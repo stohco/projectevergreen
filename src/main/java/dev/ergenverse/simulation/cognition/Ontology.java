@@ -61,6 +61,14 @@ public final class Ontology {
     /** Currently active goal (set by the DecisionEngine each tick). */
     public CognitionGoal activeGoal = null;
 
+    /**
+     * Currently active intent (set by the IntentEngine each cognition tick).
+     * The intent is the strategic framing of the current behavior — the "WHY"
+     * behind the action. Sits between Goal (hours) and Decision/Action (seconds).
+     * May be null if no goal is active or intent derivation failed.
+     */
+    public dev.ergenverse.simulation.intent.Intent activeIntent = null;
+
     /** Currently active plan (set by the Planner when a goal is chosen). */
     public Plan activePlan = null;
 

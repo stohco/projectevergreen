@@ -113,6 +113,29 @@ public final class ActorTickLoop {
         a.cognition.activeGoal = decision.goal;
         if (decision.goal != null) {
             decision.goal.status = CognitionGoal.Status.ACTIVE;
+
+            // ── INTENT LAYER ──
+            // Derive the immediate Intent from the active Goal + Dao Identity +
+            // Personality. This is the "WHY" behind the NPC's current behavior —
+            // the strategic framing that makes Wang Lin feel like Wang Lin.
+            // (ChatGPT architectural review: Identity → Goals → Intent → Decision → Action)
+            try {
+                var intent = dev.ergenverse.simulation.intent.IntentEngine.derive(
+                        decision.goal,
+                        a.cognition.daoIdentity,
+                        a.cognition.personality,
+                        a.id,
+                        a.blockX, a.blockZ,
+                        tick
+                );
+                a.cognition.activeIntent = intent;
+                if (intent != null) {
+                    Ergenverse.LOGGER.debug("[Ergenverse] ActorTick[cognition] {} intent: {}",
+                            a.id, intent.nature().label);
+                }
+            } catch (Exception e) {
+                Ergenverse.LOGGER.error("[Ergenverse] IntentEngine failed for {}", a.id, e);
+            }
         }
         Ergenverse.LOGGER.debug("[Ergenverse] ActorTick[cognition] {} decision: {}",
                 a.id, decision);
