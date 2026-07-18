@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Qiu Siping (邱思平). Canon ID: N34. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Qiu Siping (\u90b1\u601d\u5e73). Canon ID: N34. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_qiu_siping",
   "name": "Qiu Siping",
-  "nameCn": "邱思平",
+  "nameCn": "\u90b1\u601d\u5e73",
   "canon_id": "N34",
   "type": "disciple",
   "faction": "heng_yue_sect",
@@ -34,10 +34,75 @@
   "initiation_lines": [
     "You there. Have you completed today's patrol of the eastern ridge? Elder Liu won't tolerate slackers.",
     "The Spirit Herb Garden needs tending. If you gather enough Cloud-Thread Moss, I'll put in a good word for you.",
-    "Word of advice — stay clear of the Sword Peak after dark. Senior Brother Zhou has been practicing a new technique. The last person who disturbed him... couldn't cultivate for a month.",
+    "Word of advice \u2014 stay clear of the Sword Peak after dark. Senior Brother Zhou has been practicing a new technique. The last person who disturbed him... couldn't cultivate for a month.",
     "The alchemy lecture is about to start at the Alchemy Courtyard. Elders take attendance. You don't want to miss it."
   ],
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "studying",
+      "dir": "east",
+      "dist": 15
+    },
+    {
+      "t0": 6000,
+      "t1": 8000,
+      "act": "studying",
+      "dir": "east",
+      "dist": 15
+    },
+    {
+      "t0": 8000,
+      "t1": 10000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 12000,
+      "t1": 14000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 14000,
+      "t1": 23000,
+      "act": "studying",
+      "dir": "east",
+      "dist": 15
+    },
+    {
+      "t0": 23000,
+      "t1": 24000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 20
+    }
+  ]
 }

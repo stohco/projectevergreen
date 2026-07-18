@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Wang Zhuo (王卓). Canon ID: N05. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Wang Zhuo (\u738b\u5353). Canon ID: N05. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_wang_zhuo",
   "name": "Wang Zhuo",
-  "nameCn": "王卓",
+  "nameCn": "\u738b\u5353",
   "canon_id": "N05",
   "type": "disciple",
   "faction": "heng_yue_sect",
@@ -32,11 +32,83 @@
     "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
   },
   "initiation_lines": [
-    "Hmph. Another junior disciple. The Wang clan produces cultivators of real talent — not all of us rely on sect charity.",
+    "Hmph. Another junior disciple. The Wang clan produces cultivators of real talent \u2014 not all of us rely on sect charity.",
     "The trial grounds open next week. If you think you're ready, sign up at the Main Hall. Don't embarrass yourself.",
     "My cultivation advances faster than most. The clan elders invested heavily in my foundation. Don't assume we're equals."
   ],
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "sparring",
+      "dir": "east",
+      "dist": 30
+    },
+    {
+      "t0": 6000,
+      "t1": 8000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 8000,
+      "t1": 10000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 12000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 13000,
+      "t1": 14000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 14000,
+      "t1": 23000,
+      "act": "sleeping",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 23000,
+      "t1": 24000,
+      "act": "patrolling",
+      "dir": "east",
+      "dist": 15
+    }
+  ]
 }

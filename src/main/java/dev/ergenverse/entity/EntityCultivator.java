@@ -289,7 +289,14 @@ public class EntityCultivator extends PathfinderMob {
         // Priority 2, above CognitionDrivenGoal(3). Fires when player enters range,
         // sends a canon-faithful initiation line from NPC JSON data.
         this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcInitiationGoal(this));
-        this.goalSelector.addGoal(3, new dev.ergenverse.entity.ai.CognitionDrivenGoal(this));
+        // NpcScheduleGoal: Article XXIII — NPCs follow a canon-faithful daily
+        // schedule (cultivate at dawn, lecture at midday, sleep at night).
+        // Priority 3 (below NpcInitiationGoal=2, above CognitionDrivenGoal=4).
+        // The schedule is the DEFAULT; CognitionDrivenGoal (intent-based)
+        // overrides it for situational responses (spirit fruit, player nearby).
+        this.goalSelector.addGoal(3, new dev.ergenverse.entity.ai.NpcScheduleGoal(this));
+        // CognitionDrivenGoal: intent-based responses override schedule.
+        this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.CognitionDrivenGoal(this));
         this.goalSelector.addGoal(7, new net.minecraft.world.entity.ai.goal.RandomStrollGoal(this, 0.35D));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
