@@ -1,5 +1,5 @@
 {
-  "_comment": "Start pool for Heng Yue Sect. Stand-in: vanilla village town_centers. Final: custom sect/city NBT templates.",
+  "_comment": "Start pool for Heng Yue Sect main complex. Uses the custom main_hall NBT — the sect's central building where the Sect Master addresses disciples, promotions are announced, and major gatherings occur. Canon: this is the heart of Heng Yue Sect where Wang Lin spent his outer-disciple years. Replaces the vanilla plains_meeting_point placeholder (Article XXII: every canon entry must become gameplay).",
   "name": "ergenverse:heng_yue_sect/start_pool",
   "fallback": "minecraft:village/plains/terminators",
   "elements": [
@@ -8,7 +8,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "projection": "rigid",
-        "location": "minecraft:village/plains/town_centers/plains_meeting_point_1",
+        "location": "ergenverse:heng_yue_sect/main_hall",
         "processors": "minecraft:empty"
       }
     }
