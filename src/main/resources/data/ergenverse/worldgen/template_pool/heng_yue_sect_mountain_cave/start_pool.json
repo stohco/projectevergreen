@@ -1,13 +1,16 @@
 {
+  "_comment": "Heng Yue Sect \u2014 Mountain Cave. Custom structure generated for canon fidelity (Article XXII). Replaces vanilla Minecraft placeholder.",
   "name": "ergenverse:heng_yue_sect_mountain_cave/start_pool",
-  "fallback": "minecraft:village/taiga/terminators",
+  "fallback": "minecraft:village/plains/terminators",
   "elements": [
     {
-      "element_type": "minecraft:single_pool_element",
-      "location": "minecraft:village/taiga/houses/taiga_medium_house_1",
-      "projection": "rigid",
-      "processors": "minecraft:empty",
-      "weight": 1
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "projection": "rigid",
+        "location": "ergenverse:heng_yue_sect/mountain_cave",
+        "processors": "minecraft:empty"
+      }
     }
   ]
 }
