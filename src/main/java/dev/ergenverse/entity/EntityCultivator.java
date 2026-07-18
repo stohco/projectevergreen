@@ -293,6 +293,11 @@ public class EntityCultivator extends PathfinderMob {
         // Priority 2 (same as NpcInitiationGoal; both are one-shot LOOK-only goals
         // with cooldowns, so the scheduler alternates between them naturally).
         this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcSectMissionGoal(this));
+        // NpcLectureGoal: Article XXIV — elder NPCs invite players to attend
+        // lectures during scheduled time windows. Priority 2 (same tier as
+        // NpcInitiationGoal and NpcSectMissionGoal; all use Flag.LOOK and
+        // are one-shot with cooldowns, so MC scheduler alternates).
+        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcLectureGoal(this));
         // NpcScheduleGoal: Article XXIII — NPCs follow a canon-faithful daily
         // schedule (cultivate at dawn, lecture at midday, sleep at night).
         // Priority 3 (below NpcInitiationGoal=2, above CognitionDrivenGoal=4).

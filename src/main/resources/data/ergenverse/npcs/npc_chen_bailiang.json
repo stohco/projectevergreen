@@ -1,37 +1,65 @@
 {
-  "_comment": "NPC: Chen Bailiang (\u9648\u767e\u826f). Canon ID: N147. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Chen Bailiang (陈百良). Canon ID: N147. Heng Yue Sect elder specializing in alchemy and pill refinement. Lectures added per RI Ch.3-8.",
   "npc_id": "npc_chen_bailiang",
   "name": "Chen Bailiang",
-  "nameCn": "\u9648\u767e\u826f",
+  "nameCn": "陈百良",
   "canon_id": "N147",
   "type": "elder",
   "faction": "heng_yue_sect",
   "location": "heng_yue_sect",
   "cultivation": "Nascent Soul",
-  "personality": "Heng Yue elder",
-  "speech": "formal",
+  "personality": "Heng Yue elder; patient, methodical; passionate about alchemy",
+  "speech": "formal, instructive, encouraging",
   "relationship_to_wanglin": "sect elder",
   "dialogue_available": true,
   "quest_available": false,
   "trade_available": false,
   "teaching_available": true,
   "perception_tiers": {
-    "mortal": "An elder",
-    "qi_condensation": "Heng Yue elder; Nascent Soul"
+    "mortal": "A composed elder with the scent of herbs about him",
+    "qi_condensation": "Heng Yue elder; Nascent Soul; an accomplished alchemist"
   },
   "canon_confidence": 3,
-  "note": "Heng Yue Nascent Soul elder",
+  "note": "Heng Yue Nascent Soul elder; alchemy specialist who lectures on pill refinement",
   "derivation_type": "B",
   "salt": 1595293790,
   "dao_heart": {
-    "stability": 50,
+    "stability": 72,
     "cracks": [],
     "last_tested_tick": null,
-    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+    "note": "Elder Chen Bailiang's Dao heart is stable, tempered by decades of alchemical practice."
   },
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The herbs in the Spirit Herb Garden are ready for harvesting. My lecture today will cover pill refinement — you should attend.",
+    "Alchemy is not guesswork. It is precision. Come to the Alchemy Courtyard and I will show you."
+  ],
+  "lectures": [
+    {
+      "id": "chen_pill_refinement",
+      "topic": "Basics of Pill Refinement",
+      "time_start": 4000,
+      "time_end": 5500,
+      "location": "Alchemy Courtyard",
+      "description": "Elder Chen Bailiang stands beside a lit alchemy furnace, smoke curling from its lid.\n\n\"Pill refinement is the art of transformation. You take raw materials — herbs, beast cores, mineral essences — and through controlled fire and spiritual will, you create something greater than the sum of its parts.\"\n\nHe opens the furnace and a wave of medicinal fragrance washes over the disciples.\n\n\"The Qi Gathering Pill, the most basic pill, requires three ingredients: Qi Gathering Grass, a beast core, and purified water. But the ratio, the temperature, the timing — each must be precise. A deviation of even a few seconds can turn a perfect pill into useless slag.\"\n\nHe demonstrates, his hands moving with practiced grace. \"Watch. I lower the temperature at the exact moment the essence merges. This is not a recipe — it is a dialogue with the materials. You must listen to what they tell you.\"",
+      "insight": "You learn the critical timing principle in alchemy: the moment of essence merger requires a precise temperature drop. This knowledge could help you refine pills more efficiently.",
+      "reward_item": "ergenverse:qi_gathering_pill",
+      "reward_count": 2
+    },
+    {
+      "id": "chen_herb_identification",
+      "topic": "Spirit Herb Identification and Harvesting",
+      "time_start": 8000,
+      "time_end": 9500,
+      "location": "Spirit Herb Garden",
+      "description": "Elder Chen Bailiang kneels beside a patch of glowing herbs in the Spirit Herb Garden, gesturing for disciples to gather close.\n\n\"A true alchemist begins not at the furnace, but in the field. If you cannot identify a herb, you cannot refine it. And if you harvest it wrong, you destroy its spiritual essence.\"\n\nHe points to a pale blue flower. \"This is Cloud-Thread Moss. It grows only where spiritual Qi is dense. Notice how the threads glow faintly — that glow indicates peak potency. Harvest it after dawn but before the sun is fully up, when the dew still clings to the threads.\"\n\nHe moves to another plant. \"And this — Nine-Leaf Clover. Nine leaves, no more, no less. If a clover has eight leaves, it is immature. Ten leaves means it has begun to decay. Only the nine-leaf stage is usable for pill refinement.\"\n\nHe stands and brushes off his robes. \"The Spirit Herb Garden is open to all disciples. But harvest with care — these herbs take months to regrow.\"",
+      "insight": "You can now identify Cloud-Thread Moss (harvest at dawn) and Nine-Leaf Clover (must have exactly nine leaves). The Spirit Herb Garden's herbs are available for careful harvesting.",
+      "reward_item": "ergenverse:spirit_herb_seed",
+      "reward_count": 3
+    }
+  ],
   "daily_schedule": [
     {
       "t0": 0,
@@ -49,13 +77,34 @@
     },
     {
       "t0": 3000,
-      "t1": 6000,
-      "act": "patrolling",
+      "t1": 4000,
+      "act": "cultivating",
       "dir": "east",
-      "dist": 30
+      "dist": 15
     },
     {
-      "t0": 6000,
+      "t0": 4000,
+      "t1": 5500,
+      "act": "lecturing",
+      "dir": "east",
+      "dist": 25
+    },
+    {
+      "t0": 5500,
+      "t1": 8000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 8000,
+      "t1": 9500,
+      "act": "lecturing",
+      "dir": "south",
+      "dist": 20
+    },
+    {
+      "t0": 9500,
       "t1": 10000,
       "act": "cultivating",
       "dir": "north",
@@ -70,20 +119,6 @@
     },
     {
       "t0": 12000,
-      "t1": 13000,
-      "act": "wandering",
-      "dir": null,
-      "dist": 0
-    },
-    {
-      "t0": 13000,
-      "t1": 14000,
-      "act": "cultivating",
-      "dir": "north",
-      "dist": 20
-    },
-    {
-      "t0": 14000,
       "t1": 23000,
       "act": "sleeping",
       "dir": "south",

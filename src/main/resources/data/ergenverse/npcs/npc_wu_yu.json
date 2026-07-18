@@ -1,5 +1,5 @@
 {
-  "_comment": "NPC: Wu Yu (吴宇). Canon ID: N138. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Wu Yu (吴宇). Canon ID: N138. Heng Yue Sect elder who gives lectures on Dao principles. Lectures added per RI Ch.3-8 where Wang Lin attends elder lectures as part of daily sect life.",
   "npc_id": "npc_wu_yu",
   "name": "Wu Yu",
   "nameCn": "吴宇",
@@ -8,28 +8,140 @@
   "faction": "heng_yue_sect",
   "location": "heng_yue_sect",
   "cultivation": "Nascent Soul",
-  "personality": "Heng Yue elder; stern",
-  "speech": "stern, formal",
+  "personality": "Heng Yue elder; stern, demanding but fair; values discipline and persistence",
+  "speech": "stern, formal, authoritative",
   "relationship_to_wanglin": "sect elder",
   "dialogue_available": true,
   "quest_available": false,
   "trade_available": false,
   "teaching_available": true,
   "perception_tiers": {
-    "mortal": "A stern elder",
-    "qi_condensation": "Heng Yue elder; Nascent Soul"
+    "mortal": "A stern elder whose presence commands respect",
+    "qi_condensation": "Heng Yue elder; Nascent Soul cultivation; his gaze seems to pierce through you"
   },
   "canon_confidence": 3,
-  "note": "Heng Yue Nascent Soul elder",
+  "note": "Heng Yue Nascent Soul elder; gives regular lectures to disciples",
   "derivation_type": "B",
   "salt": 1753850978,
   "dao_heart": {
-    "stability": 50,
+    "stability": 78,
     "cracks": [],
     "last_tested_tick": null,
-    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+    "note": "Elder Wu Yu's Dao heart is stable — centuries of cultivation have forged resolve."
   },
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Disciple. The morning lecture begins soon. Do not be late.",
+    "Cultivation is not merely gathering Qi. It is understanding why Qi moves.",
+    "I have observed your progress. Attend today's lecture — it may clarify your doubts."
+  ],
+  "lectures": [
+    {
+      "id": "wu_yu_qi_foundation",
+      "topic": "Foundations of Qi Condensation",
+      "time_start": 3000,
+      "time_end": 5000,
+      "location": "Main Hall",
+      "description": "Elder Wu Yu stands before the gathered disciples, his voice steady and commanding.\n\n\"Many of you rush to gather Qi without understanding what Qi truly is. Qi is not merely spiritual energy — it is the breath of the heavens itself, filtered through the earth's veins and concentrated at sacred grounds like our Heng Yue Sect.\"\n\nHe pauses, his gaze sweeping across the rows of seated disciples.\n\n\"The first step in Qi Condensation is not power. It is stillness. You must empty yourself before the heavens can fill you. Think of a cup — if it is already full of muddy water, no clear spring can enter.\"\n\nHe demonstrates a hand seal, and a faint shimmer of spiritual energy appears around his palm.\n\n\"Observe. I do not force the Qi. I create the conditions for it to arrive. This is the difference between a cultivator who struggles for decades and one who breaks through in a single night of enlightenment.\"",
+      "insight": "You grasp the principle of 'emptying before filling' — your Qi absorption efficiency improves slightly. The next time you meditate at a spirit vein, you may notice the difference.",
+      "reward_item": "ergenverse:jade_slip",
+      "reward_count": 1
+    },
+    {
+      "id": "wu_yu_dao_heart",
+      "topic": "The Nature of Dao Heart",
+      "time_start": 7000,
+      "time_end": 8500,
+      "location": "Ancestor Hall",
+      "description": "Elder Wu Yu speaks in the solemn silence of the Ancestor Hall, where the memorial tablets of past sect leaders line the walls.\n\n\"Today I speak of something no technique can grant you: the Dao Heart. What is it? It is not determination. It is not ambition. It is the unshakable understanding of why you cultivate.\"\n\nHe strikes the floor with his staff, and a ripple of spiritual pressure fills the room.\n\n\"When I was young, I witnessed my master's death at the hands of a rival sect. In that moment, I understood: cultivation is not about power. It is about having the strength to protect what matters. That understanding became my Dao Heart.\"\n\nHis voice drops. \"Many of you seek immortality for its own sake. That path leads to the Devil's Dao. Find your reason. Nurture it. Let it burn brighter than any technique.\"",
+      "insight": "You reflect on your own motivation for cultivation. The elder's words resonate — understanding 'why' is more important than 'how.' Your Dao heart stability improves.",
+      "reward_item": "ergenverse:spirit_stone",
+      "reward_count": 2
+    },
+    {
+      "id": "wu_yu_spirit_veins",
+      "topic": "Spirit Veins and Sect Formation",
+      "time_start": 10000,
+      "time_end": 11500,
+      "location": "Main Hall",
+      "description": "Elder Wu Yu unrolls an ancient map showing ley lines converging on Heng Yue Sect's mountain.\n\n\"Why did our founders choose this mountain? Not for its height. Not for its beauty. They chose it because three spirit veins converge beneath this very hall.\"\n\nHe taps the map. \"A spirit vein is a channel through which the world's Qi flows. Where veins converge, Qi is densest. This is why cultivation here is ten times faster than in the mortal villages below.\"\n\nHe looks at the disciples sternly. \"This is also why the sect must be defended. If an enemy sect captures our spirit veins, their cultivators would advance while ours would stagnate. The geography of power is not metaphor — it is literal.\"",
+      "insight": "You now understand why sects fight over territory. Spirit veins are the foundation of cultivation speed. This knowledge may help you identify valuable locations in the future.",
+      "reward_item": "ergenverse:spirit_stone_fragment",
+      "reward_count": 5
+    }
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 5000,
+      "act": "lecturing",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 5000,
+      "t1": 7000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 7000,
+      "t1": 8500,
+      "act": "lecturing",
+      "dir": "west",
+      "dist": 20
+    },
+    {
+      "t0": 8500,
+      "t1": 10000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 10000,
+      "t1": 11500,
+      "act": "lecturing",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 11500,
+      "t1": 12000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 12000,
+      "t1": 23000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 23000,
+      "t1": 24000,
+      "act": "patrolling",
+      "dir": "south",
+      "dist": 25
+    }
+  ]
 }
