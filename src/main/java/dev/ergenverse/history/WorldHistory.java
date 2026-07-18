@@ -56,11 +56,19 @@ public final class WorldHistory {
     private static final String TAG_REGION_ID = "region_id";
     private static final String TAG_DESCRIPTION = "description";
     private static final String TAG_CANON_SOURCE = "canon_source";
+    private static final String TAG_TOPIC = "topic";        // v2: bus topic for routing
+    private static final String TAG_POS_X = "pos_x";        // v2: event X coord
+    private static final String TAG_POS_Z = "pos_z";        // v2: event Z coord
 
     /** Maximum global events (prevents unbounded growth across all players). */
     private static final int MAX_GLOBAL_EVENTS = 2000;
     /** Maximum events per region query. */
     private static final int MAX_REGION_EVENTS = 200;
+
+    /** Sentinel for "no topic" (pre-v2 events or events without a bus topic). */
+    public static final String NO_TOPIC = "";
+    /** Sentinel for "no position" (global events or pre-v2 events). */
+    public static final int NO_POS = Integer.MIN_VALUE;
 
     /** A single world-history event. */
     public record WorldEvent(
@@ -68,7 +76,10 @@ public final class WorldHistory {
             String eventType,    // "CANON_CONSEQUENCE", "PLAYER_ACTION", "ECOLOGY_SHIFT", "FACTION_CHANGE", etc.
             String regionId,     // the world region affected (e.g. "zhao_country", "heng_yue_sect")
             String description,
-            String canonSource   // if CANON_CONSEQUENCE, the canon event that caused it
+            String canonSource,  // if CANON_CONSEQUENCE, the canon event that caused it
+            String topic,        // v2: the WorldEventBus topic (e.g. "opportunity.spirit_fruit.ripe")
+            int posX,            // v2: event X block coord (NO_POS if unknown)
+            int posZ             // v2: event Z block coord (NO_POS if unknown)
     ) {
         public WorldEvent {
             // Validate / default nulls without reassigning (records auto-assign)
@@ -76,17 +87,37 @@ public final class WorldHistory {
             if (regionId == null) throw new IllegalArgumentException("regionId cannot be null");
             if (description == null) throw new IllegalArgumentException("description cannot be null");
             if (canonSource == null) throw new IllegalArgumentException("canonSource cannot be null");
+            if (topic == null) topic = NO_TOPIC;
         }
 
-        /** Factory that applies defaults for nullable fields. */
+        /** Factory that applies defaults for nullable fields (v1 compat — no topic/pos). */
         public static WorldEvent withDefaults(long timestamp, String eventType, String regionId,
                                                String description, String canonSource) {
             return new WorldEvent(timestamp,
                     eventType != null ? eventType : "PLAYER_ACTION",
                     regionId != null ? regionId : "",
                     description != null ? description : "",
-                    canonSource != null ? canonSource : "");
+                    canonSource != null ? canonSource : "",
+                    NO_TOPIC, NO_POS, NO_POS);
         }
+
+        /** Factory with topic and position (v2 — for WorldEventBus write-through). */
+        public static WorldEvent withTopic(long timestamp, String eventType, String regionId,
+                                            String description, String canonSource,
+                                            String topic, int posX, int posZ) {
+            return new WorldEvent(timestamp,
+                    eventType != null ? eventType : "PLAYER_ACTION",
+                    regionId != null ? regionId : "",
+                    description != null ? description : "",
+                    canonSource != null ? canonSource : "",
+                    topic != null ? topic : NO_TOPIC,
+                    posX, posZ);
+        }
+
+        /** Whether this event has a bus topic. */
+        public boolean hasTopic() { return !topic.equals(NO_TOPIC); }
+        /** Whether this event has a known position. */
+        public boolean hasPosition() { return posX != NO_POS && posZ != NO_POS; }
     }
 
     // ─── Instance fields ────────────────────────────────────────────
@@ -152,6 +183,68 @@ public final class WorldHistory {
         }
     }
 
+    /** Record a world event with topic and position (v2). */
+    public void recordWithTopic(long timestamp, String eventType, String regionId,
+                                 String description, String canonSource,
+                                 String topic, int posX, int posZ) {
+        events.add(WorldEvent.withTopic(timestamp, eventType, regionId,
+                description, canonSource, topic, posX, posZ));
+        while (events.size() > MAX_GLOBAL_EVENTS) {
+            events.remove(0);
+        }
+    }
+
+    // ─── v2 Query API ─────────────────────────────────────────────────
+
+    /** Find events whose topic starts with the given prefix (newest first). */
+    public List<WorldEvent> findByTopicPrefix(String prefix, int maxResults) {
+        List<WorldEvent> result = new ArrayList<>();
+        for (int i = events.size() - 1; i >= 0 && result.size() < maxResults; i--) {
+            WorldEvent e = events.get(i);
+            if (e.hasTopic() && e.topic().startsWith(prefix)) {
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
+    /** Find the N most recent events (newest first). */
+    public List<WorldEvent> findRecent(int maxResults) {
+        List<WorldEvent> result = new ArrayList<>();
+        for (int i = events.size() - 1; i >= 0 && result.size() < maxResults; i--) {
+            result.add(events.get(i));
+        }
+        return result;
+    }
+
+    /** Find events near a position within radius (newest first). */
+    public List<WorldEvent> findNearby(int x, int z, int radius, int maxResults) {
+        long rSq = (long) radius * radius;
+        List<WorldEvent> result = new ArrayList<>();
+        for (int i = events.size() - 1; i >= 0 && result.size() < maxResults; i--) {
+            WorldEvent e = events.get(i);
+            if (!e.hasPosition()) continue;
+            long dx = e.posX() - x;
+            long dz = e.posZ() - z;
+            if (dx * dx + dz * dz <= rSq) {
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
+    /** Find recent events matching a specific topic (newest first). */
+    public List<WorldEvent> findRecentByTopic(String topic, long minTickAge, int maxResults) {
+        List<WorldEvent> result = new ArrayList<>();
+        for (int i = events.size() - 1; i >= 0 && result.size() < maxResults; i--) {
+            WorldEvent e = events.get(i);
+            if (e.hasTopic() && e.topic().equals(topic) && e.timestamp() <= minTickAge) {
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
     // ─── Serialization ───────────────────────────────────────────────
 
     public CompoundTag save() {
@@ -164,6 +257,12 @@ public final class WorldHistory {
             entry.putString(TAG_REGION_ID, e.regionId);
             entry.putString(TAG_DESCRIPTION, e.description);
             entry.putString(TAG_CANON_SOURCE, e.canonSource);
+            // v2 fields (backward-compatible: old saves just lack these keys)
+            if (e.hasTopic()) entry.putString(TAG_TOPIC, e.topic);
+            if (e.hasPosition()) {
+                entry.putInt(TAG_POS_X, e.posX);
+                entry.putInt(TAG_POS_Z, e.posZ);
+            }
             list.add(entry);
         }
         tag.put(TAG_EVENTS, list);
@@ -176,12 +275,24 @@ public final class WorldHistory {
             ListTag list = tag.getList(TAG_EVENTS, Tag.TAG_COMPOUND);
             for (int i = 0; i < list.size(); i++) {
                 CompoundTag entry = list.getCompound(i);
+                // v2 backward-compatible load: old saves lack topic/pos keys,
+                // getString returns "" → NO_TOPIC, getInt returns 0 → translate to NO_POS
+                String topic = entry.contains(TAG_TOPIC) ? entry.getString(TAG_TOPIC) : NO_TOPIC;
+                int posX = entry.contains(TAG_POS_X) ? entry.getInt(TAG_POS_X) : NO_POS;
+                int posZ = entry.contains(TAG_POS_Z) ? entry.getInt(TAG_POS_Z) : NO_POS;
+                // Translate legacy 0,0 to NO_POS (0,0 is a valid position but legacy
+                // events didn't track position, so 0 means "unknown")
+                if (posX == 0 && posZ == 0 && !entry.contains(TAG_POS_X)) {
+                    posX = NO_POS;
+                    posZ = NO_POS;
+                }
                 wh.events.add(new WorldEvent(
                         entry.getLong(TAG_TIMESTAMP),
                         entry.getString(TAG_EVENT_TYPE),
                         entry.getString(TAG_REGION_ID),
                         entry.getString(TAG_DESCRIPTION),
-                        entry.getString(TAG_CANON_SOURCE)
+                        entry.getString(TAG_CANON_SOURCE),
+                        topic, posX, posZ
                 ));
             }
         }
@@ -258,6 +369,16 @@ public final class WorldHistory {
                                        String description, String canonSource) {
         WorldHistory wh = get(level);
         wh.record(timestamp, eventType, regionId, description, canonSource);
+        persist(level);
+    }
+
+    /** Record a world event with topic and position, then persist (v2). */
+    public static void recordGlobalWithTopic(ServerLevel level, long timestamp,
+                                               String eventType, String regionId,
+                                               String description, String canonSource,
+                                               String topic, int posX, int posZ) {
+        WorldHistory wh = get(level);
+        wh.recordWithTopic(timestamp, eventType, regionId, description, canonSource, topic, posX, posZ);
         persist(level);
     }
 

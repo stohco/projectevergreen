@@ -320,5 +320,10 @@ public final class Ergenverse {
         // event-driven pass (every tick) for dirty actors only.
         // Without this call, 5,800+ LOC of cognition is dead code (Art III, V, X).
         dev.ergenverse.simulation.actor.ActorTickLoop.tick(ticks);
+
+        // Loop H: WorldEventBus — set current level for write-through.
+        // The bus itself is event-driven (publish/subscribe); this just ensures
+        // it has the ServerLevel reference needed for WorldHistory persistence.
+        dev.ergenverse.simulation.event.WorldEventBus.setCurrentLevel(overworld);
     }
 }
