@@ -44,6 +44,39 @@
   },
   "offers_gifts": true,
   "gift_protagonist_id": "wang_lin",
+  "protagonist_recognition_lines": [
+    "You... You are not yet on the path. But I see it in you. The same destiny that found me when I was your age.",
+    "I felt your presence before I saw you. There is something about you — a weight the heavens themselves notice. Take this. It found me when I was nothing. Maybe it will find you too.",
+    "Do not be afraid. I am not here to harm you. I am here because the world has already begun to shape you — and I remember what that felt like. Hold this. It is a start.",
+    "You walk among mortals, but you are not one of them. Not really. I was like you once. This jade slip is the first step. The path is long. Walk it carefully."
+  ],
+  "contextual_lines": {
+    "breakthrough_recent": [
+      "I felt your breakthrough. The heavens noticed. So did I.",
+      "A new realm. Do not let it make you careless — the higher you climb, the harder you fall.",
+      "Your foundation has settled. Good. But remember: cultivation is not a race."
+    ],
+    "meditating": [
+      "Your meditation bears fruit. Continue. I will not disturb you.",
+      "Stillness is its own cultivation. I see you understand that.",
+      "Meditate. The Qi will come. The Dao will come. Patience is the first art."
+    ],
+    "in_combat": [
+      "You fight. I will watch. Do not die — the dead cannot cultivate.",
+      "Strength without wisdom is a fire that consumes itself. Be careful.",
+      "I have killed more than you can imagine. Watch your footing."
+    ],
+    "low_health": [
+      "You are wounded. Heal first. The Dao is patient — the grave is not.",
+      "Survival is the first cultivation. A dead cultivator achieves nothing.",
+      "Your body is failing. Cultivate it. Heal. There is no shame in retreat."
+    ],
+    "high_karma": [
+      "Your karma is heavy. Be wary of breakthroughs — the heavens judge the weighted more harshly.",
+      "Karma is a chain. Loosen it before you climb higher, or it will drag you down at the worst moment.",
+      "I see the weight on your soul. Walk softly for a time. The heavens have long memories."
+    ]
+  },
   "gift_offering_lines": [
     "You walk the path. Hold out your hand.",
     "I have watched you cultivate. Take this — and do not waste it.",

@@ -19,128 +19,194 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * NpcGiftOfferGoal — Article XXIV (NPCs Must Initiate Gameplay) taken to its
- * next step: the NPC not only SPEAKS first, it WALKS to the player and
- * offers a canon gift or a teaching.
+ * NpcGiftOfferGoal — Article XXIV (NPCs Must Initiate Gameplay) with
+ * PROTAGONIST RECOGNITION and CONTEXTUAL AWARENESS.
  *
- * <h2>Why this exists</h2>
- * <p>Before this goal, all gift-giving was Player → NPC: the player had to
- * right-click the Wang Lin manifestation (ManifestationGiftHandler). That is
- * the old model Article XXIV explicitly rejects. Canon-faithful behavior:
- * <ul>
- *   <li>Wang Lin leaves a jade slip where he predicts the player will find it.</li>
- *   <li>Situ Nan asks the player to investigate a fluctuation.</li>
- *   <li>An elder invites the player to observe a lecture.</li>
- *   <li>Wang Lin, recognizing a kindred spirit, walks over and offers to
- *       share a technique.</li>
- * </ul>
- * The NPC must initiate the offering. The player accepts by standing still
- * and receiving it.
- *
- * <h2>Canon-faithful gate (very important)</h2>
- * <p>Wang Lin is canonically CAUTIOUS and RESERVED. He does not hand out
- * treasures to strangers. So this goal only fires when ALL of these hold:
- * <ul>
- *   <li>The NPC's JSON data has {@code offers_gifts: true}.</li>
- *   <li>The player has reached at least Qi Condensation — Wang Lin does not
- *       reveal himself to mortals. (Canon: cultivators hide from mortals.)</li>
- *   <li>The player has been within {@link #DETECT_RANGE} blocks for at least
- *       {@link #SETTLE_TICKS} ticks — no rushing; Wang Lin watches first.</li>
- *   <li>The per-player cooldown has expired (one offer per MC day).</li>
- *   <li>The existing {@link ManifestationGiftSystem#evaluateGift} four-question
- *       gate returns {@link ManifestationGiftSystem.GiftDecision#OFFERED} for
- *       at least one gift the protagonist can offer at this trust/realm tier.</li>
- * </ul>
- * If any gate fails, the goal never activates — Wang Lin stays silent and
- * watches. This is Article XXIV (initiation) without violating Article I
- * (canon is reality — Wang Lin would not give treasures to anyone who hasn't
- * earned the right).
- *
- * <h2>Behavior sequence</h2>
+ * <h2>What this goal does (the "smart AI" surface)</h2>
+ * <p>Wang Lin's manifestation is not a vending machine. He:
  * <ol>
- *   <li>canUse: player within DETECT_RANGE, settled for SETTLE_TICKS,
- *       cooldown expired, cultivation ≥ Qi Condensation, NPC has offers_gifts=true,
- *       and at least one gift from ManifestationGiftSystem evaluates OFFERED.</li>
- *   <li>start: pick the offered gift, walk toward the player (pathfind).</li>
- *   <li>tick: keep walking until within GIFT_RANGE (3 blocks).</li>
- *   <li>On arrival: face the player, speak the offering line, evaluate the
- *       gift via the existing ManifestationGiftSystem, and grant the item
- *       using the existing inventory-grant pattern from ManifestationGiftHandler.</li>
- *   <li>Record cooldown in player NBT (shares the same key as the right-click
- *       handler so the two paths do not double-grant).</li>
+ *   <li><b>Recognizes the player as a protagonist even when they are a mortal.</b>
+ *       Canon: Wang Lin received the Heaven-Defying Bead when he was a mortal
+ *       teenager, before he knew what cultivation was. Protagonists recognize
+ *       each other. The first time Wang Lin encounters the player, he walks
+ *       up and offers a jade slip — a one-time recognition gift.</li>
+ *   <li><b>Observes context before acting.</b> He assesses what the player is
+ *       doing right now: meditating, fighting, breaking through, wounded,
+ *       burdened by karma, recently advanced. He adapts his behavior and
+ *       dialogue accordingly.</li>
+ *   <li><b>Does not disturb the player during critical moments.</b> If the
+ *       player is in a tribulation or mid-breakthrough, Wang Lin stays back
+ *       and watches. He does not path into a lightning storm.</li>
+ *   <li><b>Speaks contextually.</b> When the player is meditating, he speaks
+ *       softly. When the player just broke through, he acknowledges it. When
+ *       the player is wounded, he expresses concern. When karma is heavy,
+ *       he warns. This is what makes the AI feel smart — it reads the world.</li>
+ *   <li><b>Optimized for single-player.</b> The player reference is cached.
+ *       No per-tick player-list iteration. The server has 0 or 1 player;
+ *       we resolve once and reuse.</li>
  * </ol>
  *
+ * <h2>Player context states (what Wang Lin observes)</h2>
+ * <pre>
+ *   NOT_PRESENT          — no player in range → goal inactive
+ *   IN_TRIBULATION       — player has tribulationPending → DO NOT DISTURB
+ *   BREAKING_THROUGH     — breakthroughProgress ≥ 1.0, canBreakthrough → DO NOT DISTURB
+ *   IN_COMBAT            — player took damage in last 10s → observe only, speak combat line
+ *   LOW_HEALTH           — health < 50% max → speak concern, offer herb pill
+ *   HIGH_KARMA           — karma > 0.7 → speak karmic warning
+ *   RECENT_BREAKTHROUGH  — last history entry is breakthrough, < 5 min ago → congratulate
+ *   MEDITATING           — MeditationHandler.isMeditating → observe, speak softly
+ *   UNRECOGNIZED_MORTAL  — mortal + not yet recognized → RECOGNIZE (one-time)
+ *   NORMAL               — everything fine → normal gift pipeline
+ * </pre>
+ *
+ * <h2>Canon-faithful gate (for the normal gift pipeline)</h2>
+ * <p>After recognition, Wang Lin uses the existing {@link ManifestationGiftSystem}
+ * four-question gate (affinity + trust + realm + personality) to decide what
+ * to offer. He does not hand out canonical treasures to Core Formation
+ * cultivators — that would violate canon. But he WILL hand a jade slip to a
+ * mortal protagonist, because that is exactly what happened to him.
+ *
  * <h2>Article XXVI compliance</h2>
- * <p>NO new Engine/Bus/Subscriber. This is a single Minecraft Goal class.
- * It reuses:
+ * <p>NO new Engine/Bus/Subscriber. Reuses:
  * <ul>
- *   <li>{@link ManifestationGiftSystem} — the existing four-question evaluation engine.</li>
- *   <li>{@link WorldStateDataLoader} — the existing NPC JSON loader (for
- *       {@code offers_gifts} flag and {@code gift_offering_lines}).</li>
- *   <li>{@link CultivationCapability} — the existing cultivation state reader.</li>
- *   <li>The existing inventory-grant pattern (same as ManifestationGiftHandler).</li>
- *   <li>{@link dev.ergenverse.history.HistoryManager#onGiftReceived} — the
- *       existing emergent history recorder.</li>
+ *   <li>{@link ManifestationGiftSystem} — four-question gift evaluation</li>
+ *   <li>{@link WorldStateDataLoader} — NPC JSON loader</li>
+ *   <li>{@link CultivationCapability} — cultivation state reader</li>
+ *   <li>{@link dev.ergenverse.cultivation.MeditationHandler#isMeditating} — meditation state</li>
+ *   <li>{@link dev.ergenverse.history.PlayerHistory} — recent events</li>
+ *   <li>{@link dev.ergenverse.history.HistoryManager#onGiftReceived} — history recorder</li>
+ *   <li>Standard Minecraft {@code player.getCombatTracker()} / {@code player.getHealth()}</li>
  * </ul>
  *
  * <h2>Data shape (NPC JSON)</h2>
  * <pre>{
  *   "offers_gifts": true,
  *   "gift_protagonist_id": "wang_lin",
- *   "gift_offering_lines": [
- *     "You walk the path. Hold out your hand.",
- *     "I have watched you cultivate. Take this — and do not waste it.",
- *     "This was mine. Now it is yours. The Dao is not hoarded."
- *   ]
+ *   "protagonist_recognition_lines": [
+ *     "You... You are not yet on the path. But I see it in you.",
+ *     "I felt your presence before I saw you. Take this — it found me when I was nothing."
+ *   ],
+ *   "contextual_lines": {
+ *     "breakthrough_recent": ["I felt your breakthrough. The heavens noticed. So did I."],
+ *     "meditating": ["Your meditation bears fruit. Continue."],
+ *     "in_combat": ["You fight. I will watch."],
+ *     "low_health": ["You are wounded. Heal first. The Dao is patient."],
+ *     "high_karma": ["Your karma is heavy. Be wary of breakthroughs."]
+ *   },
+ *   "gift_offering_lines": ["You walk the path. Hold out your hand."]
  * }</pre>
- * If {@code offers_gifts} is missing or false, this goal never activates.
  *
- * <p><b>Provenance:</b> INFERRED from Article XXIV — "Wang Lin leaves a jade
- * slip", "Situ Nan asks for help", "An elder invites you to observe a lecture."
+ * <p><b>Provenance:</b> INFERRED from Article XXIV + canon (Wang Lin received
+ * the Heaven-Defying Bead as a mortal; protagonists recognize each other).
  */
 public class NpcGiftOfferGoal extends Goal {
 
-    /** How close a player must be for the NPC to consider offering (blocks). */
-    private static final double DETECT_RANGE = 12.0;
+    // ═══════════════════════════════════════════════════════════════════
+    //  Tunables
+    // ═══════════════════════════════════════════════════════════════════
+
+    /** How close a player must be for the NPC to consider engaging (blocks). */
+    private static final double DETECT_RANGE = 16.0;
 
     /** How long the player must stay in range before the NPC commits (ticks). */
-    private static final long SETTLE_TICKS = 600L; // 30 seconds
+    private static final long SETTLE_TICKS = 400L; // 20 seconds (was 30 — smarter, faster)
 
     /** How close the NPC must get before delivering the gift (blocks). */
     private static final double GIFT_RANGE = 3.0;
 
-    /** Per-player cooldown: one offer per MC day (24000 ticks = 20 min real). */
+    /** Per-player cooldown for NORMAL gift offers: one MC day. */
     private static final long COOLDOWN_TICKS = 24000L;
 
-    /** Shared NBT key with ManifestationGiftHandler so the two paths do not double-grant. */
+    /** Cooldown for contextual one-liners (don't spam the same observation). */
+    private static final long CONTEXT_LINE_COOLDOWN = 1200L; // 60 seconds
+
+    /** Health fraction below which Wang Lin expresses concern. */
+    private static final double LOW_HEALTH_THRESHOLD = 0.5;
+
+    /** Karma level above which Wang Lin warns. */
+    private static final double HIGH_KARMA_THRESHOLD = 0.7;
+
+    /** Recent-breakthrough window (ticks). */
+    private static final long RECENT_BREAKTHROUGH_TICKS = 6000L; // 5 min
+
+    /** Combat recency window (ticks). */
+    private static final long COMBAT_RECENT_TICKS = 200L; // 10 sec
+
+    /** Shared NBT key with ManifestationGiftHandler. */
     private static final String NBT_LAST_GIFT_TIME = "ergenverse_last_gift_time";
+
+    /** NBT key for one-time protagonist recognition. */
+    private static final String NBT_PROTAGONIST_RECOGNIZED = "ergenverse_protagonist_recognized";
+
+    /** NBT key for last contextual line tick (per NPC). */
+    private static final String NBT_LAST_CONTEXT_TICK = "ergenverse_last_context_tick";
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  Player context (what Wang Lin observes)
+    // ═══════════════════════════════════════════════════════════════════
+
+    /** What Wang Lin observes about the player right now. */
+    private enum PlayerContext {
+        NOT_PRESENT,
+        IN_TRIBULATION,       // DO NOT DISTURB
+        BREAKING_THROUGH,     // DO NOT DISTURB
+        IN_COMBAT,            // observe only — speak combat line once
+        LOW_HEALTH,           // speak concern, offer healing
+        HIGH_KARMA,           // speak karmic warning
+        RECENT_BREAKTHROUGH,  // congratulate
+        MEDITATING,           // observe quietly — speak soft line once
+        UNRECOGNIZED_MORTAL,  // RECOGNIZE (one-time gift)
+        NORMAL                // gift pipeline
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  State
+    // ═══════════════════════════════════════════════════════════════════
 
     private final EntityCultivator cultivator;
 
     /** Protagonist ID for gift evaluation (defaults to "wang_lin"). */
     private String protagonistId = "wang_lin";
 
-    /** Offering lines loaded from NPC JSON (empty = use a default line). */
+    /** Offering lines for the normal gift flow. */
     private final List<String> offeringLines = new java.util.ArrayList<>();
+
+    /** Recognition lines for the one-time mortal encounter. */
+    private final List<String> recognitionLines = new java.util.ArrayList<>();
+
+    /** Contextual lines keyed by context name. */
+    private final java.util.Map<String, List<String>> contextualLines = new java.util.HashMap<>();
 
     /** True once data has been loaded from NPC JSON. */
     private boolean dataLoaded = false;
 
-    /** The player the NPC is currently approaching. */
+    /** Cached single-player reference (single-player game). */
+    private ServerPlayer cachedPlayer = null;
+
+    /** Tick when the player cache was last refreshed. */
+    private long playerCacheTick = 0L;
+
+    /** The player the NPC is currently approaching (set in canUse). */
     private ServerPlayer targetPlayer = null;
 
     /** The gift that will be offered once the NPC reaches the player. */
     private ManifestationGiftSystem.GiftRecord pendingGift = null;
 
+    /** The context that triggered this approach. */
+    private PlayerContext activeContext = PlayerContext.NORMAL;
+
     /** Tick when the player first entered DETECT_RANGE (for settle check). */
     private long playerFirstSeenTick = 0L;
 
-    /** Tick when the offer was delivered (for cooldown / state reset). */
-    private long offerDeliveredTick = 0L;
+    /** Tick when the offer/line was delivered (for cooldown / state reset). */
+    private long deliveredTick = 0L;
+
+    /** True if this approach is a one-time recognition (vs. normal gift). */
+    private boolean isRecognitionApproach = false;
 
     public NpcGiftOfferGoal(EntityCultivator cultivator) {
         this.cultivator = cultivator;
-        // Controls MOVE + LOOK so the NPC can path to the player and face them.
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
@@ -152,51 +218,137 @@ public class NpcGiftOfferGoal extends Goal {
     public boolean canUse() {
         if (cultivator.level().isClientSide) return false;
         if (!loadDataIfNeeded()) return false;
-        if (offeringLines.isEmpty()) return false; // no offers_gifts flag
 
-        // Find a player who meets ALL canon-faithful gates
-        ServerPlayer candidate = findEligiblePlayer();
-        if (candidate == null) return false;
-
-        // Settle check: player must have been in range for SETTLE_TICKS
         long now = cultivator.level().getGameTime();
-        if (targetPlayer == null || !targetPlayer.getUUID().equals(candidate.getUUID())) {
-            // New player — start the settle timer
-            targetPlayer = candidate;
+
+        // ── Single-player optimization: get the one player (cached) ──
+        ServerPlayer player = getSinglePlayer(now);
+        if (player == null) return false;
+
+        // Player must be within DETECT_RANGE
+        if (player.distanceTo(cultivator) > DETECT_RANGE) {
+            // Player out of range — reset settle timer
+            if (targetPlayer != null && !targetPlayer.getUUID().equals(player.getUUID())) {
+                targetPlayer = null;
+                playerFirstSeenTick = 0L;
+            } else if (targetPlayer == null) {
+                playerFirstSeenTick = 0L;
+            }
+            return false;
+        }
+
+        // ── Assess what the player is doing right now ──
+        PlayerContext context = assessContext(player, now);
+
+        // ── SMART RULE: never disturb during tribulation or mid-breakthrough ──
+        // Wang Lin would never walk into a lightning storm. He watches.
+        if (context == PlayerContext.IN_TRIBULATION
+                || context == PlayerContext.BREAKING_THROUGH) {
+            // Reset approach state — we're observing, not approaching
+            targetPlayer = null;
+            playerFirstSeenTick = 0L;
+            return false;
+        }
+
+        // ── Settle check: player must have been observed for SETTLE_TICKS ──
+        // (Wang Lin watches first. He does not rush.)
+        if (targetPlayer == null || !targetPlayer.getUUID().equals(player.getUUID())) {
+            targetPlayer = player;
             playerFirstSeenTick = now;
             return false;
         }
         if (now - playerFirstSeenTick < SETTLE_TICKS) {
-            return false; // still settling — keep watching
+            return false; // still observing
         }
 
-        // Find a gift the existing ManifestationGiftSystem says can be offered
-        pendingGift = findOfferedGift(candidate);
-        if (pendingGift == null) {
-            // No gift passes the four-question gate — Wang Lin stays silent.
-            // Reset so we re-evaluate next cycle.
-            targetPlayer = null;
-            return false;
-        }
+        // ── Decide what to do based on context ──
+        activeContext = context;
+        isRecognitionApproach = false;
+        pendingGift = null;
 
-        return true;
+        switch (context) {
+            case UNRECOGNIZED_MORTAL:
+                // One-time protagonist recognition — always fires
+                isRecognitionApproach = true;
+                return true;
+
+            case IN_COMBAT:
+                // Observe only — speak a combat line if cooldown allows, don't approach
+                speakContextualLineIfReady(player, "in_combat", now);
+                targetPlayer = null; // don't path toward a fighting player
+                playerFirstSeenTick = 0L;
+                return false;
+
+            case MEDITATING:
+                // Observe quietly — speak a soft line if cooldown allows, don't approach
+                speakContextualLineIfReady(player, "meditating", now);
+                targetPlayer = null;
+                playerFirstSeenTick = 0L;
+                return false;
+
+            case LOW_HEALTH:
+                // Approach and offer a healing pill (qi_gathering_pill)
+                // Falls through to gift pipeline with a forced herb-pill fallback
+                pendingGift = findHealingGift(player);
+                if (pendingGift == null) {
+                    // No healing gift available — just speak concern
+                    speakContextualLineIfReady(player, "low_health", now);
+                    targetPlayer = null;
+                    playerFirstSeenTick = 0L;
+                    return false;
+                }
+                return true;
+
+            case HIGH_KARMA:
+                // Speak warning, don't approach
+                speakContextualLineIfReady(player, "high_karma", now);
+                targetPlayer = null;
+                playerFirstSeenTick = 0L;
+                return false;
+
+            case RECENT_BREAKTHROUGH:
+                // Congratulate, then fall through to normal gift flow
+                speakContextualLineIfReady(player, "breakthrough_recent", now);
+                // Fall through to NORMAL gift pipeline
+                activeContext = PlayerContext.NORMAL;
+                // intentional fall-through
+
+            case NORMAL:
+            default:
+                // Normal gift pipeline — check cooldown + four-question gate
+                long lastGift = player.getPersistentData().getLong(NBT_LAST_GIFT_TIME);
+                if (now - lastGift < COOLDOWN_TICKS) return false;
+                pendingGift = findOfferedGift(player);
+                if (pendingGift == null) return false;
+                return true;
+        }
     }
 
     @Override
     public boolean canContinueToUse() {
         if (cultivator.level().isClientSide) return false;
-        if (targetPlayer == null || pendingGift == null) return false;
+        if (targetPlayer == null) return false;
+        // For recognition, we always have a pending "gift" (the recognition slip)
+        if (!isRecognitionApproach && pendingGift == null) return false;
 
-        // Player logged out, died, or moved too far away — abort
         if (targetPlayer.hasDisconnected() || !targetPlayer.isAlive()) return false;
+
         double dist = targetPlayer.distanceTo(cultivator);
-        if (dist > DETECT_RANGE * 1.5) {
-            // Player ran off — give up
+        if (dist > DETECT_RANGE * 1.5) return false;
+
+        // Stop after delivery + short pause
+        if (deliveredTick > 0
+                && (cultivator.level().getGameTime() - deliveredTick) > 60L) {
             return false;
         }
-        // Stop once the offer has been delivered + a short post-deliver pause
-        if (offerDeliveredTick > 0
-                && (cultivator.level().getGameTime() - offerDeliveredTick) > 60L) {
+
+        // SMART RULE: if the player enters tribulation/combat mid-approach, abort
+        PlayerContext ctx = assessContext(targetPlayer, cultivator.level().getGameTime());
+        if (ctx == PlayerContext.IN_TRIBULATION
+                || ctx == PlayerContext.BREAKING_THROUGH) {
+            // Player's situation changed — Wang Lin backs off
+            Ergenverse.LOGGER.info("[NpcGiftOffer] {} aborting approach — player entered {}",
+                    cultivator.getCharacterId(), ctx);
             return false;
         }
         return true;
@@ -205,19 +357,17 @@ public class NpcGiftOfferGoal extends Goal {
     @Override
     public void start() {
         if (targetPlayer == null) return;
-        // Begin walking toward the player
         walkTowardPlayer();
-        Ergenverse.LOGGER.info("[NpcGiftOffer] {} is approaching {} to offer '{}'",
+        Ergenverse.LOGGER.info("[NpcGiftOffer] {} approaching {} (context={}, recognition={})",
                 cultivator.getCharacterId(), targetPlayer.getName().getString(),
-                pendingGift != null ? pendingGift.giftId : "?");
+                activeContext, isRecognitionApproach);
     }
 
     @Override
     public void tick() {
         if (targetPlayer == null) return;
 
-        // Already delivered — just hold position briefly
-        if (offerDeliveredTick > 0) {
+        if (deliveredTick > 0) {
             cultivator.getNavigation().stop();
             cultivator.getLookControl().setLookAt(targetPlayer);
             return;
@@ -226,15 +376,15 @@ public class NpcGiftOfferGoal extends Goal {
         double dist = targetPlayer.distanceTo(cultivator);
 
         if (dist <= GIFT_RANGE) {
-            // Arrived — deliver the gift
-            deliverGift();
+            if (isRecognitionApproach) {
+                deliverRecognition();
+            } else {
+                deliverGift();
+            }
         } else {
-            // Keep walking; re-path every ~2 seconds to track a moving player
-            if (cultivator.getNavigation().isDone()
-                    || cultivator.tickCount % 40 == 0) {
+            if (cultivator.getNavigation().isDone() || cultivator.tickCount % 40 == 0) {
                 walkTowardPlayer();
             }
-            // Face the player while walking
             cultivator.getLookControl().setLookAt(targetPlayer);
         }
     }
@@ -243,69 +393,259 @@ public class NpcGiftOfferGoal extends Goal {
     public void stop() {
         targetPlayer = null;
         pendingGift = null;
-        offerDeliveredTick = 0L;
+        activeContext = PlayerContext.NORMAL;
+        isRecognitionApproach = false;
+        deliveredTick = 0L;
         playerFirstSeenTick = 0L;
         cultivator.getNavigation().stop();
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  Gift delivery (reuses existing ManifestationGiftSystem)
+    //  Context assessment (the "smart AI" core)
     // ═══════════════════════════════════════════════════════════════════
 
     /**
-     * Deliver the pending gift: speak the offering line, evaluate the gift
-     * via the existing four-question engine (re-check at delivery time, in
-     * case the player's state changed during approach), and grant the item
-     * using the existing inventory-grant pattern.
+     * Assess what the player is doing right now. This is what makes Wang Lin
+     * feel smart — he reads the player's cultivation state, combat state,
+     * health, karma, meditation, and recent history.
      */
+    private PlayerContext assessContext(ServerPlayer player, long now) {
+        // ── Cultivation state ──
+        var stateOpt = CultivationCapability.get(player);
+        if (!stateOpt.isPresent()) return PlayerContext.NOT_PRESENT;
+        CultivationState state = stateOpt.resolve().get();
+        RealmId realm = state.getCurrentRealm();
+
+        // Tribulation pending — DO NOT DISTURB
+        if (state.isTribulationPending()) {
+            return PlayerContext.IN_TRIBULATION;
+        }
+
+        // Mid-breakthrough (progress full, can break through) — DO NOT DISTURB
+        if (state.getBreakthroughProgress() >= 1.0 && state.canBreakthrough()) {
+            return PlayerContext.BREAKING_THROUGH;
+        }
+
+        // ── Combat state (standard Minecraft API) ──
+        // Check two signals: player was recently hurt (hurtTime > 0, lasts 10 ticks),
+        // OR there are hostile mobs within 12 blocks (broader combat awareness).
+        if (player.hurtTime > 0 || isPlayerNearHostiles(player)) {
+            return PlayerContext.IN_COMBAT;
+        }
+
+        // ── Low health ──
+        float health = player.getHealth();
+        float maxHealth = player.getMaxHealth();
+        if (maxHealth > 0 && (health / maxHealth) < LOW_HEALTH_THRESHOLD) {
+            return PlayerContext.LOW_HEALTH;
+        }
+
+        // ── High karma ──
+        if (state.getKarma() > HIGH_KARMA_THRESHOLD) {
+            return PlayerContext.HIGH_KARMA;
+        }
+
+        // ── Recent breakthrough (check player history) ──
+        try {
+            var history = dev.ergenverse.history.PlayerHistory.get(player);
+            if (history != null && !history.all().isEmpty()) {
+                var latest = history.latest();
+                if ("breakthrough".equals(latest.eventType)
+                        && (now - latest.timestamp) < RECENT_BREAKTHROUGH_TICKS) {
+                    return PlayerContext.RECENT_BREAKTHROUGH;
+                }
+            }
+        } catch (Exception e) {
+            // History read failure is non-fatal — fall through
+        }
+
+        // ── Meditating ──
+        try {
+            if (dev.ergenverse.cultivation.MeditationHandler.isMeditating(player.getUUID())) {
+                return PlayerContext.MEDITATING;
+            }
+        } catch (Exception e) {
+            // Non-fatal
+        }
+
+        // ── Unrecognized mortal → RECOGNIZE ──
+        if (realm == RealmId.MORTAL) {
+            boolean recognized = player.getPersistentData()
+                    .getBoolean(NBT_PROTAGONIST_RECOGNIZED);
+            if (!recognized) {
+                return PlayerContext.UNRECOGNIZED_MORTAL;
+            }
+            // Already recognized mortal — Wang Lin observes quietly, doesn't approach
+            return PlayerContext.MEDITATING; // treat as "observe, don't approach"
+        }
+
+        return PlayerContext.NORMAL;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  Single-player optimization
+    // ═══════════════════════════════════════════════════════════════════
+
+    /**
+     * Get the single player on the server. Cached for 5 seconds (100 ticks)
+     * to avoid per-tick player-list lookups.
+     *
+     * <p>Single-player game: the server has exactly 0 or 1 player. We resolve
+     * once, cache, and reuse. This is the optimization the user requested.
+     */
+    private ServerPlayer getSinglePlayer(long now) {
+        // Refresh cache every 100 ticks (5 seconds)
+        if (cachedPlayer != null && (now - playerCacheTick) < 100L) {
+            // Verify the cached player is still valid
+            if (!cachedPlayer.hasDisconnected() && cachedPlayer.isAlive()
+                    && cachedPlayer.level() == cultivator.level()) {
+                return cachedPlayer;
+            }
+            cachedPlayer = null;
+        }
+
+        playerCacheTick = now;
+
+        // Single-player: get the first (and only) player from the server
+        var server = cultivator.level().getServer();
+        if (server == null) {
+            cachedPlayer = null;
+            return null;
+        }
+
+        var players = server.getPlayerList().getPlayers();
+        if (players.isEmpty()) {
+            cachedPlayer = null;
+            return null;
+        }
+
+        // Single-player game — take the first player.
+        // (In a hypothetical multiplayer future, this would need to pick
+        //  the nearest player in the same dimension. But per user directive,
+        //  this is single-player only.)
+        ServerPlayer player = players.get(0);
+
+        // Must be in the same dimension as the NPC
+        if (player.level() != cultivator.level()) {
+            cachedPlayer = null;
+            return null;
+        }
+
+        cachedPlayer = player;
+        return player;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  Recognition delivery (one-time mortal encounter)
+    // ═══════════════════════════════════════════════════════════════════
+
+    /**
+     * Deliver the one-time protagonist recognition. Wang Lin walks up to a
+     * mortal player, speaks a recognition line, and hands them a jade slip.
+     *
+     * <p>Canon: Wang Lin received the Heaven-Defying Bead as a mortal teen.
+     * Protagonists recognize each other. This is that moment.
+     */
+    private void deliverRecognition() {
+        if (targetPlayer == null) return;
+        long now = cultivator.level().getGameTime();
+
+        // Double-check: player must still be mortal and not yet recognized
+        var stateOpt = CultivationCapability.get(targetPlayer);
+        if (!stateOpt.isPresent()) {
+            deliveredTick = now;
+            return;
+        }
+        CultivationState state = stateOpt.resolve().get();
+        if (state.getCurrentRealm() != RealmId.MORTAL) {
+            // Player cultivated since we started approaching — treat as normal gift
+            isRecognitionApproach = false;
+            pendingGift = findOfferedGift(targetPlayer);
+            if (pendingGift != null) {
+                deliverGift();
+            } else {
+                deliveredTick = now;
+            }
+            return;
+        }
+
+        boolean alreadyRecognized = targetPlayer.getPersistentData()
+                .getBoolean(NBT_PROTAGONIST_RECOGNIZED);
+        if (alreadyRecognized) {
+            deliveredTick = now;
+            return;
+        }
+
+        // Speak the recognition line
+        String line = recognitionLines.isEmpty()
+                ? "I see it in you. The same destiny that found me."
+                : recognitionLines.get(cultivator.getRandom().nextInt(recognitionLines.size()));
+        targetPlayer.sendSystemMessage(Component.literal(
+                "\u00A7d\u00A7l<" + cultivator.getDisplayNameCn() + ">\u00A7r \u00A7f" + line + "\u00A7r"));
+
+        // Grant a jade slip — the canonical "first gift to a future cultivator"
+        Item jadeSlip = dev.ergenverse.item.ErgenverseItems.JADE_SLIP.get();
+        ItemStack stack = new ItemStack(jadeSlip, 1);
+        if (!targetPlayer.getInventory().add(stack)) {
+            targetPlayer.drop(stack, false, false);
+        }
+        targetPlayer.sendSystemMessage(Component.literal(
+                "\u00A7a\u2726 " + cultivator.getDisplayNameCn()
+                        + " hands you a jade slip. It is warm to the touch.\u00A7r"));
+        targetPlayer.sendSystemMessage(Component.literal(
+                "\u00A7b\u00A7o\u2726 You feel that this is only the beginning.\u00A7r"));
+
+        // Mark as recognized — one-time event, never repeats
+        targetPlayer.getPersistentData().putBoolean(NBT_PROTAGONIST_RECOGNIZED, true);
+        targetPlayer.getPersistentData().putLong(NBT_LAST_GIFT_TIME, now);
+
+        // Record in emergent history
+        dev.ergenverse.history.HistoryManager.onGiftReceived(
+                targetPlayer, protagonistId, "Protagonist Recognition (Jade Slip)", now);
+
+        Ergenverse.LOGGER.info("[NpcGiftOffer] {} RECOGNIZED mortal player {} as a protagonist — jade slip granted",
+                cultivator.getCharacterId(), targetPlayer.getName().getString());
+
+        deliveredTick = now;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  Gift delivery (normal pipeline — reuses ManifestationGiftSystem)
+    // ═══════════════════════════════════════════════════════════════════
+
     private void deliverGift() {
         if (targetPlayer == null || pendingGift == null) return;
         long now = cultivator.level().getGameTime();
 
-        // Re-evaluate at delivery time — the player's realm/trust may have changed
+        // Re-evaluate at delivery time — player state may have changed
         ManifestationGiftSystem.PlayerStateSnapshot snapshot = buildSnapshot(targetPlayer);
         ManifestationGiftSystem.GiftDecision decision =
                 ManifestationGiftSystem.evaluateGift(pendingGift, snapshot);
 
         if (decision != ManifestationGiftSystem.GiftDecision.OFFERED) {
-            // The four-question gate now refuses (player changed state).
-            // Wang Lin simply turns away — canon-faithful silence.
             String refusalLine = ManifestationGiftSystem.getDialogueFor(pendingGift, decision);
             targetPlayer.sendSystemMessage(Component.literal(
                     "\u00A7e<" + cultivator.getDisplayNameCn() + "> \u00A77" + refusalLine + "\u00A7r"));
-            Ergenverse.LOGGER.info("[NpcGiftOffer] {} decided NOT to offer '{}' to {} at delivery (decision={})",
-                    cultivator.getCharacterId(), pendingGift.giftId,
-                    targetPlayer.getName().getString(), decision);
-            // Still record cooldown so we don't pester them again immediately
+            Ergenverse.LOGGER.info("[NpcGiftOffer] {} decided NOT to offer '{}' at delivery (decision={})",
+                    cultivator.getCharacterId(), pendingGift.giftId, decision);
             targetPlayer.getPersistentData().putLong(NBT_LAST_GIFT_TIME, now);
-            offerDeliveredTick = now;
+            deliveredTick = now;
             return;
         }
 
-        // Speak the offering line
-        String line = offeringLines.get(
-                cultivator.getRandom().nextInt(offeringLines.size()));
+        // Speak offering line
+        String line = offeringLines.isEmpty()
+                ? "Hold out your hand."
+                : offeringLines.get(cultivator.getRandom().nextInt(offeringLines.size()));
         targetPlayer.sendSystemMessage(Component.literal(
                 "\u00A7d\u00A7l<" + cultivator.getDisplayNameCn() + ">\u00A7r \u00A7f" + line + "\u00A7r"));
 
-        // Offer dialogue from the gift record
         String offerDialogue = pendingGift.offerDialogue;
         if (offerDialogue != null && !offerDialogue.isEmpty()) {
-            targetPlayer.sendSystemMessage(Component.literal(
-                    "\u00A7d" + offerDialogue + "\u00A7r"));
+            targetPlayer.sendSystemMessage(Component.literal("\u00A7d" + offerDialogue + "\u00A7r"));
         }
 
-        // Grant the item. Three canon-faithful paths:
-        //  (a) The gift's canonOriginId maps to a registered Forge item → grant it.
-        //  (b) Technique gift (CANONICAL_TECHNIQUE) with no registered item →
-        //      Wang Lin gives the player a JADE SLIP containing the technique.
-        //      Canon: techniques are stored on jade slips in the Er Gen universe —
-        //      Wang Lin finds, creates, and distributes jade slips throughout RI.
-        //      This is the user's "Wang Lin would be the one in possession of
-        //      the slip" correction made playable.
-        //  (c) Post-canon herb/core gift with no registered item → Wang Lin
-        //      gives the player a substitute physical token (qi_gathering_pill
-        //      for herbs, beast_core for cores) — these are real registered items.
+        // Grant item (three canon-faithful paths)
         boolean granted = false;
         if (pendingGift.canonOriginId != null) {
             var itemKey = new net.minecraft.resources.ResourceLocation(
@@ -322,7 +662,6 @@ public class NpcGiftOfferGoal extends Goal {
             }
         }
         if (!granted) {
-            // Fallback: pick a canon-faithful physical token by gift category
             Item fallbackItem = pickFallbackItem(pendingGift);
             if (fallbackItem != null) {
                 ItemStack stack = new ItemStack(fallbackItem, 1);
@@ -341,18 +680,15 @@ public class NpcGiftOfferGoal extends Goal {
                                     + pendingGift.name + "\u00A7r"));
                 }
             } else {
-                // Truly no fallback — pure teaching with no physical token
                 targetPlayer.sendSystemMessage(Component.literal(
                         "\u00A7a\u2726 " + cultivator.getDisplayNameCn()
                                 + " offers to teach you: " + pendingGift.name + "\u00A7r"));
             }
         }
 
-        // Record cooldown (shared key with right-click handler)
         targetPlayer.getPersistentData().putLong(NBT_LAST_GIFT_TIME, now);
         targetPlayer.getPersistentData().putBoolean("ergenverse_gift_dirty", true);
 
-        // Record in emergent history (reuses existing HistoryManager)
         String itemName = pendingGift.name != null ? pendingGift.name : "unknown";
         dev.ergenverse.history.HistoryManager.onGiftReceived(
                 targetPlayer, protagonistId, itemName, now);
@@ -361,7 +697,35 @@ public class NpcGiftOfferGoal extends Goal {
                 cultivator.getCharacterId(), pendingGift.giftId,
                 targetPlayer.getName().getString());
 
-        offerDeliveredTick = now;
+        deliveredTick = now;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  Contextual lines (the "smart observation" surface)
+    // ═══════════════════════════════════════════════════════════════════
+
+    /**
+     * Speak a contextual observation line if the per-NPC cooldown has expired.
+     * This is what makes Wang Lin feel aware — he comments on what you're doing
+     * without walking up to you.
+     */
+    private void speakContextualLineIfReady(ServerPlayer player, String contextKey, long now) {
+        // Per-NPC cooldown key (so different NPCs can comment independently)
+        String nbtKey = NBT_LAST_CONTEXT_TICK + "_" + cultivator.getCharacterId();
+        long lastContext = player.getPersistentData().getLong(nbtKey);
+        if (now - lastContext < CONTEXT_LINE_COOLDOWN) return;
+
+        List<String> lines = contextualLines.get(contextKey);
+        if (lines == null || lines.isEmpty()) return;
+
+        String line = lines.get(cultivator.getRandom().nextInt(lines.size()));
+        player.sendSystemMessage(Component.literal(
+                "\u00A7e<" + cultivator.getDisplayNameCn() + "> \u00A77" + line + "\u00A7r"));
+
+        player.getPersistentData().putLong(nbtKey, now);
+
+        Ergenverse.LOGGER.info("[NpcGiftOffer] {} observed context '{}' for {} — spoke line",
+                cultivator.getCharacterId(), contextKey, player.getName().getString());
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -369,39 +733,25 @@ public class NpcGiftOfferGoal extends Goal {
     // ═══════════════════════════════════════════════════════════════════
 
     /**
-     * Find a player who satisfies all the canon-faithful preconditions:
-     * within DETECT_RANGE, Qi Condensation+, cooldown expired.
+     * Find a healing-oriented gift for the LOW_HEALTH context.
+     * Uses the existing gift system but filters for herb/pill category.
      */
-    private ServerPlayer findEligiblePlayer() {
-        long now = cultivator.level().getGameTime();
-        for (ServerPlayer player : cultivator.level().getEntitiesOfClass(
-                ServerPlayer.class,
-                cultivator.getBoundingBox().inflate(DETECT_RANGE))) {
-
-            // Cooldown check (shared with right-click handler)
-            long lastGift = player.getPersistentData().getLong(NBT_LAST_GIFT_TIME);
-            if (now - lastGift < COOLDOWN_TICKS) continue;
-
-            // Cultivation gate: Qi Condensation+
-            var stateOpt = CultivationCapability.get(player);
-            if (!stateOpt.isPresent()) continue;
-            CultivationState state = stateOpt.resolve().get();
-            if (state.getCurrentRealm().order < RealmId.QI_CONDENSATION.order) continue;
-
-            return player;
+    private ManifestationGiftSystem.GiftRecord findHealingGift(ServerPlayer player) {
+        // For low health, we don't need the four-question gate — Wang Lin
+        // would help a wounded cultivator regardless of trust. Use a direct
+        // POST_CANON_HERBS lookup.
+        for (var gift : ManifestationGiftSystem.getGiftsByProtagonist(protagonistId)) {
+            if (gift.category == ManifestationGiftSystem.GiftCategory.POST_CANON_HERB) {
+                return gift;
+            }
         }
         return null;
     }
 
-    /**
-     * Find the first Wang Lin gift (sorted by ascending affinity threshold)
-     * that passes the existing four-question evaluation gate.
-     */
     private ManifestationGiftSystem.GiftRecord findOfferedGift(ServerPlayer player) {
         ManifestationGiftSystem.PlayerStateSnapshot snapshot = buildSnapshot(player);
         List<ManifestationGiftSystem.GiftRecord> gifts =
                 ManifestationGiftSystem.getGiftsByProtagonist(protagonistId);
-        // Sort by ascending affinity threshold (most accessible first)
         gifts = new java.util.ArrayList<>(gifts);
         gifts.sort((a, b) -> Integer.compare(a.affinityThreshold, b.affinityThreshold));
 
@@ -415,10 +765,6 @@ public class NpcGiftOfferGoal extends Goal {
         return null;
     }
 
-    /**
-     * Build a PlayerStateSnapshot for the existing ManifestationGiftSystem.
-     * (Mirrors ManifestationGiftHandler's snapshot logic — no new infra.)
-     */
     private ManifestationGiftSystem.PlayerStateSnapshot buildSnapshot(ServerPlayer player) {
         var stateOpt = CultivationCapability.get(player);
         final CultivationState state = stateOpt.isPresent()
@@ -438,7 +784,6 @@ public class NpcGiftOfferGoal extends Goal {
         };
     }
 
-    /** Pathfind toward the target player. */
     private void walkTowardPlayer() {
         if (targetPlayer == null) return;
         cultivator.getNavigation().moveTo(
@@ -446,57 +791,39 @@ public class NpcGiftOfferGoal extends Goal {
     }
 
     /**
-     * Pick a canon-faithful fallback physical item when the gift's
-     * canonOriginId is null or not yet registered as a Forge item.
-     *
-     * <p>Canon basis:
-     * <ul>
-     *   <li><b>CANONICAL_TECHNIQUE</b> → jade_slip. Techniques are stored
-     *       on jade slips in the Er Gen universe — Wang Lin finds, creates,
-     *       and distributes jade slips throughout Renegade Immortal.
-     *       This makes "Wang Lin possesses the slip" playable.</li>
-     *   <li><b>POST_CANON_HERB</b> → qi_gathering_pill (a registered,
-     *       usable pill — represents Wang Lin's gathered spirit herbs
-     *       condensed into pill form).</li>
-     *   <li><b>POST_CANON_CORE</b> → beast_core (the registered generic
-     *       beast core item — represents Wang Lin's slain beast cores).</li>
-     *   <li><b>POST_CANON_FORGED</b> → jade_slip (Bai Xiaochun-style
-     *       pill recipes inscribed on a slip).</li>
-     *   <li><b>CANONICAL_TREASURE</b> → null (no fallback — Wang Lin would
-     *       never give a fake; the canonical item must be registered).</li>
-     * </ul>
-     *
-     * @return the fallback Item, or null if no canon-faithful fallback exists
+     * Check if there are hostile mobs within 12 blocks of the player.
+     * This is Wang Lin's broader combat awareness — he won't approach a
+     * player who is surrounded by monsters, even if they haven't been hit yet.
      */
+    private boolean isPlayerNearHostiles(ServerPlayer player) {
+        return !player.level().getEntitiesOfClass(
+                net.minecraft.world.entity.monster.Monster.class,
+                player.getBoundingBox().inflate(12.0)).isEmpty();
+    }
+
     private Item pickFallbackItem(ManifestationGiftSystem.GiftRecord gift) {
         if (gift == null || gift.category == null) return null;
         switch (gift.category) {
             case CANONICAL_TECHNIQUE:
-                // Techniques live on jade slips — Wang Lin hands the player
-                // a slip inscribed with the technique.
                 return dev.ergenverse.item.ErgenverseItems.JADE_SLIP.get();
             case POST_CANON_HERB:
                 return dev.ergenverse.item.ErgenverseItems.QI_GATHERING_PILL.get();
             case POST_CANON_CORE:
                 return dev.ergenverse.item.ErgenverseItems.BEAST_CORE.get();
             case POST_CANON_FORGED:
-                // Bai Xiaochun's pills/recipes → inscribe on a jade slip
                 return dev.ergenverse.item.ErgenverseItems.JADE_SLIP.get();
             case CANONICAL_TREASURE:
             default:
-                // No fallback for canonical treasures — the canonical item
-                // itself must be registered, otherwise Wang Lin stays silent.
                 return null;
         }
     }
 
-    /**
-     * Lazy-load the NPC's JSON data. Returns true if data is loaded (and
-     * the NPC has offers_gifts=true); false if data couldn't be loaded OR
-     * the NPC doesn't offer gifts.
-     */
+    // ═══════════════════════════════════════════════════════════════════
+    //  Data loading
+    // ═══════════════════════════════════════════════════════════════════
+
     private boolean loadDataIfNeeded() {
-        if (dataLoaded) return !offeringLines.isEmpty();
+        if (dataLoaded) return !offeringLines.isEmpty() || !recognitionLines.isEmpty();
         dataLoaded = true;
 
         String characterId = cultivator.getCharacterId();
@@ -506,36 +833,56 @@ public class NpcGiftOfferGoal extends Goal {
             JsonObject data = WorldStateDataLoader.getEntry("npcs", characterId);
             if (data == null) return false;
 
-            // Check offers_gifts flag
             if (!data.has("offers_gifts") || !data.get("offers_gifts").isJsonPrimitive()
                     || !data.getAsJsonPrimitive("offers_gifts").getAsBoolean()) {
                 return false;
             }
 
-            // Load protagonist ID (defaults to wang_lin)
             if (data.has("gift_protagonist_id")
                     && data.get("gift_protagonist_id").isJsonPrimitive()) {
                 protagonistId = data.getAsJsonPrimitive("gift_protagonist_id").getAsString();
             }
 
-            // Load offering lines
-            if (data.has("gift_offering_lines")
-                    && data.get("gift_offering_lines").isJsonArray()) {
-                for (var elem : data.getAsJsonArray("gift_offering_lines")) {
-                    if (elem.isJsonPrimitive() && elem.getAsJsonPrimitive().isString()) {
-                        offeringLines.add(elem.getAsString());
-                    }
-                }
-            }
-            // Fallback: if offers_gifts=true but no lines provided, use a default
+            // Load offering lines (normal gift flow)
+            loadStringList(data, "gift_offering_lines", offeringLines);
             if (offeringLines.isEmpty()) {
                 offeringLines.add("Hold out your hand.");
+            }
+
+            // Load recognition lines (one-time mortal encounter)
+            loadStringList(data, "protagonist_recognition_lines", recognitionLines);
+            if (recognitionLines.isEmpty()) {
+                recognitionLines.add("I see it in you. The same destiny that found me.");
+            }
+
+            // Load contextual lines
+            if (data.has("contextual_lines") && data.get("contextual_lines").isJsonObject()) {
+                JsonObject ctx = data.getAsJsonObject("contextual_lines");
+                for (String key : java.util.List.of(
+                        "breakthrough_recent", "meditating", "in_combat",
+                        "low_health", "high_karma")) {
+                    List<String> list = new java.util.ArrayList<>();
+                    loadStringList(ctx, key, list);
+                    if (!list.isEmpty()) {
+                        contextualLines.put(key, list);
+                    }
+                }
             }
             return true;
         } catch (Exception e) {
             Ergenverse.LOGGER.debug("[NpcGiftOffer] Failed to load data for {}: {}",
                     characterId, e.getMessage());
             return false;
+        }
+    }
+
+    private void loadStringList(JsonObject obj, String key, List<String> target) {
+        if (obj.has(key) && obj.get(key).isJsonArray()) {
+            for (var elem : obj.getAsJsonArray(key)) {
+                if (elem.isJsonPrimitive() && elem.getAsJsonPrimitive().isString()) {
+                    target.add(elem.getAsString());
+                }
+            }
         }
     }
 }
