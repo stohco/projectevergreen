@@ -1,96 +1,60 @@
 package dev.ergenverse.entity.ai;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.simulation.WorldStateDataLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 /**
- * NpcScheduleGoal — Article XXIII (Vertical Slice Completion).
+ * NpcScheduleGoal - Article XXIII (Vertical Slice Completion).
  *
  * <h2>What this does</h2>
- * <p>Makes Heng Yue Sect NPCs follow a daily schedule — they cultivate at
- * dawn, eat at the main hall at noon, study at the library in the
- * afternoon, sleep at the dormitory at night, patrol after dark.
- * Each NPC can have a canon-faithful schedule defined in its JSON data.
+ * <p>Makes Heng Yue Sect NPCs follow a daily schedule defined in their
+ * NPC JSON data. At dawn they cultivate at Sword Peak, at noon they eat
+ * at the Main Hall, in the afternoon they patrol or study, at night
+ * they sleep in the dormitory.
  *
  * <h2>Canon basis</h2>
- * <p>In Renegade Immortal Chapters 1-50, Heng Yue Sect has a strict daily
- * rhythm:</p>
- * <ul>
- *   <li>Dawn: outer disciples cultivate at Sword Peak (Wang Lin's daily routine).</li>
- *   <li>Morning: eat at the Main Hall, then attend elder lectures.</li>
- *   <li>Daytime: study at the Library or patrol the sect perimeter.</li>
- *   <li>Afternoon: free cultivation time or sparring.</li>
- *   <li>Dusk: evening meal at Main Hall.</li>
- *   <li>Night: sleep at Disciple Dormitory. Night patrol sentries walk the
- *       perimeter.</li>
- * </ul>
- * Before this goal, ALL NPCs (except Wang Tiangui) either stood still
- * (meditating) or wandered randomly. Now they have canon-faithful daily
- * rhythms.
+ * <p>INFERRED from RI Chapters 1-50. Heng Yue Sect has a strict daily
+ * rhythm: dawn cultivation, morning lectures, daytime study/patrol,
+ * evening meal, night sleep. Night patrol sentries walk the perimeter.
+ * Before this goal, NPCs either stood still or wandered randomly.
  *
  * <h2>How it works</h2>
  * <ol>
- *   <li>The NPC's JSON data contains a {@code daily_schedule} array. Each
- *       entry has: {@code t0} (start MC tick), {@code t1} (end MC tick),
- *       {@code act} (activity name), {@code dir} (direction), {@code dist}
- *       (blocks).</li>
- *   <li>The goal reads the current schedule entry and pathfinds the NPC
- *       to the target location (home + direction + distance).</li>
- *   <li>When the NPC arrives at the target, it stands still for the
- *       duration (scheduled activity = stationary).</li>
- *   <li>When the time window expires, the goal re-evaluates and either
- *       moves to the next location or yields (letting lower-priority goals
- *       like CognitionDrivenGoal or RandomStrollGoal handle free time).</li>
+ *   <li>NPC JSON contains a {@code daily_schedule} array with entries
+ *       having {@code t0}, {@code t1}, {@code act}, {@code dir}, {@code dist}.</li>
+ *   <li>The goal pathfinds the NPC to home + direction + distance.</li>
+ *   <li>On arrival, the NPC stands still until the window expires.</li>
+ *   <li>When the window expires, it transitions to the next entry or yields.</li>
  * </ol>
  *
  * <h2>Priority design</h2>
- * <ul>
- *   <li>Priority 3 (below NpcInitiationGoal=2, above CognitionDrivenGoal=4).</li>
- *   <li>The schedule is the DEFAULT behavior — NPCs follow their routine.</li>
- *   <li>CognitionDrivenGoal (priority 4) can OVERRIDE the schedule when
- *       the intent system fires (e.g., spirit fruit detected, player nearby).
- *       This is correct: the schedule is the routine; the intent system
- *       handles situational responses. After the situation resolves, the
- *       schedule resumes.</li>
- * </ul>
- *
- * <h2>Data shape (NPC JSON)</h2>
- * <pre>{
- *   "daily_schedule": [
- *     {"t0": 0, "t1": 2000, "act": "cultivating", "dir": "north", "dist": 20},
- *     {"t0": 2000, "t1": 3000, "act": "eating", "dir": null, "dist": 0},
- *     {"t0": 3000, "t1": 6000, "act": "patrolling", "dir": "east", "dist": 30}
- *   ]
- * }</pre>
- * If {@code dir} is null or {@code dist} is 0, the NPC stays in place
- * (no pathfinding — lower-priority goals handle free time).
+ * <p>Priority 3 (below NpcInitiationGoal=2, above CognitionDrivenGoal=4).
+ * The schedule is the DEFAULT behavior. CognitionDrivenGoal can override
+ * it for situational responses.
  *
  * <h2>Article XXVI compliance</h2>
- * <p>NO new Engine/Bus/Subscriber. This is a single Minecraft Goal class.
- * It reuses:
- * <ul>
- *   <li>{@link WorldStateDataLoader} — the existing NPC JSON loader.</li>
- *   <li>{@link dev.ergenverse.simulation.CultivatorActivityResolver} — the
- *       existing activity resolver (extended to read schedules).</li>
- * </ul>
- *
- * <p><b>Provenance:</b> INFERRED from RI Chapters 1-50 (Heng Yue Sect
- * daily rhythm).
+ * <p>NO new Engine/Bus/Subscriber. Single Goal class reusing
+ * WorldStateDataLoader for JSON access.
  */
 public class NpcScheduleGoal extends Goal {
 
     /** MC day = 24000 ticks = 20 minutes real time. */
     private static final long MC_DAY_TICKS = 24000L;
+
+    /** Squared arrival threshold (2 blocks squared = 4.0). */
+    private static final double ARRIVE_DIST_SQ = 4.0;
+
+    /** Squared close-enough threshold for look-at (2.5 blocks squared). */
+    private static final double CLOSE_DIST_SQ = 6.25;
 
     private final EntityCultivator cultivator;
 
@@ -100,7 +64,7 @@ public class NpcScheduleGoal extends Goal {
     /** True once schedule data has been loaded (or attempted). */
     private boolean scheduleLoaded = false;
 
-    /** The home position (where the NPC "lives" — recorded on first load). */
+    /** The home position (where the NPC "lives" - recorded on first load). */
     private BlockPos homePos = null;
 
     /** Target position for the current schedule entry. */
@@ -114,7 +78,7 @@ public class NpcScheduleGoal extends Goal {
 
     public NpcScheduleGoal(EntityCultivator cultivator) {
         this.cultivator = cultivator;
-        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
     @Override
@@ -126,17 +90,15 @@ public class NpcScheduleGoal extends Goal {
         long now = cultivator.level().getGameTime();
         long timeOfDay = now % MC_DAY_TICKS;
 
-        // Find the current schedule entry
         ScheduleEntry entry = findCurrentEntry(timeOfDay);
         if (entry == null) {
-            // No scheduled activity right now — let lower goals handle free time
             currentEntry = null;
             targetPos = null;
             return false;
         }
 
-        // Stationary activities with no direction = NPC stays put.
-        // Let CognitionDrivenGoal or RandomStrollGoal handle it.
+        // Stationary activities with no direction: NPC stays put,
+        // lower-priority goals handle free time.
         if (entry.dir == null && entry.dist == 0) return false;
 
         // Record home position on first activation
@@ -144,7 +106,6 @@ public class NpcScheduleGoal extends Goal {
             homePos = cultivator.blockPosition();
         }
 
-        // Compute target position: home + direction + distance
         targetPos = computeTarget(entry);
         if (targetPos == null) return false;
 
@@ -157,31 +118,35 @@ public class NpcScheduleGoal extends Goal {
     public boolean canContinueToUse() {
         if (cultivator.level().isClientSide) return false;
         if (currentEntry == null || targetPos == null) return false;
-        if (targetPlayerDisconnected()) return false;
+        if (isSinglePlayerGone()) return false;
 
-        // Time window expired?
         long now = cultivator.level().getGameTime();
         long timeOfDay = now % MC_DAY_TICKS;
-        if (timeOfDay >= currentEntry.t1) {
-            // Window expired — check if next entry is actionable
+
+        // Handle wrap-around at midnight
+        boolean windowExpired;
+        if (currentEntry.t1 <= currentEntry.t0) {
+            // Wraps midnight: active when timeOfDay >= t0 OR timeOfDay < t1
+            windowExpired = (timeOfDay >= currentEntry.t1 && timeOfDay < currentEntry.t0);
+        } else {
+            windowExpired = timeOfDay >= currentEntry.t1;
+        }
+
+        if (windowExpired) {
             ScheduleEntry next = findCurrentEntry(timeOfDay);
             if (next != null && next.dir != null && next.dist > 0) {
-                // Transition: update target, re-path
                 currentEntry = next;
                 targetPos = computeTarget(next);
                 moveStartTick = now;
                 return targetPos != null;
             }
-            // No more scheduled entries — yield to free time
             return false;
         }
 
         // Arrived at target?
-        double dist = cultivator.distanceTo(
-                targetPos.getX(), cultivator.getY(), targetPos.getZ());
-        if (dist < 2.0) {
-            // Arrived — stop moving, stand still. canContinueToUse will
-            // keep returning true (NPC stands still) until window expires.
+        double distSq = cultivator.distanceToSqr(
+                targetPos.getX() + 0.5, cultivator.getY(), targetPos.getZ() + 0.5);
+        if (distSq < ARRIVE_DIST_SQ) {
             cultivator.getNavigation().stop();
             return true;
         }
@@ -198,7 +163,7 @@ public class NpcScheduleGoal extends Goal {
     @Override
     public void start() {
         walkTowardTarget();
-        Ergenverse.LOGGER.debug("[NpcSchedule] {} following schedule: {} ({}→{}) → ({}, {}, {})",
+        Ergenverse.LOGGER.debug("[NpcSchedule] {} following schedule: {} ({}-{}) dir={} dist={} -> ({},{},{})",
                 cultivator.getCharacterId(), currentEntry.act,
                 currentEntry.t0, currentEntry.t1,
                 currentEntry.dir, currentEntry.dist,
@@ -209,14 +174,13 @@ public class NpcScheduleGoal extends Goal {
     public void tick() {
         if (currentEntry == null || targetPos == null) return;
 
-        // Already at target — stand still and look around
-        double dist = cultivator.distanceTo(
-                targetPos.getX(), cultivator.getY(), targetPos.getZ());
-        if (dist < 2.5) {
+        double distSq = cultivator.distanceToSqr(
+                targetPos.getX() + 0.5, cultivator.getY(), targetPos.getZ() + 0.5);
+        if (distSq < CLOSE_DIST_SQ) {
             cultivator.getNavigation().stop();
-            // Face the direction the NPC came from
             if (homePos != null) {
-                cultivator.getLookControl().setLookAt(homePos);
+                cultivator.getLookControl().setLookAt(
+                        homePos.getX() + 0.5, homePos.getY() + 0.5, homePos.getZ() + 0.5);
             }
             return;
         }
@@ -235,18 +199,32 @@ public class NpcScheduleGoal extends Goal {
         cultivator.getNavigation().stop();
     }
 
-    // ═════════════════════════════════════════════════════════════
+    // =================================================================
+
+    /**
+     * Find the schedule entry active at the given time-of-day.
+     * Handles entries that wrap around midnight (t1 < t0).
+     */
+    private ScheduleEntry findCurrentEntry(long timeOfDay) {
+        for (ScheduleEntry e : schedule) {
+            if (e.t1 <= e.t0) {
+                // Wraps midnight: active when timeOfDay >= t0 OR timeOfDay < t1
+                if (timeOfDay >= e.t0 || timeOfDay < e.t1) return e;
+            } else {
+                if (timeOfDay >= e.t0 && timeOfDay < e.t1) return e;
+            }
+        }
+        return null;
+    }
 
     private void walkTowardTarget() {
         if (targetPos == null) return;
         cultivator.getNavigation().moveTo(
-                targetPos.getX(), cultivator.getY(), targetPos.getZ(), 0.8D);
+                targetPos.getX() + 0.5, cultivator.getY(), targetPos.getZ() + 0.5, 0.8D);
     }
 
     /**
      * Compute the target BlockPos from home + direction + distance.
-     * Direction is one of: north, south, east, west, northeast, northwest,
-     * southeast, southwest (or null = stay put).
      */
     private BlockPos computeTarget(ScheduleEntry entry) {
         if (homePos == null || entry.dir == null || entry.dist <= 0) return null;
@@ -268,15 +246,13 @@ public class NpcScheduleGoal extends Goal {
                 homePos.getZ() + dz * entry.dist);
     }
 
-    private boolean targetPlayerDisconnected() {
-        // Single-player game — check if the single player is gone
+    private boolean isSinglePlayerGone() {
         var server = cultivator.level().getServer();
         if (server == null) return true;
-        var players = server.getPlayerList().getPlayers();
-        return players.isEmpty();
+        return server.getPlayerList().getPlayers().isEmpty();
     }
 
-    // ── Schedule loading ───────────────────────────────────────
+    // -- Schedule loading ------------------------------------------------
 
     private boolean loadScheduleIfNeeded() {
         if (scheduleLoaded) return !schedule.isEmpty();
@@ -299,7 +275,8 @@ public class NpcScheduleGoal extends Goal {
                 int t0 = obj.has("t0") ? obj.get("t0").getAsInt() : 0;
                 int t1 = obj.has("t1") ? obj.get("t1").getAsInt() : 24000;
                 String act = obj.has("act") ? obj.get("act").getAsString() : "";
-                String dir = obj.has("dir") ? obj.get("dir").getAsString() : null;
+                String dir = obj.has("dir") && !obj.get("dir").isJsonNull()
+                        ? obj.get("dir").getAsString() : null;
                 int dist = obj.has("dist") ? obj.get("dist").getAsInt() : 0;
                 if (t1 > 24000) t1 = 24000;
                 schedule.add(new ScheduleEntry(t0, t1, act, dir, dist));
