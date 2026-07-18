@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Yun Fei (\u4e91\u83f2). Canon ID: N95. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Yun Fei (云菲). Canon ID: N95. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_yun_fei",
   "name": "Yun Fei",
-  "nameCn": "\u4e91\u83f2",
+  "nameCn": "云菲",
   "canon_id": "N95",
   "type": "disciple",
   "faction": "heng_yue_sect",
@@ -41,8 +41,8 @@
     {
       "t0": 0,
       "t1": 2000,
-      "act": "cultivating",
-      "dir": "north",
+      "act": "studying",
+      "dir": "west",
       "dist": 20
     },
     {
@@ -54,24 +54,31 @@
     },
     {
       "t0": 3000,
-      "t1": 6000,
-      "act": "sparring",
-      "dir": "east",
-      "dist": 30
-    },
-    {
-      "t0": 6000,
-      "t1": 8000,
+      "t1": 5000,
       "act": "cultivating",
       "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 5000,
+      "t1": 7000,
+      "act": "studying",
+      "dir": "west",
       "dist": 20
+    },
+    {
+      "t0": 7000,
+      "t1": 8000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
     },
     {
       "t0": 8000,
       "t1": 10000,
       "act": "cultivating",
       "dir": "north",
-      "dist": 20
+      "dist": 15
     },
     {
       "t0": 10000,
@@ -82,31 +89,17 @@
     },
     {
       "t0": 12000,
-      "t1": 13000,
-      "act": "wandering",
-      "dir": null,
-      "dist": 0
-    },
-    {
-      "t0": 13000,
       "t1": 14000,
-      "act": "cultivating",
-      "dir": "north",
+      "act": "studying",
+      "dir": "west",
       "dist": 20
     },
     {
       "t0": 14000,
-      "t1": 23000,
+      "t1": 24000,
       "act": "sleeping",
       "dir": "south",
       "dist": 10
-    },
-    {
-      "t0": 23000,
-      "t1": 24000,
-      "act": "patrolling",
-      "dir": "east",
-      "dist": 15
     }
   ]
 }

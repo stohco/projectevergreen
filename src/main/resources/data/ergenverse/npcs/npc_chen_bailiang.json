@@ -29,7 +29,7 @@
     "last_tested_tick": null,
     "note": "Elder Chen Bailiang's Dao heart is stable, tempered by decades of alchemical practice."
   },
-  "soul_state": "nascent_soul",
+  "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
   "initiation_lines": [
@@ -123,13 +123,6 @@
       "act": "sleeping",
       "dir": "south",
       "dist": 10
-    },
-    {
-      "t0": 23000,
-      "t1": 24000,
-      "act": "patrolling",
-      "dir": "east",
-      "dist": 15
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Sun Zhenwei (\u5b59\u632f\u5a01). Canon ID: N146. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Sun Zhenwei (孙振威). Canon ID: N146. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_sun_zhenwei",
   "name": "Sun Zhenwei",
-  "nameCn": "\u5b59\u632f\u5a01",
+  "nameCn": "孙振威",
   "canon_id": "N146",
   "type": "disciple",
   "faction": "heng_yue_sect",
@@ -34,16 +34,16 @@
     "The eastern training ground is open. I'll be there this afternoon if you want to test your techniques.",
     "Cultivation is not a race, but hesitation in battle will kill you. Find the balance between patience and resolve."
   ],
-  "soul_state": "nascent_soul",
+  "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
   "daily_schedule": [
     {
       "t0": 0,
       "t1": 2000,
-      "act": "cultivating",
-      "dir": "north",
-      "dist": 20
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
     },
     {
       "t0": 2000,
@@ -54,23 +54,30 @@
     },
     {
       "t0": 3000,
-      "t1": 6000,
+      "t1": 5000,
       "act": "sparring",
       "dir": "east",
-      "dist": 30
+      "dist": 25
     },
     {
-      "t0": 6000,
-      "t1": 8000,
+      "t0": 5000,
+      "t1": 7000,
       "act": "cultivating",
       "dir": "north",
-      "dist": 20
+      "dist": 15
+    },
+    {
+      "t0": 7000,
+      "t1": 8000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
     },
     {
       "t0": 8000,
       "t1": 10000,
-      "act": "cultivating",
-      "dir": "north",
+      "act": "wandering",
+      "dir": "south",
       "dist": 20
     },
     {
@@ -82,31 +89,30 @@
     },
     {
       "t0": 12000,
-      "t1": 13000,
-      "act": "wandering",
+      "t1": 14000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 14000,
+      "t1": 16000,
+      "act": "sleeping",
       "dir": null,
       "dist": 0
     },
     {
-      "t0": 13000,
-      "t1": 14000,
-      "act": "cultivating",
-      "dir": "north",
-      "dist": 20
-    },
-    {
-      "t0": 14000,
-      "t1": 23000,
-      "act": "sleeping",
-      "dir": "south",
-      "dist": 10
-    },
-    {
-      "t0": 23000,
+      "t0": 16000,
       "t1": 24000,
       "act": "patrolling",
       "dir": "east",
-      "dist": 15
+      "dist": 25
     }
+  ],
+  "night_lines": [
+    "Halt. Identify yourself. The sect perimeter is not a place for midnight strolls.",
+    "You are out past curfew. I will not ask twice — return to the disciple dormitories.",
+    "If I find you wandering near the restricted buildings again, you will answer to Elder Zhang Tian.",
+    "The night patrol reports directly to the Sect Master. Move along, disciple."
   ]
 }

@@ -36,5 +36,77 @@
   ],
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 5000,
+      "act": "studying",
+      "dir": "west",
+      "dist": 20
+    },
+    {
+      "t0": 5000,
+      "t1": 7000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 25
+    },
+    {
+      "t0": 7000,
+      "t1": 8000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 8000,
+      "t1": 10000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 20
+    },
+    {
+      "t0": 12000,
+      "t1": 13000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 13000,
+      "t1": 15000,
+      "act": "studying",
+      "dir": "west",
+      "dist": 20
+    },
+    {
+      "t0": 15000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": "south",
+      "dist": 10
+    }
+  ]
 }

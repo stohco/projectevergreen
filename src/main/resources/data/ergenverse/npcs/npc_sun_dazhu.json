@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Sun Dazhu (\u5b59\u5927\u67f1). Canon ID: N85. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Sun Dazhu (孙大柱). Canon ID: N85. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_sun_dazhu",
   "name": "Sun Dazhu",
-  "nameCn": "\u5b59\u5927\u67f1",
+  "nameCn": "孙大柱",
   "canon_id": "N85",
   "type": "disciple",
   "faction": "heng_yue_sect",
@@ -34,7 +34,7 @@
     "You look weak. What realm are you? Qi Condensation? Pathetic. Don't waste my time.",
     "If you want to survive in this sect, learn to stay out of the way of your seniors. Now move."
   ],
-  "soul_state": "nascent_soul",
+  "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
   "sect_tasks": [
@@ -42,7 +42,10 @@
       "id": "errand_boy",
       "description": "Sun Dazhu sneers: 'I need beast bones for my weapon refinement. Go get them, junior.'",
       "requires": [
-        {"item": "ergenverse:beast_bone", "count": 5}
+        {
+          "item": "ergenverse:beast_bone",
+          "count": 5
+        }
       ],
       "reward_item": "ergenverse:spirit_stone_fragment",
       "reward_count": 8
@@ -51,7 +54,10 @@
       "id": "spirit_ink_fetch",
       "description": "Sun Dazhu waves dismissively: 'Fetch me spirit ink. I have formations to draw and no time for errands.'",
       "requires": [
-        {"item": "ergenverse:spirit_ink", "count": 2}
+        {
+          "item": "ergenverse:spirit_ink",
+          "count": 2
+        }
       ],
       "reward_item": "ergenverse:spirit_stone",
       "reward_count": 1
@@ -60,73 +66,59 @@
   "daily_schedule": [
     {
       "t0": 0,
-      "t1": 2000,
-      "act": "cultivating",
-      "dir": "north",
-      "dist": 20
-    },
-    {
-      "t0": 2000,
       "t1": 3000,
-      "act": "eating",
+      "act": "sleeping",
       "dir": null,
       "dist": 0
     },
     {
       "t0": 3000,
-      "t1": 6000,
-      "act": "patrolling",
-      "dir": "east",
-      "dist": 30
-    },
-    {
-      "t0": 6000,
-      "t1": 8000,
-      "act": "patrolling",
-      "dir": "south",
-      "dist": 30
-    },
-    {
-      "t0": 8000,
-      "t1": 10000,
-      "act": "sparring",
-      "dir": "east",
-      "dist": 30
-    },
-    {
-      "t0": 10000,
-      "t1": 12000,
+      "t1": 4000,
       "act": "eating",
       "dir": null,
       "dist": 0
     },
     {
-      "t0": 12000,
-      "t1": 13000,
+      "t0": 4000,
+      "t1": 7000,
+      "act": "sparring",
+      "dir": "east",
+      "dist": 25
+    },
+    {
+      "t0": 7000,
+      "t1": 9000,
       "act": "wandering",
+      "dir": "south",
+      "dist": 20
+    },
+    {
+      "t0": 9000,
+      "t1": 10000,
+      "act": "eating",
       "dir": null,
       "dist": 0
     },
     {
-      "t0": 13000,
-      "t1": 14000,
+      "t0": 10000,
+      "t1": 13000,
       "act": "cultivating",
       "dir": "north",
-      "dist": 20
+      "dist": 15
+    },
+    {
+      "t0": 13000,
+      "t1": 14000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
     },
     {
       "t0": 14000,
-      "t1": 23000,
+      "t1": 24000,
       "act": "sleeping",
       "dir": "south",
       "dist": 10
-    },
-    {
-      "t0": 23000,
-      "t1": 24000,
-      "act": "patrolling",
-      "dir": "east",
-      "dist": 15
     }
   ]
 }

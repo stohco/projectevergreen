@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Wang Hao (\u738b\u6d69). Canon ID: N06. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Wang Hao (王浩). Canon ID: N06. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_wang_hao",
   "name": "Wang Hao",
-  "nameCn": "\u738b\u6d69",
+  "nameCn": "王浩",
   "canon_id": "N06",
   "type": "disciple",
   "faction": "heng_yue_sect",
@@ -40,66 +40,66 @@
   "daily_schedule": [
     {
       "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
       "t1": 2000,
-      "act": "cultivating",
-      "dir": "north",
-      "dist": 20
+      "act": "eating",
+      "dir": null,
+      "dist": 0
     },
     {
       "t0": 2000,
-      "t1": 3000,
-      "act": "eating",
-      "dir": null,
-      "dist": 0
+      "t1": 4000,
+      "act": "sparring",
+      "dir": "east",
+      "dist": 25
     },
     {
-      "t0": 3000,
+      "t0": 4000,
       "t1": 6000,
-      "act": "patrolling",
-      "dir": "east",
-      "dist": 30
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 15
     },
     {
       "t0": 6000,
-      "t1": 10000,
-      "act": "cultivating",
-      "dir": "north",
-      "dist": 20
-    },
-    {
-      "t0": 10000,
-      "t1": 12000,
+      "t1": 8000,
       "act": "eating",
       "dir": null,
       "dist": 0
     },
     {
-      "t0": 12000,
-      "t1": 13000,
+      "t0": 8000,
+      "t1": 12000,
       "act": "wandering",
+      "dir": "south",
+      "dist": 25
+    },
+    {
+      "t0": 12000,
+      "t1": 14000,
+      "act": "eating",
       "dir": null,
       "dist": 0
     },
     {
-      "t0": 13000,
-      "t1": 14000,
+      "t0": 14000,
+      "t1": 16000,
       "act": "cultivating",
       "dir": "north",
-      "dist": 20
+      "dist": 15
     },
     {
-      "t0": 14000,
-      "t1": 23000,
+      "t0": 16000,
+      "t1": 24000,
       "act": "sleeping",
       "dir": "south",
       "dist": 10
-    },
-    {
-      "t0": 23000,
-      "t1": 24000,
-      "act": "patrolling",
-      "dir": "east",
-      "dist": 15
     }
   ]
 }

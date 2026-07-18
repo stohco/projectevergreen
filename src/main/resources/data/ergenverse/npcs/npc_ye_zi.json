@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Ye Zi (\u53f6\u7d2b). Canon ID: N139. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Ye Zi (叶紫). Canon ID: N139. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_ye_zi",
   "name": "Ye Zi",
-  "nameCn": "\u53f6\u7d2b",
+  "nameCn": "叶紫",
   "canon_id": "N139",
   "type": "elder",
   "faction": "heng_yue_sect",
@@ -34,72 +34,65 @@
     "The restriction formations around the Ancestor Hall are not to be tested. Even Nascent Soul cultivators have been trapped within.",
     "If you seek to rise in the sect, prove yourself through deeds, not words. The elders are always watching."
   ],
-  "soul_state": "nascent_soul",
+  "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
   "daily_schedule": [
     {
       "t0": 0,
-      "t1": 2000,
+      "t1": 3000,
       "act": "cultivating",
       "dir": "north",
       "dist": 20
     },
     {
-      "t0": 2000,
-      "t1": 3000,
+      "t0": 3000,
+      "t1": 4000,
       "act": "eating",
       "dir": null,
       "dist": 0
     },
     {
-      "t0": 3000,
-      "t1": 6000,
-      "act": "patrolling",
+      "t0": 4000,
+      "t1": 7000,
+      "act": "wandering",
       "dir": "east",
       "dist": 30
     },
     {
-      "t0": 6000,
-      "t1": 10000,
+      "t0": 7000,
+      "t1": 9000,
       "act": "cultivating",
       "dir": "north",
       "dist": 20
     },
     {
-      "t0": 10000,
-      "t1": 12000,
+      "t0": 9000,
+      "t1": 10000,
       "act": "eating",
       "dir": null,
       "dist": 0
     },
     {
-      "t0": 12000,
+      "t0": 10000,
       "t1": 13000,
       "act": "wandering",
-      "dir": null,
-      "dist": 0
+      "dir": "south",
+      "dist": 25
     },
     {
       "t0": 13000,
-      "t1": 14000,
+      "t1": 15000,
       "act": "cultivating",
       "dir": "north",
       "dist": 20
     },
     {
-      "t0": 14000,
-      "t1": 23000,
+      "t0": 15000,
+      "t1": 24000,
       "act": "sleeping",
       "dir": "south",
       "dist": 10
-    },
-    {
-      "t0": 23000,
-      "t1": 24000,
-      "act": "patrolling",
-      "dir": "east",
-      "dist": 15
     }
   ]
 }

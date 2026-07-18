@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Qiu Siping (\u90b1\u601d\u5e73). Canon ID: N34. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Qiu Siping (邱思平). Canon ID: N34. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_qiu_siping",
   "name": "Qiu Siping",
-  "nameCn": "\u90b1\u601d\u5e73",
+  "nameCn": "邱思平",
   "canon_id": "N34",
   "type": "disciple",
   "faction": "heng_yue_sect",
@@ -34,10 +34,10 @@
   "initiation_lines": [
     "You there. Have you completed today's patrol of the eastern ridge? Elder Liu won't tolerate slackers.",
     "The Spirit Herb Garden needs tending. If you gather enough Cloud-Thread Moss, I'll put in a good word for you.",
-    "Word of advice \u2014 stay clear of the Sword Peak after dark. Senior Brother Zhou has been practicing a new technique. The last person who disturbed him... couldn't cultivate for a month.",
+    "Word of advice — stay clear of the Sword Peak after dark. Senior Brother Zhou has been practicing a new technique. The last person who disturbed him... couldn't cultivate for a month.",
     "The alchemy lecture is about to start at the Alchemy Courtyard. Elders take attendance. You don't want to miss it."
   ],
-  "soul_state": "nascent_soul",
+  "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
   "sect_tasks": [
@@ -45,7 +45,10 @@
       "id": "spirit_stone_collection",
       "description": "The sect needs spirit stone fragments for the formation maintenance fund. Bring 5 to the treasury.",
       "requires": [
-        {"item": "ergenverse:spirit_stone_fragment", "count": 5}
+        {
+          "item": "ergenverse:spirit_stone_fragment",
+          "count": 5
+        }
       ],
       "reward_item": "ergenverse:spirit_stone",
       "reward_count": 2
@@ -54,8 +57,14 @@
       "id": "beast_core_delivery",
       "description": "The Alchemy Hall needs beast cores for refining Qi Gathering Pills. Hunt spirit wolves in the eastern forest.",
       "requires": [
-        {"item": "ergenverse:wolf_core", "count": 2},
-        {"item": "ergenverse:beast_bone", "count": 3}
+        {
+          "item": "ergenverse:wolf_core",
+          "count": 2
+        },
+        {
+          "item": "ergenverse:beast_bone",
+          "count": 3
+        }
       ],
       "reward_item": "ergenverse:qi_gathering_pill",
       "reward_count": 3
@@ -64,8 +73,14 @@
       "id": "jade_slip_copying",
       "description": "Help copy cultivation notes for the junior disciples. Bring blank jade slips and spirit ink.",
       "requires": [
-        {"item": "ergenverse:jade_slip_blank", "count": 2},
-        {"item": "ergenverse:spirit_ink", "count": 1}
+        {
+          "item": "ergenverse:jade_slip_blank",
+          "count": 2
+        },
+        {
+          "item": "ergenverse:spirit_ink",
+          "count": 1
+        }
       ],
       "reward_item": "ergenverse:spirit_stone",
       "reward_count": 3

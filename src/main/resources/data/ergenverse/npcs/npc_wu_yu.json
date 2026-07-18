@@ -29,7 +29,7 @@
     "last_tested_tick": null,
     "note": "Elder Wu Yu's Dao heart is stable — centuries of cultivation have forged resolve."
   },
-  "soul_state": "nascent_soul",
+  "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
   "initiation_lines": [
@@ -135,13 +135,6 @@
       "act": "cultivating",
       "dir": "north",
       "dist": 15
-    },
-    {
-      "t0": 23000,
-      "t1": 24000,
-      "act": "patrolling",
-      "dir": "south",
-      "dist": 25
     }
   ]
 }
