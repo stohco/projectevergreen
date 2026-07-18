@@ -33,5 +33,68 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Brother, Da Niu wants to go fishing at the south bend. Will you come? We could use the extra food.",
+    "Father has been quiet lately. The Teng family's tax collectors came again yesterday. We gave them half our rice.",
+    "If the Heng Yue elder tests us, I hope you pass. I will stay and take care of Mother and Father, but you... you could become someone."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 20
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 9000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 25
+    },
+    {
+      "t0": 9000,
+      "t1": 10000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 10000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 20
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ]
 }

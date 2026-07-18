@@ -33,5 +33,68 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Lin'er, your mother prepared extra food today. Eat before you go wandering.",
+    "The Teng family's servants were in the market again, buying up grain. Mark my words — they are squeezing us out.",
+    "I have heard the Heng Yue Sect elder will arrive soon for the aptitude test. Every family in the village is nervous."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 2000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 15
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 7000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 20
+    },
+    {
+      "t0": 7000,
+      "t1": 8000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 8000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 20
+    },
+    {
+      "t0": 11000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 15
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ]
 }

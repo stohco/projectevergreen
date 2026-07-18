@@ -31,5 +31,68 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Eh heh! Wang Lin! Come help me carry these logs. You are smarter than me, but I am stronger — we make a good team!",
+    "I heard there are spirit beasts in the mountains east of here. My grandfather said he saw one forty years ago. Want to go look?",
+    "The village elder says we should stay close to home before the aptitude test. But I am not afraid. What is the worst that could happen?"
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 7000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 25
+    },
+    {
+      "t0": 7000,
+      "t1": 8000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 8000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 20
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 12000,
+      "t1": 14000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 15
+    },
+    {
+      "t0": 14000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ]
 }

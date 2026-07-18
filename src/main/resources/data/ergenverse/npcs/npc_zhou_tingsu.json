@@ -31,5 +31,75 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Wang Lin, take this bread. You always forget to eat when you are out exploring the hills.",
+    "Be careful near the river. Old Zhou's boy nearly drowned there last spring. These waters are not forgiving.",
+    "I had a dream last night. A man in blue robes descended from the sky. Perhaps the cultivators are coming soon."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 2000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 5000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 12
+    },
+    {
+      "t0": 5000,
+      "t1": 6000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 6000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 8000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 12
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ]
 }

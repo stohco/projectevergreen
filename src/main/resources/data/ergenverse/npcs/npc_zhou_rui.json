@@ -31,5 +31,68 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Good morning, Wang Lin. Your father's carpentry work is the finest in the village. He made my new shelves last week.",
+    "The harvest was poor this season. If the Teng family demands more grain, I do not know what we will do.",
+    "I have some spare thread and needles. If your mother needs them for mending, send Wang Ping to my house."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 15
+    },
+    {
+      "t0": 6000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 8000,
+      "t1": 10000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 15
+    },
+    {
+      "t0": 12000,
+      "t1": 13000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ]
 }

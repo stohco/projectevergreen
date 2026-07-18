@@ -31,5 +31,68 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Young one, respect your elders. The Wang family's reputation was built on discipline, not luck.",
+    "When I was your age, the Teng family was just a merchant clan. Now they act like nobility. Times change.",
+    "The memorial shrine must be maintained. Our ancestors watch over us. Do not forget that."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 5000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 5000,
+      "t1": 7000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 15
+    },
+    {
+      "t0": 7000,
+      "t1": 8000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 8000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 15
+    },
+    {
+      "t0": 11000,
+      "t1": 13000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ]
 }
