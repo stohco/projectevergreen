@@ -210,6 +210,18 @@ public final class SpiritFruitTimeline {
         if (elapsed < TICK_INSECTS_GATHER) return;
         if (!state.markMilestoneFired(MILESTONE_INSECTS)) return;
 
+        // Publish QI disturbance to the WorldEventBus.
+        // The spirit fruit's qi ripple is now perceptible to nearby actors.
+        // Per ENDGAME PROOF (b): "qi fluctuations propagate via event bus."
+        BlockPos pos = new BlockPos(state.getPosX(), state.getPosY(), state.getPosZ());
+        long tick = state.getDriverTickZero() + TICK_INSECTS_GATHER;
+        dev.ergenverse.simulation.event.WorldEventBus.publish(
+                "opportunity.spirit_fruit.qi_fluctuation",
+                dev.ergenverse.simulation.event.EnergyType.QI,
+                pos, 0.3f,
+                "Faint qi fluctuation detected — spirit insects gathering at the glade",
+                "INFERRED from RI Ch.12", tick);
+
         // Spawn 3-5 spirit insects (deterministic count from level RNG).
         int count = 3 + level.getRandom().nextInt(3);
         for (int i = 0; i < count; i++) {
@@ -241,6 +253,18 @@ public final class SpiritFruitTimeline {
         if (elapsed < TICK_WOLF_NOTICES) return;
         if (!state.markMilestoneFired(MILESTONE_WOLF)) return;
 
+        // Publish stronger QI + ACQUIRE disturbance. Wolf spirit beast senses
+        // prey concentration — this is the first COMPETITOR event.
+        // Per ENDGAME PROOF (b,d): "qi fluctuations propagate" + "spirit beasts migrate toward."
+        BlockPos pos = new BlockPos(state.getPosX(), state.getPosY(), state.getPosZ());
+        long tick = state.getDriverTickZero() + TICK_WOLF_NOTICES;
+        dev.ergenverse.simulation.event.WorldEventBus.publish(
+                "opportunity.spirit_fruit.predator_approaching",
+                dev.ergenverse.simulation.event.EnergyType.ACQUIRE,
+                pos, 0.5f,
+                "A spirit beast has been drawn to the glade — qi disturbance intensifying",
+                "INFERRED from RI Ch.12", tick);
+
         state.addActor(ACTOR_WOLF);
         // TODO: replace with Ergenverse wolf_spirit_beast entity once PA-C creates it
         state.queueSpawnAction("wolf_spirit_beast@" + state.getPosX() + "," + state.getPosY() + "," + state.getPosZ());
@@ -253,6 +277,17 @@ public final class SpiritFruitTimeline {
         if (elapsed < TICK_WANDERING_CULTIVATOR) return;
         if (!state.markMilestoneFired(MILESTONE_CULTIVATOR)) return;
 
+        // Publish QI disturbance at cultivator-sensing range.
+        // Per ENDGAME PROOF (e): "nearby cultivators independently detect via their perception."
+        BlockPos pos = new BlockPos(state.getPosX(), state.getPosY(), state.getPosZ());
+        long tick = state.getDriverTickZero() + TICK_WANDERING_CULTIVATOR;
+        dev.ergenverse.simulation.event.WorldEventBus.publish(
+                "opportunity.spirit_fruit.cultivator_approaching",
+                dev.ergenverse.simulation.event.EnergyType.QI,
+                pos, 0.65f,
+                "A wandering Qi Condensation cultivator sensed the fluctuation and approaches",
+                "INFERRED from RI Ch.12", tick);
+
         state.addActor(ACTOR_WANDERING_CULT);
         // TODO: replace with Ergenverse wandering_qi_cultivator entity once PA-B creates it
         state.queueSpawnAction("wandering_qi_cultivator@" + state.getPosX() + "," + state.getPosY() + "," + state.getPosZ());
@@ -264,6 +299,18 @@ public final class SpiritFruitTimeline {
     private static void fireScoutsDispatched(OpportunityState state, long elapsed) {
         if (elapsed < TICK_SCOUTS_DISPATCHED) return;
         if (!state.markMilestoneFired(MILESTONE_SCOUTS)) return;
+
+        // Publish high-severity SOCIAL event — factions are now involved.
+        // Per ENDGAME PROOF (f,g): "NPC decides the player will investigate" + "rumors spread."
+        // Severity 0.7 > LEDGER_SEVERITY_THRESHOLD (0.45) -> written to WorldHistory.
+        BlockPos pos = new BlockPos(state.getPosX(), state.getPosY(), state.getPosZ());
+        long tick = state.getDriverTickZero() + TICK_SCOUTS_DISPATCHED;
+        dev.ergenverse.simulation.event.WorldEventBus.publish(
+                "opportunity.spirit_fruit.faction_scouts",
+                dev.ergenverse.simulation.event.EnergyType.SOCIAL,
+                pos, 0.7f,
+                "Two factions have dispatched scouts toward the spirit fruit glade",
+                "INFERRED from RI Ch.12", tick);
 
         state.addActor(ACTOR_SCOUT_FACTION_A);
         state.addActor(ACTOR_SCOUT_FACTION_B);
@@ -278,6 +325,18 @@ public final class SpiritFruitTimeline {
     private static void fireConflictPossible(OpportunityState state, long elapsed) {
         if (elapsed < TICK_CONFLICT_POSSIBLE) return;
         if (!state.markMilestoneFired(MILESTONE_CONFLICT)) return;
+
+        // Publish high-severity KARMA event — conflict imminent.
+        // Per ENDGAME PROOF (h,i): "fruit harvested or destroyed" + "region ecosystem changes."
+        // Severity 0.85 -> written to WorldHistory. Weeks later NPCs reference this (link j).
+        BlockPos pos = new BlockPos(state.getPosX(), state.getPosY(), state.getPosZ());
+        long tick = state.getDriverTickZero() + TICK_CONFLICT_POSSIBLE;
+        dev.ergenverse.simulation.event.WorldEventBus.publish(
+                "opportunity.spirit_fruit.conflict_imminent",
+                dev.ergenverse.simulation.event.EnergyType.KARMA,
+                pos, 0.85f,
+                "Multiple factions and beasts converge on the spirit fruit — conflict is imminent",
+                "INFERRED from RI Ch.12", tick);
 
         // No new actors — combat MAY begin between existing actors.
         // The FSM's getResolution will now return a resolution on subsequent ticks.

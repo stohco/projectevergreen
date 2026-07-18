@@ -275,18 +275,71 @@ public final class IntentEngine {
 
     /**
      * Situational modifier — nearby world events influence which intent is best.
-     * If there are KARMA events nearby, an AVOID_REVEALING_STRENGTH intent
-     * gets a bonus (someone is watching). If there are ACQUIRE events, a
-     * SEEK_OPPORTUNITY intent gets a bonus.
+     *
+     * <p>This is the "perception" part of the cognition pipeline: the NPC
+     * queries WorldHistory for recent events near its position and adjusts
+     * its intent scores accordingly. Per ENDGAME PROOF (e): "nearby
+     * cultivators independently detect via their perception."
+     *
+     * <p>Examples:
+     * <ul>
+     *   <li>A QI event nearby → SEEK_OPPORTUNITY gets +2.0 (go investigate)</li>
+     *   <li>An ACQUIRE event nearby → SEEK_OPPORTUNITY +1.5 (go grab it)</li>
+     *   <li>A KARMA event nearby → AVOID_REVEALING_STRENGTH +1.5 (lay low)</li>
+     *   <li>A SOCIAL event nearby → OBSERVE_FROM_DISTANCE +1.0 (watch)</li>
+     * </ul>
      */
     private static double situationalModifier(IntentNature nature, int x, int z, long tick) {
-        // Query the WorldEventBus for recent events near the actor.
-        // We can't easily query by position from the bus (it's publish/subscribe,
-        // not query-based), so we use the WorldHistory for this.
-        // For now, return 0 — the situational awareness will be wired when
-        // we build the ConsultationEngine (which queries WorldHistory).
-        // TODO: wire WorldHistory.findNearby once ConsultationEngine is built
-        return 0.0;
+        double mod = 0.0;
+
+        // Query WorldHistory for recent events near the actor.
+        // Use QI radius (128) as the perception range — cultivators sense qi.
+        var history = dev.ergenverse.history.WorldHistory.get(
+                dev.ergenverse.simulation.event.WorldEventBus.currentLevel());
+        if (history == null) return 0.0;
+
+        // Check within QI perception radius (128 blocks) for recent events.
+        java.util.List<dev.ergenverse.history.WorldHistory.WorldEvent> nearby =
+                history.findNearby(x, z, 128, 5);
+        if (nearby.isEmpty()) return 0.0;
+
+        // Classify nearby events by topic prefix
+        boolean hasQiEvent = false;
+        boolean hasAcquireEvent = false;
+        boolean hasKarmaEvent = false;
+        boolean hasSocialEvent = false;
+        for (var e : nearby) {
+            if (!e.hasTopic()) continue;
+            String t = e.topic();
+            if (t.contains("qi_fluctuation") || t.contains("cultivator_approaching")) hasQiEvent = true;
+            if (t.contains("predator_approaching") || t.contains("conflict")) hasAcquireEvent = true;
+            if (t.startsWith("karma.") || t.contains("karma")) hasKarmaEvent = true;
+            if (t.startsWith("sect.") || t.startsWith("npc.")) hasSocialEvent = true;
+        }
+
+        // Adjust intent scores based on what's happening nearby
+        if (hasQiEvent) {
+            if (nature == IntentNature.SEEK_OPPORTUNITY) mod += 2.0;
+            if (nature == IntentNature.EXPLORE_CAUTIOUSLY) mod += 1.0;
+            if (nature == IntentNature.GATHER_INTEL) mod += 0.8;
+        }
+        if (hasAcquireEvent) {
+            if (nature == IntentNature.SEEK_OPPORTUNITY) mod += 1.5;
+            if (nature == IntentNature.OBSERVE_FROM_DISTANCE) mod += 1.0;
+            if (nature == IntentNature.AMBUSH) mod += 1.5;
+        }
+        if (hasKarmaEvent) {
+            if (nature == IntentNature.AVOID_REVEALING_STRENGTH) mod += 1.5;
+            if (nature == IntentNature.OBSERVE_FROM_DISTANCE) mod += 1.0;
+            if (nature == IntentNature.RETREAT_TACTICALLY) mod += 1.0;
+            if (nature == IntentNature.SEEK_OPPORTUNITY) mod -= 0.5; // dangerous
+        }
+        if (hasSocialEvent) {
+            if (nature == IntentNature.OBSERVE_FROM_DISTANCE) mod += 1.0;
+            if (nature == IntentNature.GATHER_INTEL) mod += 0.8;
+        }
+
+        return mod;
     }
 
     /**
