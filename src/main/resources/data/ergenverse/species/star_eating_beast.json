@@ -1,0 +1,75 @@
+{
+  "_comment": "Species: Star-Eating Beast (噬星兽) from A World Worth Protecting. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "star_eating_beast",
+  "name": "Star-Eating Beast",
+  "nameCn": "噬星兽",
+  "novel": "A World Worth Protecting",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Leviathan maw 1000 m, can swallow stars, body is cosmic hunger",
+    "size": "1000 m adult, planetary mass; true form swallows star systems",
+    "behavior": "Cultivates by devouring stars; sleeps between meals for millennia",
+    "habitat": "Star-system voids, star-aspected forbidden zones",
+    "cultivation": "Immortal (star/devour attribute)",
+    "intelligence": 8,
+    "diet": "stars, star-essence, cosmic qi",
+    "relationships": "Threat to all star-systems",
+    "techniques": [
+      "star_swallow",
+      "cosmic_maw",
+      "stellar_devour"
+    ],
+    "treasures": [
+      "star_eating_core",
+      "stellar_essence"
+    ],
+    "bloodline": "Star-Eating lineage; cosmic bloodline",
+    "mutations": [
+      "true_cosmic_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "star_eating_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "star_eating_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1779235515,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

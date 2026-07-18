@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Russell (罗素). Canon ID: N69. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_russell",
+  "name": "Russell",
+  "nameCn": "罗素",
+  "canon_id": "N69",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Third Step",
+  "personality": "foreign cultivator; antagonist",
+  "speech": "foreign accent, cold",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A powerful cultivator",
+    "qi_condensation": "Third Step; overwhelming",
+    "core_formation": "Third Step",
+    "nascent_soul": "Third Step antagonist"
+  },
+  "canon_confidence": 3,
+  "note": "Foreign Third Step antagonist",
+  "derivation_type": "B",
+  "salt": 1417438268,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

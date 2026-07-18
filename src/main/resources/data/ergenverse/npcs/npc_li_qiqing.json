@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Li Qiqing (李齐青). Canon ID: N14. Li Muwan's older brother; raised her after their parents died; elite Luo He Sect disciple in Fire Burn Country (CANON_RI_COMPLETE_WORLD.md N14, L25, F15). Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_li_qiqing",
+  "name": "Li Qiqing",
+  "nameCn": "李齐青",
+  "canon_id": "N14",
+  "type": "disciple",
+  "faction": "luo_he_sect",
+  "location": "fire_burn_country",
+  "cultivation": "elite Luo He Sect disciple (Core Formation tier)",
+  "personality": "protective older brother; principled elite disciple",
+  "speech": "warm, brotherly, responsible",
+  "relationship_to_wanglin": "brother-in-law (Li Muwan's older brother)",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A composed cultivator with a scholar's bearing",
+    "qi_condensation": "Luo He Sect elite; Core Formation aura",
+    "core_formation": "Li Qiqing; Luo He Sect elite disciple",
+    "nascent_soul": "Li Muwan's older brother; raised her after their parents died"
+  },
+  "canon_confidence": 4,
+  "note": "Li Muwan's older brother; raised her after their parents died. Elite Luo He Sect disciple in Fire Burn Country. Source: CANON_RI_COMPLETE_WORLD.md N14, L25, F15; ri_canon_database.json N14.",
+  "derivation_type": "A",
+  "salt": 714820935,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,29 @@
+{
+  "_comment": "Life-state variant: Soul Lasher Beast (Mutated). Generated from canonical species definition. Prime Directive: this state exists objectively; perception tier determines whether player recognizes it.",
+  "variant_id": "soul_lasher_beast__mutated",
+  "species_id": "soul_lasher_beast",
+  "species_name": "Soul Lasher Beast",
+  "species_nameCn": "魂鞭兽",
+  "novel": "Renegade Immortal",
+  "life_state": "mutated",
+  "life_state_name": "Mutated",
+  "description": "Bloodline-awakened, altered form; cultivates by absorbing the mutation source",
+  "modifiers": {
+    "size_multiplier": 1.5,
+    "power_multiplier": 3.0,
+    "intelligence_multiplier": 1.2,
+    "temperament": "aggressive",
+    "rarity": "rare"
+  },
+  "perception_tiers": {
+    "mortal": "Sees a aggressive beast.",
+    "qi_condensation": "Sees a aggressive beast of soul lasher beast kind.",
+    "foundation_establishment": "Recognizes life-state: Mutated.",
+    "core_formation": "Recognizes species, life-state, and approximate cultivation.",
+    "nascent_soul": "Sees bloodline, mutation potential, and treasure affinity.",
+    "spirit_severing": "Sees complete ecology and Dao-comprehension state."
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 324028352
+}

@@ -1,0 +1,78 @@
+{
+  "_comment": "Civilization: Foreign Battleground War Camps (war_camps) at Foreign Battleground. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "foreign_battleground_war_camps",
+  "name": "Foreign Battleground War Camps",
+  "type": "war_camps",
+  "location": "Foreign Battleground",
+  "peak_realm": "Spirit Severing (war camp commander)",
+  "canon_status": "active_war_zone",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "soldiers": "tens of thousands",
+    "officers": "hundreds",
+    "commanders": 12,
+    "war_camp_commander": 1,
+    "spirit_beasts": 1000
+  },
+  "economy": {
+    "spirit_stones": "war-spoils",
+    "food": "supply lines",
+    "water": "supply lines",
+    "alchemy": "war-focus",
+    "forging": "war-focus",
+    "formation": "war-focus",
+    "trade": "war-spoils",
+    "recruitment": "conscription + volunteers"
+  },
+  "politics": {
+    "allies": [
+      "home factions"
+    ],
+    "enemies": [
+      "opposing war camps"
+    ],
+    "vassals": [],
+    "rivals": [
+      "rival war camps (same side)"
+    ],
+    "internal_factions": [
+      "commander loyalists",
+      "officer council"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "conscription + volunteers",
+    "expansion": "war-driven",
+    "decline": "war-driven",
+    "schisms": "rival war camp tension",
+    "wars": [
+      "active"
+    ],
+    "recovery": "war-driven"
+  },
+  "libraries": [
+    "war techniques",
+    "battle records",
+    "war beast catalogues"
+  ],
+  "spirit_beasts": [
+    "war beasts",
+    "white tiger (divine, appears at wars)"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 350434347,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,68 @@
+{
+  "_comment": "Provenance metadata for Lu Fu Blood Balls (陆符血球). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I82",
+  "name": "Lu Fu Blood Balls",
+  "nameCn": "陆符血球",
+  "type": "consumable",
+  "category": "offensive",
+  "origin": "Early-acquired from Lu Fu (1st: Ch. 947; ×6: Ch. 1095)",
+  "current_owner": "Used (consumed)",
+  "abilities": [
+    "Consumable blood-ball weapons",
+    "Up to 6 used at once",
+    "Spirit-tier explosive power"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Spirit-tier consumable",
+    "6 used simultaneously on one occasion",
+    "Fully consumed"
+  ],
+  "source": "Ch.947, Ch.1095 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Early-acquired from Lu Fu (1st: Ch. 947; ×6: Ch. 1095)"
+  },
+  "lifecycle": {
+    "creator": "Early-acquired from Lu Fu (1st: Ch. 947; ×6: Ch. 1095)",
+    "creation_circumstances": "Early-acquired from Lu Fu (1st: Ch. 947; ×6: Ch. 1095)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

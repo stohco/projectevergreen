@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Yun Kong (云空). Canon ID: N130. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_yun_kong",
+  "name": "Yun Kong",
+  "nameCn": "云空",
+  "canon_id": "N130",
+  "type": "antagonist",
+  "faction": "yun_family",
+  "location": "yun_family_territory",
+  "cultivation": "Third Step+",
+  "personality": "cloud-aspected family elder",
+  "speech": "ethereal, cloud-touched",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cloud-aspected elder",
+    "qi_condensation": "Cloud-aspected; overwhelming",
+    "core_formation": "Yun family; Third Step+",
+    "nascent_soul": "Third Step+; cloud dao"
+  },
+  "canon_confidence": 3,
+  "note": "Yun family cloud-aspected antagonist",
+  "derivation_type": "B",
+  "salt": 205924516,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

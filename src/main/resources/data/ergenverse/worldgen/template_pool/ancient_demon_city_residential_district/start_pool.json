@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:ancient_demon_city_residential_district/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "minecraft:nether_fortress/corridor_3",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

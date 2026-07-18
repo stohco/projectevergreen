@@ -1,0 +1,75 @@
+{
+  "_comment": "Species: Ghost Spirit Beast (鬼灵兽) from I Shall Seal the Heavens. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "ghost_spirit_beast",
+  "name": "Ghost Spirit Beast",
+  "nameCn": "鬼灵兽",
+  "novel": "I Shall Seal the Heavens",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Ghostly beast 4 m, body shifts between physical and ghost-form",
+    "size": "4 m adult, 500 jin (material) / 0 jin (ghost)",
+    "behavior": "Hunts in ghost-form, strikes in physical-form; cultivates by consuming ghosts",
+    "habitat": "Ghost-aspected forbidden zones, nether-aspected caves",
+    "cultivation": "Nascent Soul -> Spirit Severing (ghost attribute)",
+    "intelligence": 7,
+    "diet": "ghosts, ghost-aspected herbs",
+    "relationships": "Lesser kin of Nether Beast",
+    "techniques": [
+      "ghost_shift",
+      "physical_strike",
+      "ghost_drain"
+    ],
+    "treasures": [
+      "ghost_core",
+      "ghost_essence"
+    ],
+    "bloodline": "Ghost-Spirit lineage; ghost-attribute bloodline",
+    "mutations": [
+      "true_ghost_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "ghost_spirit_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "ghost_spirit_beast — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1513607423,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

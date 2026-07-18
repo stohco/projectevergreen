@@ -1,0 +1,44 @@
+{
+  "_comment": "Opportunity: Spirit Vein Collapse. Per opportunity directive: the engine continuously asks 'what opportunities naturally exist at a location that has existed for 50000 years?'. Discoverable by cultivation (Core Formation), perception (Nascent Soul (to perceive the collapse)), and luck (modifier 0.7). Prime Directive: opportunity exists objectively; player perception determines whether they find it.",
+  "opportunity_id": "spirit_vein_collapse",
+  "name": "Spirit Vein Collapse",
+  "description": "A spirit vein in the process of collapsing, releasing its essence. Exists because: spirit veins have lifespans; collapse releases vast essence.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "age_requirement_years": 50000,
+  "location_types": [
+    "spirit_vein_core",
+    "ancient_mine",
+    "underground"
+  ],
+  "cultivation_required": "Core Formation",
+  "perception_required": "Nascent Soul (to perceive the collapse)",
+  "luck_modifier": 0.7,
+  "discovery_methods": [
+    "divine_sense",
+    "earth_tremor",
+    "rumor_following"
+  ],
+  "reward_tables": [
+    "spirit_stone_burst",
+    "vein_essence",
+    "rare_ore",
+    "ancient_herb_bloom"
+  ],
+  "why_untaken": "Collapse is rare and brief; requires timing.",
+  "natural_next_event": "Collapse completes; essence disperses; beasts converge.",
+  "simulation_notes": {
+    "continuous_inference": "The World State Engine continuously infers opportunities at every location based on the location's age, type, and history.",
+    "no_locked_upgrades": "A cultivator who later reaches the required perception will find opportunities they previously missed; the opportunities do not disappear.",
+    "canon_fidelity": "This is how Wang Lin found inheritances throughout his journey — the opportunities existed before he arrived; his perception determined what he found."
+  },
+  "salt": 1518602386,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

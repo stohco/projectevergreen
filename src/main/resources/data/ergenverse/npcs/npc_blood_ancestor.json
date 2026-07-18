@@ -1,0 +1,38 @@
+{
+  "_comment": "NPC: Blood Ancestor (Yao Xinghai) (血祖 / 姚星海). Canon ID: N98. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_blood_ancestor",
+  "name": "Blood Ancestor (Yao Xinghai)",
+  "nameCn": "血祖 / 姚星海",
+  "canon_id": "N98",
+  "type": "patriarch",
+  "faction": "yao_family",
+  "location": "blood_sea",
+  "cultivation": "peak Third Step",
+  "personality": "ancient, blood-obsessed patriarch",
+  "speech": "ancient, dripping with blood qi",
+  "relationship_to_wanglin": "major enemy; Wang Lin kills him",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A terrifying blood-aspected being",
+    "qi_condensation": "Blood patriarch; overwhelming blood aura",
+    "core_formation": "Blood Ancestor; peak Third Step",
+    "nascent_soul": "Peak Third Step; blood lineage incarnate",
+    "spirit_severing": "Peak Third Step; can reform from blood sea"
+  },
+  "canon_confidence": 5,
+  "note": "Blood Ancestor; major antagonist Wang Lin kills",
+  "derivation_type": "A",
+  "salt": 208521009,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,67 @@
+{
+  "_comment": "Provenance metadata for One Step to Trample the Heavens — Heaven-Trampling Dao (一步踏天). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I161",
+  "name": "One Step to Trample the Heavens — Heaven-Trampling Dao",
+  "nameCn": "一步踏天",
+  "type": "other",
+  "category": "domain",
+  "origin": "Self-comprehended on 5th Heaven-Trampling bridge (Ch. 2064)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "The Heaven-Trampling Dao — Fourth-Step tier",
+    "Comprehended on the 5th Heaven-Trampling bridge"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Fourth-Step (Heaven-Trampling Dao) tier",
+    "Wang Lin's ultimate Dao achievement",
+    "Retained to end"
+  ],
+  "source": "Ch.2064 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Self-comprehended on 5th Heaven-Trampling bridge (Ch. 2064)"
+  },
+  "lifecycle": {
+    "creator": "Self-comprehended on 5th Heaven-Trampling bridge (Ch. 2064)",
+    "creation_circumstances": "Self-comprehended on 5th Heaven-Trampling bridge (Ch. 2064)",
+    "every_known_owner": [
+      "wang lin"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " G ",
+    "GJG",
+    " G "
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_nugget"
+    },
+    "J": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "result": {
+    "item": "ergenverse:blank_jade_slip",
+    "count": 1
+  }
+}

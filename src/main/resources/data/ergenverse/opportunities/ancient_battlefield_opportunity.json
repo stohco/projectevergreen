@@ -1,0 +1,44 @@
+{
+  "_comment": "Opportunity: Ancient Battlefield Opportunity. Per opportunity directive: the engine continuously asks 'what opportunities naturally exist at a location that has existed for 10000 years?'. Discoverable by cultivation (Core Formation), perception (Nascent Soul (to perceive treasures among death-qi)), and luck (modifier 1.0). Prime Directive: opportunity exists objectively; player perception determines whether they find it.",
+  "opportunity_id": "ancient_battlefield_opportunity",
+  "name": "Ancient Battlefield Opportunity",
+  "description": "An ancient battlefield saturated with death-qi and fallen cultivator treasures. Exists because: ancient wars killed millions; their treasures remain.",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "age_requirement_years": 10000,
+  "location_types": [
+    "ancient_battlefield",
+    "mass_grave",
+    "war_ruin"
+  ],
+  "cultivation_required": "Core Formation",
+  "perception_required": "Nascent Soul (to perceive treasures among death-qi)",
+  "luck_modifier": 1.0,
+  "discovery_methods": [
+    "divine_sense",
+    "rumor_following",
+    "scavenging"
+  ],
+  "reward_tables": [
+    "fallen_treasure",
+    "war_technique",
+    "death_essence",
+    "ancient_weapon"
+  ],
+  "why_untaken": "Death-qi corrupts; requires cultivation to survive.",
+  "natural_next_event": "Death-qi disperses over millennia; beasts claim the battlefield.",
+  "simulation_notes": {
+    "continuous_inference": "The World State Engine continuously infers opportunities at every location based on the location's age, type, and history.",
+    "no_locked_upgrades": "A cultivator who later reaches the required perception will find opportunities they previously missed; the opportunities do not disappear.",
+    "canon_fidelity": "This is how Wang Lin found inheritances throughout his journey — the opportunities existed before he arrived; his perception determined what he found."
+  },
+  "salt": 661020858,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

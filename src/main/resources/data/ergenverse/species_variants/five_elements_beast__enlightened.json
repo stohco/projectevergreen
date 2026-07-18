@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Five Elements True Body (enlightened). Generated from canonical definition.",
+  "variant_id": "five_elements_beast__enlightened",
+  "species_id": "five_elements_beast",
+  "species_name": "Five Elements True Body",
+  "life_state": "enlightened",
+  "modifiers": {
+    "size_multiplier": 1.1,
+    "power_multiplier": 5.0,
+    "temperament": "serene",
+    "rarity": "very_rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1132579640
+}

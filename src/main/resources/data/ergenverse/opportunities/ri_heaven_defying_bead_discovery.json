@@ -1,0 +1,47 @@
+{
+  "_comment": "RI Canon Opportunity: Heaven-Defying Bead Discovery. Canon event: Wang Lin finds the Heaven-Defying Bead in a dead bird under a cliff as a youth. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_heaven_defying_bead_discovery",
+  "name": "Heaven-Defying Bead Discovery",
+  "canon_event": "Wang Lin finds the Heaven-Defying Bead in a dead bird under a cliff as a youth",
+  "location": "heng_yue_sect_outer_peaks",
+  "age_requirement_years": 0,
+  "cultivation_required": "Qi Condensation",
+  "perception_required": "Foundation Establishment",
+  "luck_modifier": 0.1,
+  "discovery_methods": [
+    "exploration",
+    "divine_sense"
+  ],
+  "reward_tables": [
+    "heaven_defying_bead",
+    "dream_dao_access"
+  ],
+  "why_untaken": "The bead is hidden in a dead bird under a cliff; requires specific luck/perception to find.",
+  "natural_next_event": "Wang Lin (or player) discovers the bead and begins their journey.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 164223293,
+  "karmic_weight": {
+    "value": 100,
+    "type": "fate",
+    "propagation": "global",
+    "description": "The Heaven-Defying Bead is the single most karma-laden object in Wang Lin's journey. Its discovery triggers the entire chain of events."
+  },
+  "consequences": [
+    {
+      "event_id": "wang_lin_cultivation_acceleration",
+      "type": "realm_change",
+      "target": "wang_lin",
+      "description": "Wang Lin's cultivation speed increases dramatically",
+      "delay": "immediate"
+    },
+    {
+      "event_id": "teng_family_massacre",
+      "type": "faction_change",
+      "target": "teng_family",
+      "description": "Teng Family attempts to steal the bead, leading to their destruction",
+      "delay": "years"
+    }
+  ],
+  "_xianxia_schema": 2
+}

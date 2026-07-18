@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Lei Ji (雷记). Canon ID: N46. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_lei_ji",
+  "name": "Lei Ji",
+  "nameCn": "雷记",
+  "canon_id": "N46",
+  "type": "mount",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "beast (Ascendant-tier)",
+  "personality": "loyal thunder beast companion; imprinted on Wang Lin",
+  "speech": "beast sounds; thunder-rumble",
+  "relationship_to_wanglin": "bonded companion; loyal",
+  "dialogue_available": false,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A crackling thunder beast",
+    "qi_condensation": "Thunder beast; Nascent Soul aura",
+    "core_formation": "Lei Ji; Spirit Severing thunder beast",
+    "nascent_soul": "Ascendant-tier; Wang Lin's bonded thunder beast"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's bonded thunder beast companion; reached Ascendant tier",
+  "derivation_type": "A",
+  "salt": 1575340261,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

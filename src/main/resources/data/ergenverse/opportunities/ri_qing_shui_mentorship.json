@@ -1,0 +1,33 @@
+{
+  "_comment": "RI Canon Opportunity: Qing Shui Mentorship. Canon event: Qing Shui gives Wang Lin the Slaughter Sword and becomes his mentor. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_qing_shui_mentorship",
+  "name": "Qing Shui Mentorship",
+  "canon_event": "Qing Shui gives Wang Lin the Slaughter Sword and becomes his mentor",
+  "location": "variable",
+  "age_requirement_years": 0,
+  "cultivation_required": "Nascent Soul",
+  "perception_required": "Spirit Severing",
+  "luck_modifier": 0.5,
+  "discovery_methods": [
+    "divine_sense",
+    "social_connection"
+  ],
+  "reward_tables": [
+    "slaughter_sword",
+    "qing_shui_mentorship",
+    "water_dao_insight"
+  ],
+  "why_untaken": "Requires meeting Qing Shui; he is a Third Step cultivator.",
+  "natural_next_event": "Qing Shui mentors Wang Lin.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 1557622242,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,80 @@
+{
+  "_comment": "Species: Vermilion Bird (朱雀) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "vermilion_bird",
+  "name": "Vermilion Bird",
+  "nameCn": "朱雀",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "canonical": {
+    "appearance": "Divine bird 30 m wingspan, feathers the color of molten fire, three tail feathers trail nine-color flame",
+    "size": "30 m wingspan, 100000 jin; true form fills the sky",
+    "behavior": "Divine spirit beast; sleeps for epochs; awakens to choose Divine Emperor; rivals Azure Dragon",
+    "habitat": "Vermilion Bird Divine Sect, Vermilion Bird Starfield core, fire-aspected apex spirit veins",
+    "cultivation": "Immortal (fire attribute, true divine beast)",
+    "intelligence": 12,
+    "diet": "fire-attribute heavenly treasures, tribulation flames, sun-essence",
+    "relationships": "Bonded to Vermilion Bird Divine Emperor (Wang Lin was 6th generation); rival of Azure Dragon",
+    "techniques": [
+      "vermilion_breath",
+      "divine_rebirth",
+      "nine_color_flame",
+      "star_burning"
+    ],
+    "treasures": [
+      "vermilion_bird_core",
+      "divine_feather",
+      "nine_color_flame_essence"
+    ],
+    "bloodline": "True Divine Beast lineage; one of Four Symbols",
+    "mutations": [
+      "nine_color_body",
+      "true_divine_awakening"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ancient_celestial_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "vermilion_bird — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "vermilion_bird — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1007123857,
+  "bloodline_tier": "ancient_celestial",
+  "inner_dan_properties": {
+    "element": "fire",
+    "purity_tier": 9,
+    "dao_resonance": "rebirth_samsara",
+    "side_effects": [
+      "rebirth_ignition"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

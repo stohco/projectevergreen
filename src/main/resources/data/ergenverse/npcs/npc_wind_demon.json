@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Wind Demon (风魔). Canon ID: N100. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_wind_demon",
+  "name": "Wind Demon",
+  "nameCn": "风魔",
+  "canon_id": "N100",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "wind_realm",
+  "cultivation": "Third Step",
+  "personality": "wind-incarnate demon; chaotic, destructive",
+  "speech": "howling, chaotic",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A howling wind presence",
+    "qi_condensation": "Wind demon; chaotic aura",
+    "core_formation": "Third Step; wind law",
+    "nascent_soul": "Wind demon; Third Step"
+  },
+  "canon_confidence": 4,
+  "note": "Wind-aspected demon antagonist",
+  "derivation_type": "A",
+  "salt": 1971167191,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

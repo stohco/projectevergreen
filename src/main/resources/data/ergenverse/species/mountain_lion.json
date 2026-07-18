@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Mountain Lion (山狮) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "mountain_lion",
+  "name": "Mountain Lion",
+  "nameCn": "山狮",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Lion 3 m long, fur earth-gold, mane of stone-spike fur, roar causes rockslides",
+    "size": "3 m adult, 600 jin; ancient 8 m, 10000 jin",
+    "behavior": "Solitary apex predator of mountains; territory spans peaks; hunts by ambush from above",
+    "habitat": "Mountain ranges, earth-aspected peaks, cliff caves",
+    "cultivation": "Core Formation -> Nascent Soul (earth attribute)",
+    "intelligence": 7,
+    "diet": "mountain beasts, spirit-herb grazers, lost cultivators",
+    "relationships": "Rival of giant savage apes; tributed by mountain-sects",
+    "techniques": [
+      "rockslide_roar",
+      "ambush_pounce",
+      "stone_mane_defense",
+      "earth_step"
+    ],
+    "treasures": [
+      "lion_core",
+      "mane_pelt",
+      "fang"
+    ],
+    "bloodline": "Earth-Lion lineage; earth-attribute bloodline",
+    "mutations": [
+      "stone_body",
+      "golden_mane",
+      "ancient_lion_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": "No alchemy value — common beast with no condensed inner core",
+      "canon_note": "mountain_lion — common beast, no condensed inner core"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "mountain_lion — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1252128706,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

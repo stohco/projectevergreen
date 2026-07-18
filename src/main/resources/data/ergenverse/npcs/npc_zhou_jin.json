@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Zhou Jin (周瑾). Canon ID: N49. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_zhou_jin",
+  "name": "Zhou Jin",
+  "nameCn": "周瑾",
+  "canon_id": "N49",
+  "type": "servant",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "captured then freed; loyal servant",
+  "speech": "grateful, loyal",
+  "relationship_to_wanglin": "servant; freed captive",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A grateful servant",
+    "qi_condensation": "Cultivator servant"
+  },
+  "canon_confidence": 3,
+  "note": "Wang Lin's servant; captured then freed",
+  "derivation_type": "B",
+  "salt": 1068300813,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

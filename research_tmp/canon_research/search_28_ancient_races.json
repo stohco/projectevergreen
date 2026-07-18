@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin is the main protagonist of Renegade Immortal. Born with a weak body, Wang Lin's features begin as average before becoming moderately handsome as a ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=x67tumsfCzc",
+    "name": "Truth behind Ancient Gods | Renegade Immortal | Xian Ni | Wang Lin",
+    "snippet": "Step into the ancient era of Renegade Immortal, where power is not cultivated through Qi, but forged through an indestructible body and the ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Ancient_Clan",
+    "name": "Ancient Clan - Xian Ni Wikia - Fandom",
+    "snippet": "5.Ancient Nation · 5.1.Dao Country - Ancient God...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1q8jqe3/renegade_immortal",
+    "name": "Renegade immortal : r/Donghua - Reddit",
+    "snippet": "YE MO was the progenitor of Ancient gods,devil's,and demons in the cave world. Spoiler intended. After that he goes through the Ancient Order ...",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=41orDNiihXo",
+    "name": "Wang Lin's Mad Plan: Devour Scatter Devil Soul + Unlock Second",
+    "snippet": "Tianhou (Scatter Devil) and strike a dangerous deal with the Ancient Demon ... Renegade Immortal 124. @DonghuaLens75 likes2.8K views5 months ...",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

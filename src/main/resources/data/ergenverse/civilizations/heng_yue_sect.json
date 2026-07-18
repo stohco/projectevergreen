@@ -1,0 +1,83 @@
+{
+  "_comment": "Civilization: Heng Yue Sect (sect) at Zhao Country. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "heng_yue_sect",
+  "name": "Heng Yue Sect",
+  "type": "sect",
+  "location": "Zhao Country",
+  "peak_realm": "Nascent Soul (Sect Master)",
+  "canon_status": "declined_after_wang_lin",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "population_structure": {
+    "outer_disciples": 2000,
+    "inner_disciples": 300,
+    "core_disciples": 30,
+    "elders": 12,
+    "peak_lords": 7,
+    "ancestor": 1,
+    "spirit_beasts": 50
+  },
+  "economy": {
+    "spirit_stones": "moderate",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "basic",
+    "forging": "basic",
+    "formation": "basic",
+    "trade": "Zhao Country markets",
+    "recruitment": "Zhao mortal families"
+  },
+  "politics": {
+    "allies": [
+      "Zhao royal family (nominal)"
+    ],
+    "enemies": [
+      "rival Zhao sects"
+    ],
+    "vassals": [],
+    "rivals": [
+      "Cloud Sky Sect (regional)"
+    ],
+    "internal_factions": [
+      "orthodox elders",
+      "reformist disciples"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "annual examination of Zhao mortal youth",
+    "expansion": "slow; constrained by Zhao Country size",
+    "decline": "accelerated after Wang Lin's departure and elder deaths",
+    "schisms": "none canonical",
+    "wars": [
+      "border skirmishes with rival sects"
+    ],
+    "recovery": "stagnant; lacks Nascent Soul+ leadership"
+  },
+  "libraries": [
+    "basic techniques",
+    "Heng Yue formation manuals",
+    "spirit herb catalogues"
+  ],
+  "spirit_beasts": [
+    "mounts for inner disciples",
+    "guardian beasts for treasury"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 601809554,
+  "spiritual_vein_grade": 4,
+  "heritage_treasures": [
+    "I03",
+    "I07"
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,29 @@
+{
+  "_comment": "Life-state variant: Mosquito Beast (Enlightened). Generated from canonical species definition. Prime Directive: this state exists objectively; perception tier determines whether player recognizes it.",
+  "variant_id": "mosquito_beast__enlightened",
+  "species_id": "mosquito_beast",
+  "species_name": "Mosquito Beast",
+  "species_nameCn": "蚊兽",
+  "novel": "Renegade Immortal",
+  "life_state": "enlightened",
+  "life_state_name": "Enlightened",
+  "description": "Achieved Dao comprehension, body radiates law; cultivates by contemplation",
+  "modifiers": {
+    "size_multiplier": 1.1,
+    "power_multiplier": 5.0,
+    "intelligence_multiplier": 1.6,
+    "temperament": "serene",
+    "rarity": "very_rare"
+  },
+  "perception_tiers": {
+    "mortal": "Sees a serene beast.",
+    "qi_condensation": "Sees a serene beast of mosquito beast kind.",
+    "foundation_establishment": "Recognizes life-state: Enlightened.",
+    "core_formation": "Recognizes species, life-state, and approximate cultivation.",
+    "nascent_soul": "Sees bloodline, mutation potential, and treasure affinity.",
+    "spirit_severing": "Sees complete ecology and Dao-comprehension state."
+  },
+  "derivation_type": "B",
+  "canon_confidence": 5,
+  "salt": 64447705
+}

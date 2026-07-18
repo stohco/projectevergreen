@@ -1,0 +1,24 @@
+{
+  "_comment": "Macro-Terrain: Ancient God Rib Canyon. Per scale directive: this terrain IS a being. Player shouldn't initially realize they're standing on bone. Divine Sense -> Perception changes -> 'You realize this mountain range... is one finger.' Prime Directive: the being's corpse is objectively terrain; perception tier determines what the player sees.",
+  "terrain_id": "ancient_god_rib_canyon",
+  "name": "Ancient God Rib Canyon",
+  "being": "Ancient God Tu Si",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "scale": "500 li long, 50 li wide, 10 li tall — the ribcage of a continent-spanning being.",
+  "canonical_event": "Tu Si's ribcage formed this canyon when his god-body fell.",
+  "perception_tiered_appearance": {
+    "mortal": "A canyon 500 li long, walls of curved grey stone arching overhead like ribs.",
+    "qi_condensation": "The walls hum in storms; the canyon amplifies sound strangely.",
+    "foundation_establishment": "The walls are petrified ribs; the canyon is the space between them.",
+    "core_formation": "This is an Ancient God's ribcage; the canyon runs between two ribs.",
+    "nascent_soul": "The ribs still hold residual god-essence; marrow-channels line the walls.",
+    "spirit_severing": "The ribcage protected Tu Si's heart; cultivating here grants body-tempering essence."
+  },
+  "perception_mechanic": {
+    "trigger": "When player's perception tier rises, the appearance re-rolls automatically.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does.",
+    "canon_fidelity": "This is exactly how Wang Lin perceived Ancient God Tu Si's remains — first as terrain, then as god-bone, then as god-memory."
+  },
+  "salt": 1368934739
+}

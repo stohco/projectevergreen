@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Lian Daozhen (连道真). Canon ID: N110. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_lian_daozhen",
+  "name": "Lian Daozhen",
+  "nameCn": "连道真",
+  "canon_id": "N110",
+  "type": "divine_emperor",
+  "faction": "immortal_astral_continent",
+  "location": "immortal_astral_continent",
+  "cultivation": "Immortal Emperor",
+  "personality": "immortal emperor; powerful",
+  "speech": "imperial, weighted",
+  "relationship_to_wanglin": "complex; IAC power",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "Immortal Emperor; overwhelming",
+    "core_formation": "Immortal Emperor",
+    "nascent_soul": "Lian Daozhen; Immortal Emperor"
+  },
+  "canon_confidence": 3,
+  "note": "Immortal Emperor of the IAC",
+  "derivation_type": "B",
+  "salt": 1593265872,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

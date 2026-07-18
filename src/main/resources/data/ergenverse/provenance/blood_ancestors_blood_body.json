@@ -1,0 +1,31 @@
+{
+  "_comment": "Provenance metadata for Blood Ancestor's Blood Body (血祖血身). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I61",
+  "name": "Blood Ancestor's Blood Body",
+  "nameCn": "血祖血身",
+  "type": "soul_artifact",
+  "category": "offensive",
+  "origin": "Taken from Blood Ancestor's Blood Planet (Ch. 769)",
+  "current_owner": "Exploded (used)",
+  "abilities": [
+    "Explodable as a weapon — ancient-blood-tier power",
+    "One-use explosive body"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Ancient-blood-tier consumable",
+    "Exploded Ch. 789 as weapon",
+    "Taken from Blood Ancestor's Blood Planet"
+  ],
+  "source": "Ch.769 obtained, Ch.789 exploded (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Taken from Blood Ancestor's Blood Planet (Ch. 769)"
+  }
+}

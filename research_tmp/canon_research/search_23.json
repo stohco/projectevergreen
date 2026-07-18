@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Essence",
+    "name": "Essence - Xian Ni Wikia - Fandom",
+    "snippet": "One can, however, choose not to use Joss Flames at all, as in Wang Lin's case, which means their Essence Cultivation will rely on their own enlightenment. One's ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/RenegadeImmortal/comments/1qkem3y/llama_joss",
+    "name": "Llama joss : r/RenegadeImmortal - Reddit",
+    "snippet": "Joss flames are poisonous. That's what Wanglin was told and thus went the long way into 3rd step by cultivating his 7 essences to completion.",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Joss_Flames",
+    "name": "Joss Flames | Xian Ni Wikia - Fandom",
+    "snippet": "Joss Flames are a fuel used to mature Essence. The practice involves creating a Joss Flame Realm. One way to achieve this is by capturing souls and turning ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Wang%20Lin/986247",
+    "name": "Wang Lin - Renegade Immortal",
+    "snippet": "Wang Lin is the protagonist of the novel Renegade Immortal by Er Gen. His aliases include Ma Liang, Zeng Niu, Xu Mu, and Lü Zihao. His Nickname(s) are Wang ...",
+    "host_name": "baike.baidu.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.scribd.com/document/832626379/Xian-Ni-Chapter-0901-1000-Wuxiaworld-Hasseno-LNWNCentral",
+    "name": "Wang Lin's Path to Immortality | PDF | Thunder | Karma - Scribd",
+    "snippet": "Renegade Immortal follows Wang Lin, a boy with mediocre talent who embarks on a journey to become an immortal despite being shunned by his relatives.",
+    "host_name": "www.scribd.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

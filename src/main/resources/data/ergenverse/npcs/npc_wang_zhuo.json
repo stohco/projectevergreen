@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Wang Zhuo (王卓). Canon ID: N05. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_wang_zhuo",
+  "name": "Wang Zhuo",
+  "nameCn": "王卓",
+  "canon_id": "N05",
+  "type": "disciple",
+  "faction": "heng_yue_sect",
+  "location": "heng_yue_sect",
+  "cultivation": "Nascent Soul",
+  "personality": "proud, talented clan descendant; complex relationship with Wang Lin",
+  "speech": "aristocratic, clipped",
+  "relationship_to_wanglin": "clan brother; rival",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A noble cultivator",
+    "qi_condensation": "Wang clan disciple; Foundation Establishment",
+    "core_formation": "Wang clan elite; Nascent Soul potential",
+    "nascent_soul": "Nascent Soul; clan politics visible"
+  },
+  "canon_confidence": 5,
+  "note": "Wang clan member; complex rivalry with Wang Lin",
+  "derivation_type": "A",
+  "salt": 779900918,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "nascent_soul",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

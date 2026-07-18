@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Song Wude (宋武德). Canon ID: N74. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_song_wude",
+  "name": "Song Wude",
+  "nameCn": "宋武德",
+  "canon_id": "N74",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "antagonist",
+  "speech": "cold",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator",
+    "qi_condensation": "Antagonist"
+  },
+  "canon_confidence": 3,
+  "note": "Minor antagonist",
+  "derivation_type": "B",
+  "salt": 272815351,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

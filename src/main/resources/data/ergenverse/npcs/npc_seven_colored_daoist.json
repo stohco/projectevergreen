@@ -1,0 +1,39 @@
+{
+  "_comment": "NPC: Seven-Colored Daoist (七彩道人 / 七彩仙尊). Canon ID: N114. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_seven_colored_daoist",
+  "name": "Seven-Colored Daoist",
+  "nameCn": "七彩道人 / 七彩仙尊",
+  "canon_id": "N114",
+  "type": "antagonist",
+  "faction": "seven_colored_sect",
+  "location": "cave_world",
+  "cultivation": "Heaven Trampling",
+  "personality": "cosmic manipulator; the true hidden antagonist of RI",
+  "speech": "cosmic, detached",
+  "relationship_to_wanglin": "ultimate enemy; Cave World owner Wang Lin kills",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "Impossible to perceive",
+    "core_formation": "A faint cosmic presence",
+    "nascent_soul": "A distant cosmic manipulator",
+    "spirit_severing": "The Seven-Colored Daoist; Heaven Trampling",
+    "ascendant": "The true owner of the Cave World; Heaven Trampling tier"
+  },
+  "canon_confidence": 5,
+  "note": "THE true antagonist of RI; Cave World owner; Wang Lin kills him to become owner",
+  "derivation_type": "A",
+  "salt": 303628253,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "origin",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

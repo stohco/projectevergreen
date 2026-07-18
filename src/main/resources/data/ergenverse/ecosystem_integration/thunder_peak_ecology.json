@@ -1,0 +1,14 @@
+{
+  "_comment": "Ecosystem integration: thunder_peak_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "thunder_peak_ecology",
+  "beasts": [
+    "thunder_toad",
+    "lei_ji_thunder_beast",
+    "thunder_celestial_beast",
+    "thunder_ape"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Thunder Peak ecology; thunder-aspected beasts",
+  "salt": 825462595
+}

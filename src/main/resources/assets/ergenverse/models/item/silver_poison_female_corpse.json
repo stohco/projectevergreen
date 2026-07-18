@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ergenverse:item/silver_poison_female_corpse"
+  }
+}

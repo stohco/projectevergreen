@@ -1,0 +1,77 @@
+{
+  "_comment": "Species: Nine-Colored Peacock (九色孔雀) from I Shall Seal the Heavens. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "nine_colored_peacock",
+  "name": "Nine-Colored Peacock",
+  "nameCn": "九色孔雀",
+  "novel": "I Shall Seal the Heavens",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Peacock 4 m tall, tail of nine-color feathers 12 m long, each feather holds a different law",
+    "size": "4 m adult, 1000 jin; ancient 12 m, 20000 jin",
+    "behavior": "Divine beast; displays tail to project nine laws; cultivates by absorbing law-fragments",
+    "habitat": "Law-aspected apex spirit veins, nine-color forbidden zones",
+    "cultivation": "Ascendant -> Immortal (law attribute)",
+    "intelligence": 11,
+    "diet": "law-fragments, nine-element herbs, spirit-rice",
+    "relationships": "Auspicious to cultivators who comprehend law",
+    "techniques": [
+      "nine_law_display",
+      "tail_strike",
+      "law_projection"
+    ],
+    "treasures": [
+      "peacock_core",
+      "nine_color_feather",
+      "law_fragment"
+    ],
+    "bloodline": "Nine-Color-Peacock lineage; law-attribute bloodline",
+    "mutations": [
+      "true_law_body",
+      "law_immortal_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "nine_colored_peacock — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "nine_colored_peacock — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 69058176,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

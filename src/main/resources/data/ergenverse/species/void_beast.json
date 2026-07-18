@@ -1,0 +1,75 @@
+{
+  "_comment": "Species: Void Beast (虚空兽) from A World Worth Protecting. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "void_beast",
+  "name": "Void Beast",
+  "nameCn": "虚空兽",
+  "novel": "A World Worth Protecting",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Formless beast of void 8 m, body is a tear in reality",
+    "size": "8 m adult, 0 jin (void); true form spans void",
+    "behavior": "Hunts by stepping through void; cultivates by absorbing void-essence",
+    "habitat": "Void edges, void-aspected forbidden zones",
+    "cultivation": "Ascendant -> Immortal (void attribute)",
+    "intelligence": 9,
+    "diet": "void-essence, void-aspected herbs, lost travelers",
+    "relationships": "Enemy of all who enter the void",
+    "techniques": [
+      "void_step",
+      "void_maw",
+      "reality_tear"
+    ],
+    "treasures": [
+      "void_core",
+      "void_essence"
+    ],
+    "bloodline": "Void lineage; void-attribute bloodline",
+    "mutations": [
+      "true_void_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "void_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "void_beast — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 586698449,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

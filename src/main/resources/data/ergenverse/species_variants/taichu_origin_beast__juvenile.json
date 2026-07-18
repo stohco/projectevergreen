@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Taichu Origin True Body (juvenile). Generated from canonical definition.",
+  "variant_id": "taichu_origin_beast__juvenile",
+  "species_id": "taichu_origin_beast",
+  "species_name": "Taichu Origin True Body",
+  "life_state": "juvenile",
+  "modifiers": {
+    "size_multiplier": 0.15,
+    "power_multiplier": 0.1,
+    "temperament": "curious",
+    "rarity": "common"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1024828483
+}

@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin is the main protagonist of Renegade Immortal. Born with a weak body, Wang Lin's features begin as average before becoming moderately handsome as a ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.newhanfu.com/77580.html",
+    "name": "Wang Lin's Ultimate Escape in Renegade Immortal - Newhanfu.com",
+    "snippet": "Cornered, Wang Lin chose the unthinkable: self-detonation. He shattered his own hard-won Ascension cultivation in a cataclysmic blast. To any ...",
+    "host_name": "www.newhanfu.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=cW6cvkkvIY0",
+    "name": "Why Was Even the Thunder Palace Master Shocked by Wang Lin?",
+    "snippet": "Disclaimer: I do not own the anime, music, artwork ... Ancient God Awakens – Wang Lin's Escape from the Moongazer Serpent | Renegade Immortal | ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.instagram.com/reel/DV8kPZXEfls/?hl=en",
+    "name": "[Renegade Immortal] Wang Lin escape from the old monsters and",
+    "snippet": "I need to move fast. One Ascension Fruit has been planted. Eight out of ten have the Ascension Fruit planted. Before I extract the bone, The ...",
+    "host_name": "www.instagram.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Wang%20Lin/986247",
+    "name": "Wang Lin - Renegade Immortal",
+    "snippet": "Wang Lin was originally an ordinary youth whose path of cultivation was fraught with hardships. He endured sufferings such as the annihilation of his clan and ...",
+    "host_name": "baike.baidu.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

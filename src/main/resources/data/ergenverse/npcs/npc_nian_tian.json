@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Nian Tian (念天). Canon ID: N161. Du Tian's sworn brother; shares the Ancient Clan bloodline; Soul Refining Sect lineage figure (Country of Zhao / Pilu Kingdom area). Sacrificed himself to protect Du Tian during the Soul Refining Sect catastrophe. Status: deceased (canon). His death is a defining karmic event for Du Tian's character arc. Should be referenced in soul_refining_sect_ancestor_hall.json structure (CANON_RI_COMPLETE_WORLD.md N23, N161; ri_canon_database.json N161). Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_nian_tian",
+  "name": "Nian Tian",
+  "nameCn": "念天",
+  "canon_id": "N161",
+  "type": "ally",
+  "faction": "soul_refining_sect",
+  "location": "deceased",
+  "cultivation": "Nirvana Scryer+",
+  "personality": "loyal sworn brother; self-sacrificing",
+  "speech": "steady, brotherly, weighted",
+  "relationship_to_wanglin": "acquaintance (Du Tian's sworn brother)",
+  "dialogue_available": false,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A powerful cultivator with a brother's warmth",
+    "qi_condensation": "Soul Refining Sect elder; Nirvana Scryer aura",
+    "core_formation": "Nian Tian; Nirvana Scryer+",
+    "nascent_soul": "Du Tian's sworn brother; Ancient Clan bloodline"
+  },
+  "canon_confidence": 4,
+  "note": "Du Tian's sworn brother; shares the Ancient Clan bloodline. Sacrificed himself to protect Du Tian during the Soul Refining Sect catastrophe. Status: deceased (canon). His death is the defining karmic event for Du Tian's character arc. Source: CANON_RI_COMPLETE_WORLD.md N23, N161; ri_canon_database.json N161.",
+  "derivation_type": "A",
+  "salt": 1503827442,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

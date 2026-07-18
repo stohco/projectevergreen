@@ -1,0 +1,356 @@
+[
+  {
+    "name": "Qi-Gathering Grass",
+    "regions": [
+      "ZHAO COUNTRY (赵国)"
+    ],
+    "contexts": [
+      "- *Qi-Gathering Grass* (Type C) — sustains Qi Condensation cultivation",
+      "Mentioned in task description / common across regions"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Foundation-Root Vine",
+    "regions": [
+      "ZHAO COUNTRY (赵国)"
+    ],
+    "contexts": [
+      "- *Foundation-Root Vine* (Type C) — used in Foundation Establishment pills",
+      "Zhao Country; used in Foundation Establishment pills"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Sword-Edge Moss",
+    "regions": [
+      "ZHAO COUNTRY (赵国)"
+    ],
+    "contexts": [
+      "- *Sword-Edge Moss* (Type C) — grows on sword-aligned spirit veins; Heng Yue Sect's",
+      "Zhao Country; grows on sword-aligned spirit veins"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Fire-Bloom Lotus",
+    "regions": [
+      "PLANET SUZAKU (朱雀星) — All Countries Except Zhao"
+    ],
+    "contexts": [
+      "- *Fire-Bloom Lotus* (Type C) — Fire Burn Country; fire-aspect spirit herb",
+      "Fire Burn Country; fire-aspect spirit herb (Type C)"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Snow-Heart Herb",
+    "regions": [
+      "PLANET SUZAKU (朱雀星) — All Countries Except Zhao"
+    ],
+    "contexts": [
+      "- *Snow-Heart Herb* (Type C) — Snow Domain Country; ice-aspect spirit herb",
+      "Snow Domain Country; ice-aspect spirit herb (Type C)"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Demon-Corpse Mushroom",
+    "regions": [
+      "PLANET SUZAKU (朱雀星) — All Countries Except Zhao"
+    ],
+    "contexts": [
+      "- *Demon-Corpse Mushroom* (Type C) — Sky Demon / Fire Demon Country; grows on",
+      "Sky/Fire Demon Country; grows on battlefields"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Vermilion-Blood Ginseng",
+    "regions": [
+      "PLANET SUZAKU (朱雀星) — All Countries Except Zhao"
+    ],
+    "contexts": [
+      "- *Vermilion-Blood Ginseng* (Type C) — Vermilion Bird Country; the dominant country",
+      "Vermilion Bird Country; dominant country's best herb"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Fu-Clan Golden Leaf",
+    "regions": [
+      "PLANET SUZAKU (朱雀星) — All Countries Except Zhao"
+    ],
+    "contexts": [
+      "- *Fu-Clan Golden Leaf* (Type A attestation on Layer 17 of the Immortal Graveyard)",
+      "Layer 17 of the Immortal Graveyard; Flame Source Origin"
+    ],
+    "canonConfidence": 5,
+    "type": "herb"
+  },
+  {
+    "name": "God-Blood Moss",
+    "regions": [
+      "THE ANCIENT BATTLEFIELD (Land of the Ancient God / Tu Si's Corpse)"
+    ],
+    "contexts": [
+      "- *God-Blood Moss* (Type C) — grows on Tu Si's actual blood residue; Foundation"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Restriction-Vine",
+    "regions": [
+      "THE ANCIENT BATTLEFIELD (Land of the Ancient God / Tu Si's Corpse)"
+    ],
+    "contexts": [
+      "- *Restriction-Vine* (Type C) — grows on Restriction Mountain; Core Formation tier;"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Annihilation-Lotus",
+    "regions": [
+      "THE ANCIENT BATTLEFIELD (Land of the Ancient God / Tu Si's Corpse)"
+    ],
+    "contexts": [
+      "- *Annihilation-Lotus* (Type C) — grows on Level 3 (the Annihilation realm);"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Fate-Thread Lotus",
+    "regions": [
+      "HEAVENLY FATE SECT REGION / PLANET TIAN YUN (天运星)"
+    ],
+    "contexts": [
+      "- *Fate-Thread Lotus* (Type C) — grows on the All-Seer's spirit vein; Soul Formation"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Crimson-Fate Vine",
+    "regions": [
+      "HEAVENLY FATE SECT REGION / PLANET TIAN YUN (天运星)"
+    ],
+    "contexts": [
+      "- Red: *Crimson-Fate Vine* (Type C)"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Dawn-Mist Herb",
+    "regions": [
+      "HEAVENLY FATE SECT REGION / PLANET TIAN YUN (天运星)"
+    ],
+    "contexts": [
+      "- Orange: *Dawn-Mist Herb* (Type C)"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Imperial-Gold Ginseng",
+    "regions": [
+      "HEAVENLY FATE SECT REGION / PLANET TIAN YUN (天运星)"
+    ],
+    "contexts": [
+      "- Yellow: *Imperial-Gold Ginseng* (Type C)"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Indigo-Cloud Moss",
+    "regions": [
+      "HEAVENLY FATE SECT REGION / PLANET TIAN YUN (天运星)"
+    ],
+    "contexts": [
+      "- Blue: *Indigo-Cloud Moss* (Type C)"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Azure-Silk Lotus",
+    "regions": [
+      "HEAVENLY FATE SECT REGION / PLANET TIAN YUN (天运星)"
+    ],
+    "contexts": [
+      "- Cyan: *Azure-Silk Lotus* (Type C)"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Violet-Fate Orchid",
+    "regions": [
+      "HEAVENLY FATE SECT REGION / PLANET TIAN YUN (天运星)"
+    ],
+    "contexts": [
+      "- Purple: *Violet-Fate Orchid* (Type C) — Wang Lin's division (7th purple)"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Thunder-Lake Lotus",
+    "regions": [
+      "ALLHEAVEN STAR SYSTEM (诸天星系)"
+    ],
+    "contexts": [
+      "- *Thunder-Lake Lotus* (Type C) — grows on Thunder Lake (Thunder Celestial Temple);"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Rain-Immortal Mushroom",
+    "regions": [
+      "ALLHEAVEN STAR SYSTEM (诸天星系)"
+    ],
+    "contexts": [
+      "- *Rain-Immortal Mushroom* (Type C) — Rain Celestial Realm; Soul Formation tier;"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Cloud-Mist Ginseng",
+    "regions": [
+      "CLOUD SEA STAR SYSTEM (云海星系)"
+    ],
+    "contexts": [
+      "- *Cloud-Mist Ginseng* (Type C) — grows on cloud-covered spirit worlds; Soul"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Wind-Cloud Lily",
+    "regions": [
+      "CLOUD SEA STAR SYSTEM (云海星系)"
+    ],
+    "contexts": [
+      "- *Wind-Cloud Lily* (Type C) — Wind Celestial Realm; Nascent Soul tier; wind-aspect"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Wild-Continent Ancient Root",
+    "regions": [
+      "CLOUD SEA STAR SYSTEM (云海星系)"
+    ],
+    "contexts": [
+      "- *Wild-Continent Ancient Root* (Type C) — Wild Continent; Soul Transformation tier;"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Seven-Colored Crystal Flower",
+    "regions": [
+      "CLOUD SEA STAR SYSTEM (云海星系)"
+    ],
+    "contexts": [
+      "- *Seven-Colored Crystal Flower* (Type C) — Seven-Colored Realm; Nirvana Scryer tier;"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Fire-Vein Lotus",
+    "regions": [
+      "THE CAVE WORLD AT LARGE (IAC Continents, 9 Suns, the Cave World Spirit)"
+    ],
+    "contexts": [
+      "- *Fire-Vein Lotus* (Type C) — Heavenly Bull Continent; Soul Transformation tier;"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Green-Devil Moss",
+    "regions": [
+      "THE CAVE WORLD AT LARGE (IAC Continents, 9 Suns, the Cave World Spirit)"
+    ],
+    "contexts": [
+      "- *Green-Devil Moss* (Type C) — Green Devil Continent; Soul Transformation tier;"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Pill-Sea Residue Herb",
+    "regions": [
+      "THE CAVE WORLD AT LARGE (IAC Continents, 9 Suns, the Cave World Spirit)"
+    ],
+    "contexts": [
+      "- *Pill-Sea Residue Herb* (Type C) — Pill Sea; Nirvana Scryer tier; grows on"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Dong-Lin Pool Lily",
+    "regions": [
+      "THE CAVE WORLD AT LARGE (IAC Continents, 9 Suns, the Cave World Spirit)"
+    ],
+    "contexts": [
+      "- *Dong-Lin Pool Lily* (Type C) — Dong Lin Pool; Nirvana Fruit tier; grows on the"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Ancient-Clan Rite Herb",
+    "regions": [
+      "THE CAVE WORLD AT LARGE (IAC Continents, 9 Suns, the Cave World Spirit)"
+    ],
+    "contexts": [
+      "- *Ancient-Clan Rite Herb* (Type C) — Ancient Clan Ancestral Temple; Grand"
+    ],
+    "canonConfidence": 3,
+    "type": "herb"
+  },
+  {
+    "name": "Half-Moon Blade",
+    "regions": [],
+    "contexts": [
+      "Found in Suzaku Tomb; canon-attested"
+    ],
+    "canonConfidence": 5,
+    "type": "herb"
+  },
+  {
+    "name": "Cultivation Planet Crystal",
+    "regions": [],
+    "contexts": [
+      "Planet Suzaku's supreme spirit material / seal mechanism"
+    ],
+    "canonConfidence": 5,
+    "type": "herb"
+  },
+  {
+    "name": "Brilliant Golden Fruit",
+    "regions": [],
+    "contexts": [
+      "Earth Planet; triggers beast evolution (canon)"
+    ],
+    "canonConfidence": 5,
+    "type": "herb"
+  }
+]

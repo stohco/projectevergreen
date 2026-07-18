@@ -1,0 +1,22 @@
+{
+  "_comment": "World State Engine query: What would naturally happen next if the player did nothing? Schema: natural_next_event_registry. Data sources: ['time_events', 'ecosystems', 'migrations', 'civilizations'].",
+  "question": "What would naturally happen next if the player did nothing?",
+  "schema": "natural_next_event_registry",
+  "fields": [
+    "object_id",
+    "next_event",
+    "event_timeline",
+    "event_probability"
+  ],
+  "data_sources": [
+    "time_events",
+    "ecosystems",
+    "migrations",
+    "civilizations"
+  ],
+  "reason_types": [],
+  "note": "The world does not wait for the player; events unfold on their own schedule.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "salt": 820823687
+}

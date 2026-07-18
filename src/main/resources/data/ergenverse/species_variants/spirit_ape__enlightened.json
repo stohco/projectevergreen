@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Ape (enlightened). Generated from canonical definition.",
+  "variant_id": "spirit_ape__enlightened",
+  "species_id": "spirit_ape",
+  "species_name": "Spirit Ape",
+  "life_state": "enlightened",
+  "modifiers": {
+    "size_multiplier": 1.1,
+    "power_multiplier": 5.0,
+    "temperament": "serene",
+    "rarity": "very_rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 380827375
+}

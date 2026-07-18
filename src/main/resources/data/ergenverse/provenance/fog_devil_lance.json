@@ -1,0 +1,68 @@
+{
+  "_comment": "Provenance metadata for Fog Devil Lance (雾魔枪). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I26",
+  "name": "Fog Devil Lance",
+  "nameCn": "雾魔枪",
+  "type": "weapon",
+  "category": "offensive",
+  "origin": "Obtained in the Ancient Tomb (Ch. 1386)",
+  "current_owner": "Ancient Demon clone",
+  "abilities": [
+    "Ancient Devil weapon — lance form",
+    "Devil-element power",
+    "Given to Wang Lin's Ancient Demon Clone"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Ancient Devil Treasure tier",
+    "Given to Ancient Demon clone for use",
+    "Per Baidu: obtained in the Ancient Tomb"
+  ],
+  "source": "Ch.1386 (novel); Fandom wiki; Baidu Baike",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Obtained in the Ancient Tomb (Ch. 1386)"
+  },
+  "lifecycle": {
+    "creator": "Obtained in the Ancient Tomb (Ch. 1386)",
+    "creation_circumstances": "Obtained in the Ancient Tomb (Ch. 1386)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

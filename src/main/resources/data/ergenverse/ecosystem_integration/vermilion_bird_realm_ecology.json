@@ -1,0 +1,23 @@
+{
+  "_comment": "Ecosystem integration: vermilion_bird_realm_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "vermilion_bird_realm_ecology",
+  "beasts": [
+    "vermilion_bird",
+    "ice_phoenix",
+    "flame_dragon",
+    "earth_fire_dragon"
+  ],
+  "npcs": [
+    "npc_zhou_wutai",
+    "npc_ye_wuyou",
+    "npc_qian_pinghai",
+    "npc_3rd_gen_vermilion",
+    "npc_14th_gen_vermilion"
+  ],
+  "enemies": [
+    "3rd_gen_vermilion",
+    "14th_gen_vermilion"
+  ],
+  "note": "Vermilion Bird Realm; fire-divine ecology",
+  "salt": 1564513005
+}

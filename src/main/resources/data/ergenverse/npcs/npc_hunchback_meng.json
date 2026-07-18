@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Hunchback Meng (驼背孟). Canon ID: N91. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_hunchback_meng",
+  "name": "Hunchback Meng",
+  "nameCn": "驼背孟",
+  "canon_id": "N91",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "Soul Transformation (perfect circle)",
+  "personality": "hunchbacked, cunning antagonist",
+  "speech": "wheedling, cunning",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A hunchbacked cultivator",
+    "qi_condensation": "Soul Transformation; cunning aura",
+    "core_formation": "Hunchback Meng; Soul Transformation",
+    "nascent_soul": "Soul Transformation perfect circle"
+  },
+  "canon_confidence": 3,
+  "note": "Hunchbacked Soul Transformation antagonist",
+  "derivation_type": "B",
+  "salt": 993168541,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

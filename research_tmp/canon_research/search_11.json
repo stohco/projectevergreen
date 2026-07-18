@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin is the main protagonist of Renegade Immortal. Born with a weak body, Wang Lin's features begin as average before becoming moderately handsome as a ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.newhanfu.com/78350.html",
+    "name": "All of Wang Lin's Immortal Guards in Renegade Immortal - Newhanfu.com",
+    "snippet": "These were not mere puppets, but transformed cultivators, born from a ruthless and nearly-lost art. The process to create one was a harrowing ...",
+    "host_name": "www.newhanfu.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=m8GUGf-FFDA",
+    "name": "WANG LIN HUNTS LEI DAOZI & TURNS HIM INTO A PUPPET",
+    "snippet": "In Renegade Immortal Episode 143, Wang Lin hunts down Lei Daozi after the envoy of Lei Xian Hall makes the mistake of threatening Wang Ping.",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=iS-vKLSWm2s",
+    "name": "Wang Lin Creates a Yin-Yang Stage Celestial Puppet & Learns Tian",
+    "snippet": "Wang Lin faces one of the most terrifying moments in Renegade Immortal when he becomes trapped deep inside the deadly Tide Abyss.",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Celestial_guards",
+    "name": "Celestial guards | Xian Ni Wikia - Fandom",
+    "snippet": "They are not ordinary individuals, but rather cultivators who have been fundamentally transformed — body and soul — into powerful, obedient puppets designed to ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

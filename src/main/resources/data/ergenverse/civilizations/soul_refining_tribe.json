@@ -1,0 +1,80 @@
+{
+  "_comment": "Civilization: Soul Refining Tribe (tribe) at Sea of Devils frontier. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "soul_refining_tribe",
+  "name": "Soul Refining Tribe",
+  "type": "tribe",
+  "location": "Sea of Devils frontier",
+  "peak_realm": "Nascent Soul (tribe chief)",
+  "canon_status": "frontier_devil_tribe",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "population_structure": {
+    "mortals": 5000,
+    "qi_condensation": 500,
+    "foundation_establishment": 50,
+    "core_formation": 5,
+    "elders": 8,
+    "tribe_chief": 1,
+    "spirit_beasts": 200
+  },
+  "economy": {
+    "spirit_stones": "minimal",
+    "food": "hunt",
+    "water": "well",
+    "alchemy": "soul-focus",
+    "forging": "soul-focus",
+    "formation": "soul-focus",
+    "trade": "black market",
+    "recruitment": "birth + fallen cultivators"
+  },
+  "politics": {
+    "allies": [
+      "Soul Refining Sect"
+    ],
+    "enemies": [
+      "orthodox frontier sects"
+    ],
+    "vassals": [],
+    "rivals": [
+      "other frontier tribes"
+    ],
+    "internal_factions": [
+      "chief loyalists",
+      "elder council"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "birth + fallen cultivators",
+    "expansion": "slow",
+    "decline": "slow; frontier pressure",
+    "schisms": "chief vs elder tension",
+    "wars": [
+      "frontier conflicts"
+    ],
+    "recovery": "moderate; Soul Refining Sect backing"
+  },
+  "libraries": [
+    "soul techniques",
+    "tribe records",
+    "soul beast catalogues"
+  ],
+  "spirit_beasts": [
+    "nether beasts",
+    "soul beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 813838185,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

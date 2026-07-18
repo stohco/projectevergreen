@@ -1,0 +1,33 @@
+{
+  "_comment": "Provenance metadata for Wealth — Wang Lin's First Flying Sword (财富). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I06",
+  "name": "Wealth — Wang Lin's First Flying Sword",
+  "nameCn": "财富",
+  "type": "weapon",
+  "category": "offensive",
+  "origin": "Chosen from Heng Yue Sect armory as a disciple",
+  "current_owner": "Destroyed by Teng Huayuan",
+  "abilities": [
+    "First flying sword — mortal/low-grade spirit tier",
+    "Reforged multiple times over career",
+    "Soul-binding contract with sect (must repair, never sell)"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Made by a Heng Yue Sect elder",
+    "Sect rule: if broken repair, if sold exiled",
+    "Revealed later to have mysterious origin",
+    "Destroyed by Teng Huayuan ~Ch. 110"
+  ],
+  "source": "early Heng Yue Sect, destroyed Ch.~110 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Chosen from Heng Yue Sect armory as a disciple"
+  }
+}

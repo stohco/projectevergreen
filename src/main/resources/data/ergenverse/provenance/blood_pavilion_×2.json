@@ -1,0 +1,31 @@
+{
+  "_comment": "Provenance metadata for Blood Pavilion ×2 (血阁). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I168",
+  "name": "Blood Pavilion ×2",
+  "nameCn": "血阁",
+  "type": "celestial_treasure",
+  "category": "utility",
+  "origin": "1st: Blood Ancestor's Blood Planet (Ch. 765); 2nd: from Ancient Demon occupying Blood God's soul (Ch. 1507)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Blood-element pavilion — 2 copies obtained",
+    "Spirit-tier utility pavilions"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Spirit-tier blood-element pavilions",
+    "Two copies from different sources",
+    "Retained to end"
+  ],
+  "source": "Ch.765, Ch.1507 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "1st: Blood Ancestor's Blood Planet (Ch. 765); 2nd: from Ancient Demon occupying Blood God's soul (Ch. 1507)"
+  }
+}

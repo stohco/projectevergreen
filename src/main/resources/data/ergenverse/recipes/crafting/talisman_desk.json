@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WWW",
+    "IGI",
+    "PPP"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:oxidized_copper"
+    },
+    "I": {
+      "item": "minecraft:ink_sac"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "P": {
+      "item": "minecraft:dark_oak_planks"
+    }
+  },
+  "result": {
+    "item": "ergenverse:talisman_desk",
+    "count": 1
+  }
+}

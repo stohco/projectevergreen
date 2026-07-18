@@ -1,0 +1,13 @@
+{
+  "_comment": "Ecosystem integration: sword_intent_realm_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "sword_intent_realm_ecology",
+  "beasts": [
+    "spirit_crane",
+    "dragon_ape",
+    "spirit_eagle"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Sword Intent Realm; sword-aspected ecology",
+  "salt": 1589665436
+}

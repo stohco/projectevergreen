@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Miemie Origin True Body (灭灭本源真身) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "miemie_origin_beast",
+  "name": "Miemie Origin True Body",
+  "nameCn": "灭灭本源真身",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Formless beast of destruction-origin 8 m, body radiates annihilating light",
+    "size": "8 m manifestation, 0 jin (destruction); true form spans destruction-realms",
+    "behavior": "Destruction-origin-incarnate being; cultivates by absorbing destruction-essence; Wang Lin obtained as treasure",
+    "habitat": "Destruction-aspected forbidden zones, annihilation sites",
+    "cultivation": "Immortal (destruction attribute)",
+    "intelligence": 11,
+    "diet": "destruction-essence, annihilation fragments",
+    "relationships": "Wang Lin obtained Miemie origin true body as treasure (canon event)",
+    "techniques": [
+      "destruction_breath",
+      "annihilate",
+      "destruction_absorb",
+      "void_rend"
+    ],
+    "treasures": [
+      "miemie_origin_core",
+      "destruction_essence",
+      "annihilation_fragment"
+    ],
+    "bloodline": "Destruction lineage; destruction bloodline",
+    "mutations": [
+      "true_destruction_body",
+      "destruction_immortal_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "miemie_origin_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "miemie_origin_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1816546135,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

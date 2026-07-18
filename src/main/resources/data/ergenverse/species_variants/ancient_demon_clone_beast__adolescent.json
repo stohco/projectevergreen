@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Ancient Demon Clone (adolescent). Generated from canonical definition.",
+  "variant_id": "ancient_demon_clone_beast__adolescent",
+  "species_id": "ancient_demon_clone_beast",
+  "species_name": "Ancient Demon Clone",
+  "life_state": "adolescent",
+  "modifiers": {
+    "size_multiplier": 0.45,
+    "power_multiplier": 0.35,
+    "temperament": "reckless",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1302125803
+}

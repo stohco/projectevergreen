@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Mosquito Beast (蚊兽). Canon ID: N155. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_mosquito_beast",
+  "name": "Mosquito Beast",
+  "nameCn": "蚊兽",
+  "canon_id": "N155",
+  "type": "mount",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "beast (evolved king mosquito)",
+  "personality": "swarm-king; loyal to Wang Lin after taming",
+  "speech": "buzzing, swarm",
+  "relationship_to_wanglin": "bonded companion; tamed via Dream Dao",
+  "dialogue_available": false,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A terrifying mosquito swarm",
+    "qi_condensation": "Mosquito swarm; Foundation Establishment",
+    "core_formation": "Mosquito king; Core Formation",
+    "nascent_soul": "Evolved king mosquito; Wang Lin's swarm"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's mosquito swarm; tamed via Dream Dao; evolved to king tier",
+  "derivation_type": "A",
+  "salt": 723795382,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

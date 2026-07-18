@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Short Sword (Black & White Dual Swords) (白黑双剑). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I17",
+  "name": "Short Sword (Black & White Dual Swords)",
+  "nameCn": "白黑双剑",
+  "type": "weapon",
+  "category": "offensive",
+  "origin": "Acquired in Seven-Colored Realm (1st: Ch. 1187; 2nd: Ch. 1223)",
+  "current_owner": "Wang Lin (restored)",
+  "abilities": [
+    "Paired swords: one black, one white with nine seals each",
+    "Undoing seals produces millions of sword shadows",
+    "Pseudo Nirvana Void grade"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Pair-weapon with seal-based mass-shadow generation",
+    "Destroyed Ch. 1273 vs Daoist Water, restored by previous Lord of Sealed Realm",
+    "Retained after restoration"
+  ],
+  "source": "Ch.1187 & Ch.1223 obtained, Ch.1273 destroyed (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Acquired in Seven-Colored Realm (1st: Ch. 1187; 2nd: Ch. 1223)"
+  }
+}

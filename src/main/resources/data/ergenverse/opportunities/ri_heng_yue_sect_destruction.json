@@ -1,0 +1,48 @@
+{
+  "_comment": "RI Canon Opportunity: Heng Yue Sect Destruction. Canon event: Teng Huayuan destroys Heng Yue Sect; Wang Lin swears revenge. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_heng_yue_sect_destruction",
+  "name": "Heng Yue Sect Destruction",
+  "canon_event": "Teng Huayuan destroys Heng Yue Sect; Wang Lin swears revenge",
+  "location": "heng_yue_sect",
+  "age_requirement_years": 0,
+  "cultivation_required": "Qi Condensation",
+  "perception_required": "Foundation Establishment",
+  "luck_modifier": 1.0,
+  "discovery_methods": [
+    "witness",
+    "rumor"
+  ],
+  "reward_tables": [
+    "heng_yue_sect_ruins",
+    "scattered_treasures",
+    "revenge_quest"
+  ],
+  "why_untaken": "The destruction is a canon event; the ruins remain for the player to explore.",
+  "natural_next_event": "The sect falls into ruin; treasures scatter; survivors flee.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 1864029140,
+  "karmic_weight": {
+    "value": 80,
+    "type": "grudge",
+    "propagation": "regional",
+    "description": "Wang Lin's massacre of the Teng Family creates a blood-karma that follows him through the Sea of Devils"
+  },
+  "consequences": [
+    {
+      "event_id": "wang_lin_ruthless_personality",
+      "type": "personality_shift",
+      "target": "wang_lin",
+      "description": "Wang Lin's personality locks to Ruthless/Dao of Slaughter",
+      "delay": "immediate"
+    },
+    {
+      "event_id": "soul_refining_sect_recruitment",
+      "type": "faction_change",
+      "target": "wang_lin",
+      "description": "Xu Liqing notices Wang Lin's ruthlessness and recruits him",
+      "delay": "years"
+    }
+  ],
+  "_xianxia_schema": 2
+}

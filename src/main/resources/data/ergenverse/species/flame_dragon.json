@@ -1,0 +1,66 @@
+{
+  "_comment": "Flame Dragon (火龙) — Renegade Immortal. Canon confidence: 4/5. Prime Directive: this beast exists objectively whether the player has the perception to recognize it.",
+  "species_id": "flame_dragon",
+  "name": "Flame Dragon",
+  "nameCn": "火龙",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Serpentine dragon 30m long, scales cooling magma. Breath ignites air. The Fire Burn Country's tributed beast.",
+    "size": "30m, 50000 jin",
+    "behavior": "See ecology definitions.",
+    "habitat": "Fire Burn Country volcanoes",
+    "cultivation": "Spirit Severing",
+    "intelligence": 9,
+    "diet": "See ecology definitions.",
+    "relationships": "See ecology definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": true,
+      "element": "fire",
+      "grade": "extreme",
+      "alchemy_use": "Flame Dragon core refines Fire Origin Pills; supreme material for fire-attribute breakthrough pills",
+      "canon_note": "The Fire Burn Country's tributed Flame Dragon; its core is a national treasure"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "flame_dragon — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 253646486,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

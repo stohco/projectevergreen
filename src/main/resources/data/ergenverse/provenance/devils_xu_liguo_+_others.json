@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Devils (Xu Liguo + others) (魔头). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I123",
+  "name": "Devils (Xu Liguo + others)",
+  "nameCn": "魔头",
+  "type": "other",
+  "category": "utility",
+  "origin": "Refined/captured (Xu Liguo Ch. ~580; others ~Ch. 590-620)",
+  "current_owner": "Xu Liguo retained as sword-spirit; others destroyed",
+  "abilities": [
+    "Extremely cunning and gifted in possession",
+    "Xu Liguo became sword-spirit of Rain Celestial Sword",
+    "Multiple devils refined: Xu Liguo, souls-tornado leader, Sky Cloud Sect monkey"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Devil-tier companions",
+    "Xu Liguo is the most prominent — became Rain Celestial Sword's spirit",
+    "Others destroyed per wiki"
+  ],
+  "source": "Ch.~580, Ch.~590, Ch.~620 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Refined/captured (Xu Liguo Ch. ~580; others ~Ch. 590-620)"
+  }
+}

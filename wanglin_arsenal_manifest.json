@@ -1,0 +1,1864 @@
+{
+  "metadata": {
+    "source": "src/lib/sim/protagonist-arsenals.ts (WANG_LIN_ARSENAL)",
+    "extractedAt": "2026-07-12",
+    "total": 309,
+    "note": "Every item Wang Lin encountered/had across the full RI narrative. unlockThreshold = narrative mastery point (0..1). All items must be registerable in the Forge mod and fully upgradeable with no locked paths."
+  },
+  "entries": [
+    {
+      "itemId": "ergen:wanglin/attractive_force_art",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.03
+    },
+    {
+      "itemId": "ergen:wanglin/disguising_technique",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.05
+    },
+    {
+      "itemId": "ergen:wanglin/memory_erasing_technique",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.05
+    },
+    {
+      "itemId": "ergen:wanglin/blood_refining_technique",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.06
+    },
+    {
+      "itemId": "ergen:wanglin/foundation_stealing_technique",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.08
+    },
+    {
+      "itemId": "ergen:wanglin/underworld_ascension_method",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.08
+    },
+    {
+      "itemId": "ergen:wanglin/yin_energy_detection",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.08
+    },
+    {
+      "itemId": "ergen:wanglin/divine_path",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.1
+    },
+    {
+      "itemId": "ergen:wanglin/earth_escape_technique",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.1
+    },
+    {
+      "itemId": "ergen:wanglin/devouring_technique",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.1
+    },
+    {
+      "itemId": "ergen:wanglin/illusionary_circle",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.12
+    },
+    {
+      "itemId": "ergen:wanglin/fiend_transformation_art",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.12
+    },
+    {
+      "itemId": "ergen:wanglin/wealth_flying_sword",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.05
+    },
+    {
+      "itemId": "ergen:wanglin/core_treasure_sword",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.1
+    },
+    {
+      "itemId": "ergen:wanglin/dark_green_flying_sword",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.1
+    },
+    {
+      "itemId": "ergen:wanglin/half_moon_blade",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.12
+    },
+    {
+      "itemId": "ergen:wanglin/soul_searching",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.15
+    },
+    {
+      "itemId": "ergen:wanglin/soul_flag_production",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.15
+    },
+    {
+      "itemId": "ergen:wanglin/star_rotation",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.16
+    },
+    {
+      "itemId": "ergen:wanglin/spatial_bending",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.18
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_god_tactic",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.18
+    },
+    {
+      "itemId": "ergen:wanglin/heaven_technique",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.2
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_restrictions",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.2
+    },
+    {
+      "itemId": "ergen:wanglin/heavenly_devil_sound",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.2
+    },
+    {
+      "itemId": "ergen:wanglin/spirit_transformation",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.22
+    },
+    {
+      "itemId": "ergen:wanglin/restriction_flag_method",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.22
+    },
+    {
+      "itemId": "ergen:wanglin/teleportation_restriction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.22
+    },
+    {
+      "itemId": "ergen:wanglin/life_seizing_hex",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.25
+    },
+    {
+      "itemId": "ergen:wanglin/celestial_slaughter_art",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.25
+    },
+    {
+      "itemId": "ergen:wanglin/void_stop_spell",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.25
+    },
+    {
+      "itemId": "ergen:wanglin/thunder_origin_spell",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.26
+    },
+    {
+      "itemId": "ergen:wanglin/war_spirit_print",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.26
+    },
+    {
+      "itemId": "ergen:wanglin/finger_of_death",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.26
+    },
+    {
+      "itemId": "ergen:wanglin/demonic_finger",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.26
+    },
+    {
+      "itemId": "ergen:wanglin/nine_cycle_celestial_refining",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.27
+    },
+    {
+      "itemId": "ergen:wanglin/underworld_finger",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.27
+    },
+    {
+      "itemId": "ergen:wanglin/planet_soul_extraction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.28
+    },
+    {
+      "itemId": "ergen:wanglin/restriction_flag",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.25
+    },
+    {
+      "itemId": "ergen:wanglin/god_slaying_war_chariot",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.28
+    },
+    {
+      "itemId": "ergen:wanglin/celestial_capture_net",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.28
+    },
+    {
+      "itemId": "ergen:wanglin/mountain_and_river_screen",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/star_compass",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/celestial_emperor_crown",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/heaven_tiger_flag",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/collection_pavilion",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.32
+    },
+    {
+      "itemId": "ergen:wanglin/straw_hat",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.32
+    },
+    {
+      "itemId": "ergen:wanglin/three_bells_shield",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.32
+    },
+    {
+      "itemId": "ergen:wanglin/silver_dragon_star_compass",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.33
+    },
+    {
+      "itemId": "ergen:wanglin/dot_immortal_pen",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.33
+    },
+    {
+      "itemId": "ergen:wanglin/heaven_avoiding_coffin",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/dao_life_death",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/life_death_domain",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/life_death_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/karma_domain",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/karma_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/true_false_domain",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/true_false_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.48
+    },
+    {
+      "itemId": "ergen:wanglin/battle_will_domain",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/star_of_law",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/fire_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.48
+    },
+    {
+      "itemId": "ergen:wanglin/thunder_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.48
+    },
+    {
+      "itemId": "ergen:wanglin/slaughter_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/restriction_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.52
+    },
+    {
+      "itemId": "ergen:wanglin/water_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/earth_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.58
+    },
+    {
+      "itemId": "ergen:wanglin/metal_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/wood_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/taichu_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/miemie_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.68
+    },
+    {
+      "itemId": "ergen:wanglin/reincarnation_essence",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.72
+    },
+    {
+      "itemId": "ergen:wanglin/billion_soul_flag",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/ji_realm",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/ji_realm_execution",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/sundered_night",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.52
+    },
+    {
+      "itemId": "ergen:wanglin/flowing_time",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.58
+    },
+    {
+      "itemId": "ergen:wanglin/dream_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/karma_print",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/life_death_seal",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/true_false_eternal_seal",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.68
+    },
+    {
+      "itemId": "ergen:wanglin/undying_ancient_finger",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.7
+    },
+    {
+      "itemId": "ergen:wanglin/heart_pounding_thunder",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.72
+    },
+    {
+      "itemId": "ergen:wanglin/one_step_trample_heavens",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.85
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_god_body",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_god_leather_armor",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_god_furnace",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/azure_ancient_god_shield",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_god_trident",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.48
+    },
+    {
+      "itemId": "ergen:wanglin/emperor_furnace",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_god_bracer",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.52
+    },
+    {
+      "itemId": "ergen:wanglin/nine_star_ancient_god_power",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.75
+    },
+    {
+      "itemId": "ergen:wanglin/karma_whip",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/celestial_sealing_stamp",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/crystal_sword",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/rusted_iron_sword",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/seven_colored_nails",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/blood_slaughter_sword",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/yin_blade",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.52
+    },
+    {
+      "itemId": "ergen:wanglin/rain_celestial_sword",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/li_guang_bow",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/li_guang_arrow",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/seven_star_sword_formation",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/vermilion_bird_spirit",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/nine_mysterious_transformations",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/vermilion_bird_feather",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/fire_bone",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.48
+    },
+    {
+      "itemId": "ergen:wanglin/cloak_vermilion_bird_emperor",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/vermilion_bird_holy_token",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/holy_treasure_white_stone",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.52
+    },
+    {
+      "itemId": "ergen:wanglin/call_wind_summon_rain_magic_arsenal",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/nether_guide",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.38
+    },
+    {
+      "itemId": "ergen:wanglin/mountains_crumble",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/falling_star",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/body_formation",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/heaven_extinction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/heaven_reversal_stamp",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/light_shadow_shield",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.46
+    },
+    {
+      "itemId": "ergen:wanglin/dao_fusion",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.48
+    },
+    {
+      "itemId": "ergen:wanglin/giant_thunder_stamp",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/heavenly_fate_finger",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.52
+    },
+    {
+      "itemId": "ergen:wanglin/three_life_spell",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/immortal_dream",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.7
+    },
+    {
+      "itemId": "ergen:wanglin/annihilation_restriction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/time_restriction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/life_death_restriction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/destruction_restriction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_soul_restriction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/soul_devil_ship",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/scattered_devil_armour",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/god_slaying_seal_origin",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/god_slaying_spear",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/merit_spirit",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/life_transformation_spell",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/god_tremble_army_formation",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/heaven_ripping",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/blue_flames",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.12
+    },
+    {
+      "itemId": "ergen:wanglin/red_lightning_ji_realm",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.15
+    },
+    {
+      "itemId": "ergen:wanglin/soul_piercing_eyes",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.2
+    },
+    {
+      "itemId": "ergen:wanglin/heart_of_slaughter",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/heart_restriction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/eyes_suppressing_world",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.7
+    },
+    {
+      "itemId": "ergen:wanglin/soul_devourer_nature",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.15
+    },
+    {
+      "itemId": "ergen:wanglin/slaughter_crystal",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/dao_slaughter",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/realm_defining_compass",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/celestial_spirit_clock",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/dream_dao_mirror",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/space_stone",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.7
+    },
+    {
+      "itemId": "ergen:wanglin/white_hair_strand",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.72
+    },
+    {
+      "itemId": "ergen:wanglin/great_heavenly_venerable_sun",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.75
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_leaf",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/eternal_wood_spirit",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.52
+    },
+    {
+      "itemId": "ergen:wanglin/fog_devil_lance",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/heaven_splitting_axe_ancestral",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/demon_blade_earth_burial",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.58
+    },
+    {
+      "itemId": "ergen:wanglin/heavenly_bull_soul_armour",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/tortoise_shell",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/blue_umbrella",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.68
+    },
+    {
+      "itemId": "ergen:wanglin/soul_gourd",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.68
+    },
+    {
+      "itemId": "ergen:wanglin/golden_print",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.72
+    },
+    {
+      "itemId": "ergen:wanglin/rapid_spell_technique",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/undying_ancient_body",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.72
+    },
+    {
+      "itemId": "ergen:wanglin/dao_karma",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/dao_time",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.58
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_fire_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.75
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_water_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.78
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_metal_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.8
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_wood_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.8
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_earth_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.82
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_life_death_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.85
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_land_sky_life_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.88
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_sky_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.9
+    },
+    {
+      "itemId": "ergen:wanglin/heaven_defying_bead",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.98
+    },
+    {
+      "itemId": "ergen:wanglin/mosquito_beast",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.25
+    },
+    {
+      "itemId": "ergen:wanglin/mosquito_swarm_10000",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/lei_ji_thunder_beast",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/nether_beast",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/thunder_toad",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/thunder_celestial_beast",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.32
+    },
+    {
+      "itemId": "ergen:wanglin/xu_liguo_devil",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.2
+    },
+    {
+      "itemId": "ergen:wanglin/brilliant_void_sea_dragon",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.38
+    },
+    {
+      "itemId": "ergen:wanglin/copper_celestial_guard_du_jian",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/silver_celestial_guard_thunder_daoist",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.32
+    },
+    {
+      "itemId": "ergen:wanglin/silver_celestial_guard_ta_shan",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/silver_poison_female_corpse",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.38
+    },
+    {
+      "itemId": "ergen:wanglin/yi_si_puppet",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/xie_qing_immortal_guard",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/cultivator_dao_avatar",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.15
+    },
+    {
+      "itemId": "ergen:wanglin/celestial_body",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.25
+    },
+    {
+      "itemId": "ergen:wanglin/thunder_body",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/immortal_celestial_body",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_demon",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_devil",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/void_avatar",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/lu_mo_slaughter_clone",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.7
+    },
+    {
+      "itemId": "ergen:wanglin/five_elements_true_body",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/divine_path_clone",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.2
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_bloodline_ancestor",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/celestial_bloodline_ancestor",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.7
+    },
+    {
+      "itemId": "ergen:wanglin/lu_fu_blood_balls",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/ji_qiong_head",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/blood_pavilion",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/dark_heaven_stone",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/emerald_bracelet_li_qianmei",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/earth_palace",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/fate_sealing_ring",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/heavenly_bull_bead",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/burning_realm_ancient_umbrella",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.58
+    },
+    {
+      "itemId": "ergen:wanglin/seven_colored_lance",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/li_guang_heaven_shattering_bow",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.62
+    },
+    {
+      "itemId": "ergen:wanglin/body_fixation_art",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.75
+    },
+    {
+      "itemId": "ergen:wanglin/great_teleportation_forbidden",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/nine_revolutions_refining_immortal",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.68
+    },
+    {
+      "itemId": "ergen:wanglin/slaughter_immortal_art",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/dao_transformation_yellow_springs",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.7
+    },
+    {
+      "itemId": "ergen:wanglin/heavenly_flame",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_thunder_dragon_form",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/store_all_ji_thunder",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/bloodline_thunder",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/defying_thunder",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/ethereal_fire",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.48
+    },
+    {
+      "itemId": "ergen:wanglin/nine_tribulation_karma_fires",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/basic_formation_book",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.08
+    },
+    {
+      "itemId": "ergen:wanglin/five_sword_sheaths",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.15
+    },
+    {
+      "itemId": "ergen:wanglin/celestial_wine_jug",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/pair_metal_flints",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.25
+    },
+    {
+      "itemId": "ergen:wanglin/celestial_mountain_soul",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/dagger_ge_hong",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.28
+    },
+    {
+      "itemId": "ergen:wanglin/jade_thunder_defense",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/wood_carving_black_fiend",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/three_battle_scrolls_zhan",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/nine_drops_poison_miao_yin",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/gui_yi_sect_earth_armor",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/ice_imitation_dongling_pool",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/golden_print_xuan_luo",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/lantern_origin_soul_protection",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/human_shaped_armor_green_bull",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/vice_ghostly_sail",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/heavenly_bull_bead",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/infant_skull_da_yi",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/blood_ancestors_blood_body",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/mother_child_dao_withered",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/burning_realm_ancient_umbrella_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/li_guang_heaven_shattering_bow_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.58
+    },
+    {
+      "itemId": "ergen:wanglin/seven_colored_lance_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/three_life_spell_william",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/unnamed_wheel_formation",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.65
+    },
+    {
+      "itemId": "ergen:wanglin/bronze_mirror_time_domain",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/sword_teleportation_spell",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/hairpin_thousand_illusion_ruthless",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/black_comb_19_teeth",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/fragment_stamp_celestial_sealing",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.38
+    },
+    {
+      "itemId": "ergen:wanglin/bell_sealing_tracking",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/jade_bottle_black_liquid",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/blood_nascent_soul_seven_colored",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/short_sword_seals_shadows",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.48
+    },
+    {
+      "itemId": "ergen:wanglin/beads_seven_colored_realm",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/heaven_dao_crystal",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.48
+    },
+    {
+      "itemId": "ergen:wanglin/devil_soul_bottle",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/giant_head_skull_ancient_clansman",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/restriction_breaking_ancient_mirror",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.38
+    },
+    {
+      "itemId": "ergen:wanglin/heart_compass_annihilation",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_soul_restriction_tortoise_beast",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/isolation_restriction_compass",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/ghostly_sail_main",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/wither_dao_pair",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/tattoo_talisman_speed_boost",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.3
+    },
+    {
+      "itemId": "ergen:wanglin/beast_skin_tattoo",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.28
+    },
+    {
+      "itemId": "ergen:wanglin/fog_transformation_thunder_spell",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.45
+    },
+    {
+      "itemId": "ergen:wanglin/open_ancient_thunder_realm",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.48
+    },
+    {
+      "itemId": "ergen:wanglin/seven_colored_lance_dao_spell",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_water_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.78
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_metal_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.8
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_wood_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.8
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_earth_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.82
+    },
+    {
+      "itemId": "ergen:wanglin/soul_fantasy_origin",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/multi_layered_illusion_spell",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.58
+    },
+    {
+      "itemId": "ergen:wanglin/extreme_fire_dao_imitation",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/soul_eye_dao",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.62
+    },
+    {
+      "itemId": "ergen:wanglin/rapid_spell_art_xu_decai",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/heavenly_fate_finger",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/lands_collapse",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/dark_moon_clear_skies",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/third_eye_spell",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/body_fixation_art_xiangang",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.75
+    },
+    {
+      "itemId": "ergen:wanglin/heavenly_chop",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/ten_million_swords",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/slash_luo_art",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/god_punch",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.5
+    },
+    {
+      "itemId": "ergen:wanglin/void_spell_8_star",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/mysterious_god_star",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.55
+    },
+    {
+      "itemId": "ergen:wanglin/demon_spell_wind_fire_mountain",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.52
+    },
+    {
+      "itemId": "ergen:wanglin/devil_dao_life_death_reverse",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.58
+    },
+    {
+      "itemId": "ergen:wanglin/god_demon_devil_ancient_dao_no_celestial",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.7
+    },
+    {
+      "itemId": "ergen:wanglin/ancient_ancestors_finger_attack",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.8
+    },
+    {
+      "itemId": "ergen:wanglin/blood_jades_yao_xixue",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.25
+    },
+    {
+      "itemId": "ergen:wanglin/three_purple_flags_defensive",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.2
+    },
+    {
+      "itemId": "ergen:wanglin/soul_flag_soul_refining_sect",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.18
+    },
+    {
+      "itemId": "ergen:wanglin/three_ink_stones_restriction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.2
+    },
+    {
+      "itemId": "ergen:wanglin/green_fragment_power_heaven",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/blood_red_nascent_soul",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.35
+    },
+    {
+      "itemId": "ergen:wanglin/carving_domain_of_time",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.4
+    },
+    {
+      "itemId": "ergen:wanglin/undying_ancient_body_version",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.72
+    },
+    {
+      "itemId": "ergen:wanglin/blood_lines_rules_restriction",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.6
+    },
+    {
+      "itemId": "ergen:wanglin/devilish_flames_fire_dragon",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/flame_dragon",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.42
+    },
+    {
+      "itemId": "ergen:wanglin/wandering_souls",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.15
+    },
+    {
+      "itemId": "ergen:wanglin/devil_xu_liguo_first",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.2
+    },
+    {
+      "itemId": "ergen:wanglin/devil_soul_tornado_leader",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.22
+    },
+    {
+      "itemId": "ergen:wanglin/devil_sky_cloud_monkey",
+      "isCanonical": true,
+      "count": 1,
+      "unlockThreshold": 0.25
+    }
+  ]
+}

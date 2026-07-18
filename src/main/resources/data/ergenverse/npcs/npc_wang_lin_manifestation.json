@@ -1,0 +1,45 @@
+{
+  "_comment": "NPC: Wang Lin's Manifestation (王林分身). The player's companion — a manifestation of Wang Lin's Dao that travels with the player. Grants items via the ManifestationGiftSystem's four-question evaluation. NOT a quest giver. Per ManifestationGiftSystem.manifestationIsQuestGiver(): false.",
+  "npc_id": "npc_wang_lin_manifestation",
+  "name": "Wang Lin's Manifestation",
+  "nameCn": "王林分身",
+  "canon_id": "MANIFEST",
+  "type": "manifestation_companion",
+  "faction": "independent",
+  "location": "player_companion",
+  "cultivation": "Nascent Soul (initial); grows with player — mirrors player realm +2 tiers",
+  "personality": "reserved, rarely speaks first, loyal when trust is earned. Offers canon items only when the four questions pass. Never volunteers — the player must ask.",
+  "speech": "terse, calm, Wang Lin's voice",
+  "relationship_to_wanglin": "is Wang Lin — a Dao manifestation, not a clone. Shares Wang Lin's personality and memories up to his current canon point.",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": true,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "A quiet, still figure. There is something unsettling about his stillness.",
+    "qi_condensation": "A cultivator. His Qi is compressed, dangerous. He watches you without blinking.",
+    "foundation": "Wang Lin's manifestation. He is reading you — your Qi, your Dao, your intent.",
+    "nascent_soul": "Wang Lin's manifestation. He recognizes you. His eyes carry the weight of someone who has lived far longer than he appears.",
+    "soul_formation": "Wang Lin's manifestation. Full lineage visible — Slaughter Dao, Karma Dao, Restriction Dao. He is not the real Wang Lin, but his Dao is real."
+  },
+  "canon_confidence": 5,
+  "note": "The manifestation companion. Uses ManifestationGiftSystem for item grants. The four-question evaluation is the gate, not affinity-as-currency. See ManifestationGiftSystem.java.",
+  "derivation_type": "A",
+  "salt": 777777777,
+  "dao_heart": {
+    "stability": 100,
+    "slaughter": 100,
+    "karma": 95,
+    "restriction": 90,
+    "life_death": 90,
+    "dream": 85,
+    "time": 80
+  },
+  "max_hp": 800,
+  "behaviors": {
+    "follow_player": true,
+    "grant_gifts": true,
+    "teach_techniques": true,
+    "comment_on_location": true
+  }
+}

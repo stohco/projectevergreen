@@ -1,0 +1,24 @@
+{
+  "_comment": "Macro-Terrain: Blood Ancestor Congealed Sea. Per scale directive: this terrain IS a being. Player shouldn't initially realize they're standing on bone. Divine Sense -> Perception changes -> 'You realize this mountain range... is one finger.' Prime Directive: the being's corpse is objectively terrain; perception tier determines what the player sees.",
+  "terrain_id": "blood_ancestor_congealed_sea",
+  "name": "Blood Ancestor Congealed Sea",
+  "being": "Blood Ancestor Beast",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "scale": "200 li across — the congealed body of an ancient beast.",
+  "canonical_event": "Wang Lin killed the Blood Ancestor here; its corpse-sea remains.",
+  "perception_tiered_appearance": {
+    "mortal": "A sea of congealed blood 200 li across, perpetually liquid, no waves.",
+    "qi_condensation": "The sea radiates blood-essence; the air is thick with blood-qi.",
+    "foundation_establishment": "The sea is congealed blood; the blood is alive, slowly regenerating.",
+    "core_formation": "This is the Blood Ancestor's corpse-sea; the blood is its congealed body.",
+    "nascent_soul": "The Blood Ancestor's will still lingers in the blood; cultivating here is dangerous.",
+    "spirit_severing": "The Blood Ancestor can reform from this sea; the sea is its anchor."
+  },
+  "perception_mechanic": {
+    "trigger": "When player's perception tier rises, the appearance re-rolls automatically.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does.",
+    "canon_fidelity": "This is exactly how Wang Lin perceived Ancient God Tu Si's remains — first as terrain, then as god-bone, then as god-memory."
+  },
+  "salt": 752524917
+}

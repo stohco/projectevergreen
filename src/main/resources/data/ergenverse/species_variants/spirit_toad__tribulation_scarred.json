@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Toad (tribulation_scarred). Generated from canonical definition.",
+  "variant_id": "spirit_toad__tribulation_scarred",
+  "species_id": "spirit_toad",
+  "species_name": "Spirit Toad",
+  "life_state": "tribulation_scarred",
+  "modifiers": {
+    "size_multiplier": 1.2,
+    "power_multiplier": 2.5,
+    "temperament": "sober",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 1489034048
+}

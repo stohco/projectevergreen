@@ -1,0 +1,78 @@
+{
+  "_comment": "Civilization: Wang Family Village (mortal_clan) at Zhao Country. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "wang_family_village",
+  "name": "Wang Family Village",
+  "type": "mortal_clan",
+  "location": "Zhao Country",
+  "peak_realm": "Qi Condensation (village head)",
+  "canon_status": "wang_lin_origin",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "population_structure": {
+    "mortals": 500,
+    "qi_condensation": 5,
+    "foundation_establishment": 1,
+    "elders": 3,
+    "village_head": 1,
+    "spirit_beasts": 10
+  },
+  "economy": {
+    "spirit_stones": "minimal",
+    "food": "self-sufficient (farming)",
+    "water": "well",
+    "alchemy": "none",
+    "forging": "none",
+    "formation": "none",
+    "trade": "local market",
+    "recruitment": "birth"
+  },
+  "politics": {
+    "allies": [
+      "neighboring villages"
+    ],
+    "enemies": [
+      "bandits"
+    ],
+    "vassals": [],
+    "rivals": [
+      "neighboring clans"
+    ],
+    "internal_factions": [
+      "main family",
+      "branch families"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "birth",
+    "expansion": "none",
+    "decline": "after Wang Lin's departure; bandit raids",
+    "schisms": "none",
+    "wars": [
+      "bandit raids"
+    ],
+    "recovery": "slow; Wang Lin's occasional protection"
+  },
+  "libraries": [
+    "mortal records",
+    "family genealogy"
+  ],
+  "spirit_beasts": [
+    "farm animals",
+    "watch dogs"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 1586262066,
+  "spiritual_vein_grade": 1,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

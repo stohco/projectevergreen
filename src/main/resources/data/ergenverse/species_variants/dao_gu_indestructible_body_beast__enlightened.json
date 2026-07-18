@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Dao Gu Indestructible Body (enlightened). Generated from canonical definition.",
+  "variant_id": "dao_gu_indestructible_body_beast__enlightened",
+  "species_id": "dao_gu_indestructible_body_beast",
+  "species_name": "Dao Gu Indestructible Body",
+  "life_state": "enlightened",
+  "modifiers": {
+    "size_multiplier": 1.1,
+    "power_multiplier": 5.0,
+    "temperament": "serene",
+    "rarity": "very_rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1771708284
+}

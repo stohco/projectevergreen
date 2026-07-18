@@ -1,0 +1,75 @@
+{
+  "_comment": "Species: Void Fissure Beast (虚裂兽) from Beyond the Timescape. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "void_fissure_beast",
+  "name": "Void Fissure Beast",
+  "nameCn": "虚裂兽",
+  "novel": "Beyond the Timescape",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Beast that IS a void fissure, body is a moving tear in reality 10 m",
+    "size": "10 m fissure, 0 jin (void)",
+    "behavior": "Cultivates by widening reality tears; hunts by pulling prey into void",
+    "habitat": "Void fissure zones, reality-edge regions",
+    "cultivation": "Ascendant -> Immortal (void/fissure attribute)",
+    "intelligence": 8,
+    "diet": "reality fragments, void-essence",
+    "relationships": "Enemy of all reality-dwelling beasts",
+    "techniques": [
+      "fissure_step",
+      "void_pull",
+      "reality_tear"
+    ],
+    "treasures": [
+      "fissure_core",
+      "void_essence"
+    ],
+    "bloodline": "Void-Fissure lineage; void-attribute bloodline",
+    "mutations": [
+      "true_fissure_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "void_fissure_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "void_fissure_beast — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1834524966,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

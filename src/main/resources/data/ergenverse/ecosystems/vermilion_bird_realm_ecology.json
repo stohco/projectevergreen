@@ -1,0 +1,122 @@
+{
+  "_comment": "Ecosystem: Vermilion Bird Realm Ecology (Vermilion Bird Starfield). Full food web with 6 trophic layers and 4 seasonal/environmental states. Prime Directive: ecology exists objectively; player perception determines what they observe. No-Locked-Upgrades: all seasonal states are reachable by time/weather/event.",
+  "ecosystem_id": "vermilion_bird_realm_ecology",
+  "name": "Vermilion Bird Realm Ecology",
+  "location": "Vermilion Bird Starfield",
+  "description": "The fire-divine ecology of the Vermilion Bird Realm.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "members": [
+        "divine_fire_herb",
+        "phoenix_tree",
+        "sun_essence_flora"
+      ],
+      "population": "environmental"
+    },
+    {
+      "layer": "primary",
+      "members": [
+        "fire_phoenix#juvenile",
+        "flame_dragon#juvenile"
+      ],
+      "population": 1000,
+      "biomass_jin": 500000
+    },
+    {
+      "layer": "secondary",
+      "members": [
+        "fire_phoenix#adult",
+        "flame_dragon#adult"
+      ],
+      "population": 100,
+      "biomass_jin": 5000000
+    },
+    {
+      "layer": "tertiary",
+      "members": [
+        "fire_phoenix#ancient",
+        "flame_dragon#ancient"
+      ],
+      "population": 10,
+      "biomass_jin": 50000000
+    },
+    {
+      "layer": "quaternary",
+      "members": [
+        "flame_dragon#enlightened",
+        "fire_phoenix#enlightened"
+      ],
+      "population": 2,
+      "biomass_jin": 100000000
+    },
+    {
+      "layer": "apex",
+      "members": [
+        "vermilion_bird"
+      ],
+      "population": 1,
+      "biomass_jin": 1000000000
+    }
+  ],
+  "features": [
+    "divine_fire_pools",
+    "phoenix_trees",
+    "sun_essence_springs",
+    "vermilion_nest",
+    "starfire_rain"
+  ],
+  "seasonal_states": {
+    "divine_slumber": {
+      "phoenix_mult": 0.5,
+      "dragon_mult": 0.5,
+      "vermilion_mult": 0.0,
+      "behavior": "slumber",
+      "note": "Vermilion bird slumbers; ecology subdued."
+    },
+    "divine_awakening": {
+      "phoenix_mult": 2.0,
+      "dragon_mult": 2.0,
+      "vermilion_mult": 1.0,
+      "behavior": "awakening",
+      "note": "Vermilion bird awakens; all fire-beasts active."
+    },
+    "imperial_selection": {
+      "phoenix_mult": 3.0,
+      "dragon_mult": 3.0,
+      "vermilion_mult": 1.0,
+      "behavior": "convergence",
+      "note": "Vermilion bird selects new Divine Emperor; all fire-beasts converge."
+    },
+    "tribulation": {
+      "phoenix_mult": 1.5,
+      "dragon_mult": 1.5,
+      "vermilion_mult": 1.0,
+      "behavior": "ascension",
+      "note": "Vermilion bird faces tribulation; ecology supports."
+    }
+  },
+  "state_transitions": {
+    "spring->summer": "temperature_rise",
+    "summer->autumn": "temperature_fall",
+    "autumn->winter": "temperature_fall",
+    "winter->spring": "temperature_rise",
+    "any->tribulation_storm": "tribulation_event",
+    "any->blood_moon": "blood_moon_event",
+    "any->nearby_corpse_battlefield": "battlefield_proximity",
+    "any->nearby_spirit_spring": "spring_proximity",
+    "any->nearby_dragon_corpse": "dragon_corpse_proximity",
+    "any->nearby_ancient_god_remains": "ancient_god_proximity"
+  },
+  "perception_tiers": {
+    "mortal": "Sees beasts and terrain; does not perceive trophic structure.",
+    "qi_condensation": "Senses qi-flows of the ecosystem.",
+    "foundation_establishment": "Perceives trophic layers and seasonal shifts.",
+    "core_formation": "Perceives population dynamics and triggers.",
+    "nascent_soul": "Perceives mutation potential and bloodline flows.",
+    "spirit_severing": "Perceives complete ecology as a living system."
+  },
+  "salt": 1564513005
+}

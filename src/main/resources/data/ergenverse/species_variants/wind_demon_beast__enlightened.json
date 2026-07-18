@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Wind Demon (enlightened). Generated from canonical definition.",
+  "variant_id": "wind_demon_beast__enlightened",
+  "species_id": "wind_demon_beast",
+  "species_name": "Wind Demon",
+  "life_state": "enlightened",
+  "modifiers": {
+    "size_multiplier": 1.1,
+    "power_multiplier": 5.0,
+    "temperament": "serene",
+    "rarity": "very_rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 655658830
+}

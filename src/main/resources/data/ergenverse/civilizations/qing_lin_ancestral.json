@@ -1,0 +1,79 @@
+{
+  "_comment": "Civilization: Qing Lin Ancestral Temple (ancient_clan) at Ancient Clan territory. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "qing_lin_ancestral",
+  "name": "Qing Lin Ancestral Temple",
+  "type": "ancient_clan",
+  "location": "Ancient Clan territory",
+  "peak_realm": "Ascendant (clan ancestor)",
+  "canon_status": "ancient_clan",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "outer_members": 1000,
+    "inner_members": 200,
+    "core_members": 20,
+    "elders": 8,
+    "clan_ancestor": 1,
+    "spirit_beasts": 50
+  },
+  "economy": {
+    "spirit_stones": "ancient reserves",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "ancient",
+    "forging": "ancient",
+    "formation": "ancient",
+    "trade": "ancient-clan network",
+    "recruitment": "bloodline only"
+  },
+  "politics": {
+    "allies": [
+      "other ancient clans"
+    ],
+    "enemies": [
+      "newer powers"
+    ],
+    "vassals": [],
+    "rivals": [
+      "other ancient clans"
+    ],
+    "internal_factions": [
+      "main bloodline",
+      "branch bloodlines"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "bloodline only",
+    "expansion": "slow; bloodline-constrained",
+    "decline": "slow; ancient power waning",
+    "schisms": "bloodline disputes",
+    "wars": [
+      "ancient-clan conflicts"
+    ],
+    "recovery": "slow; depends on bloodline awakening"
+  },
+  "libraries": [
+    "ancient techniques",
+    "clan formation manuals",
+    "bloodline catalogues",
+    "ancient alchemy"
+  ],
+  "spirit_beasts": [
+    "ancient-clan guardian beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 1703598444,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

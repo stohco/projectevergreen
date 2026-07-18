@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Soul Flag (Soul Refining Sect) (魂旗). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I50",
+  "name": "Soul Flag (Soul Refining Sect)",
+  "nameCn": "魂旗",
+  "type": "banner",
+  "category": "soul_related",
+  "origin": "Soul Refining Sect inheritance — Dun Tian gift (mid-Nascent Soul era)",
+  "current_owner": "Wang Lin (retired)",
+  "abilities": [
+    "Holds and refines captured souls",
+    "Soul Refining Sect standard soul flag",
+    "Spirit-tier soul storage"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Spirit-tier soul flag",
+    "Retired — replaced by Billion Soul Flag",
+    "Dun Tian's gift"
+  ],
+  "source": "wiki-attested (mid-Nascent Soul era); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Soul Refining Sect inheritance — Dun Tian gift (mid-Nascent Soul era)"
+  }
+}

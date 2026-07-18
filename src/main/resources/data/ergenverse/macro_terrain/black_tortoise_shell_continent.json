@@ -1,0 +1,24 @@
+{
+  "_comment": "Macro-Terrain: Black Tortoise Shell Continent. Per scale directive: this terrain IS a being. Player shouldn't initially realize they're standing on bone. Divine Sense -> Perception changes -> 'You realize this mountain range... is one finger.' Prime Directive: the being's corpse is objectively terrain; perception tier determines what the player sees.",
+  "terrain_id": "black_tortoise_shell_continent",
+  "name": "Black Tortoise Shell Continent",
+  "being": "Black Tortoise",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "scale": "1000 li across — the shell of a divine beast that supports a continent.",
+  "canonical_event": "The Black Tortoise sleeps beneath Xuan Wu; its shell IS the continent.",
+  "perception_tiered_appearance": {
+    "mortal": "A continent of black-jade stone, oddly domed, 1000 li across.",
+    "qi_condensation": "The continent feels stable beyond reason; earthquakes never occur here.",
+    "foundation_establishment": "The continent is a single piece of shell; the dome is its curve.",
+    "core_formation": "This is the Black Tortoise's shell; the continent rests on the sleeping divine beast.",
+    "nascent_soul": "The Tortoise slumbers beneath; its breath is the continent's climate.",
+    "spirit_severing": "The Tortoise supports the continent in its slumber; waking it would sink the continent."
+  },
+  "perception_mechanic": {
+    "trigger": "When player's perception tier rises, the appearance re-rolls automatically.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does.",
+    "canon_fidelity": "This is exactly how Wang Lin perceived Ancient God Tu Si's remains — first as terrain, then as god-bone, then as god-memory."
+  },
+  "salt": 1459019640
+}

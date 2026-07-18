@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Tu_Si",
+    "name": "Tu Si - Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin entered the Land of the Ancient God and managed to get half of Tu Si's inheritance of knowledge. Trivia. Tu Si (and by effect Wang Lin) ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1l4u88g/why_does_wang_lin_look_like_tuo_sen",
+    "name": "Why does wang Lin look like Tuo sen?? : r/Donghua - Reddit",
+    "snippet": "They both are ancient Gods also because Tuo sen is from Tusi and also Wanglin got inheritance from Tusi. Renegade Immortal - Why the hell are we watching the story from Clone ... [Spoilers] Just finished Renegade Immortal and damn. - Reddit More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Wang%20Lin/986247",
+    "name": "Wang Lin - Renegade Immortal",
+    "snippet": "Fought Tuo Sen and returned Tu Si's memory inheritance, learning the Ancient Dao Without Immortals. Returned to Luotian to see Xie Qing, took Xi Zifeng as a ...",
+    "host_name": "baike.baidu.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Tuo_Sen",
+    "name": "Tuo Sen - Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin opened the Tomb and inside he found Tuo Sen who had attained Tu Si's complete inheritance. In fact, Wang Lin believed that this \"Tuo Sen\" was ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=EEV3MMGg9Js",
+    "name": "Renegade Immortal: Ancient God Tu Si's Trident Halberd Disguised as",
+    "snippet": "Discover one of the most shocking secrets in Renegade Immortal (Xian Ni)! The mysterious three mountains within the Shatter Land of ...",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

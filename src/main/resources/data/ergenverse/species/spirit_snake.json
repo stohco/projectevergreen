@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Spirit Snake (灵蛇) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "spirit_snake",
+  "name": "Spirit Snake",
+  "nameCn": "灵蛇",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Serpentine body 5 m, scales spirit-green, venom drips spirit-corroding acid",
+    "size": "5 m adult, 200 jin; ancient 20 m, 5000 jin",
+    "behavior": "Ambush predator; cultivates by absorbing venom-essence; constricts prey",
+    "habitat": "Spirit forests, venom-aspected valleys, caves",
+    "cultivation": "Foundation Establishment -> Core Formation (venom attribute)",
+    "intelligence": 5,
+    "diet": "spirit rabbits, spirit deer, smaller beasts",
+    "relationships": "Rival of spirit foxes; preyed upon by giant pythons",
+    "techniques": [
+      "venom_bite",
+      "constrict",
+      "spirit_dodge",
+      "burrow"
+    ],
+    "treasures": [
+      "spirit_snake_core",
+      "venom_gland",
+      "snake_pelt"
+    ],
+    "bloodline": "Spirit-Snake lineage; venom-attribute bloodline (dilute python)",
+    "mutations": [
+      "venom_body",
+      "ancient_snake_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "spirit_snake — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "spirit_snake — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 224321724,
+  "bloodline_tier": "ordinary",
+  "inner_dan_properties": {
+    "element": "poison",
+    "purity_tier": 2,
+    "dao_resonance": "serpent_venom",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

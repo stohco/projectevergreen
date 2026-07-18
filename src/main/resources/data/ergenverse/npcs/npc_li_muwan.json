@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Li Muwan (李慕婉). Canon ID: N17. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_li_muwan",
+  "name": "Li Muwan",
+  "nameCn": "李慕婉",
+  "canon_id": "N17",
+  "type": "other",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Treading Heaven Realm",
+  "personality": "gentle, devoted; Wang Lin's primary love interest",
+  "speech": "soft, caring, devoted",
+  "relationship_to_wanglin": "wife; primary love interest",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A beautiful, gentle woman",
+    "qi_condensation": "Cultivator; gentle aura",
+    "core_formation": "Treading Heaven Realm; Wang Lin's wife",
+    "nascent_soul": "Treading Heaven; Wang Lin's primary love"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's primary love interest; transcended together",
+  "derivation_type": "A",
+  "salt": 109948956,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

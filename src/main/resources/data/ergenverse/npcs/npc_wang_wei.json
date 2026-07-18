@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Wang Wei (王伟). Canon ID: N41. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_wang_wei",
+  "name": "Wang Wei",
+  "nameCn": "王伟",
+  "canon_id": "N41",
+  "type": "other",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Nirvana Shatterer",
+  "personality": "Wang clan cultivator",
+  "speech": "measured",
+  "relationship_to_wanglin": "complex; Wang clan",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A powerful cultivator",
+    "qi_condensation": "Nirvana Shatterer; overwhelming",
+    "core_formation": "Nirvana Shatterer",
+    "nascent_soul": "Wang Wei; Nirvana Shatterer"
+  },
+  "canon_confidence": 3,
+  "note": "Nirvana Shatterer Wang clan cultivator",
+  "derivation_type": "B",
+  "salt": 1650079956,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

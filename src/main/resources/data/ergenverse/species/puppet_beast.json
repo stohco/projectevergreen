@@ -1,0 +1,77 @@
+{
+  "_comment": "Species: Puppet Beast (傀儡兽) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "puppet_beast",
+  "name": "Puppet Beast",
+  "nameCn": "傀儡兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Constructed puppet beast 2 m, body is spirit-wood and spirit-metal, joints articulate",
+    "size": "2 m adult, 1000 jin; ancient 5 m, 10000 jin",
+    "behavior": "Constructed puppet; follows puppet-master's orders; no will of its own",
+    "habitat": "Puppet workshops, where deployed",
+    "cultivation": "Constructed (matches puppet-master tier)",
+    "intelligence": 3,
+    "diet": "spirit stones (maintenance)",
+    "relationships": "Constructed by puppet cultivators; Wang Lin used puppets",
+    "techniques": [
+      "puppet_strike",
+      "puppet_defend",
+      "order_follow",
+      "construct_regen"
+    ],
+    "treasures": [
+      "puppet_core",
+      "puppet_material",
+      "spirit_stone"
+    ],
+    "bloodline": "Constructed lineage; no natural bloodline",
+    "mutations": [
+      "true_puppet_body"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "puppet_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "puppet_beast — not a hive-mind species"
+    },
+    "combat_ai": "territorial_defender"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 222104344,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

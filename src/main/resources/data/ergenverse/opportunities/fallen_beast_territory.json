@@ -1,0 +1,44 @@
+{
+  "_comment": "Opportunity: Fallen Beast Territory. Per opportunity directive: the engine continuously asks 'what opportunities naturally exist at a location that has existed for 100 years?'. Discoverable by cultivation (Core Formation), perception (Nascent Soul (to perceive the hoard)), and luck (modifier 1.1). Prime Directive: opportunity exists objectively; player perception determines whether they find it.",
+  "opportunity_id": "fallen_beast_territory",
+  "name": "Fallen Beast Territory",
+  "description": "A territory left vacant by a fallen apex beast, rich in treasures. Exists because: apex beasts hoard treasures; their fall leaves the hoard.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "age_requirement_years": 100,
+  "location_types": [
+    "beast_lair",
+    "ancient_peak",
+    "deep_cave"
+  ],
+  "cultivation_required": "Core Formation",
+  "perception_required": "Nascent Soul (to perceive the hoard)",
+  "luck_modifier": 1.1,
+  "discovery_methods": [
+    "divine_sense",
+    "beast_tracking",
+    "rumor_following"
+  ],
+  "reward_tables": [
+    "beast_hoard",
+    "beast_core",
+    "beast_treasure",
+    "territory_ownership"
+  ],
+  "why_untaken": "Other beasts claim the territory quickly.",
+  "natural_next_event": "Other beasts claim the territory; hoard scattered.",
+  "simulation_notes": {
+    "continuous_inference": "The World State Engine continuously infers opportunities at every location based on the location's age, type, and history.",
+    "no_locked_upgrades": "A cultivator who later reaches the required perception will find opportunities they previously missed; the opportunities do not disappear.",
+    "canon_fidelity": "This is how Wang Lin found inheritances throughout his journey — the opportunities existed before he arrived; his perception determined what he found."
+  },
+  "salt": 437530782,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

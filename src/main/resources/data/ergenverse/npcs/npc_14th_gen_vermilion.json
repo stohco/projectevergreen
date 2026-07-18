@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: 14th-Gen Vermilion Bird Master (十四代朱雀). Canon ID: N82. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_14th_gen_vermilion",
+  "name": "14th-Gen Vermilion Bird Master",
+  "nameCn": "十四代朱雀",
+  "canon_id": "N82",
+  "type": "antagonist",
+  "faction": "vermilion_bird_divine_sect",
+  "location": "vermilion_bird_divine_sect",
+  "cultivation": "14th-Gen Vermilion Bird Master",
+  "personality": "antagonist predecessor",
+  "speech": "imperial, cold",
+  "relationship_to_wanglin": "antagonist predecessor",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "Vermilion Bird Master",
+    "core_formation": "14th-Gen Vermilion Bird Master",
+    "nascent_soul": "14th-Gen; antagonist predecessor"
+  },
+  "canon_confidence": 3,
+  "note": "14th-Generation Vermilion Bird Master; antagonist",
+  "derivation_type": "B",
+  "salt": 417838392,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

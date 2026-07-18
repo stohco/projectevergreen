@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:teng_family_city_tavern_district/start_pool",
+  "fallback": "minecraft:village/taiga/terminators",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "minecraft:village/taiga/houses/taiga_large_house_1",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

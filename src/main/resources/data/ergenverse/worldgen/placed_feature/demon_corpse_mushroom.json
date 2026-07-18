@@ -1,0 +1,17 @@
+{
+  "_comment": "Demon-Corpse Mushroom placed in Sky Demon Country and Fire Demon Country. Rarity 6 — grows on demonic battlefields. Surface and underground.",
+  "feature": "ergenverse:demon_corpse_mushroom",
+  "placement": [
+    { "type": "minecraft:rarity_filter", "chance": 6 },
+    { "type": "minecraft:in_square" },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": { "absolute": -32 },
+        "max_inclusive": { "absolute": 64 }
+      }
+    },
+    { "type": "minecraft:biome" }
+  ]
+}

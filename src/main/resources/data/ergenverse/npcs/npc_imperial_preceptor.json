@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Imperial Preceptor (Dao Gu) (帝国师). Canon ID: N121. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_imperial_preceptor",
+  "name": "Imperial Preceptor (Dao Gu)",
+  "nameCn": "帝国师",
+  "canon_id": "N121",
+  "type": "artifact_spirit",
+  "faction": "ancient_clan",
+  "location": "ancient_clan_territory",
+  "cultivation": "artifact spirit",
+  "personality": "Dao Gu artifact spirit; ancient, knowledgeable",
+  "speech": "ancient, resonant",
+  "relationship_to_wanglin": "complex; artifact spirit",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "A ghostly presence",
+    "qi_condensation": "Artifact spirit; ancient",
+    "core_formation": "Dao Gu Imperial Preceptor",
+    "nascent_soul": "Artifact spirit; Dao Gu lineage"
+  },
+  "canon_confidence": 4,
+  "note": "Dao Gu Imperial Preceptor artifact spirit",
+  "derivation_type": "A",
+  "salt": 1839717239,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

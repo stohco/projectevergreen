@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:heng_yue_sect_sword_peak/start_pool",
+  "fallback": "minecraft:village/taiga/terminators",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "minecraft:village/taiga/houses/taiga_butcher_shop_1",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

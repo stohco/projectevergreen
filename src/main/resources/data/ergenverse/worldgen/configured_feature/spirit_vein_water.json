@@ -1,0 +1,22 @@
+{
+  "_comment": "Water-element spirit vein — found near water bodies. Auto-generated elemental spirit vein variant. Prime Directive: the element is an objective property of the vein's Qi.",
+  "type": "minecraft:ore",
+  "config": {
+    "size": 5,
+    "discard_chance_on_air_exposure": 0.2,
+    "targets": [
+      {
+        "target": {
+          "predicate": {
+            "type": "minecraft:tag_match",
+            "tag": "minecraft:stone_ore_replaceables"
+          },
+          "state": {
+            "Name": "minecraft:sea_lantern"
+          }
+        },
+        "size": 3
+      }
+    ]
+  }
+}

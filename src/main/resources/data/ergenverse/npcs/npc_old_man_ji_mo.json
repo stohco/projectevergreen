@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Old Man Ji Mo (极魔老人). Canon ID: N86. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_old_man_ji_mo",
+  "name": "Old Man Ji Mo",
+  "nameCn": "极魔老人",
+  "canon_id": "N86",
+  "type": "antagonist",
+  "faction": "ji_mo_sect",
+  "location": "sea_of_devils",
+  "cultivation": "Core Formation+",
+  "personality": "demonic old cultivator; Sea of Devils antagonist",
+  "speech": "demonic, cackling",
+  "relationship_to_wanglin": "enemy; Sea of Devils arc",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A terrifying demonic elder",
+    "qi_condensation": "Demonic cultivator; Core Formation+",
+    "core_formation": "Old Man Ji Mo; demonic",
+    "nascent_soul": "Core Formation+; Sea of Devils antagonist"
+  },
+  "canon_confidence": 4,
+  "note": "Sea of Devils demonic antagonist",
+  "derivation_type": "A",
+  "salt": 124981538,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

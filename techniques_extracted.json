@@ -1,0 +1,4492 @@
+[
+  {
+    "id": "T01",
+    "name": "Underworld Ascension Method",
+    "nameCn": "黄泉升窍诀",
+    "type": "cultivation_art",
+    "origin": "Taught by Situ Nan via Heaven Defying Pearl",
+    "effects": [
+      "Divided into 9 layers, uses extreme-Yin sites for near-death cultivation to form Cold Dan",
+      "Dramatically boosts Golden Core formation success rate; catalyst for Ji Realm",
+      "Produces cold-attribute Blue Flames as side effect"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ji Realm cultivation method reorganized by Situ Nan from the Ancient Underworld Ascension Method",
+      "Requires Foundation Establishment to use safely, cultivates toward Core Formation",
+      "Eventually superseded by Celestial/Ancient Order cultivation but remains early-game engine"
+    ]
+  },
+  {
+    "id": "T02",
+    "name": "Vermilion Bird Burning Heaven Art",
+    "nameCn": "朱雀焚天功",
+    "type": "cultivation_art",
+    "origin": "Taught by Situ Nan (2nd-Gen Vermilion Bird lineage)",
+    "effects": [
+      "Foundational Vermilion Bird cultivation art opening path to Vermilion Bird Mark awakenings",
+      "Fire-attribute art spanning Qi Condensation to Ascendant",
+      "Feeds into Vermilion Bird Mark awakenings, Ethereal Fire, and Fire Essence"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Named in Situ Nan Baidu entry as one of the arts imparted to Wang Lin",
+      "Requires Vermilion Bird Sequence to fully unlock",
+      "Foundation for the entire Vermilion Bird awakening cycle"
+    ]
+  },
+  {
+    "id": "T03",
+    "name": "Nine Cycle Celestial Refining Tactic",
+    "nameCn": "九转炼仙诀",
+    "type": "cultivation_art",
+    "origin": "Imitation of a low-quality celestial spell by the All-Seer; learned via Tianyunzi's clone on Planet Tian Yun",
+    "effects": [
+      "Causes immortal power to spiral in the body before release, equivalent to Golden Immortal power",
+      "Up to 9 revolutions; longer charge = greater output",
+      "Stacks with Rapid Spell Art; foundational to late-game Empyrean Exalt reproduction"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Uses immortal/celestial power; requires Soul Transformation and up",
+      "Time-delay tradeoff: more revolutions = more power but longer charge time",
+      "Learned as part of Celestial Cultivation induction under All-Seer/Tianyunzi"
+    ]
+  },
+  {
+    "id": "T04",
+    "name": "Ancient God Tactic",
+    "nameCn": "古神诀",
+    "type": "cultivation_art",
+    "origin": "Inherited from Tu Si's memory legacy in the Ancient God's body",
+    "effects": [
+      "Reconstructs the cultivator's body as an Ancient God; outer-body cultivation track",
+      "Allows absorbing spiritual energy, pills, and inheritance fragments as stars",
+      "Forces hybrid-track existence: main body Ancient God, Avatar is Qi Cultivator vessel"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Essence is one word: plunder — plunder everything",
+      "Progression from 1-Star (Ch.199) to 27-Star (Ch.2003)",
+      "Enables Half-Heaven-Trampling (Ch.2062) and Heaven-Trampling (Ch.2087) via this track"
+    ]
+  },
+  {
+    "id": "T05",
+    "name": "Heaven Technique (Ancient God)",
+    "nameCn": "通天诀",
+    "type": "cultivation_art",
+    "origin": "Inherited from Tu Si's legacy",
+    "effects": [
+      "Allows free travel anywhere inside an Ancient God's body",
+      "Used during the Restriction Mountain Trial inside Tu Si's body",
+      "Niche utility; only useful inside Ancient God body"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ancient God auxiliary movement art",
+      "Learned at Ch. 192 alongside Ancient God Tactic",
+      "Used specifically for the Land of the Ancient God trial"
+    ]
+  },
+  {
+    "id": "T06",
+    "name": "Indestructible Immortal Body",
+    "nameCn": "不灭仙体",
+    "type": "cultivation_art",
+    "origin": "Transmitted by Lian Daofei inside the Nether Beast",
+    "effects": [
+      "Forges an undying physical body",
+      "Initially rejected by Wang Lin's Dao-Ancient bloodline",
+      "Inspires Wang Lin's self-created Undying Ancient Finger and Undying Ancient Body"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Lian Daofei fused his supreme Immortal bloodline into Wang Lin",
+      "Lian Daofei also imparted numerous divine abilities alongside",
+      "Implied ~Ch.1509+ when Lian Daofei forcibly transmits it"
+    ]
+  },
+  {
+    "id": "T07",
+    "name": "Rapid Spell Art",
+    "nameCn": "速咒术",
+    "type": "cultivation_art",
+    "origin": "Obtained after killing Xu Decai of Green Devil Continent",
+    "effects": [
+      "Opens nine spell veins in the body, each greatly increasing casting speed",
+      "Spell veins use sealed time-energy to accelerate casting",
+      "Engine of Void Tribulant breakthrough; reproduces Empyrean Exalt effect when combined with mass-produced fused spells"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Requires Arcane Void and up (3rd Step)",
+      "Each spell vein requires sealing cultivation/energy; failure is fatal",
+      "Central to Ch.1907 breakthrough allowing Wang Lin to become Empyrean Exalt equivalent"
+    ]
+  },
+  {
+    "id": "T08",
+    "name": "Dao Fusion",
+    "nameCn": "道融",
+    "type": "cultivation_art",
+    "origin": "Taught by / stolen from Dao Master Blue Dream's lineage",
+    "effects": [
+      "Dao Spell that fuses spells with essence in a special way",
+      "Lets user fuse all spells into tens of millions of different ones, or all into one",
+      "Mechanical basis for Wang Lin's later Essence fusion breakthroughs"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Not an attack or defense — a fusing art",
+      "Comprehension-gated, not raw power",
+      "Ch. 1322; enables combining Fire/Earth/Water etc. Essences"
+    ]
+  },
+  {
+    "id": "T09",
+    "name": "Finger of Death",
+    "nameCn": "寂灭指",
+    "type": "combat",
+    "origin": "Incomplete Low-Quality Celestial Spell taught by Situ Nan",
+    "effects": [
+      "Death-attribute finger strike; main offensive technique during Yang-Soul-Transformation period",
+      "Originally performed with Extinction Twin Fingers treasure",
+      "Has variants Demonic Finger and Underworld Finger — all incomplete celestial spells"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Situ Nan comprehended it from an incomplete immortal art",
+      "Bare-hand version needs much higher realm",
+      "Ch. 482; backfires if user's realm is too low"
+    ]
+  },
+  {
+    "id": "T10",
+    "name": "Demonic Finger",
+    "nameCn": "魔指",
+    "type": "combat",
+    "origin": "Situ Nan (incomplete low-quality celestial spell)",
+    "effects": [
+      "Demonic-attribute finger strike",
+      "Sister-technique to Finger of Death, part of Situ Nan's trio",
+      "Limited use per battle due to being incomplete"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 483; requires Foundation Establishment+",
+      "Part of Death/Demonic/Underworld celestial-finger trio",
+      "Incomplete celestial spell tier"
+    ]
+  },
+  {
+    "id": "T11",
+    "name": "Underworld Finger",
+    "nameCn": "冥指",
+    "type": "combat",
+    "origin": "Situ Nan (third sister-spell to Death/Demonic Fingers)",
+    "effects": [
+      "Underworld-attribute finger strike",
+      "Third of Situ Nan's trio of celestial-finger spells",
+      "Incomplete celestial spell tier"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 500; requires Foundation Establishment+",
+      "Underworld-attribute variant",
+      "Donghua S1 EP103"
+    ]
+  },
+  {
+    "id": "T12",
+    "name": "Celestial Slaughter Art",
+    "nameCn": "屠仙术",
+    "type": "combat",
+    "origin": "Obtained from the All-Seer via Tianyunzi's clone",
+    "effects": [
+      "Condenses life force from slaughters into protective life seals",
+      "10 million life seals envelop the user into a true-life seal",
+      "Trap: Tianyunzi's malicious intent; Wang Lin expelled it and merged into his first Immortal Guard"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 504; requires Soul Transformation+",
+      "Became source of Slaughter Origin after re-cultivation",
+      "Originally incomplete — true-life seal was a trap"
+    ]
+  },
+  {
+    "id": "T13",
+    "name": "Heavenly Chop",
+    "nameCn": "天斩",
+    "type": "combat",
+    "origin": "Integrated into Wang Lin's sword dao; source not explicit",
+    "effects": [
+      "Single heavenly chop with the sword; signature sword strike",
+      "Sword-technique requiring a high-quality flying sword",
+      "Classified as Sword Divine Ability alongside Deer (sword spirit pattern)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 685; requires Ascendant+",
+      "One of Wang Lin's named sword divine abilities",
+      "No detailed wiki description available"
+    ]
+  },
+  {
+    "id": "T14",
+    "name": "10 Million Swords",
+    "nameCn": "千万剑",
+    "type": "combat",
+    "origin": "Sword-summoning art; source not explicit",
+    "effects": [
+      "Summons ten million sword shadows",
+      "Mass-summon sword technique",
+      "Listed under Sword Divine Abilities alongside Heavenly Chop"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "No chapter number given in wiki",
+      "Requires 2nd Step+",
+      "Classified as Sword Divine Ability"
+    ]
+  },
+  {
+    "id": "T15",
+    "name": "Karma Whip",
+    "nameCn": "因果鞭",
+    "type": "combat",
+    "origin": "Fused Soul Lasher treasure with Karma Dao; Ch. 731",
+    "effects": [
+      "Manifests the Karma Domain; directly attacks the primordial spirit",
+      "Restraining effect on soul-type entities; once cleaved open 7 million worlds with a single whip",
+      "Evolved from Soul Lasher treasure → Karma Whip → Karma Sword (one of seven Origin Swords)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 731 (Donghua EP147); requires Ascendant+",
+      "Later burned by Ghostly Sky Fire and nourished into Cause-Effect Whip",
+      "Wields karmic backlash if used against those with no karmic link"
+    ]
+  },
+  {
+    "id": "T16",
+    "name": "Mountains Crumble",
+    "nameCn": "山崩",
+    "type": "combat",
+    "origin": "4th of Bai Fan's Six Paths Triple Arts; taught by Immortal Lord Qing Shui",
+    "effects": [
+      "Summons illusionary volcanoes that fuse into real ones, then crumbles them",
+      "Limit: 2 crumbles per volcano, max 6 mountains per casting cycle",
+      "Triggers breakthrough to mid Nirvana Cleanser; opens path to True-and-False Domain"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1105; requires Nirvana Cleanser+",
+      "Fuses immortal power into spiritual sense",
+      "Materializes sky-obscuring volcanic peaks out of thin air"
+    ]
+  },
+  {
+    "id": "T17",
+    "name": "Falling Star",
+    "nameCn": "陨星",
+    "type": "combat",
+    "origin": "Self-acquired celestial spell",
+    "effects": [
+      "Summons starlight that swarms the area",
+      "Starlight-attribute celestial spell",
+      "Requires Nirvana Cleanser+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1119; source not detailed",
+      "Celestial spell tier",
+      "Partial wiki description"
+    ]
+  },
+  {
+    "id": "T18",
+    "name": "Heaven Extinction",
+    "nameCn": "灭天",
+    "type": "combat",
+    "origin": "Self-acquired / blood-absorption technique",
+    "effects": [
+      "Devours origin souls of all killed cultivators",
+      "Absorbs flesh and blood as nutrients to recover",
+      "Karmically heavy — adds to slaughter essence / heart-demon risk"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1307; requires Nirvana Shatterer+",
+      "Recovery-via-slaughter celestial spell",
+      "Significant karmic cost with each use"
+    ]
+  },
+  {
+    "id": "T19",
+    "name": "Heaven Reversal Stamp",
+    "nameCn": "翻天印",
+    "type": "combat",
+    "origin": "Self-created celestial spell",
+    "effects": [
+      "Flips the sky to become earth",
+      "The sky becomes the strongest stamp",
+      "Heaven-flipping stamp attack"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1320; requires Nirvana Shatterer+",
+      "Self-created celestial spell",
+      "Partial wiki description"
+    ]
+  },
+  {
+    "id": "T20",
+    "name": "Light and Shadow Shield",
+    "nameCn": "光影盾",
+    "type": "combat",
+    "origin": "Dao Master Blue Dream lineage; Spirit Void Spell",
+    "effects": [
+      "Creates a defensive shield of light",
+      "Made from every vitality in the world",
+      "Dao Master Blue Dream's Spells category"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1321; requires Nirvana Shatterer+",
+      "Defensive spell",
+      "Partial wiki description"
+    ]
+  },
+  {
+    "id": "T21",
+    "name": "Fog Transformation Thunder Spell",
+    "nameCn": "雾化雷术",
+    "type": "combat",
+    "origin": "Self-acquired / lineage",
+    "effects": [
+      "Fog-transformation thunder attack",
+      "Combines fog transformation with thunder",
+      "Requires Nirvana Shatterer+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 3,
+    "knownFacts": [
+      "Ch. 1336; implied / pieced together from wiki",
+      "Thunder + fog transformation hybrid",
+      "Least documented of the named combat spells"
+    ]
+  },
+  {
+    "id": "T22",
+    "name": "Giant Thunder Stamp",
+    "nameCn": "大雷印",
+    "type": "combat",
+    "origin": "Self-acquired",
+    "effects": [
+      "Giant thunder-stamp attack",
+      "Thunder-attribute strike",
+      "Wiki groups with Fog Transformation Thunder Spell"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 3,
+    "knownFacts": [
+      "Ch. ~1336+; implied / pieced together",
+      "Thunder stamp category",
+      "Minimal wiki description"
+    ]
+  },
+  {
+    "id": "T23",
+    "name": "Dao of Power / Rebound Force",
+    "nameCn": "力之反",
+    "type": "combat",
+    "origin": "Black Tortoise method taught by 2nd Vermilion Bird Divine Emperor",
+    "effects": [
+      "Rebound force technique — turns opponent's power back on them",
+      "Force-redirection body-technique",
+      "Requires Nirvana Shatterer+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1403; Black Tortoise clan technique",
+      "Per Baidu: 2nd-Gen Vermilion Bird passed Dao of Strength as proof",
+      "Body-technique category"
+    ]
+  },
+  {
+    "id": "T24",
+    "name": "Open the Ancient Thunder Realm",
+    "nameCn": "开古雷界",
+    "type": "combat",
+    "origin": "Stolen / inherited from Scatter Thunder Clan's head elder",
+    "effects": [
+      "Opens the Ancient Thunder Realm",
+      "Realm-opening thunder ability",
+      "Combat/utility dual-purpose"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 3,
+    "knownFacts": [
+      "Ch. 1417; requires Nirvana Shatterer+",
+      "Scatter Thunder Clan spell",
+      "Implied from wiki grouping"
+    ]
+  },
+  {
+    "id": "T25",
+    "name": "Seven-Colored Lance",
+    "nameCn": "七彩枪",
+    "type": "combat",
+    "origin": "Taught by Lian Daofei (madman); Dao Spell",
+    "effects": [
+      "Seven-colored light contains the power of emotions",
+      "Affects the emotions of anyone who sees it",
+      "Stronger than Ethereal Fire"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1543; requires 3rd Step",
+      "Dao Spell taught by Lian Daofei",
+      "Emotion-attribute lance"
+    ]
+  },
+  {
+    "id": "T26",
+    "name": "Li Guang's Heaven-Shattering Bow Dao",
+    "nameCn": "李广射天弓道",
+    "type": "combat",
+    "origin": "Taught by Lian Daofei (madman); Dao Spell",
+    "effects": [
+      "Bow-Dao that shatters the heavens",
+      "Pairs with Li Guang's Arrow",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "~Ch. 1533+ when Li Guang's Bow obtained",
+      "Dao Spell taught by Lian Daofei",
+      "Legendary bow-dao"
+    ]
+  },
+  {
+    "id": "T27",
+    "name": "Heavenly Fate Finger",
+    "nameCn": "天命指",
+    "type": "combat",
+    "origin": "Self-realized / derived (Bai Fan-lineage); Forgotten Chapter",
+    "effects": [
+      "Fate-attribute finger strike",
+      "Bai Fan-lineage technique",
+      "Forgotten Chapter category"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1156; requires Nirvana Cleanser+",
+      "Self-realized technique",
+      "Listed under Forgotten Chapters"
+    ]
+  },
+  {
+    "id": "T28",
+    "name": "Lands Collapse",
+    "nameCn": "土崩",
+    "type": "combat",
+    "origin": "Bai Fan's spell, one of the Six Paths Triple Arts",
+    "effects": [
+      "Earth-collapse celestial spell",
+      "Part of Bai Fan's Six Paths Triple Techniques",
+      "Requires Nirvana Cleanser+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1582; Forgotten Chapters",
+      "Earth-attribute celestial spell",
+      "Part of Bai Fan lineage"
+    ]
+  },
+  {
+    "id": "T29",
+    "name": "Dark Moon, Clear Skies",
+    "nameCn": "暗月晴空",
+    "type": "combat",
+    "origin": "Bai Fan's spell",
+    "effects": [
+      "Yin-attribute / moon-clearing celestial spell",
+      "Dark moon technique",
+      "Part of Bai Fan lineage"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1582; Forgotten Chapters",
+      "Yin-attribute celestial spell",
+      "Part of Bai Fan's Six Paths Triple Techniques"
+    ]
+  },
+  {
+    "id": "T30",
+    "name": "God, Demon, Devil, Ancient Dao, No Celestial!",
+    "nameCn": "神魔妖古道无仙",
+    "type": "combat",
+    "origin": "Self-realized; requires three prerequisite spells in sequence",
+    "effects": [
+      "Combined three-ancestor attack: God + Demon + Devil spells",
+      "Requires God Tremble Army Formation → Wind Fire Mountain → Life Death Reversal",
+      "Only after all three spells can this composite attack execute"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1778; requires 3rd Step",
+      "Three-spell combo: God, Demon, and Devil spells in order",
+      "Ancient Order composite-ancestor strike"
+    ]
+  },
+  {
+    "id": "T31",
+    "name": "God Punch",
+    "nameCn": "神拳",
+    "type": "combat",
+    "origin": "Ancient Order spell",
+    "effects": [
+      "Ancient-God punch attack",
+      "Raw physical power strike",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1312; Ancient Order spell",
+      "Ancient God power",
+      "Simple but devastating punch"
+    ]
+  },
+  {
+    "id": "T32",
+    "name": "Life Exchange",
+    "nameCn": "命换",
+    "type": "combat",
+    "origin": "Ancient Order spell",
+    "effects": [
+      "Exchanges life force for temporary burst of power",
+      "Sacrifices lifespan/health",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1278; Ancient Order spell",
+      "Life-for-power exchange",
+      "Significant cost: sacrifices lifespan"
+    ]
+  },
+  {
+    "id": "T33",
+    "name": "Immortal Dream",
+    "nameCn": "仙梦",
+    "type": "combat",
+    "origin": "Fusion of Dream of Ancient Times and Wang Lin's own Dream Dao spell",
+    "effects": [
+      "Master of the dream — can change everything in the dream to kill",
+      "Evolved from Dream of Ancient Times (shield-owner's technique)",
+      "Wang Lin became master of the shield, his thoughts change everything about the dream"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1675; requires 3rd Step",
+      "Original fusion spell combining Dream Dao + Dream of Ancient Times",
+      "Dream-attack category"
+    ]
+  },
+  {
+    "id": "T34",
+    "name": "Heaven-Ripping",
+    "nameCn": "撕天",
+    "type": "combat",
+    "origin": "Ancient Order spell",
+    "effects": [
+      "Heaven-ripping attack",
+      "Ancient Order technique",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1691; Ancient Order spell",
+      "Space-tearing attack",
+      "Ancient Clan power"
+    ]
+  },
+  {
+    "id": "T35",
+    "name": "Tu Si's Trident",
+    "nameCn": "涂司三叉戟",
+    "type": "combat",
+    "origin": "Inherited from Tu Si; Tu Si's Life Treasure",
+    "effects": [
+      "Tu Si's trident weapon; could absorb spells",
+      "Ancient God treasure-weapon",
+      "Destroyed by Daoist Water at Ch. 1277"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 941; obtained via items page Ch.1082",
+      "Tu Si's Life Treasure",
+      "Later destroyed by Daoist Water"
+    ]
+  },
+  {
+    "id": "T36",
+    "name": "God Slaying Spear / God Slaying Seal",
+    "nameCn": "诛神矛/诛神印",
+    "type": "combat",
+    "origin": "Origin Ancient God spell; royal Cave-World bloodline only",
+    "effects": [
+      "Borrows power from the ancestors",
+      "Only the royal clan (Cave World) can use",
+      "Ancient God ancestor-borrowing technique"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 941-942; Origin Ancient God spell",
+      "Royal bloodline requirement",
+      "Partial wiki description"
+    ]
+  },
+  {
+    "id": "T37",
+    "name": "Heavenly Devil Sound",
+    "nameCn": "天魔音",
+    "type": "combat",
+    "origin": "Learned from a Scattered Devil's armor in Qing Lin's Cave",
+    "effects": [
+      "Devil-sound attack",
+      "Sound-attribute devil spell",
+      "Requires Soul Transformation+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 619 (per techniques page) / Ch. 625 (per Situ Nan Baidu)",
+      "Obtained from Scattered Devil's armor",
+      "Sound-attribute attack"
+    ]
+  },
+  {
+    "id": "T38",
+    "name": "Spirit Transformation",
+    "nameCn": "灵变",
+    "type": "combat",
+    "origin": "Ancient Order spell",
+    "effects": [
+      "Enters a planet to surround oneself in spiritual energy and enter dormant state",
+      "Undetectable unless encountering another Ancient God",
+      "Ancient God stealth/concealment ability"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 765; Ancient God+ required",
+      "Enters a planet NOT to absorb energy but to hide",
+      "Stealth/concealment category"
+    ]
+  },
+  {
+    "id": "T39",
+    "name": "Merit Spirit",
+    "nameCn": "功德灵",
+    "type": "combat",
+    "origin": "Ancient God spell",
+    "effects": [
+      "Withdraws a will from the universe — the universe doesn't have a soul, but this spell can extract one",
+      "A 9-star Ancient God can extract soul of universe + laws of the world to change the heavens",
+      "Universe-law supreme Ancient God spell"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1017; Ancient God+ required",
+      "\"Steal the merit of the heavens, take the soul of the universe\"",
+      "Output scales with user's power"
+    ]
+  },
+  {
+    "id": "T40",
+    "name": "100 Avatars",
+    "nameCn": "百化身",
+    "type": "avatar_clone",
+    "origin": "Ancient Order spell",
+    "effects": [
+      "Creates 100 avatars simultaneously",
+      "Mass-avatar creation technique",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1271; Ancient Order spell",
+      "Mass-avatar combat application",
+      "Ancient Clan power"
+    ]
+  },
+  {
+    "id": "T41",
+    "name": "Void",
+    "nameCn": "虚",
+    "type": "void_late_game",
+    "origin": "Ancient God inheritance; 8-star Ancient God spell",
+    "effects": [
+      "Void manipulation ability",
+      "8-star Ancient God spell",
+      "Combat / void-manipulation category"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1314; requires 8-star Ancient God",
+      "Ancient God inheritance spell",
+      "Void manipulation power"
+    ]
+  },
+  {
+    "id": "T42",
+    "name": "Mysterious God Star",
+    "nameCn": "玄神星",
+    "type": "combat",
+    "origin": "Ancient Order spell",
+    "effects": [
+      "Star-attribute attack",
+      "Ancient Order technique",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1315; Ancient Order spell",
+      "Star-attribute power",
+      "Partial wiki description"
+    ]
+  },
+  {
+    "id": "T43",
+    "name": "God Tremble, Army Formation",
+    "nameCn": "神震军阵",
+    "type": "combat",
+    "origin": "Ancient Order spell",
+    "effects": [
+      "Army-formation attack spell",
+      "Part 1 of three-spell combo for 'God, Demon, Devil, Ancient Dao, No Celestial!'",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1469; Ancient Order spell",
+      "First spell in the three-ancestor composite",
+      "Army-formation category"
+    ]
+  },
+  {
+    "id": "T44",
+    "name": "Demon Spell, Wind and Fire Mountain",
+    "nameCn": "魔咒风水山",
+    "type": "combat",
+    "origin": "Ancient Order spell",
+    "effects": [
+      "Conjures wind-fire mountain demon-spell",
+      "Part 2 of the three-spell combo",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1469; Ancient Order spell",
+      "Second spell in the three-ancestor composite",
+      "Demon-spell category"
+    ]
+  },
+  {
+    "id": "T45",
+    "name": "Devil Dao, Life and Death Reverse",
+    "nameCn": "魔道生死逆",
+    "type": "combat",
+    "origin": "Ancient Order spell",
+    "effects": [
+      "Reverses life and death",
+      "Part 3 of the three-spell combo",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1476; Ancient Order spell",
+      "Third spell in the three-ancestor composite",
+      "Devil-dao life-death reversal"
+    ]
+  },
+  {
+    "id": "T46",
+    "name": "Ancient Order, Life Transformation Spell",
+    "nameCn": "古序命转术",
+    "type": "combat",
+    "origin": "Ancient Order spell; rumored ancestors could only use 3 times",
+    "effects": [
+      "Transforms life states",
+      "Ancestors could only use 3 times per lifetime",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1515; Ancient Order spell",
+      "Extreme limitation: 3 uses per lifetime maximum",
+      "Life-transformation category"
+    ]
+  },
+  {
+    "id": "T47",
+    "name": "Burning Realm Ancient Umbrella",
+    "nameCn": "焚界古伞",
+    "type": "combat",
+    "origin": "Vermilion Bird Divine Ability; later upgraded to Dao Spell",
+    "effects": [
+      "Burning realm umbrella — defensive + offensive domain item",
+      "Dao Spell version achieved at Ch. 1543",
+      "Treasure-spell hybrid"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1427 (upgraded to Dao Spell Ch. 1543)",
+      "Vermilion Bird Divine Ability",
+      "Domain/defensive/offensive item"
+    ]
+  },
+  {
+    "id": "T48",
+    "name": "Third Eye Spell",
+    "nameCn": "天眼术",
+    "type": "divine_sense",
+    "origin": "Obtained through exchange with an ancestor of a clan from Luotian Star Domain",
+    "effects": [
+      "Origin-power third-eye attack",
+      "Contains origin power; further evolved during Heaven's Trial of Seal Immortal competition",
+      "Spell with a Hint of the 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 734; requires Ascendant+",
+      "Obtained via exchange in Luotian Star Domain",
+      "Further evolved by absorbing origin power during 3rd trial"
+    ]
+  },
+  {
+    "id": "T49",
+    "name": "Body Fixation Art",
+    "nameCn": "定身术",
+    "type": "combat",
+    "origin": "Immortal Art from Xiangang Continent; left by Immortal Emperor Qing Lin",
+    "effects": [
+      "Immobilizes body, soul, immortals, primordial force, stars, rivers, time, and space",
+      "One of the few Divine Abilities belonging to the scope of the 4th Step",
+      "Immobilized person can still think"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Implicit (Baidu); requires Late 3rd Step",
+      "Known users: Immortal Emperor Qing Lin, Qing Shuang, Seal Sovereign, Shui Daozi, Wang Lin",
+      "Law-attribute fixation technique"
+    ]
+  },
+  {
+    "id": "T50",
+    "name": "Slash Luo Art",
+    "nameCn": "斩罗剑术",
+    "type": "combat",
+    "origin": "Legacy sword technique from previous generation's Rain Immortal Sword, Jufu",
+    "effects": [
+      "Can slash through space and cut through rules",
+      "Destroys rules — astonishing power",
+      "Sword style that destroys the very fabric of reality"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Implicit (Baidu); requires Late 3rd Step",
+      "Contained within Jufu (Rain Immortal Sword)",
+      "Rule-destroying sword technique"
+    ]
+  },
+  {
+    "id": "T51",
+    "name": "Great Teleportation Forbidden Technique",
+    "nameCn": "大挪移禁术",
+    "type": "combat",
+    "origin": "Self-developed teleportation-restriction combo",
+    "effects": [
+      "Uses momentary time difference during teleportation",
+      "Seals self, then continuously teleports within that instant to generate mysterious force",
+      "When seal is released, teleportation distance is multiplied countless times"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Implicit (Baidu); requires Nascent Soul+",
+      "Teleport-amplification forbidden art",
+      "Same as Teleportation Restriction Ch. 493"
+    ]
+  },
+  {
+    "id": "T52",
+    "name": "Ancient God's Blood",
+    "nameCn": "古神之血",
+    "type": "combat",
+    "origin": "Obtained by killing the Giant Demon Ancestor",
+    "effects": [
+      "Manifests a gigantic Ancient God phantom from the true body",
+      "Single strike with considerable attack power",
+      "No longer usable later since true body rarely appears"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Implicit (Baidu); Ancient God body required",
+      "Obtained from Giant Demon Ancestor",
+      "Single-strike Ancient God phantom"
+    ]
+  },
+  {
+    "id": "T53",
+    "name": "Dao Transformation Yellow Springs",
+    "nameCn": "道化黄泉",
+    "type": "combat",
+    "origin": "Self-created; materialized product of Wang Lin's Dao thoughts",
+    "effects": [
+      "Cultivated to extreme can form independent cycle of reincarnation",
+      "Main divine ability during Soul Formation period",
+      "Direct precursor to 18 Layers of Hell Reincarnation Realm"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Implicit (Baidu); requires Soul Formation+",
+      "Self-created Dao-thought materialization",
+      "Precursor to 18 Layers of Hell (Ch. 915)"
+    ]
+  },
+  {
+    "id": "T54",
+    "name": "Yellow Springs Finger",
+    "nameCn": "黄泉指",
+    "type": "combat",
+    "origin": "Situ Nan lineage",
+    "effects": [
+      "Yellow-Springs attribute finger strike",
+      "Used by Situ Nan to heavily injure Tuo Sen",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Implicit (Baidu/Situ Nan lineage)",
+      "Situ Nan's technique; Wang Lin learns second-hand",
+      "Yellow-Springs attribute variant"
+    ]
+  },
+  {
+    "id": "T55",
+    "name": "Three Life Spell",
+    "nameCn": "三生术",
+    "type": "combat",
+    "origin": "Self-acquired; great-soul-sect lineage?",
+    "effects": [
+      "Splits soul, origin soul, and body into three parts",
+      "Splitting technique",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1713; requires 3rd Step",
+      "Great Soul Sect lineage possible",
+      "Triple-split technique"
+    ]
+  },
+  {
+    "id": "T56",
+    "name": "Heaven Technique (Qi Cultivator)",
+    "nameCn": "通天",
+    "type": "other",
+    "origin": "Implicit; distinct from the Ancient God Heaven Technique",
+    "effects": [
+      "Qi Cultivator version of Heaven Technique",
+      "Combat/cultivation-art hybrid",
+      "Distinct from Ancient God movement-inside-body version"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 3,
+    "knownFacts": [
+      "Implicit (no chapter given)",
+      "Canon confidence 3 — implied / pieced together",
+      "Very minimal documentation"
+    ]
+  },
+  {
+    "id": "T57",
+    "name": "War Spirit Print",
+    "nameCn": "战神印",
+    "type": "celestial_spell",
+    "origin": "Discovered at Rain Celestial Realm entrance door",
+    "effects": [
+      "Absorbs surrounding laws to create massive palm-shaped spell",
+      "Grows stronger the longer it forms",
+      "Upgraded to Dao Spell at Ch. 1542: three palms descend to kill body, origin soul, and soul simultaneously"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 299; upgraded to Dao Spell Ch. 1542",
+      "Discovered by looking at massive palm print on Rain Celestial Realm entrance",
+      "Three sources of power inside when upgraded"
+    ]
+  },
+  {
+    "id": "T58",
+    "name": "Void Stop Spell",
+    "nameCn": "空停术",
+    "type": "celestial_spell",
+    "origin": "Celestial spell",
+    "effects": [
+      "Commands the law to entangle the target to stop for a few seconds",
+      "Backlashes if target has higher cultivation",
+      "Control/immobilization celestial spell"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 627 (EP126)",
+      "Law-entanglement technique",
+      "Risk of backlash against stronger opponents"
+    ]
+  },
+  {
+    "id": "T59",
+    "name": "Thunder Origin Spell",
+    "nameCn": "雷源术",
+    "type": "celestial_spell",
+    "origin": "Fragment of a low rank celestial spell",
+    "effects": [
+      "Absorb origin energy from thunder and quickly condense it into your own",
+      "Helps reduce time at the Yin and Yang stage",
+      "Thunder-attribute origin absorption"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 707; fragment of low-rank celestial spell",
+      "Reduces time at transitional stages",
+      "Thunder origin energy absorption"
+    ]
+  },
+  {
+    "id": "T60",
+    "name": "Call the Wind",
+    "nameCn": "唤风术",
+    "type": "celestial_spell",
+    "origin": "1st of Celestial Emperor Bai Fan's Six Paths Triple Techniques",
+    "effects": [
+      "Summons black wind that turns into dragons; max 9 dragons",
+      "All dragons condense to a spear after reaching the spell's limit",
+      "Wind-attribute celestial spell"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 783; 1st of Bai Fan's Six Paths Triple Techniques",
+      "Black wind dragon summoning",
+      "Max 9 dragons → spear condensation"
+    ]
+  },
+  {
+    "id": "T61",
+    "name": "Summon the Rain",
+    "nameCn": "唤雨术",
+    "type": "celestial_spell",
+    "origin": "2nd of Celestial Emperor Bai Fan's Six Paths Triple Techniques",
+    "effects": [
+      "Fuses Call the Wind dragons into a cloud dropping black crystal rain",
+      "All rain merges into one drop of blue crystal with powerful destructive force",
+      "Rain-attribute celestial spell"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 914; 2nd of Bai Fan's Six Paths Triple Techniques",
+      "Sequel to Call the Wind",
+      "Crystal rain → single blue crystal drop"
+    ]
+  },
+  {
+    "id": "T62",
+    "name": "Body Formation",
+    "nameCn": "体化术",
+    "type": "celestial_spell",
+    "origin": "Celestial spell",
+    "effects": [
+      "Creates an avatar made of rock and part of the origin soul",
+      "Avatar lasts for 10 days",
+      "Rock-body clone creation"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1125; celestial spell",
+      "10-day duration avatar",
+      "Rock and origin soul composite"
+    ]
+  },
+  {
+    "id": "T63",
+    "name": "Heart-Pounding Thunder",
+    "nameCn": "心悸雷",
+    "type": "combat",
+    "origin": "Comprehended in the last layer of the Ancient Graveyard",
+    "effects": [
+      "Heart-attribute thunder attack fusing fire and thunder essence",
+      "Fuses spell with fire and thunder essence power",
+      "Essence-spell fusion"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1777; requires 3rd Step",
+      "Self-comprehended in Ancient Graveyard",
+      "Fire + thunder essence fusion attack"
+    ]
+  },
+  {
+    "id": "T64",
+    "name": "Soul Eye Dao",
+    "nameCn": "魂眼道",
+    "type": "combat",
+    "origin": "Great Soul Sect divination spell",
+    "effects": [
+      "Soul-eye divination and attack",
+      "Half of the Mourning Death Clan's Dao divination spell",
+      "Divination + combat hybrid"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1831; Great Soul Sect",
+      "Mourning Death Clan Dao divination lineage",
+      "Requires 3rd Step"
+    ]
+  },
+  {
+    "id": "T65",
+    "name": "Soul Fantasy Origin",
+    "nameCn": "魂幻源",
+    "type": "combat",
+    "origin": "Great Soul Sect spell",
+    "effects": [
+      "Summons first Ancestor power",
+      "Ancestor-summon soul spell",
+      "Great Soul Sect technique"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1837; Great Soul Sect",
+      "Summons first Ancestor power",
+      "Requires 3rd Step"
+    ]
+  },
+  {
+    "id": "T66",
+    "name": "Multi-Layered Illusion Spell",
+    "nameCn": "多层幻术",
+    "type": "combat",
+    "origin": "Great Soul Sect main spell",
+    "effects": [
+      "Nine-layer illusion",
+      "Great Soul Sect's primary illusion technique",
+      "Each layer adds to the illusion complexity"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1853; Great Soul Sect main spell",
+      "Has nine levels",
+      "Requires 3rd Step"
+    ]
+  },
+  {
+    "id": "T67",
+    "name": "Extreme Fire Dao",
+    "nameCn": "极火道",
+    "type": "combat",
+    "origin": "Self-comprehended via Empyrean Trial",
+    "effects": [
+      "One of the Eight Extreme Daos; extreme-path fire Dao",
+      "Imitated when trying to devour Green Bull's main fire vein",
+      "Fully comprehended after passing 11th floor of Empyrean Trial"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1826; requires 3rd Step",
+      "First of Eight Extreme Daos",
+      "Self-comprehended"
+    ]
+  },
+  {
+    "id": "T68",
+    "name": "Extreme Water Dao",
+    "nameCn": "极水道",
+    "type": "combat",
+    "origin": "Self-comprehended via Empyrean Trial",
+    "effects": [
+      "Extreme-path water Dao; one of the Eight Extreme Daos",
+      "Comprehended after passing 12th floor of Empyrean Trial",
+      "Self-comprehended water extreme"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1958; requires 3rd Step",
+      "Second of Eight Extreme Daos",
+      "Empyrean Trial 12th floor"
+    ]
+  },
+  {
+    "id": "T69",
+    "name": "Extreme Metal Dao",
+    "nameCn": "极金道",
+    "type": "combat",
+    "origin": "Self-comprehended",
+    "effects": [
+      "Extreme-path metal Dao; one of the Eight Extreme Daos",
+      "Comprehended during Empyrean Trial",
+      "Metal-attribute extreme path"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2034; requires 3rd Step",
+      "Third of Eight Extreme Daos",
+      "Revealed at Ch. 2034"
+    ]
+  },
+  {
+    "id": "T70",
+    "name": "Extreme Wood Dao",
+    "nameCn": "极木道",
+    "type": "combat",
+    "origin": "Self-comprehended",
+    "effects": [
+      "Extreme-path wood Dao; one of the Eight Extreme Daos",
+      "Wood-attribute extreme path",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Listed in wiki; no chapter given",
+      "One of Eight Extreme Daos",
+      "Partial documentation"
+    ]
+  },
+  {
+    "id": "T71",
+    "name": "Extreme Earth Dao",
+    "nameCn": "极土道",
+    "type": "combat",
+    "origin": "Self-comprehended",
+    "effects": [
+      "Extreme-path earth Dao; one of the Eight Extreme Daos",
+      "Earth-attribute extreme path",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Listed in wiki; no chapter given",
+      "One of Eight Extreme Daos",
+      "Partial documentation"
+    ]
+  },
+  {
+    "id": "T72",
+    "name": "Extreme Life and Death Dao",
+    "nameCn": "极生死道",
+    "type": "combat",
+    "origin": "Self-comprehended",
+    "effects": [
+      "Extreme-path life-death Dao; one of the Eight Extreme Daos",
+      "Life-death attribute extreme path",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Listed in wiki; no chapter given",
+      "One of Eight Extreme Daos",
+      "Partial documentation"
+    ]
+  },
+  {
+    "id": "T73",
+    "name": "Extreme Land Dao",
+    "nameCn": "极地道",
+    "type": "combat",
+    "origin": "Self-comprehended on 5th Heaven-Trampling bridge",
+    "effects": [
+      "Extreme-path land Dao; first of last three Eight Extreme Daos",
+      "Comprehended on 5th bridge",
+      "Requires Half-Heaven-Trampling"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2063; Half-Heaven-Trampling required",
+      "First of final three Eight Extreme Daos",
+      "Comprehended on 5th Heaven Trampling bridge"
+    ]
+  },
+  {
+    "id": "T74",
+    "name": "Extreme Sky Dao",
+    "nameCn": "极天道",
+    "type": "combat",
+    "origin": "Self-comprehended",
+    "effects": [
+      "Extreme-path sky Dao; second of last three Eight Extreme Daos",
+      "Sky-attribute extreme path",
+      "Requires Half-Heaven-Trampling"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2063; Half-Heaven-Trampling required",
+      "Second of final three Eight Extreme Daos",
+      "Comprehended alongside Extreme Land and Extreme Life Dao"
+    ]
+  },
+  {
+    "id": "T75",
+    "name": "Extreme Life Dao",
+    "nameCn": "极命道",
+    "type": "combat",
+    "origin": "Self-comprehended",
+    "effects": [
+      "Extreme-path life/fate/command Dao; final of the Eight Extreme Daos",
+      "Also translated as Extreme Fate Dao or Extreme Command Dao",
+      "Requires Half-Heaven-Trampling"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2063; Half-Heaven-Trampling required",
+      "Final of Eight Extreme Daos",
+      "Can be translated as Extreme Fate/Command/Life Dao"
+    ]
+  },
+  {
+    "id": "T76",
+    "name": "One Step To Trample the Heavens",
+    "nameCn": "一步踏天",
+    "type": "combat",
+    "origin": "Self-comprehended; Heaven-Trampling Dao",
+    "effects": [
+      "Single step that tramples the heavens",
+      "The Dao of the 4th Step",
+      "Requires Half-Heaven-Trampling"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2064; comprehended on 5th bridge",
+      "Heaven-Trampling Dao movement/combat ability",
+      "Represents the ultimate Dao step"
+    ]
+  },
+  {
+    "id": "T77",
+    "name": "Ancient Ancestor's Finger Attack",
+    "nameCn": "古祖之指",
+    "type": "combat",
+    "origin": "Ancient Order lineage",
+    "effects": [
+      "Ancient-ancestor finger attack",
+      "Ancient Order power strike",
+      "Requires 3rd Step / Half-Heaven-Trampling"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 2033; Ancient Order lineage",
+      "Ancient-ancestor level finger technique",
+      "Partial wiki description"
+    ]
+  },
+  {
+    "id": "T78",
+    "name": "Ji Realm / Extreme Realm Divine Sense",
+    "nameCn": "极境神识",
+    "type": "divine_sense",
+    "origin": "Awakened through clan annihilation trauma + Underworld Ascension Method catalyst",
+    "effects": [
+      "Killing divine sense: kills cultivators below Core Formation at FE, below Nascent Soul at CF, below Soul Formation at NS Peak",
+      "Spiritual Energy refines into Divine Sense through trauma",
+      "Eventually absorbed into Slaughter and becomes Ji Thunder (7th accompanying thunder, Ch.1368)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 127; the Ji Realm changes Spiritual Energy to Divine Sense",
+      "Interferes with breakthroughs — sealed and unsealed across story",
+      "Qing Shui used Ji Realm to kill Russell for offending Wang Lin"
+    ]
+  },
+  {
+    "id": "T79",
+    "name": "Soul Piercing Eyes",
+    "nameCn": "神识之眼",
+    "type": "divine_sense",
+    "origin": "Obtained upon reaching mastery in restrictions",
+    "effects": [
+      "Pierces illusions and restrictions",
+      "Reads structure of restrictions without seeing them",
+      "Gated by restriction mastery level"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 179; requires Core Formation + restriction mastery",
+      "Divine sense eye-technique",
+      "Only obtained once certain restriction mastery is reached"
+    ]
+  },
+  {
+    "id": "T80",
+    "name": "Heart of Slaughter",
+    "nameCn": "杀戮之心",
+    "type": "divine_sense",
+    "origin": "Awakened through accumulated slaughter",
+    "effects": [
+      "Heart-state that channels slaughter intent",
+      "Dao-heart enhancement",
+      "Requires Ascendant+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 574; Ascendant+ required",
+      "Awakened through accumulated killing",
+      "Channels slaughter intent as a divine sense state"
+    ]
+  },
+  {
+    "id": "T81",
+    "name": "Heart Restriction (Divine Sense)",
+    "nameCn": "心禁",
+    "type": "divine_sense",
+    "origin": "Wang Lin's specialized restriction; paired with Heart Compass",
+    "effects": [
+      "Restricts the heart/mind; works on inner demons of self and enemies",
+      "Paired with Heart Compass and Restriction Heart inheritance",
+      "Requires Ascendant+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 858; specialized restriction on the heart/mind",
+      "Also listed in Restriction Arts (D)",
+      "Dual-category: divine sense and restriction"
+    ]
+  },
+  {
+    "id": "T82",
+    "name": "Eyes Suppressing the World",
+    "nameCn": "镇压天下之眼",
+    "type": "divine_sense",
+    "origin": "Fragment of Celestial Ancestor's Immortal Absolute Sword fused into eyes by Ji Si",
+    "effects": [
+      "Gaze can suppress another cultivator",
+      "Directly tied to Metal Essence — third fragment of Celestial Ancestor's Sword",
+      "World-suppressing eye technique"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1896; requires 3rd Step",
+      "Ji Si implanted sword fragment into Wang Lin's eyes",
+      "Tied to Metal Essence completion (Ch. 1997)"
+    ]
+  },
+  {
+    "id": "T83",
+    "name": "Samsara Eye / Reincarnation Eye",
+    "nameCn": "轮回眼",
+    "type": "divine_sense",
+    "origin": "Situ Nan's technique; Wang Lin learns second-hand",
+    "effects": [
+      "Can briefly glimpse karma lines",
+      "Eye of karma/reincarnation",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Implicit; Situ Nan used it",
+      "Wang Lin's mastery implied via Karma Domain",
+      "Situ Nan lineage technique"
+    ]
+  },
+  {
+    "id": "T84",
+    "name": "Heavenly Eye",
+    "nameCn": "天眼",
+    "type": "divine_sense",
+    "origin": "Situ Nan awakened it after reincarnation",
+    "effects": [
+      "Sees through cultivator disguises",
+      "Eye of truth",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Implicit; Situ Nan's technique",
+      "Wang Lin learns second-hand",
+      "Truth-seeing eye ability"
+    ]
+  },
+  {
+    "id": "T85",
+    "name": "Blue Flames",
+    "nameCn": "蓝焰",
+    "type": "divine_sense",
+    "origin": "Cold-attribute flame from the Underworld Ascension Method",
+    "effects": [
+      "Cold-attribute flame side-effect of Underworld Ascension Method",
+      "Ch. 121 appearance",
+      "Foundation Establishment+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 121; Foundation Establishment+",
+      "Side-effect of Underworld Ascension Method cultivation",
+      "Cold-attribute flame"
+    ]
+  },
+  {
+    "id": "T86",
+    "name": "Star Rotation",
+    "nameCn": "星辰流转",
+    "type": "divine_sense",
+    "origin": "Self-acquired technique",
+    "effects": [
+      "Defensive rotation technique",
+      "Divine sense defensive ability",
+      "Requires Core Formation+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 475 (S1 EP103)",
+      "Self-acquired defensive technique",
+      "Rotation-based defense"
+    ]
+  },
+  {
+    "id": "T87",
+    "name": "Spatial Bending",
+    "nameCn": "空间弯曲",
+    "type": "divine_sense",
+    "origin": "Self-acquired movement/divine-sense",
+    "effects": [
+      "Spatial bending movement ability",
+      "Divine sense / movement hybrid",
+      "Requires Ascendant+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 770; self-acquired",
+      "Spatial manipulation",
+      "Also referenced in Movement section"
+    ]
+  },
+  {
+    "id": "T88",
+    "name": "Planet Soul Extraction",
+    "nameCn": "星魂抽取",
+    "type": "divine_sense",
+    "origin": "Self-acquired soul-technique",
+    "effects": [
+      "Extracts souls from planets",
+      "Planet-level soul extraction",
+      "Requires Nirvana Scryer+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 903; Nirvana Scryer+ required",
+      "Self-acquired technique",
+      "Planet-soul extraction"
+    ]
+  },
+  {
+    "id": "T89",
+    "name": "God Speed Divine Arts",
+    "nameCn": "神速神技",
+    "type": "divine_sense",
+    "origin": "Self-acquired",
+    "effects": [
+      "God-speed movement ability",
+      "Divine sense / movement hybrid",
+      "Requires Ascendant+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 3,
+    "knownFacts": [
+      "Listed under Techniques; no chapter given",
+      "Self-acquired",
+      "Minimal documentation"
+    ]
+  },
+  {
+    "id": "T90",
+    "name": "Ji Realm (Technique Form)",
+    "nameCn": "极境",
+    "type": "divine_sense",
+    "origin": "Refinement of Ji Realm into usable technique after Ascendant breakthrough",
+    "effects": [
+      "Refined Ji Realm into an active technique form",
+      "Distinct from the passive Divine Sense form",
+      "Requires Ascendant+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1306; listed as Technique alongside Spatial Bending and Planet Soul Extraction",
+      "Refinement after Ascendant breakthrough",
+      "Active-use version of the Ji Realm"
+    ]
+  },
+  {
+    "id": "T91",
+    "name": "Ancient Restrictions",
+    "nameCn": "古禁",
+    "type": "restriction",
+    "origin": "Self-taught via 7-year trial at Land of the Ancient God Restrictions Mountain",
+    "effects": [
+      "Foundation for all restriction work",
+      "Studied for 7 years at Restriction Mountain Trial",
+      "Core Formation+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "~Ch.179-180; 7 years of study",
+      "Became 4th person to successfully comprehend the trial",
+      "Foundation of Wang Lin's restriction specialty"
+    ]
+  },
+  {
+    "id": "T92",
+    "name": "Restriction Flags Refining Method",
+    "nameCn": "禁旗炼制法",
+    "type": "restriction",
+    "origin": "Inherited from Tu Si after passing the Restriction Mountain Trial",
+    "effects": [
+      "Creates portable formation-array flags from inkstones and 99,999 restrictions",
+      "Three flag variants: incomplete/tribulation-summoning, mixed, pure-attack",
+      "Requires 3 Ink Stones per flag"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "~Ch.180; inherited from Tu Si",
+      "Each flag = portable formation-array",
+      "Wang Lin made three distinct variants"
+    ]
+  },
+  {
+    "id": "T93",
+    "name": "Illusionary Circle",
+    "nameCn": "幻阵",
+    "type": "restriction",
+    "origin": "Self-developed after 7 years of restriction research",
+    "effects": [
+      "Wave-based restriction analysis tool",
+      "Reads any restriction's structure and rules without seeing it",
+      "Examines waves produced by restrictions to understand their structure"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 180 (S1 EP32); Core Formation+",
+      "Doesn't require eyes — works by wave examination",
+      "Mastered after 7 years of research and improvement"
+    ]
+  },
+  {
+    "id": "T94",
+    "name": "18 Plum Restriction",
+    "nameCn": "梅花十八禁",
+    "type": "restriction",
+    "origin": "Self-derived from the Annihilation Restriction (Destruction Restriction branch)",
+    "effects": [
+      "Autonomous plum-blossom restriction; operates independently once set",
+      "18 sets of restrictions transform into statues",
+      "Unpredictable, almost supernatural"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 752; Ascendant+ required",
+      "Derived from Annihilation/Destruction Restriction",
+      "Can be deployed as treasure/compass (Heart Compass)"
+    ]
+  },
+  {
+    "id": "T95",
+    "name": "Annihilation Restriction",
+    "nameCn": "寂灭禁",
+    "type": "restriction",
+    "origin": "Obtained after inheriting half of Restrictions Heart from Li Yuan",
+    "effects": [
+      "1st of the Four Great Restrictions; annihilation-attribute",
+      "Destroy-the-target restriction",
+      "Source of the 18 Plum Restriction"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 754; Ascendant+ required",
+      "One of four great restrictions",
+      "Combined with Heart Compass for full activation"
+    ]
+  },
+  {
+    "id": "T96",
+    "name": "Nine Deaths Perish Formation",
+    "nameCn": "九死灭阵",
+    "type": "restriction",
+    "origin": "Self-constructed from Annihilation-lineage restrictions",
+    "effects": [
+      "Formation array with perish-attribute",
+      "Built from Annihilation-lineage restrictions",
+      "Requires Ascendant+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 829; Ascendant+ required",
+      "Self-constructed formation",
+      "Perish-attribute array"
+    ]
+  },
+  {
+    "id": "T97",
+    "name": "Time Restriction",
+    "nameCn": "时禁",
+    "type": "restriction",
+    "origin": "Self-comprehended; 2nd of the Four Great Restrictions",
+    "effects": [
+      "Time-bending restriction",
+      "2nd of the Four Great Restrictions",
+      "Requires Nirvana Shatterer+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1223; Nirvana Shatterer+ required",
+      "Self-comprehended / inherited",
+      "Time-attribute great restriction"
+    ]
+  },
+  {
+    "id": "T98",
+    "name": "Life and Death Restriction",
+    "nameCn": "生死禁",
+    "type": "restriction",
+    "origin": "Self-comprehended; 3rd of the Four Great Restrictions",
+    "effects": [
+      "Life-death attribute restriction",
+      "3rd of the Four Great Restrictions",
+      "Requires Nirvana Shatterer+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1229; Nirvana Shatterer+ required",
+      "Self-comprehended / inherited",
+      "Life-death-attribute great restriction"
+    ]
+  },
+  {
+    "id": "T99",
+    "name": "Ancient Soul Restriction",
+    "nameCn": "古魂禁",
+    "type": "restriction",
+    "origin": "Self-comprehended; 4th of the Four Great Restrictions",
+    "effects": [
+      "Ancient-soul attribute restriction",
+      "4th of the Four Great Restrictions",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1697; 3rd Step required",
+      "Self-comprehended / inherited",
+      "Ancient-soul-attribute great restriction"
+    ]
+  },
+  {
+    "id": "T100",
+    "name": "Heart Restriction (Restriction)",
+    "nameCn": "心禁",
+    "type": "restriction",
+    "origin": "Restriction-heart inheritance; paired with Heart Compass",
+    "effects": [
+      "Heart-attribute special restriction",
+      "Pairs with Heart Compass and Restriction Heart inheritance",
+      "Requires Ascendant+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 858; also listed in Divine Sense (C)",
+      "Restriction-heart inheritance",
+      "Dual-category: restriction and divine sense"
+    ]
+  },
+  {
+    "id": "T101",
+    "name": "Destruction Restriction",
+    "nameCn": "毁灭禁",
+    "type": "restriction",
+    "origin": "One of the four great ancient forbidden arts; capstone of ancient restriction arts",
+    "effects": [
+      "World-sealing tier restriction — seals everything from immortals to mortal beasts",
+      "Capstone of ancient restriction arts; source of Annihilation Restriction",
+      "Requires Heart Restriction Compass and Destruction Heart Restriction legacy for full power"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Implicit (Baidu); requires 3rd Step",
+      "Ambiguous whether identical to Annihilation or overarching source-art",
+      "Per Baidu: can travel the world using restrictions, sealing everything"
+    ]
+  },
+  {
+    "id": "T102",
+    "name": "Restriction Essence",
+    "nameCn": "禁之源",
+    "type": "restriction",
+    "origin": "Self-forged by merging world laws and millions of fused formations",
+    "effects": [
+      "4th-step-tier essence from lifetime of restriction mastery",
+      "Merged laws of the world and formations from Immortal Astral Continent into eye bloodlines",
+      "Evolved from acquiring all Four Great Restrictions to Abstract Realm"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1715 (completed); Spirit Void Peak → Arcane Void",
+      "Restriction Essence True Body at Ch. 2044/2046",
+      "Fused into Slaughter Thunder Essence True Body"
+    ]
+  },
+  {
+    "id": "T103",
+    "name": "Unnamed Wheel Formation",
+    "nameCn": "无名轮阵",
+    "type": "restriction",
+    "origin": "Self-created; upgraded version of Life-Death, Karma, True-False Wheel Formation",
+    "effects": [
+      "Seals all Outer Realm cultivators from entering Inner Realm",
+      "Allows Joss Flames to enter (fixing Realm-Sealing Formation's flaw)",
+      "Four-part creation: treasure spirits, planet souls, enemy soul slaves, and Inner Realm immortal formation spirit"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1667; requires 3rd Step",
+      "Replaces the Realm-Sealing Formation",
+      "Utilizes souls from 100 years of war"
+    ]
+  },
+  {
+    "id": "T104",
+    "name": "Blood Lines Rules",
+    "nameCn": "血脉之规",
+    "type": "restriction",
+    "origin": "Self-comprehended restriction-essence rule",
+    "effects": [
+      "Restriction-essence bloodline law rule",
+      "Bloodline-law category",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Ch. 1715; self-comprehended",
+      "Restriction-essence derived rule",
+      "Partial documentation"
+    ]
+  },
+  {
+    "id": "T105",
+    "name": "Soul Searching",
+    "nameCn": "搜魂术",
+    "type": "soul",
+    "origin": "Self-taught",
+    "effects": [
+      "Rips memories from a captured soul",
+      "Interrogation technique",
+      "Requires Core Formation+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Early (around Ch. 180+)",
+      "Self-taught soul interrogation",
+      "Standard soul technique"
+    ]
+  },
+  {
+    "id": "T106",
+    "name": "Soul Flag Production Method",
+    "nameCn": "魂旗炼制法",
+    "type": "soul",
+    "origin": "Main cultivation method of the Soul Refining Sect",
+    "effects": [
+      "Splits into Soul Refining, Soul Extracting, and Soul Sealing",
+      "Lets user refine souls into a Soul Flag",
+      "Powers the One Billion Soul Banner"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 384; Foundation Establishment+",
+      "Inherited from Soul Refining Sect",
+      "Wang Lin inherits and repairs One Billion Soul Banner from Dun Tian"
+    ]
+  },
+  {
+    "id": "T107",
+    "name": "Soul Refining",
+    "nameCn": "炼魂",
+    "type": "soul",
+    "origin": "Soul Refining Sect method",
+    "effects": [
+      "Refines souls for use",
+      "Part of Soul Flag Production Method",
+      "Foundation Establishment+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 384; part of Soul Flag Production Method",
+      "Soul Refining Sect core technique",
+      "Basic soul processing"
+    ]
+  },
+  {
+    "id": "T108",
+    "name": "Soul Extracting",
+    "nameCn": "抽魂",
+    "type": "soul",
+    "origin": "Soul Refining Sect method",
+    "effects": [
+      "Extracts souls from bodies",
+      "Part of Soul Flag Production Method",
+      "Foundation Establishment+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 384; part of Soul Flag Production Method",
+      "Soul Refining Sect core technique",
+      "Soul extraction"
+    ]
+  },
+  {
+    "id": "T109",
+    "name": "Soul Sealing",
+    "nameCn": "封魂",
+    "type": "soul",
+    "origin": "Soul Refining Sect method",
+    "effects": [
+      "Seals souls for storage/use",
+      "Part of Soul Flag Production Method",
+      "Foundation Establishment+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 384; part of Soul Flag Production Method",
+      "Soul Refining Sect core technique",
+      "Soul sealing"
+    ]
+  },
+  {
+    "id": "T110",
+    "name": "Soul-Devourer Soul Nature",
+    "nameCn": "噬魂者本性",
+    "type": "soul",
+    "origin": "Innate soul-nature; manifests as Soul Gem",
+    "effects": [
+      "Innate soul-devourer nature with Soul Gem",
+      "Can create wandering souls",
+      "Evolves through multiple absorptions: Thunder Dragon, Heavenly Flame, Devilish Flames, Fire/Flame Dragons, Soul Blood"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 119; innate ability",
+      "Soul Gem appears at Ch. 193",
+      "Eventually becomes Ancient Order Soul close to Ancient Ancestor"
+    ]
+  },
+  {
+    "id": "T111",
+    "name": "Soul Branding / Slave Seal",
+    "nameCn": "灵魂烙印",
+    "type": "soul",
+    "origin": "Self-acquired",
+    "effects": [
+      "Brands/enslaves souls with a seal",
+      "Slave seal creation",
+      "Requires Nascent Soul+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Early chapters; used on Big Head Cultivator and others",
+      "Self-acquired technique",
+      "Soul branding / slave seal"
+    ]
+  },
+  {
+    "id": "T112",
+    "name": "Magic Arsenal",
+    "nameCn": "魔库术",
+    "type": "soul",
+    "origin": "Bai Fan lineage; 3rd of Six Paths Triple Arts",
+    "effects": [
+      "Stores all souls of enemies killed throughout lifetime",
+      "Catalyst for 18 Layers of Hell when combined with Underworld River + Celestial Sealing Stamp",
+      "Soul-storing arsenal spell"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 919; Nirvana Scryer+ required",
+      "3rd of Bai Fan's Six Paths Triple Arts",
+      "Combined with Underworld River → 18 Layers of Hell (Ch. 915)"
+    ]
+  },
+  {
+    "id": "T113",
+    "name": "18 Layers of Hell Reincarnation Realm",
+    "nameCn": "十八层地狱轮回界",
+    "type": "soul",
+    "origin": "Self-created composite using Life-Death Underworld River + Celestial Sealing Stamp",
+    "effects": [
+      "Forms Wang Lin's own private reincarnation cycle",
+      "Uses Magic Arsenal's stored souls bound by Life-Death Domain's Underworld River",
+      "Reincarnation-cycle formation"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 915; Nirvana Scryer+ required",
+      "Self-created composite technique",
+      "Direct evolution of Dao Transformation Yellow Springs"
+    ]
+  },
+  {
+    "id": "T114",
+    "name": "Nether Guide",
+    "nameCn": "冥引",
+    "type": "soul",
+    "origin": "Taught by Qing Shui (Wang Lin's senior brother)",
+    "effects": [
+      "Condenses memories of recently killed persons to open a portal to where they had been",
+      "Memory-portal soul technique",
+      "Requires Nirvana Scryer+"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 949; taught by Qing Shui",
+      "Soul/movement dual-purpose",
+      "Memory-based portal creation"
+    ]
+  },
+  {
+    "id": "T115",
+    "name": "Heaven Avoiding Coffin",
+    "nameCn": "避天棺",
+    "type": "soul",
+    "origin": "Acquired to preserve Li Muwan's soul",
+    "effects": [
+      "Preserves a dissipating nascent soul inside coffin",
+      "Sustains soul with trace of life force",
+      "Mysterious force surrounds entire coffin"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 819 (item); Ascendant+ required",
+      "Soul-preservation treasure",
+      "Used for Li Muwan's soul"
+    ]
+  },
+  {
+    "id": "T116",
+    "name": "Qi Xi Spell",
+    "nameCn": "乞夕术",
+    "type": "soul",
+    "origin": "Learned from Zhan Li Yunzi's ancestor",
+    "effects": [
+      "Life-force exchange resurrection spell",
+      "Sacrifices user's vitality to resurrect another and form flesh from Nascent Soul",
+      "50% of Wang Lin's life force demanded"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Implicit (Baidu); requires 3rd Step",
+      "Failed to fully recover Li Muwan — didn't pass 4th day out of 7",
+      "Life-force sacrifice resurrection"
+    ]
+  },
+  {
+    "id": "T117",
+    "name": "Soul Devil Ship",
+    "nameCn": "魂魔船",
+    "type": "soul",
+    "origin": "Self-forged from four great restrictions and many other restrictions",
+    "effects": [
+      "Composite soul-restriction vehicle/weapon",
+      "Made from four great restrictions",
+      "Soul-devil ship"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1789; requires 3rd Step",
+      "Self-forged composite",
+      "Uses all four great restrictions as base"
+    ]
+  },
+  {
+    "id": "T118",
+    "name": "Heavenly Flame",
+    "nameCn": "天火",
+    "type": "soul",
+    "origin": "Absorbed from Ming Hai's Burn the Heavens spell",
+    "effects": [
+      "Absorbed heavenly flame into Soul-devourer nature",
+      "Part of Vermilion Bird awakening cycle",
+      "Nirvana Scryer+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1021; absorbed from Ming Hai",
+      "Part of the Vermilion Bird awakening evolution",
+      "Fire-attribute soul absorption"
+    ]
+  },
+  {
+    "id": "T119",
+    "name": "Earth Escape Technique",
+    "nameCn": "土遁术",
+    "type": "movement",
+    "origin": "Self-acquired basic escape technique",
+    "effects": [
+      "Basic earth-escape movement technique",
+      "Allows underground travel",
+      "Foundation Establishment+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 134 (S1 EP16)",
+      "Basic escape technique",
+      "Foundation Establishment+ required"
+    ]
+  },
+  {
+    "id": "T120",
+    "name": "Disguising Technique",
+    "nameCn": "易容术",
+    "type": "movement",
+    "origin": "Basic immortal technique",
+    "effects": [
+      "Hides cultivation for a short period",
+      "Unless target is at Foundation Establishment, disguise holds",
+      "Qi Condensation+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 33; very early technique",
+      "Basic immortal technique",
+      "Foundational stealth"
+    ]
+  },
+  {
+    "id": "T121",
+    "name": "Memory Erasing Technique",
+    "nameCn": "忘情术",
+    "type": "movement",
+    "origin": "Self-acquired",
+    "effects": [
+      "Erases memories of targets",
+      "Stealth/support technique",
+      "Foundation Establishment+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 78; self-acquired",
+      "Memory erasure ability",
+      "Foundation Establishment+ required"
+    ]
+  },
+  {
+    "id": "T122",
+    "name": "Attractive Force Technique",
+    "nameCn": "引力术",
+    "type": "movement",
+    "origin": "One of Three Techniques in Three Stages of Qi Condensation",
+    "effects": [
+      "Manipulates objects from a distance (telekinesis)",
+      "Usable at 1st layer Qi Condensation",
+      "Most basic immortal technique"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 25 (S1 EP2); 1st layer Qi Condensation",
+      "Telekinesis ability",
+      "One of the three basic immortal techniques"
+    ]
+  },
+  {
+    "id": "T123",
+    "name": "Fireball Technique",
+    "nameCn": "火球术",
+    "type": "combat",
+    "origin": "Basic immortal technique (Three Stages of Qi Condensation)",
+    "effects": [
+      "Basic fireball attack",
+      "Usable at 1st layer Qi Condensation",
+      "Most basic combat spell"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 25 (S1 EP2); 1st layer Qi Condensation",
+      "Basic immortal technique",
+      "One of the three basic techniques"
+    ]
+  },
+  {
+    "id": "T124",
+    "name": "Earth Splitting Technique",
+    "nameCn": "裂地术",
+    "type": "combat",
+    "origin": "Basic immortal technique (Three Stages of Qi Condensation)",
+    "effects": [
+      "Splits the earth as attack/movement",
+      "Usable at 1st layer Qi Condensation",
+      "Basic combat/movement hybrid"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 25 (S1 EP2); 1st layer Qi Condensation",
+      "Basic immortal technique",
+      "Earth-attribute technique"
+    ]
+  },
+  {
+    "id": "T125",
+    "name": "Teleportation Restriction",
+    "nameCn": "瞬移禁制",
+    "type": "movement",
+    "origin": "Self-created restriction-teleport hybrid",
+    "effects": [
+      "Uses split-second time distortion during teleportation",
+      "Seals self, teleports multiple times in one instant, releases seal for multiplied distance",
+      "Core Formation+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 493 (S1 EP106)",
+      "Self-created restriction-teleport hybrid",
+      "Also known as Great Teleportation Forbidden Technique"
+    ]
+  },
+  {
+    "id": "T126",
+    "name": "Shrink Earth to Inch",
+    "nameCn": "缩地成寸",
+    "type": "movement",
+    "origin": "One of four great divine abilities 2nd-step cultivators can comprehend",
+    "effects": [
+      "Divine ability for traversing and walking between planets",
+      "On Xiangang Continent, must reach Golden Venerable level",
+      "Used multiple times to distance from powerful enemies"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Implicit (Baidu); 2nd Step (Cave Mansion Realm)",
+      "Self-comprehended by sensing heaven and earth",
+      "Planet-traversal movement ability"
+    ]
+  },
+  {
+    "id": "T127",
+    "name": "Star Compass / Silver Dragon Star Compass",
+    "nameCn": "星盘",
+    "type": "movement",
+    "origin": "Gifted by Giant Demon Clan's Chi Hu; can only be used in void",
+    "effects": [
+      "Extremely fast void-vehicle; primary void transportation",
+      "Upgraded to Silver Dragon Star Compass at Ch. 477",
+      "Ascendant+ required to operate"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 477 (upgraded); gifted by Chi Hu",
+      "Void-only vehicle",
+      "Primary means of void transportation"
+    ]
+  },
+  {
+    "id": "T128",
+    "name": "Flying Sword",
+    "nameCn": "飞剑",
+    "type": "movement",
+    "origin": "Self-acquired; first flying sword named Wealth",
+    "effects": [
+      "Basic flying sword movement",
+      "Qi Condensation+ required",
+      "First flying sword obtained ~Ch. 30"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "~Ch. 30; first flying sword Wealth",
+      "Basic movement technique",
+      "Qi Condensation+ required"
+    ]
+  },
+  {
+    "id": "T129",
+    "name": "Divine Path",
+    "nameCn": "神道诀",
+    "type": "avatar_clone",
+    "origin": "War God Shrine's Divine Path technique",
+    "effects": [
+      "Creates an Avatar to help break through to Nascent Soul",
+      "Original drawback: Avatar lacks cultivation and lives only 30 years",
+      "Ji Realm conflict removes lifespan drawback; no primary/secondary distinction between original and avatar"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 129 (S1 EP26); Foundation Establishment+",
+      "Avatar cultivates normally while main body becomes Ancient God",
+      "War God Shrine technique"
+    ]
+  },
+  {
+    "id": "T130",
+    "name": "War God Shrine Refining Technique",
+    "nameCn": "战神殿炼制法",
+    "type": "avatar_clone",
+    "origin": "War God Shrine",
+    "effects": [
+      "War-shrine method for avatar/refining",
+      "War God Shrine refining technique",
+      "Foundation Establishment+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "~S1 EP26; War God Shrine",
+      "Avatar / refining category",
+      "Partial documentation"
+    ]
+  },
+  {
+    "id": "T131",
+    "name": "Heaven Devouring Demon Formation",
+    "nameCn": "吞天魔阵",
+    "type": "avatar_clone",
+    "origin": "Self-acquired vicious formation",
+    "effects": [
+      "Vicious formation using bodies of killed cultivators as base",
+      "10 FE bodies trap a CF cultivator; 5 CF bodies kill mid/low CF cultivator",
+      "Bodies must be ones Wang Lin personally killed"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 139; Foundation Establishment+",
+      "Heaven Devouring Demon Formation",
+      "Very inconvenient: requires personally-killed bodies"
+    ]
+  },
+  {
+    "id": "T132",
+    "name": "Foundation Stealing Technique",
+    "nameCn": "夺基术",
+    "type": "avatar_clone",
+    "origin": "Self-acquired / Situ Nan",
+    "effects": [
+      "Steals a person's foundation and talent for instant Foundation Establishment",
+      "Used on Teng Huayuan's son Teng Li at Ch. 86",
+      "Foundation Establishment+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 84 (S1 EP7)",
+      "Used to steal Teng Li's cultivation",
+      "Instant Foundation Establishment via theft"
+    ]
+  },
+  {
+    "id": "T133",
+    "name": "Blood Refining Technique",
+    "nameCn": "血炼术",
+    "type": "avatar_clone",
+    "origin": "Created with Situ Nan's help; Blood Symbol method",
+    "effects": [
+      "Refines treasure faster with Blood Symbol; user gets hurt if treasure is damaged",
+      "Treasure gains blood aura and gets stronger with more kills",
+      "Foundation Establishment+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 80 (S1 EP5)",
+      "Blood Symbol creation with Situ Nan's help",
+      "Treasure-blood refining method"
+    ]
+  },
+  {
+    "id": "T134",
+    "name": "Cultivator Clone / Celestial Body",
+    "nameCn": "修仙分身",
+    "type": "avatar_clone",
+    "origin": "Divine Path technique; main cultivator avatar",
+    "effects": [
+      "Primary Qi Cultivator avatar; evolves through multiple bodies",
+      "Evolution: Celestial Body (Ch.424) → Thunder Body (Ch.719) → Immortal Celestial Body (Ch.1538)",
+      "Fused back with Main Body at Ch. 211"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 211 (fused back with Main Body)",
+      "Divine Path technique — main cultivator avatar",
+      "Multiple body evolutions across the story"
+    ]
+  },
+  {
+    "id": "T135",
+    "name": "Ancient Demon Clone",
+    "nameCn": "古魔分身",
+    "type": "avatar_clone",
+    "origin": "Cultivating demonic energy; from statue in Land of Demonic Spirits",
+    "effects": [
+      "Second Avatar for Ancient Demon powers",
+      "From a statue in Land of Demonic Spirits; refined into a Second Avatar",
+      "Fused back with Main Body at Ch. 1002 to become an Ancient One"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1002 (fused back); Ancient Order track",
+      "Incomplete Seed initially, incapable of existing outside statue",
+      "Completed via Scattered Demon fragment + Soul Refining Tribe worship"
+    ]
+  },
+  {
+    "id": "T136",
+    "name": "Ancient Devil Clone",
+    "nameCn": "古妖分身",
+    "type": "avatar_clone",
+    "origin": "From Devil Soul Bottle's 3000 Ancient Devil Souls; infused into Ancient Devil Corpse with Royal Aura",
+    "effects": [
+      "Third Avatar for Ancient Devil powers",
+      "Half-finished from 3000 Ancient Devil Souls; completed via Ancient Devil Corpse + Royal Aura",
+      "Fused back at ~Ch.1539 to become an Ancient One"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "~Ch.1539 (fused back); Ancient Order track",
+      "From Daogu Yemo's tomb corpse (Baidu)",
+      "Third Avatar; completed with Royal Aura infusion"
+    ]
+  },
+  {
+    "id": "T137",
+    "name": "Otherworldly Void Avatar",
+    "nameCn": "异界虚空分身",
+    "type": "avatar_clone",
+    "origin": "Condensed at arc-shaped platform; same Void Destiny as Immortal/Ancient Ancestor",
+    "effects": [
+      "Possesses same Void Destiny as Immortal Ancestor and Ancient Ancestor",
+      "Caused nine suns of Xiangang to appear simultaneously",
+      "Fused during battle with Ancient Path; enables full Nine Songs and Three Signs"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1798; Void Tribulant (3rd Step peak)",
+      "Condensed at arc-shaped platform",
+      "Enables full Nine Songs and Three Signs when fused"
+    ]
+  },
+  {
+    "id": "T138",
+    "name": "Slaughter True Body / Lu Mo",
+    "nameCn": "戮默",
+    "type": "essence_true_body",
+    "origin": "Formed accidentally by fusing Thunder True Body with Slaughter and Restriction Essences",
+    "effects": [
+      "Black-haired Wang Lin clone; combat power threatens Grand Empyreans",
+      "Represents Wang Lin's lifetime of murder (戮 + 寂灭 = Slaughter + Silent Extinction)",
+      "Sent back in time via Flowing Moon to find method to resurrect Li Muwan"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1900 (initial) → Ch. 2046 (completed)",
+      "Named 'Slaughter' (戮); given independence then merged back",
+      "Fuses with all other True Bodies → Punishment Slaughter"
+    ]
+  },
+  {
+    "id": "T139",
+    "name": "Five Elements True Body",
+    "nameCn": "五行真身",
+    "type": "essence_true_body",
+    "origin": "Self-forged by fusing Fire, Earth, Water, Metal, Wood Essence True Bodies",
+    "effects": [
+      "Represents Wang Lin's lifetime of cultivation in Five Elements",
+      "Each Five Elements Origin condensed a true body; all fuse into one",
+      "Fire+Earth+Water at Ch.1900; completed with Metal (Ch.2024) and Wood (Ch.2017)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1900 (initial) → Ch. 2024 (completed)",
+      "Arcane Void → Void Tribulant",
+      "Five Elements Essences unified into single true body"
+    ]
+  },
+  {
+    "id": "T140",
+    "name": "Slaughter Thunder Essence True Body",
+    "nameCn": "戮雷真身",
+    "type": "essence_true_body",
+    "origin": "Formed accidentally by fusing Thunder True Body + Slaughter + Restriction Essences",
+    "effects": [
+      "Composite true body of Thunder + Slaughter + Restriction",
+      "Accidental creation during Arcane Void advancement",
+      "3rd Step required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1900 (initial) → Ch. 2046 (completed)",
+      "Accidentally created during Ch. 1901 advancement",
+      "Contains Slaughter (Lu Mo) within it"
+    ]
+  },
+  {
+    "id": "T141",
+    "name": "Restriction Essence True Body",
+    "nameCn": "禁源真身",
+    "type": "essence_true_body",
+    "origin": "Self-forged by splitting Five Elements True Body and integrating restrictions from Xuan Lou",
+    "effects": [
+      "Restriction-attribute true body",
+      "Split from Five Elements True Body; integrated Xuan Lou's restrictions",
+      "Half-Heaven-Trampling required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2044 (initial) → Ch. 2046 (completed)",
+      "Self-forged with Xuan Lou's restrictions",
+      "Half-Heaven-Trampling"
+    ]
+  },
+  {
+    "id": "T142",
+    "name": "Absolute Beginning Essence True Body",
+    "nameCn": "太初真身",
+    "type": "essence_true_body",
+    "origin": "Self-forged by simulating day/night alternation with multiple techniques",
+    "effects": [
+      "Absolute Beginning (Taichu) attribute true body",
+      "Created via day/night simulation: Absolute Beginning as sun, Absolute End as darkness",
+      "Used Grand Empyrean Power + Flowing Time Spell + wisp of Origin Soul"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Implicit → completed via century of closed-door cultivation with Lou Hou's Spirit",
+      "Self-forged with complex simulation technique",
+      "Half-Heaven-Trampling"
+    ]
+  },
+  {
+    "id": "T143",
+    "name": "Absolute End Essence True Body",
+    "nameCn": "寂灭真身",
+    "type": "essence_true_body",
+    "origin": "Same simulation process as Absolute Beginning",
+    "effects": [
+      "Absolute End (Silent Extinction/Miemie) attribute true body",
+      "Created as darkness in day/night simulation",
+      "Half-Heaven-Trampling required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Implicit → completed alongside Absolute Beginning",
+      "Same complex simulation as Absolute Beginning",
+      "Half-Heaven-Trampling"
+    ]
+  },
+  {
+    "id": "T144",
+    "name": "Slaughter Essence True Body",
+    "nameCn": "杀戮真身",
+    "type": "essence_true_body",
+    "origin": "Self-forged; suppressed Slaughter's growth until Absolute Beginning/End learned",
+    "effects": [
+      "Slaughter-attribute true body",
+      "Refined second time to prevent Slaughter rebelling",
+      "Fuses with all prior Essence True Bodies → Punishment Slaughter"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Initial after Slaughter Thunder creation → completed via century of nourishment",
+      "Suppressed to maintain balance until Absolute Beginning/End Essences learned",
+      "Half-Heaven-Trampling"
+    ]
+  },
+  {
+    "id": "T145",
+    "name": "Fire Essence True Body",
+    "nameCn": "火源真身",
+    "type": "essence_true_body",
+    "origin": "Consumed ~120 Fire Veins + Main Fire Vein in Great Soul Sect",
+    "effects": [
+      "Fire-attribute true body",
+      "Evolved from Vermilion Bird manifestation after consuming Fire Veins",
+      "3rd Step required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1825; 3rd Step",
+      "Consumed ~120 Fire Veins + Main Fire Vein",
+      "Evolved from Vermilion Bird manifestation"
+    ]
+  },
+  {
+    "id": "T146",
+    "name": "Thunder Essence True Body",
+    "nameCn": "雷源真身",
+    "type": "essence_true_body",
+    "origin": "Dao Devil Sect Master fed his Thunder Essence into Wang Lin's to evolve it",
+    "effects": [
+      "Thunder-attribute true body",
+      "Dao Devil Sect Master's Thunder Essence fed into Wang Lin's",
+      "Wang Lin reclaimed it after Heaven Defying Bead protected him from will-erasure"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1892; 3rd Step",
+      "Seized back from Dao Devil Sect Master's control",
+      "Heaven Defying Bead enabled recovery"
+    ]
+  },
+  {
+    "id": "T147",
+    "name": "Earth Essence True Body",
+    "nameCn": "土源真身",
+    "type": "essence_true_body",
+    "origin": "Ji Si used Meng Earth Beads + Celestial Ancestor's grains of sand",
+    "effects": [
+      "Earth-attribute true body",
+      "Third grain of Celestial Ancestor's continent-creation sand used",
+      "3rd Step required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1895; 3rd Step",
+      "Three Meng Earth Beads + two of nine grains of Celestial Ancestor's sand",
+      "Completed the 9th cycle"
+    ]
+  },
+  {
+    "id": "T148",
+    "name": "Water Essence True Body",
+    "nameCn": "水源真身",
+    "type": "essence_true_body",
+    "origin": "Ji Si used Celestial Sea Mother Soul, Mortal Dream Water, Dao Heart Melting Liquid, etc.",
+    "effects": [
+      "Water-attribute true body",
+      "Fourth Essence True Body; originally for Green Scorpion to possess",
+      "3rd Step required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1897; 3rd Step",
+      "Created with Celestial Sea Mother Soul, Mortal Dream Water, Dao Heart Melting Liquid, Water Celestial Blood",
+      "Required 16 years of Ji Si's life in blood"
+    ]
+  },
+  {
+    "id": "T149",
+    "name": "Wood Essence True Body",
+    "nameCn": "木源真身",
+    "type": "essence_true_body",
+    "origin": "Pure Wood Essence liquid from Ji Du + Wood Essence absorbed with Xuan Lou",
+    "effects": [
+      "Wood-attribute true body",
+      "Formed from Ji Du's pure Wood Essence liquid",
+      "Void Tribulant required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2017; Void Tribulant",
+      "Ji Du's pure Wood Essence liquid",
+      "Wood Essence absorbed while with Xuan Lou"
+    ]
+  },
+  {
+    "id": "T150",
+    "name": "Metal Essence True Body",
+    "nameCn": "金源真身",
+    "type": "essence_true_body",
+    "origin": "Integration of Celestial Ancestor's Sword fragments + Metal Essence with Xuan Lou",
+    "effects": [
+      "Metal-attribute true body",
+      "Third fragment of Celestial Ancestor's Immortal Absolute Sword",
+      "Void Tribulant Peak required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2024; Void Tribulant Peak",
+      "Celestial Ancestor's Sword fragments integrated",
+      "Great Accomplishment with third fragment from Grand Empyrean Jiu Di"
+    ]
+  },
+  {
+    "id": "T151",
+    "name": "Punishment Slaughter",
+    "nameCn": "刑戮",
+    "type": "avatar_clone",
+    "origin": "Fused Slaughter with Thunder → Restriction → Absolute Beginning/End → Five Elements True Body",
+    "effects": [
+      "Final fused avatar from all Essence True Bodies + Slaughter",
+      "Slaughter struggled until Five Elements True Body pressured him with divine sense",
+      "Half-Heaven-Trampling required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. ~2065; Half-Heaven-Trampling",
+      "All Essence True Bodies fused into Slaughter → Punishment Slaughter",
+      "Ultimate fused avatar form"
+    ]
+  },
+  {
+    "id": "T152",
+    "name": "Life and Death Domain",
+    "nameCn": "生死域",
+    "type": "dao_domain",
+    "origin": "Cultivated by spending a mortal lifetime (Ch.139 arc + Ch.272 breakthrough)",
+    "effects": [
+      "Manifests as the Underworld River (Ch.604); controls cycle of life and death",
+      "Breakthrough requires living as mortal for one full lifetime",
+      "Evolves: Domain → Life and Death Essence (Ch.1280/1613) → Life and Death Seal (5th Original Spell)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 264; ~age 400; Nascent Soul → Soul Formation",
+      "First domain; foundation for Karma and True-False domains",
+      "Sacrificed to fuel Fire and Thunder Essences at Ch.1280; re-completed later"
+    ]
+  },
+  {
+    "id": "T153",
+    "name": "Karma Domain",
+    "nameCn": "因果域",
+    "type": "dao_domain",
+    "origin": "Evolved from Life and Death Domain after another mortal lifetime with Wang Ping",
+    "effects": [
+      "Manifests as Karmic Cycle / Yin-Yang Symbol (left eye yang, right eye yin)",
+      "Karma Whip is its treasure-form",
+      "Evolves: Domain → Karma Essence → Karma Print (4th Original Spell)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 731 (Donghua EP147); ~age 900+",
+      "Evolved after spending lifetime as mortal with son Wang Ping",
+      "Ascendant+ required"
+    ]
+  },
+  {
+    "id": "T154",
+    "name": "True and False Domain",
+    "nameCn": "真假域",
+    "type": "dao_domain",
+    "origin": "Evolved from Karma Domain while comprehending Bai Fan's Mountain Crumble",
+    "effects": [
+      "Controls Real and Unreal; makes others enter nightmare hallucinations",
+      "Sundered Night triggers it: right eye lightning, left eye true/false",
+      "Evolves: Domain → True-False Essence → True-False Eternal Seal (6th Original Spell)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1102; ~age 1300",
+      "Evolved while being a mountain soul in Vermillion Bird Divine Sect Starfield",
+      "Nirvana Cleanser+ required"
+    ]
+  },
+  {
+    "id": "T155",
+    "name": "Battle Will / Battle Domain",
+    "nameCn": "战之域",
+    "type": "dao_domain",
+    "origin": "Inherited from golden word 'Battle' after merging Zhen Family Battle Scrolls + Zhan Xingye skeletons",
+    "effects": [
+      "Battle-will domain from golden 'Battle' word",
+      "Fused from three Zhen Family Battle Scrolls + golden light from Zhan Xingye skeletons",
+      "Nirvana Cleanser+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1206",
+      "Inherited, not self-comprehended",
+      "Nirvana Cleanser+"
+    ]
+  },
+  {
+    "id": "T156",
+    "name": "Star of Law",
+    "nameCn": "法则之星",
+    "type": "dao_domain",
+    "origin": "Fusion of True-False Domain, Fire/Thunder tattoo, and Battle Domain",
+    "effects": [
+      "Star-shaped Law Mark fusing life-death, karma domains, and fire/thunder mark",
+      "Briefly sealed at Ch.1221 (pseudo Nirvana Shatterer) — unsealed at Ch.1298",
+      "Also called Store All Ji Thunder (7th accompanying thunder) at Ch.1368"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1220-1221; Nirvana Cleanser Peak",
+      "Wang Lin's own 7th type of law/creation",
+      "Sealing risk could have prevented advancement"
+    ]
+  },
+  {
+    "id": "T157",
+    "name": "Underworld River",
+    "nameCn": "黄泉/冥河",
+    "type": "dao_domain",
+    "origin": "Manifestation of Life and Death Domain",
+    "effects": [
+      "Physical manifestation of Life and Death Domain as a river",
+      "Used as catalyst to bind souls into Celestial Sealing Stamp",
+      "Key component of 18 Layers of Hell Reincarnation Realm"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 604; Soul Formation+",
+      "Life-Death Domain manifestation",
+      "Catalyst for 18 Layers of Hell formation"
+    ]
+  },
+  {
+    "id": "T158",
+    "name": "Karmic Cycle / Yin-Yang Symbol",
+    "nameCn": "因果轮回/阴阳符",
+    "type": "dao_domain",
+    "origin": "Karma Domain manifestation",
+    "effects": [
+      "Left eye containing yang, right eye containing yin",
+      "Physical manifestation of Karma Domain",
+      "Ascendant+ required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 850; Ascendant+",
+      "Karma Domain physical manifestation",
+      "Yin-Yang symbol in the eyes"
+    ]
+  },
+  {
+    "id": "T159",
+    "name": "Void Avatar (Late-Game Form)",
+    "nameCn": "虚空分身",
+    "type": "void_late_game",
+    "origin": "Condensed at arc-shaped platform; fused during Ancient Path battle",
+    "effects": [
+      "Same Void Destiny as Immortal Ancestor and Ancient Ancestor",
+      "Fusing with it allows summoning full Nine Songs and Three Signs",
+      "Caused nine suns of Xiangang to appear simultaneously"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1798; Void Tribulant (3rd Step peak)",
+      "Also listed in Avatar section (G) as Otherworldly Void Avatar",
+      "Enables full fusion of Celestial and Ancient Powers"
+    ]
+  },
+  {
+    "id": "T160",
+    "name": "Nine Songs and Three Signs",
+    "nameCn": "九歌三符",
+    "type": "void_late_game",
+    "origin": "Achieved by fusing with Void Avatar during Gu Dao battle",
+    "effects": [
+      "Cosmic manifestation making Wang Lin match for late Celestial/Ancient Ancestors",
+      "Significantly progresses fusion of Celestial and Ancient Powers",
+      "Unrivalled on the Immortal Astral Continent"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2065 (full summon during Gu Dao battle)",
+      "Requires Half-Heaven-Trampling (7th Bridge+)",
+      "Those past 8th Bridge but not 9th level"
+    ]
+  },
+  {
+    "id": "T161",
+    "name": "Reincarnation Essence",
+    "nameCn": "轮回源",
+    "type": "void_late_game",
+    "origin": "Comprehended via Dong Lin Pool meditation and Heaven Defying Bead secret",
+    "effects": [
+      "4th Ethereal Essence; completing it = achieving Heaven Trampling",
+      "Begun at Ch.1943; completed at Ch.2087",
+      "Confirmed by uncovering Ji Qiong skull's divine sense from Slaughter"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1943 (potential) → Ch. 2087 (completed)",
+      "4th Step required for completion",
+      "Directly enables Heaven Trampling upon mastery"
+    ]
+  },
+  {
+    "id": "T162",
+    "name": "Heaven Trampling",
+    "nameCn": "踏天境",
+    "type": "void_late_game",
+    "origin": "Achieved without stepping on more bridges; comprehended via Reincarnation Essence",
+    "effects": [
+      "Opens world within the illusory, forming reincarnation cycle within",
+      "Confrontation between reincarnation cycles determines everything",
+      "Walking a single Dao to its end and becoming its source = 4th Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2087 (revealed); ~age 3000",
+      "Achieved without completing 9th bridge — via Reincarnation Essence",
+      "4th Step; not all Daos allow becoming the source"
+    ]
+  },
+  {
+    "id": "T163",
+    "name": "Grand Empyrean Sun",
+    "nameCn": "大天尊之阳",
+    "type": "void_late_game",
+    "origin": "Condensed by absorbing Celestial Ancestor's head; tricolor black-white-gold",
+    "effects": [
+      "Tricolored (black, white, gold) Venerable Sun — most powerful type",
+      "Energy within can be absorbed to enhance strength",
+      "Makes Wang Lin 10th Sun of Immortal Astral Continent, 2nd strongest after Gu Dao"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 2050 (fully condensed); Half-Heaven-Trampling (3rd Bridge+)",
+      "Lian Daozhan's Soul used as guide for final condensation",
+      "Black-White outline (Ch.1997) → Black-White-Gold (Ch.2050)"
+    ]
+  },
+  {
+    "id": "T164",
+    "name": "Ethereal Fire",
+    "nameCn": "虚无之火",
+    "type": "void_late_game",
+    "origin": "4th Vermilion Bird Awakening; 9 colors fused into one",
+    "effects": [
+      "First and only cultivatable Ethereal Fire thanks to Heaven Defying Bead",
+      "After 4th awakening, absorbed Nine Tribulation Karma fires for 9 fire types",
+      "Supports Fire Essence with 9 accompanying types of fire"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1412; Nirvana Shatterer+",
+      "4th Vermilion Bird Awakening product",
+      "Unique: only cultivatable Ethereal Fire in existence"
+    ]
+  },
+  {
+    "id": "T165",
+    "name": "Ethereal Essences",
+    "nameCn": "虚源",
+    "type": "void_late_game",
+    "origin": "4 virtual/special origins representing four realms",
+    "effects": [
+      "4 virtual origins: Life-Death, Cause-Effect, True-False, Reincarnation",
+      "4 special origins: Primordial/Taichu, Silent Extinction/Miemie, Restriction, Slaughter",
+      "Each formed their own true body; Killing + Silent Extinction → Lu Mo"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1943+ (Reincarnation), 1950 (Absolute Beginning/End)",
+      "14 Origins total: 6 substantial + 4 virtual + 4 special",
+      "3rd Step → 4th Step"
+    ]
+  },
+  {
+    "id": "T166",
+    "name": "Origin Swords",
+    "nameCn": "源剑",
+    "type": "void_late_game",
+    "origin": "Condensed using strange power from void gate collapse vortex",
+    "effects": [
+      "Set of seven: Fire, Thunder, Cause-Effect, Life-Death, True-False, Slaughter, Restriction",
+      "Condensed from void gate collapse vortex power",
+      "Karma Sword is one of the seven; 3rd Step required"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1561+ (Slaughter Sword), 1625+ (Lightning Sword), 5 elemental swords",
+      "Seven Origin Swords total including Restriction Sword (Ch.1715)",
+      "3rd Step required"
+    ]
+  },
+  {
+    "id": "T167",
+    "name": "Brilliant Void Star System Crossing",
+    "nameCn": "虚空星系穿越",
+    "type": "movement",
+    "origin": "Movement across the Brilliant Void (later Alliance) Star System",
+    "effects": [
+      "Sustained void travel across star systems",
+      "2nd Step+ required for sustained void travel",
+      "Void traversal movement ability"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Implicit; late Cave-World period",
+      "Originally named Brilliant Void, later Alliance Star System",
+      "2nd Step+ for sustained void travel"
+    ]
+  },
+  {
+    "id": "OS01",
+    "name": "Sundered Night",
+    "nameCn": "残夜",
+    "type": "original_spell",
+    "origin": "Self-created; First Original Spell — Dao of Beginning and End",
+    "effects": [
+      "Controls Real and Unreal; right eye lightning, left eye true/false",
+      "Makes others lose control, enter nightmare hallucinations",
+      "Evolved into a Belief Art after reaching Kong Jie"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 988; Ascendant+ required",
+      "Dao of Beginning and End / Creation and Extermination",
+      "Used to kill Xu Kongzi and heavily wound Tian Yunzi"
+    ]
+  },
+  {
+    "id": "OS02",
+    "name": "Flowing Time",
+    "nameCn": "流月",
+    "type": "original_spell",
+    "origin": "Self-created; Second Original Spell — Dao of Time",
+    "effects": [
+      "Can reverse time",
+      "Used to send Slaughter true body (Lu Mo) back to the past",
+      "Comprehended at gate of Ancient Immortal Domain in Wind Immortal World"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1245; Nirvana Shatterer+ required",
+      "Dao of Time",
+      "Key to sending Lu Mo to the past for Li Muwan resurrection"
+    ]
+  },
+  {
+    "id": "OS03",
+    "name": "Dream Dao",
+    "nameCn": "梦道",
+    "type": "original_spell",
+    "origin": "Self-created; Third Original Spell — Dao Spell of Dreams",
+    "effects": [
+      "With Slaughter Clone and three Dao Fruits, lived as mortal scholar",
+      "Completed Life-Death, Karma, and True-False Essences",
+      "Combined with Dream of Ancient Times → Immortal Dream (Ch.1675)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1295; Nirvana Shatterer+ required",
+      "Dao Spell of Dreams",
+      "Source for Dream Dao-derived resurrection method"
+    ]
+  },
+  {
+    "id": "OS04",
+    "name": "Karma Print",
+    "nameCn": "因果印",
+    "type": "original_spell",
+    "origin": "Self-created; Fourth Original Spell — Dao of Karma",
+    "effects": [
+      "Karma-seal original spell",
+      "Dao of Karma manifestation",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1614; 3rd Step required",
+      "Dao of Karma",
+      "Self-created original spell"
+    ]
+  },
+  {
+    "id": "OS05",
+    "name": "Life and Death Seal",
+    "nameCn": "生死印",
+    "type": "original_spell",
+    "origin": "Self-created; Fifth Original Spell — Dao of Life and Death",
+    "effects": [
+      "Life-death seal original spell",
+      "Dao of Life and Death manifestation",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1616; 3rd Step required",
+      "Dao of Life and Death",
+      "Self-created original spell"
+    ]
+  },
+  {
+    "id": "OS06",
+    "name": "True and False Eternal Seal",
+    "nameCn": "真假永恒印",
+    "type": "original_spell",
+    "origin": "Self-created; Sixth Original Spell — Dao of True and False",
+    "effects": [
+      "True-false eternal seal original spell",
+      "Dao of True and False manifestation",
+      "Requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1617; 3rd Step required",
+      "Dao of True and False",
+      "Self-created original spell"
+    ]
+  },
+  {
+    "id": "OS07",
+    "name": "Undying Ancient Finger",
+    "nameCn": "不灭古指",
+    "type": "original_spell",
+    "origin": "Self-created; Seventh Original Spell — Three Ancient Clans condensed into one finger",
+    "effects": [
+      "Terrifying offensive power AND terrifying recovery ability",
+      "Condenses God/Devil/Demon power into one finger",
+      "Inspired by Undying Immortal Body; has body-wide variant: Undying Ancient Body (Ch.1728)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1639; 3rd Step required",
+      "Uses Undying Immortal Body as inspiration",
+      "Seventh and final numbered Original Spell"
+    ]
+  },
+  {
+    "id": "T171",
+    "name": "Undying Ancient Body",
+    "nameCn": "不灭古体",
+    "type": "combat",
+    "origin": "Self-created; akin to Undying Ancient Finger but whole-body scale",
+    "effects": [
+      "Whole-body undying state — body-wide variant of Undying Ancient Finger",
+      "Defensive + recovery on the scale of the entire body",
+      "Self-created at Ch. 1728; requires 3rd Step"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1728; self-created",
+      "Body-scale variant of the 7th Original Spell (Undying Ancient Finger)",
+      "Requires 3rd Step"
+    ]
+  },
+  {
+    "id": "E01",
+    "name": "Metal Essence",
+    "nameCn": "金之源",
+    "type": "essence",
+    "origin": "Fragment of Celestial Ancestor's Immortal Absolute Sword + Metal Essence from Xuan Lou",
+    "effects": [
+      "One of 6 substantial Essences with True Body",
+      "Obtained by absorbing sword fragments: 2nd from Mountain Tree Seal, 3rd from Jiu Di",
+      "Completed at Ch. 1997; True Body at Ch. 2024"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Potential: Ch. 1896; Initial: Ch. 1938; Completed: Ch. 1997",
+      "Eyes Suppressing the World tied to Metal Essence",
+      "Great Accomplishment via third Celestial Ancestor's Sword fragment"
+    ]
+  },
+  {
+    "id": "E02",
+    "name": "Wood Essence",
+    "nameCn": "木之源",
+    "type": "essence",
+    "origin": "90,000-year-old celestial tree from Ji Si + Mountain Sea Spirits from Ji Du",
+    "effects": [
+      "One of 6 substantial Essences with True Body",
+      "Seed from Ji Si's celestial tree; completed with Mountain Sea Spirits",
+      "Completed at Ch. 1970; True Body at Ch. 2017"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Potential: Ch. 1896; Initial: Ch. 1935; Completed: Ch. 1970",
+      "Ji Du provided pure Wood Essence liquid",
+      "6 Mountain Sea Spirits born from death of the tree"
+    ]
+  },
+  {
+    "id": "E03",
+    "name": "Water Essence",
+    "nameCn": "水之源",
+    "type": "essence",
+    "origin": "All-Seer's drop + Water General's One Drop of Universe + Great Soul Sect Founder's drop",
+    "effects": [
+      "One of 6 substantial Essences with True Body",
+      "Comprehends 380 million changes to condense; completed 9th cycle in Pill Sea",
+      "Completed at Ch. 1843; True Body at Ch. 1897"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Potential: Ch. 1720; Initial: Ch. 1734; Completed: Ch. 1843",
+      "Green Bull Continent's Water Essence absorbed during 9th cycle",
+      "Ji Si used Celestial Sea Mother Soul + Mortal Dream Water for True Body"
+    ]
+  },
+  {
+    "id": "E04",
+    "name": "Fire Essence",
+    "nameCn": "火之源",
+    "type": "essence",
+    "origin": "Vermilion Bird Mark + Ming Hai's Burn the Heaven + Fire/Flame/Devilish Dragon absorption",
+    "effects": [
+      "One of 6 substantial Essences with True Body",
+      "Initial at Ch.1280 via sacrificing Life-Death and Karma Domains; Complete at Ch.1412",
+      "9 accompanying types of fire from Nine Tribulation Karma fires"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Potential: from Fu Clan's Golden Leaf Flame Source; Initial: Ch. 1280; Complete: Ch. 1412",
+      "Four Vermilion Bird awakenings feed into Fire Essence",
+      "Ethereal Fire = first cultivatable Ethereal Fire thanks to Heaven Defying Bead"
+    ]
+  },
+  {
+    "id": "E05",
+    "name": "Earth Essence",
+    "nameCn": "土之源",
+    "type": "essence",
+    "origin": "Ji Si's Meng Earth Beads + Celestial Ancestor's grains of sand",
+    "effects": [
+      "One of 6 substantial Essences with True Body",
+      "Three Meng Earth Beads + two of nine grains of Celestial Ancestor's continent-creation sand",
+      "Completed at Ch. 1895; True Body at Ch. 1895"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Completed at Ch. 1895",
+      "Ji Si used Celestial Ancestor's sand (2 of 9 grains)",
+      "Nourished by third grain of Celestial Ancestor's sand"
+    ]
+  },
+  {
+    "id": "E06",
+    "name": "Thunder Essence",
+    "nameCn": "雷之源",
+    "type": "essence",
+    "origin": "Ancient Thunder Dragon soul + Scatter Thunder Clan's thunder + 9 Accompanying Thunders",
+    "effects": [
+      "One of 6 substantial Essences with True Body",
+      "9 Accompanying Thunders complete it: 6 stolen + Ji Thunder + Bloodline Thunder + Defying Thunder",
+      "Initial at Ch.1280; Complete at Ch.1368; True Body at Ch.1892"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Devoured half of Ancient Thunder Dragon soul (Soul-Devourer form)",
+      "Ji Realm absorbed as 7th Accompanying Thunder (Ji Thunder)",
+      "Complete at Ch.1368 after perfecting 9 Accompanying Thunders"
+    ]
+  },
+  {
+    "id": "E07",
+    "name": "Life-Death Essence",
+    "nameCn": "生死之源",
+    "type": "essence",
+    "origin": "Life and Death Domain evolution + Dao Fruits + Dream Dao",
+    "effects": [
+      "One of 4 virtual Essences",
+      "Initial at Ch.1280 during battle with Daoist Water; Completed at Ch.1613",
+      "Domain sacrificed at Ch.1280 to fuel Fire/Thunder Essences; re-completed via Dream Dao"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Virtual essence; no True Body in standard set",
+      "Sacrificed and re-completed multiple times",
+      "Evolved from Life and Death Domain (Ch.264)"
+    ]
+  },
+  {
+    "id": "E08",
+    "name": "Karma Essence",
+    "nameCn": "因果之源",
+    "type": "essence",
+    "origin": "Sacrificed all six stars against Daoist Water to gain last desperate power",
+    "effects": [
+      "One of 4 virtual Essences",
+      "Comprehended when sacrificing stars against Daoist Water",
+      "Evolved from Karma Domain (Ch.731)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Virtual essence; no True Body in standard set",
+      "Required sacrificing all six stars",
+      "Evolved from Karma Domain"
+    ]
+  },
+  {
+    "id": "E09",
+    "name": "Slaughter Essence",
+    "nameCn": "杀戮之源",
+    "type": "essence",
+    "origin": "Lifetime of killing + consuming Qing Shui's Black Sword",
+    "effects": [
+      "One of 4 special Essences with own True Body",
+      "Initial at Ch.1509 after returning to kill Daoist Water; Completed at Ch.1622",
+      "Refined by consuming Qing Shui's Black Sword (condensed from Wang Lin's own Slaughter Essence)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Special essence; has own True Body (Slaughter/Lu Mo)",
+      "Completed by consuming his own Slaughter Essence in Qing Shui's sword",
+      "Represents Wang Lin's lifetime of murder"
+    ]
+  },
+  {
+    "id": "E10",
+    "name": "Restriction Essence",
+    "nameCn": "禁之源",
+    "type": "essence",
+    "origin": "Merged world laws and millions of fused formations into eye bloodlines",
+    "effects": [
+      "One of 4 special Essences with own True Body",
+      "Completed at Ch.1715; True Body at Ch.2044/2046",
+      "Formed from lifetime of restriction study + Four Great Restrictions mastery"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Special essence; has own True Body",
+      "Used Ghostly Sail's eye bloodlines as vessel",
+      "Fused into Slaughter Thunder Essence True Body"
+    ]
+  },
+  {
+    "id": "E11",
+    "name": "True-False Essence",
+    "nameCn": "真假之源",
+    "type": "essence",
+    "origin": "Star of Law destroyed in fight with Daoist Water; completed via Dream Dao",
+    "effects": [
+      "One of 4 virtual Essences",
+      "Domain completed when Star of Law was destroyed",
+      "Completed via Dream Dao + Dao Fruits + mortal scholar life"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Virtual essence; no True Body in standard set",
+      "Evolved from True-False Domain (Ch.1102)",
+      "Completed alongside Life-Death and Karma via Dream Dao"
+    ]
+  },
+  {
+    "id": "E12",
+    "name": "Dao Essence",
+    "nameCn": "道之源",
+    "type": "essence",
+    "origin": "Wang Lin's overall Dao comprehension",
+    "effects": [
+      "One of 14 total Essences per Baidu classification",
+      "Represents Wang Lin's core Dao understanding",
+      "Fundamental to 3rd Step cultivation"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Listed among 14 Origins in Baidu",
+      "Part of the overall essence framework",
+      "Less explicitly documented than others"
+    ]
+  },
+  {
+    "id": "E13",
+    "name": "True/False Essence (Primordial/Silent Extinction)",
+    "nameCn": "太初/寂灭之源",
+    "type": "essence",
+    "origin": "Comprehended from Dong Lin Pool — Essence of Spirit sealed under Great Saint Continent",
+    "effects": [
+      "Absolute Beginning (Taichu) completed after 13 years in Dong Lin Pool at Ch.1950",
+      "Absolute End (Miemie/Silent Extinction) given to Slaughter Thunder for comprehension",
+      "Each formed their own True Body; half of the 4 special Essences"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1950; two special Essences",
+      "Comprehended from Spirit sealed under Great Saint Continent",
+      "Absolute Beginning = sun in day/night simulation; Absolute End = darkness"
+    ]
+  },
+  {
+    "id": "E14",
+    "name": "Cause-and-Effect Essence",
+    "nameCn": "因果之源",
+    "type": "essence",
+    "origin": "Evolved from Karma Essence / Karma Domain",
+    "effects": [
+      "One of 14 total Essences; related to Karma lineage",
+      "Cause-Effect Whip evolved from Karma Whip",
+      "Cleaved open 7 million worlds with a single whip"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Evolved from Karma Domain (Ch.731) → Karma Whip → Cause-Effect Whip",
+      "Also called Cause-Effect in some translations",
+      "Related to but distinct from Karma Essence"
+    ]
+  },
+  {
+    "id": "B01",
+    "name": "1st Bridge",
+    "nameCn": "踏天桥·第一桥",
+    "type": "bridge",
+    "origin": "Heaven Trampling Bridge trial",
+    "effects": [
+      "Completed after century of closed-door cultivation; fused Slaughter, Restriction, Absolute Beginning/End True Bodies into Punishment Slaughter",
+      "Chapter: Ch. 2047",
+      "Crossed"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Heaven Trampling Bridge at Ch. 2047",
+      "Crossed by Wang Lin",
+      "Part of 4th Step progression"
+    ]
+  },
+  {
+    "id": "B02",
+    "name": "2nd Bridge",
+    "nameCn": "踏天桥·第二桥",
+    "type": "bridge",
+    "origin": "Heaven Trampling Bridge trial",
+    "effects": [
+      "Tested sturdiness of heart; granted glimpse of Heaven Trampling divine sense covering entire Celestial Clan",
+      "Chapter: Ch. 2049",
+      "Crossed"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Heaven Trampling Bridge at Ch. 2049",
+      "Crossed by Wang Lin",
+      "Part of 4th Step progression"
+    ]
+  },
+  {
+    "id": "B03",
+    "name": "3rd Bridge",
+    "nameCn": "踏天桥·第三桥",
+    "type": "bridge",
+    "origin": "Heaven Trampling Bridge trial",
+    "effects": [
+      "Trial to close mind from inner demons; Wang Lin embraced them instead; absorbed Celestial Ancestor's Head → Grand Empyrean Sun",
+      "Chapter: Ch. 2049",
+      "Crossed"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Heaven Trampling Bridge at Ch. 2049",
+      "Crossed by Wang Lin",
+      "Part of 4th Step progression"
+    ]
+  },
+  {
+    "id": "B04",
+    "name": "4th Bridge",
+    "nameCn": "踏天桥·第四桥",
+    "type": "bridge",
+    "origin": "Heaven Trampling Bridge trial",
+    "effects": [
+      "Crossed via Ancient Clan Cultivation completion (3rd Ancient Clan Tribulation)",
+      "Chapter: Ch. 2062",
+      "Crossed"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Heaven Trampling Bridge at Ch. 2062",
+      "Crossed by Wang Lin",
+      "Part of 4th Step progression"
+    ]
+  },
+  {
+    "id": "B05",
+    "name": "5th Bridge",
+    "nameCn": "踏天桥·第五桥",
+    "type": "bridge",
+    "origin": "Heaven Trampling Bridge trial",
+    "effects": [
+      "Stepped over after passing Ancient Order's 3rd Tribulation; Extreme Land/Sky/Life Dao comprehended here",
+      "Chapter: Ch. 2062",
+      "Crossed"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Heaven Trampling Bridge at Ch. 2062",
+      "Crossed by Wang Lin",
+      "Part of 4th Step progression"
+    ]
+  },
+  {
+    "id": "B06",
+    "name": "6th Bridge",
+    "nameCn": "踏天桥·第六桥",
+    "type": "bridge",
+    "origin": "Heaven Trampling Bridge trial",
+    "effects": [
+      "Crossed immediately after 5th using Heaven Trampling step witnessed during tribulation",
+      "Chapter: ~Ch. 2062",
+      "Crossed"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Heaven Trampling Bridge at ~Ch. 2062",
+      "Crossed by Wang Lin",
+      "Part of 4th Step progression"
+    ]
+  },
+  {
+    "id": "B07",
+    "name": "7th Bridge",
+    "nameCn": "踏天桥·第七桥",
+    "type": "bridge",
+    "origin": "Heaven Trampling Bridge trial",
+    "effects": [
+      "Crossed to 7th bridge; stopped at 8th; fuses with Void Avatar for Nine Songs Three Signs",
+      "Chapter: Ch. 2062/2065",
+      "Crossed"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Heaven Trampling Bridge at Ch. 2062/2065",
+      "Crossed by Wang Lin",
+      "Part of 4th Step progression"
+    ]
+  },
+  {
+    "id": "B08",
+    "name": "8th Bridge",
+    "nameCn": "踏天桥·第八桥",
+    "type": "bridge",
+    "origin": "Failed to cross",
+    "effects": [
+      "Could NOT cross — bridge turned into specks of light that devoured Wang Lin",
+      "Chapter: ~Ch. 2065",
+      "Not crossed"
+    ],
+    "knownUsers": [],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Heaven Trampling Bridge at ~Ch. 2065",
+      "Failed — bridge devoured Wang Lin",
+      "Part of 4th Step progression"
+    ]
+  },
+  {
+    "id": "B09",
+    "name": "9th Bridge",
+    "nameCn": "踏天桥·第九桥",
+    "type": "bridge",
+    "origin": "Bypassed via Reincarnation Essence",
+    "effects": [
+      "Never crossed — achieved Heaven Trampling via Reincarnation Essence mastery instead (Ch.2087)",
+      "Chapter: N/A",
+      "Not crossed"
+    ],
+    "knownUsers": [],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Heaven Trampling Bridge at N/A",
+      "Achieved Heaven Trampling without crossing",
+      "Part of 4th Step progression"
+    ]
+  },
+  {
+    "id": "AT01",
+    "name": "First Accompanying Thunder",
+    "nameCn": "第一道伴雷",
+    "type": "accompanying_thunder",
+    "origin": "Stolen from Scatter Thunder Clan",
+    "effects": [
+      "First of 6 stolen/devoured accompanying thunders",
+      "Part of Scatter Thunder Clan's set",
+      "Contributes to Thunder Essence completion"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Stolen from Scatter Thunder Clan",
+      "One of first 6 accompanying thunders",
+      "Devoured Ancient Thunder Dragons released by 5th Heaven Blight head elder"
+    ]
+  },
+  {
+    "id": "AT02",
+    "name": "Second Accompanying Thunder",
+    "nameCn": "第二道伴雷",
+    "type": "accompanying_thunder",
+    "origin": "Stolen from Scatter Thunder Clan",
+    "effects": [
+      "Second of 6 stolen/devoured accompanying thunders",
+      "Part of Scatter Thunder Clan's set",
+      "Contributes to Thunder Essence completion"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Stolen from Scatter Thunder Clan",
+      "One of first 6 accompanying thunders",
+      "Part of the set stolen/devoured from Scatter Thunder Clan"
+    ]
+  },
+  {
+    "id": "AT03",
+    "name": "Third Accompanying Thunder",
+    "nameCn": "第三道伴雷",
+    "type": "accompanying_thunder",
+    "origin": "Stolen from Scatter Thunder Clan",
+    "effects": [
+      "Third of 6 stolen/devoured accompanying thunders",
+      "Part of Scatter Thunder Clan's set",
+      "Contributes to Thunder Essence completion"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Stolen from Scatter Thunder Clan",
+      "One of first 6 accompanying thunders",
+      "Part of the set stolen/devoured from Scatter Thunder Clan"
+    ]
+  },
+  {
+    "id": "AT04",
+    "name": "Fourth Accompanying Thunder",
+    "nameCn": "第四道伴雷",
+    "type": "accompanying_thunder",
+    "origin": "Stolen from Scatter Thunder Clan",
+    "effects": [
+      "Fourth of 6 stolen/devoured accompanying thunders",
+      "Part of Scatter Thunder Clan's set",
+      "Contributes to Thunder Essence completion"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Stolen from Scatter Thunder Clan",
+      "One of first 6 accompanying thunders",
+      "Part of the set stolen/devoured from Scatter Thunder Clan"
+    ]
+  },
+  {
+    "id": "AT05",
+    "name": "Fifth Accompanying Thunder",
+    "nameCn": "第五道伴雷",
+    "type": "accompanying_thunder",
+    "origin": "Stolen from Scatter Thunder Clan",
+    "effects": [
+      "Fifth of 6 stolen/devoured accompanying thunders",
+      "Part of Scatter Thunder Clan's set",
+      "Contributes to Thunder Essence completion"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Stolen from Scatter Thunder Clan",
+      "One of first 6 accompanying thunders",
+      "Part of the set stolen/devoured from Scatter Thunder Clan"
+    ]
+  },
+  {
+    "id": "AT06",
+    "name": "Sixth Accompanying Thunder",
+    "nameCn": "第六道伴雷",
+    "type": "accompanying_thunder",
+    "origin": "Stolen from Scatter Thunder Clan",
+    "effects": [
+      "Sixth of 6 stolen/devoured accompanying thunders",
+      "Part of Scatter Thunder Clan's set",
+      "Contributes to Thunder Essence completion"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 4,
+    "knownFacts": [
+      "Stolen from Scatter Thunder Clan",
+      "Last of the 6 stolen accompanying thunders",
+      "Part of the set stolen/devoured from Scatter Thunder Clan"
+    ]
+  },
+  {
+    "id": "AT07",
+    "name": "Store All Ji Thunder",
+    "nameCn": "储极雷",
+    "type": "accompanying_thunder",
+    "origin": "Created from the Ji Realm (Extreme Realm Divine Sense)",
+    "effects": [
+      "7th Accompanying Thunder — created from the Ji Realm",
+      "Ji Realm absorbed into Slaughter and became this thunder at Ch.1368",
+      "Also associated with Star of Law (Wang Lin's 7th type of law)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1368; created from Ji Realm",
+      "Ji Realm's resolution: absorbed as 7th accompanying thunder",
+      "Also called Store All Ji Thunder / tied to Star of Law"
+    ]
+  },
+  {
+    "id": "AT08",
+    "name": "Bloodline Thunder",
+    "nameCn": "血脉雷",
+    "type": "accompanying_thunder",
+    "origin": "Created by sacrificing the Thunder Toad",
+    "effects": [
+      "8th Accompanying Thunder — created by sacrificing Thunder Toad",
+      "Bloodline-sacrifice thunder",
+      "Ch. 1368"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1368; created by sacrificing Thunder Toad",
+      "Bloodline-sacrifice method",
+      "Self-created accompanying thunder"
+    ]
+  },
+  {
+    "id": "AT09",
+    "name": "Defying Thunder",
+    "nameCn": "逆天雷",
+    "type": "accompanying_thunder",
+    "origin": "Wang Lin's own will — never having appeared since beginning of time",
+    "effects": [
+      "9th Accompanying Thunder — formed via heaven-defying will",
+      "Never before appeared since beginning of time",
+      "Ultimate expression of Wang Lin's heaven-defying nature"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1368; Wang Lin's own 9th thunder",
+      "Formed via defying will — unique in all history",
+      "Completes the 9 Accompanying Thunders for Thunder Essence"
+    ]
+  },
+  {
+    "id": "VA01",
+    "name": "1st Vermilion Bird Awakening",
+    "nameCn": "朱雀一觉",
+    "type": "vermilion_bird_awakening",
+    "origin": "Absorbed Ming Hai's Burn The Heaven flames",
+    "effects": [
+      "Red Vermillion Bird appears",
+      "First awakening of Vermilion Bird Mark",
+      "Gives initial fire power boost"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1021; absorbed Ming Hai's Burn The Heaven flames",
+      "Red Vermillion Bird manifestation",
+      "Part of Fire Essence evolution"
+    ]
+  },
+  {
+    "id": "VA02",
+    "name": "2nd Vermilion Bird Awakening",
+    "nameCn": "朱雀二觉",
+    "type": "vermilion_bird_awakening",
+    "origin": "Absorbed Devilish Flames, Fire Dragon, and Flame Dragon",
+    "effects": [
+      "Evolved into White Vermillion Bird",
+      "Second awakening after absorbing multiple fire sources",
+      "Significant power increase"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1068",
+      "White Vermillion Bird manifestation",
+      "Devilish Flames + Fire Dragon + Flame Dragon absorbed"
+    ]
+  },
+  {
+    "id": "VA03",
+    "name": "3rd Vermilion Bird Awakening",
+    "nameCn": "朱雀三觉",
+    "type": "vermilion_bird_awakening",
+    "origin": "Absorbed Vermillion Bird feather + ancestral spirit of Fire Sparrow Clan youth",
+    "effects": [
+      "Evolved into Blue Vermillion Bird",
+      "Third awakening via Vermillion Bird feather and Fire Sparrow Clan",
+      "Ch. 1210"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1210",
+      "Blue Vermillion Bird manifestation",
+      "Vermillion Bird feather + Fire Sparrow Clan ancestral spirit"
+    ]
+  },
+  {
+    "id": "VA04",
+    "name": "4th Vermilion Bird Awakening",
+    "nameCn": "朱雀四觉",
+    "type": "vermilion_bird_awakening",
+    "origin": "Burned by karma fire → 9 colors fused into one = Ethereal Fire",
+    "effects": [
+      "Blue → Black (Ch.1409, karma fire) → 9-Color (Ch.1411) → Ethereal Fire (Ch.1412)",
+      "9 colors fused into one to create Ethereal Fire",
+      "Thanks to Heaven Defying Bead, first and only cultivatable Ethereal Fire"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1409-1412; final awakening",
+      "Multi-stage evolution: Red → White → Blue → Black → 9-Color → Ethereal",
+      "Absorbed Nine Tribulation Karma fires for 9 accompanying fire types"
+    ]
+  },
+  {
+    "id": "T168",
+    "name": "Fire Burn (Nine Mysterious 1st Transformation)",
+    "nameCn": "焚天九变·第一变",
+    "type": "celestial_spell",
+    "origin": "Vermilion Bird Divine Ability — Nine Mysterious Transformations",
+    "effects": [
+      "First Transformation of Nine Mysterious Transformations",
+      "Fire Burn ability",
+      "Ch. 1089"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1089; Vermilion Bird Divine Ability",
+      "First of Nine Mysterious Transformations",
+      "Part of Nine Mysterious Spell set"
+    ]
+  },
+  {
+    "id": "T169",
+    "name": "Rise Three Realm Flame Origin",
+    "nameCn": "三界焰源",
+    "type": "celestial_spell",
+    "origin": "Vermilion Bird Divine Ability — Nine Mysterious Transformations",
+    "effects": [
+      "Second technique of Nine Mysterious Transformations",
+      "Flame origin ability across three realms",
+      "Ch. 1091"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1091; Vermilion Bird Divine Ability",
+      "Part of Nine Mysterious Transformations",
+      "Three-realm flame origin"
+    ]
+  },
+  {
+    "id": "T170",
+    "name": "Nine Mysterious Fire Escape",
+    "nameCn": "九秘火遁",
+    "type": "celestial_spell",
+    "origin": "Vermilion Bird Divine Ability — secret spell (originally stolen from Azure Dragon, White Tiger, Black Tortoise clans)",
+    "effects": [
+      "Fire escape secret spell",
+      "Originally stolen from Azure Dragon, White Tiger, and Black Tortoise clans by old ancestor",
+      "Not actually a spell but a method for using force (revealed at Ch.1403)"
+    ],
+    "knownUsers": [
+      "Wang Lin"
+    ],
+    "canonConfidence": 5,
+    "knownFacts": [
+      "Ch. 1127 (fire escape); Ch. 1403 (revealed as stolen force method)",
+      "Stolen from three other divine beast clans",
+      "Called clan's secret spell but actually a force method"
+    ]
+  }
+]

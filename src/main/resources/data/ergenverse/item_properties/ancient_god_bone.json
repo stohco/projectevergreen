@@ -1,0 +1,24 @@
+{
+  "_comment": "Item Properties: Ancient God Bone. Per physical-size directive: every object has lore-accurate physical size, not block size. Length: 5.0 m, Weight: 50000 jin, Material: god-bone, Suitable realm: Heaven Trampling, Body strength required: Immortal. Prime Directive: physical size exists objectively; cultivation determines what the player can lift/activate.",
+  "item_id": "ancient_god_bone",
+  "name": "Ancient God Bone",
+  "type": "bone",
+  "physical_properties": {
+    "length_m": 5.0,
+    "weight_jin": 50000,
+    "material_density": "god-bone"
+  },
+  "usage_requirements": {
+    "suitable_realm": "Heaven Trampling",
+    "body_strength_required": "Immortal",
+    "effect_when_undersized": "Cannot lift; bone is impossibly dense."
+  },
+  "canon_note": "A bone of an Ancient God.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "simulation_notes": {
+    "no_locked_upgrades": "A cultivator who later reaches the required body strength will be able to lift/activate the item; the item does not change, only the cultivator does.",
+    "canon_fidelity": "This reflects the novels: Wang Lin could not lift the God-Slaying Sword until his body cultivation matched; he could barely use it as a heavy physical weapon before then."
+  },
+  "salt": 696668215
+}

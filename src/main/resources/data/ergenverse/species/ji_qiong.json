@@ -1,0 +1,80 @@
+{
+  "_comment": "Species: Ji Qiong (季穷) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "ji_qiong",
+  "name": "Ji Qiong",
+  "nameCn": "季穷",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Ancient god-tier beast 100 m, form shifts between beast and god-fragment, body crackles with ancient god-power",
+    "size": "100 m adult, planetary mass; true form spans regions",
+    "behavior": "Ancient god-tier beast; cultivated from ancient god-fragments; Wang Lin obtained its head as treasure",
+    "habitat": "Ancient god ruins, god-aspected forbidden zones",
+    "cultivation": "Immortal -> Ancient Immortal (ancient god attribute)",
+    "intelligence": 11,
+    "diet": "god-fragments, god-essence, ancient spirit herbs",
+    "relationships": "Wang Lin obtained Ji Qiong's head as treasure (canon event)",
+    "techniques": [
+      "god_breath",
+      "ancient_maw",
+      "god_fragment_absorb",
+      "ancient_roar"
+    ],
+    "treasures": [
+      "ji_qiong_head",
+      "god_fragment",
+      "ancient_god_essence"
+    ],
+    "bloodline": "Ancient God lineage; born from god-fragments",
+    "mutations": [
+      "true_god_body",
+      "ancient_god_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "ji_qiong — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "ji_qiong — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1221447953,
+  "bloodline_tier": "desolate",
+  "inner_dan_properties": {
+    "element": "chaos",
+    "purity_tier": 8,
+    "dao_resonance": "ancient_devouring",
+    "side_effects": [
+      "soul_devour"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

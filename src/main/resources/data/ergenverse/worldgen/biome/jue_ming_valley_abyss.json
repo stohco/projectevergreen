@@ -1,0 +1,90 @@
+{
+  "_comment": "Jue Ming Valley Abyss (绝命谷深渊) — the deepest layer, gateway to the Foreign Battleground. Canon: the Jue Ming Valley tokens activate here, opening the rift to the Extraterrestrial Battleground. Ancient corpses and ruined formations from countless battles. Death-qi is so thick that Nascent Soul cultivators feel pressure. Prime Directive: the abyss is objectively the most dangerous non-Cave-World location on Planet Suzaku.",
+  "temperature": -0.5,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 2105376,
+    "fog_color": 131072,
+    "water_color": 131584,
+    "water_fog_color": 0,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "monster": [
+      {
+        "type": "minecraft:wither_skeleton",
+        "weight": 40,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 30,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:enderman",
+        "weight": 25,
+        "minCount": 1,
+        "maxCount": 3
+      },
+      {
+        "type": "minecraft:warden",
+        "weight": 2,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "creature": [],
+    "ambient": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": [],
+    "axolotls": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft.canyon",
+      "minecraft:nether_cave",
+      "minecraft:hell_cave"
+    ]
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_diamond",
+      "minecraft:ore_redstone",
+      "minecraft:ore_emerald",
+      "minecraft:ore_ancient_debris_large"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:demon_corpse_mushroom",
+      "ergenverse:heart_devil_flower",
+      "ergenverse:void_nether_grass"
+    ],
+    [
+      "ergenverse:joss_flame_source"
+    ]
+  ],
+  "structures": {
+    "ergenverse:wandering_cultivator_camp": {
+      "spacing": 100,
+      "separation": 40,
+      "salt": 12345
+    }
+  }
+}

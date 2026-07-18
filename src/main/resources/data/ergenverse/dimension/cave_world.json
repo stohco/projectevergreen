@@ -1,0 +1,46 @@
+{
+  "_comment": "Cave World (洞府界) — the vast sealed artificial world created by the Seven-Colored Daoist. Contains Planet Suzaku and other cultivation planets. Canon: an enclosed realm with a visible sky barrier (the seal). The space between planets is a void of spiritual energy. This dimension represents that inter-planetary void — the player sees distant planet surfaces floating in spiritual fog. Biomes: (1) cave_world_void — the default void between planets, dark fog, no ground, only floating platforms of spiritual energy and occasional soul fragments from dead cultivators; (2) sealed_barrier_zone — the edge where the Realm-Sealing Grand Array manifests as visible energy barriers (bright, dangerous); (3) spiritual_energy_sea — regions of pure condensed spiritual energy forming a luminous sea that cultivators can absorb from. Uses the_end noise settings (floating islands pattern) because Cave World space is fragmented — it is NOT a continuous surface like a planet. Prime Directive: the Cave World exists objectively — the Seven-Colored Daoist created it, regardless of player knowledge. The seal is real. Breaking it changes ownership, not existence.",
+  "type": "ergenverse:cave_world_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "minecraft:end",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "ergenverse:cave_world_void",
+          "parameters": {
+            "temperature": [0.0, 0.2, 0.0, 0.0],
+            "continents": [-1.0, 1.0, 0.0, 0.0],
+            "erosion": [-1.0, 1.0, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:sealed_barrier_zone",
+          "parameters": {
+            "temperature": [0.0, 0.5, 0.0, 0.0],
+            "continents": [0.7, 1.0, 0.0, 0.0],
+            "erosion": [-1.0, 1.0, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": [0.5, 1.0, 0.0, 0.0],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:spiritual_energy_sea",
+          "parameters": {
+            "temperature": [0.3, 0.7, 0.0, 0.0],
+            "continents": [-1.0, -0.3, 0.0, 0.0],
+            "erosion": [-0.5, 0.5, 0.0, 0.0],
+            "depth": [-1.0, -0.3, 0.0, 0.0],
+            "weirdness": [-0.5, 0.0, 0.0, 0.0],
+            "offset": 0.0
+          }
+        }
+      ]
+    }
+  }
+}

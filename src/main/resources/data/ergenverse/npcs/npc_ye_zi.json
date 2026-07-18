@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Ye Zi (叶紫). Canon ID: N139. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_ye_zi",
+  "name": "Ye Zi",
+  "nameCn": "叶紫",
+  "canon_id": "N139",
+  "type": "elder",
+  "faction": "heng_yue_sect",
+  "location": "heng_yue_sect",
+  "cultivation": "Nascent Soul",
+  "personality": "Heng Yue elder",
+  "speech": "formal",
+  "relationship_to_wanglin": "sect elder",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "An elder",
+    "qi_condensation": "Heng Yue elder; Nascent Soul"
+  },
+  "canon_confidence": 3,
+  "note": "Heng Yue Nascent Soul elder",
+  "derivation_type": "B",
+  "salt": 1713977466,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "nascent_soul",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

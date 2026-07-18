@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Wu Qing (吴情). Canon ID: N103. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_wu_qing",
+  "name": "Wu Qing",
+  "nameCn": "吴情",
+  "canon_id": "N103",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "Nirvana Shatterer",
+  "personality": "cold, emotionless cultivator",
+  "speech": "flat, emotionless",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cold cultivator",
+    "qi_condensation": "Emotionless; cold aura",
+    "core_formation": "Nirvana Shatterer; cold law",
+    "nascent_soul": "Nirvana Shatterer; emotionless dao"
+  },
+  "canon_confidence": 3,
+  "note": "Emotionless antagonist",
+  "derivation_type": "B",
+  "salt": 1882514122,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

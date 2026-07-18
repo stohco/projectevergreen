@@ -1,0 +1,35 @@
+{
+  "_comment": "Immortal Ghost — Renegade Immortal. A remnant soul that has persisted for centuries. Canon: appears in haunted battlefields and ancient sect ruins. Semi-intangible.",
+  "species_id": "immortal_ghost",
+  "name": "Immortal Ghost",
+  "nameCn": "仙魂",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 3,
+  "max_hp": 35,
+  "attack_damage": 7,
+  "speed": 0.25,
+  "follow_range": 20,
+  "canonical": {
+    "appearance": "A translucent, humanoid-shaped wisp of pale blue-white energy. Faintly visible facial features that shift between expressions. Cold aura.",
+    "size": "Medium (humanoid proportions, 1.5-2m tall)",
+    "behavior": "Haunts areas of violent death. Attacks by draining spiritual energy (qi). Can phase through walls. Weakened by restriction-based techniques and pure yang fire.",
+    "habitat": "Ancient battlefields, destroyed sect ruins, mass-grave sites",
+    "cultivation": "Variable — depends on original cultivator's realm before death",
+    "intelligence": "3-5 (fragmented memories of former life, capable of speech)",
+    "diet": "Drains qi from living cultivators. Feeds on residual spiritual energy from death sites.",
+    "relationships": "Sometimes recognizes former allies/enemies from its living days. Generally hostile to all living beings.",
+    "techniques": ["Qi drain (melee: damages and heals self)", "Phase shift (becomes intangible for 3 seconds, immune to physical)", "Wail of the dead (AoE slow + fear)", "Memory fragment (drops a lore item)"],
+    "treasures": ["Soul Fragment (spirit refinement material)", "Ghost Jade (rare, used in soul-recovery techniques)"],
+    "bloodline": "spirit_beast",
+    "mutations": ["Intangible — 50% chance to ignore physical damage; immune to knockback"],
+    "ecology": "Scavenger of death sites. Does not reproduce — forms from particularly violent or karmically heavy deaths. Rare and localized.",
+    "bloodline_tier": "spirit_beast",
+    "combat_ai": "spirit"
+  },
+  "art_direction": {
+    "color_palette": ["#aaddff", "#ffffff", "#ccddff", "#446688"],
+    "model_notes": "Translucent humanoid wisp. Floating animation (no walking). Particle trail of cold mist.",
+    "texture_notes": "Semi-transparent blue-white glow. Faintly visible face that shifts. Cold fog particle effect."
+  }
+}

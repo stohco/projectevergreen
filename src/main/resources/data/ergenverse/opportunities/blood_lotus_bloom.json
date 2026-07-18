@@ -1,0 +1,44 @@
+{
+  "_comment": "Opportunity: Blood Lotus Bloom. Per opportunity directive: the engine continuously asks 'what opportunities naturally exist at a location that has existed for 500 years?'. Discoverable by cultivation (Core Formation), perception (Nascent Soul (to perceive the lotus)), and luck (modifier 1.0). Prime Directive: opportunity exists objectively; player perception determines whether they find it.",
+  "opportunity_id": "blood_lotus_bloom",
+  "name": "Blood Lotus Bloom",
+  "description": "A blood lotus blooming at a site of mass death, condensing death-essence. Exists because: blood lotuses grow from accumulated death-qi.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "age_requirement_years": 500,
+  "location_types": [
+    "mass_grave",
+    "ancient_battlefield",
+    "execution_ground"
+  ],
+  "cultivation_required": "Core Formation",
+  "perception_required": "Nascent Soul (to perceive the lotus)",
+  "luck_modifier": 1.0,
+  "discovery_methods": [
+    "divine_sense",
+    "rumor_following",
+    "death_qi_tracking"
+  ],
+  "reward_tables": [
+    "blood_lotus",
+    "death_essence",
+    "blood_herb",
+    "blood_attribute_treasure"
+  ],
+  "why_untaken": "Site is death-saturated; requires cultivation to survive.",
+  "natural_next_event": "Lotus blooms once per century; brief window.",
+  "simulation_notes": {
+    "continuous_inference": "The World State Engine continuously infers opportunities at every location based on the location's age, type, and history.",
+    "no_locked_upgrades": "A cultivator who later reaches the required perception will find opportunities they previously missed; the opportunities do not disappear.",
+    "canon_fidelity": "This is how Wang Lin found inheritances throughout his journey — the opportunities existed before he arrived; his perception determined what he found."
+  },
+  "salt": 33011068,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

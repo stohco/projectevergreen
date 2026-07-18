@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Ling'er (灵儿). Canon ID: N162. Master Yi Chen's granddaughter; recipient of two of Wang Lin's gifted treasures — the Straw Hat / Li Ming Straw Hat (黎明草帽, Ch.965) and the Three Bells Shield (三铃盾, Ch.965). Wang Lin also received the Dark Heaven Stone from Master Yi Chen in the same chapter (Ch.965). Referenced in provenance/straw_hat___li_ming_straw_hat.json, provenance/three_bells_shield.json, provenance/dark_heaven_stone.json, and CANON_RI_WIKI_RESEARCH_FINDINGS.md. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_ling_er",
+  "name": "Ling'er",
+  "nameCn": "灵儿",
+  "canon_id": "N162",
+  "type": "family",
+  "faction": "independent",
+  "location": "planet_suzaku",
+  "cultivation": "Foundation Establishment (child)",
+  "personality": "innocent, gentle; protected child",
+  "speech": "childlike, sweet",
+  "relationship_to_wanglin": "recipient of Wang Lin's gifted treasures (Straw Hat + Three Bells Shield, Ch.965)",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A gentle, bright-eyed child",
+    "qi_condensation": "Foundation Establishment child; protected by spirit treasures",
+    "core_formation": "Ling'er; Master Yi Chen's granddaughter",
+    "nascent_soul": "Wears Wang Lin's Straw Hat + Three Bells Shield (Ch.965 gifts)"
+  },
+  "canon_confidence": 4,
+  "note": "Master Yi Chen's granddaughter. Recipient of Wang Lin's gifted treasures: Straw Hat (黎明草帽) and Three Bells Shield (三铃盾) at Ch. 965. Provenance: see provenance/straw_hat___li_ming_straw_hat.json, provenance/three_bells_shield.json, provenance/dark_heaven_stone.json. Note on canon ambiguity: ri_canon_database.json N162 also records 'Adopted by Wang Lin; treated as his daughter' alongside the Yi Chen-granddaughter framing; the wiki and provenance files consistently use 'Master Yi Chen's granddaughter'. This NPC preserves the Yi Chen-granddaughter framing as the primary relationship per the wiki attestation. Source: CANON_RI_WIKI_RESEARCH_FINDINGS.md; CANON_DIVINE_SENSE_USES.md; provenance files; ri_canon_database.json N162.",
+  "derivation_type": "A",
+  "salt": 612847093,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

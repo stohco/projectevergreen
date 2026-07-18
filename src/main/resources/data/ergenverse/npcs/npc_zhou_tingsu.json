@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Zhou Tingsu (周婷苏). Canon ID: N03. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_zhou_tingsu",
+  "name": "Zhou Tingsu",
+  "nameCn": "周婷苏",
+  "canon_id": "N03",
+  "type": "other",
+  "faction": "wang_family_village",
+  "location": "wang_family_village",
+  "cultivation": "mortal",
+  "personality": "gentle, caring mother figure",
+  "speech": "maternal, worried",
+  "relationship_to_wanglin": "mother",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "Wang Lin's mother",
+    "qi_condensation": "Same — mortal"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's mother; her suffering drives his early cultivation",
+  "derivation_type": "A",
+  "salt": 172987072,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

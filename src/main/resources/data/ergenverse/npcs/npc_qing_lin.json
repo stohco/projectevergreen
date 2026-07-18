@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Qing Lin (青林). Canon ID: N26. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_qing_lin",
+  "name": "Qing Lin",
+  "nameCn": "青林",
+  "canon_id": "N26",
+  "type": "divine_emperor",
+  "faction": "qing_lin_sect",
+  "location": "qing_lin_territory",
+  "cultivation": "Immortal Emperor",
+  "personality": "green-robed immortal emperor; nature-aspected",
+  "speech": "flowing, natural, wise",
+  "relationship_to_wanglin": "ally; Divine Emperor",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "An impossibly powerful immortal",
+    "qi_condensation": "Nature immortal; overwhelming",
+    "core_formation": "Qing Lin; Immortal Emperor",
+    "nascent_soul": "Divine Emperor; nature dao"
+  },
+  "canon_confidence": 4,
+  "note": "Divine Emperor; nature-aspected",
+  "derivation_type": "A",
+  "salt": 1579134776,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

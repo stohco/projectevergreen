@@ -1,0 +1,86 @@
+{
+  "_comment": "Civilization: Cloud Sky Sect (sect) at Chu Country. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "cloud_sky_sect",
+  "name": "Cloud Sky Sect",
+  "type": "sect",
+  "location": "Chu Country",
+  "peak_realm": "Spirit Severing (Sect Master)",
+  "canon_status": "major_power",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "population_structure": {
+    "outer_disciples": 5000,
+    "inner_disciples": 800,
+    "core_disciples": 80,
+    "elders": 25,
+    "peak_lords": 12,
+    "ancestor": 2,
+    "spirit_beasts": 200
+  },
+  "economy": {
+    "spirit_stones": "abundant",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "moderate",
+    "forging": "moderate",
+    "formation": "moderate",
+    "trade": "Chu Country + regional",
+    "recruitment": "Chu + neighboring countries"
+  },
+  "politics": {
+    "allies": [
+      "Chu royal family"
+    ],
+    "enemies": [
+      "Sky Demon Country sects"
+    ],
+    "vassals": [
+      "minor Chu sects"
+    ],
+    "rivals": [
+      "Heavenly Fate Sect"
+    ],
+    "internal_factions": [
+      "main lineage",
+      "branch lineages"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "decennial examination",
+    "expansion": "steady; regional influence growing",
+    "decline": "none current",
+    "schisms": "branch lineage tension",
+    "wars": [
+      "border conflicts with Sky Demon Country"
+    ],
+    "recovery": "strong; multiple Spirit Severing elders"
+  },
+  "libraries": [
+    "intermediate techniques",
+    "Cloud Sky formation manuals",
+    "spirit beast catalogues",
+    "alchemy basics"
+  ],
+  "spirit_beasts": [
+    "mounts for core disciples",
+    "guardian beasts for peaks",
+    "war beasts for conflicts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 18782270,
+  "spiritual_vein_grade": 5,
+  "heritage_treasures": [
+    "I05"
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,14 @@
+{
+  "_comment": "Ecosystem integration: karma_wastes_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "karma_wastes_ecology",
+  "beasts": [
+    "destiny_beast",
+    "nether_beast",
+    "ghost_face_beast",
+    "sand_scorpion"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Karma Wastes; karma-aspected ecology",
+  "salt": 765318255
+}

@@ -1,0 +1,114 @@
+{
+  "_comment": "Ecosystem: Sword Intent Realm Ecology (Da Lou Sword Sect Region). Full food web with 6 trophic layers and 3 seasonal/environmental states. Prime Directive: ecology exists objectively; player perception determines what they observe. No-Locked-Upgrades: all seasonal states are reachable by time/weather/event.",
+  "ecosystem_id": "sword_intent_realm_ecology",
+  "name": "Sword Intent Realm Ecology",
+  "location": "Da Lou Sword Sect Region",
+  "description": "The sword-aspected ecology where residual sword intent alters all life.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "members": [
+        "sword_grass",
+        "intent_herb",
+        "blade_moss"
+      ],
+      "population": "environmental"
+    },
+    {
+      "layer": "primary",
+      "members": [
+        "spirit_crane#juvenile",
+        "wind_wolf#juvenile"
+      ],
+      "population": 20000,
+      "biomass_jin": 60000
+    },
+    {
+      "layer": "secondary",
+      "members": [
+        "spirit_crane#adult",
+        "wind_wolf#adult"
+      ],
+      "population": 2000,
+      "biomass_jin": 400000
+    },
+    {
+      "layer": "tertiary",
+      "members": [
+        "spirit_crane#ancient",
+        "dragon_ape#juvenile"
+      ],
+      "population": 100,
+      "biomass_jin": 1000000
+    },
+    {
+      "layer": "quaternary",
+      "members": [
+        "dragon_ape#adult",
+        "spirit_crane#enlightened"
+      ],
+      "population": 10,
+      "biomass_jin": 5000000
+    },
+    {
+      "layer": "apex",
+      "members": [
+        "sword_spirit_beast",
+        "dragon_ape#enlightened"
+      ],
+      "population": 1,
+      "biomass_jin": 50000000
+    }
+  ],
+  "features": [
+    "sword_peaks",
+    "intent_lakes",
+    "blade_forests",
+    "crane_roosts",
+    "sword_spring"
+  ],
+  "seasonal_states": {
+    "calm": {
+      "crane_mult": 1.0,
+      "dragon_ape_mult": 1.0,
+      "behavior": "cultivation",
+      "note": "Standard sword ecology."
+    },
+    "sword_rain": {
+      "crane_mult": 2.0,
+      "dragon_ape_mult": 1.5,
+      "sword_spirit_mult": 3.0,
+      "behavior": "manifestation",
+      "note": "Sword rain; sword spirits manifest."
+    },
+    "intent_storm": {
+      "crane_mult": 3.0,
+      "dragon_ape_mult": 2.0,
+      "behavior": "breakthrough",
+      "note": "Intent storm; beasts break through."
+    }
+  },
+  "state_transitions": {
+    "spring->summer": "temperature_rise",
+    "summer->autumn": "temperature_fall",
+    "autumn->winter": "temperature_fall",
+    "winter->spring": "temperature_rise",
+    "any->tribulation_storm": "tribulation_event",
+    "any->blood_moon": "blood_moon_event",
+    "any->nearby_corpse_battlefield": "battlefield_proximity",
+    "any->nearby_spirit_spring": "spring_proximity",
+    "any->nearby_dragon_corpse": "dragon_corpse_proximity",
+    "any->nearby_ancient_god_remains": "ancient_god_proximity"
+  },
+  "perception_tiers": {
+    "mortal": "Sees beasts and terrain; does not perceive trophic structure.",
+    "qi_condensation": "Senses qi-flows of the ecosystem.",
+    "foundation_establishment": "Perceives trophic layers and seasonal shifts.",
+    "core_formation": "Perceives population dynamics and triggers.",
+    "nascent_soul": "Perceives mutation potential and bloodline flows.",
+    "spirit_severing": "Perceives complete ecology as a living system."
+  },
+  "salt": 1589665436
+}

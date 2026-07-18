@@ -1,0 +1,33 @@
+{
+  "_comment": "RI Canon Opportunity: Foreign Battleground Participation. Canon event: Wang Lin participates in the Foreign Battleground war. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_foreign_battleground_participation",
+  "name": "Foreign Battleground Participation",
+  "canon_event": "Wang Lin participates in the Foreign Battleground war",
+  "location": "foreign_battleground",
+  "age_requirement_years": 10000,
+  "cultivation_required": "Core Formation",
+  "perception_required": "Nascent Soul",
+  "luck_modifier": 0.5,
+  "discovery_methods": [
+    "war_summons",
+    "rumor"
+  ],
+  "reward_tables": [
+    "war_spoils",
+    "white_tiger_manifestation",
+    "slaughter_essence"
+  ],
+  "why_untaken": "Requires war participation; the battleground is active war zone.",
+  "natural_next_event": "Wars continue; the White Tiger manifests at major battles.",
+  "canon_confidence": 4,
+  "derivation_type": "A",
+  "salt": 1016511174,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

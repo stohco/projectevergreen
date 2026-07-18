@@ -1,0 +1,29 @@
+{
+  "_comment": "Life-state variant: Thunder Celestial Beast (Ancient). Generated from canonical species definition. Prime Directive: this state exists objectively; perception tier determines whether player recognizes it.",
+  "variant_id": "thunder_celestial_beast__ancient",
+  "species_id": "thunder_celestial_beast",
+  "species_name": "Thunder Celestial Beast",
+  "species_nameCn": "雷仙兽",
+  "novel": "Renegade Immortal",
+  "life_state": "ancient",
+  "life_state_name": "Ancient",
+  "description": "Centuries old, massive, sage-like; cultivates by meditation",
+  "modifiers": {
+    "size_multiplier": 2.5,
+    "power_multiplier": 4.0,
+    "intelligence_multiplier": 1.3,
+    "temperament": "contemplative",
+    "rarity": "rare"
+  },
+  "perception_tiers": {
+    "mortal": "Sees a contemplative beast.",
+    "qi_condensation": "Sees a contemplative beast of thunder celestial beast kind.",
+    "foundation_establishment": "Recognizes life-state: Ancient.",
+    "core_formation": "Recognizes species, life-state, and approximate cultivation.",
+    "nascent_soul": "Sees bloodline, mutation potential, and treasure affinity.",
+    "spirit_severing": "Sees complete ecology and Dao-comprehension state."
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1740284024
+}

@@ -1,0 +1,35 @@
+{
+  "_comment": "Fire Phoenix — Renegade Immortal. A reborn fire avian beast. Canon: appears in the Sea of Devils arc; its feathers are alchemy-grade materials.",
+  "species_id": "fire_phoenix",
+  "name": "Fire Phoenix",
+  "nameCn": "火凤",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 3,
+  "max_hp": 60,
+  "attack_damage": 8,
+  "speed": 0.35,
+  "follow_range": 28,
+  "canonical": {
+    "appearance": "A large avian wreathed in crimson flame. Feathers glow like embers; wingspan of 3-5 meters. Reborn from its own ashes.",
+    "size": "Large (3-5m wingspan, 1.5m body)",
+    "behavior": "Territorial but not aggressive unless provoked. Nests near fire-aligned spirit veins. Rebirth cycle upon death (drops phoenix feather).",
+    "habitat": "Planet Suzaku — volcanic biomes, fire spirit veins, the Sea of Devils outer regions",
+    "cultivation": "Qi Condensation to Foundation Establishment equivalent",
+    "intelligence": "4-6 (high for a beast — capable of recognizing cultivators by realm)",
+    "diet": "Spirit stones, fire-element herbs, raw spiritual energy from veins",
+    "relationships": "Preyed upon by higher-realm cultivators for feathers. Sometimes kept as a guardian by fire-aligned sects.",
+    "techniques": ["Fire rebirth (revives once upon death)", "Flame sweep (AoE fire damage)", "Ember rain (ranged fire projectiles)"],
+    "treasures": ["Phoenix Feather (alchemy ingredient)", "Phoenix Blood (body refinement material)"],
+    "bloodline": "ancient_beast",
+    "mutations": ["Ash Rebirth — upon taking fatal damage, revives at 50% HP once per day"],
+    "ecology": "Apex fire-attribute predator in volcanic regions. Competes with Thunder Birds for territory near spirit veins.",
+    "bloodline_tier": "ancient_beast",
+    "combat_ai": "elemental"
+  },
+  "art_direction": {
+    "color_palette": ["#ff4400", "#ff8800", "#ffcc00", "#ff2200"],
+    "model_notes": "Large bird with spread wings on fire. Particle emitter for ember trail.",
+    "texture_notes": "Crimson-orange plumage with glowing feather tips. Blackened beak and talons."
+  }
+}

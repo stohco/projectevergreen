@@ -1,0 +1,22 @@
+{
+  "_comment": "Ecosystem integration: wang_family_village_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "wang_family_village_ecology",
+  "beasts": [
+    "spirit_rabbit",
+    "spirit_deer",
+    "spirit_fox",
+    "spirit_wolf_pack_leader"
+  ],
+  "npcs": [
+    "npc_wang_tianshui",
+    "npc_wang_ping",
+    "npc_zhou_tingsu",
+    "npc_da_niu",
+    "npc_zhou_rui",
+    "npc_wang_tianshan",
+    "npc_wang_qingyue"
+  ],
+  "enemies": [],
+  "note": "Wang Family Village; mortal + low-tier spirit beast ecology",
+  "salt": 132754637
+}

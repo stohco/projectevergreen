@@ -1,0 +1,37 @@
+{
+  "_comment": "Time-Event: Ancient God Stirring. Per time directive: the world is not static. Trigger: era, scope: global, duration: 3650 days. Prime Directive: event occurs objectively; player perception determines whether they witness it.",
+  "event_id": "ancient_god_stirring",
+  "name": "Ancient God Stirring",
+  "trigger": "era",
+  "scope": "global",
+  "duration_days": 3650,
+  "effects": [
+    "god_essence_rises",
+    "ecology_restructures",
+    "guardian_beasts_manifest"
+  ],
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "note": "Ancient gods stir in their slumber; reality warps.",
+  "simulation_notes": {
+    "world_breathes": "The world changes whether or not the player acts; a player who returns 200 years later will barely recognize it.",
+    "trigger_types": {
+      "seasonal": "occurs every season",
+      "decennial": "occurs every decade",
+      "centennial": "occurs every century",
+      "millennial": "occurs every millennium",
+      "era": "occurs every era (10000+ years)",
+      "random": "occurs randomly",
+      "political": "triggered by political events",
+      "tribulation": "triggered by tribulations"
+    },
+    "perception_tiers": {
+      "mortal": "Witnesses only local effects.",
+      "qi_condensation": "Senses the event occurring.",
+      "foundation_establishment": "Perceives the event's scope and effects.",
+      "core_formation": "Predicts the event's consequences.",
+      "nascent_soul": "Perceives the event's place in the larger pattern."
+    }
+  },
+  "salt": 316514972
+}

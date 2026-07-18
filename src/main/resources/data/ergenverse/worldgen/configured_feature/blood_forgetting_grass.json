@@ -1,0 +1,21 @@
+{
+  "_comment": "Blood-Forgetting Grass (忘忧草) — emotional-cultivation herb. Canon: a slender blue-green grass that calms the heart and dispels intrusive sorrow, used to stabilize cultivators after heart-devil episodes; gathered in peaceful, Qi-balanced regions. Found in Zhao Plains and Chu Country (temperate, settled lands) and Jue Ming Valley (where departing cultivators seek calm before the Foreign Battleground). Custom block: ergenverse:blood_forgetting_grass
+  "type": "minecraft:flower",
+  "config": {
+    "feature": {
+      "type": "minecraft:simple_block",
+      "config": {
+        "to_place": {
+          "type": "minecraft:simple_state_provider",
+          "state": {
+            "Name": "ergenverse:blood_forgetting_grass"
+          }
+        }
+      }
+    },
+    "tries": 1,
+    "xz_spread": 4,
+    "y_spread": 1,
+    "need_red_to_survive": false
+  }
+}

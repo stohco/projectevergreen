@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Du Qing (杜青). Canon ID: N123. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_du_qing",
+  "name": "Du Qing",
+  "nameCn": "杜青",
+  "canon_id": "N123",
+  "type": "elder",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Third Step",
+  "personality": "elder; powerful",
+  "speech": "measured",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "A powerful elder",
+    "qi_condensation": "Third Step; overwhelming",
+    "core_formation": "Third Step elder",
+    "nascent_soul": "Third Step; elder"
+  },
+  "canon_confidence": 3,
+  "note": "Third Step elder NPC",
+  "derivation_type": "B",
+  "salt": 459591894,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

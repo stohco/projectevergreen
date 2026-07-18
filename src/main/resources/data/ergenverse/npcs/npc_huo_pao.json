@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Huo Pao (火炮). Canon ID: N134. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_huo_pao",
+  "name": "Huo Pao",
+  "nameCn": "火炮",
+  "canon_id": "N134",
+  "type": "disciple",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "fire-cannon cultivator; explosive",
+  "speech": "explosive, loud",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A fire-aspected cultivator",
+    "qi_condensation": "Fire-cannon; explosive aura"
+  },
+  "canon_confidence": 3,
+  "note": "Fire-cannon cultivator",
+  "derivation_type": "B",
+  "salt": 1381603521,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

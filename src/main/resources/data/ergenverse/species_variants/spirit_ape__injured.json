@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Ape (injured). Generated from canonical definition.",
+  "variant_id": "spirit_ape__injured",
+  "species_id": "spirit_ape",
+  "species_name": "Spirit Ape",
+  "life_state": "injured",
+  "modifiers": {
+    "size_multiplier": 0.9,
+    "power_multiplier": 0.5,
+    "temperament": "desperate",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 837826537
+}

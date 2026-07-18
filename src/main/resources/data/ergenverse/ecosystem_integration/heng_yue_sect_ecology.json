@@ -1,0 +1,29 @@
+{
+  "_comment": "Ecosystem integration: heng_yue_sect_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "heng_yue_sect_ecology",
+  "beasts": [
+    "spirit_ape",
+    "spirit_bear",
+    "spirit_eagle",
+    "spirit_fox"
+  ],
+  "npcs": [
+    "npc_qiu_siping",
+    "npc_wang_zhuo",
+    "npc_wang_hao",
+    "npc_yun_fei",
+    "npc_qian_kun",
+    "npc_sun_dazhu",
+    "npc_wu_yu",
+    "npc_ye_zi",
+    "npc_sun_zhenwei",
+    "npc_chen_bailiang",
+    "npc_zhang_hu",
+    "npc_zhou_lin"
+  ],
+  "enemies": [
+    "sun_dazhu"
+  ],
+  "note": "Heng Yue Sect; cultivator + spirit beast ecology",
+  "salt": 1169971166
+}

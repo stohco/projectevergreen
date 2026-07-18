@@ -1,0 +1,123 @@
+{
+  "_comment": "Ecosystem: Underground Crystal Ecology (underground). Full food web with 6 trophic layers and 4 seasonal/environmental states. Prime Directive: ecology exists objectively; player perception determines what they observe. No-Locked-Upgrades: all seasonal states are reachable by time/weather/event.",
+  "ecosystem_id": "underground_crystal_ecology",
+  "name": "Underground Crystal Ecology",
+  "location": "underground",
+  "description": "The crystal-aspected ecology of underground crystal forests.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "members": [
+        "crystal_flora",
+        "amethyst_moss",
+        "deep_mineral_herbs"
+      ],
+      "population": "environmental"
+    },
+    {
+      "layer": "primary",
+      "members": [
+        "ant_beast#worker",
+        "ink_bat#juvenile"
+      ],
+      "population": 1000000,
+      "biomass_jin": 2000000
+    },
+    {
+      "layer": "secondary",
+      "members": [
+        "ant_beast#soldier",
+        "giant_centipede#juvenile"
+      ],
+      "population": 100000,
+      "biomass_jin": 1000000
+    },
+    {
+      "layer": "tertiary",
+      "members": [
+        "giant_centipede#adult",
+        "web_weaver_spider#adult"
+      ],
+      "population": 10000,
+      "biomass_jin": 500000
+    },
+    {
+      "layer": "quaternary",
+      "members": [
+        "ant_beast#queen",
+        "giant_centipede#ancient"
+      ],
+      "population": 100,
+      "biomass_jin": 1000000
+    },
+    {
+      "layer": "apex",
+      "members": [
+        "ink_dragon#juvenile",
+        "ink_dragon#adult"
+      ],
+      "population": 3,
+      "biomass_jin": 300000
+    }
+  ],
+  "features": [
+    "crystal_forests",
+    "amethyst_geodes",
+    "ant_kingdoms",
+    "centipede_tunnels",
+    "deep_springs"
+  ],
+  "seasonal_states": {
+    "stable": {
+      "ant_mult": 1.0,
+      "centipede_mult": 1.0,
+      "ink_dragon_mult": 1.0,
+      "behavior": "normal",
+      "note": "Standard underground ecology."
+    },
+    "vein_shift": {
+      "ant_mult": 1.5,
+      "centipede_mult": 1.5,
+      "ink_dragon_mult": 0.5,
+      "behavior": "migration",
+      "note": "Vein shifts; beasts migrate; dragons retreat."
+    },
+    "cave_collapse": {
+      "ant_mult": 0.3,
+      "centipede_mult": 2.0,
+      "ink_dragon_mult": 0.2,
+      "behavior": "frenzy",
+      "note": "Collapse; centipedes tunnel frenzied; others crushed."
+    },
+    "miner_invasion": {
+      "ant_mult": 1.2,
+      "centipede_mult": 1.0,
+      "ink_dragon_mult": 1.0,
+      "behavior": "defensive",
+      "note": "Miners invade; ant kingdoms defend."
+    }
+  },
+  "state_transitions": {
+    "spring->summer": "temperature_rise",
+    "summer->autumn": "temperature_fall",
+    "autumn->winter": "temperature_fall",
+    "winter->spring": "temperature_rise",
+    "any->tribulation_storm": "tribulation_event",
+    "any->blood_moon": "blood_moon_event",
+    "any->nearby_corpse_battlefield": "battlefield_proximity",
+    "any->nearby_spirit_spring": "spring_proximity",
+    "any->nearby_dragon_corpse": "dragon_corpse_proximity",
+    "any->nearby_ancient_god_remains": "ancient_god_proximity"
+  },
+  "perception_tiers": {
+    "mortal": "Sees beasts and terrain; does not perceive trophic structure.",
+    "qi_condensation": "Senses qi-flows of the ecosystem.",
+    "foundation_establishment": "Perceives trophic layers and seasonal shifts.",
+    "core_formation": "Perceives population dynamics and triggers.",
+    "nascent_soul": "Perceives mutation potential and bloodline flows.",
+    "spirit_severing": "Perceives complete ecology as a living system."
+  },
+  "salt": 1829729249
+}

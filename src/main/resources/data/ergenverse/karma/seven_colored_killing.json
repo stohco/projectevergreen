@@ -1,0 +1,30 @@
+{
+  "karma_id": "seven_colored_killing",
+  "name": "Killing of the Seven-Colored Daoist",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 35400,
+  "karmic_weight": -4500,
+  "bearer": "N01",
+  "debtor": "seven_colored_daoist",
+  "description": "Wang Lin slays the Seven-Colored Daoist and becomes owner of the Cave World. Resolves the long-standing enmity but inherits the Cave World's karmic burden.",
+  "consequences": [
+    {
+      "type": "inheritance_claimed",
+      "target_id": "cave_world",
+      "magnitude": 100,
+      "resolved_at_tick": 35400
+    },
+    {
+      "type": "tribulation_earned",
+      "target_id": "N01",
+      "magnitude": 3000,
+      "resolved_at_tick": null,
+      "note": "ownership of a world draws heavenly attention"
+    }
+  ],
+  "unresolved_until": "never",
+  "_comment": "Karmic Nexus node: Killing of the Seven-Colored Daoist. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 1146298172
+}

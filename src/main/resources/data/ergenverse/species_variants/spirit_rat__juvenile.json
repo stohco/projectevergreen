@@ -1,0 +1,29 @@
+{
+  "_comment": "Life-state variant: Spirit Rat (Juvenile). Generated from canonical species definition. Prime Directive: this state exists objectively; perception tier determines whether player recognizes it.",
+  "variant_id": "spirit_rat__juvenile",
+  "species_id": "spirit_rat",
+  "species_name": "Spirit Rat",
+  "species_nameCn": "灵鼠",
+  "novel": "A Will Eternal",
+  "life_state": "juvenile",
+  "life_state_name": "Juvenile",
+  "description": "Newly born, small, weak, learning; cultivates by observing",
+  "modifiers": {
+    "size_multiplier": 0.15,
+    "power_multiplier": 0.1,
+    "intelligence_multiplier": 0.5,
+    "temperament": "curious",
+    "rarity": "common"
+  },
+  "perception_tiers": {
+    "mortal": "Sees a curious beast.",
+    "qi_condensation": "Sees a curious beast of spirit rat kind.",
+    "foundation_establishment": "Recognizes life-state: Juvenile.",
+    "core_formation": "Recognizes species, life-state, and approximate cultivation.",
+    "nascent_soul": "Sees bloodline, mutation potential, and treasure affinity.",
+    "spirit_severing": "Sees complete ecology and Dao-comprehension state."
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 675542376
+}

@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Karma_Whip",
+    "name": "Karma Whip - Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin Renegade Immortal Li Muwan. Karma Whip Sign In to Save Type Whip Ownership Creator Wang Lin Sect / Faction Karma Domain Current Owner Wang Lin",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin/Items",
+    "name": "Wang Lin/Items | Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin fused it with his Karma Dao making it the Karma Whip. Blood Jades. Got from Yao Xixue's bag of holding. Expand Status: It was used previously but ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=U5qbo8SN5TY",
+    "name": "Wang Lin Crushes an Illusory Yin Cultivator in a Battle of Dao!",
+    "snippet": "Wang Lin just proved exactly why you should never underestimate a first-step cultivator! Welcome back to Donghua Lens! In today's Renegade ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "Jul 5, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Wang%20Lin/986247",
+    "name": "Wang Lin - Renegade Immortal",
+    "snippet": "the whip was obtained by Wang Lin. it became the Cause-Effect Whip. with a single whip. to grasp the karma of life and death.",
+    "host_name": "baike.baidu.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://forums.spacebattles.com/threads/renegade-immortal-%E4%BB%99%E9%80%86-feat-and-source-thread.982071",
+    "name": "Renegade Immortal (仙逆) Feat and Source Thread | SpaceBattles",
+    "snippet": "Wang Lin's domain was precisely due to the karma domain. After Wang Lin's domain evolved, it would be impossible to see through it unless one ...",
+    "host_name": "forums.spacebattles.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

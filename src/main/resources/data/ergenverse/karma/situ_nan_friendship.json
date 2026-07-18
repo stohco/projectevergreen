@@ -1,0 +1,23 @@
+{
+  "karma_id": "situ_nan_friendship",
+  "name": "Situ Nan Mentorship",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 7300,
+  "karmic_weight": 1200,
+  "bearer": "N01",
+  "debtor": "situ_nan",
+  "description": "Situ Nan takes Wang Lin as a disciple, granting him the path of restriction and profound guidance.",
+  "consequences": [
+    {
+      "type": "technique_unlocked",
+      "target_id": "T_restriction_canon",
+      "magnitude": 90,
+      "resolved_at_tick": 7300
+    }
+  ],
+  "unresolved_until": "resolved",
+  "_comment": "Karmic Nexus node: Situ Nan Mentorship. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 513655041
+}

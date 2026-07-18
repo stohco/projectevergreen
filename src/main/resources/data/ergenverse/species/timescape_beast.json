@@ -1,0 +1,75 @@
+{
+  "_comment": "Species: Timescape Beast (光阴兽) from Beyond the Timescape. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "timescape_beast",
+  "name": "Timescape Beast",
+  "nameCn": "光阴兽",
+  "novel": "Beyond the Timescape",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Beast of living time 5 m, body shifts through moments, eyes are clocks",
+    "size": "5 m adult, 0 jin (time); true form spans eras",
+    "behavior": "Cultivates by absorbing time; hunts by aging prey in moments",
+    "habitat": "Time-aspected forbidden zones, timescape edges",
+    "cultivation": "Immortal (time attribute)",
+    "intelligence": 12,
+    "diet": "time-essence, time-aspected herbs",
+    "relationships": "Neutral; rarely interacts with cultivators",
+    "techniques": [
+      "time_step",
+      "age_touch",
+      "moment_rewind"
+    ],
+    "treasures": [
+      "timescape_core",
+      "time_essence"
+    ],
+    "bloodline": "Timescape lineage; time-attribute bloodline",
+    "mutations": [
+      "true_time_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "timescape_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "timescape_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1503117514,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

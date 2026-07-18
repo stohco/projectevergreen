@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Giant Savage Ape (巨猿) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "giant_savage_ape",
+  "name": "Giant Savage Ape",
+  "nameCn": "巨猿",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Bipedal ape 10 m tall, fur iron-grey, fists the size of millstones, four arms on ancient specimens",
+    "size": "10 m adult, 200000 jin; ancient 30 m, millions of jin",
+    "behavior": "Territorial mountain predator; uses fists to shatter formations; hoards spirit-fruit in caves",
+    "habitat": "Suzaku mountain range, Great Saint Continent peaks, Wild Continent forests",
+    "cultivation": "Core Formation -> Nascent Soul -> Spirit Severing (body-tempering)",
+    "intelligence": 6,
+    "diet": "spirit fruit, mountain herbs, weaker beasts, lost cultivators",
+    "relationships": "Rival of mountain lions; tamed by body-cultivation sects",
+    "techniques": [
+      "iron_fist",
+      "mountain_roar",
+      "four_arm_sweep",
+      "boulder_throw"
+    ],
+    "treasures": [
+      "ape_blood_essence",
+      "iron_fur_pelt",
+      "four_arm_bone"
+    ],
+    "bloodline": "Ancient Savage-Ape lineage; body-tempering bloodline",
+    "mutations": [
+      "four_arm",
+      "iron_bone",
+      "ancient_savage_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "giant_savage_ape — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "giant_savage_ape — not a hive-mind species"
+    },
+    "combat_ai": "pack_hunter"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1148596047,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,65 @@
+{
+  "_comment": "Faction relationships: soul_refining_sect. Per user directive: faction relationship network — allies/enemies/vassals/rivals. Prime Directive: relationships exist objectively.",
+  "faction_id": "soul_refining_sect",
+  "type": "sect",
+  "allies": [
+    "teng_family",
+    "devil_sects"
+  ],
+  "enemies": [
+    "wang_lin",
+    "orthodox_sects",
+    "heavenly_fate_sect"
+  ],
+  "vassals": [
+    "soul_refining_tribe",
+    "corpse_yin_sect"
+  ],
+  "rivals": [],
+  "neutral": [],
+  "note": "",
+  "salt": 418359873,
+  "spiritual_vein_grade": {
+    "grade": "high",
+    "element": "dark",
+    "qi_modifier": "Soul Refining techniques 2x effective within sect grounds",
+    "canon_note": "Soul Refining Sect's high-grade dark vein amplifies soul manipulation techniques"
+  },
+  "heritage_treasures": [
+    {
+      "item_id": "soul_refining_flag",
+      "name": "Soul Refining Flag",
+      "status": "sealed",
+      "location_within_faction": "Forbidden chamber beneath sect",
+      "canon_note": null
+    },
+    {
+      "item_id": "restriction_flag",
+      "name": "Restriction Flag set",
+      "status": "active",
+      "location_within_faction": "Xu Liqing's personal vault",
+      "canon_note": null
+    }
+  ],
+  "relationship_metadata": {
+    "allies": [],
+    "enemies": [
+      {
+        "id": "heng_yue_sect",
+        "strength": "ancient",
+        "since": "Pre-canon",
+        "reason": "Xu Liqing's grudge against Wang Lin's origin sect"
+      },
+      {
+        "id": "all_sect_war",
+        "strength": "moderate",
+        "since": "Pre-canon",
+        "reason": "Orthodox sects oppose Soul Refining practices"
+      }
+    ],
+    "vassals": [],
+    "rivals": [],
+    "neutral": []
+  },
+  "_xianxia_schema": 2
+}

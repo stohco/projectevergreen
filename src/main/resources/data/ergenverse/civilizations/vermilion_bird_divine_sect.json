@@ -1,0 +1,91 @@
+{
+  "_comment": "Civilization: Vermilion Bird Divine Sect (divine_sect) at Vermilion Bird Starfield. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "vermilion_bird_divine_sect",
+  "name": "Vermilion Bird Divine Sect",
+  "type": "divine_sect",
+  "location": "Vermilion Bird Starfield",
+  "peak_realm": "Immortal (Divine Emperor)",
+  "canon_status": "apex_power",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "population_structure": {
+    "outer_disciples": 50000,
+    "inner_disciples": 10000,
+    "core_disciples": 1000,
+    "elders": 100,
+    "peak_lords": 36,
+    "divine_emperor": 1,
+    "spirit_beasts": 5000
+  },
+  "economy": {
+    "spirit_stones": "vast",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "immortal-grade",
+    "forging": "immortal-grade",
+    "formation": "immortal-grade",
+    "trade": "star-system",
+    "recruitment": "star-system-wide"
+  },
+  "politics": {
+    "allies": [
+      "vassal star-sects"
+    ],
+    "enemies": [
+      "rival divine sects"
+    ],
+    "vassals": [
+      "entire star-sects"
+    ],
+    "rivals": [
+      "Azure Dragon Divine Sect"
+    ],
+    "internal_factions": [
+      "divine emperor loyalists",
+      "elder council",
+      "star-system lords"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "star-system-wide divine examination",
+    "expansion": "star-system-scale",
+    "decline": "none; divine emperor ensures continuity",
+    "schisms": "star-system lord tension",
+    "wars": [
+      "divine-sect wars"
+    ],
+    "recovery": "divine; divine emperor can intervene personally"
+  },
+  "libraries": [
+    "immortal techniques",
+    "divine formation manuals",
+    "divine beast catalogues",
+    "immortal alchemy",
+    "star-system lore",
+    "divine inheritance"
+  ],
+  "spirit_beasts": [
+    "vermilion bird (divine)",
+    "fire phoenixes",
+    "flame dragons",
+    "star-system beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 133084840,
+  "spiritual_vein_grade": "immortal",
+  "heritage_treasures": [
+    "I01",
+    "I04"
+  ],
+  "_xianxia_schema": 1
+}

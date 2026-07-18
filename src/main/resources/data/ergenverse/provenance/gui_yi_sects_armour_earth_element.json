@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Gui Yi Sect's Armour (Earth Element) (鬼衣宗甲). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I44",
+  "name": "Gui Yi Sect's Armour (Earth Element)",
+  "nameCn": "鬼衣宗甲",
+  "type": "armor",
+  "category": "defensive",
+  "origin": "1st: taken from Water General of Planet Five Elements (Ch. 1735); 2nd: via Old Ancestor Green Bull (Ch. 1886)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Earth-element human-shaped armor",
+    "Rare even within the Gui Yi Sect",
+    "Two copies obtained"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Rare Gui Yi Sect treasure",
+    "Earth-element / human-shaped armor",
+    "Old Ancestor Green Bull paid high price for 2nd copy"
+  ],
+  "source": "Ch.1735 & Ch.1886 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "1st: taken from Water General of Planet Five Elements (Ch. 1735); 2nd: via Old Ancestor Green Bull (Ch. 1886)"
+  }
+}

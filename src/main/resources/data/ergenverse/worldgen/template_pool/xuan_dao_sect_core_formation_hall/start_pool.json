@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:xuan_dao_sect_core_formation_hall/start_pool",
+  "fallback": "minecraft:village/plains/terminators",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "minecraft:village/plains/houses/plains_fletcher_house_1",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

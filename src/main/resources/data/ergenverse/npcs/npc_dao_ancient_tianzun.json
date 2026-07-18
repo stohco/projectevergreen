@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Dao Ancient Great Celestial Venerable (道古大天尊). Canon ID: N119. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_dao_ancient_tianzun",
+  "name": "Dao Ancient Great Celestial Venerable",
+  "nameCn": "道古大天尊",
+  "canon_id": "N119",
+  "type": "elder",
+  "faction": "ancient_clan",
+  "location": "ancient_clan_territory",
+  "cultivation": "Great Celestial Venerable",
+  "personality": "ancient clan celestial venerable",
+  "speech": "ancient, formal",
+  "relationship_to_wanglin": "complex; Ancient Clan",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "Celestial presence",
+    "core_formation": "Great Celestial Venerable",
+    "nascent_soul": "Ancient Clan Great Celestial Venerable"
+  },
+  "canon_confidence": 3,
+  "note": "Ancient Clan Great Celestial Venerable",
+  "derivation_type": "B",
+  "salt": 481772670,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

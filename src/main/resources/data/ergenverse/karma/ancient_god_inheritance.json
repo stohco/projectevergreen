@@ -1,0 +1,29 @@
+{
+  "karma_id": "ancient_god_inheritance",
+  "name": "Ancient God Tu Si Inheritance",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 12000,
+  "karmic_weight": 3000,
+  "bearer": "N01",
+  "debtor": "tu_si_ancient_god",
+  "description": "Wang Lin inherits the Ancient God knowledge of Tu Si, gaining the Ji Realm and the path of the Ancient God.",
+  "consequences": [
+    {
+      "type": "technique_unlocked",
+      "target_id": "T_ancient_god_ji_realm",
+      "magnitude": 100,
+      "resolved_at_tick": 12000
+    },
+    {
+      "type": "tribulation_earned",
+      "target_id": "N01",
+      "magnitude": 1500,
+      "resolved_at_tick": null
+    }
+  ],
+  "unresolved_until": "wang_lin_becomes_ancient_god",
+  "_comment": "Karmic Nexus node: Ancient God Tu Si Inheritance. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 1023160144
+}

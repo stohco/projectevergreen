@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Spirit Toad (灵蟾) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "spirit_toad",
+  "name": "Spirit Toad",
+  "nameCn": "灵蟾",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Toad 0.5 m, skin spirit-green, throat sac glows with spirit-light",
+    "size": "0.5 m adult, 20 jin; ancient 2 m, 500 jin",
+    "behavior": "Ambush predator near springs; cultivates by absorbing water+dawn essence",
+    "habitat": "Spirit springs, dawn-aspected wetlands",
+    "cultivation": "Qi Condensation -> Foundation Establishment (water/light attribute)",
+    "intelligence": 4,
+    "diet": "spirit fish, spirit insects, dawn-dew",
+    "relationships": "Lesser kin of thunder toad; prey for spirit snakes",
+    "techniques": [
+      "spirit_croak",
+      "tongue_lash",
+      "water_dodge"
+    ],
+    "treasures": [
+      "spirit_toad_core",
+      "spirit_skin"
+    ],
+    "bloodline": "Spirit-Toad lineage; water-attribute bloodline (dilute thunder toad)",
+    "mutations": [
+      "light_sac",
+      "spirit_toad_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": "No alchemy value — common beast with no condensed inner core",
+      "canon_note": "spirit_toad — common beast, no condensed inner core"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "spirit_toad — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1876955354,
+  "bloodline_tier": "ordinary",
+  "inner_dan_properties": {
+    "element": "poison",
+    "purity_tier": 3,
+    "dao_resonance": "miasma",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

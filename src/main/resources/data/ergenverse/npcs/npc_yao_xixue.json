@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Yao Xixue (姚惜雪). Canon ID: N99. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_yao_xixue",
+  "name": "Yao Xixue",
+  "nameCn": "姚惜雪",
+  "canon_id": "N99",
+  "type": "antagonist",
+  "faction": "yao_family",
+  "location": "yao_family_territory",
+  "cultivation": "Infant Transformation Late Stage",
+  "personality": "cunning Yao family cultivator",
+  "speech": "calculating, aristocratic",
+  "relationship_to_wanglin": "enemy; Yao family",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A noble cultivator",
+    "qi_condensation": "Yao family; Infant Transformation",
+    "core_formation": "Infant Transformation Late Stage",
+    "nascent_soul": "Yao family elite"
+  },
+  "canon_confidence": 4,
+  "note": "Yao family antagonist",
+  "derivation_type": "A",
+  "salt": 1394234058,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

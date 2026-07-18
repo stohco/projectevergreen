@@ -1,0 +1,37 @@
+{
+  "_comment": "Time-Event: Sect Leader Death. Per time directive: the world is not static. Trigger: age_or_war, scope: regional, duration: 90 days. Prime Directive: event occurs objectively; player perception determines whether they witness it.",
+  "event_id": "sect_leader_death",
+  "name": "Sect Leader Death",
+  "trigger": "age_or_war",
+  "scope": "regional",
+  "duration_days": 90,
+  "effects": [
+    "succession_crisis",
+    "internal_faction_struggle",
+    "power_vacuum"
+  ],
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "note": "Sect leaders die; succession crises follow.",
+  "simulation_notes": {
+    "world_breathes": "The world changes whether or not the player acts; a player who returns 200 years later will barely recognize it.",
+    "trigger_types": {
+      "seasonal": "occurs every season",
+      "decennial": "occurs every decade",
+      "centennial": "occurs every century",
+      "millennial": "occurs every millennium",
+      "era": "occurs every era (10000+ years)",
+      "random": "occurs randomly",
+      "political": "triggered by political events",
+      "tribulation": "triggered by tribulations"
+    },
+    "perception_tiers": {
+      "mortal": "Witnesses only local effects.",
+      "qi_condensation": "Senses the event occurring.",
+      "foundation_establishment": "Perceives the event's scope and effects.",
+      "core_formation": "Predicts the event's consequences.",
+      "nascent_soul": "Perceives the event's place in the larger pattern."
+    }
+  },
+  "salt": 473241729
+}

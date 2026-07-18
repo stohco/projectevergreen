@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Ancient_Clan",
+    "name": "Ancient Clan - Xian Ni Wikia - Fandom",
+    "snippet": "At Immortal Astral Continent this clan is divided into three different branches: Ji, Dao and Shi, each branch with an Emperor representing it, and multiple ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Ancient_Demon",
+    "name": "Ancient Demon - Xian Ni Wikia - Fandom",
+    "snippet": "The Ancient Demons are one of the three branches of the Ancient Clan, they cultivate demonic energy. They originate from the Immortal Astral Continent, ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=x67tumsfCzc",
+    "name": "Ancient Ones Explained | Renegade Immortal | Xian Ni | Wang Lin",
+    "snippet": "Step into the ancient era of Renegade Immortal, where power is not cultivated through Qi, but forged through an indestructible body and the ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Ancient_Devil",
+    "name": "Ancient Devil - Xian Ni Wikia - Fandom",
+    "snippet": "The Ancient Devils are one of the three branches of the Ancient Clan, they cultivate devilish energy. They originate from the Immortal Astral Continent, ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Ancient%20Demon%20Beiluo/1522059",
+    "name": "Ancient Demon Beiluo - Renegade Immortal",
+    "snippet": "Ancient Demon Beiluo belongs to the Ancient Demon Clan, one of the Four Great Ancient Races in the novel. In the Star Immortal Domain, he stands in a tripartite ...",
+    "host_name": "baike.baidu.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

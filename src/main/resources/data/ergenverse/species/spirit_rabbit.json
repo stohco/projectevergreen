@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Spirit Rabbit (灵兔) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "spirit_rabbit",
+  "name": "Spirit Rabbit",
+  "nameCn": "灵兔",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Small rabbit 0.3 m, fur white-silver, eyes glow with spirit-light",
+    "size": "0.3 m adult, 2 jin; ancient 0.8 m, 20 jin",
+    "behavior": "Timid; cultivates by absorbing dawn-light; prey for many predators",
+    "habitat": "Spirit herb hills, dawn-aspected valleys, forests",
+    "cultivation": "Qi Condensation -> Foundation Establishment (light attribute)",
+    "intelligence": 5,
+    "diet": "dawn-dew, spirit-herbs, grass",
+    "relationships": "Prey for wind wolves, mountain lions, foxes",
+    "techniques": [
+      "dawn_hop",
+      "spirit_dodge",
+      "light_burrow"
+    ],
+    "treasures": [
+      "spirit_rabbit_core",
+      "white_fur"
+    ],
+    "bloodline": "Spirit-Rabbit lineage; light-attribute bloodline (dilute)",
+    "mutations": [
+      "silver_fur",
+      "light_body"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": "No alchemy value — common beast with no condensed inner core",
+      "canon_note": "spirit_rabbit — common beast, no condensed inner core"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "spirit_rabbit — not a hive-mind species"
+    },
+    "combat_ai": "migration_passive"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 499536031,
+  "bloodline_tier": "ordinary",
+  "inner_dan_properties": {
+    "element": "wood",
+    "purity_tier": 1,
+    "dao_resonance": "fleetness",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

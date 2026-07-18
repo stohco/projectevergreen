@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Celestial Guard Beast (ancient). Generated from canonical definition.",
+  "variant_id": "celestial_guard_beast__ancient",
+  "species_id": "celestial_guard_beast",
+  "species_name": "Celestial Guard Beast",
+  "life_state": "ancient",
+  "modifiers": {
+    "size_multiplier": 2.5,
+    "power_multiplier": 4.0,
+    "temperament": "contemplative",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 389603680
+}

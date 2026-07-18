@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Thunder Ape (雷猿) from Pursuit of the Truth. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "thunder_ape",
+  "name": "Thunder Ape",
+  "nameCn": "雷猿",
+  "novel": "Pursuit of the Truth",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Bipedal ape 4 m tall, fur crackling with thunder, fists strike with lightning",
+    "size": "4 m adult, 4000 jin; ancient 12 m, 80000 jin",
+    "behavior": "Pack hunter during storms; cultivates by absorbing lightning on peaks",
+    "habitat": "Thunder peaks, storm-aspected mountains",
+    "cultivation": "Core Formation -> Nascent Soul (thunder attribute)",
+    "intelligence": 6,
+    "diet": "thunder-herbs, weaker beasts, lost cultivators",
+    "relationships": "Rival of Lei Ji; preyed upon by thunder celestial beasts",
+    "techniques": [
+      "thunder_fist",
+      "storm_howl",
+      "lightning_pounce"
+    ],
+    "treasures": [
+      "thunder_ape_core",
+      "thunder_fur"
+    ],
+    "bloodline": "Thunder-Ape lineage; thunder-attribute bloodline",
+    "mutations": [
+      "nine_arm",
+      "ancient_thunder_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "thunder_ape — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "thunder_ape — not a hive-mind species"
+    },
+    "combat_ai": "pack_hunter"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1525351643,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

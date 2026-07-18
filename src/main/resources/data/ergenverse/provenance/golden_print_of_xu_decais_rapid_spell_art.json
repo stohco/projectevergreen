@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Golden Print of Xu Decai's Rapid Spell Art (金印·徐德才速法). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I178",
+  "name": "Golden Print of Xu Decai's Rapid Spell Art",
+  "nameCn": "金印·徐德才速法",
+  "type": "talisman",
+  "category": "cultivation_aid",
+  "origin": "Taken after killing Xu Decai from Green Devil Continent (Ch. 1867)",
+  "current_owner": "Wang Lin (technique internalized)",
+  "abilities": [
+    "Rapid Spell Art — opens 9 spell veins in body",
+    "Each vein greatly increases casting speed",
+    "Uses sealing-based method to accelerate spell casting"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Spirit-tier print/technique",
+    "Walks extreme path — terrifying casting speed",
+    "Technique internalized — retained permanently"
+  ],
+  "source": "Ch.1772 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Taken after killing Xu Decai from Green Devil Continent (Ch. 1867)"
+  }
+}

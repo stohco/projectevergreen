@@ -1,0 +1,31 @@
+{
+  "_comment": "RI Canon Opportunity: Seven-Colored Daoist Confrontation. Canon event: Wang Lin kills the Seven-Colored Daoist and becomes the owner of the Cave World. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_seven_colored_daoist_confrontation",
+  "name": "Seven-Colored Daoist Confrontation",
+  "canon_event": "Wang Lin kills the Seven-Colored Daoist and becomes the owner of the Cave World",
+  "location": "cave_world_core",
+  "age_requirement_years": 0,
+  "cultivation_required": "Heaven Trampling",
+  "perception_required": "Heaven Trampling",
+  "luck_modifier": 0.05,
+  "discovery_methods": [
+    "heaven_trampling_realm"
+  ],
+  "reward_tables": [
+    "cave_world_ownership",
+    "seven_colored_daoist_remnants"
+  ],
+  "why_untaken": "Requires Heaven Trampling cultivation; the Seven-Colored Daoist is the strongest being in the Cave World.",
+  "natural_next_event": "The confrontation occurs when Wang Lin reaches sufficient cultivation.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 1336032873,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

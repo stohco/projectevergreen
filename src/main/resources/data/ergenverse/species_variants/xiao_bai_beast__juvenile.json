@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Xiao Bai (juvenile). Generated from canonical definition.",
+  "variant_id": "xiao_bai_beast__juvenile",
+  "species_id": "xiao_bai_beast",
+  "species_name": "Xiao Bai",
+  "life_state": "juvenile",
+  "modifiers": {
+    "size_multiplier": 0.15,
+    "power_multiplier": 0.1,
+    "temperament": "curious",
+    "rarity": "common"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 198485070
+}

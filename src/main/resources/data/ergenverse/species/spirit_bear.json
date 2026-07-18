@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Spirit Bear (灵熊) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "spirit_bear",
+  "name": "Spirit Bear",
+  "nameCn": "灵熊",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Massive bear 3 m tall, fur spirit-brown, fists shatter stone",
+    "size": "3 m adult, 2000 jin; ancient 6 m, 30000 jin",
+    "behavior": "Territorial body-tempering beast; cultivates by absorbing earth-essence",
+    "habitat": "Mountain forests, earth-aspected caves, spirit-herb hills",
+    "cultivation": "Foundation Establishment -> Core Formation (earth attribute)",
+    "intelligence": 5,
+    "diet": "spirit-herbs, honey, smaller beasts",
+    "relationships": "Rival of mountain lions; preyed upon by giant savage apes",
+    "techniques": [
+      "bear_hug",
+      "iron_fist",
+      "earth_roar",
+      "mountain_charge"
+    ],
+    "treasures": [
+      "spirit_bear_core",
+      "bear_pelt",
+      "iron_fur"
+    ],
+    "bloodline": "Spirit-Bear lineage; earth-attribute bloodline",
+    "mutations": [
+      "iron_body",
+      "ancient_bear_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": "No alchemy value — common beast with no condensed inner core",
+      "canon_note": "spirit_bear — common beast, no condensed inner core"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "spirit_bear — not a hive-mind species"
+    },
+    "combat_ai": "territorial_defender"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1052899724,
+  "bloodline_tier": "ordinary",
+  "inner_dan_properties": {
+    "element": "earth",
+    "purity_tier": 2,
+    "dao_resonance": "mountain_strength",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

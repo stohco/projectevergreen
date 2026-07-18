@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Restriction Origin True Body (禁制本源真身) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "restriction_origin_beast",
+  "name": "Restriction Origin True Body",
+  "nameCn": "禁制本源真身",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Formless beast of living restriction 10 m, body is woven restriction-runes, shifts between patterns",
+    "size": "10 m manifestation, 0 jin (restriction); true form spans formation-networks",
+    "behavior": "Restriction-incarnate being; cultivates by absorbing broken restrictions; Wang Lin obtained as treasure",
+    "habitat": "Restriction Mountain, ancient formation sites, restriction-aspected zones",
+    "cultivation": "Immortal (restriction attribute)",
+    "intelligence": 12,
+    "diet": "broken restrictions, formation fragments, restriction-essence",
+    "relationships": "Wang Lin obtained restriction origin true body as treasure (canon event)",
+    "techniques": [
+      "restriction_rend",
+      "formation_absorb",
+      "seal_impose",
+      "restriction_body"
+    ],
+    "treasures": [
+      "restriction_origin_core",
+      "rune_fragment",
+      "formation_essence"
+    ],
+    "bloodline": "Restriction-Dao lineage; born of accumulated restriction-power",
+    "mutations": [
+      "true_restriction_body",
+      "restriction_immortal_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "restriction_origin_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "restriction_origin_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1201310019,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

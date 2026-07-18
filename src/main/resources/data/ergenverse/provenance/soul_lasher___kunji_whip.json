@@ -1,0 +1,68 @@
+{
+  "_comment": "Provenance metadata for Soul Lasher / Kunji Whip (坤极鞭). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I53",
+  "name": "Soul Lasher / Kunji Whip",
+  "nameCn": "坤极鞭",
+  "type": "weapon",
+  "category": "soul_related",
+  "origin": "Taken from Hong Die's corpse (originally Red Butterfly's) (early-Nascent Soul era)",
+  "current_owner": "Fused into Karma Whip",
+  "abilities": [
+    "Directly attacks primordial/origin soul at warp speed",
+    "Tian Yu Sect heavy treasure",
+    "Spirit-tier soul-piercing whip"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Originally Tian Yu Sect heavy treasure",
+    "Qian Feng gave it to Hong Die; Wang Lin took it after her death",
+    "Burned by Ghostly Sky Fire → transformed → nourished by Karma Concept → Karma Whip"
+  ],
+  "source": "fused Ch.731 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Taken from Hong Die's corpse (originally Red Butterfly's) (early-Nascent Soul era)"
+  },
+  "lifecycle": {
+    "creator": "Taken from Hong Die's corpse (originally Red Butterfly's) (early-Nascent Soul era)",
+    "creation_circumstances": "Taken from Hong Die's corpse (originally Red Butterfly's) (early-Nascent Soul era)",
+    "every_known_owner": [
+      "wang lin"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

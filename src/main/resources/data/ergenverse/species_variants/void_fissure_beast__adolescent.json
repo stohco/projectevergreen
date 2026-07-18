@@ -1,0 +1,29 @@
+{
+  "_comment": "Life-state variant: Void Fissure Beast (Adolescent). Generated from canonical species definition. Prime Directive: this state exists objectively; perception tier determines whether player recognizes it.",
+  "variant_id": "void_fissure_beast__adolescent",
+  "species_id": "void_fissure_beast",
+  "species_name": "Void Fissure Beast",
+  "species_nameCn": "虚裂兽",
+  "novel": "Beyond the Timescape",
+  "life_state": "adolescent",
+  "life_state_name": "Adolescent",
+  "description": "Growing, half-size, testing strength; cultivates by play-fighting",
+  "modifiers": {
+    "size_multiplier": 0.45,
+    "power_multiplier": 0.35,
+    "intelligence_multiplier": 0.75,
+    "temperament": "reckless",
+    "rarity": "uncommon"
+  },
+  "perception_tiers": {
+    "mortal": "Sees a reckless beast.",
+    "qi_condensation": "Sees a reckless beast of void fissure beast kind.",
+    "foundation_establishment": "Recognizes life-state: Adolescent.",
+    "core_formation": "Recognizes species, life-state, and approximate cultivation.",
+    "nascent_soul": "Sees bloodline, mutation potential, and treasure affinity.",
+    "spirit_severing": "Sees complete ecology and Dao-comprehension state."
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 567548575
+}

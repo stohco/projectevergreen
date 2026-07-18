@@ -1,0 +1,24 @@
+{
+  "_comment": "Macro-Terrain: Ancient Battlefield Bone Plain. Per scale directive: this terrain IS a being. Player shouldn't initially realize they're standing on bone. Divine Sense -> Perception changes -> 'You realize this mountain range... is one finger.' Prime Directive: the being's corpse is objectively terrain; perception tier determines what the player sees.",
+  "terrain_id": "ancient_battlefield_bone_plain",
+  "name": "Ancient Battlefield Bone Plain",
+  "being": "millions of fallen",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "scale": "500 li across — the bone-crushed remains of millions of fallen cultivators.",
+  "canonical_event": "An ancient war killed millions here; the battlefield remains saturated with death.",
+  "perception_tiered_appearance": {
+    "mortal": "A plain 500 li across, soil is grey-white, oddly fertile.",
+    "qi_condensation": "The plain radiates death-qi; the soil is clearly not normal earth.",
+    "foundation_establishment": "The soil is crushed bone; the plain is a mass grave.",
+    "core_formation": "This is an ancient battlefield; millions of cultivators fell here; the soil is their bone.",
+    "nascent_soul": "The death-essence still saturates the plain; nether beasts cultivate here.",
+    "spirit_severing": "The battlefield's karmic weight warps reality; cultivating here is dangerous."
+  },
+  "perception_mechanic": {
+    "trigger": "When player's perception tier rises, the appearance re-rolls automatically.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does.",
+    "canon_fidelity": "This is exactly how Wang Lin perceived Ancient God Tu Si's remains — first as terrain, then as god-bone, then as god-memory."
+  },
+  "salt": 504757443
+}

@@ -1,0 +1,33 @@
+{
+  "_comment": "Sword Grass — Renegade Immortal. STUB: flora referenced in ecosystem JSONs but not yet fully implemented. Implemented as placed feature or custom block.",
+  "species_id": "sword_grass",
+  "name": "Sword Grass",
+  "nameCn": "",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Described in canon ecology. Flora stub.",
+    "size": "Small (0.1-0.5m)",
+    "behavior": "Static, ambient decoration",
+    "habitat": "Planet Suzaku (varies by biome)",
+    "cultivation": "None to Qi Condensation equivalent",
+    "intelligence": "0 (plant)",
+    "diet": "Photosynthesis / Spirit Qi absorption",
+    "relationships": "See ecosystem definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "flora",
+    "combat_ai": "none"
+  },
+  "art_direction": {
+    "color_palette": [
+      "#88aa88"
+    ],
+    "model_notes": "Stub — flora not yet modeled",
+    "texture_notes": "Placeholder when implemented"
+  }
+}

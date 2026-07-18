@@ -1,0 +1,35 @@
+{
+  "_comment": "Vein Guardian Beast — Renegade Immortal. A territorial beast that guards spirit stone veins. Canon: appears near mineral-rich cave systems.",
+  "species_id": "vein_guardian_beast",
+  "name": "Vein Guardian Beast",
+  "nameCn": "灵脉守兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 3,
+  "max_hp": 100,
+  "attack_damage": 6,
+  "speed": 0.2,
+  "follow_range": 16,
+  "canonical": {
+    "appearance": "A massive, earth-toned quadruped with crystalline protrusions growing from its back and shoulders. Slow but incredibly durable. Resembles an armadillo crossed with a golem.",
+    "size": "Large (4-6m long, 2-3m tall)",
+    "behavior": "Strictly territorial — never leaves its vein. Does not chase far. Extremely high defense but slow. Attacks with crystal slam.",
+    "habitat": "Spirit stone veins, deep caves, mining-rich mountain interiors",
+    "cultivation": "Foundation Establishment to Soul Transformation equivalent (scales with vein quality)",
+    "intelligence": "1-2 (almost mindless — pure territorial instinct)",
+    "diet": "Absorbs spirit stone energy directly from the vein it guards",
+    "relationships": "Neutral to cultivators who don't approach the vein. Mortal miners are generally ignored. Cultivators who mine the vein are attacked.",
+    "techniques": ["Crystal slam (ground AoE, high knockback)", "Stone hide (damage reduction 50% for 10 seconds)", "Vein heal (regenerates HP when near its vein)"],
+    "treasures": ["Spirit Stone Chunk (guaranteed drop)", "Vein Crystal (formation ingredient)"],
+    "bloodline": "variant_beast",
+    "mutations": ["Vein Bond — while within 20 blocks of its home vein, HP regeneration 5x"],
+    "ecology": "Apex cave predator. Symbiotic with the spirit vein — the vein sustains it, and its presence enriches the vein.",
+    "bloodline_tier": "variant_beast",
+    "combat_ai": "guardian"
+  },
+  "art_direction": {
+    "color_palette": ["#886644", "#aa8866", "#ccaa88", "#446633"],
+    "model_notes": "Large quadruped with crystal growths. Slow, heavy animations. Crystal glow pulses.",
+    "texture_notes": "Earthy brown-green hide with embedded crystal shards. Glowing amber cracks in stone-like armor plating."
+  }
+}

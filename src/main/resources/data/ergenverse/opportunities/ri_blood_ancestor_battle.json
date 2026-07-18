@@ -1,0 +1,33 @@
+{
+  "_comment": "RI Canon Opportunity: Blood Ancestor Battle. Canon event: Wang Lin kills the Blood Ancestor (Yao Xinghai). Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_blood_ancestor_battle",
+  "name": "Blood Ancestor Battle",
+  "canon_event": "Wang Lin kills the Blood Ancestor (Yao Xinghai)",
+  "location": "blood_sea",
+  "age_requirement_years": 50000,
+  "cultivation_required": "Spirit Severing",
+  "perception_required": "Ascendant",
+  "luck_modifier": 0.3,
+  "discovery_methods": [
+    "divine_sense",
+    "rumor"
+  ],
+  "reward_tables": [
+    "blood_ancestor_remnants",
+    "blood_sea_essence",
+    "blood_lineage_fragment"
+  ],
+  "why_untaken": "Requires Spirit Severing+ to survive the blood sea; the Blood Ancestor can reform.",
+  "natural_next_event": "The Blood Ancestor's corpse-sea remains; blood beasts converge.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 39403568,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

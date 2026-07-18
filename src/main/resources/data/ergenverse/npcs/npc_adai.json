@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Adai (阿呆). Canon ID: N137. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_adai",
+  "name": "Adai",
+  "nameCn": "阿呆",
+  "canon_id": "N137",
+  "type": "servant",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "simple, loyal servant; named 'adai' (simpleton)",
+  "speech": "simple, slow",
+  "relationship_to_wanglin": "servant; loyal",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A simple servant",
+    "qi_condensation": "Cultivator servant"
+  },
+  "canon_confidence": 3,
+  "note": "Wang Lin's simple servant",
+  "derivation_type": "B",
+  "salt": 951266428,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Ape (mutated). Generated from canonical definition.",
+  "variant_id": "spirit_ape__mutated",
+  "species_id": "spirit_ape",
+  "species_name": "Spirit Ape",
+  "life_state": "mutated",
+  "modifiers": {
+    "size_multiplier": 1.5,
+    "power_multiplier": 3.0,
+    "temperament": "aggressive",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 918434753
+}

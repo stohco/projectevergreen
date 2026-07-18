@@ -1,0 +1,78 @@
+{
+  "_comment": "Ancient God Bone Chamber — underground chamber containing bone fragments of an Ancient God. The bones are mountain-sized. Residual divine power saturates the chamber. Prime Directive: the bones are objective remains — an Ancient God died here in the primordial era.",
+  "temperature": 0.4,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 1118481,
+    "fog_color": 1118481,
+    "water_color": 3145784,
+    "water_fog_color": 270131,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 10,
+        "minCount": 8,
+        "maxCount": 8
+      }
+    ],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:wither_skeleton",
+        "weight": 35,
+        "minCount": 1,
+        "maxCount": 3
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 25,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:enderman",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_diamond",
+      "minecraft:ore_debris_small",
+      "minecraft:ore_debris_large",
+      "ergenverse:spirit_vein_quartz_ore",
+      "ergenverse:spirit_vein_ancient"
+    ],
+    [
+      "minecraft:fossil_underground",
+      "minecraft:bone_block"
+    ],
+    [],
+    [],
+    []
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "_comment": "Civilization: Sky Demon Court (royal_court) at Sky Demon Country. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "sky_demon_court",
+  "name": "Sky Demon Court",
+  "type": "royal_court",
+  "location": "Sky Demon Country",
+  "peak_realm": "Spirit Severing (Sky Demon Emperor)",
+  "canon_status": "regional_power",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "mortals": 400000,
+    "qi_condensation": 4000,
+    "foundation_establishment": 400,
+    "core_formation": 40,
+    "elders": 15,
+    "sky_demon_emperor": 1,
+    "spirit_beasts": 800
+  },
+  "economy": {
+    "spirit_stones": "moderate",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "demon-focus",
+    "forging": "demon-focus",
+    "formation": "demon-focus",
+    "trade": "demon-attribute goods",
+    "recruitment": "Sky Demon Country"
+  },
+  "politics": {
+    "allies": [
+      "demon-aspected sects"
+    ],
+    "enemies": [
+      "orthodox powers"
+    ],
+    "vassals": [
+      "Sky Demon sects"
+    ],
+    "rivals": [
+      "Heavenly Fate Sect"
+    ],
+    "internal_factions": [
+      "royal family",
+      "demon council"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "Sky Demon nobility",
+    "expansion": "steady",
+    "decline": "none current",
+    "schisms": "royal vs demon council tension",
+    "wars": [
+      "perennial with orthodox powers"
+    ],
+    "recovery": "strong; Sky Demon Emperor present"
+  },
+  "libraries": [
+    "demon techniques",
+    "demon formation manuals",
+    "demon beast catalogues",
+    "royal records"
+  ],
+  "spirit_beasts": [
+    "demon beasts",
+    "sky demon mounts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 105140546,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

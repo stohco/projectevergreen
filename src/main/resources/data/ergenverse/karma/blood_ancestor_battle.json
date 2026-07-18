@@ -1,0 +1,23 @@
+{
+  "karma_id": "blood_ancestor_battle",
+  "name": "Blood Ancestor Confrontation",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 18900,
+  "karmic_weight": -2000,
+  "bearer": "N01",
+  "debtor": "blood_ancestor",
+  "description": "Wang Lin battles the Blood Ancestor, a remnant of the ancient era. Establishes Wang Lin as a power capable of contesting ancient existences.",
+  "consequences": [
+    {
+      "type": "technique_unlocked",
+      "target_id": "T_blood_sutra",
+      "magnitude": 50,
+      "resolved_at_tick": 18900
+    }
+  ],
+  "unresolved_until": "resolved",
+  "_comment": "Karmic Nexus node: Blood Ancestor Confrontation. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 1216355923
+}

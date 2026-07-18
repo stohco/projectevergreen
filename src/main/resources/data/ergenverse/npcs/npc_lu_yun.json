@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Lu Yun (陆云). Canon ID: N25. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_lu_yun",
+  "name": "Lu Yun",
+  "nameCn": "陆云",
+  "canon_id": "N25",
+  "type": "divine_emperor",
+  "faction": "lu_yun_sect",
+  "location": "lu_yun_territory",
+  "cultivation": "Void Flame Cultivator",
+  "personality": "void-flame emperor; calm, powerful",
+  "speech": "measured, flame-touched",
+  "relationship_to_wanglin": "ally; Divine Emperor",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "An impossibly powerful immortal",
+    "qi_condensation": "Void Flame; overwhelming",
+    "core_formation": "Lu Yun; Void Flame Cultivator",
+    "nascent_soul": "Divine Emperor; void-flame dao"
+  },
+  "canon_confidence": 4,
+  "note": "Divine Emperor; void-flame cultivator",
+  "derivation_type": "A",
+  "salt": 1216264147,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

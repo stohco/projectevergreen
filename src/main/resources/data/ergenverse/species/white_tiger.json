@@ -1,0 +1,80 @@
+{
+  "_comment": "Species: White Tiger (白虎) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "white_tiger",
+  "name": "White Tiger",
+  "nameCn": "白虎",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Tiger 8 m long, fur white-gold, stripes glow with killing intent, fangs drip metallic qi",
+    "size": "8 m adult, 20000 jin; true form fills battlefields",
+    "behavior": "Divine spirit beast of slaughter; appears at world wars; hunts the wicked",
+    "habitat": "Foreign Battleground, slaughter-aspected apex spirit veins",
+    "cultivation": "Immortal (metal/slaughter attribute, true divine beast)",
+    "intelligence": 12,
+    "diet": "slaughter-qi, wicked cultivator souls, metal-attribute treasures",
+    "relationships": "Bonded to White Tiger Divine lineage; rival of Black Tortoise",
+    "techniques": [
+      "killing_pounce",
+      "metal_fang",
+      "slaughter_roar",
+      "white_gold_scales"
+    ],
+    "treasures": [
+      "white_tiger_core",
+      "tiger_fang",
+      "white_gold_pelt"
+    ],
+    "bloodline": "True Divine Beast lineage; one of Four Symbols",
+    "mutations": [
+      "six_leg",
+      "true_divine_awakening"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ancient_celestial_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "white_tiger — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "white_tiger — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1547505392,
+  "bloodline_tier": "ancient_celestial",
+  "inner_dan_properties": {
+    "element": "metal",
+    "purity_tier": 9,
+    "dao_resonance": "slaughter_intent",
+    "side_effects": [
+      "killing_intent_overflow"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

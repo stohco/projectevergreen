@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Zhong Dahong (钟大红). Canon ID: N50. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_zhong_dahong",
+  "name": "Zhong Dahong",
+  "nameCn": "钟大红",
+  "canon_id": "N50",
+  "type": "servant",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "loud, loyal servant",
+  "speech": "loud, hearty",
+  "relationship_to_wanglin": "servant",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A loud servant",
+    "qi_condensation": "Cultivator servant"
+  },
+  "canon_confidence": 3,
+  "note": "Wang Lin's servant",
+  "derivation_type": "B",
+  "salt": 405259167,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

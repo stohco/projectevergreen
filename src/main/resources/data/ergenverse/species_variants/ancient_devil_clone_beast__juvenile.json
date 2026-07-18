@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Ancient Devil Clone (juvenile). Generated from canonical definition.",
+  "variant_id": "ancient_devil_clone_beast__juvenile",
+  "species_id": "ancient_devil_clone_beast",
+  "species_name": "Ancient Devil Clone",
+  "life_state": "juvenile",
+  "modifiers": {
+    "size_multiplier": 0.15,
+    "power_multiplier": 0.1,
+    "temperament": "curious",
+    "rarity": "common"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 3346221
+}

@@ -1,0 +1,45 @@
+{
+  "_comment": "Opportunity: Lost Sword Intent. Per opportunity directive: the engine continuously asks 'what opportunities naturally exist at a location that has existed for 1000 years?'. Discoverable by cultivation (Core Formation (sword focus)), perception (Nascent Soul (sword focus, to perceive the intent)), and luck (modifier 1.1). Prime Directive: opportunity exists objectively; player perception determines whether they find it.",
+  "opportunity_id": "lost_sword_intent",
+  "name": "Lost Sword Intent",
+  "description": "Residual sword intent left by a fallen sword cultivator. Exists because: sword intent can persist after the cultivator's death.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "age_requirement_years": 1000,
+  "location_types": [
+    "sword_peak",
+    "ancient_battlefield",
+    "sword_cave",
+    "sword_lake"
+  ],
+  "cultivation_required": "Core Formation (sword focus)",
+  "perception_required": "Nascent Soul (sword focus, to perceive the intent)",
+  "luck_modifier": 1.1,
+  "discovery_methods": [
+    "sword_cultivation",
+    "divine_sense",
+    "rumor_following"
+  ],
+  "reward_tables": [
+    "sword_intent_fragment",
+    "sword_technique",
+    "sword_treasure",
+    "sword_comprehension"
+  ],
+  "why_untaken": "Requires sword focus to perceive; most cultivators cannot.",
+  "natural_next_event": "Intent disperses over millennia; eventually fades.",
+  "simulation_notes": {
+    "continuous_inference": "The World State Engine continuously infers opportunities at every location based on the location's age, type, and history.",
+    "no_locked_upgrades": "A cultivator who later reaches the required perception will find opportunities they previously missed; the opportunities do not disappear.",
+    "canon_fidelity": "This is how Wang Lin found inheritances throughout his journey — the opportunities existed before he arrived; his perception determined what he found."
+  },
+  "salt": 1045688816,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,44 @@
+{
+  "_comment": "Opportunity: Vein Essence Pool. Per opportunity directive: the engine continuously asks 'what opportunities naturally exist at a location that has existed for 10000 years?'. Discoverable by cultivation (Core Formation), perception (Nascent Soul (to perceive the pool)), and luck (modifier 1.0). Prime Directive: opportunity exists objectively; player perception determines whether they find it.",
+  "opportunity_id": "vein_essence_pool",
+  "name": "Vein Essence Pool",
+  "description": "A pool of condensed spirit-vein essence, naturally forming at vein cores. Exists because: spirit veins condense essence over millennia.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "age_requirement_years": 10000,
+  "location_types": [
+    "spirit_vein_core",
+    "underground_spring",
+    "vein_core_cave"
+  ],
+  "cultivation_required": "Core Formation",
+  "perception_required": "Nascent Soul (to perceive the pool)",
+  "luck_modifier": 1.0,
+  "discovery_methods": [
+    "divine_sense",
+    "vein_tracking",
+    "rumor_following"
+  ],
+  "reward_tables": [
+    "vein_essence",
+    "spirit_stone_burst",
+    "rare_ore",
+    "vein_ownership"
+  ],
+  "why_untaken": "Vein cores are guarded by vein-guardian beasts.",
+  "natural_next_event": "Pool overflows; essence disperses; beasts converge.",
+  "simulation_notes": {
+    "continuous_inference": "The World State Engine continuously infers opportunities at every location based on the location's age, type, and history.",
+    "no_locked_upgrades": "A cultivator who later reaches the required perception will find opportunities they previously missed; the opportunities do not disappear.",
+    "canon_fidelity": "This is how Wang Lin found inheritances throughout his journey — the opportunities existed before he arrived; his perception determined what he found."
+  },
+  "salt": 1983892886,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

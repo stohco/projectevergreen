@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Bai Wei (白薇). Canon ID: N67. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_bai_wei",
+  "name": "Bai Wei",
+  "nameCn": "白薇",
+  "canon_id": "N67",
+  "type": "other",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "female cultivator",
+  "speech": "measured",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A female cultivator",
+    "qi_condensation": "Cultivator"
+  },
+  "canon_confidence": 3,
+  "note": "Minor female cultivator NPC",
+  "derivation_type": "B",
+  "salt": 1751489421,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

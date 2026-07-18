@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Five Elements True Body (tribulation_scarred). Generated from canonical definition.",
+  "variant_id": "five_elements_beast__tribulation_scarred",
+  "species_id": "five_elements_beast",
+  "species_name": "Five Elements True Body",
+  "life_state": "tribulation_scarred",
+  "modifiers": {
+    "size_multiplier": 1.2,
+    "power_multiplier": 2.5,
+    "temperament": "sober",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 958928875
+}

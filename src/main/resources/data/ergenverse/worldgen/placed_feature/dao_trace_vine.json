@@ -1,0 +1,10 @@
+{
+  "_comment": "Dao-Trace Vine (道痕藤) placed in Zhao Mountains and Xuan Wu Country. Rarity 48 — rare Dao-perception vine, grows on cliff faces and exposed Dao-saturated stone. Surface only.",
+  "feature": "ergenverse:dao_trace_vine",
+  "placement": [
+    { "type": "minecraft:rarity_filter", "chance": 48 },
+    { "type": "minecraft:in_square" },
+    { "type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG" },
+    { "type": "minecraft:biome" }
+  ]
+}

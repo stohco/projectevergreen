@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Brilliant Void Beast (玄虚) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "brilliant_void_beast",
+  "name": "Brilliant Void Beast",
+  "nameCn": "玄虚",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Void-aspected beast 5 m, body shifts between physical and void-form, eyes are void-tunnels",
+    "size": "5 m adult, 200 jin (material) / 0 jin (void)",
+    "behavior": "Hunts by stepping through void; cultivates by absorbing void-essence",
+    "habitat": "Void edges, void-aspected forbidden zones, reality faults",
+    "cultivation": "Spirit Severing -> Ascendant (void attribute)",
+    "intelligence": 8,
+    "diet": "void-essence, reality fragments, void-aspected herbs",
+    "relationships": "Wang Lin's bonded companion (N159); kin of void_beast",
+    "techniques": [
+      "void_step",
+      "void_breath",
+      "reality_shift",
+      "void_maw"
+    ],
+    "treasures": [
+      "void_core",
+      "reality_fragment",
+      "void_essence"
+    ],
+    "bloodline": "Void lineage; void-attribute bloodline",
+    "mutations": [
+      "true_void_body",
+      "void_immortal_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "brilliant_void_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "brilliant_void_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1953953205,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

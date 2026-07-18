@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Brilliant Void Beast (juvenile). Generated from canonical definition.",
+  "variant_id": "brilliant_void_beast__juvenile",
+  "species_id": "brilliant_void_beast",
+  "species_name": "Brilliant Void Beast",
+  "life_state": "juvenile",
+  "modifiers": {
+    "size_multiplier": 0.15,
+    "power_multiplier": 0.1,
+    "temperament": "curious",
+    "rarity": "common"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 649545600
+}

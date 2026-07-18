@@ -1,0 +1,24 @@
+{
+  "karma_id": "heng_yue_sect_destruction",
+  "name": "Heng Yue Sect Decline",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 4,
+  "derivation_type": "A",
+  "event_tick": 20000,
+  "karmic_weight": -600,
+  "bearer": "N01",
+  "debtor": "heng_yue_sect",
+  "description": "Wang Lin's departure and rise causes the decline of his former sect. Indirect karmic consequence.",
+  "consequences": [
+    {
+      "type": "faction_destroyed",
+      "target_id": "heng_yue_sect",
+      "magnitude": 70,
+      "resolved_at_tick": 20000,
+      "note": "decline, not total destruction"
+    }
+  ],
+  "unresolved_until": "resolved",
+  "_comment": "Karmic Nexus node: Heng Yue Sect Decline. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 1064985613
+}

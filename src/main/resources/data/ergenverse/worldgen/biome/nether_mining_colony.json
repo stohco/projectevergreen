@@ -1,0 +1,84 @@
+{
+  "_comment": "Nether Mining Colony — a deep cultivation outpost established to mine nether-tier materials. The colonists have gone feral after millennia of isolation. Prime Directive: the colony is objective history — it was established, then abandoned, and the inhabitants devolved.",
+  "temperature": 0.7,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 2039583,
+    "fog_color": 2039583,
+    "water_color": 3145784,
+    "water_fog_color": 270131,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 10,
+        "minCount": 8,
+        "maxCount": 8
+      }
+    ],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:wither_skeleton",
+        "weight": 25,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:blaze",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:zombie",
+        "weight": 20,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:nether_cave"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_quartz",
+      "minecraft:ore_gold_extra",
+      "minecraft:ore_magma",
+      "minecraft:ore_debris_small",
+      "minecraft:ore_debris_large",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [
+      "minecraft:patch_fire"
+    ],
+    []
+  ]
+}

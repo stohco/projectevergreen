@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ergenverse:item/cloak_vermilion_bird_emperor"
+  }
+}

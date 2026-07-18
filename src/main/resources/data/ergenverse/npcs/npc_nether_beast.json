@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Nether Beast (冥兽). Canon ID: N158. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_nether_beast",
+  "name": "Nether Beast",
+  "nameCn": "冥兽",
+  "canon_id": "N158",
+  "type": "mount",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "beast (vast interior)",
+  "personality": "shadow-wreathed nether beast; loyal to Wang Lin",
+  "speech": "shadow-whisper",
+  "relationship_to_wanglin": "bonded companion",
+  "dialogue_available": false,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A shadow-wreathed beast",
+    "qi_condensation": "Nether beast; Nascent Soul",
+    "core_formation": "Nether beast; Spirit Severing",
+    "nascent_soul": "Vast interior; Wang Lin's nether beast"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's nether beast companion",
+  "derivation_type": "A",
+  "salt": 1530923537,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

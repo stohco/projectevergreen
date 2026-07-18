@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ergenverse:item/tattoo_talisman_speed_boost"
+  }
+}

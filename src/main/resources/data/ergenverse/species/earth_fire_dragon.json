@@ -1,0 +1,80 @@
+{
+  "_comment": "Species: Earth Fire Dragon (地火龙) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "earth_fire_dragon",
+  "name": "Earth Fire Dragon",
+  "nameCn": "地火龙",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Serpentine dragon 30 m, scales molten-earth, breath is liquid fire, lives in magma",
+    "size": "30 m adult, 60000 jin; ancient 100 m, millions of jin",
+    "behavior": "Solitary apex of volcanic regions; sleeps in magma for centuries; soul-extracted by Wang Lin",
+    "habitat": "Earth Fire veins, volcanic regions, magma chambers",
+    "cultivation": "Spirit Severing -> Ascendant (earth-fire attribute)",
+    "intelligence": 9,
+    "diet": "magma minerals, fire-attribute herbs, earth-fire essence",
+    "relationships": "Soul extracted by Wang Lin (canon event); rival of flame dragon",
+    "techniques": [
+      "magma_breath",
+      "earth_fire_coil",
+      "eruption_call",
+      "magma_sleep"
+    ],
+    "treasures": [
+      "earth_fire_dragon_core",
+      "magma_scale",
+      "earth_fire_essence"
+    ],
+    "bloodline": "Earth-Fire-Dragon lineage; earth+fire true dragon bloodline (diluted)",
+    "mutations": [
+      "true_dragon_awakening",
+      "earth_fire_immortal_body"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "earth_fire_dragon — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "earth_fire_dragon — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 492739244,
+  "bloodline_tier": "desolate",
+  "inner_dan_properties": {
+    "element": "fire",
+    "purity_tier": 6,
+    "dao_resonance": "earth_flame",
+    "side_effects": [
+      "volcanic_corruption"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

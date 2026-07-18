@@ -1,0 +1,24 @@
+{
+  "_comment": "Macro-Terrain: Cosmic Whale-Back Civilization. Per scale directive: this terrain IS a being. Player shouldn't initially realize they're standing on bone. Divine Sense -> Perception changes -> 'You realize this mountain range... is one finger.' Prime Directive: the being's corpse is objectively terrain; perception tier determines what the player sees.",
+  "terrain_id": "cosmic_whale_back_civilization",
+  "name": "Cosmic Whale-Back Civilization",
+  "being": "Cosmic Whale",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "scale": "100 li across — the back of a cosmic leviathan that swims through the void.",
+  "canonical_event": "Cosmic whales carry entire civilizations through the void.",
+  "perception_tiered_appearance": {
+    "mortal": "A floating continent 100 li across, hovers in the void, surface is starlight.",
+    "qi_condensation": "The continent radiates cosmic-essence; the void around it is calm.",
+    "foundation_establishment": "The continent is the back of a living cosmic whale; the whale swims through void.",
+    "core_formation": "This is a cosmic whale's back; an entire civilization lives on it.",
+    "nascent_soul": "The whale's cosmic-essence sustains the civilization; the whale cultivates by swimming.",
+    "spirit_severing": "The whale and civilization are symbiotic; the civilization feeds the whale cosmic-qi."
+  },
+  "perception_mechanic": {
+    "trigger": "When player's perception tier rises, the appearance re-rolls automatically.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does.",
+    "canon_fidelity": "This is exactly how Wang Lin perceived Ancient God Tu Si's remains — first as terrain, then as god-bone, then as god-memory."
+  },
+  "salt": 1494869121
+}

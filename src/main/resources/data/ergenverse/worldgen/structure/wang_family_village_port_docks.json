@@ -1,0 +1,16 @@
+{
+  "_comment": "Wang Family Village — Port Docks. Auto-generated city component from canon location L34 (王家村). Prime Directive: this district exists as part of the city's physical layout.",
+  "type": "minecraft:jigsaw",
+  "biomes": "ergenverse:zhao_plains",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "start_pool": "ergenverse:wang_family_village_port_docks/start_pool",
+  "size": 5,
+  "start_height": {
+    "type": "minecraft:constant",
+    "value": 0
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "max_distance_from_center": 80,
+  "use_expansion_hack": false
+}

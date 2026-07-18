@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "ergenverse:block/alchemy_furnace" },
+    "facing=south": { "model": "ergenverse:block/alchemy_furnace", "y": 180 },
+    "facing=west":  { "model": "ergenverse:block/alchemy_furnace", "y": 270 },
+    "facing=east":  { "model": "ergenverse:block/alchemy_furnace", "y": 90 }
+  }
+}

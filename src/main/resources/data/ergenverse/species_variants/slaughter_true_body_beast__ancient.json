@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Slaughter True Body (ancient). Generated from canonical definition.",
+  "variant_id": "slaughter_true_body_beast__ancient",
+  "species_id": "slaughter_true_body_beast",
+  "species_name": "Slaughter True Body",
+  "life_state": "ancient",
+  "modifiers": {
+    "size_multiplier": 2.5,
+    "power_multiplier": 4.0,
+    "temperament": "contemplative",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 902463780
+}

@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Taichu Origin True Body (太初本源真身) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "taichu_origin_beast",
+  "name": "Taichu Origin True Body",
+  "nameCn": "太初本源真身",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Formless beast of origin-power 8 m, body radiates primordial light, eyes are origin-wells",
+    "size": "8 m manifestation, 0 jin (origin); true form spans origin-realms",
+    "behavior": "Origin-incarnate being; cultivates by absorbing origin-essence; Wang Lin obtained as treasure",
+    "habitat": "Origin-aspected forbidden zones, primordial sites",
+    "cultivation": "Immortal -> Ancient Immortal (origin attribute)",
+    "intelligence": 12,
+    "diet": "origin-essence, primordial herbs, ancient qi",
+    "relationships": "Wang Lin obtained Taichu origin true body as treasure (canon event)",
+    "techniques": [
+      "origin_breath",
+      "primordial_light",
+      "origin_absorb",
+      "beginning_roar"
+    ],
+    "treasures": [
+      "taichu_origin_core",
+      "origin_essence",
+      "primordial_fragment"
+    ],
+    "bloodline": "Origin lineage; primordial bloodline",
+    "mutations": [
+      "true_origin_body",
+      "origin_immortal_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "origin_true_body",
+    "inner_dan_properties": {
+      "has_core": true,
+      "element": "void",
+      "grade": "supreme",
+      "alchemy_use": "Origin True Body core is beyond mortal alchemy; usable only by Origin-level cultivators",
+      "canon_note": "taichu_origin_beast — Origin True Body; its core contains primordial origin essence"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "taichu_origin_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 537480912,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

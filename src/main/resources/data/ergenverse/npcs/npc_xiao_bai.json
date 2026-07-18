@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Xiao Bai (小白). Canon ID: N154. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_xiao_bai",
+  "name": "Xiao Bai",
+  "nameCn": "小白",
+  "canon_id": "N154",
+  "type": "mount",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "beast",
+  "personality": "small white beast companion; endearing",
+  "speech": "small beast sounds",
+  "relationship_to_wanglin": "bonded companion",
+  "dialogue_available": false,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A small white beast",
+    "qi_condensation": "Spirit beast; small",
+    "core_formation": "Xiao Bai",
+    "nascent_soul": "Wang Lin's small white beast companion"
+  },
+  "canon_confidence": 3,
+  "note": "Wang Lin's small white beast companion",
+  "derivation_type": "B",
+  "salt": 1567984562,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

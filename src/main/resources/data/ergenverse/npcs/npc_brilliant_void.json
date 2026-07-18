@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Brilliant Void (玄虚). Canon ID: N159. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_brilliant_void",
+  "name": "Brilliant Void",
+  "nameCn": "玄虚",
+  "canon_id": "N159",
+  "type": "mount",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "beast",
+  "personality": "void-aspected beast; mysterious",
+  "speech": "void-whisper",
+  "relationship_to_wanglin": "bonded companion",
+  "dialogue_available": false,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A void-blurred beast",
+    "qi_condensation": "Void beast; mysterious",
+    "core_formation": "Brilliant Void",
+    "nascent_soul": "Wang Lin's void beast companion"
+  },
+  "canon_confidence": 4,
+  "note": "Wang Lin's Brilliant Void beast companion",
+  "derivation_type": "A",
+  "salt": 1736357438,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

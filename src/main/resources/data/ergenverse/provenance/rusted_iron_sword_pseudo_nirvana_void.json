@@ -1,0 +1,31 @@
+{
+  "_comment": "Provenance metadata for Rusted Iron Sword (Pseudo Nirvana Void) (锈铁剑). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I20",
+  "name": "Rusted Iron Sword (Pseudo Nirvana Void)",
+  "nameCn": "锈铁剑",
+  "type": "weapon",
+  "category": "offensive",
+  "origin": "Likely taken as loot (Ch. 1043)",
+  "current_owner": "Destroyed",
+  "abilities": [
+    "Upper Nirvana Void Treasure grade sword",
+    "Deceptively powerful despite rusted appearance"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Upper-Nirvana-Void tier — very high grade",
+    "Destroyed Ch. 1193 vs Master Ashen Pine in Seven-Colored Realm",
+    "Bloody battle weapon"
+  ],
+  "source": "Ch.1043 obtained, Ch.1193 destroyed (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Likely taken as loot (Ch. 1043)"
+  }
+}

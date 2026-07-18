@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1g83gfw/renegade_immortal_wang_lins_restriction_flag",
+    "name": "[Renegade Immortal] Wang Lin's Restriction Flag : r/Donghua - Reddit",
+    "snippet": "The restriction flag that Wang Lin is trying to make is super powerful weapon that used the ink given to him by the Ancient God (Tu Si) as a ... Understanding what this is. : r/RenegadeImmortal Renegade Immortal (Questions & Spoilers) : r/Donghua More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin/Techniques",
+    "name": "Wang Lin/Techniques | Xian Ni Wikia - Fandom",
+    "snippet": "Restrictions Spells ; Annihilation Restriction, 754 ; Nine Deaths Perish Formation, 829 ; Time Restriction, 1223 ; Life and Death Restriction, 1229.",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Restrictions",
+    "name": "Restrictions - Xian Ni Wikia - Fandom",
+    "snippet": "Heaven, Earth, Mystery, and Yellow were the four grades of restrictions for a long time! However, there is another grade above those four, and we call it Void ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://m.webnovel.com/book/8094127105005005/21727507618779168",
+    "name": "The Ancient Mirror and The Restriction Flag - WebNovel",
+    "snippet": "After laying down the restriction, Wang Lin stopped watching Yun Fei. With a wave of his hand, he divided the cave in half, separating their living spaces.",
+    "host_name": "m.webnovel.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=odN860fkuZw",
+    "name": "Wang Lin 10 Billion Soul Banner Explained - YouTube",
+    "snippet": "Wang Lin journey in Renegade Immortal (Xian Ni) is one of the most legendary in the cultivation world—and at the heart of it lies the ... Missing: formation restriction",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

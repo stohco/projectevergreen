@@ -1,0 +1,77 @@
+{
+  "_comment": "Species: Ancient Dream Beast (古梦兽) from Beyond the Timescape. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "ancient_dream_beast",
+  "name": "Ancient Dream Beast",
+  "nameCn": "古梦兽",
+  "novel": "Beyond the Timescape",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Beast of living dream 4 m, body shifts between dream and reality",
+    "size": "4 m adult, 0 jin (dream); true form spans dreams",
+    "behavior": "Cultivates by consuming dreams; hunts by pulling prey into dream",
+    "habitat": "Dream-aspected forbidden zones, dream-realm edges",
+    "cultivation": "Spirit Severing -> Ascendant (dream attribute)",
+    "intelligence": 10,
+    "diet": "dreams, dream-aspected herbs",
+    "relationships": "Neutral; rarely interacts with cultivators",
+    "techniques": [
+      "dream_step",
+      "dream_pull",
+      "reality_shift"
+    ],
+    "treasures": [
+      "dream_core",
+      "dream_essence"
+    ],
+    "bloodline": "Ancient-Dream lineage; dream-attribute bloodline",
+    "mutations": [
+      "true_dream_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "ancient_dream_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "ancient_dream_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 205099940,
+  "bloodline_tier": "ancient_celestial",
+  "inner_dan_properties": {
+    "element": "illusion",
+    "purity_tier": 7,
+    "dao_resonance": "dream_realm",
+    "side_effects": [
+      "dream_trance"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ergenverse:item/dream_dao_mirror"
+  }
+}

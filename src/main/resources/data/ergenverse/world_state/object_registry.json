@@ -1,0 +1,25 @@
+{
+  "_comment": "World State Engine query: What exists? Schema: object_registry. Data sources: ['worldgen/biome', 'worldgen/structure', 'species', 'macro_terrain', 'provenance', 'civilizations'].",
+  "question": "What exists?",
+  "schema": "object_registry",
+  "fields": [
+    "object_id",
+    "object_type",
+    "location",
+    "age",
+    "true_state"
+  ],
+  "data_sources": [
+    "worldgen/biome",
+    "worldgen/structure",
+    "species",
+    "macro_terrain",
+    "provenance",
+    "civilizations"
+  ],
+  "reason_types": [],
+  "note": "The engine maintains a complete registry of everything that exists in the world.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "salt": 31708703
+}

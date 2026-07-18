@@ -1,0 +1,49 @@
+{
+  "_comment": "NPC: Heng Yue Sect Recruiter (恒岳派招弟子). Phase A.6 (PA-6) — the Day 3 aptitude-test ceremony recruiter. A low-realm cultivator dispatched by the Heng Yue Sect to conduct the annual recruitment drive through the mortal villages of Zhao Country. Spawns near the player on Day 3 of the mortal origin via AptitudeTestCeremonyEvent. Right-clicked by the player via AptitudeTestCeremonyHandler to run the aptitude test and call MortalOriginHandler.completeMortalOrigin(). Per PROJECT_MASTER.md §5.4: the Day 3 trigger is the BASE PATH; per the Opportunity Engine philosophy, the player can also deviate (early discovery on the road toward Heng Yue Mountain — future v2 work, NOT in PA-6 scope). Prime Directive: Reality is objective — this recruiter exists in the world independent of the player's perception.",
+  "npc_id": "npc_heng_yue_recruiter",
+  "character_id": "heng_yue_recruiter",
+  "name": "Heng Yue Sect Recruiter",
+  "name_cn": "恒岳派招弟子",
+  "name_en": "Heng Yue Sect Recruiter",
+  "canon_id": "PA6-HYR",
+  "type": "sect_recruiter",
+  "faction": "heng_yue_sect",
+  "location": "wang_family_village",
+  "cultivation": "Qi Condensation 3 (low-realm cultivator sent to test mortals)",
+  "cultivation_realm": "qi_condensation_3",
+  "realm": "qi_condensation_3",
+  "personality": ["indifferent", "dutiful", "slightly_bored"],
+  "speech": "terse, official",
+  "dialogue_style": "terse_official",
+  "behavior": "visits_mortal_villages_for_recruitment",
+  "relationship_to_wanglin": "incidental — does not personally know Wang Lin; one of many low-realm outer-sect functionaries the Heng Yue Sect dispatches annually",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A figure in gray robes. His gaze is heavy, appraising.",
+    "qi_condensation": "A Qi Condensation cultivator of the Heng Yue Sect. Outer-sect functionary, here on a recruitment drive.",
+    "foundation": "Qi Condensation 3, late stage. Bored by mortal villages. Will return to the sect by sundown.",
+    "core_formation": "Low-realm recruiter. Carries a jade testing stone and a stack of outer-disciple tokens. No threat."
+  },
+  "canon_confidence": 4,
+  "note": "Phase A.6 (PA-6) ceremony recruiter. Spawns near the player on Day 3 of the mortal origin (AptitudeTestCeremonyEvent). Right-click via AptitudeTestCeremonyHandler runs the aptitude test sequence and calls MortalOriginHandler.completeMortalOrigin() to unlock cultivation. Recruiter is force-configured in Java (character_id, displayName, cultivationRealm, max_hp) so the entity is properly identified even if this JSON file is not yet registered in npcs/_index.json (TODO for follow-up subagent). Recruiter respawns at next dawn if killed before the player completes the test (LivingDeathEvent → CeremonyScheduler.markRecruiterDied → AptitudeTestCeremonyEvent spawn-at-dawn logic).",
+  "derivation_type": "A",
+  "salt": 606060606,
+  "dao_heart": {
+    "stability": 40,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "max_hp": 60,
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "behaviors": {
+    "conduct_aptitude_test": true,
+    "issue_outer_disciple_token": true,
+    "depart_after_ceremony": true
+  },
+  "_xianxia_schema": 1
+}

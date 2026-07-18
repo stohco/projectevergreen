@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Jiu Di (九地). Canon ID: N77. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_jiu_di",
+  "name": "Jiu Di",
+  "nameCn": "九地",
+  "canon_id": "N77",
+  "type": "elder",
+  "faction": "immortal_astral_continent",
+  "location": "immortal_astral_continent",
+  "cultivation": "Grand Empyrean",
+  "personality": "earth-aspected grand empyrean",
+  "speech": "deep, earthen",
+  "relationship_to_wanglin": "complex; IAC power",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "Earth-aspected celestial",
+    "core_formation": "Grand Empyrean",
+    "nascent_soul": "Grand Empyrean; earth dao"
+  },
+  "canon_confidence": 3,
+  "note": "Grand Empyrean of the IAC",
+  "derivation_type": "B",
+  "salt": 1593438619,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

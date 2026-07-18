@@ -1,0 +1,111 @@
+{
+  "_comment": "Ecosystem: Reincarnation Realm Ecology (Reincarnation Secret Realm). Full food web with 6 trophic layers and 3 seasonal/environmental states. Prime Directive: ecology exists objectively; player perception determines what they observe. No-Locked-Upgrades: all seasonal states are reachable by time/weather/event.",
+  "ecosystem_id": "reincarnation_realm_ecology",
+  "name": "Reincarnation Realm Ecology",
+  "location": "Reincarnation Secret Realm",
+  "description": "The reincarnation-aspected ecology where beings cycle through lives.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "members": [
+        "reincarnation_lotus",
+        "past_life_herb",
+        "cycle_flora"
+      ],
+      "population": "environmental"
+    },
+    {
+      "layer": "primary",
+      "members": [
+        "spirit_rat#enlightened",
+        "seven_colored_deer#juvenile"
+      ],
+      "population": 500,
+      "biomass_jin": 100000
+    },
+    {
+      "layer": "secondary",
+      "members": [
+        "seven_colored_deer#adult",
+        "ancient_dream_beast#juvenile"
+      ],
+      "population": 50,
+      "biomass_jin": 500000
+    },
+    {
+      "layer": "tertiary",
+      "members": [
+        "ancient_dream_beast#adult",
+        "destiny_beast#juvenile"
+      ],
+      "population": 5,
+      "biomass_jin": 2000000
+    },
+    {
+      "layer": "quaternary",
+      "members": [
+        "destiny_beast#adult",
+        "timescape_beast#juvenile"
+      ],
+      "population": 2,
+      "biomass_jin": 10000000
+    },
+    {
+      "layer": "apex",
+      "members": [
+        "timescape_beast#adult",
+        "reincarnation_spirit"
+      ],
+      "population": 1,
+      "biomass_jin": 100000000
+    }
+  ],
+  "features": [
+    "reincarnation_pools",
+    "past_life_mirrors",
+    "cycle_altars",
+    "destiny_threads",
+    "time_crystals"
+  ],
+  "seasonal_states": {
+    "cycle_active": {
+      "all_mult": 1.5,
+      "behavior": "cycling",
+      "note": "Reincarnation cycle active; beasts cycle through lives."
+    },
+    "cycle_pause": {
+      "all_mult": 0.3,
+      "behavior": "pause",
+      "note": "Cycle paused; beasts dormant."
+    },
+    "destiny_convergence": {
+      "destiny_mult": 5.0,
+      "timescape_mult": 3.0,
+      "behavior": "convergence",
+      "note": "Destiny convergence; time/destiny beasts manifest."
+    }
+  },
+  "state_transitions": {
+    "spring->summer": "temperature_rise",
+    "summer->autumn": "temperature_fall",
+    "autumn->winter": "temperature_fall",
+    "winter->spring": "temperature_rise",
+    "any->tribulation_storm": "tribulation_event",
+    "any->blood_moon": "blood_moon_event",
+    "any->nearby_corpse_battlefield": "battlefield_proximity",
+    "any->nearby_spirit_spring": "spring_proximity",
+    "any->nearby_dragon_corpse": "dragon_corpse_proximity",
+    "any->nearby_ancient_god_remains": "ancient_god_proximity"
+  },
+  "perception_tiers": {
+    "mortal": "Sees beasts and terrain; does not perceive trophic structure.",
+    "qi_condensation": "Senses qi-flows of the ecosystem.",
+    "foundation_establishment": "Perceives trophic layers and seasonal shifts.",
+    "core_formation": "Perceives population dynamics and triggers.",
+    "nascent_soul": "Perceives mutation potential and bloodline flows.",
+    "spirit_severing": "Perceives complete ecology as a living system."
+  },
+  "salt": 1715964956
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top":   "ergenverse:block/alchemy_furnace_top",
+    "front": "ergenverse:block/alchemy_furnace_front",
+    "side":  "ergenverse:block/alchemy_furnace_side"
+  }
+}

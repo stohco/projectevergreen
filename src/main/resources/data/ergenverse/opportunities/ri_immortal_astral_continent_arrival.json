@@ -1,0 +1,32 @@
+{
+  "_comment": "RI Canon Opportunity: Immortal Astral Continent Arrival. Canon event: Wang Lin arrives at the Immortal Astral Continent (the true reality outside the Cave World). Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_immortal_astral_continent_arrival",
+  "name": "Immortal Astral Continent Arrival",
+  "canon_event": "Wang Lin arrives at the Immortal Astral Continent (the true reality outside the Cave World)",
+  "location": "immortal_astral_continent",
+  "age_requirement_years": 0,
+  "cultivation_required": "Ascendant",
+  "perception_required": "Immortal",
+  "luck_modifier": 0.3,
+  "discovery_methods": [
+    "cave_world_seal_breaking"
+  ],
+  "reward_tables": [
+    "iac_access",
+    "ancient_tomb_access",
+    "great_soul_sect_elder_position"
+  ],
+  "why_untaken": "Requires breaking the Cave World seal; endgame content.",
+  "natural_next_event": "The IAC exists objectively; the player can arrive when they break the seal.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 200267781,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,35 @@
+{
+  "_comment": "Ancient Nether Emperor — Renegade Immortal. A supreme nether-attribute beast. Canon: one of the legendary creatures of the Sea of Devils. Commands lesser nether beasts.",
+  "species_id": "ancient_nether_emperor",
+  "name": "Ancient Nether Emperor",
+  "nameCn": "幽冥古皇",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 3,
+  "max_hp": 150,
+  "attack_damage": 14,
+  "speed": 0.3,
+  "follow_range": 36,
+  "canonical": {
+    "appearance": "A serpentine emperor beast wreathed in nether energy. Crown-like horn protrusions. Commands lesser nether creatures telepathically. Aura of decay and cold.",
+    "size": "Massive (10-15m long, 2-3m diameter)",
+    "behavior": "Dominant apex predator. Commands packs of lesser nether beasts. territorial over vast domains. Can project nether energy across hundreds of meters.",
+    "habitat": "Sea of Devils deep zones, nether-aligned pocket dimensions",
+    "cultivation": "Nascent Soul equivalent",
+    "intelligence": "7-9 (near-human intelligence, capable of strategy and negotiation with equals)",
+    "diet": "Absorbs nether energy, devours lesser beasts that challenge it",
+    "relationships": "Commands lesser nether beasts. Respects only cultivators of Nascent Soul or above. Ancient enemy of the Thunder Celestial Temple guardians.",
+    "techniques": ["Nether roar (AoE fear + damage)", "Decay aura (passive damage to nearby entities)", "Beast command (buffs nearby nether creatures)", "Nether dive (burrow through dimensional barriers)"],
+    "treasures": ["Nether Emperor Core (extreme crafting material)", "Emperor Scale (body refinement, fire/ice resistance)"],
+    "bloodline": "ancient_beast",
+    "mutations": ["Emperor Command — nearby nether beasts gain +50% attack damage and speed"],
+    "ecology": "Apex predator and pack leader. Controls territory spanning hundreds of blocks in the Sea of Devils.",
+    "bloodline_tier": "ancient_beast",
+    "combat_ai": "pack_hunter"
+  },
+  "art_direction": {
+    "color_palette": ["#2d0036", "#5c0067", "#8b00a3", "#ff00ff"],
+    "model_notes": "Large serpentine beast with crown horns. Nether particle aura. Bioluminescent patterns.",
+    "texture_notes": "Deep purple-black scales with magenta bioluminescent lines. Crown of crystalline horns. Glowing violet eyes."
+  }
+}

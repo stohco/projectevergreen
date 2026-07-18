@@ -1,0 +1,67 @@
+{
+  "_comment": "Provenance metadata for Devil Soul Bottle (魔鬼魂瓶). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I52",
+  "name": "Devil Soul Bottle",
+  "nameCn": "魔鬼魂瓶",
+  "type": "soul_artifact",
+  "category": "soul_related",
+  "origin": "Ancient Tomb (Ch. 1388)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Contains multiple Ancient Devil souls",
+    "Ancient Devil Treasure tier soul storage"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Ancient Devil Treasure tier",
+    "Soul storage for ancient devil souls",
+    "From Ancient Tomb"
+  ],
+  "source": "Ch.1388 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Ancient Tomb (Ch. 1388)"
+  },
+  "lifecycle": {
+    "creator": "Ancient Tomb (Ch. 1388)",
+    "creation_circumstances": "Ancient Tomb (Ch. 1388)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

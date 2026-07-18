@@ -1,0 +1,33 @@
+{
+  "_comment": "Provenance metadata for Six Origin Swords (Fire, Life-Death, Karma, True-False, Slaughter, Restriction) (六本源剑). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I32",
+  "name": "Six Origin Swords (Fire, Life-Death, Karma, True-False, Slaughter, Restriction)",
+  "nameCn": "六本源剑",
+  "type": "weapon",
+  "category": "offensive",
+  "origin": "Self-condensed from void-gate vortex (Ch. 1715)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Six fundamental origin-element swords embodying Wang Lin's Origins",
+    "Each embodies one Origin: Fire, Life-Death, Karma, True-False, Slaughter, Restriction",
+    "Set completes power when all six are condensed",
+    "Origin Treasure tier"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Origin Treasure tier — set of 6",
+    "Each embodies a different Origin of Wang Lin",
+    "Retained to end"
+  ],
+  "source": "Ch.1715 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Self-condensed from void-gate vortex (Ch. 1715)"
+  }
+}

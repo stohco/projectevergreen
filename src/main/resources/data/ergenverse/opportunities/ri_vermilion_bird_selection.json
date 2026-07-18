@@ -1,0 +1,33 @@
+{
+  "_comment": "RI Canon Opportunity: Vermilion Bird Divine Emperor Selection. Canon event: Wang Lin is selected as the 6th-Generation Vermilion Bird Divine Emperor. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_vermilion_bird_selection",
+  "name": "Vermilion Bird Divine Emperor Selection",
+  "canon_event": "Wang Lin is selected as the 6th-Generation Vermilion Bird Divine Emperor",
+  "location": "vermilion_bird_divine_sect",
+  "age_requirement_years": 0,
+  "cultivation_required": "Spirit Severing",
+  "perception_required": "Ascendant",
+  "luck_modifier": 0.2,
+  "discovery_methods": [
+    "divine_sense",
+    "imperial_summons"
+  ],
+  "reward_tables": [
+    "vermilion_bird_inheritance",
+    "divine_emperor_seal",
+    "vermilion_bird_feather"
+  ],
+  "why_untaken": "Requires Spirit Severing+ cultivation; the Vermilion Bird must choose you.",
+  "natural_next_event": "The Vermilion Bird awakens and selects the next Divine Emperor.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 339229894,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

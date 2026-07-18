@@ -1,0 +1,10 @@
+{
+  "_comment": "Nine-Leaf Clover (九叶草) placed in Zhao Plains and Chu Country. Rarity 24 — moderately common foundation-building herb, the staple of temperate lowlands. Surface only.",
+  "feature": "ergenverse:nine_leaf_clover",
+  "placement": [
+    { "type": "minecraft:rarity_filter", "chance": 24 },
+    { "type": "minecraft:in_square" },
+    { "type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG" },
+    { "type": "minecraft:biome" }
+  ]
+}

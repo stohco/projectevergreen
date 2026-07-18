@@ -1,0 +1,33 @@
+{
+  "name": "Spirit Herb Growth System",
+  "description": "Biological growth stages for spirit herbs. Higher-grade herbs take dramatically longer to mature — a dao herb may take centuries. This makes finding a mature heaven-grade herb rare.",
+  "provenance": {"source": "Er Gen novels (systematized)", "attestation": "INFERRED", "confidence": 4},
+  "growthStages": ["seed", "sprout", "young", "mature", "flowering", "fruiting", "dormant", "dead"],
+  "stageDurationsYears": {
+    "mortal":   {"seed": [1,2], "sprout": [1,2], "young": [1,3], "mature": [3,6], "flowering": [1,2], "fruiting": [1,2], "dormant": [2,4], "dead": [0,0]},
+    "spirit":   {"seed": [2,4], "sprout": [2,3], "young": [3,5], "mature": [5,10], "flowering": [2,4], "fruiting": [2,3], "dormant": [4,8], "dead": [0,0]},
+    "earth":    {"seed": [5,10], "sprout": [5,8], "young": [8,15], "mature": [15,30], "flowering": [5,10], "fruiting": [5,8], "dormant": [10,20], "dead": [0,0]},
+    "heaven":   {"seed": [20,40], "sprout": [20,30], "young": [30,60], "mature": [60,120], "flowering": [20,40], "fruiting": [20,30], "dormant": [40,80], "dead": [0,0]},
+    "dao":      {"seed": [50,100], "sprout": [50,80], "young": [80,150], "mature": [150,300], "flowering": [50,100], "fruiting": [50,80], "dormant": [100,200], "dead": [0,0]}
+  },
+  "seedStartStages": ["sprout", "young", "young", "mature", "mature", "flowering", "dormant"],
+  "hiddenProperties": {
+    "age": "Years since germination — affects potency and value",
+    "qiSaturation": "0.0-1.0 — how much ambient Qi the herb has absorbed",
+    "purity": "0.0-1.0 — inverse of contamination/corruption",
+    "mutation": "Environmental influence (fire-aspected, water-aspected, wind-aspected, earth-aspected, lightning-aspected, blood-soaked, karmic-stained, void-touched, yin-saturated, yang-saturated) — ~20% chance, 80% no mutation",
+    "medicinalPotency": "Derived from age + qiSaturation + purity + mutation — determines pill yield and effect strength",
+    "karmicResidue": "If the herb grew in a karmically significant location (battlefield, graveyard, inheritance site) it may carry trace karmic impressions"
+  },
+  "mutations": [null, null, null, null, null, null, null, null, "fire-aspected", "water-aspected", "wind-aspected", "earth-aspected", "lightning-aspected", "blood-soaked", "karmic-stained", "void-touched", "yin-saturated", "yang-saturated"],
+  "realmScaledPerception": {
+    "mortal": "Sees a weed",
+    "qi_condensation": "Recognizes it as a spirit herb (name, basic property)",
+    "foundation": "Sees age category (young/mature/ancient)",
+    "core_formation": "Sees qi saturation percentage and purity",
+    "nascent_soul": "Sees the full hidden properties (e.g. '300-year-old Blood Spirit Grass, 92% saturation, high purity, karmic residue detected')",
+    "spirit_formation": "Sees mutation type and medicinal potency projection",
+    "void_refining": "Sees karmic residue origin and inheritance connections",
+    "ascendant_plus": "Sees the herb's complete timeline and future growth projection"
+  }
+}

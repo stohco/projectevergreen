@@ -1,0 +1,83 @@
+{
+  "_comment": "Civilization: Da Lou Sword Sect (sect) at Suzaku sword region. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "da_lou_sword_sect",
+  "name": "Da Lou Sword Sect",
+  "type": "sect",
+  "location": "Suzaku sword region",
+  "peak_realm": "Ascendant (Sword Master)",
+  "canon_status": "major_sword_sect",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "outer_disciples": 2000,
+    "inner_disciples": 400,
+    "core_disciples": 40,
+    "elders": 10,
+    "peak_lords": 9,
+    "ancestor": 1,
+    "spirit_beasts": 100
+  },
+  "economy": {
+    "spirit_stones": "moderate",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "basic",
+    "forging": "sword-focus",
+    "formation": "sword-formation focus",
+    "trade": "sword markets",
+    "recruitment": "sword-aspected youth"
+  },
+  "politics": {
+    "allies": [
+      "other sword sects"
+    ],
+    "enemies": [
+      "non-sword rival sects"
+    ],
+    "vassals": [],
+    "rivals": [
+      "Heavenly Fate Sect (general rivalry)"
+    ],
+    "internal_factions": [
+      "main sword lineage",
+      "branch sword lineages"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "decennial sword-aspected examination",
+    "expansion": "steady; sword-aspected regions",
+    "decline": "none current",
+    "schisms": "sword lineage disputes",
+    "wars": [
+      "sword-duel conflicts"
+    ],
+    "recovery": "strong; sword-master present"
+  },
+  "libraries": [
+    "sword techniques",
+    "sword-formation manuals",
+    "sword-intent catalogues",
+    "sword-herb lore"
+  ],
+  "spirit_beasts": [
+    "spirit cranes",
+    "sword-aspected beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 638759349,
+  "spiritual_vein_grade": 6,
+  "heritage_treasures": [
+    "I09"
+  ],
+  "_xianxia_schema": 1
+}

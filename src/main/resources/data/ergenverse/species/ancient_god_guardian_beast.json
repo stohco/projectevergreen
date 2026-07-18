@@ -1,0 +1,35 @@
+{
+  "_comment": "Ancient God Guardian Beast — Renegade Immortal. A beast from the Land of the Ancient God. Canon: guards the Tu Si inheritance area. Extremely dangerous.",
+  "species_id": "ancient_god_guardian_beast",
+  "name": "Ancient God Guardian Beast",
+  "nameCn": "古神守兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 3,
+  "max_hp": 200,
+  "attack_damage": 18,
+  "speed": 0.35,
+  "follow_range": 40,
+  "canonical": {
+    "appearance": "A towering beast with Ancient God lineage — obsidian-black hide inscribed with glowing restriction patterns. Multiple eyes. Immense presence pressure (divine sense reacts).",
+    "size": "Massive (8-12m long, 4-6m tall)",
+    "behavior": "Patrols the Ancient God inheritance grounds. Attacks any intruder regardless of cultivation level. Cannot be reasoned with. Restrictions embedded in its body.",
+    "habitat": "Land of the Ancient God, Restriction Mountain approaches",
+    "cultivation": "Soul Formation to Soul Transformation equivalent",
+    "intelligence": "6-8 (near-human — can assess cultivator realm and adjust tactics)",
+    "diet": "Spiritual energy, Ancient God residual power from the land",
+    "relationships": "Created by Tu Si to guard the inheritance. Answers to no one else. Recognizes Ancient God bloodline holders.",
+    "techniques": ["Restriction pulse (AoE that slows and damages)", "Ancient God roar (fear effect, disables abilities for 3s)", "Restriction body (reflects 30% of melee damage)"],
+    "treasures": ["Ancient God Fragment (inheritance material)", "Restriction Essence Shard (restriction crafting)"],
+    "bloodline": "ancient_beast",
+    "mutations": ["Restriction Body — 30% melee damage reflection, immune to restriction-based attacks"],
+    "ecology": "Apex guardian — top of the food chain in the Ancient God domain. No natural predators. Only defeated by inheritance seekers who pass the Restriction Mountain trials.",
+    "bloodline_tier": "ancient_beast",
+    "combat_ai": "guardian"
+  },
+  "art_direction": {
+    "color_palette": ["#1a1a2e", "#16213e", "#0f3460", "#e94560"],
+    "model_notes": "Massive beast with glowing restriction patterns on hide. Multiple glowing eyes. Presence particle effect (pressure aura).",
+    "texture_notes": "Obsidian-black hide with glowing blue-red restriction inscriptions. Multiple eye slits that glow crimson."
+  }
+}

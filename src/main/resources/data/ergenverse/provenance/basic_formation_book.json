@@ -1,0 +1,67 @@
+{
+  "_comment": "Provenance metadata for Basic Formation Book (基础阵书). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I74",
+  "name": "Basic Formation Book",
+  "nameCn": "基础阵书",
+  "type": "material",
+  "category": "cultivation_aid",
+  "origin": "Early era acquisition",
+  "current_owner": "Wang Lin (kept as memento)",
+  "abilities": [
+    "Foundation formation knowledge manual",
+    "Mortal-tier instructional book"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Mortal-tier manual",
+    "Kept even after mastering it — sentimental memento",
+    "Retained to end"
+  ],
+  "source": "wiki-attested (early era); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Early era acquisition"
+  },
+  "lifecycle": {
+    "creator": "Early era acquisition",
+    "creation_circumstances": "Early era acquisition",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

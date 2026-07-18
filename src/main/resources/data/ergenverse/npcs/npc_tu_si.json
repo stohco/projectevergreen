@@ -1,0 +1,38 @@
+{
+  "_comment": "NPC: Tu Si (涂司). Canon ID: N22. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_tu_si",
+  "name": "Tu Si",
+  "nameCn": "涂司",
+  "canon_id": "N22",
+  "type": "elder",
+  "faction": "ancient_god_clan",
+  "location": "ancient_god_land",
+  "cultivation": "Ancient God 8-Star",
+  "personality": "ancient god; left inheritance for Wang Lin",
+  "speech": "god-deep, ancient, resonant",
+  "relationship_to_wanglin": "predecessor; left Ancient God inheritance",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "A faint ancient god-presence",
+    "core_formation": "Ancient God remnant; 8-Star",
+    "nascent_soul": "Tu Si; Ancient God 8-Star; left inheritance",
+    "spirit_severing": "Tu Si; Ancient God 8-Star; Wang Lin inherited his god-knowledge"
+  },
+  "canon_confidence": 5,
+  "note": "Ancient God whose inheritance Wang Lin received",
+  "derivation_type": "A",
+  "salt": 567285316,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

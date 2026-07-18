@@ -1,0 +1,29 @@
+{
+  "_comment": "Life-state variant: Sand Scorpion (Adult). Generated from canonical species definition. Prime Directive: this state exists objectively; perception tier determines whether player recognizes it.",
+  "variant_id": "sand_scorpion__adult",
+  "species_id": "sand_scorpion",
+  "species_name": "Sand Scorpion",
+  "species_nameCn": "沙蝎",
+  "novel": "Renegade Immortal",
+  "life_state": "adult",
+  "life_state_name": "Adult",
+  "description": "Full size, full power, territory-holder; cultivates by hunting",
+  "modifiers": {
+    "size_multiplier": 1.0,
+    "power_multiplier": 1.0,
+    "intelligence_multiplier": 1.0,
+    "temperament": "territorial",
+    "rarity": "uncommon"
+  },
+  "perception_tiers": {
+    "mortal": "Sees a territorial beast.",
+    "qi_condensation": "Sees a territorial beast of sand scorpion kind.",
+    "foundation_establishment": "Recognizes life-state: Adult.",
+    "core_formation": "Recognizes species, life-state, and approximate cultivation.",
+    "nascent_soul": "Sees bloodline, mutation potential, and treasure affinity.",
+    "spirit_severing": "Sees complete ecology and Dao-comprehension state."
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1264530739
+}

@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Ancient Demon Clone (tribulation_scarred). Generated from canonical definition.",
+  "variant_id": "ancient_demon_clone_beast__tribulation_scarred",
+  "species_id": "ancient_demon_clone_beast",
+  "species_name": "Ancient Demon Clone",
+  "life_state": "tribulation_scarred",
+  "modifiers": {
+    "size_multiplier": 1.2,
+    "power_multiplier": 2.5,
+    "temperament": "sober",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 310750588
+}

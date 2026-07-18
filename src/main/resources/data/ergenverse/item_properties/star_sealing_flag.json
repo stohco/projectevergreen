@@ -1,0 +1,24 @@
+{
+  "_comment": "Item Properties: Star-Sealing Flag. Per physical-size directive: every object has lore-accurate physical size, not block size. Length: 3.0 m, Weight: 8000 jin, Material: star-iron, Suitable realm: Immortal, Body strength required: Spirit Severing. Prime Directive: physical size exists objectively; cultivation determines what the player can lift/activate.",
+  "item_id": "star_sealing_flag",
+  "name": "Star-Sealing Flag",
+  "type": "flag",
+  "physical_properties": {
+    "length_m": 3.0,
+    "weight_jin": 8000,
+    "material_density": "star-iron"
+  },
+  "usage_requirements": {
+    "suitable_realm": "Immortal",
+    "body_strength_required": "Spirit Severing",
+    "effect_when_undersized": "Cannot lift; flag is impossibly heavy."
+  },
+  "canon_note": "A flag that seals stars.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "simulation_notes": {
+    "no_locked_upgrades": "A cultivator who later reaches the required body strength will be able to lift/activate the item; the item does not change, only the cultivator does.",
+    "canon_fidelity": "This reflects the novels: Wang Lin could not lift the God-Slaying Sword until his body cultivation matched; he could barely use it as a heavy physical weapon before then."
+  },
+  "salt": 1424083528
+}

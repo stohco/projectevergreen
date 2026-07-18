@@ -1,0 +1,62 @@
+{
+  "_comment": "Thunder Celestial Realm (雷仙界) — the pocket realm of the Thunder Celestial Temple. Canon (CANON_RI_COMPLETE_WORLD.md L53/L54; CANON_RI_TIMELINE.md E24, E94): Site of Wang Lin's Thunder Celestial Tournament victory; he kills Russell here, becomes the Thunder Celestial of the Thunder Celestial Temple, and the Blood Ancestor is slain here (E94). Wang Lin obtains the God-Slaying War Chariot, the Celestial Emperor Crown, and Bai Fan's Collection Pavilion inheritance. The realm is a perpetual thunder-storm dimension — crackling clouds, lightning lakes, thunder-saturated air, and Thunder Lake trial grounds surround the Temple. Non-thunder cultivators are damaged by merely being present. Prime Directive: the perpetual storm and thunder-saturation are objective properties of the realm — they exist because the realm is the thunder-aspect source-dimension anchored by the Thunder Celestial Temple, not because anyone perceives them. Post-ch.901 (referenced by ch.901 karmic completion).",
+  "temperature": 0.4,
+  "downfall": 1.0,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 2039583,
+    "fog_color": 2039583,
+    "water_color": 3618331,
+    "water_fog_color": 2236962,
+    "mood_sound": "minecraft:ambient.basalt_deltas.additions",
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      { "type": "minecraft:ghast", "weight": 25, "minCount": 1, "maxCount": 1 },
+      { "type": "minecraft:phantom", "weight": 35, "minCount": 1, "maxCount": 2 },
+      { "type": "minecraft:vex", "weight": 15, "minCount": 1, "maxCount": 2 },
+      { "type": "minecraft:creeper", "weight": 20, "minCount": 1, "maxCount": 1 },
+      { "type": "minecraft:skeleton", "weight": 20, "minCount": 1, "maxCount": 2 }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:nether_cave",
+      "minecraft:cave"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [
+      "minecraft:lake_lava"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_quartz",
+      "minecraft:ore_gold",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [
+      "minecraft:patch_fire",
+      "minecraft:spring_lava"
+    ],
+    []
+  ],
+  "structures": {
+    "ergenverse:thunder_celestial_temple": {}
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Liu Jinbiao (刘金彪). Canon ID: N47. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_liu_jinbiao",
+  "name": "Liu Jinbiao",
+  "nameCn": "刘金彪",
+  "canon_id": "N47",
+  "type": "servant",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "Peak Path of Deception",
+  "personality": "sly, deceptive servant; trickster",
+  "speech": "sly, evasive",
+  "relationship_to_wanglin": "servant; trickster",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A sly man",
+    "qi_condensation": "Path of Deception; tricky aura",
+    "core_formation": "Peak Path of Deception",
+    "nascent_soul": "Path of Deception; Wang Lin's trickster servant"
+  },
+  "canon_confidence": 3,
+  "note": "Wang Lin's Path of Deception servant",
+  "derivation_type": "B",
+  "salt": 1219304226,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

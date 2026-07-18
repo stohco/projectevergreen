@@ -1,0 +1,14 @@
+{
+  "_comment": "Ecosystem integration: pill_sea_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "pill_sea_ecology",
+  "beasts": [
+    "flame_dragon",
+    "earth_fire_dragon",
+    "spirit_toad",
+    "spirit_fish"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Pill Sea; alchemical ecology",
+  "salt": 814495552
+}

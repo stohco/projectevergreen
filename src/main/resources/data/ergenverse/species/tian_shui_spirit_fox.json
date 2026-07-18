@@ -1,0 +1,66 @@
+{
+  "_comment": "Tian Shui Spirit Fox (天水灵狐) — Renegade Immortal. Canon confidence: 3/5. Prime Directive: this beast exists objectively whether the player has the perception to recognize it.",
+  "species_id": "tian_shui_spirit_fox",
+  "name": "Tian Shui Spirit Fox",
+  "nameCn": "天水灵狐",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Fox spirit that inhabits Tian Shui City. Mischievous but harmless to mortals.",
+    "size": "0.8m, 15 jin",
+    "behavior": "See ecology definitions.",
+    "habitat": "Tian Shui City",
+    "cultivation": "Core Formation",
+    "intelligence": 7,
+    "diet": "See ecology definitions.",
+    "relationships": "See ecology definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": "No alchemy value — common beast with no condensed inner core",
+      "canon_note": "tian_shui_spirit_fox — common beast, no condensed inner core"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "tian_shui_spirit_fox — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 123336513,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

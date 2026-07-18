@@ -1,0 +1,22 @@
+{
+  "_comment": "World State Engine query: Who wants it? Schema: desire_registry. Data sources: ['civilizations', 'species', 'provenance'].",
+  "question": "Who wants it?",
+  "schema": "desire_registry",
+  "fields": [
+    "object_id",
+    "desirer",
+    "desire_type",
+    "desire_strength",
+    "desire_reason"
+  ],
+  "data_sources": [
+    "civilizations",
+    "species",
+    "provenance"
+  ],
+  "reason_types": [],
+  "note": "Desire is inferred from faction needs, beast ecology, and cultivator inheritance.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "salt": 845430982
+}

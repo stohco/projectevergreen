@@ -1,0 +1,114 @@
+{
+  "_comment": "Ecosystem: Ancient God Remains Ecology (Land of the Ancient God). Full food web with 6 trophic layers and 4 seasonal/environmental states. Prime Directive: ecology exists objectively; player perception determines what they observe. No-Locked-Upgrades: all seasonal states are reachable by time/weather/event.",
+  "ecosystem_id": "ancient_god_remains_ecology",
+  "name": "Ancient God Remains Ecology",
+  "location": "Land of the Ancient God",
+  "description": "The unique ecology that forms around Ancient God remains — everything is altered by god-essence.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "members": [
+        "god_bone_flora",
+        "god_blood_lotus",
+        "ancient_spirit_herbs"
+      ],
+      "population": "environmental"
+    },
+    {
+      "layer": "primary",
+      "members": [
+        "spirit_rat#mutated",
+        "mosquito_beast#mutated"
+      ],
+      "population": 10000,
+      "biomass_jin": 500000
+    },
+    {
+      "layer": "secondary",
+      "members": [
+        "giant_savage_ape#mutated",
+        "giant_python#mutated"
+      ],
+      "population": 1000,
+      "biomass_jin": 5000000
+    },
+    {
+      "layer": "tertiary",
+      "members": [
+        "giant_savage_ape#ancient",
+        "giant_python#ancient"
+      ],
+      "population": 50,
+      "biomass_jin": 50000000
+    },
+    {
+      "layer": "quaternary",
+      "members": [
+        "blood_ancestor_beast#juvenile",
+        "nether_beast#enlightened"
+      ],
+      "population": 5,
+      "biomass_jin": 50000000
+    },
+    {
+      "layer": "apex",
+      "members": [
+        "ancient_god_guardian_beast"
+      ],
+      "population": 1,
+      "biomass_jin": 1000000000
+    }
+  ],
+  "features": [
+    "god_bone_mountains",
+    "god_blood_lakes",
+    "god_eye_pools",
+    "ancient_spirit_veins",
+    "god_guardian_chambers"
+  ],
+  "seasonal_states": {
+    "slumber": {
+      "all_mult": 0.5,
+      "behavior": "slumber",
+      "note": "Ancient god slumbers; ecology subdued but still mutated."
+    },
+    "stirring": {
+      "all_mult": 1.5,
+      "behavior": "stirring",
+      "note": "Ancient god stirs; all beasts grow restless."
+    },
+    "awakening": {
+      "all_mult": 3.0,
+      "behavior": "frenzy",
+      "note": "Ancient god awakens; entire ecology restructures; guardian beasts manifest."
+    },
+    "god_tribulation": {
+      "all_mult": 5.0,
+      "behavior": "apex",
+      "note": "God tribulation; apex beasts manifest; reality warps."
+    }
+  },
+  "state_transitions": {
+    "spring->summer": "temperature_rise",
+    "summer->autumn": "temperature_fall",
+    "autumn->winter": "temperature_fall",
+    "winter->spring": "temperature_rise",
+    "any->tribulation_storm": "tribulation_event",
+    "any->blood_moon": "blood_moon_event",
+    "any->nearby_corpse_battlefield": "battlefield_proximity",
+    "any->nearby_spirit_spring": "spring_proximity",
+    "any->nearby_dragon_corpse": "dragon_corpse_proximity",
+    "any->nearby_ancient_god_remains": "ancient_god_proximity"
+  },
+  "perception_tiers": {
+    "mortal": "Sees beasts and terrain; does not perceive trophic structure.",
+    "qi_condensation": "Senses qi-flows of the ecosystem.",
+    "foundation_establishment": "Perceives trophic layers and seasonal shifts.",
+    "core_formation": "Perceives population dynamics and triggers.",
+    "nascent_soul": "Perceives mutation potential and bloodline flows.",
+    "spirit_severing": "Perceives complete ecology as a living system."
+  },
+  "salt": 187694227
+}

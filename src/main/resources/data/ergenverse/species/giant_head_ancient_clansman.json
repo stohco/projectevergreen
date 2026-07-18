@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Giant Head Ancient Clansman (大头古族) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "giant_head_ancient_clansman",
+  "name": "Giant Head Ancient Clansman",
+  "nameCn": "大头古族",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Humanoid ancient clan being 20 m tall, head disproportionately massive, body radiates ancient clan power",
+    "size": "20 m adult, 100000 jin; ancient 50 m, millions of jin",
+    "behavior": "Ancient clan being; head contains vast ancient power; Wang Lin obtained the skull as treasure",
+    "habitat": "Ancient clan territory, ancient clan ruins",
+    "cultivation": "Immortal (ancient clan attribute)",
+    "intelligence": 10,
+    "diet": "ancient clan herbs, spirit stones, ancient qi",
+    "relationships": "Wang Lin obtained giant head skull as treasure (canon event)",
+    "techniques": [
+      "ancient_head_butt",
+      "clan_roar",
+      "ancient_qi_burst",
+      "head_crush"
+    ],
+    "treasures": [
+      "giant_head_skull",
+      "ancient_clan_essence",
+      "head_fragment"
+    ],
+    "bloodline": "Ancient Clan lineage; giant-head bloodline",
+    "mutations": [
+      "true_clan_body",
+      "ancient_clan_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "giant_head_ancient_clansman — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "giant_head_ancient_clansman — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1714659746,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

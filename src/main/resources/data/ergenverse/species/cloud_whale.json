@@ -1,0 +1,68 @@
+{
+  "comment": "Cloud Whale (云鲸) — massive sky-dwelling spirit beast. Canon: swims through the cloud layer. Their passage leaves spirit energy condensation trails. Migration routes are stable across millennia.",
+  "taxonomy": {
+    "kingdom": "spirit_beast",
+    "phylum": "sky_fauna",
+    "class": "cetacean",
+    "order": "cloud_whale",
+    "family": "aether_cetus",
+    "genus": "nimbus_balaena",
+    "species": "cloud_whale"
+  },
+  "temperament": "gentle_giant",
+  "territory": "cloud_whale_territory sky biome — migration corridor",
+  "territorial_radius": 5000,
+  "diet": "cloud_spirit_energy_and_atmospheric_qi",
+  "prey": [
+    "none — filter_feeds_on_atmospheric_qi"
+  ],
+  "predators": [
+    "none — too_large_to_be_predated"
+  ],
+  "migration": "seasonal — follows cloud spirit density across the sky realm",
+  "sleep_cycle": "does_not_sleep — perpetually_swimming",
+  "cultivation": {
+    "base_tier": "soul_formation",
+    "max_tier": "celestial",
+    "growth_method": "cloud_qi_absorption"
+  },
+  "breeding": {
+    "method": "cloud_birth",
+    "egg_count": 1,
+    "gestation": 100,
+    "maturity_age": 5000
+  },
+  "mutations": [
+    "ancient_cloud_whale",
+    "storm_whale",
+    "celestial_sky_whale"
+  ],
+  "leader_hierarchy": "pod_structure — eldest_female_leads",
+  "nest_generation": "cloud_condensation_nest — temporary_structures_in_the_cloud_sea",
+  "treasure_preferences": [
+    "cloud_essence",
+    "sky_spirit_crystals",
+    "condensation_dew"
+  ],
+  "relationship_with_cultivators": "friendly — will allow cultivators to ride them if treated with respect",
+  "fear_response": "ascend_to_higher_altitude — never_fights",
+  "intelligence": 15,
+  "elemental_affinity": "cloud",
+  "law_affinity": "freedom",
+  "canon_source": "L56 — Cloud Sea Star System fauna",
+  "ecological_variants": [
+    "juvenile",
+    "adult",
+    "elder",
+    "ancient"
+  ],
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

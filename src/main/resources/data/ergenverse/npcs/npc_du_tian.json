@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Du Tian (顿天). Canon ID: N23. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_du_tian",
+  "name": "Du Tian",
+  "nameCn": "顿天",
+  "canon_id": "N23",
+  "type": "elder",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "Nirvana Scryer+",
+  "personality": "patient, powerful elder; mentor figure",
+  "speech": "patient, weighted",
+  "relationship_to_wanglin": "mentor; elder",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "A powerful elder",
+    "qi_condensation": "Nirvana Scryer; overwhelming",
+    "core_formation": "Du Tian; Nirvana Scryer+",
+    "nascent_soul": "Nirvana Scryer+; mentor"
+  },
+  "canon_confidence": 4,
+  "note": "Mentor elder",
+  "derivation_type": "A",
+  "salt": 1450123098,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

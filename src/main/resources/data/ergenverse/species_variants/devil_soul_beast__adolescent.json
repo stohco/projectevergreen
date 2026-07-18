@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Devil Soul Beast (adolescent). Generated from canonical definition.",
+  "variant_id": "devil_soul_beast__adolescent",
+  "species_id": "devil_soul_beast",
+  "species_name": "Devil Soul Beast",
+  "life_state": "adolescent",
+  "modifiers": {
+    "size_multiplier": 0.45,
+    "power_multiplier": 0.35,
+    "temperament": "reckless",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1635836310
+}

@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Zhan Xingye (战星野). Canon ID: N131. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_zhan_xingye",
+  "name": "Zhan Xingye",
+  "nameCn": "战星野",
+  "canon_id": "N131",
+  "type": "antagonist",
+  "faction": "zhan_family",
+  "location": "zhan_family_territory",
+  "cultivation": "Third Step+",
+  "personality": "war-aspected family member",
+  "speech": "martial, aggressive",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A martial cultivator",
+    "qi_condensation": "War-aspected; strong",
+    "core_formation": "Zhan family; Third Step+",
+    "nascent_soul": "Third Step+; war dao"
+  },
+  "canon_confidence": 3,
+  "note": "Zhan family antagonist",
+  "derivation_type": "B",
+  "salt": 742830971,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

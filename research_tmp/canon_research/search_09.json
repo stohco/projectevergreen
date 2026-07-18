@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "He absorbed the Golden Spirit Root and also feed it to his Mosquito Beast and Thunder Toad which caused both of them to start evolving. Later, Wang Lin ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=iNAI-ez96ZE",
+    "name": "10 Spirit Beasts Wang Lin Subdued in Renegade Immortal - YouTube",
+    "snippet": "Each beast, from the underrated Thunder Frog ... 10 Spirit Beasts Wang Lin Subdued in Renegade Immortal | From Thunder Frog to Mosquito King.",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1pl921k/renegade_immortal",
+    "name": "Renegade immortal : r/Donghua - Reddit",
+    "snippet": "Wang Lin has more than 10000+ mosquito beasts. Renegade Immortal Ep-63 (Preview) : r/RenegadeImmortal - Reddit [CN] Xian Ni (Renegade Immortal) - Chapter 1452 : r/noveltranslations More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Lil_Mosqi",
+    "name": "Lil Mosqi - Xian Ni Wikia - Fandom",
+    "snippet": "Lil Mosqi is Wang Lin's pet. Lil Mosqi was part of a herd of Mosquito Beasts on Planet Suzaku before he met Wang Lin. Initially, it attacked Wang Lin in Hou ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=SThNDGNvfgY",
+    "name": "Wang Lin's 7 Most Terrifying Pets & Spirit Beasts Explained - YouTube",
+    "snippet": "In this video, we dive deep into the world of Renegade Immortal to rank Wang Lin's 7 Most Terrifying Spirit Beasts.",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Song Tian Great Celestial Venerable (宋天大天尊). Canon ID: N118. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_song_tian_tianzun",
+  "name": "Song Tian Great Celestial Venerable",
+  "nameCn": "宋天大天尊",
+  "canon_id": "N118",
+  "type": "elder",
+  "faction": "immortal_astral_continent",
+  "location": "immortal_astral_continent",
+  "cultivation": "Great Celestial Venerable",
+  "personality": "celestial venerable; powerful",
+  "speech": "celestial, weighted",
+  "relationship_to_wanglin": "complex; IAC power",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "Celestial presence",
+    "core_formation": "Great Celestial Venerable",
+    "nascent_soul": "Great Celestial Venerable; IAC power"
+  },
+  "canon_confidence": 3,
+  "note": "Great Celestial Venerable of the IAC",
+  "derivation_type": "B",
+  "salt": 711137445,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

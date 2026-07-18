@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Li Dannan (李丹楠). Canon ID: N66. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_li_dannan",
+  "name": "Li Dannan",
+  "nameCn": "李丹楠",
+  "canon_id": "N66",
+  "type": "other",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "cultivator",
+  "speech": "measured",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator",
+    "qi_condensation": "Cultivator"
+  },
+  "canon_confidence": 3,
+  "note": "Minor cultivator NPC",
+  "derivation_type": "B",
+  "salt": 56785359,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

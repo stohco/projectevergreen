@@ -1,0 +1,45 @@
+{
+  "_comment": "Opportunity: Dead Cultivator. Per opportunity directive: the engine continuously asks 'what opportunities naturally exist at a location that has existed for 100 years?'. Discoverable by cultivation (Qi Condensation), perception (Foundation Establishment (to find the corpse)), and luck (modifier 1.5). Prime Directive: opportunity exists objectively; player perception determines whether they find it.",
+  "opportunity_id": "dead_cultivator",
+  "name": "Dead Cultivator",
+  "description": "The corpse of a cultivator who fell in the wilderness, still holding treasures. Exists because: cultivators die in the wild and are not always found.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "age_requirement_years": 100,
+  "location_types": [
+    "wilderness",
+    "ancient_battlefield",
+    "cave",
+    "ruin"
+  ],
+  "cultivation_required": "Qi Condensation",
+  "perception_required": "Foundation Establishment (to find the corpse)",
+  "luck_modifier": 1.5,
+  "discovery_methods": [
+    "divine_sense",
+    "accidental_stumble",
+    "rumor_following"
+  ],
+  "reward_tables": [
+    "storage_pouch",
+    "cultivation_manual",
+    "treasure",
+    "spirit_stones"
+  ],
+  "why_untaken": "Corpse hidden by terrain; requires perception to find.",
+  "natural_next_event": "Corpse rots; treasures scatter; beasts claim the remains.",
+  "simulation_notes": {
+    "continuous_inference": "The World State Engine continuously infers opportunities at every location based on the location's age, type, and history.",
+    "no_locked_upgrades": "A cultivator who later reaches the required perception will find opportunities they previously missed; the opportunities do not disappear.",
+    "canon_fidelity": "This is how Wang Lin found inheritances throughout his journey — the opportunities existed before he arrived; his perception determined what he found."
+  },
+  "salt": 1898239968,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

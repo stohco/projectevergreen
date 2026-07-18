@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Heaven_Trampling",
+    "name": "Heaven Trampling - Xian Ni Wikia - Fandom",
+    "snippet": "... nine Heaven Trampling Bridges, with the ninth bridge leading to Heaven Trampling. ... This is the last level shown by Wang Lin in the story of Renegade Immortal.",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Half_Heaven_Trampling",
+    "name": "Half Heaven Trampling | Xian Ni Wikia - Fandom",
+    "snippet": "Second Bridge - Dao Heart Tribulation · Third Bridge - Inner Demon Tribulation · Fourth Bridge - Unknown · Fifth ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=BL-DjKD6T90",
+    "name": "Wang Lin's Legendary Breakthrough to Heaven Trampling Realm",
+    "snippet": "Wang Lin's Legendary Breakthrough to Heaven Trampling Realm (Da Tian) | Renegade Immortal ENG SUB Witness the legendary moment when Wang Lin ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1l4xney/any_one_know_her_power_level_at_end_of_novel",
+    "name": "Any one know her power level at end of novel after Revival - Reddit",
+    "snippet": "At the end of the story Wang Lin says \"Let me take you to Trample the Heavens\" or smt like that, and then walks onto the heaven trampling 9th ...",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/shorts/U9P7Y_WcEag",
+    "name": "Renegade Immortal Cultivation System Explained in 60  - YouTube",
+    "snippet": "Renegade Immortal Power Levels Explained From Mortal to Heaven Trampling Wang Lin's Cultivation Journey Explained Renegade Immortal ...",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

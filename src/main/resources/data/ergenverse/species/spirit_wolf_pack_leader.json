@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Spirit Wolf Pack Leader (灵狼首领) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "spirit_wolf_pack_leader",
+  "name": "Spirit Wolf Pack Leader",
+  "nameCn": "灵狼首领",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Larger wind wolf 3 m, fur silver-alpha, eyes command the pack",
+    "size": "3 m adult, 400 jin; ancient 5 m, 3000 jin",
+    "behavior": "Alpha of wind wolf packs; commands pack tactics; cultivates by leading hunts",
+    "habitat": "Plains, wind-aspected spirit veins, mountain foothills",
+    "cultivation": "Core Formation (wind attribute)",
+    "intelligence": 8,
+    "diet": "spirit deer, spirit rabbits, lost travelers",
+    "relationships": "Alpha of wind wolf packs; rival of mountain lions",
+    "techniques": [
+      "pack_command",
+      "alpha_howl",
+      "wind_step",
+      "alpha_bite"
+    ],
+    "treasures": [
+      "alpha_wolf_core",
+      "silver_alpha_fur",
+      "fang"
+    ],
+    "bloodline": "Spirit-Wolf lineage; wind-attribute alpha bloodline",
+    "mutations": [
+      "silver_alpha",
+      "wind_body",
+      "ancient_wolf_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "spirit_wolf_pack_leader — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "spirit_wolf_pack_leader — not a hive-mind species"
+    },
+    "combat_ai": "pack_hunter"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1306700201,
+  "bloodline_tier": "ordinary",
+  "inner_dan_properties": {
+    "element": "metal",
+    "purity_tier": 3,
+    "dao_resonance": "pack_sovereignty",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

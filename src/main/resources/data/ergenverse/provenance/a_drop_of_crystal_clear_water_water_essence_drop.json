@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for A Drop of Crystal Clear Water (Water Essence Drop) (水元精滴). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I78",
+  "name": "A Drop of Crystal Clear Water (Water Essence Drop)",
+  "nameCn": "水元精滴",
+  "type": "consumable",
+  "category": "cultivation_aid",
+  "origin": "Gift from founder of Great Soul Sect (Ch. 1843)",
+  "current_owner": "Wang Lin (kept for cultivation)",
+  "abilities": [
+    "Single drop of crystal clear water essence",
+    "Refined from 99 rivers with multiple water-essence cultivators",
+    "Quasi-Third-Step tier — 3 of 3 promised gifts"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Quasi-Third-Step tier",
+    "3 of 3 promised gifts from Great Soul Sect founder",
+    "Refined from 99 rivers in Heavenly River Continent"
+  ],
+  "source": "Ch.1843 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Gift from founder of Great Soul Sect (Ch. 1843)"
+  }
+}

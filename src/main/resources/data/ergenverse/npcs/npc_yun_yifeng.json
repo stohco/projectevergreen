@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Yun Yifeng (云一峰). Canon ID: N127. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_yun_yifeng",
+  "name": "Yun Yifeng",
+  "nameCn": "云一峰",
+  "canon_id": "N127",
+  "type": "antagonist",
+  "faction": "yun_family",
+  "location": "yun_family_territory",
+  "cultivation": "Third Step+",
+  "personality": "cloud-aspected family member",
+  "speech": "ethereal, cold",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cloud cultivator",
+    "qi_condensation": "Cloud-aspected; strong",
+    "core_formation": "Yun family; Third Step+",
+    "nascent_soul": "Third Step+; cloud dao"
+  },
+  "canon_confidence": 3,
+  "note": "Yun family antagonist",
+  "derivation_type": "B",
+  "salt": 1593905376,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

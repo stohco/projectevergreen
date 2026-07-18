@@ -1,0 +1,45 @@
+{
+  "_comment": "Faction relationships: zhan_family. Per user directive: faction relationship network — allies/enemies/vassals/rivals. Prime Directive: relationships exist objectively.",
+  "faction_id": "zhan_family",
+  "type": "clan",
+  "allies": [
+    "yun_family"
+  ],
+  "enemies": [
+    "wang_lin"
+  ],
+  "vassals": [],
+  "rivals": [],
+  "neutral": [],
+  "note": "War-aspected antagonist family",
+  "salt": 817276972,
+  "spiritual_vein_grade": {
+    "grade": null,
+    "element": null,
+    "qi_modifier": null,
+    "canon_note": "zhan_family — spiritual vein grade not specified in canon"
+  },
+  "heritage_treasures": [],
+  "_xianxia_schema": 2,
+  "relationship_metadata": {
+    "allies": [
+      {
+        "id": "yun_family",
+        "strength": null,
+        "since": null,
+        "reason": null
+      }
+    ],
+    "enemies": [
+      {
+        "id": "wang_lin",
+        "strength": null,
+        "since": null,
+        "reason": null
+      }
+    ],
+    "vassals": [],
+    "rivals": [],
+    "neutral": []
+  }
+}

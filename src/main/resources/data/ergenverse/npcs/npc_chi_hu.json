@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Chi Hu (赤虎). Canon ID: N33. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_chi_hu",
+  "name": "Chi Hu",
+  "nameCn": "赤虎",
+  "canon_id": "N33",
+  "type": "other",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "tiger-aspected cultivator",
+  "speech": "bold, tiger-growling",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A tiger-aspected cultivator",
+    "qi_condensation": "Tiger aura"
+  },
+  "canon_confidence": 3,
+  "note": "Tiger-aspected cultivator NPC",
+  "derivation_type": "B",
+  "salt": 1813174118,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,33 @@
+{
+  "_comment": "RI Canon Opportunity: Joss Flame Economy Revelation. Canon event: Wang Lin discovers the Joss Flame economy — mortals are unknowing livestock. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_joss_flame_economy_revelation",
+  "name": "Joss Flame Economy Revelation",
+  "canon_event": "Wang Lin discovers the Joss Flame economy — mortals are unknowing livestock",
+  "location": "cave_world",
+  "age_requirement_years": 0,
+  "cultivation_required": "Spirit Severing",
+  "perception_required": "Ascendant",
+  "luck_modifier": 0.2,
+  "discovery_methods": [
+    "dao_comprehension",
+    "divine_sense"
+  ],
+  "reward_tables": [
+    "joss_flame_understanding",
+    "mortal_truth",
+    "cave_world_mechanism"
+  ],
+  "why_untaken": "Requires Spirit Severing+ to comprehend the truth; mortals cannot perceive it.",
+  "natural_next_event": "The Joss Flame continues flowing to the Seven-Colored Daoist (until Wang Lin takes over).",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 242273993,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,18 @@
+{
+  "_comment": "Ecosystem integration: green_devil_continent_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "green_devil_continent_ecology",
+  "beasts": [
+    "green_devil_scorpion",
+    "sand_scorpion",
+    "spirit_snake",
+    "devil_soul_beast"
+  ],
+  "npcs": [
+    "npc_green_devil"
+  ],
+  "enemies": [
+    "green_devil"
+  ],
+  "note": "Green Devil Continent; poison-aspected ecology",
+  "salt": 177003533
+}

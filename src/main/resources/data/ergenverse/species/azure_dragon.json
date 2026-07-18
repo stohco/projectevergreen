@@ -1,0 +1,80 @@
+{
+  "_comment": "Species: Azure Dragon (青龙) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "azure_dragon",
+  "name": "Azure Dragon",
+  "nameCn": "青龙",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Serpentine dragon 100 m long, scales azure jade, antlers of crystal, breath summons storms",
+    "size": "100 m adult, millions of jin; true form spans continents",
+    "behavior": "Divine spirit beast; sleeps in deep seas; awakens for era-defining events",
+    "habitat": "Eastern seas, dragon palaces, water-aspected apex spirit veins",
+    "cultivation": "Immortal (water/wind attribute, true divine beast)",
+    "intelligence": 12,
+    "diet": "water-attribute heavenly treasures, sea-spirit beasts, storm-essence",
+    "relationships": "Bonded to Azure Dragon Divine lineage; rival of Vermilion Bird",
+    "techniques": [
+      "storm_breath",
+      "dragon_coil",
+      "rain_summon",
+      "azure_scales"
+    ],
+    "treasures": [
+      "azure_dragon_core",
+      "dragon_pearl",
+      "azure_scale"
+    ],
+    "bloodline": "True Divine Beast lineage; one of Four Symbols",
+    "mutations": [
+      "five_claw",
+      "true_divine_awakening"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ancient_celestial_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "azure_dragon — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "azure_dragon — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 55707202,
+  "bloodline_tier": "ancient_celestial",
+  "inner_dan_properties": {
+    "element": "wood",
+    "purity_tier": 9,
+    "dao_resonance": "celestial_sovereignty",
+    "side_effects": [
+      "body_refinement_overflow"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

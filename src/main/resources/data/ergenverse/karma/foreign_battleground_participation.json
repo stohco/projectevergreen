@@ -1,0 +1,23 @@
+{
+  "karma_id": "foreign_battleground_participation",
+  "name": "Foreign Battleground Service",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 16700,
+  "karmic_weight": -1800,
+  "bearer": "N01",
+  "debtor": "planet_suzaku",
+  "description": "Wang Lin fights in the Foreign Battleground for Planet Suzaku. Earns merit but accumulates war karma.",
+  "consequences": [
+    {
+      "type": "inheritance_claimed",
+      "target_id": "foreign_battleground_merit",
+      "magnitude": 70,
+      "resolved_at_tick": 16700
+    }
+  ],
+  "unresolved_until": "resolved",
+  "_comment": "Karmic Nexus node: Foreign Battleground Service. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 1424842891
+}

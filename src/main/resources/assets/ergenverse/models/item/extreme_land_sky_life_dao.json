@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ergenverse:item/extreme_land_sky_life_dao"
+  }
+}

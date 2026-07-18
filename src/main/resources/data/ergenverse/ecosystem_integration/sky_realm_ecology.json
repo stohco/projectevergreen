@@ -1,0 +1,15 @@
+{
+  "_comment": "Ecosystem integration: sky_realm_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "sky_realm_ecology",
+  "beasts": [
+    "cloud_whale",
+    "spirit_crane",
+    "spirit_eagle",
+    "southern_winged_snake",
+    "thunder_bird"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Sky Realm ecology; aerial beasts",
+  "salt": 766439137
+}

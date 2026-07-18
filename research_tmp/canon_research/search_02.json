@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "In the Sea of Devils, Wang Lin met up with the Soul Refining Tribe and gifted them various cultivation methods. Wang Lin also found out that the statue of ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=fI2P8B8gcbM",
+    "name": "How Strong Is Thirteen When Wang Lin Returns to the Soul Refining",
+    "snippet": "Renegade Immortal - How Strong Is Thirteen When Wang Lin Returns to the Soul Refining Tribe? Disclaimer: I do not own the anime, music, ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/RenegadeImmortal/comments/1frz30i/why_is_wang_lin_seemingly_the_only_one_that",
+    "name": "Why is Wang Lin seemingly the only one that cultivates both path of",
+    "snippet": "Wang Lin seemingly the only one that cultivates both path of body refinement and origin soul growth through fusion of the avatars.",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Soul_Refining_Sect",
+    "name": "Soul Refining Sect - Xian Ni Wikia - Fandom",
+    "snippet": "When Wang Lin gets sent to the East Demon Spirit Sea, he founded a new tribe called Soul Refining Tribe and taught them the cultivation techniques of the Soul ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=ntjC8-JAj0w",
+    "name": "Wang Lin Teaches Thirteen the Body Refining Technique  - YouTube",
+    "snippet": "The Xian Ni (Renegade Immortal) anime continues! Wang Lin fulfills the Duntian Patriarch's final wish and establishes the powerful Soul ...",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

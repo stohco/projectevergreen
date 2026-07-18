@@ -1,0 +1,25 @@
+{
+  "_comment": "Qi-Gathering Grass — the most basic spirit herb. Canon (CANON_RI_ECOLOGY.md 1.3, Type C conf 3): 'sustains Qi Condensation cultivation.' The staple herb of Heng Yue Sect's outer disciples. Custom block: ergenverse:qi_gathering_grass
+  "type": "minecraft:flower",
+  "config": {
+    "feature": {
+      "type": "minecraft:simple_block",
+      "config": {
+        "to_place": {
+          "type": "minecraft:simple_state_provider",
+          "state": {
+            "Name": "ergenverse:qi_gathering_grass",
+            "Properties": {
+              "pickles": "1",
+              "waterlogged": "false"
+            }
+          }
+        }
+      }
+    },
+    "tries": 1,
+    "xz_spread": 2,
+    "y_spread": 0,
+    "need_red_to_survive": false
+  }
+}

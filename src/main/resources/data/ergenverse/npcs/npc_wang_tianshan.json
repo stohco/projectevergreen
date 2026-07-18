@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Wang Tianshan (王天山). Canon ID: N04. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_wang_tianshan",
+  "name": "Wang Tianshan",
+  "nameCn": "王天山",
+  "canon_id": "N04",
+  "type": "elder",
+  "faction": "wang_family_village",
+  "location": "wang_family_village",
+  "cultivation": "low-tier cultivator",
+  "personality": "Wang family elder",
+  "speech": "formal, elder",
+  "relationship_to_wanglin": "family elder",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A Wang family elder",
+    "qi_condensation": "Low-tier cultivator"
+  },
+  "canon_confidence": 3,
+  "note": "Wang family elder NPC",
+  "derivation_type": "B",
+  "salt": 1049551256,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

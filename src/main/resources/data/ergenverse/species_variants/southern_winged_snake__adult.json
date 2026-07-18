@@ -1,0 +1,29 @@
+{
+  "_comment": "Life-state variant: Southern Winged Snake (Adult). Generated from canonical species definition. Prime Directive: this state exists objectively; perception tier determines whether player recognizes it.",
+  "variant_id": "southern_winged_snake__adult",
+  "species_id": "southern_winged_snake",
+  "species_name": "Southern Winged Snake",
+  "species_nameCn": "南翼蛇",
+  "novel": "Pursuit of the Truth",
+  "life_state": "adult",
+  "life_state_name": "Adult",
+  "description": "Full size, full power, territory-holder; cultivates by hunting",
+  "modifiers": {
+    "size_multiplier": 1.0,
+    "power_multiplier": 1.0,
+    "intelligence_multiplier": 1.0,
+    "temperament": "territorial",
+    "rarity": "uncommon"
+  },
+  "perception_tiers": {
+    "mortal": "Sees a territorial beast.",
+    "qi_condensation": "Sees a territorial beast of southern winged snake kind.",
+    "foundation_establishment": "Recognizes life-state: Adult.",
+    "core_formation": "Recognizes species, life-state, and approximate cultivation.",
+    "nascent_soul": "Sees bloodline, mutation potential, and treasure affinity.",
+    "spirit_severing": "Sees complete ecology and Dao-comprehension state."
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 1502189846
+}

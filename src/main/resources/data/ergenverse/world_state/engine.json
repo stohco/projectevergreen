@@ -1,0 +1,209 @@
+{
+  "_comment": "WORLD STATE ENGINE - MASTER SCHEMA. The unifying simulation system. Everything derives from this. Per the user's directive: 'If I could only ask the agent to build one more foundational system, it would be this: The World State Engine.' The engine continuously answers: What exists? Who owns it? Who wants it? Who knows about it? Why hasn't it been taken already? What would naturally happen next if the player did nothing? Prime Directive: the player is not spawning content — they are entering a world that is already moving.",
+  "engine_id": "world_state_engine",
+  "version": "1.0",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "core_questions": [
+    "What exists?",
+    "Who owns it?",
+    "Who wants it?",
+    "Who knows about it?",
+    "Why hasn't it been taken already?",
+    "What would naturally happen next if the player did nothing?"
+  ],
+  "subsystem_registry": {
+    "species": "data/ergenverse/species/ (canonical beast definitions)",
+    "species_variants": "data/ergenverse/species_variants/ (10 life-state variants per species)",
+    "ecosystems": "data/ergenverse/ecosystems/ (food webs with seasonality)",
+    "migrations": "data/ergenverse/migrations/ (migration routes with follower chains)",
+    "macro_terrain": "data/ergenverse/macro_terrain/ (terrain that IS a being)",
+    "provenance": "data/ergenverse/provenance/ (artifact lifecycle tracking)",
+    "civilizations": "data/ergenverse/civilizations/ (sect/clan/city simulation)",
+    "opportunities": "data/ergenverse/opportunities/ (opportunity generation tables)",
+    "time_events": "data/ergenverse/time_events/ (time-system event definitions)",
+    "item_properties": "data/ergenverse/item_properties/ (lore-accurate physical properties)",
+    "worldgen": "data/ergenverse/worldgen/ (biomes, structures, features, dimensions)"
+  },
+  "simulation_loop": {
+    "tick_rate": "1 tick = 1 in-game day",
+    "per_tick": [
+      "advance time_events (check triggers, apply effects)",
+      "advance migrations (move waypoints, spawn markets)",
+      "advance ecosystems (apply seasonal state, adjust populations)",
+      "advance civilizations (recruitment, economy, politics, lifecycle)",
+      "advance opportunities (infer new opportunities at aged locations, expire old ones)",
+      "advance provenance (record any state changes to artifacts)",
+      "advance macro_terrain (perception re-roll for cultivators whose perception changed)",
+      "answer player queries (what does the player perceive at their location?)"
+    ],
+    "player_arrival": "When the player arrives at a location, the engine does NOT spawn content; it reveals what already exists according to the player's perception tier."
+  },
+  "perception_engine": {
+    "description": "Determines what the player perceives based on cultivation tier.",
+    "tiers": [
+      "mortal",
+      "qi_condensation",
+      "foundation_establishment",
+      "core_formation",
+      "nascent_soul",
+      "spirit_severing",
+      "ascendant",
+      "immortal",
+      "heaven_trampling"
+    ],
+    "rule": "Perception NEVER changes what exists; it only changes what the player observes. A mortal standing on Ancient God bone sees a mountain; a Core Formation cultivator sees bone; a Spirit Severing cultivator sees god-memory.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does."
+  },
+  "objective_nature": {
+    "description": "The ObjectiveNature layer records the TRUE state of everything, independent of perception.",
+    "rule": "Reality is objective; cultivation changes understanding, not existence.",
+    "fields": [
+      "true_owner",
+      "true_age",
+      "true_history",
+      "true_contents",
+      "true_danger"
+    ],
+    "perception_overlay": "PerceptionEngine overlays a filtered view on top of ObjectiveNature."
+  },
+  "world_breathes": {
+    "description": "The world changes whether or not the player acts.",
+    "examples": [
+      "Spirit herbs grow seasonally.",
+      "Beasts migrate along routes.",
+      "Spirit veins shift over decades.",
+      "Forests burn randomly.",
+      "Sect wars occur politically.",
+      "Sect leaders die of age or war.",
+      "Markets move seasonally.",
+      "Caravans disappear randomly.",
+      "Rivers change course over centuries.",
+      "Spirit veins exhaust over millennia.",
+      "Caves collapse randomly.",
+      "Ancient ruins open periodically.",
+      "Tribulations scar the landscape.",
+      "A player who returns 200 years later will barely recognize the world."
+    ]
+  },
+  "salt": 1107579255,
+  "xianxia_primitives": {
+    "version": 2,
+    "description": "Xianxia-specific schema primitives added to species, faction_relationships, and opportunities",
+    "species_primitives": {
+      "bloodline_tier": {
+        "location": "canonical.bloodline_tier",
+        "type": "string",
+        "enum": [
+          "ordinary_beast",
+          "mutated_ordinary",
+          "spiritual_beast",
+          "desolate_beast",
+          "ancient_celestial_beast",
+          "origin_true_body"
+        ],
+        "description": "Classifies a beast's bloodline purity. Derived from cultivation range, bloodline field, mutations, and intelligence."
+      },
+      "inner_dan_properties": {
+        "location": "canonical.inner_dan_properties",
+        "type": "object",
+        "fields": {
+          "has_core": "boolean — whether the species condenses an inner core",
+          "element": "string — fire/water/earth/metal/wood/thunder/wind/ice/dark/light/void/null",
+          "grade": "string — null/low/mid/high/extreme/supreme",
+          "alchemy_use": "string — what the core can be used for in alchemy (or null)",
+          "canon_note": "string — canon source note"
+        },
+        "description": "Describes a beast's condensed inner core (dan) for alchemy and cultivation purposes."
+      },
+      "hive_mind_anchor": {
+        "location": "canonical.hive_mind_anchor",
+        "type": "object",
+        "fields": {
+          "is_hive": "boolean",
+          "queen_id": "string — species_id of the queen (or null)",
+          "swarm_id": "string — unique swarm identifier (or null)",
+          "coordination": "string — telepathic/pherochemical/visual/null",
+          "canon_note": "string"
+        },
+        "description": "Tracks hive-mind swarm linkage for species like the Mosquito Beast."
+      },
+      "combat_ai": {
+        "location": "canonical.combat_ai",
+        "type": "string",
+        "enum": [
+          "swarm_aggressive",
+          "pack_hunter",
+          "solo_ambush",
+          "territorial_defender",
+          "migration_passive",
+          "hive_coordinated",
+          "deity_level"
+        ],
+        "description": "Determines the species' default combat behavior pattern."
+      }
+    },
+    "faction_primitives": {
+      "spiritual_vein_grade": {
+        "location": "spiritual_vein_grade",
+        "type": "object",
+        "fields": {
+          "grade": "string — null/low/mid/high/extreme/supreme",
+          "element": "string — fire/water/earth/metal/wood/null",
+          "qi_modifier": "string — description of passive cultivation bonus",
+          "canon_note": "string"
+        },
+        "description": "The spiritual vein that powers a faction's territory."
+      },
+      "heritage_treasures": {
+        "location": "heritage_treasures",
+        "type": "array of objects",
+        "fields": {
+          "item_id": "string — matches item_properties or arsenal ID",
+          "name": "string",
+          "status": "string — vaulted/active/lost/sealed/destroyed",
+          "location_within_faction": "string — where it's kept",
+          "canon_note": "string"
+        },
+        "description": "Heritage treasures owned by the faction."
+      },
+      "relationship_metadata": {
+        "location": "relationship_metadata",
+        "type": "object",
+        "fields": {
+          "allies": "array of {id, strength, since, reason}",
+          "enemies": "array of {id, strength, since, reason}",
+          "vassals": "array of {id, obligation, since}",
+          "rivals": "array of {id, competition_over, intensity}",
+          "neutral": "array of {id, context}"
+        },
+        "description": "Enriched faction relationship data with metadata."
+      }
+    },
+    "opportunity_primitives": {
+      "karmic_weight": {
+        "location": "karmic_weight",
+        "type": "object",
+        "fields": {
+          "value": "integer — karmic magnitude",
+          "type": "string — grudge/debt/blessing/fate/null",
+          "propagation": "string — none/individual/faction/regional/continental/global",
+          "description": "string — what karmic consequence this event creates"
+        },
+        "description": "Measures the karmic weight of an opportunity event."
+      },
+      "consequences": {
+        "location": "consequences",
+        "type": "array of objects",
+        "fields": {
+          "event_id": "string — ID of a related future event or state change",
+          "type": "string — personality_shift/faction_change/item_transfer/location_change/realm_change/death/birth",
+          "target": "string — who/what is affected",
+          "description": "string",
+          "delay": "string — immediate/years/decades/centuries"
+        },
+        "description": "Downstream consequences triggered by this opportunity."
+      }
+    }
+  }
+}

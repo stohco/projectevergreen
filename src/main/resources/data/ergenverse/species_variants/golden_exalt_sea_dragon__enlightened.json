@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Golden Exalt Sea Dragon (enlightened). Generated from canonical definition.",
+  "variant_id": "golden_exalt_sea_dragon__enlightened",
+  "species_id": "golden_exalt_sea_dragon",
+  "species_name": "Golden Exalt Sea Dragon",
+  "life_state": "enlightened",
+  "modifiers": {
+    "size_multiplier": 1.1,
+    "power_multiplier": 5.0,
+    "temperament": "serene",
+    "rarity": "very_rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 520758073
+}

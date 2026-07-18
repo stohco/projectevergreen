@@ -1,0 +1,25 @@
+{
+  "_comment": "Immortal Astral Continent (仙罡大陆 / Xiangang Dalu) — the END-GAME highest realm in Renegade Immortal canon. The greater immortal realm that exists BEYOND the sealed Cave World (which contains Planet Suzaku). Wang Lin breaks the Cave World's seal and ascends here in the final arcs. Immortal Sovereigns and Dao Lords reside here. Spirit energy is overwhelmingly dense — mortals cannot survive without cultivation. The sky has multiple suns/celestial bodies (hence bright ambient_light=0.5). Heightened gravity and physics (logical_height=384, min_y=-64, height=448). Reachable only by breaking the Cave World seal (a late-game event). Prime Directive: the Continent exists objectively regardless of the player's cultivation; the player's perception of its grandeur scales with their realm, but its existence does not.",
+  "ultrawarm": false,
+  "natural": false,
+  "piglin_safe": true,
+  "respawn_anchor_works": false,
+  "bed_works": true,
+  "has_raids": false,
+  "has_skylight": true,
+  "has_ceiling": false,
+  "coordinate_scale": 1.0,
+  "ambient_light": 0.5,
+  "logical_height": 384,
+  "min_y": -64,
+  "height": 448,
+  "infiniburn": "#minecraft:infiniburn_overworld",
+  "effects": "minecraft:overworld",
+  "monster_spawn_light_level": {
+    "type": "minecraft:uniform",
+    "value_in_clamped_range": true,
+    "min_inclusive": 0,
+    "max_inclusive": 7
+  },
+  "monster_spawn_block_light_limit": 0
+}

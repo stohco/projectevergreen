@@ -1,0 +1,38 @@
+{
+  "_comment": "NPC: Situ Nan (司徒南). Canon ID: N20. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_situ_nan",
+  "name": "Situ Nan",
+  "nameCn": "司徒南",
+  "canon_id": "N20",
+  "type": "divine_emperor",
+  "faction": "vermilion_bird_divine_sect",
+  "location": "vermilion_bird_divine_sect",
+  "cultivation": "Yang Solid Peak (reconstructed); Heaven Trampling",
+  "personality": "boisterous, loyal friend; first true ally",
+  "speech": "loud, hearty, loyal",
+  "relationship_to_wanglin": "sworn brother; first true friend",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "A loud, powerful cultivator",
+    "qi_condensation": "Divine Emperor; overwhelming aura",
+    "core_formation": "Situ Nan; reconstructed Divine Emperor",
+    "nascent_soul": "Sworn brother of Wang Lin; Heaven Trampling potential",
+    "spirit_severing": "Situ Nan; Yang Solid Peak reconstructed; Heaven Trampling potential"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's first true friend and sworn brother; Divine Emperor",
+  "derivation_type": "A",
+  "salt": 322030831,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "origin",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

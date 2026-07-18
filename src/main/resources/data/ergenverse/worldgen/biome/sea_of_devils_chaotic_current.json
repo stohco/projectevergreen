@@ -1,0 +1,108 @@
+{
+  "_comment": "Sea of Devils Chaotic Current (魔海乱流) — the deepest, most corrupted region. Canon: ancient devils slumber here; the corruption is so thick that even Soul Formation cultivators feel suppression. Spirit veins are fully corrupted — harvesting them risks heart demon eruption. The terrain is volatile: basalt deltas mixed with soul sand valleys. No mortal can survive here. Prime Directive: this is objectively the most dangerous region on Planet Suzaku.",
+  "temperature": 2.0,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 2039583,
+    "fog_color": 131072,
+    "water_color": 1973790,
+    "water_fog_color": 131072,
+    "mood_sound": "minecraft:ambient.soul_sand_valley",
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "monster": [
+      {
+        "type": "minecraft:wither",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:blaze",
+        "weight": 50,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:ghast",
+        "weight": 40,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:wither_skeleton",
+        "weight": 40,
+        "minCount": 2,
+        "maxCount": 3
+      },
+      {
+        "type": "minecraft:magma_cube",
+        "weight": 35,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:enderman",
+        "weight": 25,
+        "minCount": 1,
+        "maxCount": 3
+      }
+    ],
+    "creature": [],
+    "ambient": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": [],
+    "axolotls": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:nether_cave",
+      "minecraft:hell_cave",
+      "minecraft:canyon"
+    ]
+  },
+  "features": [
+    [],
+    [],
+    [
+      "minecraft:basalt_pillar",
+      "minecraft:large_basalt_columns",
+      "minecraft:delta"
+    ],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_gold_nether",
+      "minecraft:ore_quartz_nether",
+      "minecraft:ore_ancient_debris_large",
+      "minecraft:ore_debris_small"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:demon_corpse_mushroom",
+      "ergenverse:heart_devil_flower",
+      "ergenverse:reincarnation_lily",
+      "ergenverse:void_nether_grass"
+    ],
+    [
+      "ergenverse:joss_flame_source"
+    ]
+  ],
+  "structures": {
+    "ergenverse:soul_refining_ancestral": {},
+    "ergenverse:foreign_void_rift": {
+      "spacing": 60,
+      "separation": 20,
+      "salt": 64734
+    }
+  }
+}

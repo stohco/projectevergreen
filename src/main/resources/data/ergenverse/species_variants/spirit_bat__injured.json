@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Bat (injured). Generated from canonical definition.",
+  "variant_id": "spirit_bat__injured",
+  "species_id": "spirit_bat",
+  "species_name": "Spirit Bat",
+  "life_state": "injured",
+  "modifiers": {
+    "size_multiplier": 0.9,
+    "power_multiplier": 0.5,
+    "temperament": "desperate",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 653324638
+}

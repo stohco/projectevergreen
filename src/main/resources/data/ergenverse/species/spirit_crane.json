@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Spirit Crane (仙鹤) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "spirit_crane",
+  "name": "Spirit Crane",
+  "nameCn": "仙鹤",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Elegant crane 2 m tall, feathers white with red crown, wings trail spirit-light",
+    "size": "2 m tall, 2 m wingspan, 30 jin; ancient 5 m, 500 jin",
+    "behavior": "Migratory; flies in formations sword-cultivators follow; nests on sword peaks; cultivates by dancing at dawn",
+    "habitat": "Sword sect peaks, sky migration routes, dawn-aspected spirit veins",
+    "cultivation": "Core Formation -> Nascent Soul (sword/wind attribute)",
+    "intelligence": 8,
+    "diet": "dawn-dew, spirit-rice, sword-attribute herbs",
+    "relationships": "Followed by sword cultivators; preyed upon by thunder birds",
+    "techniques": [
+      "crane_dance",
+      "sword_wing",
+      "dawn_call",
+      "formation_flight"
+    ],
+    "treasures": [
+      "crane_feather",
+      "spirit_crown",
+      "dawn_essence"
+    ],
+    "bloodline": "Spirit-Crane lineage; sword-attribute bloodline",
+    "mutations": [
+      "nine_feather",
+      "sword_body",
+      "ancient_crane_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "spirit_crane — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "spirit_crane — not a hive-mind species"
+    },
+    "combat_ai": "migration_passive"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 442631236,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

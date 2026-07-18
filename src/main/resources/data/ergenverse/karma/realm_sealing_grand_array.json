@@ -1,0 +1,23 @@
+{
+  "karma_id": "realm_sealing_grand_array",
+  "name": "Realm-Sealing Grand Array",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 29200,
+  "karmic_weight": 1500,
+  "bearer": "N01",
+  "debtor": "sealed_realm",
+  "description": "Wang Lin becomes Lord of the Sealed Realm, inheriting its karma and protection.",
+  "consequences": [
+    {
+      "type": "inheritance_claimed",
+      "target_id": "sealed_realm",
+      "magnitude": 100,
+      "resolved_at_tick": 29200
+    }
+  ],
+  "unresolved_until": "never",
+  "_comment": "Karmic Nexus node: Realm-Sealing Grand Array. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 420300343
+}

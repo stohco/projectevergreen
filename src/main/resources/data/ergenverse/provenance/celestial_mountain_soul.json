@@ -1,0 +1,68 @@
+{
+  "_comment": "Provenance metadata for Celestial Mountain Soul (仙山魂). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I100",
+  "name": "Celestial Mountain Soul",
+  "nameCn": "仙山魂",
+  "type": "celestial_treasure",
+  "category": "utility",
+  "origin": "Celestial-era acquisition (Ch. 712)",
+  "current_owner": "Sold (Ch. 1177)",
+  "abilities": [
+    "Celestial-tier soul fragment",
+    "Collapsed due to soul explosion",
+    "Condensed remnant by Wang Lin"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Celestial-tier soul-fragment",
+    "Soul exploded Ch. 853; sold Ch. 1177",
+    "Became useless after collapse"
+  ],
+  "source": "Ch.712 obtained, Ch.853 exploded, Ch.1177 sold (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Celestial-era acquisition (Ch. 712)"
+  },
+  "lifecycle": {
+    "creator": "Celestial-era acquisition (Ch. 712)",
+    "creation_circumstances": "Celestial-era acquisition (Ch. 712)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

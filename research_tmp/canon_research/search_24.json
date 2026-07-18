@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Essences_Evolutions",
+    "name": "Essences Evolutions | Xian Ni Wikia - Fandom",
+    "snippet": "After entering his Dream Dao with the help of three Dao Fruits, Wang Lin completed his True and False Essence. Samsara/Reincarnation. Wang Lin begin to ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/noveltranslations/comments/1ao3ltp/end_of_renegade_immortal",
+    "name": "End of renegade immortal : r/noveltranslations - Reddit",
+    "snippet": "Instead of his Dream Dao , which everyone suspected he did, it was actually his reincarnation essence that sent his clone, Slaughter , to before ... Renegade immortal WANG LIN { THE GOD } Origin : r/Donghua Renegade Immortal Question (Spoiler Alert) : r/Donghua More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=9f2IB4i2zCk",
+    "name": "Why Wang Lin's Personal Path Is The Most Unique In All Of Renegade",
+    "snippet": "The Reincarnation Dao — Why Wang Lin's Personal Path Is The Most Unique In All Of Renegade Immortal. 3.2K views · 2 months ago. #ErGen ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "She formed her Nascent Soul before dying and Wang Lin defies the heavens reincarnation cycle to put her soul into a baby that did not form a soul yet in ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Si%20Tu%20Nan/951161",
+    "name": "Si Tu Nan_Baiduwiki",
+    "snippet": "As the reincarnation of the Green Soul, he has a bloodline connection with the Heaven Defying Pearl and can activate its heaven-defying fate-altering function.",
+    "host_name": "baike.baidu.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

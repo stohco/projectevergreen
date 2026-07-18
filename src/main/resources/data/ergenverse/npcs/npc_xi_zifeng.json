@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Xi Zifeng (席紫凤). Canon ID: N136. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_xi_zifeng",
+  "name": "Xi Zifeng",
+  "nameCn": "席紫凤",
+  "canon_id": "N136",
+  "type": "disciple",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Jingnie",
+  "personality": "phoenix-aspected Jingnie cultivator",
+  "speech": "phoenix-touched, regal",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A phoenix-aspected cultivator",
+    "qi_condensation": "Jingnie; phoenix aura"
+  },
+  "canon_confidence": 3,
+  "note": "Phoenix-aspected Jingnie cultivator",
+  "derivation_type": "B",
+  "salt": 337203282,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

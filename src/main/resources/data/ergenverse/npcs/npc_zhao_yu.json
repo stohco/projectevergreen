@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Zhao Yu (赵宇). Canon ID: N70. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_zhao_yu",
+  "name": "Zhao Yu",
+  "nameCn": "赵宇",
+  "canon_id": "N70",
+  "type": "disciple",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "low",
+  "personality": "low-tier disciple",
+  "speech": "timid",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator",
+    "qi_condensation": "Low-tier disciple"
+  },
+  "canon_confidence": 3,
+  "note": "Low-tier disciple NPC",
+  "derivation_type": "B",
+  "salt": 1488695852,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Palm-Sized Piece of Ice (Dong Ling Pool ice, Ye Mo's left arm) (东灵池冰·含夜魔左臂). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I177",
+  "name": "Palm-Sized Piece of Ice (Dong Ling Pool ice, Ye Mo's left arm)",
+  "nameCn": "东灵池冰·含夜魔左臂",
+  "type": "celestial_treasure",
+  "category": "cultivation_aid",
+  "origin": "Imitation Dong Ling Pool created by Seven Coloured Celestial Sovereign (Ch. 1768)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Ice from imitation Dong Ling Pool in cave world",
+    "Contains Ye Mo's left arm — inheritance bearing",
+    "Quasi-Third-Step tier"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Quasi-Third-Step tier",
+    "Contains Ye Mo's left arm",
+    "From cave world's imitation Dong Ling Pool"
+  ],
+  "source": "Ch.1768 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Imitation Dong Ling Pool created by Seven Coloured Celestial Sovereign (Ch. 1768)"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Golden Exalt Sea Dragon (金尊海龙). Canon ID: N160. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_golden_exalt_sea_dragon",
+  "name": "Golden Exalt Sea Dragon",
+  "nameCn": "金尊海龙",
+  "canon_id": "N160",
+  "type": "mount",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "beast",
+  "personality": "golden sea dragon; regal, powerful",
+  "speech": "dragon-roar, ocean-rumble",
+  "relationship_to_wanglin": "bonded companion",
+  "dialogue_available": false,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A golden sea dragon",
+    "qi_condensation": "Sea dragon; overwhelming",
+    "core_formation": "Golden Exalt Sea Dragon",
+    "nascent_soul": "Wang Lin's golden sea dragon"
+  },
+  "canon_confidence": 4,
+  "note": "Wang Lin's Golden Exalt Sea Dragon companion",
+  "derivation_type": "A",
+  "salt": 1542907900,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

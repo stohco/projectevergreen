@@ -1,0 +1,67 @@
+{
+  "_comment": "Mosquito Beast (蚊兽) — Renegade Immortal. Canon confidence: 5/5. Prime Directive: this beast exists objectively whether the player has the perception to recognize it.",
+  "species_id": "mosquito_beast",
+  "name": "Mosquito Beast",
+  "nameCn": "蚊兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "canonical": {
+    "appearance": "Blood-drinking insectoid swarm beast. Evolves from millions of blood-drinking mosquitoes that absorbed spirit beast blood. Wang Lin obtained his in Mosquito Valley.",
+    "size": "Worker 0.3m wingspan, Soldier 1m, Elite 3m wingspan, Queen 10m, Ancient Queen 50m",
+    "behavior": "See ecology definitions.",
+    "habitat": "Mosquito Valley, Zhao Country",
+    "cultivation": "Qi Condensation→Soul Formation",
+    "intelligence": 3,
+    "diet": "See ecology definitions.",
+    "relationships": "See ecology definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": true,
+      "element": "blood",
+      "grade": "mid",
+      "alchemy_use": "Mosquito Beast Queen core can refine blood-attribute pills; swarm cores used in mass-poison alchemy",
+      "canon_note": "Wang Lin's mosquito swarm cores are collected after battles; the Queen's core is unique"
+    },
+    "hive_mind_anchor": {
+      "is_hive": true,
+      "queen_id": "mosquito_beast_queen",
+      "swarm_id": "mosquito_valley_swarm",
+      "coordination": "telepathic",
+      "canon_note": "Mosquito Beast swarm is telepathically linked to the Queen; Wang Lin controls via Dream Dao"
+    },
+    "combat_ai": "swarm_aggressive"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1992733018,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": null,
+  "_inner_dan_note": "Swarm-type beast — no traditional inner dan. The swarm itself is the 'core.' Canon information, not a gap.",
+  "hive_mind_anchor": {
+    "swarm_id": "mosquito_valley_swarm",
+    "queen_id": "mosquito_valley_ancient_queen",
+    "role_in_swarm": "collective",
+    "distance_from_queen": "variable"
+  },
+  "_xianxia_schema": 2
+}

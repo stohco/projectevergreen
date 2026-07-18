@@ -1,0 +1,75 @@
+{
+  "_comment": "Species: Destiny Beast (命兽) from Beyond the Timescape. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "destiny_beast",
+  "name": "Destiny Beast",
+  "nameCn": "命兽",
+  "novel": "Beyond the Timescape",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Beast of living destiny 5 m, body is woven fate-threads, eyes see all possible futures",
+    "size": "5 m adult, 0 jin (fate); true form spans destinies",
+    "behavior": "Cultivates by absorbing destiny; appears at fate-defining moments",
+    "habitat": "Destiny-aspected forbidden zones, fate-nexus points",
+    "cultivation": "Immortal (destiny attribute)",
+    "intelligence": 13,
+    "diet": "destiny-essence, fate-threads",
+    "relationships": "Neutral; observed by all cultivators at breakthroughs",
+    "techniques": [
+      "destiny_step",
+      "fate_sever",
+      "future_see"
+    ],
+    "treasures": [
+      "destiny_core",
+      "fate_thread"
+    ],
+    "bloodline": "Destiny lineage; destiny-attribute bloodline (one of the rarest)",
+    "mutations": [
+      "true_destiny_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "destiny_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "destiny_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1100649921,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

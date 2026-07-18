@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Zhou Yi (周逸). Canon ID: N31. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_zhou_yi",
+  "name": "Zhou Yi",
+  "nameCn": "周逸",
+  "canon_id": "N31",
+  "type": "disciple",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Wending realm",
+  "personality": "powerful disciple",
+  "speech": "measured",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A powerful cultivator",
+    "qi_condensation": "Wending; overwhelming",
+    "core_formation": "Wending realm",
+    "nascent_soul": "Zhou Yi; Wending realm"
+  },
+  "canon_confidence": 3,
+  "note": "Wending realm cultivator NPC",
+  "derivation_type": "B",
+  "salt": 430165632,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

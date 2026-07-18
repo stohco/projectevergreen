@@ -1,0 +1,24 @@
+{
+  "_comment": "Item Properties: God-Slaying Sword. Per physical-size directive: every object has lore-accurate physical size, not block size. Length: 4.2 m, Weight: 18400 jin, Material: Spirit Steel, Suitable realm: Soul Formation (Spirit Severing), Body strength required: Foundation Establishment. Prime Directive: physical size exists objectively; cultivation determines what the player can lift/activate.",
+  "item_id": "god_slaying_sword",
+  "name": "God-Slaying Sword",
+  "type": "sword",
+  "physical_properties": {
+    "length_m": 4.2,
+    "weight_jin": 18400,
+    "material_density": "Spirit Steel"
+  },
+  "usage_requirements": {
+    "suitable_realm": "Soul Formation (Spirit Severing)",
+    "body_strength_required": "Foundation Establishment",
+    "effect_when_undersized": "Can barely lift with both hands; functions as extremely heavy physical weapon; cannot activate spiritual properties."
+  },
+  "canon_note": "A sword that can slay gods; massive and heavy beyond mortal comprehension.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "simulation_notes": {
+    "no_locked_upgrades": "A cultivator who later reaches the required body strength will be able to lift/activate the item; the item does not change, only the cultivator does.",
+    "canon_fidelity": "This reflects the novels: Wang Lin could not lift the God-Slaying Sword until his body cultivation matched; he could barely use it as a heavy physical weapon before then."
+  },
+  "salt": 1520578841
+}

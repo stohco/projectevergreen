@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:corpse_yin_sect_spirit_herb_garden/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "minecraft:nether_fortress/corridor_3",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

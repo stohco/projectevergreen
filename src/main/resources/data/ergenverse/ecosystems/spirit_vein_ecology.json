@@ -1,0 +1,130 @@
+{
+  "_comment": "Ecosystem: Spirit Vein Ecology (universal). Full food web with 6 trophic layers and 5 seasonal/environmental states. Prime Directive: ecology exists objectively; player perception determines what they observe. No-Locked-Upgrades: all seasonal states are reachable by time/weather/event.",
+  "ecosystem_id": "spirit_vein_ecology",
+  "name": "Spirit Vein Ecology",
+  "location": "universal",
+  "description": "The ecology that forms around spirit veins — herb-grazers, vein-guardian beasts, and cultivator competition.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "members": [
+        "spirit_vein_herbs",
+        "vein_crystal_flora",
+        "qi_gathering_grass"
+      ],
+      "population": "environmental"
+    },
+    {
+      "layer": "primary",
+      "members": [
+        "spirit_rat#adult",
+        "wind_wolf#juvenile"
+      ],
+      "population": 20000,
+      "biomass_jin": 40000
+    },
+    {
+      "layer": "secondary",
+      "members": [
+        "wind_wolf#adult",
+        "mountain_lion#juvenile"
+      ],
+      "population": 2000,
+      "biomass_jin": 100000
+    },
+    {
+      "layer": "tertiary",
+      "members": [
+        "mountain_lion#adult",
+        "giant_python#adult"
+      ],
+      "population": 200,
+      "biomass_jin": 200000
+    },
+    {
+      "layer": "quaternary",
+      "members": [
+        "giant_savage_ape#adult",
+        "giant_python#ancient"
+      ],
+      "population": 10,
+      "biomass_jin": 200000
+    },
+    {
+      "layer": "apex",
+      "members": [
+        "vein_guardian_beast",
+        "giant_savage_ape#ancient"
+      ],
+      "population": 1,
+      "biomass_jin": 500000
+    }
+  ],
+  "features": [
+    "spirit_vein_crystals",
+    "herb_groves",
+    "vein_springs",
+    "guardian_caves",
+    "cultivator_camps"
+  ],
+  "seasonal_states": {
+    "vein_active": {
+      "herb_mult": 1.5,
+      "grazer_mult": 1.3,
+      "guardian_mult": 1.2,
+      "behavior": "abundance",
+      "note": "Vein active; herbs bloom; grazers multiply."
+    },
+    "vein_dormant": {
+      "herb_mult": 0.5,
+      "grazer_mult": 0.7,
+      "guardian_mult": 1.0,
+      "behavior": "scarcity",
+      "note": "Vein dormant; herbs wither; grazers scatter."
+    },
+    "vein_collapsing": {
+      "herb_mult": 2.0,
+      "grazer_mult": 0.3,
+      "guardian_mult": 3.0,
+      "behavior": "crisis",
+      "note": "Vein collapsing; herbs bloom one last time; guardian frenzied."
+    },
+    "cultivator_harvest": {
+      "herb_mult": 0.3,
+      "grazer_mult": 0.8,
+      "guardian_mult": 1.5,
+      "behavior": "disturbed",
+      "note": "Cultivators harvesting; ecology disturbed."
+    },
+    "tribulation_storm": {
+      "herb_mult": 1.2,
+      "grazer_mult": 0.5,
+      "guardian_mult": 1.0,
+      "behavior": "sheltering",
+      "note": "Beasts shelter from tribulation; herbs absorb lightning."
+    }
+  },
+  "state_transitions": {
+    "spring->summer": "temperature_rise",
+    "summer->autumn": "temperature_fall",
+    "autumn->winter": "temperature_fall",
+    "winter->spring": "temperature_rise",
+    "any->tribulation_storm": "tribulation_event",
+    "any->blood_moon": "blood_moon_event",
+    "any->nearby_corpse_battlefield": "battlefield_proximity",
+    "any->nearby_spirit_spring": "spring_proximity",
+    "any->nearby_dragon_corpse": "dragon_corpse_proximity",
+    "any->nearby_ancient_god_remains": "ancient_god_proximity"
+  },
+  "perception_tiers": {
+    "mortal": "Sees beasts and terrain; does not perceive trophic structure.",
+    "qi_condensation": "Senses qi-flows of the ecosystem.",
+    "foundation_establishment": "Perceives trophic layers and seasonal shifts.",
+    "core_formation": "Perceives population dynamics and triggers.",
+    "nascent_soul": "Perceives mutation potential and bloodline flows.",
+    "spirit_severing": "Perceives complete ecology as a living system."
+  },
+  "salt": 488172710
+}

@@ -1,0 +1,37 @@
+{
+  "_comment": "Time-Event: Karmic Settlement. Per time directive: the world is not static. Trigger: era, scope: global, duration: 1 days. Prime Directive: event occurs objectively; player perception determines whether they witness it.",
+  "event_id": "karmic_settlement",
+  "name": "Karmic Settlement",
+  "trigger": "era",
+  "scope": "global",
+  "duration_days": 1,
+  "effects": [
+    "karma_resolves",
+    "beings_fall_or_rise",
+    "world_shifts"
+  ],
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "note": "Karmic settlements; rare era-defining events.",
+  "simulation_notes": {
+    "world_breathes": "The world changes whether or not the player acts; a player who returns 200 years later will barely recognize it.",
+    "trigger_types": {
+      "seasonal": "occurs every season",
+      "decennial": "occurs every decade",
+      "centennial": "occurs every century",
+      "millennial": "occurs every millennium",
+      "era": "occurs every era (10000+ years)",
+      "random": "occurs randomly",
+      "political": "triggered by political events",
+      "tribulation": "triggered by tribulations"
+    },
+    "perception_tiers": {
+      "mortal": "Witnesses only local effects.",
+      "qi_condensation": "Senses the event occurring.",
+      "foundation_establishment": "Perceives the event's scope and effects.",
+      "core_formation": "Predicts the event's consequences.",
+      "nascent_soul": "Perceives the event's place in the larger pattern."
+    }
+  },
+  "salt": 562899920
+}

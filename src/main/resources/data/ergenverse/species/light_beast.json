@@ -1,0 +1,75 @@
+{
+  "_comment": "Species: Light Beast (光兽) from A World Worth Protecting. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "light_beast",
+  "name": "Light Beast",
+  "nameCn": "光兽",
+  "novel": "A World Worth Protecting",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Formless beast of pure light 3 m, body is radiance incarnate",
+    "size": "3 m adult, 0 jin (light); true form is a sun",
+    "behavior": "Cultivates by absorbing light; cannot exist in darkness",
+    "habitat": "Sun-aspected forbidden zones, light-aspected peaks",
+    "cultivation": "Spirit Severing -> Ascendant (light attribute)",
+    "intelligence": 8,
+    "diet": "light, light-aspected herbs",
+    "relationships": "Enemy of all darkness-attribute beasts",
+    "techniques": [
+      "light_step",
+      "radiance_burst",
+      "light_burn"
+    ],
+    "treasures": [
+      "light_core",
+      "radiance_essence"
+    ],
+    "bloodline": "Light lineage; light-attribute bloodline",
+    "mutations": [
+      "true_light_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "light_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "light_beast — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1725380170,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

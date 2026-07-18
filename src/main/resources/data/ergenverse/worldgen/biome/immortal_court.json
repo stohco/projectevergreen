@@ -1,0 +1,89 @@
+{
+  "_comment": "Immortal Court (仙庭) — opulent central highlands of the Immortal Astral Continent where ruling immortals dwell in sky-piercing palaces. Golden aura, dense spirit energy. Cultivators of the highest realm congregate here. Stand-in spawns: witch=rogue cultivators, horse/parrot/allay=immortal attendants. Dense gold and diamond ores represent the wealth of immortal courts. Plains village structures stand in for immortal cities until custom NBT palaces are added. Prime Directive: the Court exists objectively; its opulence is not a perception effect. Mortals caught here without cultivation die from the spirit pressure.",
+  "temperature": 0.5,
+  "downfall": 0.2,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 14741811,
+    "fog_color": 16768460,
+    "water_color": 7396607,
+    "water_fog_color": 2236962,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 10,
+        "minCount": 8,
+        "maxCount": 8
+      }
+    ],
+    "axolotls": [],
+    "creature": [
+      {
+        "type": "minecraft:horse",
+        "weight": 15,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:parrot",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:allay",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "monster": [
+      {
+        "type": "minecraft:witch",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:village_plains"
+    ],
+    [],
+    [
+      "minecraft:ore_gold",
+      "minecraft:ore_gold_lower",
+      "minecraft:ore_diamond",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [
+      "minecraft:forest_flowers",
+      "minecraft:patch_grass"
+    ],
+    []
+  ],
+  "structures": [
+    "ergenverse:immortal_court_palace"
+  ]
+}

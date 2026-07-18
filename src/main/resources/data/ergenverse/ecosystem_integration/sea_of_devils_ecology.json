@@ -1,0 +1,26 @@
+{
+  "_comment": "Ecosystem integration: sea_of_devils_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "sea_of_devils_ecology",
+  "beasts": [
+    "nether_beast",
+    "six_desire_devil",
+    "devil_soul_beast",
+    "corpse_yin_beast",
+    "blood_beast",
+    "soul_beast"
+  ],
+  "npcs": [
+    "npc_old_man_ji_mo",
+    "npc_xu_liqing",
+    "npc_duanmu_ji",
+    "npc_gun_lan"
+  ],
+  "enemies": [
+    "old_man_ji_mo",
+    "xu_liqing",
+    "duanmu_ji",
+    "gun_lan"
+  ],
+  "note": "Sea of Devils; devil-aspected ecology + devil-sect NPCs",
+  "salt": 162658840
+}

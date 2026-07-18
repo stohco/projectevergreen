@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Cang Songzi (苍松子). Canon ID: N107. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_cang_songzi",
+  "name": "Cang Songzi",
+  "nameCn": "苍松子",
+  "canon_id": "N107",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "Sub-Empty Annihilation upper-grade",
+  "personality": "pine-aspected ancient cultivator",
+  "speech": "creaking, ancient",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "An ancient pine-scented cultivator",
+    "qi_condensation": "Pine-aspected; ancient aura",
+    "core_formation": "Sub-Empty Annihilation; pine law",
+    "nascent_soul": "Sub-Empty Annihilation upper-grade"
+  },
+  "canon_confidence": 3,
+  "note": "Pine-aspected antagonist",
+  "derivation_type": "B",
+  "salt": 1816639369,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

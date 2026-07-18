@@ -1,0 +1,13 @@
+{
+  "_comment": "Ecosystem integration: heavenly_bull_continent_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "heavenly_bull_continent_ecology",
+  "beasts": [
+    "heavenly_bull_soul_beast",
+    "earth_fire_dragon",
+    "flame_dragon"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Heavenly Bull Continent; soul+fire ecology",
+  "salt": 73740589
+}

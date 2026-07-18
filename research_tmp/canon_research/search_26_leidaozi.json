@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin is the main protagonist of Renegade Immortal. Born with a weak body, Wang Lin's features begin as average before becoming moderately handsome as a ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=m8GUGf-FFDA",
+    "name": "WANG LIN HUNTS LEI DAOZI & TURNS HIM INTO A PUPPET",
+    "snippet": "In Renegade Immortal Episode 143, Wang Lin hunts down Lei Daozi after the envoy of Lei Xian Hall makes the mistake of threatening Wang Ping.",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.newhanfu.com/82748.html",
+    "name": "Lei Daozi's Fall in Renegade Immortal - Newhanfu.com",
+    "snippet": "Lei Daozi's greed didn't stop at the mysterious boy. He also spotted Wang Lin's Silver-Horned Thunder Beast. The creature's grade was higher ...",
+    "host_name": "www.newhanfu.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.instagram.com/reel/DYoRBcvGjSs/?hl=en",
+    "name": "Wang Lin bertarung habis-habisan dengan utusan petir : Renegade",
+    "snippet": "You... You are Xu Mu? Hand over the Silver-horned Thunder Monster and that puppet or you will all be destroyed by my true power. If you want ...",
+    "host_name": "www.instagram.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=j_qnaBTpKeY",
+    "name": "Wang Lin Arrives Just In Time To Save Wang Ping From Lei Daozi!",
+    "snippet": "Renegade immortal - Wang Lin Arrives Just In Time To Save Wang Ping From Lei Daozi! Disclaimer: I do not own the anime, music, ...",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

@@ -1,0 +1,29 @@
+{
+  "karma_id": "cave_world_ownership",
+  "name": "Cave World Ownership",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 35400,
+  "karmic_weight": 4000,
+  "bearer": "N01",
+  "debtor": "cave_world",
+  "description": "Wang Lin becomes the owner of the Cave World after slaying the Seven-Colored Daoist. A world's worth of beings now fall under his karma.",
+  "consequences": [
+    {
+      "type": "inheritance_claimed",
+      "target_id": "cave_world",
+      "magnitude": 100,
+      "resolved_at_tick": 35400
+    },
+    {
+      "type": "tribulation_earned",
+      "target_id": "N01",
+      "magnitude": 2000,
+      "resolved_at_tick": null
+    }
+  ],
+  "unresolved_until": "never",
+  "_comment": "Karmic Nexus node: Cave World Ownership. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 185817843
+}

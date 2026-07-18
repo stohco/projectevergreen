@@ -1,0 +1,33 @@
+{
+  "_comment": "Provenance metadata for Li Guang's Heaven-Shattering Bow (李广弓). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I27",
+  "name": "Li Guang's Heaven-Shattering Bow",
+  "nameCn": "李广弓",
+  "type": "weapon",
+  "category": "offensive",
+  "origin": "Taught by the madman Lian Daofei inside Nether Beast (Ch. 1533)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Bow Dao — forms Heaven-Shattering Bow Dao with Li Guang's Arrow",
+    "Fuses with Wang Lin's thunder essence for armor-piercing shots",
+    "Kills across realms",
+    "Dao Spell treasure tier"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Dao Spell treasure — taught, not physical",
+    "Requires Li Guang's Arrow to use",
+    "Named after legendary general Li Guang"
+  ],
+  "source": "Ch.1533 (novel); Fandom wiki; Baidu Baike",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Taught by the madman Lian Daofei inside Nether Beast (Ch. 1533)"
+  }
+}

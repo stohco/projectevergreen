@@ -1,0 +1,20 @@
+{
+  "_comment": "World State Engine query: Who knows about it? Schema: knowledge_registry. Data sources: ['civilizations', 'provenance'].",
+  "question": "Who knows about it?",
+  "schema": "knowledge_registry",
+  "fields": [
+    "object_id",
+    "knower",
+    "knowledge_tier",
+    "knowledge_accuracy"
+  ],
+  "data_sources": [
+    "civilizations",
+    "provenance"
+  ],
+  "reason_types": [],
+  "note": "Knowledge is tiered; a sect may know a rumor, an individual may know the truth.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "salt": 1748638925
+}

@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Five Elements True Body (starving). Generated from canonical definition.",
+  "variant_id": "five_elements_beast__starving",
+  "species_id": "five_elements_beast",
+  "species_name": "Five Elements True Body",
+  "life_state": "starving",
+  "modifiers": {
+    "size_multiplier": 0.85,
+    "power_multiplier": 0.7,
+    "temperament": "frenzied",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 732462683
+}

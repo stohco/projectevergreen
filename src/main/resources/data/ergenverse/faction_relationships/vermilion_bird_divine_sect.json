@@ -1,0 +1,82 @@
+{
+  "_comment": "Faction relationships: vermilion_bird_divine_sect. Per user directive: faction relationship network — allies/enemies/vassals/rivals. Prime Directive: relationships exist objectively.",
+  "faction_id": "vermilion_bird_divine_sect",
+  "type": "divine_sect",
+  "allies": [
+    "wang_lin",
+    "situ_nan"
+  ],
+  "enemies": [
+    "rival_divine_sects",
+    "seven_colored_daoist"
+  ],
+  "vassals": [
+    "vassal_star_sects"
+  ],
+  "rivals": [],
+  "neutral": [],
+  "note": "",
+  "salt": 133084840,
+  "spiritual_vein_grade": {
+    "grade": "supreme",
+    "element": "fire",
+    "qi_modifier": "All fire-attribute cultivators gain 3x comprehension speed; Vermilion Bird bloodline resonance",
+    "canon_note": "Vermilion Bird Divine Sect sits on the apex fire-aspected spiritual vein of the star system"
+  },
+  "heritage_treasures": [
+    {
+      "item_id": "vermilion_bird_feather",
+      "name": "Vermilion Bird Feather",
+      "status": "sealed",
+      "location_within_faction": "Inner sanctuary",
+      "canon_note": null
+    },
+    {
+      "item_id": "vermilion_emperor_seal",
+      "name": "Vermilion Emperor Seal",
+      "status": "active",
+      "location_within_faction": "Emperor's throne room",
+      "canon_note": null
+    }
+  ],
+  "_xianxia_schema": 2,
+  "relationship_metadata": {
+    "allies": [
+      {
+        "id": "wang_lin",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "situ_nan",
+        "strength": null,
+        "since": null,
+        "reason": null
+      }
+    ],
+    "enemies": [
+      {
+        "id": "rival_divine_sects",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "seven_colored_daoist",
+        "strength": null,
+        "since": null,
+        "reason": null
+      }
+    ],
+    "vassals": [
+      {
+        "id": "vassal_star_sects",
+        "obligation": null,
+        "since": null
+      }
+    ],
+    "rivals": [],
+    "neutral": []
+  }
+}

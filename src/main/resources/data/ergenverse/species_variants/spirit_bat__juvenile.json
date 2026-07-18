@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Bat (juvenile). Generated from canonical definition.",
+  "variant_id": "spirit_bat__juvenile",
+  "species_id": "spirit_bat",
+  "species_name": "Spirit Bat",
+  "life_state": "juvenile",
+  "modifiers": {
+    "size_multiplier": 0.15,
+    "power_multiplier": 0.1,
+    "temperament": "curious",
+    "rarity": "common"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 473939543
+}

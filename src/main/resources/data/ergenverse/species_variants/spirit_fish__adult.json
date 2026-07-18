@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Fish (adult). Generated from canonical definition.",
+  "variant_id": "spirit_fish__adult",
+  "species_id": "spirit_fish",
+  "species_name": "Spirit Fish",
+  "life_state": "adult",
+  "modifiers": {
+    "size_multiplier": 1.0,
+    "power_multiplier": 1.0,
+    "temperament": "territorial",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 441963302
+}

@@ -1,0 +1,75 @@
+{
+  "_comment": "Species: Eternal Silence Beast (永寂兽) from Beyond the Timescape. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "eternal_silence_beast",
+  "name": "Eternal Silence Beast",
+  "nameCn": "永寂兽",
+  "novel": "Beyond the Timescape",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Beast of perfect silence 6 m, body absorbs all sound, presence is deafening quiet",
+    "size": "6 m adult, 3000 jin; true form silences regions",
+    "behavior": "Cultivates by absorbing sound; hunts by silencing prey",
+    "habitat": "Silence-aspected forbidden zones, void edges",
+    "cultivation": "Ascendant -> Immortal (silence attribute)",
+    "intelligence": 9,
+    "diet": "sound, silence-aspected herbs",
+    "relationships": "Enemy of all sound-attribute beasts",
+    "techniques": [
+      "silence_step",
+      "sound_absorb",
+      "deafening_touch"
+    ],
+    "treasures": [
+      "silence_core",
+      "silence_essence"
+    ],
+    "bloodline": "Eternal-Silence lineage; silence-attribute bloodline",
+    "mutations": [
+      "true_silence_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "eternal_silence_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "eternal_silence_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 358215569,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

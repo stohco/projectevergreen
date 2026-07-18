@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Thunder Celestial Beast (雷仙兽). Canon ID: N157. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_thunder_celestial_beast",
+  "name": "Thunder Celestial Beast",
+  "nameCn": "雷仙兽",
+  "canon_id": "N157",
+  "type": "mount",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "beast (Ascendant-tier)",
+  "personality": "tribulation-born celestial beast; powerful, aloof",
+  "speech": "crackling, celestial",
+  "relationship_to_wanglin": "bonded companion; ascendant-tier",
+  "dialogue_available": false,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A mass of living lightning",
+    "qi_condensation": "Thunder celestial; overwhelming",
+    "core_formation": "Ascendant-tier celestial beast",
+    "nascent_soul": "Ascendant-tier; Wang Lin's thunder celestial"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's thunder celestial beast; Ascendant-tier",
+  "derivation_type": "A",
+  "salt": 1926152786,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

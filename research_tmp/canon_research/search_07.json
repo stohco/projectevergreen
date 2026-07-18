@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin kept Li Muwan's Nascent soul inside Heaven Defying Bead for 700 years. He used Qi Xi spell on himself and sacrificed his vitality which is the key to ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Wang%20Lin/986247",
+    "name": "Wang Lin - Renegade Immortal",
+    "snippet": "An Origin Treasure condensed and gifted to Wang Lin by Immortal Lord Qing ... A low-level spell Wang Lin learned during his Qi Condensation period. It can ...",
+    "host_name": "baike.baidu.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Qing_Lin",
+    "name": "Qing Lin | Xian Ni Wikia - Fandom",
+    "snippet": "In the 70 years during which Wang Lin was missing, Qing Lin used a life-threatening spell to seal the Inner Realm for 30 years. Although this allowed the Inner ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=neJn3sZxkn0",
+    "name": "Wang Lin Unlocks Terrifying Celestial Spell & Revives Qing Shuang",
+    "snippet": "In Renegade Immortal Episodes 126–127, Wang Lin captures Celestial Ancestor Huang Yu and uncovers a legendary jade slip containing true ...",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1avc8kg/renegade_immortal_few_questions",
+    "name": "Renegade Immortal: Few Questions : r/Donghua - Reddit",
+    "snippet": "Wang Lin calls it the death spell because the “Ji Realm” is something like a taboo in the cultivation world and if people were to find out, Wang ...",
+    "host_name": "www.reddit.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

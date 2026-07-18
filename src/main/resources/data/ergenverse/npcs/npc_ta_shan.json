@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Ta Shan (塔山). Canon ID: N44. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_ta_shan",
+  "name": "Ta Shan",
+  "nameCn": "塔山",
+  "canon_id": "N44",
+  "type": "servant",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "Celestial Guard (refined)",
+  "personality": "loyal, silent guardian; refined celestial guard",
+  "speech": "minimal, respectful",
+  "relationship_to_wanglin": "servant; celestial guard",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A silent armored guardian",
+    "qi_condensation": "Celestial Guard; refined construct",
+    "core_formation": "Ta Shan; Celestial Guard",
+    "nascent_soul": "Celestial Guard; Wang Lin's servant"
+  },
+  "canon_confidence": 4,
+  "note": "Wang Lin's Celestial Guard servant",
+  "derivation_type": "A",
+  "salt": 163831782,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

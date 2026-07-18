@@ -1,0 +1,15 @@
+{
+  "_comment": "Ecosystem integration: immortal_graveyard_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "immortal_graveyard_ecology",
+  "beasts": [
+    "nether_beast",
+    "soul_beast",
+    "devil_soul_beast",
+    "corpse_yin_beast",
+    "ghost_spirit_beast"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Immortal Graveyard; death-aspected ecology",
+  "salt": 1596037710
+}

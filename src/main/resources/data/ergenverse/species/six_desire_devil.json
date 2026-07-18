@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Six-Desire Devil (六欲魔) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "six_desire_devil",
+  "name": "Six-Desire Devil",
+  "nameCn": "六欲魔",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Humanoid devil 3 m tall, six arms, body wreathed in pink desire-mist, face shifts to mirror the desires of viewers",
+    "size": "3 m adult, 400 jin (mostly spirit, not flesh)",
+    "behavior": "Lures cultivators by manifesting their deepest desires; drains desire-essence; cultivates by consuming the fallen",
+    "habitat": "Sea of Devils, desire-aspected caves, corrupted spirit veins",
+    "cultivation": "Nascent Soul -> Spirit Severing -> Ascendant (desire attribute)",
+    "intelligence": 9,
+    "diet": "desire-essence, fallen cultivator soul fragments, desire-aspected herbs",
+    "relationships": "Servant-devils of devil-sects; enemies of all orthodox cultivators",
+    "techniques": [
+      "desire_mirror",
+      "six_arm_grasp",
+      "pink_mist_drain",
+      "face_shift"
+    ],
+    "treasures": [
+      "six_desire_core",
+      "desire_mirror_fragment",
+      "pink_mist_essence"
+    ],
+    "bloodline": "Desire-Devil lineage; born of accumulated mortal desire",
+    "mutations": [
+      "twelve_arm",
+      "true_desire_embodiment",
+      "desire_immortal_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "six_desire_devil — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "six_desire_devil — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 103733291,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

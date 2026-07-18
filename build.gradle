@@ -1,0 +1,164 @@
+// Ergenverse — build.gradle
+// A Minecraft Forge mod reconstructing the Er Gen cultivation multiverse.
+// Target: Minecraft 1.20.1 + Forge 47.4.0 + Java 17
+//
+// Why 1.20.1 (not bleeding-edge):
+//   - ForgeGradle stable; no "prefix is null" NPEs from pre-release MCP mappings
+//   - Mature ecosystem: Patchouli, Curios, JEI, KubeJS all available
+//   - Forge 47.4.x still receiving bugfix releases in 2025
+//   - Java 17 LTS auto-provisions cleanly
+//
+// Build with:   ./gradlew build
+// Run client:   ./gradlew runClient
+// Run server:   ./gradlew runServer
+
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '6.0.+'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    maven { url = 'https://maven.minecraftforge.net/' }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+}
+
+// ---------------------------------------------------------------------------
+// Canon Integrity Validator — runs the relational-assertion harness before
+// compileJava. Fails the build on any canon contradiction (0 errors required).
+// Warnings are tracked but do not fail the build (they flag data gaps, not
+// contradictions). Per architectural review: this is the "objective reality
+// check" demanded by the Prime Directive.
+// ---------------------------------------------------------------------------
+tasks.register('validateCanon', Exec) {
+    group = 'verification'
+    description = 'Validates canon DB relational integrity (12 assertions). Fails on contradiction.'
+    workingDir = file('.')
+    commandLine 'python3', 'scripts/canon_validator.py'
+    // only run if canon DB or data files changed
+    inputs.files fileTree('ri_canon_database.json'),
+                 fileTree('src/main/resources/data/ergenverse') {
+        include '**/*.json'
+    }
+    outputs.upToDateWhen { false }  // always re-validate; it's fast and catches regressions
+}
+
+// compileJava depends on validateCanon — a canon contradiction blocks the build
+tasks.named('compileJava') {
+    dependsOn 'validateCanon'
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version   : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            forge_version       : forge_version,
+            forge_version_range : forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id              : mod_id,
+            mod_name            : mod_name,
+            mod_license         : mod_license,
+            mod_version         : mod_version,
+            mod_authors         : mod_authors,
+            mod_description     : mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

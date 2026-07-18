@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Mo Zhi (莫知). Canon ID: N60. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_mo_zhi",
+  "name": "Mo Zhi",
+  "nameCn": "莫知",
+  "canon_id": "N60",
+  "type": "elder",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Third Step+",
+  "personality": "knowing elder",
+  "speech": "measured, knowing",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "A knowing elder",
+    "qi_condensation": "Third Step+; overwhelming",
+    "core_formation": "Third Step+",
+    "nascent_soul": "Mo Zhi; Third Step+ elder"
+  },
+  "canon_confidence": 3,
+  "note": "Third Step+ elder NPC",
+  "derivation_type": "B",
+  "salt": 1999315362,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

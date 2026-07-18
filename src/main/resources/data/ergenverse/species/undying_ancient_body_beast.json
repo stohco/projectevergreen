@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Undying Ancient Body (道古不灭体) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "undying_ancient_body_beast",
+  "name": "Undying Ancient Body",
+  "nameCn": "道古不灭体",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Ancient undying body 6 m, body radiates ancient+undying power, skin is ancient-clan bronze",
+    "size": "6 m manifestation, 5000 jin; true form spans ancient-realms",
+    "behavior": "Undying-incarnate being; cultivates by absorbing ancient+undying essence",
+    "habitat": "Ancient clan territory, undying-aspected zones",
+    "cultivation": "Immortal -> Ancient Immortal (ancient/undying attribute)",
+    "intelligence": 11,
+    "diet": "ancient essence, undying herbs, ancient qi",
+    "relationships": "Wang Lin obtained undying ancient body as treasure (canon event)",
+    "techniques": [
+      "undying_breath",
+      "ancient_regen",
+      "undying_absorb",
+      "ancient_body"
+    ],
+    "treasures": [
+      "undying_ancient_core",
+      "undying_essence",
+      "ancient_fragment"
+    ],
+    "bloodline": "Ancient+Undying lineage; ancient clan + undying bloodline",
+    "mutations": [
+      "true_undying_body",
+      "ancient_undying_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "undying_ancient_body_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "undying_ancient_body_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1158781496,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

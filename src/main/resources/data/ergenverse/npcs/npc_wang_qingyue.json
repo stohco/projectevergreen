@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Wang Qingyue (王青叶). Canon ID: N94. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_wang_qingyue",
+  "name": "Wang Qingyue",
+  "nameCn": "王青叶",
+  "canon_id": "N94",
+  "type": "other",
+  "faction": "wang_family_village",
+  "location": "wang_family_village",
+  "cultivation": "unknown",
+  "personality": "Wang family member",
+  "speech": "measured",
+  "relationship_to_wanglin": "family",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A Wang family member",
+    "qi_condensation": "Cultivator"
+  },
+  "canon_confidence": 3,
+  "note": "Wang family member NPC",
+  "derivation_type": "B",
+  "salt": 780976576,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

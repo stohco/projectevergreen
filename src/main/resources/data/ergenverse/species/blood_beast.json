@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Blood Beast (血兽) from Pursuit of the Truth. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "blood_beast",
+  "name": "Blood Beast",
+  "nameCn": "血兽",
+  "novel": "Pursuit of the Truth",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Formless blood-mass 5 m, can shape into any beast, perpetually dripping",
+    "size": "5 m mass, 8000 jin; ancient spans battlefields",
+    "behavior": "Born of battlefield blood; cultivates by consuming bloodlines; mutates prey",
+    "habitat": "Ancient battlefields, blood-aspected forbidden zones",
+    "cultivation": "Spirit Severing (blood attribute)",
+    "intelligence": 6,
+    "diet": "bloodlines, blood-aspected herbs",
+    "relationships": "Lesser kin of Blood Ancestor Beast",
+    "techniques": [
+      "blood_assimilate",
+      "form_shift",
+      "blood_drain"
+    ],
+    "treasures": [
+      "blood_core",
+      "blood_essence"
+    ],
+    "bloodline": "Blood-Beast lineage; dilute Blood Ancestor bloodline",
+    "mutations": [
+      "formless",
+      "all_bloodline_absorption"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "blood_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "blood_beast — not a hive-mind species"
+    },
+    "combat_ai": "hive_coordinated"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1794360618,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

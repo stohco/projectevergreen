@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Ancient Demon Clone (古魔分身) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "ancient_demon_clone_beast",
+  "name": "Ancient Demon Clone",
+  "nameCn": "古魔分身",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Demon clone 5 m, body shifts between beast and demon-form, radiates ancient demon power",
+    "size": "5 m adult, 5000 jin; true form spans demon-realms",
+    "behavior": "Ancient demon clone; cultivates by absorbing demon-essence; can reform from demon-source",
+    "habitat": "Ancient demon territory, demon-aspected forbidden zones",
+    "cultivation": "Ascendant -> Immortal (demon attribute)",
+    "intelligence": 9,
+    "diet": "demon-essence, demon-herbs, wicked souls",
+    "relationships": "Wang Lin obtained ancient demon clone as treasure (canon event)",
+    "techniques": [
+      "demon_clone_step",
+      "demon_breath",
+      "clone_reform",
+      "demon_maw"
+    ],
+    "treasures": [
+      "ancient_demon_clone_core",
+      "demon_essence",
+      "demon_fragment"
+    ],
+    "bloodline": "Ancient Demon lineage; demon bloodline",
+    "mutations": [
+      "true_demon_body",
+      "ancient_demon_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "ancient_demon_clone_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "ancient_demon_clone_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1498734326,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

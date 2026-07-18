@@ -1,0 +1,80 @@
+{
+  "_comment": "Civilization: Cloud Sea Star System (star_system_civilization) at Cloud Sea Star System. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "cloud_sea_star_system",
+  "name": "Cloud Sea Star System",
+  "type": "star_system_civilization",
+  "location": "Cloud Sea Star System",
+  "peak_realm": "Immortal (star lord)",
+  "canon_status": "star_system_power",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "population_structure": {
+    "mortals": "billions",
+    "cultivators": "millions",
+    "elders": "thousands",
+    "star_lord": 1,
+    "spirit_beasts": "vast"
+  },
+  "economy": {
+    "spirit_stones": "vast",
+    "food": "star-system",
+    "water": "star-system",
+    "alchemy": "immortal-grade",
+    "forging": "immortal-grade",
+    "formation": "immortal-grade",
+    "trade": "inter-star-system",
+    "recruitment": "star-system-wide"
+  },
+  "politics": {
+    "allies": [
+      "vassal star-sects"
+    ],
+    "enemies": [
+      "rival star systems"
+    ],
+    "vassals": [
+      "entire star-sects"
+    ],
+    "rivals": [
+      "Allheaven Star System"
+    ],
+    "internal_factions": [
+      "star lord loyalists",
+      "star-system lords"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "star-system-wide",
+    "expansion": "star-system-scale",
+    "decline": "none current",
+    "schisms": "star-system lord tension",
+    "wars": [
+      "star-system wars"
+    ],
+    "recovery": "strong; star lord present"
+  },
+  "libraries": [
+    "immortal techniques",
+    "star-system lore",
+    "vast collections"
+  ],
+  "spirit_beasts": [
+    "star-system beasts",
+    "cloud whales"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 1201744348,
+  "spiritual_vein_grade": 8,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "ISI",
+    "OOO"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_block" },
+    "S": { "item": "ergenverse:soul_essence" },
+    "O": { "item": "minecraft:obsidian" }
+  },
+  "result": {
+    "item": "ergenverse:soul_refining_cauldron",
+    "count": 1
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "_comment": "Ecosystem: Thunder Peak Ecology (Ancient Thunder Realm). Full food web with 6 trophic layers and 5 seasonal/environmental states. Prime Directive: ecology exists objectively; player perception determines what they observe. No-Locked-Upgrades: all seasonal states are reachable by time/weather/event.",
+  "ecosystem_id": "thunder_peak_ecology",
+  "name": "Thunder Peak Ecology",
+  "location": "Ancient Thunder Realm",
+  "description": "The thunder-attribute ecology of the Ancient Thunder Realm peaks where Wang Lin cultivated the Ji Realm.",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "members": [
+        "thunder_essence_herb",
+        "lightning_struck_tree",
+        "storm_crystal_flora"
+      ],
+      "population": "environmental"
+    },
+    {
+      "layer": "primary",
+      "members": [
+        "thunder_toad#juvenile",
+        "lei_ji#juvenile"
+      ],
+      "population": 50000,
+      "biomass_jin": 100000
+    },
+    {
+      "layer": "secondary",
+      "members": [
+        "thunder_toad#adult",
+        "lei_ji#adolescent"
+      ],
+      "population": 5000,
+      "biomass_jin": 200000
+    },
+    {
+      "layer": "tertiary",
+      "members": [
+        "lei_ji#adult",
+        "thunder_ape#adult"
+      ],
+      "population": 500,
+      "biomass_jin": 300000
+    },
+    {
+      "layer": "quaternary",
+      "members": [
+        "lei_ji#ancient",
+        "thunder_ape#ancient"
+      ],
+      "population": 20,
+      "biomass_jin": 200000
+    },
+    {
+      "layer": "apex",
+      "members": [
+        "thunder_celestial_beast#adult",
+        "thunder_celestial_beast#ancient"
+      ],
+      "population": 3,
+      "biomass_jin": 500000
+    }
+  ],
+  "features": [
+    "thunder_essence_springs",
+    "lightning_struck_trees",
+    "storm_crystal_caves",
+    "tribulation_scarred_peaks",
+    "beast_nests"
+  ],
+  "seasonal_states": {
+    "calm": {
+      "toad_mult": 1.0,
+      "lei_ji_mult": 1.0,
+      "celestial_mult": 0.5,
+      "behavior": "normal",
+      "note": "Standard ecology."
+    },
+    "storm": {
+      "toad_mult": 1.5,
+      "lei_ji_mult": 2.0,
+      "celestial_mult": 1.5,
+      "behavior": "active",
+      "note": "All castes active; cultivation accelerates."
+    },
+    "tribulation": {
+      "toad_mult": 2.0,
+      "lei_ji_mult": 3.0,
+      "celestial_mult": 3.0,
+      "behavior": "frenzy",
+      "note": "Tribulation calls celestial beasts; mutations peak."
+    },
+    "dry_season": {
+      "toad_mult": 0.3,
+      "lei_ji_mult": 0.7,
+      "celestial_mult": 0.2,
+      "behavior": "buried",
+      "note": "Toads bury in mud; lei_ji go solitary; celestials retreat to storms."
+    },
+    "blood_moon": {
+      "toad_mult": 1.5,
+      "lei_ji_mult": 1.5,
+      "celestial_mult": 2.0,
+      "behavior": "aggressive",
+      "note": "All castes aggressive; thunder-aspected mutations likely."
+    }
+  },
+  "state_transitions": {
+    "spring->summer": "temperature_rise",
+    "summer->autumn": "temperature_fall",
+    "autumn->winter": "temperature_fall",
+    "winter->spring": "temperature_rise",
+    "any->tribulation_storm": "tribulation_event",
+    "any->blood_moon": "blood_moon_event",
+    "any->nearby_corpse_battlefield": "battlefield_proximity",
+    "any->nearby_spirit_spring": "spring_proximity",
+    "any->nearby_dragon_corpse": "dragon_corpse_proximity",
+    "any->nearby_ancient_god_remains": "ancient_god_proximity"
+  },
+  "perception_tiers": {
+    "mortal": "Sees beasts and terrain; does not perceive trophic structure.",
+    "qi_condensation": "Senses qi-flows of the ecosystem.",
+    "foundation_establishment": "Perceives trophic layers and seasonal shifts.",
+    "core_formation": "Perceives population dynamics and triggers.",
+    "nascent_soul": "Perceives mutation potential and bloodline flows.",
+    "spirit_severing": "Perceives complete ecology as a living system."
+  },
+  "salt": 825462595
+}

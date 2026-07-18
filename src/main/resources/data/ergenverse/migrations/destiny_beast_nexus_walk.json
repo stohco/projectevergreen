@@ -1,0 +1,63 @@
+{
+  "_comment": "Migration: Destiny Beast Nexus Walk. 3 waypoints, 2 follower types, 1 emergent markets. Per migration directive: migration is a major simulation system. The world breathes because markets appear seasonally along routes. Prime Directive: route exists objectively; player enters a world already moving.",
+  "migration_id": "destiny_beast_nexus_walk",
+  "name": "Destiny Beast Nexus Walk",
+  "species": "destiny_beast",
+  "description": "The era-defining walk of a destiny beast between fate-nexus points.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "waypoints": [
+    {
+      "point": "fate_nexus_1",
+      "season": "era_event",
+      "duration_days": 1
+    },
+    {
+      "point": "fate_nexus_2",
+      "season": "era_event",
+      "duration_days": 1
+    },
+    {
+      "point": "fate_nexus_3",
+      "season": "era_event",
+      "duration_days": 1
+    }
+  ],
+  "follower_chain": [
+    {
+      "follower": "destiny_cultivators",
+      "relationship": "symbiotic",
+      "distance_li": 50,
+      "note": "Destiny cultivators follow for fate-threads."
+    },
+    {
+      "follower": "orthodox_observers",
+      "relationship": "observer",
+      "distance_li": 200,
+      "note": "Orthodox observers record the walk."
+    }
+  ],
+  "emergent_markets": [
+    {
+      "market": "destiny_thread_market",
+      "season": "era_event",
+      "goods": [
+        "fate_thread",
+        "destiny_core",
+        "destiny_essence"
+      ]
+    }
+  ],
+  "simulation_notes": {
+    "world_breathes": "Markets appear and disappear seasonally; the world changes whether or not the player acts.",
+    "follower_dynamics": "Each follower type arrives with a delay proportional to distance_li; predators arrive after prey, scavengers after predators, bandits after cultivators, merchants after stability.",
+    "perception_tiers": {
+      "mortal": "Sees beasts moving.",
+      "qi_condensation": "Senses migration direction.",
+      "foundation_establishment": "Perceives follower chain.",
+      "core_formation": "Predicts market appearances.",
+      "nascent_soul": "Perceives complete migration system."
+    }
+  },
+  "salt": 259285667
+}

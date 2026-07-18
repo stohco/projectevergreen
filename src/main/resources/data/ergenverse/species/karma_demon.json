@@ -1,0 +1,35 @@
+{
+  "_comment": "Karma Demon — Renegade Immortal. A being formed from accumulated negative karma. Canon: appears where great atrocities occurred. Feeds on karmic debt.",
+  "species_id": "karma_demon",
+  "name": "Karma Demon",
+  "nameCn": "业魔",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 3,
+  "max_hp": 80,
+  "attack_damage": 11,
+  "speed": 0.3,
+  "follow_range": 28,
+  "canonical": {
+    "appearance": "A shifting shadow form with crimson eyes. The surrounding area darkens. Emits a heavy pressure that cultivators can feel through divine sense. Sometimes takes the form of those it has consumed.",
+    "size": "Variable (1.5-3m, shifts form)",
+    "behavior": "Drawn to beings with heavy karmic debt. Can sense karma through divine sense. Attacks by inflicting karmic backlash. Powerful but slow to form and disperses if karma source is purified.",
+    "habitat": "Sites of great slaughter, corrupted spirit veins, karmically heavy locations",
+    "cultivation": "Core Formation to Nascent Soul equivalent (scales with accumulated karma)",
+    "intelligence": "5-7 (understands karma and cultivator weaknesses, can strategize)",
+    "diet": "Feeds on the karmic debt of cultivators and the residual karma of massacre sites",
+    "relationships": "Attracted to cultivators who have killed heavily. Can be temporarily appeased by karmic purification techniques. Natural enemy of cultivators on the Samsara Dao path.",
+    "techniques": ["Karma strike (damage scales with target's negative karma)", "Karma mirror (reflects the last damage type received)", "Debt sense (reveals target's approximate kill count)", "Form shift (takes appearance of a consumed victim)"],
+    "treasures": ["Karma Essence (advanced Dao comprehension material)", "Demon Core (dark alchemy ingredient)"],
+    "bloodline": "demon_beast",
+    "mutations": ["Karma Scaling — damage increases by 10% for each kill the target has committed"],
+    "ecology": "Apex predator of karmically-corrupted areas. Does not reproduce — manifests from accumulated karma exceeding a threshold. Rare but devastating.",
+    "bloodline_tier": "demon_beast",
+    "combat_ai": "elemental"
+  },
+  "art_direction": {
+    "color_palette": ["#330000", "#660000", "#990000", "#ff0000"],
+    "model_notes": "Shifting shadowy humanoid. Red eye glow. Dark aura particle effect. Form flickers and distorts.",
+    "texture_notes": "Dark red-black shifting form. Solid crimson eyes. Wisps of shadow trail behind."
+  }
+}

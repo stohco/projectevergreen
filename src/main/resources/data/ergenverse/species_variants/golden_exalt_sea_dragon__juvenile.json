@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Golden Exalt Sea Dragon (juvenile). Generated from canonical definition.",
+  "variant_id": "golden_exalt_sea_dragon__juvenile",
+  "species_id": "golden_exalt_sea_dragon",
+  "species_name": "Golden Exalt Sea Dragon",
+  "life_state": "juvenile",
+  "modifiers": {
+    "size_multiplier": 0.15,
+    "power_multiplier": 0.1,
+    "temperament": "curious",
+    "rarity": "common"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 28651297
+}

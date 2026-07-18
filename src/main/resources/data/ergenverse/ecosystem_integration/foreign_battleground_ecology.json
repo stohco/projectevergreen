@@ -1,0 +1,20 @@
+{
+  "_comment": "Ecosystem integration: foreign_battleground_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "foreign_battleground_ecology",
+  "beasts": [
+    "white_tiger",
+    "blood_ancestor_beast",
+    "berserk_beast",
+    "blood_beast",
+    "slaughter_true_body_beast"
+  ],
+  "npcs": [
+    "npc_white_tiger_general"
+  ],
+  "enemies": [
+    "white_tiger_general",
+    "zhan_family_members"
+  ],
+  "note": "Foreign Battleground; war-aspected ecology",
+  "salt": 1238712373
+}

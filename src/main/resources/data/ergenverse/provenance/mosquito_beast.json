@@ -1,0 +1,68 @@
+{
+  "_comment": "Provenance metadata for Mosquito Beast (蚊兽). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I116",
+  "name": "Mosquito Beast",
+  "nameCn": "蚊兽",
+  "type": "other",
+  "category": "offensive",
+  "origin": "Tamed in Cultivation Devil Sea (early-mid era)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Rank-9 Void Mosquito — signature companion",
+    "Multiplies into swarm of 10,000",
+    "Soul-bound destined companion"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Rank-9 Void Mosquito species",
+    "Purple/Gold variants — destined companion archetype",
+    "Multiplies into 10,000 swarm; retained to end"
+  ],
+  "source": "novel (Sea of Devils); Fandom wiki; Baidu Baike",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Tamed in Cultivation Devil Sea (early-mid era)"
+  },
+  "lifecycle": {
+    "creator": "Tamed in Cultivation Devil Sea (early-mid era)",
+    "creation_circumstances": "Tamed in Cultivation Devil Sea (early-mid era)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

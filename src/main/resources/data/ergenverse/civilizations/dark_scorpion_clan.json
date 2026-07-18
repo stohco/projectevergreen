@@ -1,0 +1,81 @@
+{
+  "_comment": "Civilization: Dark Scorpion Clan (ancient_clan) at Immortal Astral Continent. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "dark_scorpion_clan",
+  "name": "Dark Scorpion Clan",
+  "type": "ancient_clan",
+  "location": "Immortal Astral Continent",
+  "peak_realm": "Immortal (clan ancestor)",
+  "canon_status": "immortal_ancient_clan",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "outer_members": 5000,
+    "inner_members": 1000,
+    "core_members": 100,
+    "elders": 30,
+    "clan_ancestor": 1,
+    "spirit_beasts": 500
+  },
+  "economy": {
+    "spirit_stones": "vast",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "ancient",
+    "forging": "ancient",
+    "formation": "ancient",
+    "trade": "ancient-clan network",
+    "recruitment": "bloodline only"
+  },
+  "politics": {
+    "allies": [
+      "other ancient clans"
+    ],
+    "enemies": [
+      "Great Soul Sect (rival)"
+    ],
+    "vassals": [],
+    "rivals": [
+      "Great Soul Sect"
+    ],
+    "internal_factions": [
+      "main bloodline",
+      "branch bloodlines"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "bloodline only",
+    "expansion": "slow; bloodline-constrained",
+    "decline": "none current",
+    "schisms": "bloodline disputes",
+    "wars": [
+      "ancient-clan conflicts"
+    ],
+    "recovery": "strong; immortal ancestor"
+  },
+  "libraries": [
+    "ancient scorpion techniques",
+    "bloodline catalogues",
+    "ancient lore"
+  ],
+  "spirit_beasts": [
+    "dark scorpions (clan totem)",
+    "ancient-clan guardians"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 381633250,
+  "spiritual_vein_grade": 6,
+  "heritage_treasures": [
+    "I06"
+  ],
+  "_xianxia_schema": 1
+}

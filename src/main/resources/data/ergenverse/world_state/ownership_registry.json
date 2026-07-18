@@ -1,0 +1,21 @@
+{
+  "_comment": "World State Engine query: Who owns it? Schema: ownership_registry. Data sources: ['provenance', 'civilizations'].",
+  "question": "Who owns it?",
+  "schema": "ownership_registry",
+  "fields": [
+    "object_id",
+    "true_owner",
+    "owner_type",
+    "owner_strength",
+    "claim_strength"
+  ],
+  "data_sources": [
+    "provenance",
+    "civilizations"
+  ],
+  "reason_types": [],
+  "note": "Ownership is objective; it may be a sect, a beast, a cultivator, or unclaimed.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "salt": 1274925202
+}

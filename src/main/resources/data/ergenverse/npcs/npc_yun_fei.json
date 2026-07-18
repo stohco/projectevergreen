@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Yun Fei (云菲). Canon ID: N95. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_yun_fei",
+  "name": "Yun Fei",
+  "nameCn": "云菲",
+  "canon_id": "N95",
+  "type": "disciple",
+  "faction": "heng_yue_sect",
+  "location": "heng_yue_sect",
+  "cultivation": "Core Formation",
+  "personality": "quiet, studious female disciple",
+  "speech": "soft, measured",
+  "relationship_to_wanglin": "fellow disciple",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": true,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A female cultivator",
+    "qi_condensation": "Heng Yue inner disciple; Core Formation"
+  },
+  "canon_confidence": 3,
+  "note": "Heng Yue Core Formation disciple",
+  "derivation_type": "B",
+  "salt": 1297356582,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

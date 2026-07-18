@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Bai Fan (白凡). Canon ID: N24. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_bai_fan",
+  "name": "Bai Fan",
+  "nameCn": "白凡",
+  "canon_id": "N24",
+  "type": "divine_emperor",
+  "faction": "bai_fan_sect",
+  "location": "bai_fan_territory",
+  "cultivation": "Immortal Emperor (Third Step+)",
+  "personality": "wise, white-robed immortal emperor",
+  "speech": "measured, wise, imperial",
+  "relationship_to_wanglin": "ally; Divine Emperor",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "An impossibly powerful immortal",
+    "qi_condensation": "Immortal Emperor; overwhelming",
+    "core_formation": "Bai Fan; Immortal Emperor",
+    "nascent_soul": "Third Step+; Divine Emperor ally"
+  },
+  "canon_confidence": 4,
+  "note": "Divine Emperor; Wang Lin's ally",
+  "derivation_type": "A",
+  "salt": 1160529286,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

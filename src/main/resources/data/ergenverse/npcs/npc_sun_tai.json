@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Sun Tai (孙泰). Canon ID: N37. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_sun_tai",
+  "name": "Sun Tai",
+  "nameCn": "孙泰",
+  "canon_id": "N37",
+  "type": "servant",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Nirvana Scryer+",
+  "personality": "powerful servant cultivator",
+  "speech": "respectful, measured",
+  "relationship_to_wanglin": "complex; servant",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A powerful cultivator",
+    "qi_condensation": "Nirvana Scryer+; overwhelming",
+    "core_formation": "Nirvana Scryer+",
+    "nascent_soul": "Sun Tai; Nirvana Scryer+ servant"
+  },
+  "canon_confidence": 3,
+  "note": "Nirvana Scryer+ servant cultivator",
+  "derivation_type": "B",
+  "salt": 565329951,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

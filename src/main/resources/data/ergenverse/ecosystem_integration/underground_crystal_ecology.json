@@ -1,0 +1,16 @@
+{
+  "_comment": "Ecosystem integration: underground_crystal_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "underground_crystal_ecology",
+  "beasts": [
+    "ant_beast",
+    "giant_centipede",
+    "web_weaver_spider",
+    "ink_bat",
+    "ink_dragon",
+    "spirit_tortoise"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Underground crystal ecology; subterranean beasts",
+  "salt": 1829729249
+}

@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Giant Head Ancient Clansman (corrupted). Generated from canonical definition.",
+  "variant_id": "giant_head_ancient_clansman__corrupted",
+  "species_id": "giant_head_ancient_clansman",
+  "species_name": "Giant Head Ancient Clansman",
+  "life_state": "corrupted",
+  "modifiers": {
+    "size_multiplier": 1.3,
+    "power_multiplier": 2.0,
+    "temperament": "malevolent",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 419263230
+}

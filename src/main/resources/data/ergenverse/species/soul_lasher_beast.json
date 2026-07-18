@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Soul Lasher Beast (魂鞭兽) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "soul_lasher_beast",
+  "name": "Soul Lasher Beast",
+  "nameCn": "魂鞭兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Serpentine body 8 m long covered in soul-tendrils, no eyes, senses by soul-fluctuation",
+    "size": "8 m adult, 800 jin; ancient 30 m, 10000 jin",
+    "behavior": "Lashes prey with soul-tendrils that drain cultivation base; herds prey into dead-end caves",
+    "habitat": "Soul-aspected caves, Soul Refining territory, ghost valleys",
+    "cultivation": "Nascent Soul -> Spirit Severing (soul attribute)",
+    "intelligence": 7,
+    "diet": "soul fragments, cultivation base, soul-aspected herbs",
+    "relationships": "Bred by Soul Refining Sect as guardians",
+    "techniques": [
+      "soul_lash",
+      "soul_herd",
+      "cultivation_drain",
+      "soul_tendril_burst"
+    ],
+    "treasures": [
+      "soul_lasher_core",
+      "soul_tendril",
+      "soul_fragment_cluster"
+    ],
+    "bloodline": "Soul-Devil lineage; born of accumulated soul fragments",
+    "mutations": [
+      "thousand_tendril",
+      "soul_immortal_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "soul_lasher_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "soul_lasher_beast — not a hive-mind species"
+    },
+    "combat_ai": "hive_coordinated"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 526435974,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

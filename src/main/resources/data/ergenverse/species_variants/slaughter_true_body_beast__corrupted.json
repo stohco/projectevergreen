@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Slaughter True Body (corrupted). Generated from canonical definition.",
+  "variant_id": "slaughter_true_body_beast__corrupted",
+  "species_id": "slaughter_true_body_beast",
+  "species_name": "Slaughter True Body",
+  "life_state": "corrupted",
+  "modifiers": {
+    "size_multiplier": 1.3,
+    "power_multiplier": 2.0,
+    "temperament": "malevolent",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1553791422
+}

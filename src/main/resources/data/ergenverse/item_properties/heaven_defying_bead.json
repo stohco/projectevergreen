@@ -1,0 +1,24 @@
+{
+  "_comment": "Item Properties: Heaven-Defying Bead / Pearl. Per physical-size directive: every object has lore-accurate physical size, not block size. Length: 0.03 m, Weight: 0.5 jin, Material: condensed heaven-defying essence, Suitable realm: Heaven Trampling, Body strength required: Ascendant. Prime Directive: physical size exists objectively; cultivation determines what the player can lift/activate.",
+  "item_id": "heaven_defying_bead",
+  "name": "Heaven-Defying Bead / Pearl",
+  "type": "bead",
+  "physical_properties": {
+    "length_m": 0.03,
+    "weight_jin": 0.5,
+    "material_density": "condensed heaven-defying essence"
+  },
+  "usage_requirements": {
+    "suitable_realm": "Heaven Trampling",
+    "body_strength_required": "Ascendant",
+    "effect_when_undersized": "Cannot activate; bead remains inert."
+  },
+  "canon_note": "Wang Lin's defining treasure; a bead that defies heaven itself.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "simulation_notes": {
+    "no_locked_upgrades": "A cultivator who later reaches the required body strength will be able to lift/activate the item; the item does not change, only the cultivator does.",
+    "canon_fidelity": "This reflects the novels: Wang Lin could not lift the God-Slaying Sword until his body cultivation matched; he could barely use it as a heavy physical weapon before then."
+  },
+  "salt": 1367880313
+}

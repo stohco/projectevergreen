@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Spirit Rat (灵鼠) from A Will Eternal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "spirit_rat",
+  "name": "Spirit Rat",
+  "nameCn": "灵鼠",
+  "novel": "A Will Eternal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Rat 0.5 m, fur spirit-gold, can sense spirit-treasures for li",
+    "size": "0.5 m adult, 5 jin; ancient 2 m, 200 jin",
+    "behavior": "Treasure-seeking companion beast; cultivates by hoarding spirit-treasures",
+    "habitat": "Spirit-treasure-rich regions, ancient ruins",
+    "cultivation": "Foundation Establishment -> Core Formation (treasure attribute)",
+    "intelligence": 8,
+    "diet": "spirit-treasure fragments, spirit-rice",
+    "relationships": "Bonded companion to treasure-seekers",
+    "techniques": [
+      "treasure_sense",
+      "burrow",
+      "squeak_alarm"
+    ],
+    "treasures": [
+      "rat_core",
+      "treasure_fragment"
+    ],
+    "bloodline": "Spirit-Rat lineage; treasure-attribute bloodline",
+    "mutations": [
+      "golden_fur",
+      "treasure_immortal_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": "No alchemy value — common beast with no condensed inner core",
+      "canon_note": "spirit_rat — common beast, no condensed inner core"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "spirit_rat — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 458958126,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

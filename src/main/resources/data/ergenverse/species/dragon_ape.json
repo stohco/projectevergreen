@@ -1,0 +1,77 @@
+{
+  "_comment": "Species: Dragon Ape (龙猿) from I Shall Seal the Heavens. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "dragon_ape",
+  "name": "Dragon Ape",
+  "nameCn": "龙猿",
+  "novel": "I Shall Seal the Heavens",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Bipedal ape 6 m tall, scales of dragon, fists of dragon-strength, horns on head",
+    "size": "6 m adult, 15000 jin; ancient 20 m, 200000 jin",
+    "behavior": "Solitary apex predator; combines ape strength with dragon durability",
+    "habitat": "Dragon-aspected mountains, dragon-ape peaks",
+    "cultivation": "Nascent Soul -> Spirit Severing (dragon/body attribute)",
+    "intelligence": 7,
+    "diet": "dragon-herbs, weaker beasts, lost cultivators",
+    "relationships": "Hybrid bloodline; rival of giant savage ape",
+    "techniques": [
+      "dragon_fist",
+      "scale_defense",
+      "dragon_roar"
+    ],
+    "treasures": [
+      "dragon_ape_core",
+      "dragon_scale",
+      "horn"
+    ],
+    "bloodline": "Dragon-Ape hybrid lineage; dragon + ape bloodline",
+    "mutations": [
+      "true_dragon_awakening",
+      "ancient_dragon_ape_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "dragon_ape — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "dragon_ape — not a hive-mind species"
+    },
+    "combat_ai": "pack_hunter"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 284167004,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

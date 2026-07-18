@@ -1,0 +1,66 @@
+{
+  "_comment": "Teng Family Bodyguard Beast (腾家护院兽) — Renegade Immortal. Canon confidence: 4/5. Prime Directive: this beast exists objectively whether the player has the perception to recognize it.",
+  "species_id": "teng_family_bodyguard_beast",
+  "name": "Teng Family Bodyguard Beast",
+  "nameCn": "腾家护院兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Beast kept by the Teng Family as a bodyguard. Enhanced by their cultivation resources.",
+    "size": "3m, 400 jin",
+    "behavior": "See ecology definitions.",
+    "habitat": "Teng Family City",
+    "cultivation": "Core Formation",
+    "intelligence": 5,
+    "diet": "See ecology definitions.",
+    "relationships": "See ecology definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "teng_family_bodyguard_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "teng_family_bodyguard_beast — not a hive-mind species"
+    },
+    "combat_ai": "territorial_defender"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 389851511,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [" D ", "DGD", " D "],
+  "key": {
+    "D": { "item": "minecraft:diamond" },
+    "G": { "item": "ergenverse:spirit_gathering_core" }
+  },
+  "result": { "item": "ergenverse:cave_dwelling_core", "count": 1 }
+}

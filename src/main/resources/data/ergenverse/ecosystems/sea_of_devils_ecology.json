@@ -1,0 +1,130 @@
+{
+  "_comment": "Ecosystem: Sea of Devils Ecology (Sea of Devils). Full food web with 6 trophic layers and 5 seasonal/environmental states. Prime Directive: ecology exists objectively; player perception determines what they observe. No-Locked-Upgrades: all seasonal states are reachable by time/weather/event.",
+  "ecosystem_id": "sea_of_devils_ecology",
+  "name": "Sea of Devils Ecology",
+  "location": "Sea of Devils",
+  "description": "The devil-aspected ecology of the Sea of Devils, home to nether beasts, soul beasts, and six-desire devils.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "members": [
+        "devil_qi_flora",
+        "soul_fragment_moss",
+        "nether_lotus"
+      ],
+      "population": "environmental"
+    },
+    {
+      "layer": "primary",
+      "members": [
+        "soul_beast#juvenile",
+        "ghost_spirit_beast#juvenile"
+      ],
+      "population": 100000,
+      "biomass_jin": 50000
+    },
+    {
+      "layer": "secondary",
+      "members": [
+        "soul_beast#adult",
+        "nether_beast#juvenile"
+      ],
+      "population": 10000,
+      "biomass_jin": 100000
+    },
+    {
+      "layer": "tertiary",
+      "members": [
+        "nether_beast#adult",
+        "ghost_face_beast#adult"
+      ],
+      "population": 1000,
+      "biomass_jin": 300000
+    },
+    {
+      "layer": "quaternary",
+      "members": [
+        "six_desire_devil#adult",
+        "nether_beast#ancient"
+      ],
+      "population": 50,
+      "biomass_jin": 200000
+    },
+    {
+      "layer": "apex",
+      "members": [
+        "six_desire_devil#ancient",
+        "six_desire_devil#enlightened"
+      ],
+      "population": 3,
+      "biomass_jin": 500000
+    }
+  ],
+  "features": [
+    "devil_qi_pools",
+    "soul_fragment_mists",
+    "nether_caves",
+    "desire_mirages",
+    "corpse_battlefields"
+  ],
+  "seasonal_states": {
+    "normal": {
+      "soul_mult": 1.0,
+      "nether_mult": 1.0,
+      "desire_mult": 1.0,
+      "behavior": "hunting",
+      "note": "Standard devil ecology."
+    },
+    "blood_moon": {
+      "soul_mult": 2.0,
+      "nether_mult": 2.0,
+      "desire_mult": 3.0,
+      "behavior": "frenzy",
+      "note": "All devils frenzied; desire-mirages intensify."
+    },
+    "nearby_corpse_battlefield": {
+      "soul_mult": 3.0,
+      "nether_mult": 2.5,
+      "desire_mult": 1.5,
+      "behavior": "explosion",
+      "note": "Soul fragments fuel population explosion."
+    },
+    "nearby_spirit_vein_collapse": {
+      "soul_mult": 1.5,
+      "nether_mult": 1.5,
+      "desire_mult": 1.0,
+      "behavior": "migration",
+      "note": "Devils migrate to the collapse; vein-essence feeds them."
+    },
+    "nearby_sealed_demon": {
+      "soul_mult": 1.0,
+      "nether_mult": 2.0,
+      "desire_mult": 1.0,
+      "behavior": "guardian",
+      "note": "Nether beasts gather as guardians of the seal."
+    }
+  },
+  "state_transitions": {
+    "spring->summer": "temperature_rise",
+    "summer->autumn": "temperature_fall",
+    "autumn->winter": "temperature_fall",
+    "winter->spring": "temperature_rise",
+    "any->tribulation_storm": "tribulation_event",
+    "any->blood_moon": "blood_moon_event",
+    "any->nearby_corpse_battlefield": "battlefield_proximity",
+    "any->nearby_spirit_spring": "spring_proximity",
+    "any->nearby_dragon_corpse": "dragon_corpse_proximity",
+    "any->nearby_ancient_god_remains": "ancient_god_proximity"
+  },
+  "perception_tiers": {
+    "mortal": "Sees beasts and terrain; does not perceive trophic structure.",
+    "qi_condensation": "Senses qi-flows of the ecosystem.",
+    "foundation_establishment": "Perceives trophic layers and seasonal shifts.",
+    "core_formation": "Perceives population dynamics and triggers.",
+    "nascent_soul": "Perceives mutation potential and bloodline flows.",
+    "spirit_severing": "Perceives complete ecology as a living system."
+  },
+  "salt": 162658840
+}

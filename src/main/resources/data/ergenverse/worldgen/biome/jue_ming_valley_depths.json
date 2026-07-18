@@ -1,0 +1,88 @@
+{
+  "_comment": "Jue Ming Valley Depths (绝命谷深处) — the middle layer where death-qi thickens. Canon: cultivators below Foundation realm perish here. Ancient battlefield remains litter the ground. The tokens to the Foreign Battleground are found here. Spirit veins are tainted with yin energy. Prime Directive: the death-qi suppression is objective.",
+  "temperature": 0.1,
+  "downfall": 0.1,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 5263440,
+    "fog_color": 3355478,
+    "water_color": 2105376,
+    "water_fog_color": 2631720,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "monster": [
+      {
+        "type": "minecraft:skeleton",
+        "weight": 40,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:zombie",
+        "weight": 30,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:wither_skeleton",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:enderman",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "creature": [],
+    "ambient": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": [],
+    "axolotls": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:canyon",
+      "minecraft.nether_cave"
+    ]
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_gold",
+      "minecraft:ore_redstone",
+      "minecraft:ore_diamond",
+      "minecraft:ore_lapis"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:demon_corpse_mushroom",
+      "ergenverse:foundation_root_vine"
+    ],
+    [
+      "ergenverse:joss_flame_source"
+    ]
+  ],
+  "structures": {
+    "ergenverse:wandering_cultivator_camp": {
+      "spacing": 100,
+      "separation": 40,
+      "salt": 12345
+    }
+  }
+}

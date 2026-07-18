@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Wang Ping (王平). Canon ID: N07. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_wang_ping",
+  "name": "Wang Ping",
+  "nameCn": "王平",
+  "canon_id": "N07",
+  "type": "family",
+  "faction": "wang_family_village",
+  "location": "wang_family_village",
+  "cultivation": "mortal",
+  "personality": "gentle, protective younger brother",
+  "speech": "casual, brotherly",
+  "relationship_to_wanglin": "brother",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "Wang Lin's younger brother",
+    "qi_condensation": "Same — mortal",
+    "core_formation": "Same — mortal",
+    "nascent_soul": "Same — mortal, but you sense his fragile health"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's brother; tragic fate drives Wang Lin's early motivation",
+  "derivation_type": "A",
+  "salt": 1794719128,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

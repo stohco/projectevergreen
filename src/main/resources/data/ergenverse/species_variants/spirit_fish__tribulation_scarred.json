@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Fish (tribulation_scarred). Generated from canonical definition.",
+  "variant_id": "spirit_fish__tribulation_scarred",
+  "species_id": "spirit_fish",
+  "species_name": "Spirit Fish",
+  "life_state": "tribulation_scarred",
+  "modifiers": {
+    "size_multiplier": 1.2,
+    "power_multiplier": 2.5,
+    "temperament": "sober",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 92818972
+}

@@ -1,0 +1,33 @@
+{
+  "_comment": "Provenance metadata for God-Slaying War Chariot (set of 3) (杀神战车). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I90",
+  "name": "God-Slaying War Chariot (set of 3)",
+  "nameCn": "杀神战车",
+  "type": "celestial_treasure",
+  "category": "offensive",
+  "origin": "Found during first expedition at Celestial Realm (1st: Ch. 307)",
+  "current_owner": "1 given to Situ Nan; 2 restored and retained",
+  "abilities": [
+    "Three tiers: Low (given to Situ Nan), Mid (Lightning Beast soul), High (Butterfly soul)",
+    "Each possesses a beast soul; forged by Immortal Realm's Heavenly Treasure Master",
+    "Mid: Silver-Horned Thunder Beast unsealed — Soul-Ascension strength",
+    "High: Butterfly soul — kills Yang-Solid peak; with Mother-Child Dao Withered battles Insight-into-Annihilation"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Low/Mid/High Quality Celestial Treasure tiers",
+    "Low given to Situ Nan Ch. 441",
+    "Mid & High destroyed Ch. 1276 vs Daoist Water, restored Ch. 1626 via Gate of Emptiness"
+  ],
+  "source": "Ch.307, Ch.~1080, Ch.~1100 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Found during first expedition at Celestial Realm (1st: Ch. 307)"
+  }
+}

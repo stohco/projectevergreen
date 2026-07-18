@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Zhou Rui (周瑞). Canon ID: N150. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_zhou_rui",
+  "name": "Zhou Rui",
+  "nameCn": "周瑞",
+  "canon_id": "N150",
+  "type": "other",
+  "faction": "wang_family_village",
+  "location": "wang_family_village",
+  "cultivation": "mortal",
+  "personality": "kind neighbor; helps Wang family in hard times",
+  "speech": "warm, village dialect",
+  "relationship_to_wanglin": "neighbor",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": true,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "Village neighbor",
+    "qi_condensation": "Same — mortal"
+  },
+  "canon_confidence": 3,
+  "note": "Village neighbor who helps the Wang family",
+  "derivation_type": "B",
+  "salt": 1175530942,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Ink Bat (墨蝠) from Pursuit of the Truth. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "ink_bat",
+  "name": "Ink Bat",
+  "nameCn": "墨蝠",
+  "novel": "Pursuit of the Truth",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Bat 2 m wingspan, fur ink-black, sonar drains cultivation base",
+    "size": "2 m wingspan, 50 jin; ancient 8 m, 1000 jin",
+    "behavior": "Cave swarm; hunts by sonar; cultivates in darkness",
+    "habitat": "Ink caves, darkness-aspected caverns",
+    "cultivation": "Foundation Establishment -> Core Formation (darkness attribute)",
+    "intelligence": 4,
+    "diet": "cave insects, lost miners, weaker beasts",
+    "relationships": "Swarm hunters; preyed upon by web weavers",
+    "techniques": [
+      "sonar_drain",
+      "swarm_overwhelm",
+      "darkness_step"
+    ],
+    "treasures": [
+      "bat_core",
+      "ink_fur"
+    ],
+    "bloodline": "Ink-Bat lineage; darkness-attribute bloodline",
+    "mutations": [
+      "thousand_wing",
+      "ancient_bat_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "ink_bat — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "ink_bat — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1382177012,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

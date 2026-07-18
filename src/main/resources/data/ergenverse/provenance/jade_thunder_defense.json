@@ -1,0 +1,31 @@
+{
+  "_comment": "Provenance metadata for Jade (Thunder Defense) (御雷玉). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I47",
+  "name": "Jade (Thunder Defense)",
+  "nameCn": "御雷玉",
+  "type": "accessory",
+  "category": "defensive",
+  "origin": "Obtained from Xi Zifeng (Ch. 871)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Defends against powerful thunder",
+    "Spirit-tier thunder ward"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Spirit-tier thunder-defense jade",
+    "Important self-defense treasure of Xi Zifeng",
+    "Retained to end"
+  ],
+  "source": "Ch.871 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Obtained from Xi Zifeng (Ch. 871)"
+  }
+}

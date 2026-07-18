@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Corpse Yin Beast (尸阴兽) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "corpse_yin_beast",
+  "name": "Corpse Yin Beast",
+  "nameCn": "尸阴兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Undead beast 3 m, body is desiccated corpse-flesh, eyes glow with yin-fire",
+    "size": "3 m adult, 500 jin; ancient 10 m, 10000 jin",
+    "behavior": "Undead predator; cultivates by absorbing yin-qi and corpse-essence",
+    "habitat": "Corpse Yin Sect territory, yin-aspected caves, graveyards",
+    "cultivation": "Core Formation -> Nascent Soul (yin/corpse attribute)",
+    "intelligence": 5,
+    "diet": "corpse-essence, yin-herbs, lost cultivators",
+    "relationships": "Servant-beasts of Corpse Yin Sect; enemies of all living",
+    "techniques": [
+      "yin_breath",
+      "corpse_drain",
+      "yin_step",
+      "desiccate"
+    ],
+    "treasures": [
+      "corpse_yin_core",
+      "yin_essence",
+      "corpse_fragment"
+    ],
+    "bloodline": "Corpse-Yin lineage; yin-attribute undead bloodline",
+    "mutations": [
+      "true_undying",
+      "yin_immortal_body"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "corpse_yin_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "corpse_yin_beast — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1825084795,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

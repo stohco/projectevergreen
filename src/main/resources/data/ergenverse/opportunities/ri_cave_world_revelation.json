@@ -1,0 +1,33 @@
+{
+  "_comment": "RI Canon Opportunity: Cave World Revelation. Canon event: Wang Lin discovers the Cave World is an artificial Joss Flame farm. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_cave_world_revelation",
+  "name": "Cave World Revelation",
+  "canon_event": "Wang Lin discovers the Cave World is an artificial Joss Flame farm",
+  "location": "cave_world",
+  "age_requirement_years": 0,
+  "cultivation_required": "Ascendant",
+  "perception_required": "Immortal",
+  "luck_modifier": 0.1,
+  "discovery_methods": [
+    "dao_comprehension",
+    "divine_sense"
+  ],
+  "reward_tables": [
+    "cave_world_truth",
+    "joss_flame_understanding",
+    "seven_colored_daoist_revelation"
+  ],
+  "why_untaken": "Requires Immortal-tier perception to comprehend the truth.",
+  "natural_next_event": "The Seven-Colored Daoist continues harvesting Joss Flame.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 673801731,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

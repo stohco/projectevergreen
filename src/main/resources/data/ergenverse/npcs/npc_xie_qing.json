@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Xie Qing (谢青). Canon ID: N135. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_xie_qing",
+  "name": "Xie Qing",
+  "nameCn": "谢青",
+  "canon_id": "N135",
+  "type": "disciple",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Jingnie (Concept-only)",
+  "personality": "concept cultivator; abstract",
+  "speech": "abstract, conceptual",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "An abstract cultivator",
+    "qi_condensation": "Concept cultivator; Jingnie"
+  },
+  "canon_confidence": 3,
+  "note": "Concept-only Jingnie cultivator",
+  "derivation_type": "B",
+  "salt": 1515030802,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Dao Devil Sect Master (道魔宗主). Canon ID: N122. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_dao_devil_master",
+  "name": "Dao Devil Sect Master",
+  "nameCn": "道魔宗主",
+  "canon_id": "N122",
+  "type": "patriarch",
+  "faction": "dao_devil_sect",
+  "location": "dao_devil_sect_ruins",
+  "cultivation": "Third Step+",
+  "personality": "devil-aspected sect master; Wang Lin annihilated the sect",
+  "speech": "devilish, arrogant",
+  "relationship_to_wanglin": "enemy; destroyed by Wang Lin",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A terrifying devil cultivator",
+    "qi_condensation": "Devil patriarch; overwhelming",
+    "core_formation": "Dao Devil Sect Master; Third Step+",
+    "nascent_soul": "Third Step+; Wang Lin annihilated this sect"
+  },
+  "canon_confidence": 4,
+  "note": "Dao Devil Sect Master; sect annihilated by Wang Lin (canon-attested destruction)",
+  "derivation_type": "A",
+  "salt": 1024691319,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,46 @@
+{
+  "karma_id": "teng_family_massacre",
+  "name": "Teng Family Massacre",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 1825,
+  "karmic_weight": -9000,
+  "bearer": "N01",
+  "debtor": "teng_family",
+  "description": "Wang Lin annihilates the Teng family to avenge his parents. The single most defining karmic act of his early cultivation — locks his Dao toward Slaughter.",
+  "consequences": [
+    {
+      "type": "personality_shift",
+      "target_id": "N01",
+      "magnitude": 95,
+      "resolved_at_tick": 1825,
+      "note": "dao_affinity locked toward Slaughter; mercy threshold permanently lowered"
+    },
+    {
+      "type": "faction_destroyed",
+      "target_id": "teng_family",
+      "magnitude": 100,
+      "resolved_at_tick": 1825,
+      "note": "Teng family lineage extinguished"
+    },
+    {
+      "type": "technique_unlocked",
+      "target_id": "T_slaughter_sword",
+      "magnitude": 80,
+      "resolved_at_tick": 2400,
+      "note": "Dao of Slaughter comprehension accelerated"
+    },
+    {
+      "type": "tribulation_earned",
+      "target_id": "N01",
+      "magnitude": 7000,
+      "resolved_at_tick": null,
+      "note": "heavenly resentment accumulated; manifests across later tribulations"
+    }
+  ],
+  "unresolved_until": "never",
+  "prime_directive_note": "This karma persists objectively; no amount of merit erases it. It can only be paid in kind.",
+  "_comment": "Karmic Nexus node: Teng Family Massacre. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 1030944961
+}

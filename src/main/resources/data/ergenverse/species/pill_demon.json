@@ -1,0 +1,35 @@
+{
+  "_comment": "Pill Demon — Renegade Immortal. A sentient pill that gained awareness after absorbing too much spiritual energy. Canon: appears near alchemy labs and pill refining sites.",
+  "species_id": "pill_demon",
+  "name": "Pill Demon",
+  "nameCn": "丹魔",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 2,
+  "max_hp": 25,
+  "attack_damage": 5,
+  "speed": 0.15,
+  "follow_range": 12,
+  "canonical": {
+    "appearance": "A small, glowing orb of condensed pill energy — 0.3-0.5m diameter. Shifts color based on its dominant attribute. Can grow limbs temporarily for locomotion and combat.",
+    "size": "Tiny (0.3-0.5m diameter orb)",
+    "behavior": "Mischievous rather than hostile. Steals alchemy ingredients. Can enhance or ruin pills being refined nearby. Flees from strong cultivators but taunts weak ones.",
+    "habitat": "Alchemy labs, pill refining sites, herb gardens",
+    "cultivation": "Qi Condensation equivalent (varies with absorbed energy)",
+    "intelligence": "6-8 (fully sentient, can speak, has personality — usually eccentric and greedy)",
+    "diet": "Absorbs raw alchemy ingredients and spiritual herbs",
+    "relationships": "Sometimes kept as a pet/lab assistant by alchemy masters. Wild pill demons are considered pests by sect alchemists.",
+    "techniques": ["Pill absorption (consumes nearby item drops for healing)", "Alchemy sabotage (corrupts active furnaces within 10 blocks)", "Color shift (changes element resistance)", "Pill burst (AoE healing or damage based on absorbed element)"],
+    "treasures": ["Pill Demon Essence (rare alchemy catalyst — doubles pill quality)", "Condensed Pill Dust (generic alchemy material)"],
+    "bloodline": "spirit_beast",
+    "mutations": ["Elemental Absorption — gains resistance to the last element it consumed"],
+    "ecology": "Scavenger and opportunist. Not a predator — survives by stealing alchemy materials. Common near sect alchemy halls.",
+    "bloodline_tier": "spirit_beast",
+    "combat_ai": "passive_fleeing"
+  },
+  "art_direction": {
+    "color_palette": ["#44ff44", "#88ff44", "#ccff44", "#ffffff"],
+    "model_notes": "Small glowing orb with particle effects. Transient limbs. Color-shifting based on absorbed element.",
+    "texture_notes": "Glowing sphere with swirling inner patterns. Bright green by default. Trails sparkle particles."
+  }
+}

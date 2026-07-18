@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Purple Dawn Immortal Emperor (紫朝仙帝). Canon ID: N125. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_purple_dawn_emperor",
+  "name": "Purple Dawn Immortal Emperor",
+  "nameCn": "紫朝仙帝",
+  "canon_id": "N125",
+  "type": "divine_emperor",
+  "faction": "immortal_astral_continent",
+  "location": "immortal_astral_continent",
+  "cultivation": "Immortal Emperor (Celestial)",
+  "personality": "dawn-aspected immortal emperor",
+  "speech": "dawn-bright, imperial",
+  "relationship_to_wanglin": "complex; IAC power",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "Dawn-aspected celestial",
+    "core_formation": "Immortal Emperor",
+    "nascent_soul": "Purple Dawn Immortal Emperor; Celestial tier"
+  },
+  "canon_confidence": 3,
+  "note": "Purple Dawn Immortal Emperor of the IAC",
+  "derivation_type": "B",
+  "salt": 482995714,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

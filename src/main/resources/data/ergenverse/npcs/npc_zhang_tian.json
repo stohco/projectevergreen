@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Zhang Tian (张天). Heng Yue Sect outer sect elder — annual aptitude recruiter for Zhao Country. Canon ID: N-REC-001 (derived). Per PROJECT_MASTER.md §5.3: this NPC triggers the Day 3 ceremony. He is NOT a combat entity — he arrives, tests children, accepts them, and departs.",
+  "npc_id": "npc_zhang_tian",
+  "name": "Zhang Tian",
+  "nameCn": "张天",
+  "canon_id": "N-REC-001",
+  "type": "elder",
+  "faction": "heng_yue_sect",
+  "location": "wang_family_village",
+  "cultivation": "Foundation Establishment",
+  "personality": "impassive, dutiful, slightly weary from years of recruitment",
+  "speech": "formal, concise, matter-of-fact",
+  "relationship_to_wanglin": "recruiter — neutral",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A stern man in blue robes who descended from the sky",
+    "qi_condensation": "Heng Yue Sect outer elder, Foundation Establishment realm"
+  },
+  "canon_confidence": 2,
+  "note": "Annual recruiter. Appears at Wang Family Village on Day 3. Triggers aptitude test ceremony (AptitudeTestEvent.java). Per §5.4: the player can also find him on the road for an early ceremony trigger.",
+  "derivation_type": "D",
+  "salt": 4200069137,
+  "dao_heart": {
+    "stability": 65,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "Stable but unremarkable. He does his duty."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

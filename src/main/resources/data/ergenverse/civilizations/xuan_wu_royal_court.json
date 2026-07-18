@@ -1,0 +1,83 @@
+{
+  "_comment": "Civilization: Xuan Wu Royal Court (royal_court) at Xuan Wu. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "xuan_wu_royal_court",
+  "name": "Xuan Wu Royal Court",
+  "type": "royal_court",
+  "location": "Xuan Wu",
+  "peak_realm": "Ascendant (Xuan Wu Emperor)",
+  "canon_status": "continental_power",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "mortals": "millions",
+    "qi_condensation": "tens of thousands",
+    "foundation_establishment": "thousands",
+    "core_formation": "hundreds",
+    "elders": 50,
+    "xuan_wu_emperor": 1,
+    "spirit_beasts": 2000
+  },
+  "economy": {
+    "spirit_stones": "abundant",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "advanced",
+    "forging": "advanced",
+    "formation": "advanced",
+    "trade": "continental",
+    "recruitment": "Xuan Wu continent"
+  },
+  "politics": {
+    "allies": [
+      "earth-aspected sects"
+    ],
+    "enemies": [
+      "foreign invaders"
+    ],
+    "vassals": [
+      "Xuan Wu sects"
+    ],
+    "rivals": [
+      "other continental powers"
+    ],
+    "internal_factions": [
+      "royal family",
+      "minister council"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "Xuan Wu nobility",
+    "expansion": "continental",
+    "decline": "none current",
+    "schisms": "royal vs minister tension",
+    "wars": [
+      "continental wars"
+    ],
+    "recovery": "strong; Black Tortoise bloodline"
+  },
+  "libraries": [
+    "earth techniques",
+    "Xuan Wu formation manuals",
+    "earth beast catalogues",
+    "royal records"
+  ],
+  "spirit_beasts": [
+    "black tortoise (divine, slumbering)",
+    "earth-aspected beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 186214811,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

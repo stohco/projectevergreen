@@ -1,0 +1,66 @@
+{
+  "_comment": "Mosquito Elite Gold Carapace (金甲蚊兵) — Renegade Immortal. Canon confidence: 5/5. Prime Directive: this beast exists objectively whether the player has the perception to recognize it.",
+  "species_id": "mosquito_elite_gold_carapace",
+  "name": "Mosquito Elite Gold Carapace",
+  "nameCn": "金甲蚊兵",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "canonical": {
+    "appearance": "Elite mosquito with gold carapace mutation. Much stronger than regular soldiers. Commands small squads.",
+    "size": "1.5m wingspan",
+    "behavior": "See ecology definitions.",
+    "habitat": "Mosquito Valley",
+    "cultivation": "Core Formation",
+    "intelligence": 5,
+    "diet": "See ecology definitions.",
+    "relationships": "See ecology definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "mosquito_elite_gold_carapace — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "mosquito_elite_gold_carapace — not a hive-mind species"
+    },
+    "combat_ai": "swarm_aggressive"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1510624485,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,51 @@
+{
+  "_comment": "Faction relationships: ancient_clan. Per user directive: faction relationship network — allies/enemies/vassals/rivals. Prime Directive: relationships exist objectively.",
+  "faction_id": "ancient_clan",
+  "type": "clan",
+  "allies": [],
+  "enemies": [
+    "celestial_clan"
+  ],
+  "vassals": [],
+  "rivals": [
+    "celestial_clan"
+  ],
+  "neutral": [
+    "wang_lin"
+  ],
+  "note": "Ancient Clan; Wang Lin joined as Dao Gu lineage",
+  "salt": 340022659,
+  "spiritual_vein_grade": {
+    "grade": null,
+    "element": null,
+    "qi_modifier": null,
+    "canon_note": "ancient_clan — spiritual vein grade not specified in canon"
+  },
+  "heritage_treasures": [],
+  "_xianxia_schema": 2,
+  "relationship_metadata": {
+    "allies": [],
+    "enemies": [
+      {
+        "id": "celestial_clan",
+        "strength": null,
+        "since": null,
+        "reason": null
+      }
+    ],
+    "vassals": [],
+    "rivals": [
+      {
+        "id": "celestial_clan",
+        "competition_over": null,
+        "intensity": null
+      }
+    ],
+    "neutral": [
+      {
+        "id": "wang_lin",
+        "context": null
+      }
+    ]
+  }
+}

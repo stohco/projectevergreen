@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Deer (corrupted). Generated from canonical definition.",
+  "variant_id": "spirit_deer__corrupted",
+  "species_id": "spirit_deer",
+  "species_name": "Spirit Deer",
+  "life_state": "corrupted",
+  "modifiers": {
+    "size_multiplier": 1.3,
+    "power_multiplier": 2.0,
+    "temperament": "malevolent",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 49735597
+}

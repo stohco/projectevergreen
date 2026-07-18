@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Master Cloud Soul (云魂道主). Canon ID: N105. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_master_cloud_soul",
+  "name": "Master Cloud Soul",
+  "nameCn": "云魂道主",
+  "canon_id": "N105",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "Third Step",
+  "personality": "soul-cloud cultivator; ethereal, soul-draining",
+  "speech": "whispering, echoing",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A ghostly cultivator",
+    "qi_condensation": "Soul-cloud; draining aura",
+    "core_formation": "Third Step; soul-cloud law",
+    "nascent_soul": "Soul-cloud dao master"
+  },
+  "canon_confidence": 3,
+  "note": "Soul-cloud-aspected antagonist",
+  "derivation_type": "B",
+  "salt": 276461627,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

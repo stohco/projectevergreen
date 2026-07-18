@@ -1,0 +1,106 @@
+{
+  "_comment": "Snow Domain Country (雪域国) — the cold-region country on Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L28): a country in a cold region of Planet Suzaku. Ice-aspect spirit veins. Frost-Tusk Mammoth herds (derived fauna, CANON_RI_ECOLOGY.md 2.4). Snow-Heart Herb grows here (derived flora). World-law tier: low (Qi Condensation ceiling is the practical cap for most cultivators; Nascent Soul possible only at the country's single spirit vein peak). Prime Directive: the cold and ice are objective — mortals here have adapted to it over generations; cultivators do not 'create' the cold, they perceive the ice-aspect Qi that was always there.",
+  "temperature": -0.8,
+  "downfall": 0.9,
+  "has_precipitation": true,
+  "temperature_modifier": "frozen",
+  "effects": {
+    "sky_color": 8423168,
+    "fog_color": 10518684,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "mood_sound": "minecraft:ambient.snowy_slope",
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [
+      {
+        "type": "minecraft:polar_bear",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "monster": [
+      {
+        "type": "minecraft:stray",
+        "weight": 60,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 30,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:creeper",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:village_snowy"
+    ],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_granite_upper",
+      "minecraft:ore_granite_lower",
+      "minecraft:ore_diorite_upper",
+      "minecraft:ore_diorite_lower",
+      "minecraft:ore_andesite_upper",
+      "minecraft:ore_andesite_lower",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold_lower",
+      "minecraft:ore_copper",
+      "minecraft:ore_emerald",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [
+      "ergenverse:joss_flame_source"
+    ],
+    [
+      "minecraft:patch_pumpkin",
+      "minecraft:patch_sugar_cane",
+      "ergenverse:snow_heart_herb"
+    ],
+    [
+      "minecraft:freeze_top_layer",
+      "minecraft:patch_snow",
+      "minecraft:patch_ice",
+      "minecraft:patch_blue_ice"
+    ]
+  ],
+  "structures": {
+    "ergenverse:snow_country_capital": {}
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "_comment": "Provenance metadata for Karma Print — 4th Original Spell (因果印). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I148",
+  "name": "Karma Print — 4th Original Spell",
+  "nameCn": "因果印",
+  "type": "other",
+  "category": "domain",
+  "origin": "Self-created (Ch. 1614)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Divine ability from mastery of Cause-Effect Origin",
+    "Created during mortal transformation",
+    "Dao of Karma"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Dao of Karma",
+    "4th self-created divine ability",
+    "Created during mortal transformation"
+  ],
+  "source": "Ch.1614 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Self-created (Ch. 1614)"
+  },
+  "lifecycle": {
+    "creator": "Self-created (Ch. 1614)",
+    "creation_circumstances": "Self-created (Ch. 1614)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

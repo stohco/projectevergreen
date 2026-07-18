@@ -1,0 +1,80 @@
+{
+  "_comment": "Species: Heavenly Bull Soul Beast (天牛魂兽) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "heavenly_bull_soul_beast",
+  "name": "Heavenly Bull Soul Beast",
+  "nameCn": "天牛魂兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Bull-shaped soul beast 8 m, body semi-translucent, horns radiate soul-power",
+    "size": "8 m adult, 8000 jin (material) / soul-mass",
+    "behavior": "Soul beast of Heavenly Bull Continent; cultivates by absorbing soul-essence",
+    "habitat": "Heavenly Bull Continent, soul-aspected spirit veins",
+    "cultivation": "Spirit Severing -> Ascendant (soul attribute)",
+    "intelligence": 7,
+    "diet": "soul fragments, soul-herbs, soul-aspected minerals",
+    "relationships": "Connected to Heavenly Bull Soul Armour (canon treasure)",
+    "techniques": [
+      "soul_horn_charge",
+      "soul_breath",
+      "bull_soul_crush",
+      "soul_stomp"
+    ],
+    "treasures": [
+      "heavenly_bull_core",
+      "soul_horn",
+      "heavenly_bull_essence"
+    ],
+    "bloodline": "Heavenly Bull lineage; soul-attribute bloodline",
+    "mutations": [
+      "soul_body",
+      "heavenly_bull_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "heavenly_bull_soul_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "heavenly_bull_soul_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1814588202,
+  "bloodline_tier": "desolate",
+  "inner_dan_properties": {
+    "element": "soul",
+    "purity_tier": 7,
+    "dao_resonance": "heavenly_bull",
+    "side_effects": [
+      "soul_pull"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

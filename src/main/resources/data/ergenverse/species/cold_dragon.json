@@ -1,0 +1,77 @@
+{
+  "_comment": "Species: Cold Dragon (寒龙) from A Will Eternal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "cold_dragon",
+  "name": "Cold Dragon",
+  "nameCn": "寒龙",
+  "novel": "A Will Eternal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Serpentine dragon 40 m, scales ice-blue, breath freezes spirit",
+    "size": "40 m adult, 80000 jin; ancient 200 m, millions of jin",
+    "behavior": "Solitary apex of cold regions; sleeps in glacial depths",
+    "habitat": "Glacial seas, ice-aspected apex spirit veins",
+    "cultivation": "Spirit Severing -> Ascendant (ice attribute)",
+    "intelligence": 9,
+    "diet": "ice-herbs, cold-spring fish, frozen prey",
+    "relationships": "Rival of ice phoenix; kin of flame dragon (opposite attribute)",
+    "techniques": [
+      "cold_breath",
+      "ice_coil",
+      "freeze_spirit"
+    ],
+    "treasures": [
+      "cold_dragon_core",
+      "ice_scale",
+      "cold_essence"
+    ],
+    "bloodline": "Cold-Dragon lineage; ice-attribute true dragon bloodline (diluted)",
+    "mutations": [
+      "true_dragon_awakening",
+      "ice_immortal_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "cold_dragon — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "cold_dragon — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 536432077,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

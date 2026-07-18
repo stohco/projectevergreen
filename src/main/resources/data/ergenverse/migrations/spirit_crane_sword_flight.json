@@ -1,0 +1,100 @@
+{
+  "_comment": "Migration: Spirit Crane Sword Flight. 5 waypoints, 5 follower types, 2 emergent markets. Per migration directive: migration is a major simulation system. The world breathes because markets appear seasonally along routes. Prime Directive: route exists objectively; player enters a world already moving.",
+  "migration_id": "spirit_crane_sword_flight",
+  "name": "Spirit Crane Sword Flight",
+  "species": "spirit_crane",
+  "description": "The seasonal migration of spirit cranes between sword peaks. Sword cultivators follow this route for centuries.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "waypoints": [
+    {
+      "point": "da_lou_sword_peak",
+      "season": "spring",
+      "duration_days": 20
+    },
+    {
+      "point": "heng_yue_sword_peak",
+      "season": "late_spring",
+      "duration_days": 25
+    },
+    {
+      "point": "xuan_dao_sword_peak",
+      "season": "summer",
+      "duration_days": 30
+    },
+    {
+      "point": "vermilion_sword_peak",
+      "season": "autumn",
+      "duration_days": 25
+    },
+    {
+      "point": "snow_domain_sword_peak",
+      "season": "winter",
+      "duration_days": 40
+    }
+  ],
+  "follower_chain": [
+    {
+      "follower": "sword_cultivators",
+      "relationship": "symbiotic",
+      "distance_li": 5,
+      "note": "Sword cultivators follow cranes to cultivate sword-intent."
+    },
+    {
+      "follower": "thunder_birds",
+      "relationship": "predator",
+      "distance_li": 20,
+      "note": "Thunder birds prey on cranes."
+    },
+    {
+      "follower": "wind_wolves",
+      "relationship": "scavenger",
+      "distance_li": 50,
+      "note": "Wolves scavenge crane falls."
+    },
+    {
+      "follower": "treasure_seeking_cults",
+      "relationship": "opportunist",
+      "distance_li": 80,
+      "note": "Treasure seekers follow for sword-intent herbs."
+    },
+    {
+      "follower": "bandit_cults",
+      "relationship": "parasite",
+      "distance_li": 120,
+      "note": "Bandits rob cultivators."
+    }
+  ],
+  "emergent_markets": [
+    {
+      "market": "sword_intent_spring_market",
+      "season": "spring",
+      "goods": [
+        "sword_grass",
+        "crane_feather",
+        "intent_herb"
+      ]
+    },
+    {
+      "market": "snow_sword_market",
+      "season": "winter",
+      "goods": [
+        "ice_sword_crystal",
+        "crane_crown",
+        "winter_intent"
+      ]
+    }
+  ],
+  "simulation_notes": {
+    "world_breathes": "Markets appear and disappear seasonally; the world changes whether or not the player acts.",
+    "follower_dynamics": "Each follower type arrives with a delay proportional to distance_li; predators arrive after prey, scavengers after predators, bandits after cultivators, merchants after stability.",
+    "perception_tiers": {
+      "mortal": "Sees beasts moving.",
+      "qi_condensation": "Senses migration direction.",
+      "foundation_establishment": "Perceives follower chain.",
+      "core_formation": "Predicts market appearances.",
+      "nascent_soul": "Perceives complete migration system."
+    }
+  },
+  "salt": 1107116545
+}

@@ -1,0 +1,68 @@
+{
+  "_comment": "Provenance metadata for Immortal Celestial Body (仙天身). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I127",
+  "name": "Immortal Celestial Body",
+  "nameCn": "仙天身",
+  "type": "other",
+  "category": "cultivation_aid",
+  "origin": "Self-created post-Celestial-Vein fusion (Ch. 1538)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Fused celestial and immortal energy avatar",
+    "Immortal-tier power",
+    "Post-Celestial-Vein fusion product"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Immortal-tier avatar",
+    "Fusion of Celestial Body + Thunder Body",
+    "Immortal-celestial hybrid"
+  ],
+  "source": "Ch.1538 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Self-created post-Celestial-Vein fusion (Ch. 1538)"
+  },
+  "lifecycle": {
+    "creator": "Self-created post-Celestial-Vein fusion (Ch. 1538)",
+    "creation_circumstances": "Self-created post-Celestial-Vein fusion (Ch. 1538)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

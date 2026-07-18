@@ -1,0 +1,80 @@
+{
+  "_comment": "Species: Berserk Beast (狂兽) from Pursuit of the Truth. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "berserk_beast",
+  "name": "Berserk Beast",
+  "nameCn": "狂兽",
+  "novel": "Pursuit of the Truth",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Shifting bestial form 4 m tall, body perpetually wreathed in savage qi, eyes crimson",
+    "size": "4 m adult, 3000 jin; ancient 15 m, 100000 jin",
+    "behavior": "Born of accumulated savage qi; hunts by berserk charge; cultivates by killing",
+    "habitat": "Southern Region savage lands, berserk-aspected forbidden zones",
+    "cultivation": "Nascent Soul -> Spirit Severing (berserk attribute)",
+    "intelligence": 5,
+    "diet": "savage qi, weaker beasts, lost cultivators",
+    "relationships": "Enemy of Su Ming's lineage; born of the same savage qi",
+    "techniques": [
+      "berserk_charge",
+      "savage_roar",
+      "blood_frenzy",
+      "form_shift"
+    ],
+    "treasures": [
+      "berserk_core",
+      "savage_qi_essence",
+      "crimson_fang"
+    ],
+    "bloodline": "Savage-Beast lineage; berserk-attribute bloodline",
+    "mutations": [
+      "true_berserk_body",
+      "savage_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "berserk_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "berserk_beast — not a hive-mind species"
+    },
+    "combat_ai": "swarm_aggressive"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1049784897,
+  "bloodline_tier": "desolate",
+  "inner_dan_properties": {
+    "element": "earth",
+    "purity_tier": 5,
+    "dao_resonance": "berserk_fury",
+    "side_effects": [
+      "rage_overflow"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

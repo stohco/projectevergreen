@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Tianyunzi (天运子). Canon ID: N113. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_tianyunzi",
+  "name": "Tianyunzi",
+  "nameCn": "天运子",
+  "canon_id": "N113",
+  "type": "artifact_spirit",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "Third Step+",
+  "personality": "fate-reading artifact spirit; mysterious, knowledgeable",
+  "speech": "cryptic, fate-reading",
+  "relationship_to_wanglin": "artifact spirit; advisor",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "A ghostly presence",
+    "qi_condensation": "Artifact spirit; fate-aspected",
+    "core_formation": "Tianyunzi; Third Step+",
+    "nascent_soul": "Third Step+; fate-reading artifact spirit"
+  },
+  "canon_confidence": 4,
+  "note": "Fate-reading artifact spirit; Wang Lin's advisor",
+  "derivation_type": "A",
+  "salt": 1077906580,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

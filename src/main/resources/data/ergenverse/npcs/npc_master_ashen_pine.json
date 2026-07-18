@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Master Ashen Pine (灰松道主). Canon ID: N104. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_master_ashen_pine",
+  "name": "Master Ashen Pine",
+  "nameCn": "灰松道主",
+  "canon_id": "N104",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "Third Step",
+  "personality": "ash-aspected cultivator; patient, corroding",
+  "speech": "grating, ash-dry",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A grey-robed cultivator",
+    "qi_condensation": "Ash-aspected; corroding aura",
+    "core_formation": "Third Step; ash law",
+    "nascent_soul": "Ash dao master"
+  },
+  "canon_confidence": 3,
+  "note": "Ash-aspected antagonist",
+  "derivation_type": "B",
+  "salt": 202254000,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

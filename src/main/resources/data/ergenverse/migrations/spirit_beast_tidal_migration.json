@@ -1,0 +1,121 @@
+{
+  "_comment": "Migration: Spirit Beast Tidal Migration. 5 waypoints, 7 follower types, 3 emergent markets. Per migration directive: migration is a major simulation system. The world breathes because markets appear seasonally along routes. Prime Directive: route exists objectively; player enters a world already moving.",
+  "migration_id": "spirit_beast_tidal_migration",
+  "name": "Spirit Beast Tidal Migration",
+  "species": "multiple",
+  "description": "The annual tidal migration of spirit beasts across continents, triggered by spirit-vein shifts.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "waypoints": [
+    {
+      "point": "zhao_spirit_vein",
+      "season": "spring",
+      "duration_days": 30
+    },
+    {
+      "point": "chu_spirit_vein",
+      "season": "late_spring",
+      "duration_days": 30
+    },
+    {
+      "point": "fire_burn_spirit_vein",
+      "season": "summer",
+      "duration_days": 45
+    },
+    {
+      "point": "sky_demon_spirit_vein",
+      "season": "autumn",
+      "duration_days": 40
+    },
+    {
+      "point": "snow_domain_spirit_vein",
+      "season": "winter",
+      "duration_days": 60
+    }
+  ],
+  "follower_chain": [
+    {
+      "follower": "herbivore_beasts",
+      "relationship": "prey",
+      "distance_li": 5,
+      "note": "Herbivores migrate with vegetation."
+    },
+    {
+      "follower": "predator_beasts",
+      "relationship": "predator",
+      "distance_li": 20,
+      "note": "Predators follow herbivores."
+    },
+    {
+      "follower": "scavenger_beasts",
+      "relationship": "scavenger",
+      "distance_li": 50,
+      "note": "Scavengers follow predators."
+    },
+    {
+      "follower": "cultivator_hunters",
+      "relationship": "predator",
+      "distance_li": 100,
+      "note": "Hunters follow beasts."
+    },
+    {
+      "follower": "merchant_caravans",
+      "relationship": "opportunist",
+      "distance_li": 150,
+      "note": "Caravans follow hunters."
+    },
+    {
+      "follower": "bandit_cults",
+      "relationship": "parasite",
+      "distance_li": 200,
+      "note": "Bandits rob caravans."
+    },
+    {
+      "follower": "sect_elders",
+      "relationship": "overseer",
+      "distance_li": 500,
+      "note": "Sect elders monitor migration for threats."
+    }
+  ],
+  "emergent_markets": [
+    {
+      "market": "zhao_migration_market",
+      "season": "spring",
+      "goods": [
+        "beast_core",
+        "herb",
+        "fur"
+      ]
+    },
+    {
+      "market": "chu_migration_market",
+      "season": "late_spring",
+      "goods": [
+        "beast_core",
+        "herb",
+        "caravan_goods"
+      ]
+    },
+    {
+      "market": "fire_burn_migration_market",
+      "season": "summer",
+      "goods": [
+        "beast_core",
+        "fire_herb",
+        "volcano_crystal"
+      ]
+    }
+  ],
+  "simulation_notes": {
+    "world_breathes": "Markets appear and disappear seasonally; the world changes whether or not the player acts.",
+    "follower_dynamics": "Each follower type arrives with a delay proportional to distance_li; predators arrive after prey, scavengers after predators, bandits after cultivators, merchants after stability.",
+    "perception_tiers": {
+      "mortal": "Sees beasts moving.",
+      "qi_condensation": "Senses migration direction.",
+      "foundation_establishment": "Perceives follower chain.",
+      "core_formation": "Predicts market appearances.",
+      "nascent_soul": "Perceives complete migration system."
+    }
+  },
+  "salt": 1479295478
+}

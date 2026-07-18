@@ -1,0 +1,66 @@
+{
+  "_comment": "Thunder Toad (雷蟾) — Renegade Immortal. Canon confidence: 5/5. Prime Directive: this beast exists objectively whether the player has the perception to recognize it.",
+  "species_id": "thunder_toad",
+  "name": "Thunder Toad",
+  "nameCn": "雷蟾",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "canonical": {
+    "appearance": "Bloated toad 1-2m, skin crackles with blue-white thunder patterns, throat sac glows during storms. Deceased by Wang Lin.",
+    "size": "1.5m adult",
+    "behavior": "See ecology definitions.",
+    "habitat": "Thunder-attribute wetlands, Fire Burn Country",
+    "cultivation": "Core Formation→Nascent Soul",
+    "intelligence": 5,
+    "diet": "See ecology definitions.",
+    "relationships": "See ecology definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": true,
+      "element": "thunder",
+      "grade": "high",
+      "alchemy_use": "Thunder Toad core refines Thunder Tribulation Pills; enhances thunder-attribute techniques",
+      "canon_note": "Wang Lin killed the Thunder Toad in Fire Burn Country and harvested its core"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "thunder_toad — not a hive-mind species"
+    },
+    "combat_ai": "territorial_defender"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 953196503,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

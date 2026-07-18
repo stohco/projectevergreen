@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Sun Zhenwei (孙振威). Canon ID: N146. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_sun_zhenwei",
+  "name": "Sun Zhenwei",
+  "nameCn": "孙振威",
+  "canon_id": "N146",
+  "type": "disciple",
+  "faction": "heng_yue_sect",
+  "location": "heng_yue_sect",
+  "cultivation": "Nascent Soul",
+  "personality": "Heng Yue disciple",
+  "speech": "direct",
+  "relationship_to_wanglin": "fellow disciple",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator",
+    "qi_condensation": "Heng Yue disciple; Nascent Soul"
+  },
+  "canon_confidence": 3,
+  "note": "Heng Yue Nascent Soul disciple",
+  "derivation_type": "B",
+  "salt": 1626410150,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "nascent_soul",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

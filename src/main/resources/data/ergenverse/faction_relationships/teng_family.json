@@ -1,0 +1,51 @@
+{
+  "_comment": "Faction relationships: teng_family. Per user directive: faction relationship network — allies/enemies/vassals/rivals. Prime Directive: relationships exist objectively.",
+  "faction_id": "teng_family",
+  "type": "clan",
+  "allies": [
+    "ji_mo_sect",
+    "soul_refining_sect"
+  ],
+  "enemies": [
+    "wang_lin",
+    "wang_family_village",
+    "heng_yue_sect"
+  ],
+  "vassals": [],
+  "rivals": [
+    "other_zhao_clans"
+  ],
+  "neutral": [],
+  "note": "",
+  "salt": 139707686,
+  "spiritual_vein_grade": {
+    "grade": "mid",
+    "element": "metal",
+    "qi_modifier": "Metal-attribute techniques enhanced within Teng Family compounds",
+    "canon_note": "Teng Family's mid-grade metal vein supported their sword-cultivation traditions"
+  },
+  "heritage_treasures": [
+    {
+      "item_id": "teng_family_spirit_sword",
+      "name": "Teng Family Spirit Sword Collection",
+      "status": "destroyed",
+      "location_within_faction": "Destroyed during Teng Family massacre",
+      "canon_note": "Lost when Wang Lin destroyed the Teng Family"
+    }
+  ],
+  "relationship_metadata": {
+    "allies": [],
+    "enemies": [
+      {
+        "id": "wang_lin",
+        "strength": "mortal_feud",
+        "since": "Year 1 of Wang Lin's cultivation",
+        "reason": "Teng Huayuan's assassination attempt; Wang Lin's massacre retaliation"
+      }
+    ],
+    "vassals": [],
+    "rivals": [],
+    "neutral": []
+  },
+  "_xianxia_schema": 2
+}

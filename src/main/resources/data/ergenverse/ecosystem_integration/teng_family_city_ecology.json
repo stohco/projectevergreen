@@ -1,0 +1,20 @@
+{
+  "_comment": "Ecosystem integration: teng_family_city_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "teng_family_city_ecology",
+  "beasts": [
+    "spirit_wolf_pack_leader",
+    "mountain_lion",
+    "giant_python"
+  ],
+  "npcs": [
+    "npc_teng_huayuan",
+    "npc_teng_li",
+    "npc_teng_xiuxiu"
+  ],
+  "enemies": [
+    "teng_huayuan",
+    "teng_li"
+  ],
+  "note": "Teng Family City; antagonist clan ecology",
+  "salt": 521609468
+}

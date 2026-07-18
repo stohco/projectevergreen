@@ -1,0 +1,46 @@
+{
+  "_comment": "Foreign Battleground (外域战场) dimension — major canon location in Renegade Immortal where Wang Lin spends a major arc fighting for Planet Suzaku's survival against outsiders. Canon: a brutal, endless battlefield outside the Sealed Cave World, reached via teleportation arrays from cultivation planets. Regions include open battle plains, soul-crystal flats (minable for the reward currency), void-rift wastes (where the boundary is unstable and outsiders invade), and ancient war ruins. Three biomes mapped via multi_noise: foreign_battlefield_plains (mid-temperature, wide continent range — the main battle plains), foreign_soul_crystal_flats (cool, oceanic/edge continents — minable crystal flats), foreign_void_rift_wastes (hot, high continents, high weirdness — unstable boundary wastes). Uses overworld noise settings (the battlefield is surface-like). Prime Directive: the war was objectively fought here; the corpses and soul crystals are real regardless of the player's perception.",
+  "type": "ergenverse:foreign_battleground_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "minecraft:overworld",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "ergenverse:foreign_battlefield_plains",
+          "parameters": {
+            "temperature": [0.2, 0.6, 0.0, 0.0],
+            "continents": [-0.5, 0.5, 0.0, 0.0],
+            "erosion": [-0.5, 0.5, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:foreign_soul_crystal_flats",
+          "parameters": {
+            "temperature": [-0.2, 0.2, 0.0, 0.0],
+            "continents": [-1.0, -0.3, 0.0, 0.0],
+            "erosion": [-0.5, 0.5, 0.0, 0.0],
+            "depth": [-0.5, 0.5, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:foreign_void_rift_wastes",
+          "parameters": {
+            "temperature": [0.6, 1.0, 0.0, 0.0],
+            "continents": [0.3, 1.0, 0.0, 0.0],
+            "erosion": [-0.5, 0.5, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": [0.4, 1.0, 0.0, 0.0],
+            "offset": 0.0
+          }
+        }
+      ]
+    }
+  }
+}

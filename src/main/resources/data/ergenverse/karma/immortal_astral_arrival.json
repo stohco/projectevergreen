@@ -1,0 +1,23 @@
+{
+  "karma_id": "immortal_astral_arrival",
+  "name": "Immortal Astral Continent Arrival",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 40000,
+  "karmic_weight": 2000,
+  "bearer": "N01",
+  "debtor": "immortal_astral_continent",
+  "description": "Wang Lin arrives at the Immortal Astral Continent, the apex realm of the Ergenverse.",
+  "consequences": [
+    {
+      "type": "tribulation_earned",
+      "target_id": "N01",
+      "magnitude": 1500,
+      "resolved_at_tick": null
+    }
+  ],
+  "unresolved_until": "transcendence",
+  "_comment": "Karmic Nexus node: Immortal Astral Continent Arrival. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 546034166
+}

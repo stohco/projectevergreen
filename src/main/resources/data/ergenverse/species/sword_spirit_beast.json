@@ -1,0 +1,35 @@
+{
+  "_comment": "Sword Spirit Beast — Renegade Immortal. A beast formed from accumulated sword intent. Canon: appears near ancient battlefields and sword cultivator ruins.",
+  "species_id": "sword_spirit_beast",
+  "name": "Sword Spirit Beast",
+  "nameCn": "剑灵兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 2,
+  "max_hp": 40,
+  "attack_damage": 12,
+  "speed": 0.4,
+  "follow_range": 20,
+  "canonical": {
+    "appearance": "A vaguely lupine or feline form made entirely of condensed sword energy. Blade-like protrusions along its spine and limbs. Semi-transparent.",
+    "size": "Medium (1.5-2m body)",
+    "behavior": "Aggressive toward anyone carrying weapons. Drawn to sword cultivators' qi. Attacks with blade-like claws.",
+    "habitat": "Ancient battlefields, sword cultivator ruins, restriction-imbued areas",
+    "cultivation": "Foundation Establishment equivalent (varies with residual sword intent strength)",
+    "intelligence": "2-3 (instinctual, driven by absorbed combat memories)",
+    "diet": "Absorbs sword intent from combat, spiritual energy from weapons",
+    "relationships": "Sometimes befriended by sword cultivators who share compatible intent. Hostile to all others.",
+    "techniques": ["Sword claw (melee, ignores armor)", "Blade storm (AoE spinning attack)", "Sword sense (detects weapons in 30-block radius)"],
+    "treasures": ["Sword Essence Crystal (absorbed from defeated beasts, used in weapon refinement)"],
+    "bloodline": "spirit_beast",
+    "mutations": ["Intent Absorption — grows stronger after each combat, temporarily gaining +2 attack damage"],
+    "ecology": "Scavenger-predator of battlefields. Rare; only forms where immense sword intent has accumulated over centuries.",
+    "bloodline_tier": "spirit_beast",
+    "combat_ai": "territorial_aggressive"
+  },
+  "art_direction": {
+    "color_palette": ["#aaccff", "#ffffff", "#6688cc", "#ddeeff"],
+    "model_notes": "Semi-transparent wolf/feline hybrid with blade protrusions. Glowing seams of blue-white energy.",
+    "texture_notes": "Translucent blue-white body. Solid metallic blade spines. Particle trail of sword sparks."
+  }
+}

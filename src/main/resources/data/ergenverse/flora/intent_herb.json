@@ -1,0 +1,23 @@
+{
+  "speciesId": "intent_herb",
+  "name": "Intent Herb",
+  "nameCn": "意草",
+  "renderTier": "CROSS_SPRITE",
+  "defaultElement": "WOOD",
+  "baseMedicinalPotency": 0.7,
+  "baseQiSaturation": 0.6,
+  "minStageToHarvest": "mature",
+  "harvestItemId": "ergenverse:intent_herb_item",
+  "fruitItemId": null,
+  "growthDurationTicks": 144000,
+  "fruitingDurationTicks": 36000,
+  "requiresQiDensity": 0.3,
+  "biomeWhitelist": ["forest", "flower_forest", "birch_forest", "dark_forest", "old_growth_birch_forest"],
+  "ecologyAttracts": ["sword_spirit_beast"],
+  "ecologyRepels": [],
+  "canMutate": true,
+  "mutationChance": 0.03,
+  "perceptionTierToIdentify": "FOUNDATION",
+  "canonConfidence": 4,
+  "description": "Houses a fragment of sword intent. Only foundation cultivators perceive the intent radiating from its leaves."
+}

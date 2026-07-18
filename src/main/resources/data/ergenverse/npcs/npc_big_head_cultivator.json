@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Big Head Cultivator (大头). Canon ID: N45. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_big_head_cultivator",
+  "name": "Big Head Cultivator",
+  "nameCn": "大头",
+  "canon_id": "N45",
+  "type": "servant",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "Kunie",
+  "personality": "large-headed, eccentric servant; loyal",
+  "speech": "eccentric, rambling",
+  "relationship_to_wanglin": "servant",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "An eccentric large-headed man",
+    "qi_condensation": "Cultivator; Kunie realm",
+    "core_formation": "Big Head; Kunie",
+    "nascent_soul": "Kunie; Wang Lin's eccentric servant"
+  },
+  "canon_confidence": 3,
+  "note": "Wang Lin's eccentric servant",
+  "derivation_type": "B",
+  "salt": 479858540,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

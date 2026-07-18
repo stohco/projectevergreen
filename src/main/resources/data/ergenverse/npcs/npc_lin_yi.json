@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Lin Yi (林怡). Canon ID: N89. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_lin_yi",
+  "name": "Lin Yi",
+  "nameCn": "林怡",
+  "canon_id": "N89",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "unknown",
+  "personality": "antagonist",
+  "speech": "cold",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cold cultivator",
+    "qi_condensation": "Antagonist"
+  },
+  "canon_confidence": 3,
+  "note": "Minor antagonist",
+  "derivation_type": "B",
+  "salt": 1932706145,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

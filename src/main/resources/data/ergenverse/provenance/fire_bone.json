@@ -1,0 +1,68 @@
+{
+  "_comment": "Provenance metadata for Fire Bone (火骨). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I106",
+  "name": "Fire Bone",
+  "nameCn": "火骨",
+  "type": "celestial_treasure",
+  "category": "offensive",
+  "origin": "Gifted by 2nd-Generation Vermilion Bird",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Unleashes World Incineration Art (ultimate technique)",
+    "Used when killing the third-generation Vermilion Bird",
+    "2nd-Gen Vermilion Bird gift — celestial-tier"
+  ],
+  "canon_confidence": 4,
+  "known_facts": [
+    "Celestial-tier — 2nd-Gen Vermilion Bird's gift",
+    "Contains World Incineration Art",
+    "Used to kill third-generation Vermilion Bird"
+  ],
+  "source": "wiki-attested (Vermilion Bird lineage); Fandom wiki; Baidu Baike",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Gifted by 2nd-Generation Vermilion Bird"
+  },
+  "lifecycle": {
+    "creator": "Gifted by 2nd-Generation Vermilion Bird",
+    "creation_circumstances": "Gifted by 2nd-Generation Vermilion Bird",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

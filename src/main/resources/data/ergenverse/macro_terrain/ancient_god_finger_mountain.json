@@ -1,0 +1,24 @@
+{
+  "_comment": "Macro-Terrain: Ancient God Finger Mountain. Per scale directive: this terrain IS a being. Player shouldn't initially realize they're standing on bone. Divine Sense -> Perception changes -> 'You realize this mountain range... is one finger.' Prime Directive: the being's corpse is objectively terrain; perception tier determines what the player sees.",
+  "terrain_id": "ancient_god_finger_mountain",
+  "name": "Ancient God Finger Mountain",
+  "being": "Ancient God Tu Si",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "scale": "200 li long, 30 li wide, 5 li tall — one finger of a being whose body spanned a continent.",
+  "canonical_event": "Tu Si's Ancient God body fell here; Wang Lin inherited Tu Si's god-knowledge here.",
+  "perception_tiered_appearance": {
+    "mortal": "A mountain range of unusual grey stone, 200 li long, peaks oddly knuckle-shaped.",
+    "qi_condensation": "The stone has a faint bone-like grain; cold to the touch regardless of season.",
+    "foundation_establishment": "The 'stone' is clearly petrified bone; marrow-channels visible in cross-sections.",
+    "core_formation": "This is an Ancient God's finger. The peaks are knuckle-joints; the valleys are tendon-grooves.",
+    "nascent_soul": "The finger still holds residual god-essence; marrow-channels pulse faintly with ancient qi.",
+    "spirit_severing": "The entire finger is a relic of Tu Si's Ancient God body; god-essence permeates every grain."
+  },
+  "perception_mechanic": {
+    "trigger": "When player's perception tier rises, the appearance re-rolls automatically.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does.",
+    "canon_fidelity": "This is exactly how Wang Lin perceived Ancient God Tu Si's remains — first as terrain, then as god-bone, then as god-memory."
+  },
+  "salt": 919570426
+}

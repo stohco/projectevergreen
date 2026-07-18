@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Sun-Moon Spider (日月蛛) from I Shall Seal the Heavens. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "sun_moon_spider",
+  "name": "Sun-Moon Spider",
+  "nameCn": "日月蛛",
+  "novel": "I Shall Seal the Heavens",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Spider 4 m, body half sun-gold half moon-silver, web is sun-moon law",
+    "size": "4 m adult, 600 jin; ancient 12 m, 12000 jin",
+    "behavior": "Spins sun-moon webs that trap by law; cultivates by absorbing sun-moon essence",
+    "habitat": "Sun-moon peaks, law-aspected spirit veins",
+    "cultivation": "Spirit Severing (sun/moon attribute)",
+    "intelligence": 9,
+    "diet": "sun-moon essence, sun-moon herbs, trapped cultivators",
+    "relationships": "Auspicious to cultivators who comprehend sun-moon",
+    "techniques": [
+      "sun_moon_web",
+      "law_bind",
+      "sun_moon_bite"
+    ],
+    "treasures": [
+      "sun_moon_core",
+      "sun_moon_silk",
+      "law_fragment"
+    ],
+    "bloodline": "Sun-Moon-Spider lineage; sun/moon bloodline",
+    "mutations": [
+      "true_sun_moon_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "sun_moon_spider — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "sun_moon_spider — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 960831291,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

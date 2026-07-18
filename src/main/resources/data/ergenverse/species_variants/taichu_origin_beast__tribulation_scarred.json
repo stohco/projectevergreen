@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Taichu Origin True Body (tribulation_scarred). Generated from canonical definition.",
+  "variant_id": "taichu_origin_beast__tribulation_scarred",
+  "species_id": "taichu_origin_beast",
+  "species_name": "Taichu Origin True Body",
+  "life_state": "tribulation_scarred",
+  "modifiers": {
+    "size_multiplier": 1.2,
+    "power_multiplier": 2.5,
+    "temperament": "sober",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 446418774
+}

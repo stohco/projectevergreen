@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Ice Phoenix (冰凰) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "ice_phoenix",
+  "name": "Ice Phoenix",
+  "nameCn": "冰凰",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Avian 5 m wingspan, feathers crystalline ice-blue, tears freeze the air",
+    "size": "5 m wingspan adult, 600 jin; ancient 20 m, 8000 jin",
+    "behavior": "Solitary; nests on glacial peaks; freezes prey then shatters; hoards ice-attribute treasures",
+    "habitat": "Snow Domain Country peaks, ice-aspected spirit veins, glacial caves",
+    "cultivation": "Spirit Severing -> Ascendant (ice attribute)",
+    "intelligence": 9,
+    "diet": "ice-attribute herbs, frozen prey, cold-spring fish",
+    "relationships": "Rival of flame dragon; tributed by Snow Domain royalty",
+    "techniques": [
+      "ice_tears",
+      "glacial_roost",
+      "freeze_breath",
+      "phoenix_rebirth"
+    ],
+    "treasures": [
+      "ice_phoenix_core",
+      "phoenix_feather",
+      "frost_essence"
+    ],
+    "bloodline": "Ancient Phoenix lineage; ice-attribute true phoenix bloodline (diluted)",
+    "mutations": [
+      "nine_tail_feather",
+      "true_phoenix_awakening",
+      "ice_immortal_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "ice_phoenix — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "ice_phoenix — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 242801287,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

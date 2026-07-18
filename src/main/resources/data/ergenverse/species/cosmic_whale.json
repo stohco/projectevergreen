@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Cosmic Whale (宇宙鲸) from A World Worth Protecting. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "cosmic_whale",
+  "name": "Cosmic Whale",
+  "nameCn": "宇宙鲸",
+  "novel": "A World Worth Protecting",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Leviathan whale 10 km, body swims through cosmic void, skin is starlight",
+    "size": "10 km adult, planetary mass; ancient spans star systems",
+    "behavior": "Migrates through cosmic void; cultivates by absorbing cosmic qi; entire civilizations form on its back",
+    "habitat": "Cosmic void, between star systems",
+    "cultivation": "Immortal (cosmic attribute)",
+    "intelligence": 11,
+    "diet": "cosmic qi, star-essence, cosmic plankton",
+    "relationships": "Host to cosmic civilizations; kin of cloud whale (greater form)",
+    "techniques": [
+      "cosmic_swim",
+      "starlight_breath",
+      "void_dive"
+    ],
+    "treasures": [
+      "cosmic_whale_core",
+      "starlight_essence"
+    ],
+    "bloodline": "Cosmic-Whale lineage; cosmic bloodline (greater cloud whale)",
+    "mutations": [
+      "true_cosmic_body",
+      "cosmic_immortal_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "cosmic_whale — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "cosmic_whale — not a hive-mind species"
+    },
+    "combat_ai": "migration_passive"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 147337691,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

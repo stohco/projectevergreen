@@ -1,0 +1,73 @@
+{
+  "comment": "Mosquito Valley Ecosystem — a complete ecological system centered on the Mosquito Beast species. Canon: Wang Lin's Mosquito Beast came from here. The valley contains millions of larvae, adult swarms, queens, egg chambers, blood pools, spirit trees, nest tunnels, mutated elites, and ancient queens. This is not a single mob — it's an entire ecosystem.",
+  "ecosystem_type": "swarm_predator_ecology",
+  "keystone_species": "mosquito_beast",
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "species": [
+        "blood_pool_spirit_algae",
+        "corpse_fungus"
+      ],
+      "description": "Spirit algae that grows in blood pools; fungus that breaks down corpses"
+    },
+    {
+      "layer": "primary_consumer",
+      "species": [
+        "mosquito_larva",
+        "blood_worm"
+      ],
+      "description": "Larval mosquitoes and blood worms that feed on the algae and dissolved blood"
+    },
+    {
+      "layer": "secondary_consumer",
+      "species": [
+        "mosquito_worker",
+        "mosquito_soldier"
+      ],
+      "description": "Adult mosquitoes that hunt wild animals and weak cultivators"
+    },
+    {
+      "layer": "tertiary_consumer",
+      "species": [
+        "mosquito_elite",
+        "mosquito_queen"
+      ],
+      "description": "Elite mosquitoes that can drain Qi from Foundation Establishment cultivators; queens that command swarms"
+    },
+    {
+      "layer": "apex",
+      "species": [
+        "ancient_mosquito_queen"
+      ],
+      "description": "The ancient queen — a Soul Formation tier beast that has lived for millennia, absorbing the blood of millions"
+    }
+  ],
+  "ecosystem_features": [
+    "blood_pools — standing water infused with spirit beast blood; breeding ground for larvae",
+    "egg_chambers — underground tunnels where queens lay thousands of eggs",
+    "nest_tunnels — extensive underground network connecting blood pools and egg chambers",
+    "spirit_trees — trees that grow from blood-infused soil; their fruit attracts prey animals",
+    "corpse_middens — piles of drained corpses near the nest entrances",
+    "queen_chamber — the deepest chamber where the ancient queen resides"
+  ],
+  "population_dynamics": {
+    "larvae_per_valley": 10000000,
+    "adult_workers_per_valley": 1000000,
+    "adult_soldiers_per_valley": 100000,
+    "elites_per_valley": 100,
+    "queens_per_valley": 10,
+    "ancient_queens_per_valley": 1
+  },
+  "seasonal_cycle": "population_booms_during_spirit_beast_migration_season — crashes_during_winter_when_prey_is_scarce",
+  "canon_source": "I093 — Mosquito Beast; derived ecology from novel description",
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

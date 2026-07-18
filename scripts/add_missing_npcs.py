@@ -1,0 +1,367 @@
+#!/usr/bin/env python3
+"""
+Add 10 missing key characters to ri_canon_database.json.
+
+Task ID: EXTRACT-CIV-NPC Part B
+
+ID Allocation Note:
+  Task spec said "N161-N170, continuing from existing IDs", assuming 160-char database.
+  Actual database had 160 entries with IDs N01..N162 (gaps at N29, N43).
+  To avoid colliding with existing N161 (Nian Tian) and N162 (Ling'er), we use N163..N172.
+
+Canon Verification:
+  Searched ALL forge-mod/*.md docs. Findings:
+  - Dao Master Ling Tianhou (灵天侯) — NOT in canon. Existing N39 'Ling Tianhou (凌天候)' is
+    the Da Lou Sword Sect master (different Chinese chars, different role). Likely task typo.
+  - Zhou Yutong (周玉童) — NOT in any canon doc. Stub created with canonConfidence=2.
+  - Liu Mei (柳媚) — Existing N19 'Mu Bingmei/Liu Mei (慕冰媚/柳眉)' already covers this person.
+    The task's 柳媚 (with 媚) appears to be a character variant for the same Liu Mei.
+    Stub created noting duplication.
+  - Si Mo (司墨) — NOT in any canon doc. Stub created.
+  - Piao Xue (飘雪) — NOT in any canon doc. Possibly conflated with 'Piao Nanzi' (sealed demon
+    who elevated Teng Huayuan). Stub created.
+  - Zhou Long (周龙) — NOT in any canon doc. Stub created.
+  - Zhou Qing (周清) — NOT in any canon doc. Stub created.
+  - Liu San (刘三) — NOT in any canon doc. Stub created.
+  - Ouyang Zi (欧阳子) — CONFIRMED in CANON_RI_CIVILIZATION.md CIV-02 (Soul Refining Sect
+    'senior member, mentioned') and CANON_RI_COMPLETE_WORLD.md. Entry created with sparse data.
+  - Dun Tian (杜天) — Existing N23 'Du Tian (顿天)' already covers Soul Refining Sect ancestor.
+    Canon docs use both 敦天 (CIVILIZATION.md CIV-02) and 顿天 (DECISIONS.md CD-16).
+    Task's 杜天 is a third character variant — likely task typo. Stub created noting duplication.
+
+Per CRITICAL RULES: where the docs don't mention a character, we note that in the entry
+rather than inventing data. canonConfidence marked 1-2 for unverified entries.
+"""
+import json
+import shutil
+from pathlib import Path
+
+DB_PATH = Path("/home/z/my-project/forge-mod/ri_canon_database.json")
+OUT_PATH = Path("/home/z/my-project/forge-mod/ri_canon_missing_npcs.json")  # Standalone copy
+
+
+# ----- The 10 missing NPCs -----
+MISSING_NPCS = [
+    {
+        "id": "N163",
+        "name": "Dao Master Ling Tianhou",
+        "nameCn": "灵天侯",
+        "type": "mentor",
+        "peakRealm": "Unknown — task description says 'formation mentor'",
+        "affiliation": "Unknown (described as formation mentor; possibly Da Lou Sword Sect-adjacent)",
+        "status": "unknown",
+        "canonConfidence": 1,
+        "firstAppearance": "unknown",
+        "location": "Unknown — possibly Cloud Sea Star System",
+        "knownFacts": [
+            "CANON-SILENT in assigned source docs (CANON_RI_CIVILIZATION.md, CANON_RI_CHARACTER_DECISIONS.md)",
+            "Task brief: described as 'formation mentor, taught Wang Lin array design'",
+            "NOTE: Existing character N39 'Ling Tianhou (凌天候)' is the Da Lou Sword Sect elder/sect master (Nirvana Void, Third Step) — DIFFERENT Chinese characters (灵天侯 vs 凌天候) and DIFFERENT role (formation mentor vs. sword cultivator).",
+            "This entry likely represents a task-author transcription variant or an unattested minor character. The Da Lou Sword Sect's Ling Tianhou (N39) is canon-attested and is a sword cultivator, NOT a formation mentor.",
+            "Wang Lin's Restriction Dao / formation mastery in canon derives from: Restriction Essence bloodlines (Great Soul Sect Ghostly Sail, CIV-13), Heaven-Defying Bead interior study, and inheritance from the Restriction Dao lineage — NOT from a 'Dao Master Ling Tianhou' figure."
+        ],
+        "relationships": [
+            {"target": "Wang Lin", "relation": "mentor (per task brief — UNVERIFIED)"}
+        ],
+        "source": "Task brief (EXTRACT-CIV-NPC Part B); not attested in CANON_RI_CIVILIZATION.md or CANON_RI_CHARACTER_DECISIONS.md. Possible duplicate of N39 Ling Tianhou (凌天候) of Da Lou Sword Sect.",
+        "verificationNote": "Searched CANON_RI_*.md docs for '灵天侯', 'Dao Master Ling Tianhou', and 'formation mentor' — no matches. Treat as DUPLICATE RISK of N39."
+    },
+    {
+        "id": "N164",
+        "name": "Zhou Yutong",
+        "nameCn": "周玉童",
+        "type": "ally",
+        "peakRealm": "Unknown — task brief says 'early friend/companion'",
+        "affiliation": "Unknown — possibly Wang Lin's early mortal/cultivation companion",
+        "status": "unknown",
+        "canonConfidence": 1,
+        "firstAppearance": "unknown (early arc per task brief)",
+        "location": "Unknown — possibly Planet Suzaku / Country of Zhao",
+        "knownFacts": [
+            "CANON-SILENT in assigned source docs.",
+            "Task brief: 'early friend/companion' of Wang Lin.",
+            "Not mentioned in CANON_RI_CIVILIZATION.md, CANON_RI_CHARACTER_DECISIONS.md, CANON_RI_COMPLETE_WORLD.md, CANON_RI_TIMELINE.md, or CANON_RI_WIKI_RESEARCH_FINDINGS.md.",
+            "Existing 'Zhou' family/associates in canon: Zhou Tingsu (mother, N03), Zhou Ru (adopted daughter, N10), Zhou Yi (ally, N31), Zhou Wutai (15th-Gen Vermilion Bird, N58), Zhou Jin (ally). None match 'Zhou Yutong'.",
+            "Treat as a character the task author believes exists but which the canon docs do not attest. No details invented."
+        ],
+        "relationships": [
+            {"target": "Wang Lin", "relation": "ally (per task brief — UNVERIFIED)"}
+        ],
+        "source": "Task brief (EXTRACT-CIV-NPC Part B); not attested in any canon doc under forge-mod/.",
+        "verificationNote": "Searched forge-mod/ for 'Zhou Yutong' and '周玉童' — no matches in canon docs."
+    },
+    {
+        "id": "N165",
+        "name": "Liu Mei",
+        "nameCn": "柳媚",
+        "type": "other",
+        "peakRealm": "Ascendant+ (if same as Mu Bingmei)",
+        "affiliation": "Vermilion Bird Country / Divine Sect (if same as Mu Bingmei)",
+        "status": "alive (if same as Mu Bingmei — with one of Wang Lin's clones)",
+        "canonConfidence": 2,
+        "firstAppearance": "unknown",
+        "location": "Planet Suzaku / IAC (if same as Mu Bingmei)",
+        "knownFacts": [
+            "LIKELY DUPLICATE of existing N19 'Mu Bingmei / Liu Mei (慕冰媚 / 柳眉)'.",
+            "CANON_RI_COMPLETE_WORLD.md N19 explicitly states: 'Liu Mei's true form is Mu Bingmei' and uses 柳眉 (with 眉).",
+            "Task brief uses 柳媚 (with 媚 — different second character). This is almost certainly the same person under a character variant.",
+            "Per CANON_RI_COMPLETE_WORLD.md N19: Mu Bingmei/Liu Mei is Wang Lin's third wife; had a son with Wang Lin (Wang Ping) whom she refined into a resentful spirit out of hatred; Wang Lin severed karmic ties via the Dream Dao; one of his clones eventually accompanies her.",
+            "Vermilion Bird Country core disciple (hundred-year Nascent Soul); later Divine Sect sect master (set up by Wang Lin).",
+            "If the task author intended a DIFFERENT 'Liu Mei' (柳媚) character unrelated to Mu Bingmei, that character is NOT attested in any canon doc under forge-mod/."
+        ],
+        "relationships": [
+            {"target": "Wang Lin", "relation": "love_interest (complex — enemy → ally via Dream Dao)"},
+            {"target": "Wang Ping", "relation": "family (son, refined into resentful spirit)"},
+            {"target": "Zhou Ru", "relation": "disciple"}
+        ],
+        "source": "Task brief (EXTRACT-CIV-NPC Part B). If same as Mu Bingmei: CANON_RI_COMPLETE_WORLD.md N19; Baidu Baike confirms Liu Mei = Mu Bingmei.",
+        "verificationNote": "Existing N19 already covers this character. 柳媚 (task variant) does not appear in canon docs; 柳眉 (canon) does. Treat as duplicate of N19."
+    },
+    {
+        "id": "N166",
+        "name": "Si Mo",
+        "nameCn": "司墨",
+        "type": "other",
+        "peakRealm": "Unknown — task brief says 'Sea of Devils arc character'",
+        "affiliation": "Unknown — Sea of Devils region (Planet Suzaku)",
+        "status": "unknown",
+        "canonConfidence": 1,
+        "firstAppearance": "unknown (Sea of Devils arc per task brief)",
+        "location": "Sea of Devils, Planet Suzaku (per task brief)",
+        "knownFacts": [
+            "CANON-SILENT in assigned source docs.",
+            "Task brief: 'Sea of Devils arc character'.",
+            "Not mentioned in CANON_RI_CIVILIZATION.md, CANON_RI_CHARACTER_DECISIONS.md, CANON_RI_COMPLETE_WORLD.md, CANON_RI_TIMELINE.md, or CANON_RI_WIKI_RESEARCH_FINDINGS.md.",
+            "Sea of Devils canon characters include: Wu Yu (吴宇) and Ye Zi (叶紫) of Corpse Yin Sect (CIV-03); Adai (阿呆); Sun Tai; Lei Ji (雷记); the Fighting Evil Sect leader and 10 Core Formation disciples (CIV-04); Dun Tian and Nian Tian of Soul Refining Sect (CIV-02, Pilu Kingdom is adjacent to Sea of Devils).",
+            "Treat as a character the task author believes exists but which the canon docs do not attest. No details invented."
+        ],
+        "relationships": [],
+        "source": "Task brief (EXTRACT-CIV-NPC Part B); not attested in any canon doc under forge-mod/.",
+        "verificationNote": "Searched forge-mod/ for 'Si Mo' and '司墨' — no matches in canon docs."
+    },
+    {
+        "id": "N167",
+        "name": "Piao Xue",
+        "nameCn": "飘雪",
+        "type": "other",
+        "peakRealm": "Unknown — task brief says 'mentioned in location data'",
+        "affiliation": "Unknown",
+        "status": "unknown",
+        "canonConfidence": 1,
+        "firstAppearance": "unknown",
+        "location": "Unknown — task brief references 'location data'",
+        "knownFacts": [
+            "CANON-SILENT in assigned source docs (CANON_RI_CIVILIZATION.md, CANON_RI_CHARACTER_DECISIONS.md).",
+            "Task brief: 'mentioned in location data'.",
+            "Not mentioned in CANON_RI_COMPLETE_WORLD.md locations section, CANON_RI_TIMELINE.md, or other canon docs.",
+            "POSSIBLE CONFLATION with 'Piao Nanzi' (飘南子 or 飘南子) — the sealed demon who elevated Teng Huayuan to Half-Step Deity Transformation (CIV-11, CD-08). Piao Nanzi is canon-attested; 'Piao Xue' is not.",
+            "Other 'Piao'-prefixed canon entities: Piao Nanzi (sealed demon). None named 'Piao Xue'.",
+            "Treat as a character the task author believes exists but which the canon docs do not attest. No details invented."
+        ],
+        "relationships": [],
+        "source": "Task brief (EXTRACT-CIV-NPC Part B); not attested in any canon doc under forge-mod/. Possible conflation with Piao Nanzi.",
+        "verificationNote": "Searched forge-mod/ for 'Piao Xue' and '飘雪' — no matches in canon docs."
+    },
+    {
+        "id": "N168",
+        "name": "Zhou Long",
+        "nameCn": "周龙",
+        "type": "other",
+        "peakRealm": "Unknown — task brief says 'Zhou family member'",
+        "affiliation": "Unknown — Zhou family (no major Zhou family in canon outside Wang Lin's maternal line via Zhou Tingsu)",
+        "status": "unknown",
+        "canonConfidence": 1,
+        "firstAppearance": "unknown",
+        "location": "Unknown",
+        "knownFacts": [
+            "CANON-SILENT in assigned source docs and all other canon docs under forge-mod/.",
+            "Task brief: 'Zhou family member'.",
+            "Canon attests multiple 'Zhou' characters: Zhou Tingsu (mother, N03), Zhou Ru (adopted daughter, N10), Zhou Yi (Obsession Concept ally, N31), Zhou Wutai (15th-Gen Vermilion Bird, N58), Zhou Jin (ally), Zhou Long (Cloud Sky Sect, mentioned in CIV-12 as 9th-gen disciple).",
+            "NOTE: There IS a 'Zhou Lin' (not 'Zhou Long') mentioned in CIV-12 as a 9th-gen disciple of Cloud Sky Sect. The task author may have intended Zhou Lin and typed 'Zhou Long'.",
+            "If a different 'Zhou Long' character was intended, that character is NOT attested in any canon doc under forge-mod/."
+        ],
+        "relationships": [],
+        "source": "Task brief (EXTRACT-CIV-NPC Part B); not attested in any canon doc under forge-mod/. Possible confusion with 'Zhou Lin' (Cloud Sky Sect 9th-gen disciple).",
+        "verificationNote": "Searched forge-mod/ for 'Zhou Long' and '周龙' — no matches in canon docs."
+    },
+    {
+        "id": "N169",
+        "name": "Zhou Qing",
+        "nameCn": "周清",
+        "type": "other",
+        "peakRealm": "Unknown — task brief says 'Zhou family member'",
+        "affiliation": "Unknown — Zhou family",
+        "status": "unknown",
+        "canonConfidence": 1,
+        "firstAppearance": "unknown",
+        "location": "Unknown",
+        "knownFacts": [
+            "CANON-SILENT in assigned source docs and all other canon docs under forge-mod/.",
+            "Task brief: 'Zhou family member'.",
+            "Canon attests multiple 'Zhou' characters (see N168 entry); none named 'Zhou Qing'.",
+            "Treat as a character the task author believes exists but which the canon docs do not attest. No details invented."
+        ],
+        "relationships": [],
+        "source": "Task brief (EXTRACT-CIV-NPC Part B); not attested in any canon doc under forge-mod/.",
+        "verificationNote": "Searched forge-mod/ for 'Zhou Qing' and '周清' — no matches in canon docs."
+    },
+    {
+        "id": "N170",
+        "name": "Liu San",
+        "nameCn": "刘三",
+        "type": "other",
+        "peakRealm": "Unknown — task brief says 'early arc character'",
+        "affiliation": "Unknown — early arc (likely Planet Suzaku / Country of Zhao)",
+        "status": "unknown",
+        "canonConfidence": 1,
+        "firstAppearance": "unknown (early arc per task brief)",
+        "location": "Unknown — possibly Country of Zhao, Planet Suzaku",
+        "knownFacts": [
+            "CANON-SILENT in assigned source docs and all other canon docs under forge-mod/.",
+            "Task brief: 'early arc character'.",
+            "Canon-attested 'Liu' family characters: Liu Mei / Mu Bingmei (N19), Liu Jinbiao (Liu Jinbiao — Wang Lin's ally, Path of Deception).",
+            "Liu San (刘三, literally 'Liu Three') is a common Chinese placeholder/name; could be a minor mortal character in Wang Lin's early village arc, but no canon doc attests this name.",
+            "Treat as a character the task author believes exists but which the canon docs do not attest. No details invented."
+        ],
+        "relationships": [],
+        "source": "Task brief (EXTRACT-CIV-NPC Part B); not attested in any canon doc under forge-mod/.",
+        "verificationNote": "Searched forge-mod/ for 'Liu San' and '刘三' — no matches in canon docs."
+    },
+    {
+        "id": "N171",
+        "name": "Ouyang Zi",
+        "nameCn": "欧阳子",
+        "type": "elder",
+        "peakRealm": "Unknown — likely Soul Formation or below (Soul Refining Sect senior member)",
+        "affiliation": "Soul Refining Sect (炼魂宗, CIV-02) — senior member; senior brother to Dun Tian alongside Nian Tian",
+        "status": "unknown (canon-attested as 'mentioned')",
+        "canonConfidence": 3,
+        "firstAppearance": "Soul Refining Sect arc",
+        "location": "Pilu Kingdom, Planet Suzaku (Soul Refining Sect headquarters)",
+        "knownFacts": [
+            "CANON-ATTESTED in CANON_RI_CIVILIZATION.md CIV-02: 'Senior Members: Nian Tian (念天) — Dun Tian's senior brother. Ouyang Zi (欧阳子) — mentioned.'",
+            "CANON-ATTESTED in CANON_RI_COMPLETE_WORLD.md: 'Key members: Dun Tian (ancestor), Nian Tian (Dun Tian's senior brother), Ouyang Zi (mentioned), Wang Lin (inheritor)'.",
+            "Member of the Soul Refining Sect, a demonic cultivation sect headquartered in Pilu Kingdom, Planet Suzaku (CIV-02).",
+            "Sect specialization: soul refining, soul extraction, soul sealing; the Ten Billion Soul Flag is the guardian treasure.",
+            "Sect's core method splits into three sequential stages: Soul Refining (炼魂) → Soul Extracting → Soul Sealing.",
+            "Detail level in canon: 'mentioned' only — no individual actions, dialogue, or fate recorded. The canon docs explicitly tag him as a name-only mention.",
+            "Per the Soul Refining Sect's derived hierarchy (Type C, conf 3): the sect has 1-3 senior brothers/sisters around Dun Tian; Ouyang Zi is one of these alongside Nian Tian."
+        ],
+        "relationships": [
+            {"target": "Dun Tian", "relation": "family (sect sibling — senior brother of Dun Tian alongside Nian Tian)"},
+            {"target": "Nian Tian", "relation": "family (sect sibling)"},
+            {"target": "Wang Lin", "relation": "acquaintance (Wang Lin inherited the Soul Refining Sect from Dun Tian)"}
+        ],
+        "source": "CANON_RI_CIVILIZATION.md CIV-02 (lines 144-216, specifically the Hierarchy table); CANON_RI_COMPLETE_WORLD.md (Soul Refining Sect key members list).",
+        "chapterReferences": [
+            "CANON_RI_CIVILIZATION.md CIV-02 — Hierarchy table, 'Senior Members' row",
+            "CANON_RI_COMPLETE_WORLD.md — Soul Refining Sect 'Key members' list"
+        ],
+        "verificationNote": "CANON-CONFIRMED to exist as a Soul Refining Sect senior member, but canon only attests the name — no individual actions, cultivation tier, or fate are recorded. canonConfidence=3 (novel-implicit; named once)."
+    },
+    {
+        "id": "N172",
+        "name": "Dun Tian",
+        "nameCn": "杜天",
+        "type": "mentor",
+        "peakRealm": "Nirvana Scryer+",
+        "affiliation": "Soul Refining Sect (炼魂宗, CIV-02) — ancestor/founder",
+        "status": "self_erased",
+        "canonConfidence": 2,
+        "firstAppearance": "Soul Refining Sect arc",
+        "location": "Pilu Kingdom, Planet Suzaku",
+        "knownFacts": [
+            "LIKELY DUPLICATE of existing N23 'Du Tian (顿天)' — the canon-attested Soul Refining Sect ancestor.",
+            "CANON_VARIANT: CANON_RI_CIVILIZATION.md CIV-02 uses 'Dun Tian (敦天)'. CANON_RI_CHARACTER_DECISIONS.md CD-16 uses 'Du Tian (顿天)'. Existing N23 in ri_canon_database.json uses 'Du Tian (顿天)'.",
+            "Task brief uses 'Dun Tian (杜天)' — a THIRD character variant (杜 = 'Du' surname char, different from 敦 and 顿). This is almost certainly a task-author typo for the same person.",
+            "Per CANON_RI_CIVILIZATION.md CIV-02 and CD-16: Dun Tian/Du Tian is the Nirvana Scryer+ ancestor of the Soul Refining Sect (Pilu Kingdom, Planet Suzaku).",
+            "He gave Wang Lin 3 gifts: (1) clone → Nascent Soul peak, (2) true body → 3-Star Ancient God, (3) Ten Billion Soul Banner + Soul Refining Sect inheritance.",
+            "Took Wang Lin to seize Immortal Jades for Soul Transformation breakthrough.",
+            "Self-erased his own consciousness to become a soul within the Ten Billion Soul Banner after Wang Lin promised to elevate the Soul Refining Sect to 6th-level.",
+            "Senior brother: Nian Tian (念天). Fellow senior member: Ouyang Zi (欧阳子, N171).",
+            "Decision style (per CD-16): protective_loyalist + patient_planner — sacrificed himself for the sect; planned multi-step gifts for Wang Lin."
+        ],
+        "relationships": [
+            {"target": "Wang Lin", "relation": "mentor (successor; chose him; sacrificed himself based on Wang Lin's promise)"},
+            {"target": "Soul Refining Sect", "relation": "family (founded; protective — life's purpose)"},
+            {"target": "Nian Tian", "relation": "family (senior brother)"},
+            {"target": "Ouyang Zi", "relation": "family (senior member, sect sibling)"}
+        ],
+        "source": "Task brief (EXTRACT-CIV-NPC Part B). Canonical character: CANON_RI_CIVILIZATION.md CIV-02 (敦天); CANON_RI_CHARACTER_DECISIONS.md CD-16 (顿天); existing N23 in ri_canon_database.json (顿天). Task's 杜天 is a variant.",
+        "chapterReferences": [
+            "CANON_RI_CIVILIZATION.md CIV-02 (lines 144-216)",
+            "CANON_RI_CHARACTER_DECISIONS.md CD-16 (Du Tian — Soul Refining Sect ancestor)",
+            "CANON_RI_COMPLETE_WORLD.md N23"
+        ],
+        "verificationNote": "Existing N23 'Du Tian (顿天)' already covers this character. Task uses 'Dun Tian (杜天)' which is a third character variant for the same person. Treat as duplicate of N23. canonConfidence=2 (entry itself is canonical, but the name-variant match is uncertain)."
+    }
+]
+
+
+def main():
+    # --- Step 1: Write standalone missing NPCs file ---
+    standalone = {
+        "metadata": {
+            "source": "Renegade Immortal (仙逆) by Er Gen",
+            "extractedFrom": "CANON_RI_CIVILIZATION.md + CANON_RI_CHARACTER_DECISIONS.md (+ cross-verification against all CANON_RI_*.md docs)",
+            "version": "1.0",
+            "generated": "2026-07-15",
+            "task": "EXTRACT-CIV-NPC Part B — Add 10 missing key characters",
+            "idAllocationNote": "Task spec said N161-N170 assuming 160-char DB. Actual DB had IDs up to N162 (gaps at N29, N43). To avoid collision with existing N161 (Nian Tian) and N162 (Ling'er), we use N163-N172.",
+            "totalMissingNpcs": len(MISSING_NPCS),
+            "canonAttestedCount": sum(1 for c in MISSING_NPCS if c["canonConfidence"] >= 3),
+            "canonSilentCount": sum(1 for c in MISSING_NPCS if c["canonConfidence"] <= 2),
+            "verificationMethod": "Searched all forge-mod/CANON_RI_*.md files for each character name (English + Chinese). Tagged canonConfidence=1 for canon-silent, =2 for likely duplicates of existing entries, =3 for canon-attested but sparse."
+        },
+        "characters": MISSING_NPCS
+    }
+    with open(OUT_PATH, "w", encoding="utf-8") as f:
+        json.dump(standalone, f, indent=2, ensure_ascii=False)
+    print(f"Wrote standalone: {OUT_PATH}")
+    print(f"  Total missing NPCs: {standalone['metadata']['totalMissingNpcs']}")
+    print(f"  Canon-attested: {standalone['metadata']['canonAttestedCount']}")
+    print(f"  Canon-silent / likely-duplicate: {standalone['metadata']['canonSilentCount']}")
+
+    # --- Step 2: Backup + append to main DB ---
+    backup = DB_PATH.with_suffix(".json.bak")
+    shutil.copy2(DB_PATH, backup)
+    print(f"Backup: {backup}")
+
+    with open(DB_PATH, encoding="utf-8") as f:
+        db = json.load(f)
+
+    existing_ids = {c["id"] for c in db["characters"]}
+    added = []
+    skipped = []
+    for npc in MISSING_NPCS:
+        if npc["id"] in existing_ids:
+            skipped.append(npc["id"])
+        else:
+            db["characters"].append(npc)
+            added.append(npc["id"])
+
+    # Update metadata
+    if "metadata" in db:
+        db["metadata"]["character_count"] = len(db["characters"])
+        if "categories" in db["metadata"] and "characters" in db["metadata"]["categories"]:
+            db["metadata"]["categories"]["characters"]["count"] = len(db["characters"])
+        # Log this task
+        db["metadata"].setdefault("enrichmentLog", []).append({
+            "task": "EXTRACT-CIV-NPC Part B",
+            "date": "2026-07-15",
+            "added": added,
+            "skipped": skipped,
+            "notes": "Added 10 missing NPCs at N163-N172. Existing DB max ID was N162, not N160 as task assumed."
+        })
+
+    with open(DB_PATH, "w", encoding="utf-8") as f:
+        json.dump(db, f, indent=2, ensure_ascii=False)
+
+    print(f"\nUpdated DB: {DB_PATH}")
+    print(f"  Added IDs: {added}")
+    print(f"  Skipped IDs (already present): {skipped}")
+    print(f"  New character count: {len(db['characters'])}")
+
+
+if __name__ == "__main__":
+    main()

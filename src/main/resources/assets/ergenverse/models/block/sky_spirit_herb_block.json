@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "ergenverse:block/sky_spirit_herb_block"
+  }
+}

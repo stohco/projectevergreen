@@ -1,0 +1,23 @@
+{
+  "karma_id": "mosquito_valley_taming",
+  "name": "Taming the Mosquito Beast Swarm",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 5475,
+  "karmic_weight": 800,
+  "bearer": "N01",
+  "debtor": "mosquito_valley_swarm",
+  "description": "Wang Lin tames the mosquito beast swarm in Mosquito Valley. The swarm becomes his signature weapon.",
+  "consequences": [
+    {
+      "type": "inheritance_claimed",
+      "target_id": "mosquito_beast",
+      "magnitude": 100,
+      "resolved_at_tick": 5475
+    }
+  ],
+  "unresolved_until": "resolved",
+  "_comment": "Karmic Nexus node: Taming the Mosquito Beast Swarm. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 1452805727
+}

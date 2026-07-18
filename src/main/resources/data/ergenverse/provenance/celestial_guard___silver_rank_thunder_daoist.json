@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Celestial Guard — Silver Rank (Thunder Daoist) (银阶仙卫·雷道人). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I110",
+  "name": "Celestial Guard — Silver Rank (Thunder Daoist)",
+  "nameCn": "银阶仙卫·雷道人",
+  "type": "other",
+  "category": "offensive",
+  "origin": "Refined from Thunder Daoist (Ch. 707)",
+  "current_owner": "Shattered (Ch. 717)",
+  "abilities": [
+    "Refined from Thunder Celestial Temple messenger",
+    "Thunder-element combat puppet",
+    "Silver Rank celestial guard"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Silver Rank celestial guard",
+    "Source: real Thunder Celestial Temple messenger",
+    "Shattered Ch. 717 in Thunder Prison"
+  ],
+  "source": "Ch.653/707/815 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Refined from Thunder Daoist (Ch. 707)"
+  }
+}

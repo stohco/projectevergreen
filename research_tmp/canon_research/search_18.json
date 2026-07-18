@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "While cultivating, Wang Lin encounters a Blue-skinned man who has nine talismans attached to his body. The man speaks in a language that Wang Lin can't ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=nXt6QLAvQag",
+    "name": "Who Is the Woman Inside the Scroll? Why Did Wang Lin Seal Her for",
+    "snippet": "Renegade Immortal - Who Is the Woman Inside the Scroll? Why Did Wang Lin Seal Her for 2000 Years?! Disclaimer: I do not own the anime, ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=1dJ-dcYVSJs",
+    "name": "From Fake to GOD-TIER! Wang Lin's New 6-Finger Demon Palm!",
+    "snippet": "Renegade immortal: From Fake to GOD-TIER! Wang Lin's New 6-Finger Demon Palm! Review 5 minute here, If you want to talk with me about ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1dbvq2u/renegade_immortal_xian_ni_wang_lins_cultivation",
+    "name": "[Renegade Immortal / Xian Ni] Wang Lin's cultivation to Nascent",
+    "snippet": "He cultivates inside the bead basically the whole time. The reason why he gets to Nascent Soul is because remember when he exited the Ancient ...",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Renegade%20Immortal%20Chronicles/17943",
+    "name": "Renegade Immortal Chronicles_Baiduwiki",
+    "snippet": "Tuo Sen mistakenly thought Wang Lin had gone Outside the Realm's Seals, shattered his own three stars, and charged out Inside the Realm [to follow]. Wang Lin ...",
+    "host_name": "baike.baidu.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

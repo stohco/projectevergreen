@@ -1,0 +1,24 @@
+{
+  "_comment": "Item Properties: Immortal Stone. Per physical-size directive: every object has lore-accurate physical size, not block size. Length: 0.15 m, Weight: 20 jin, Material: immortal-stone, Suitable realm: Immortal, Body strength required: Spirit Severing. Prime Directive: physical size exists objectively; cultivation determines what the player can lift/activate.",
+  "item_id": "immortal_stone",
+  "name": "Immortal Stone",
+  "type": "stone",
+  "physical_properties": {
+    "length_m": 0.15,
+    "weight_jin": 20,
+    "material_density": "immortal-stone"
+  },
+  "usage_requirements": {
+    "suitable_realm": "Immortal",
+    "body_strength_required": "Spirit Severing",
+    "effect_when_undersized": "Cannot absorb; stone is too dense."
+  },
+  "canon_note": "An immortal-grade spirit stone.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "simulation_notes": {
+    "no_locked_upgrades": "A cultivator who later reaches the required body strength will be able to lift/activate the item; the item does not change, only the cultivator does.",
+    "canon_fidelity": "This reflects the novels: Wang Lin could not lift the God-Slaying Sword until his body cultivation matched; he could barely use it as a heavy physical weapon before then."
+  },
+  "salt": 1391843103
+}

@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Black Fiend Devil Saint (mutated). Generated from canonical definition.",
+  "variant_id": "black_fiend_devil_saint__mutated",
+  "species_id": "black_fiend_devil_saint",
+  "species_name": "Black Fiend Devil Saint",
+  "life_state": "mutated",
+  "modifiers": {
+    "size_multiplier": 1.5,
+    "power_multiplier": 3.0,
+    "temperament": "aggressive",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1513379223
+}

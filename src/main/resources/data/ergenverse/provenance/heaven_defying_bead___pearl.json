@@ -1,0 +1,70 @@
+{
+  "_comment": "Provenance metadata for Heaven-Defying Bead / Pearl (逆天珠). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I01",
+  "name": "Heaven-Defying Bead / Pearl",
+  "nameCn": "逆天珠",
+  "type": "bead_part",
+  "category": "utility",
+  "origin": "Found as a youth inside Heng Yue Sect stone bead; sent back through time by future clone Lu Mo via Dream Dao",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Five Elements pattern bead — core of the original 9-part set",
+    "Interior time-dilation chamber (10× outside speed)",
+    "Stores nascent souls; contains Third-Step divine abilities",
+    "Sentient / destiny-bound / fuses with primordial spirit"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Root cause of the great war in the Ancient Immortal Domain",
+    "Cross-novel artifact — also wielded by Su Ming and Xuan Zang",
+    "Bestowed by Seven-Colored Immortal Venerable to Realm-Sealing Supreme",
+    "Fuses with Wang Lin's primordial spirit by the end"
+  ],
+  "source": "Ch.8 (novel, Donghua S1E2); Fandom wiki; Baidu Baike",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Found as a youth inside Heng Yue Sect stone bead; sent back through time by future clone Lu Mo via Dream Dao"
+  },
+  "lifecycle": {
+    "creator": "unknown (pre-canon)",
+    "creation_circumstances": "Found as a youth inside Heng Yue Sect stone bead; sent back through time by future clone Lu Mo via Dream Dao",
+    "every_known_owner": [
+      "wang lin"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

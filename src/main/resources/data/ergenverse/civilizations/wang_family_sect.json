@@ -1,0 +1,81 @@
+{
+  "_comment": "Civilization: Wang Family Sect (family_sect) at Immortal Astral Continent. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "wang_family_sect",
+  "name": "Wang Family Sect",
+  "type": "family_sect",
+  "location": "Immortal Astral Continent",
+  "peak_realm": "Immortal (family ancestor - Wang Lin)",
+  "canon_status": "wang_lin_lineage",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "outer_disciples": 10000,
+    "inner_disciples": 2000,
+    "core_disciples": 200,
+    "elders": 50,
+    "family_ancestor": 1,
+    "spirit_beasts": 2000
+  },
+  "economy": {
+    "spirit_stones": "vast",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "immortal-grade",
+    "forging": "immortal-grade",
+    "formation": "immortal-grade",
+    "trade": "continent-scale",
+    "recruitment": "Wang bloodline + examination"
+  },
+  "politics": {
+    "allies": [
+      "vassal sects"
+    ],
+    "enemies": [
+      "Wang Lin's enemies"
+    ],
+    "vassals": [
+      "mortal sects"
+    ],
+    "rivals": [
+      "other immortal families"
+    ],
+    "internal_factions": [
+      "main bloodline",
+      "branch bloodlines"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "bloodline + examination",
+    "expansion": "steady",
+    "decline": "none (Wang Lin immortal)",
+    "schisms": "bloodline disputes",
+    "wars": [
+      "Wang Lin's enemies"
+    ],
+    "recovery": "divine; Wang Lin can intervene"
+  },
+  "libraries": [
+    "Wang Lin's techniques",
+    "inheritance",
+    "vast collections"
+  ],
+  "spirit_beasts": [
+    "Wang Lin's legacy beasts",
+    "mosquito swarm (legacy)"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 489689231,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

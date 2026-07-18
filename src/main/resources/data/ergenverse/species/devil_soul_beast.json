@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Devil Soul Beast (魔魂兽) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "devil_soul_beast",
+  "name": "Devil Soul Beast",
+  "nameCn": "魔魂兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Devil-soul beast 4 m, body shifts between physical and soul-form, radiates devil+soul power",
+    "size": "4 m adult, 800 jin; ancient 15 m, 20000 jin",
+    "behavior": "Devil+soul predator; cultivates by absorbing devil-qi and soul fragments",
+    "habitat": "Sea of Devils, devil-soul-aspected caves",
+    "cultivation": "Nascent Soul -> Spirit Severing (devil/soul attribute)",
+    "intelligence": 8,
+    "diet": "soul fragments, devil-herbs, wicked cultivators",
+    "relationships": "Servant-beasts of devil-sects; enemies of orthodox",
+    "techniques": [
+      "devil_soul_drain",
+      "soul_rend",
+      "devil_step",
+      "soul_maw"
+    ],
+    "treasures": [
+      "devil_soul_core",
+      "soul_fragment",
+      "devil_essence"
+    ],
+    "bloodline": "Devil-Soul lineage; devil+soul bloodline",
+    "mutations": [
+      "true_devil_soul_body",
+      "devil_soul_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "devil_soul_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "devil_soul_beast — not a hive-mind species"
+    },
+    "combat_ai": "hive_coordinated"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1375331900,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Celestial Guard Beast (juvenile). Generated from canonical definition.",
+  "variant_id": "celestial_guard_beast__juvenile",
+  "species_id": "celestial_guard_beast",
+  "species_name": "Celestial Guard Beast",
+  "life_state": "juvenile",
+  "modifiers": {
+    "size_multiplier": 0.15,
+    "power_multiplier": 0.1,
+    "temperament": "curious",
+    "rarity": "common"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 553225410
+}

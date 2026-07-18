@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Sun Dazhu (孙大柱). Canon ID: N85. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_sun_dazhu",
+  "name": "Sun Dazhu",
+  "nameCn": "孙大柱",
+  "canon_id": "N85",
+  "type": "disciple",
+  "faction": "heng_yue_sect",
+  "location": "heng_yue_sect",
+  "cultivation": "Foundation Establishment",
+  "personality": "bullying senior disciple; early antagonist",
+  "speech": "bullying, arrogant",
+  "relationship_to_wanglin": "early enemy; bully",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A bully cultivator",
+    "qi_condensation": "Heng Yue disciple; Foundation Establishment"
+  },
+  "canon_confidence": 3,
+  "note": "Early bullying antagonist at Heng Yue",
+  "derivation_type": "B",
+  "salt": 1976472068,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "nascent_soul",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

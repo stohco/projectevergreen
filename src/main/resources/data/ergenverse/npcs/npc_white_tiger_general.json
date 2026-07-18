@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: White Tiger General (白虎将军). Canon ID: N126. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_white_tiger_general",
+  "name": "White Tiger General",
+  "nameCn": "白虎将军",
+  "canon_id": "N126",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "foreign_battleground",
+  "cultivation": "Third Step+",
+  "personality": "martial, slaughter-aspected general",
+  "speech": "martial, commanding",
+  "relationship_to_wanglin": "complex; Foreign Battleground",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A terrifying martial general",
+    "qi_condensation": "Slaughter-aspected; overwhelming",
+    "core_formation": "White Tiger General; Third Step+",
+    "nascent_soul": "Third Step+; slaughter dao"
+  },
+  "canon_confidence": 3,
+  "note": "White Tiger General; Foreign Battleground antagonist",
+  "derivation_type": "B",
+  "salt": 655711894,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

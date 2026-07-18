@@ -1,0 +1,23 @@
+{
+  "speciesId": "frost_herb",
+  "name": "Frost Herb",
+  "nameCn": "冰寒草",
+  "renderTier": "CROSS_SPRITE",
+  "defaultElement": "WATER",
+  "baseMedicinalPotency": 0.6,
+  "baseQiSaturation": 0.5,
+  "minStageToHarvest": "mature",
+  "harvestItemId": "ergenverse:frost_herb_item",
+  "fruitItemId": null,
+  "growthDurationTicks": 96000,
+  "fruitingDurationTicks": 24000,
+  "requiresQiDensity": 0.2,
+  "biomeWhitelist": ["snowy_plains", "ice_spikes", "frozen_ocean", "snowy_taiga", "grove"],
+  "ecologyAttracts": ["frost_wolf"],
+  "ecologyRepels": ["fire_beast"],
+  "canMutate": true,
+  "mutationChance": 0.05,
+  "perceptionTierToIdentify": "QI_CONDENSATION",
+  "canonConfidence": 4,
+  "description": "A herb that grows only where ice qi pools. Mortals see an ordinary weed."
+}

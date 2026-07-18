@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Lu Fuzi (陆夫子). Canon ID: N108. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_lu_fuzi",
+  "name": "Lu Fuzi",
+  "nameCn": "陆夫子",
+  "canon_id": "N108",
+  "type": "other",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "scholar cultivator",
+  "speech": "scholarly, measured",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A scholarly cultivator",
+    "qi_condensation": "Cultivator"
+  },
+  "canon_confidence": 3,
+  "note": "Scholar cultivator NPC",
+  "derivation_type": "B",
+  "salt": 1162066379,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Wang Jie (王杰). Canon ID: N145. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_wang_jie",
+  "name": "Wang Jie",
+  "nameCn": "王杰",
+  "canon_id": "N145",
+  "type": "disciple",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Qi Condensation",
+  "personality": "low-tier cultivator",
+  "speech": "timid",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator",
+    "qi_condensation": "Qi Condensation disciple"
+  },
+  "canon_confidence": 3,
+  "note": "Qi Condensation cultivator NPC",
+  "derivation_type": "B",
+  "salt": 556195915,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

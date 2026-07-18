@@ -1,0 +1,33 @@
+{
+  "_comment": "RI Canon Opportunity: Pill Sea Alchemy. Canon event: Wang Lin cultivates alchemy at the Pill Sea. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_pill_sea_alchemy",
+  "name": "Pill Sea Alchemy",
+  "canon_event": "Wang Lin cultivates alchemy at the Pill Sea",
+  "location": "pill_sea",
+  "age_requirement_years": 10000,
+  "cultivation_required": "Core Formation",
+  "perception_required": "Nascent Soul",
+  "luck_modifier": 0.6,
+  "discovery_methods": [
+    "divine_sense",
+    "rumor"
+  ],
+  "reward_tables": [
+    "pill_essence",
+    "alchemy_recipes",
+    "flame_dragon_encounter"
+  ],
+  "why_untaken": "Requires alchemy talent; the Pill Sea is remote.",
+  "natural_next_event": "Alchemical storms occur periodically; flame dragons gather.",
+  "canon_confidence": 3,
+  "derivation_type": "B",
+  "salt": 82143075,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

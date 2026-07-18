@@ -1,0 +1,46 @@
+{
+  "_comment": "Opportunity: Abandoned Library. Per opportunity directive: the engine continuously asks 'what opportunities naturally exist at a location that has existed for 2000 years?'. Discoverable by cultivation (Foundation Establishment), perception (Core Formation (to find hidden sections)), and luck (modifier 1.3). Prime Directive: opportunity exists objectively; player perception determines whether they find it.",
+  "opportunity_id": "abandoned_library",
+  "name": "Abandoned Library",
+  "description": "A library of an extinct sect, containing rare techniques and lore. Exists because: a sect fell and its library was left behind.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "age_requirement_years": 2000,
+  "location_types": [
+    "ruined_sect",
+    "ancient_city",
+    "underground_vault",
+    "sealed_chamber"
+  ],
+  "cultivation_required": "Foundation Establishment",
+  "perception_required": "Core Formation (to find hidden sections)",
+  "luck_modifier": 1.3,
+  "discovery_methods": [
+    "exploration",
+    "rumor_following",
+    "formation_breaking"
+  ],
+  "reward_tables": [
+    "technique_scroll",
+    "formation_manual",
+    "alchemy_recipe",
+    "spirit_beast_catalogue",
+    "historical_record"
+  ],
+  "why_untaken": "Location lost; requires exploration or rumor to find.",
+  "natural_next_event": "Library degrades; scrolls rot; knowledge lost.",
+  "simulation_notes": {
+    "continuous_inference": "The World State Engine continuously infers opportunities at every location based on the location's age, type, and history.",
+    "no_locked_upgrades": "A cultivator who later reaches the required perception will find opportunities they previously missed; the opportunities do not disappear.",
+    "canon_fidelity": "This is how Wang Lin found inheritances throughout his journey — the opportunities existed before he arrived; his perception determined what he found."
+  },
+  "salt": 970365617,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Ouyang Hua (欧阳华). Canon ID: N65. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_ouyang_hua",
+  "name": "Ouyang Hua",
+  "nameCn": "欧阳华",
+  "canon_id": "N65",
+  "type": "elder",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "elder",
+  "speech": "formal",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "An elder",
+    "qi_condensation": "Elder"
+  },
+  "canon_confidence": 3,
+  "note": "Minor elder NPC",
+  "derivation_type": "B",
+  "salt": 1967171877,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

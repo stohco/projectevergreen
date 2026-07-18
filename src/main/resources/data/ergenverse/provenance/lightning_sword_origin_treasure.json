@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Lightning Sword (Origin Treasure) (雷剑). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I31",
+  "name": "Lightning Sword (Origin Treasure)",
+  "nameCn": "雷剑",
+  "type": "weapon",
+  "category": "offensive",
+  "origin": "Self-condensed via void-gate vortex (Ch. 1625)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Thunder-element Origin Treasure sword",
+    "One of six fundamental origin-treasure swords",
+    "Self-condensed via void-gate vortex"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Essence Treasure tier",
+    "Thunder-element origin sword",
+    "One of the six origin swords"
+  ],
+  "source": "Ch.1625 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Self-condensed via void-gate vortex (Ch. 1625)"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Giant Centipede (巨蜈蚣) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "giant_centipede",
+  "name": "Giant Centipede",
+  "nameCn": "巨蜈蚣",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Centipede 8 m long, hundred legs of spirit-iron, mandibles drip corrosive venom",
+    "size": "8 m adult, 2000 jin; ancient 30 m, 50000 jin",
+    "behavior": "Subterranean predator; tunnels through stone; venom dissolves spirit-armor",
+    "habitat": "Underground caverns, earth-aspected deep caves, beneath ancient battlefields",
+    "cultivation": "Core Formation -> Nascent Soul (venom attribute)",
+    "intelligence": 4,
+    "diet": "underground beasts, lost miners, corpse marrow",
+    "relationships": "Enemy of ant beasts; rival of web weavers",
+    "techniques": [
+      "tunnel",
+      "venom_bite",
+      "hundred_leg_sweep",
+      "corrode_armor"
+    ],
+    "treasures": [
+      "centipede_core",
+      "venom_gland",
+      "spirit_iron_leg"
+    ],
+    "bloodline": "Earth-Centipede lineage; venom-attribute bloodline",
+    "mutations": [
+      "thousand_leg",
+      "golden_carapace",
+      "ancient_centipede_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "giant_centipede — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "giant_centipede — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 941494406,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

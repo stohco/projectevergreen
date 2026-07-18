@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin/Items",
+    "name": "Wang Lin/Items | Xian Ni Wikia - Fandom",
+    "snippet": "After mastering it Wang Lin still kept the book. Sword Sheaths. Wang Lin obtained 5 of these sword sheaths. Expand Status: It was used previously but not ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Wang%20Lin/986247",
+    "name": "Wang Lin - Renegade Immortal",
+    "snippet": "Sword Sheath, There is more than one. Wang Lin currently possesses five of them. Inserting a flying sword can enhance different powers. They are suspected to ...",
+    "host_name": "baike.baidu.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "4.2.Book 2 - The Bloody Image... · 4.4.Book 4 - Clean Sweep",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1avc8kg/renegade_immortal_few_questions",
+    "name": "Renegade Immortal: Few Questions : r/Donghua - Reddit",
+    "snippet": "As for the sword, when Wang Lin physical body was destroyed, the sword was also physically destroyed. However, the spirit of the sword survived ... Renegade Immortal Xian Ni, Wang Lin's scroll Renegade immortal More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=vBDZ-wzka1E",
+    "name": "The Untouchable Power of Renegade Immortal Full 2K - YouTube",
+    "snippet": "Discover the Top 10 Supreme Divine Artifacts of Wang Lin in Renegade Immortal (Xian Ni) – treasures that shook the heavens and defied fate ...",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

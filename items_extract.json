@@ -1,0 +1,4697 @@
+[
+  {
+    "id": "I01",
+    "name": "Heaven-Defying Bead / Pearl",
+    "nameCn": "逆天珠 · Nì Tiān Zhū",
+    "type": "bead_part",
+    "category": "utility",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Seven-Colored Immortal Venerable",
+        "era": "Ancient Immortal Domain era"
+      },
+      {
+        "owner": "Realm-Sealing Supreme",
+        "era": "Ancient Immortal Domain era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 8 — fuses with primordial spirit at end"
+      }
+    ],
+    "abilities": [
+      "Interior chamber where time runs 10× outside for cultivation acceleration",
+      "Recognizes its master via Five Elements pattern; once perfected the master truly owns it",
+      "Stores Li Muwan's Nascent Soul after her body perishes during Nascent Soul formation",
+      "Reputed to contain Third-Step divine abilities inside",
+      "Sentient and destiny-bound; cross-novel artifact (also wielded by Su Ming / Xuan Zang)"
+    ],
+    "limitations": [
+      "Must complete Five Elements cultivation to fully master",
+      "Was initially locked/unrecognized; required Lu Mo (future clone) to blast it open via Dream Dao"
+    ],
+    "transformations": [
+      {
+        "from": "Locked bead",
+        "to": "Recognized treasure",
+        "trigger": "Lu Mo blasts it open via Dream Dao after Wang Lin's Karma Domain matures"
+      },
+      {
+        "from": "Separate treasure",
+        "to": "Fused with primordial spirit",
+        "trigger": "End of novel — becomes one with Wang Lin"
+      }
+    ],
+    "upgrades": [
+      "Evolves from unrecognized to fully mastered as Wang Lin's Five Elements cultivation progresses"
+    ],
+    "origin": "Found by Wang Lin as a youth inside the Heng Yue Sect stone bead; later revealed to have been sent back through time by his future clone Lu Mo via Dream Dao (originally bestowed by Seven-Colored Immortal Venerable to Realm-Sealing Supreme)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 8",
+    "knownFacts": [
+      "Originally 9 parts; the bead is its core",
+      "Time dilation interior: 10× speed inside",
+      "Root cause of the great war in the Ancient Immortal Domain",
+      "Recognized Wang Lin as master after Lu Mo opened it",
+      "Stores Li Muwan's Nascent Soul"
+    ],
+    "relatedItems": [
+      "Realm-Defining Compass",
+      "Li Muwan (Nascent Soul stored inside)",
+      "Great Heavenly Venerable Sun"
+    ]
+  },
+  {
+    "id": "I02",
+    "name": "Realm-Defining Compass",
+    "nameCn": "界定 Compass",
+    "type": "compass",
+    "category": "divine_sense",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Old Man Miēshēng",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Lu Mo (borrowed)",
+        "era": "Used to crack open Heaven-Defying Bead"
+      },
+      {
+        "owner": "Old Man Miēshēng (returned)",
+        "era": "Returned after use"
+      }
+    ],
+    "abilities": [
+      "Core IS the Heaven-Defying Pearl; can define and shatter realms",
+      "Has a Realm-Sealing function",
+      "Can crack open dimensionally-locked treasures"
+    ],
+    "limitations": [
+      "One-time borrow only — returned to Old Man Miēshēng"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Borrowed by Lu Mo from Old Man Miēshēng (灭生老人) to blast open the Heaven-Defying Bead",
+    "canonConfidence": 4,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Quasi-Third-Step treasure",
+      "Core is the Heaven-Defying Pearl itself",
+      "Used only once then returned"
+    ],
+    "relatedItems": [
+      "Heaven-Defying Bead / Pearl"
+    ]
+  },
+  {
+    "id": "I03",
+    "name": "Copper Mirror (with Time Domain)",
+    "nameCn": "铜镜 · Tóng Jìng",
+    "type": "talisman",
+    "category": "divine_sense",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin (crafted)",
+        "era": "Crafted on Planet Ran Yun"
+      },
+      {
+        "owner": "Sold to merchants",
+        "era": "Ch. 664"
+      }
+    ],
+    "abilities": [
+      "Hand-mirror embedding a Time-domain; crafted for sale",
+      "Side-effect: shows future/past flickers"
+    ],
+    "limitations": [
+      "Pseudo-celestial tier only; intentionally made for selling"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Crafted by Wang Lin on Planet Ran Yun as one of three pseudo-celestial treasures made to sell for celestial spirit jades",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 662",
+    "knownFacts": [
+      "One of three pseudo-celestial treasures crafted by Wang Lin",
+      "Sold at Ch. 664",
+      "Has time-domain properties"
+    ],
+    "relatedItems": [
+      "Sword with Teleportation Spell",
+      "Hairpin with Thousand Illusion Ruthless Domain"
+    ]
+  },
+  {
+    "id": "I04",
+    "name": "Slaughter Crystal",
+    "nameCn": "杀戮晶 · Shā Lù Jīng",
+    "type": "material",
+    "category": "cultivation_aid",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Immortal Lord Qing Shui",
+        "era": "Via Sky-Gate vortex"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "~Ch. 1290"
+      }
+    ],
+    "abilities": [
+      "Condensed Slaughter Origin essence",
+      "Fuses with Qing Shui's Slaughter Sword to complete Wang Lin's Slaughter Essence"
+    ],
+    "limitations": [
+      "Only useful for completing Slaughter Origin cultivation"
+    ],
+    "transformations": [
+      {
+        "from": "Raw essence",
+        "to": "Merged into Slaughter Origin True Body",
+        "trigger": "Fusion with Slaughter Sword and Slaughter Origin"
+      }
+    ],
+    "upgrades": [
+      "Fuses with Slaughter Origin to complete Wang Lin's cultivation"
+    ],
+    "origin": "Condensed from slaughters / granted by Immortal Lord Qing Shui via the Sky-Gate vortex",
+    "canonConfidence": 5,
+    "firstAppearance": "~Ch. 1290",
+    "knownFacts": [
+      "Origin essence material",
+      "Fuses with Slaughter Sword",
+      "Essential for completing Slaughter Origin True Body"
+    ],
+    "relatedItems": [
+      "Slaughter Sword",
+      "Slaughter True Body / Lu Mo",
+      "Blood Slaughter Sword"
+    ]
+  },
+  {
+    "id": "I05",
+    "name": "Great Heavenly Venerable Sun",
+    "nameCn": "大天尊日 · Dà Tiān Zūn Rì",
+    "type": "celestial_treasure",
+    "category": "cultivation_aid",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Immortal Ancestor (Celestial Ancestor)",
+        "era": "Before Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "After absorbing the head of the Immortal Ancestor"
+      }
+    ],
+    "abilities": [
+      "Three-color (black/white/gold) Heavenly Venerable Sun condensed by Wang Lin's will",
+      "Fuses with quasi-Tread-Heaven power",
+      "Energy can be absorbed into the body to enhance strength at any time",
+      "Strongest of all Great Heavenly Venerable Suns"
+    ],
+    "limitations": [
+      "Requires absorbing the head of the Immortal Ancestor"
+    ],
+    "transformations": [],
+    "upgrades": [
+      "Refined from the head of the Immortal Ancestor over time"
+    ],
+    "origin": "Refined from the head of the Immortal Ancestor (Celestial Ancestor)",
+    "canonConfidence": 4,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Three-color sun: black, white, gold",
+      "Will-condensed; perpetually active",
+      "Portable power-source",
+      "Strongest Heavenly Venerable Sun"
+    ],
+    "relatedItems": [
+      "Eight Extreme Daos",
+      "One Step to Trample the Heavens"
+    ]
+  },
+  {
+    "id": "I06",
+    "name": "Wealth (First Flying Sword)",
+    "nameCn": "财富 · Cái Fù",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Heng Yue Sect armory",
+        "era": "Pre-novel"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Chosen as disciple"
+      },
+      {
+        "owner": "Destroyed by Teng Huayuan",
+        "era": "Ch. ~110"
+      }
+    ],
+    "abilities": [
+      "First flying sword; made by a Heng Yue Sect elder",
+      "Soul-binding contract: must repair if broken, never sell",
+      "Revealed later to have a much more mysterious origin"
+    ],
+    "limitations": [
+      "Mortal / low-grade spirit tier; destroyed early in story"
+    ],
+    "transformations": [],
+    "upgrades": [
+      "Reforged multiple times before final destruction"
+    ],
+    "origin": "Chosen from Heng Yue Sect armory as a disciple",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. ~8 (donghua S1E2)",
+    "knownFacts": [
+      "Wang Lin's very first weapon",
+      "Sect rule: if broken repair immediately, if sold exiled from sect",
+      "Destroyed by Teng Huayuan",
+      "Had a mysterious origin hinted at later"
+    ],
+    "relatedItems": [
+      "Core-Treasure Sword",
+      "Dark Green Flying Sword"
+    ]
+  },
+  {
+    "id": "I07",
+    "name": "Core-Treasure Sword (Teleportation)",
+    "nameCn": "核心宝剑 · Hé Xīn Bǎo Jiàn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Unknown original owner",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin (acquired then blood-refined)",
+        "era": "Mid-Foundation era"
+      },
+      {
+        "owner": "Evolved into Dark Green Flying Sword",
+        "era": "Later"
+      }
+    ],
+    "abilities": [
+      "Teleportation effect on strike",
+      "Blood-refined by Wang Lin; took countless lives",
+      "Evolved into Dark Green Flying Sword"
+    ],
+    "limitations": [
+      "Requires continuous blood-refinement to maintain"
+    ],
+    "transformations": [
+      {
+        "from": "Core-Treasure Sword",
+        "to": "Dark Green Flying Sword (Poison)",
+        "trigger": "Blood-refinement evolution"
+      }
+    ],
+    "upgrades": [
+      "Upgraded via blood refinement into Dark Green Flying Sword"
+    ],
+    "origin": "Acquired then blood-refined by Wang Lin",
+    "canonConfidence": 5,
+    "firstAppearance": "Mid-Foundation era",
+    "knownFacts": [
+      "Blood-refined weapon",
+      "Has teleportation ability",
+      "Took countless lives for Wang Lin",
+      "Evolved into Dark Green Flying Sword"
+    ],
+    "relatedItems": [
+      "Dark Green Flying Sword",
+      "Wealth (First Flying Sword)"
+    ]
+  },
+  {
+    "id": "I08",
+    "name": "Dark Green Flying Sword (Poison)",
+    "nameCn": "墨绿飞剑 · Mò Lǜ Fēi Jiàn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin",
+        "era": "Evolved from Core-Treasure Sword"
+      },
+      {
+        "owner": "Wang Lin (retired)",
+        "era": "Replaced by later swords"
+      }
+    ],
+    "abilities": [
+      "Successor to Core-Treasure Sword; carries poison attribute",
+      "Blood-refined and battle-hardened"
+    ],
+    "limitations": [
+      "Retired — replaced by more powerful weapons later"
+    ],
+    "transformations": [
+      {
+        "from": "Core-Treasure Sword",
+        "to": "Dark Green Flying Sword (Poison)",
+        "trigger": "Blood-refinement evolution adds poison attribute"
+      }
+    ],
+    "upgrades": [],
+    "origin": "Blood-refinement evolution from Core-Treasure Sword",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Poison-attribute flying sword",
+      "Evolved from Core-Treasure Sword",
+      "Retired (not destroyed)"
+    ],
+    "relatedItems": [
+      "Core-Treasure Sword",
+      "Karma Whip"
+    ]
+  },
+  {
+    "id": "I09",
+    "name": "The Dragon Formation",
+    "nameCn": "龙阵 · Lóng Zhèn",
+    "type": "formation",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Li Muwan",
+        "era": "Gifted to Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Retained to end"
+      }
+    ],
+    "abilities": [
+      "Formation-array treasure built by Li Muwan based on the Fighting Evil Sect formation",
+      "Functions as both weapon and formation"
+    ],
+    "limitations": [
+      "Sentiment-bound — emotionally significant to Wang Lin"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Gifted by Li Muwan (love interest); built based on Fighting Evil Sect (斗邪宗) formation",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Built by Li Muwan as a gift",
+      "Based on Fighting Evil Sect formation",
+      "Retained to end — sentimental value"
+    ],
+    "relatedItems": [
+      "Li Muwan",
+      "18-Hell Celestial Sealing Stamp"
+    ]
+  },
+  {
+    "id": "I10",
+    "name": "God Slaying Spear (Illusory)",
+    "nameCn": "杀神矛 · Shā Shén Máo",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Ancient God Tu Si",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin (inherited)",
+        "era": "Ch. 941"
+      }
+    ],
+    "abilities": [
+      "Tu Si's life treasure; illusion-projected from inheritance",
+      "Ancient God's Weapon — bypasses physical defenses by striking at the origin soul"
+    ],
+    "limitations": [
+      "Illusory copy only (not the original)"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Inherited from Ancient God Tu Si's legacy",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 941",
+    "knownFacts": [
+      "Ancient God Tu Si's life treasure (illusory projection)",
+      "Bypasses physical defenses",
+      "Strikes directly at the origin soul",
+      "Inherited through Ancient God trial"
+    ],
+    "relatedItems": [
+      "Ancient God Trident",
+      "Ancient God Leather Armour",
+      "Azure Ancient God Shield"
+    ]
+  },
+  {
+    "id": "I11",
+    "name": "Ancient God Trident",
+    "nameCn": "古神三叉戟 · Gǔ Shén Sān Chā Jǐ",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Ancient God Tu Si (refining)",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin (inherited, unfinished)",
+        "era": "Ch. 1082"
+      },
+      {
+        "owner": "Destroyed by Daoist Water",
+        "era": "Ch. 1277"
+      }
+    ],
+    "abilities": [
+      "Tu Si's unfinished weapon — can absorb spells cast at the wielder",
+      "Ancient God treasure"
+    ],
+    "limitations": [
+      "Unfinished — Tu Si died before completing it",
+      "Destroyed by Daoist Water"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Tu Si-refined; inherited through Ancient God legacy",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1082",
+    "knownFacts": [
+      "Was being refined by Tu Si when he died",
+      "Can absorb enemy spells",
+      "Destroyed by Daoist Water at Ch. 1277"
+    ],
+    "relatedItems": [
+      "God Slaying Spear",
+      "Azure Ancient God Shield"
+    ]
+  },
+  {
+    "id": "I12",
+    "name": "Karma Whip",
+    "nameCn": "因果鞭 · Yīn Guǒ Biān",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Tian Yu Sect",
+        "era": "Pre-novel"
+      },
+      {
+        "owner": "Red Butterfly (Hong Die)",
+        "era": "Given by Qian Feng"
+      },
+      {
+        "owner": "Wang Lin (took from Hong Die's corpse)",
+        "era": "After Hong Die's death"
+      },
+      {
+        "owner": "Wang Lin (Karma Whip)",
+        "era": "Ch. 731 — fused with Karma Domain"
+      }
+    ],
+    "abilities": [
+      "Created by fusing Soul Lasher with Karma Domain; weaponizes karmic cause-effect",
+      "Restrains soul-type entities",
+      "Once used to cleave open 7 million worlds with a single whip-strike",
+      "Dao-domain weapon — grows stronger with Wang Lin's Karma Origin"
+    ],
+    "limitations": [
+      "Requires Karma Domain to reach full power"
+    ],
+    "transformations": [
+      {
+        "from": "Soul Lasher (Kunji Whip)",
+        "to": "Karma Whip",
+        "trigger": "Burned by Ghostly Sky Fire in Demon Spirit Land → nourished by Wang Lin's Karma Concept → fused at Ch. 731"
+      }
+    ],
+    "upgrades": [
+      "Evolves from Soul Lasher via Ghostly Sky Fire + Karma Concept fusion"
+    ],
+    "origin": "Fused from Soul Lasher + Karma Domain (Soul Lasher originally belonged to Red Butterfly, won in battle)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 731",
+    "knownFacts": [
+      "Evolved from Soul Lasher at Ch. 731",
+      "Weaponizes karmic cause-effect",
+      "Cleaved open 7 million worlds in a single strike in the Outer Realm",
+      "Restrains soul-type entities",
+      "One of Wang Lin's signature weapons"
+    ],
+    "relatedItems": [
+      "Soul Lasher / Kunji Whip",
+      "Karma Domain",
+      "18-Hell Celestial Sealing Stamp"
+    ]
+  },
+  {
+    "id": "I13",
+    "name": "18-Hell Celestial Sealing Stamp",
+    "nameCn": "十八地狱封天印 · Shí Bā Dì Yù Fēng Tiān Yìn",
+    "type": "talisman",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin (Fragment Stamp)",
+        "era": "Ch. 769 — divine tribulation forged"
+      },
+      {
+        "owner": "Wang Lin (refined into 18-Hell version)",
+        "era": "Ch. 915"
+      }
+    ],
+    "abilities": [
+      "Forms the 18-Layers-of-Hell-Reincarnation-Realm with Underworld River (Life-Death Dao)",
+      "Originally a fragment refined by divine tribulation when Wang Lin broke into Illusionary-Yin/Corporeal-Yang stage",
+      "Used as storage realm for Scatter Beans to Form Soldiers divine ability",
+      "Stores all souls of enemies Wang Lin has killed"
+    ],
+    "limitations": [
+      "Requires Life-Death Dao (Underworld River) to reach full power as reincarnation realm"
+    ],
+    "transformations": [
+      {
+        "from": "Fragment Stamp",
+        "to": "18-Hell Celestial Sealing Stamp",
+        "trigger": "Refined via divine tribulation + fused with Magic-Arsenal Spell + Celestial Sealing Stamp at Ch. 915"
+      }
+    ],
+    "upgrades": [
+      "Evolves from Fragment Stamp → 18-Hell Celestial Sealing Stamp → Incense Offering Realm (per Baidu)"
+    ],
+    "origin": "Self-forged; refined from Fragment Stamp via divine tribulation",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 915",
+    "knownFacts": [
+      "Refined from Fragment Stamp at Ch. 915",
+      "Creates 18-Layers-of-Hell Reincarnation Realm with Underworld River",
+      "Stores souls of all enemies killed by Wang Lin",
+      "Anchor for Scatter Beans to Form Soldiers ability",
+      "Pseudo-immortal grade"
+    ],
+    "relatedItems": [
+      "Fragment Stamp",
+      "Life-Death Domain",
+      "Underworld River",
+      "18-Layers-of-Hell Reincarnation Realm"
+    ]
+  },
+  {
+    "id": "I14",
+    "name": "Rain Celestial Sword (Mid Quality)",
+    "nameCn": "雨仙剑 · Yǔ Xiān Jiàn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Zhou Yi",
+        "era": "Separated from celestial corpse swords"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 717 — gifted under condition"
+      },
+      {
+        "owner": "Xu Liguo (sword-spirit)",
+        "era": "Bound to wield"
+      }
+    ],
+    "abilities": [
+      "Mid-quality celestial-tier flying sword",
+      "Sword-spirit (Jufu) passed to Xu Liguo (devil) to wield",
+      "Contains the Slash Luo Art sword-technique",
+      "Eternal inheritance — Wang Lin protects the celestial corpse in the pagoda in exchange"
+    ],
+    "limitations": [
+      "Must protect the celestial corpse inside the pagoda (condition from Zhou Yi)"
+    ],
+    "transformations": [
+      {
+        "from": "Celestial Sword",
+        "to": "Rain Celestial Sword (Mid Quality)",
+        "trigger": "Zhou Yi separated it from the celestial corpse swords at Ch. 717"
+      }
+    ],
+    "upgrades": [],
+    "origin": "Gifted by Zhou Yi (under condition Wang Lin protect the celestial corpse in the pagoda)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 717",
+    "knownFacts": [
+      "Mid-quality celestial-tier sword",
+      "Sword-spirit bound to Xu Liguo",
+      "Contains Slash Luo Art sword-technique",
+      "Eternal inheritance from Zhou Yi",
+      "Xu Liguo serves as its wielder"
+    ],
+    "relatedItems": [
+      "Celestial Sword",
+      "Xu Liguo",
+      "Rain Celestial Sword lineage"
+    ]
+  },
+  {
+    "id": "I15",
+    "name": "Celestial Sword",
+    "nameCn": "雨仙剑 (原)",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Zhou Yi",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 717"
+      },
+      {
+        "owner": "Evolved into Rain Celestial Sword",
+        "era": "Evolved"
+      }
+    ],
+    "abilities": [
+      "Zhou Yi gave one to Wang Lin",
+      "Became the seed of the Rain Celestial Sword inheritance"
+    ],
+    "limitations": [
+      "Evolved into Rain Celestial Sword — no longer exists separately"
+    ],
+    "transformations": [
+      {
+        "from": "Celestial Sword",
+        "to": "Rain Celestial Sword",
+        "trigger": "Evolution into full Rain Celestial Sword"
+      }
+    ],
+    "upgrades": [
+      "Evolved into Rain Celestial Sword"
+    ],
+    "origin": "Gifted by Zhou Yi",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 717",
+    "knownFacts": [
+      "Seed of Rain Celestial Sword inheritance",
+      "Given under condition to protect celestial corpse",
+      "Evolved into Rain Celestial Sword"
+    ],
+    "relatedItems": [
+      "Rain Celestial Sword"
+    ]
+  },
+  {
+    "id": "I16",
+    "name": "Crystal Sword (Pseudo Nirvana Void)",
+    "nameCn": "水晶剑 · Shuǐ Jīng Jiàn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Seven-Colored Realm",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1196"
+      },
+      {
+        "owner": "Destroyed by Daoist Water",
+        "era": "Ch. 1273"
+      },
+      {
+        "owner": "Wang Lin (restored)",
+        "era": "Restored by previous Lord of Sealed Realm"
+      }
+    ],
+    "abilities": [
+      "Crystal-element sword from the Seven-Colored Realm",
+      "Pseudo Nirvana Void grade"
+    ],
+    "limitations": [
+      "Shattered in first battle with Daoist Water (Ch. 1273); required external restoration"
+    ],
+    "transformations": [
+      {
+        "from": "Intact",
+        "to": "Shattered",
+        "trigger": "First battle with Daoist Water at Ch. 1273"
+      },
+      {
+        "from": "Shattered",
+        "to": "Restored",
+        "trigger": "Previous Lord of the Sealed Realm restored it"
+      }
+    ],
+    "upgrades": [
+      "Restored by previous Lord of the Sealed Realm after being shattered"
+    ],
+    "origin": "Taken from Seven-Colored Realm",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1196",
+    "knownFacts": [
+      "Pseudo Nirvana Void grade",
+      "From Seven-Colored Realm",
+      "Shattered vs Daoist Water Ch. 1273",
+      "Restored by previous Lord of Sealed Realm"
+    ],
+    "relatedItems": [
+      "Seven-Colored Nail",
+      "Short Sword (dual)"
+    ]
+  },
+  {
+    "id": "I17",
+    "name": "Short Sword (dual black & white)",
+    "nameCn": "白黑双剑",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Seven-Colored Realm",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin (1st pair)",
+        "era": "Ch. 1187"
+      },
+      {
+        "owner": "Destroyed by Daoist Water",
+        "era": "Ch. 1273"
+      },
+      {
+        "owner": "Wang Lin (restored)",
+        "era": "Restored by previous Lord of Sealed Realm"
+      }
+    ],
+    "abilities": [
+      "One black, one white; nine seals on each",
+      "Undoing the seals allows each sword to produce millions of sword shadows"
+    ],
+    "limitations": [
+      "First pair destroyed vs Daoist Water"
+    ],
+    "transformations": [
+      {
+        "from": "Intact",
+        "to": "Destroyed",
+        "trigger": "Battle with Daoist Water at Ch. 1273"
+      },
+      {
+        "from": "Destroyed",
+        "to": "Restored",
+        "trigger": "Previous Lord of Sealed Realm restoration"
+      }
+    ],
+    "upgrades": [
+      "Restored after destruction"
+    ],
+    "origin": "Acquired in Seven-Colored Realm",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1187",
+    "knownFacts": [
+      "Black and white paired swords",
+      "Nine seals on each sword",
+      "Millions of sword shadows when seals undone",
+      "Pseudo Nirvana Void grade"
+    ],
+    "relatedItems": [
+      "Crystal Sword",
+      "Seven-Colored Nail"
+    ]
+  },
+  {
+    "id": "I18",
+    "name": "Half-Moon Blade",
+    "nameCn": "半月刃 · Bàn Yuè Rèn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Planet Suzaku / Cultivation Planet Crystal",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Found in Suzaku Tomb"
+      },
+      {
+        "owner": "Retired",
+        "era": "Used previously but not anymore"
+      }
+    ],
+    "abilities": [
+      "Extremely fast blade",
+      "Initially obeyed only because of Xu Liguo (treated him like older brother)"
+    ],
+    "limitations": [
+      "Obedience bound to Xu Liguo; retired early"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Found in Cultivation Planet Crystal / Suzaku Tomb",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Found inside Cultivation Planet Crystal of Planet Suzaku",
+      "Extremely fast",
+      "Obeyed Xu Liguo",
+      "Retired — no longer used"
+    ],
+    "relatedItems": [
+      "Xu Liguo",
+      "Rain Celestial Sword"
+    ]
+  },
+  {
+    "id": "I19",
+    "name": "Axe of Giant Demon Clan",
+    "nameCn": "巨魔族斧 · Jù Mó Zú Fǔ",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Giant Demon Clan Heir",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin (stolen/traded)",
+        "era": "Exchanged for Star Compass"
+      },
+      {
+        "owner": "Destroyed",
+        "era": "Destroyed"
+      }
+    ],
+    "abilities": [
+      "Giant Demon Clan weapon"
+    ],
+    "limitations": [
+      "Spirit-tier only; destroyed"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Stolen/traded from Giant Demon Clan Heir (exchanged for Star Compass)",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "From Giant Demon Clan",
+      "Traded for Star Compass",
+      "Eventually destroyed"
+    ],
+    "relatedItems": [
+      "Star Compass"
+    ]
+  },
+  {
+    "id": "I20",
+    "name": "Rusted Iron Sword (Pseudo Nirvana Void)",
+    "nameCn": "锈铁剑 · Xiù Tiě Jiàn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Unknown",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1043"
+      },
+      {
+        "owner": "Destroyed by Master Ashen Pine",
+        "era": "Ch. 1193"
+      }
+    ],
+    "abilities": [
+      "Upper-Nirvana-Void-tier sword — deceptively powerful despite rusty appearance"
+    ],
+    "limitations": [
+      "Destroyed in bloody battle against Master Ashen Pine within Seven-Colored Realm"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Likely taken as loot (wiki doesn't specify)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1043",
+    "knownFacts": [
+      "Upper Nirvana Void Treasure grade",
+      "Deceptively powerful despite rusty appearance",
+      "Destroyed vs Master Ashen Pine at Ch. 1193"
+    ],
+    "relatedItems": [
+      "Seven-Colored Nail",
+      "Blood Slaughter Sword"
+    ]
+  },
+  {
+    "id": "I21",
+    "name": "Seven-Colored Nail / Seven-Colored God Void Nails",
+    "nameCn": "七彩通天钉 · Qī Cǎi Tōng Tiān Dīng",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Cang Songzi (Palm Venerable)",
+        "era": "Forged at Kongling-late stage"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1196 — taken from Cang Songzi"
+      }
+    ],
+    "abilities": [
+      "108 nails forged from meteorite of ancient exotic metal by Cang Songzi",
+      "Designed specifically to kill Third Step experts",
+      "Drives victims into madness if pierced and integrated into body",
+      "Once used by Palm Venerable to ambush the Venerable Sealing Realm"
+    ],
+    "limitations": [
+      "Must physically pierce and integrate into target's body for madness effect"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Taken from Cang Songzi in the Seven-Colored Realm battle",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1196",
+    "knownFacts": [
+      "108-piece set",
+      "Forged from ancient exotic metal meteorite",
+      "Anti-Third-Step design",
+      "Madness-inducing on body integration",
+      "Used to turn tables on Daoist Water"
+    ],
+    "relatedItems": [
+      "Crystal Sword",
+      "Seven-Colored Lance",
+      "Seven-Colored Realm"
+    ]
+  },
+  {
+    "id": "I22",
+    "name": "Blood Slaughter Sword",
+    "nameCn": "血煞剑 · Xuè Shà Jiàn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Dao Gu Ye Mo",
+        "era": "Ancient Dao era"
+      },
+      {
+        "owner": "Cloud Sea Wuji Sect (as mountain peak)",
+        "era": "Transformed"
+      },
+      {
+        "owner": "Wang Lin (seized)",
+        "era": "Ch. 1290"
+      }
+    ],
+    "abilities": [
+      "One of the Seven Swords of the Ancient Dao",
+      "Originally Dao Gu Ye Mo's weapon; transformed into a mountain peak",
+      "Effective even at Third Step level of cultivation"
+    ],
+    "limitations": [
+      "None significant — remains viable at highest cultivation levels"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Seized from Cloud Sea Wuji Sect after awakening during battle with Shui Daozi",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1290",
+    "knownFacts": [
+      "One of the Seven Swords of the Ancient Dao",
+      "Originally Dao Gu Ye Mo's weapon",
+      "Was transformed into a mountain peak inside Cloud Sea Wuji Sect",
+      "Still effective at Third Step",
+      "Retained to end"
+    ],
+    "relatedItems": [
+      "Slaughter Sword (from Qing Shui)",
+      "Slaughter Crystal",
+      "Slaughter True Body / Lu Mo"
+    ]
+  },
+  {
+    "id": "I23",
+    "name": "Yin Blade",
+    "nameCn": "阴刃 · Yīn Rèn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Ji Si (Green Devil)",
+        "era": "Implanted in Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1896 (implanted)"
+      },
+      {
+        "owner": "Destroyed",
+        "era": "Ch. 1979"
+      }
+    ],
+    "abilities": [
+      "Internal treasure implanted in Wang Lin's right arm by Ji Si",
+      "Pseudo Void Annihilation grade",
+      "Would become Void-Annihilation-level after transcending tribulation"
+    ],
+    "limitations": [
+      "Has not yet transcended immortal tribulation to reach full potential",
+      "Destroyed in Green-Devil battle before reaching full power"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Implanted by Ji Si (Green Devil) when Wang Lin was captured as Green Devil sacrifice",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1896",
+    "knownFacts": [
+      "Internal organ treasure (implanted in right arm)",
+      "Pseudo Void Annihilation grade",
+      "Could become Void-Annihilation after tribulation",
+      "Destroyed at Ch. 1979"
+    ],
+    "relatedItems": [
+      "Demon Blade, Earth Burial"
+    ]
+  },
+  {
+    "id": "I24",
+    "name": "Heaven-Splitting Axe (Ancestral)",
+    "nameCn": "开天斧 · Kāi Tiān Fǔ",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Realm-Sealing Formation",
+        "era": "As formation spirit"
+      },
+      {
+        "owner": "Wang Lin (subdued)",
+        "era": "Ch. 1664"
+      },
+      {
+        "owner": "Destroyed",
+        "era": "Ch. 1763"
+      }
+    ],
+    "abilities": [
+      "Cave World Royal Weapon",
+      "Was one of the Realm-Sealing Formation's formation spirits"
+    ],
+    "limitations": [
+      "Destroyed in an ambush"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Subdued from Realm-Sealing Formation when Wang Lin destroyed it",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1664",
+    "knownFacts": [
+      "Cave World Royal Weapon",
+      "Originally a Realm-Sealing Formation spirit",
+      "Destroyed at Ch. 1763 in ambush"
+    ],
+    "relatedItems": [
+      "Unnamed Wheel Formation",
+      "Realm-Sealing Formation"
+    ]
+  },
+  {
+    "id": "I25",
+    "name": "Demon Blade, Earth Burial",
+    "nameCn": "魔刀·葬土 · Mó Dāo · Zàng Tǔ",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Cave World Royal Ancient Demon",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1497"
+      }
+    ],
+    "abilities": [
+      "Royal ancient demon blade from the Cave World"
+    ],
+    "limitations": [
+      "Ancient demon element may limit universal usability"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Cave World inheritance",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1497",
+    "knownFacts": [
+      "Cave World Royal Ancient Demon Treasure",
+      "Retained to end"
+    ],
+    "relatedItems": [
+      "Fog Devil Lance",
+      "Ancient Demon (clone)"
+    ]
+  },
+  {
+    "id": "I26",
+    "name": "Fog Devil Lance",
+    "nameCn": "雾魔枪 · Wù Mó Qiāng",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Ancient Tomb",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1386"
+      },
+      {
+        "owner": "Ancient Demon clone",
+        "era": "Given away"
+      }
+    ],
+    "abilities": [
+      "Ancient Devil weapon",
+      "Devil-element lance"
+    ],
+    "limitations": [
+      "Given to Ancient Demon clone — no longer in main body's possession"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Obtained in the Ancient Tomb; given to Wang Lin's Ancient Demon Clone for use",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1386",
+    "knownFacts": [
+      "Ancient Devil magical instrument",
+      "From the Ancient Tomb",
+      "Given to Ancient Demon clone"
+    ],
+    "relatedItems": [
+      "Ancient Demon (clone)",
+      "Demon Blade, Earth Burial"
+    ]
+  },
+  {
+    "id": "I27",
+    "name": "Li Guang's Bow",
+    "nameCn": "李广弓 · Lǐ Guǎng Gōng",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Lian Daofei (madman)",
+        "era": "Inside Nether Beast"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1533"
+      }
+    ],
+    "abilities": [
+      "Bow Dao taught by Lian Daofei; when paired with Li Guang's Arrow forms Heaven-Shattering Bow Dao",
+      "Fuses with Wang Lin's thunder essence for armor-piercing shots",
+      "Can kill across realms"
+    ],
+    "limitations": [
+      "Requires Li Guang's Arrow to function",
+      "Each shot depletes Spirit-Vein-tier resources"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Taught by the madman Lian Daofei inside the Nether Beast",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1533",
+    "knownFacts": [
+      "Dao Spell treasure — Bow Dao",
+      "Taught by Lian Daofei (madman) inside Nether Beast",
+      "Pairs with Li Guang's Arrow for Heaven-Shattering Bow Dao",
+      "Fuses with thunder essence for armor-piercing",
+      "Can kill across realms"
+    ],
+    "relatedItems": [
+      "Li Guang's Arrow",
+      "Nether Beast",
+      "Lian Daofei"
+    ]
+  },
+  {
+    "id": "I28",
+    "name": "Li Guang's Arrow",
+    "nameCn": "李广箭 · Lǐ Guǎng Jiàn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Lian Daofei",
+        "era": "Inside Nether Beast"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1577"
+      }
+    ],
+    "abilities": [
+      "Arrow paired with Li Guang's Bow",
+      "Consumable when fired (finite supply)"
+    ],
+    "limitations": [
+      "Finite ammunition — each shot depletes Spirit-Vein-tier resources"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Acquired alongside the bow from Lian Daofei",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1577",
+    "knownFacts": [
+      "Paired with Li Guang's Bow",
+      "Consumable/finite-ammo treasure",
+      "Each shot uses Spirit-Vein-tier resources"
+    ],
+    "relatedItems": [
+      "Li Guang's Bow"
+    ]
+  },
+  {
+    "id": "I29",
+    "name": "Seven-Colored Lance",
+    "nameCn": "七彩枪 · Qī Cǎi Qiāng",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Lian Daofei (madman)",
+        "era": "Inside Nether Beast"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1543"
+      }
+    ],
+    "abilities": [
+      "Seven-colored light contains the power of emotions",
+      "Affects emotions of anyone who sees it",
+      "Similar to Ethereal Fire but stronger",
+      "Three transformations: black → white → gray"
+    ],
+    "limitations": [
+      "Emotional manipulation may not work on beings beyond certain cultivation levels"
+    ],
+    "transformations": [
+      {
+        "from": "Black transformation",
+        "to": "White transformation",
+        "trigger": "First evolution"
+      },
+      {
+        "from": "White transformation",
+        "to": "Gray transformation",
+        "trigger": "Second evolution"
+      }
+    ],
+    "upgrades": [
+      "Three-stage transformation: black → white → gray"
+    ],
+    "origin": "Taught by Lian Daofei (madman) inside Nether Beast",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1543",
+    "knownFacts": [
+      "Dao Spell treasure taught by Lian Daofei",
+      "Emotion-affecting weapon",
+      "Three transformations: black → white → gray",
+      "Similar to but stronger than Ethereal Fire"
+    ],
+    "relatedItems": [
+      "Ethereal Fire",
+      "Li Guang's Bow",
+      "Lian Daofei"
+    ]
+  },
+  {
+    "id": "I30",
+    "name": "Slaughter Sword (from Immortal Lord Qing Shui)",
+    "nameCn": "杀戮剑 · Shā Lù Jiàn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Immortal Lord Qing Shui",
+        "era": "Condensed at Sky Gate"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1561"
+      }
+    ],
+    "abilities": [
+      "Third-Step Origin Treasure",
+      "Condensed by Qing Shui using strange power from the Sky Gate vortex",
+      "Fuses with Wang Lin's Slaughter Origin to complete his Slaughter Essence"
+    ],
+    "limitations": [
+      "Merges with Slaughter Origin — ceases to exist as separate entity"
+    ],
+    "transformations": [
+      {
+        "from": "Separate sword",
+        "to": "Merged with Slaughter Origin True Body",
+        "trigger": "Fusion with Wang Lin's Slaughter Origin"
+      }
+    ],
+    "upgrades": [
+      "Fuses with Slaughter Origin to complete Slaughter Essence"
+    ],
+    "origin": "Gifted by Immortal Lord Qing Shui (senior brother)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1561",
+    "knownFacts": [
+      "Third-Step Origin Treasure",
+      "Gifted by Immortal Lord Qing Shui",
+      "Condensed from Sky Gate vortex power",
+      "Completes Wang Lin's Slaughter Essence"
+    ],
+    "relatedItems": [
+      "Slaughter Crystal",
+      "Slaughter True Body / Lu Mo",
+      "Blood Slaughter Sword"
+    ]
+  },
+  {
+    "id": "I31",
+    "name": "Lightning Sword",
+    "nameCn": "雷剑 · Léi Jiàn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1625"
+      }
+    ],
+    "abilities": [
+      "Thunder-element origin-treasure sword",
+      "One of six fundamental origin swords condensed via void-gate vortex"
+    ],
+    "limitations": [
+      "Thunder-element only"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Self-condensed via void-gate vortex",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1625",
+    "knownFacts": [
+      "Essence Treasure — Thunder element",
+      "One of six origin swords",
+      "Self-condensed via void-gate vortex"
+    ],
+    "relatedItems": [
+      "Six Origin Swords",
+      "Thunder Origin True Body"
+    ]
+  },
+  {
+    "id": "I32",
+    "name": "Six Origin Swords",
+    "nameCn": "六本源剑",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1715"
+      }
+    ],
+    "abilities": [
+      "Six fundamental origin-element swords: Fire, Life-Death, Karma, True-False, Slaughter, Restriction",
+      "Each embodies one of Wang Lin's Origins",
+      "Set becomes complete and most powerful when all six are together"
+    ],
+    "limitations": [
+      "Set power depends on having all six swords"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Self-condensed from the void-gate vortex",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1715",
+    "knownFacts": [
+      "Set of six swords embodying Wang Lin's Origins",
+      "Fire, Life-Death, Karma, True-False, Slaughter, Restriction",
+      "Self-condensed at Ch. 1715",
+      "Retained to end"
+    ],
+    "relatedItems": [
+      "Lightning Sword",
+      "Slaughter Sword",
+      "Life-Death Domain",
+      "Karma Domain",
+      "True-False Domain"
+    ]
+  },
+  {
+    "id": "I33",
+    "name": "Scattered Devil Armour / Divine Devil Armour",
+    "nameCn": "散魔甲 · Sǎn Mó Jiǎ",
+    "type": "armor",
+    "category": "defensive",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Scattered Devil",
+        "era": "Demon Spirit Land"
+      },
+      {
+        "owner": "Wang Lin (took with Bei Lou's help)",
+        "era": "Ch. 610"
+      },
+      {
+        "owner": "Sold",
+        "era": "Ch. 1178"
+      }
+    ],
+    "abilities": [
+      "Pitch-black armor with demonic feel",
+      "Ancient Devil Treasure grade"
+    ],
+    "limitations": [
+      "Sold at Ch. 1178"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Took from a Scattered Devil in the Demon Spirit Land (with help of Ancient Demon Bei Lou)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 610",
+    "knownFacts": [
+      "Ancient Devil Treasure",
+      "Taken from Scattered Devil with Bei Lou's help",
+      "Sold at Ch. 1178"
+    ],
+    "relatedItems": [
+      "Ancient Demon (clone)",
+      "Ancient Devil (clone)"
+    ]
+  },
+  {
+    "id": "I34",
+    "name": "Ancient God Leather Armour",
+    "nameCn": "古神皮甲 · Gǔ Shén Pí Jiǎ",
+    "type": "armor",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "8-star Ancient God",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 758 (Ancient God inheritance)"
+      }
+    ],
+    "abilities": [
+      "Origin-Soul-defensive treasure made from the skin of an 8-star Ancient God"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Ancient God inheritance",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 758",
+    "knownFacts": [
+      "Made from 8-star Ancient God's skin",
+      "Origin-soul defense",
+      "Ancient God Treasure grade"
+    ],
+    "relatedItems": [
+      "Ancient God Trident",
+      "God Slaying Spear",
+      "Azure Ancient God Shield"
+    ]
+  },
+  {
+    "id": "I35",
+    "name": "Ancient God Furnace / Ancient God Cauldron",
+    "nameCn": "古神鼎 · Gǔ Shén Dǐng",
+    "type": "other",
+    "category": "utility",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Ancient God Tu Si (created then discarded)",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 838 (Tu Si inheritance)"
+      },
+      {
+        "owner": "Destroyed",
+        "era": "Ch. 1226"
+      }
+    ],
+    "abilities": [
+      "Created by Tu Si but discarded as unsatisfactory",
+      "Can perform positional swaps (teleport-swap with another target)"
+    ],
+    "limitations": [
+      "Tu Si considered it unsatisfactory",
+      "Destroyed at Ch. 1226"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Tu Si inheritance",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 838",
+    "knownFacts": [
+      "Created by Ancient God Tu Si (discarded as unsatisfactory)",
+      "Positional-swap / teleport ability",
+      "Destroyed at Ch. 1226"
+    ],
+    "relatedItems": [
+      "Emperor Furnace",
+      "Ancient God Trident"
+    ]
+  },
+  {
+    "id": "I36",
+    "name": "Azure Ancient God Shield / Cyan Light Shield",
+    "nameCn": "青光盾 · Qīng Guāng Dùn",
+    "type": "armor",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "8-star Ancient God",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 980 (Ancient God inheritance)"
+      },
+      {
+        "owner": "Destroyed by Tian Yunzi",
+        "era": "Ch. 1082"
+      },
+      {
+        "owner": "Wang Lin (restored)",
+        "era": "Ch. 1626 via Gate of Emptiness"
+      }
+    ],
+    "abilities": [
+      "Defensive magical instrument of an 8-star Ancient God",
+      "Contains 8-star Ancient God's life-saving divine ability 'Dreaming Back to Antiquity'",
+      "Saved Wang Lin's life vs the Seven-Colored Daoist"
+    ],
+    "limitations": [
+      "Shattered once vs Tian Yunzi; required Gate of Emptiness to repair"
+    ],
+    "transformations": [
+      {
+        "from": "Intact",
+        "to": "Shattered",
+        "trigger": "Battle vs Tian Yunzi in Immortal Spirit Realm at Ch. 1082"
+      },
+      {
+        "from": "Shattered",
+        "to": "Restored",
+        "trigger": "Repaired via Gate of Emptiness at Ch. 1626"
+      }
+    ],
+    "upgrades": [
+      "Repaired via Gate of Emptiness power"
+    ],
+    "origin": "Ancient God inheritance",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 980",
+    "knownFacts": [
+      "8-star Ancient God's defensive treasure",
+      "Contains 'Dreaming Back to Antiquity' life-saving spell",
+      "Shattered vs Tian Yunzi at Ch. 1082",
+      "Restored at Ch. 1626 via Gate of Emptiness",
+      "Saved Wang Lin vs Seven-Colored Daoist"
+    ],
+    "relatedItems": [
+      "Ancient God Leather Armour",
+      "Protection Bone Tablets"
+    ]
+  },
+  {
+    "id": "I37",
+    "name": "Emperor Furnace / Heavenly Emperor Furnace",
+    "nameCn": "帝炉 · Dì Lú",
+    "type": "other",
+    "category": "utility",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Ancient Tomb",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Tan Lang",
+        "era": "Obtained in Ancient Tomb"
+      },
+      {
+        "owner": "Wang Lin (seized from Tan Lang)",
+        "era": "Ch. 838-ish"
+      }
+    ],
+    "abilities": [
+      "Royal Ancient God magical instrument",
+      "Can capture and refine all things",
+      "Used to refine Esteemed Ling Dong into an ancient slave"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Seized from Tan Lang (who got it in the Ancient Tomb)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 838",
+    "knownFacts": [
+      "Cave World Royal Ancient God Treasure",
+      "Can capture and refine all things",
+      "Used to refine Ling Dong into ancient slave at Ch. 1450"
+    ],
+    "relatedItems": [
+      "Ling Dong (Ancient Slave)",
+      "Ancient God Furnace"
+    ]
+  },
+  {
+    "id": "I38",
+    "name": "Protection Bone Tablets (Gauntlets)",
+    "nameCn": "护骨板 · Hù Gǔ Bǎn",
+    "type": "armor",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Ancient God (8-star)",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Cave World Ancient God Treasure"
+      },
+      {
+        "owner": "Destroyed",
+        "era": "Ch. 1580"
+      },
+      {
+        "owner": "Wang Lin (restored)",
+        "era": "Ch. 1626 via Gate of Emptiness"
+      }
+    ],
+    "abilities": [
+      "Transform into gauntlets containing an 8-star ancient god life-saving spell"
+    ],
+    "limitations": [
+      "Destroyed at Ch. 1580; required Gate of Emptiness repair"
+    ],
+    "transformations": [
+      {
+        "from": "Intact",
+        "to": "Destroyed",
+        "trigger": "Ch. 1580"
+      },
+      {
+        "from": "Destroyed",
+        "to": "Restored",
+        "trigger": "Ch. 1626 via Gate of Emptiness"
+      }
+    ],
+    "upgrades": [
+      "Repaired via Gate of Emptiness"
+    ],
+    "origin": "Ancient God inheritance",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Ancient God Treasure",
+      "Morphs into gauntlets",
+      "Contains 8-star life-saving spell",
+      "Destroyed Ch. 1580, restored Ch. 1626"
+    ],
+    "relatedItems": [
+      "Azure Ancient God Shield",
+      "Ancient God Bracer"
+    ]
+  },
+  {
+    "id": "I39",
+    "name": "Ancient God Bracer",
+    "nameCn": "古神臂甲 · Gǔ Shén Bì Jiǎ",
+    "type": "armor",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Ancient God",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Post-Ancient-Tomb"
+      }
+    ],
+    "abilities": [
+      "Deploys the life-saving supernatural ability 'Ancient Blessing of the Nine-Star Ancient God'"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Ancient Tomb",
+    "canonConfidence": 4,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Ancient God Treasure",
+      "Contains 9-star Ancient God life-saving blessing",
+      "Defensive bracer"
+    ],
+    "relatedItems": [
+      "Protection Bone Tablets",
+      "Azure Ancient God Shield"
+    ]
+  },
+  {
+    "id": "I40",
+    "name": "Mountain and River Screen",
+    "nameCn": "山河屏 · Shān Hé Píng",
+    "type": "other",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Greed",
+        "era": "Moongazer Serpent era"
+      },
+      {
+        "owner": "Wang Lin (stolen)",
+        "era": "Ch. 717"
+      }
+    ],
+    "abilities": [
+      "Projects image of mountains and rivers that absorbs attacks",
+      "Celestial-tier defensive treasure"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Stolen from Greed during Moongazer Serpent escape",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 717",
+    "knownFacts": [
+      "Celestial-tier defensive treasure",
+      "Stolen from Greed",
+      "Projects mountain-river image to absorb attacks"
+    ],
+    "relatedItems": [
+      "Light and Shadow Shield"
+    ]
+  },
+  {
+    "id": "I41",
+    "name": "Heaven Tiger Flag / Banner",
+    "nameCn": "天虎旗 · Tiān Hǔ Qí",
+    "type": "banner",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Luo Tian Immortal Sealing ceremony",
+        "era": "Awarded"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 879"
+      }
+    ],
+    "abilities": [
+      "Big Boi technique — materializes a Heavenly Tiger (天虎) projection to fight",
+      "Celestial treasure grade"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Awarded at Luo Tian Immortal Sealing ceremony",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 879",
+    "knownFacts": [
+      "Celestial treasure",
+      "Summons Heavenly Tiger projection",
+      "Awarded at Luo Tian Immortal Sealing ceremony",
+      "Also called 'Big Boi Technique'"
+    ],
+    "relatedItems": [
+      "Three Purple Flags",
+      "Restriction Flag"
+    ]
+  },
+  {
+    "id": "I42",
+    "name": "Three Bells Shield",
+    "nameCn": "三铃盾 · Sān Líng Dùn",
+    "type": "other",
+    "category": "defensive",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Unknown",
+        "era": "Early acquisition"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Early Celestial era"
+      },
+      {
+        "owner": "Ling Er (given)",
+        "era": "Ch. 965"
+      }
+    ],
+    "abilities": [
+      "Three bells ring on impact — good protection treasure with auditory warning"
+    ],
+    "limitations": [
+      "Given to Ling Er (Master Yi Chen's granddaughter) at Ch. 965"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Early acquisition",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Three bells ring on impact",
+      "Spirit-tier protection",
+      "Given to Ling Er at Ch. 965"
+    ],
+    "relatedItems": [
+      "Straw Hat / Li Ming Straw Hat",
+      "Ling Er"
+    ]
+  },
+  {
+    "id": "I43",
+    "name": "Light and Shadow Shield",
+    "nameCn": "光影盾 · Guāng Yǐng Dùn",
+    "type": "other",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Dao Master Blue Dream",
+        "era": "Taught to Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1321"
+      }
+    ],
+    "abilities": [
+      "Creates a light made of every vitality in the world",
+      "Fuses all surrounding light into one's body forming illusory light shield",
+      "Blocks AND reflects enemy attacks"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Taught by Dao Master Blue Dream",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1321",
+    "knownFacts": [
+      "Dao Spell defensive technique",
+      "Light-element based",
+      "Reflects enemy attacks",
+      "Taught by Dao Master Blue Dream"
+    ],
+    "relatedItems": [
+      "Mountain and River Screen"
+    ]
+  },
+  {
+    "id": "I44",
+    "name": "Gui Yi Sect's Armour (Earth Element)",
+    "nameCn": "鬼衣宗甲 · Guǐ Yī Zōng Jiǎ",
+    "type": "armor",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Water General",
+        "era": "Planet Five Elements"
+      },
+      {
+        "owner": "Wang Lin (1st taken)",
+        "era": "Ch. 1735"
+      },
+      {
+        "owner": "Wang Lin (2nd via Old Ancestor Green Bull)",
+        "era": "Ch. 1886"
+      }
+    ],
+    "abilities": [
+      "Earth-element human-shaped armor",
+      "Rare Gui Yi Sect treasure"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "1st: took from Water General; 2nd: via Old Ancestor Green Bull",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1735",
+    "knownFacts": [
+      "Earth-element armor",
+      "Human-shaped",
+      "Rare Gui Yi Sect treasure",
+      "Obtained twice"
+    ],
+    "relatedItems": [
+      "Heavenly Bull Soul Armour"
+    ]
+  },
+  {
+    "id": "I45",
+    "name": "Heavenly Bull Soul Armour",
+    "nameCn": "天牛魂甲 · Tiān Niú Hún Jiǎ",
+    "type": "armor",
+    "category": "defensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Heavenly Bull Continent",
+        "era": "Late-game era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1874"
+      },
+      {
+        "owner": "Destroyed by He, Lian Yunjue",
+        "era": "Ch. 1989"
+      }
+    ],
+    "abilities": [
+      "Soul-armor of Heavenly Bull Continent origin",
+      "Spirit-tier"
+    ],
+    "limitations": [
+      "Destroyed at Ch. 1989 by He, Lian Yunjue"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Acquired in late-game from Heavenly Bull Continent",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1874",
+    "knownFacts": [
+      "Heavenly Bull Continent origin",
+      "Soul-armor type",
+      "Destroyed at Ch. 1989"
+    ],
+    "relatedItems": [
+      "Gui Yi Sect's Armour"
+    ]
+  },
+  {
+    "id": "I46",
+    "name": "Blue Umbrella",
+    "nameCn": "蓝伞 · Lán Sǎn",
+    "type": "other",
+    "category": "defensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Yan Lu",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin (won in bet)",
+        "era": "Ch. 1835"
+      },
+      {
+        "owner": "Destroyed",
+        "era": "Ch. 1869"
+      }
+    ],
+    "abilities": [
+      "Defensive treasure in umbrella form"
+    ],
+    "limitations": [
+      "Destroyed at Ch. 1869 during Upheaval"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Won in a bet with Yan Lu",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1835",
+    "knownFacts": [
+      "Defensive umbrella treasure",
+      "Won from Yan Lu",
+      "Destroyed at Ch. 1869"
+    ],
+    "relatedItems": []
+  },
+  {
+    "id": "I47",
+    "name": "Jade (Thunder Defense)",
+    "nameCn": "御雷玉 · Yù Léi Yù",
+    "type": "accessory",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Xi Zifeng (disciple)",
+        "era": "Pre-gift"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 871 (gift)"
+      }
+    ],
+    "abilities": [
+      "Defends against powerful thunder",
+      "Important self-defense treasure of Xi Zifeng"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Obtained from Xi Zifeng (disciple)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 871",
+    "knownFacts": [
+      "Spirit-tier thunder defense",
+      "Gift from Xi Zifeng",
+      "Wards against thunder"
+    ],
+    "relatedItems": [
+      "Jade Thunder Defense (different)"
+    ]
+  },
+  {
+    "id": "I48",
+    "name": "A Dagger (from Ge Hong)",
+    "nameCn": "匕首 · Bǐ Shǒu",
+    "type": "weapon",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Ge Hong",
+        "era": "Thunder Celestial Realm"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 747"
+      }
+    ],
+    "abilities": [
+      "Spirit-tier dagger obtained from Ge Hong in Thunder Celestial Realm"
+    ],
+    "limitations": [
+      "Wang Lin has never once used it"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Obtained from a woman named Ge Hong in the Thunder Celestial Realm",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 747",
+    "knownFacts": [
+      "From Ge Hong in Thunder Celestial Realm",
+      "Never used by Wang Lin",
+      "Spirit-tier"
+    ],
+    "relatedItems": []
+  },
+  {
+    "id": "I49",
+    "name": "Jade Thunder Defense (different from above)",
+    "nameCn": "御雷玉 (different)",
+    "type": "accessory",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Xi Zifeng",
+        "era": "Pre-gift"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "~Ch. 871"
+      }
+    ],
+    "abilities": [
+      "Jade pendant warding against thunder tribulation"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Xi Zifeng gift",
+    "canonConfidence": 4,
+    "firstAppearance": "~Ch. 871",
+    "knownFacts": [
+      "Jade pendant for thunder tribulation defense",
+      "Separate from the other Jade Thunder Defense",
+      "Retained"
+    ],
+    "relatedItems": [
+      "Jade (Thunder Defense)"
+    ]
+  },
+  {
+    "id": "I50",
+    "name": "Soul Flag (Soul Refining Sect)",
+    "nameCn": "魂旗 · Hún Qí",
+    "type": "banner",
+    "category": "soul_related",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Soul Refining Sect",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin (Dun Tian gift)",
+        "era": "Mid-Nascent Soul era"
+      },
+      {
+        "owner": "Retired",
+        "era": "Replaced by Billion Soul Flag"
+      }
+    ],
+    "abilities": [
+      "Holds and refines captured souls",
+      "Soul Refining Sect standard equipment"
+    ],
+    "limitations": [
+      "Retired — replaced by Billion Soul Flag"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Soul Refining Sect inheritance (Dun Tian gift)",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Soul Refining Sect standard soul flag",
+      "Holds and refines captured souls",
+      "Gifted by Dun Tian",
+      "Retired after Billion Soul Flag acquired"
+    ],
+    "relatedItems": [
+      "Billion Soul Flag",
+      "Dun Tian"
+    ]
+  },
+  {
+    "id": "I51",
+    "name": "Billion Soul Flag / Ten-Billion Soul Banner",
+    "nameCn": "十亿魂幡 · Shí Yì Hún Fān",
+    "type": "banner",
+    "category": "soul_related",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Soul Refining Sect",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Dun Tian",
+        "era": "Used to scare off Liu Mei"
+      },
+      {
+        "owner": "Wang Lin (gifted)",
+        "era": "Early-Nascent-Soul era"
+      },
+      {
+        "owner": "Wang Lin (repaired)",
+        "era": "Repaired via Gate of Emptiness"
+      }
+    ],
+    "abilities": [
+      "Soul Refining Sect's guardian treasure — pseudo-immortal grade",
+      "Freely changes size; contains 37 main souls + 1 billion ordinary souls",
+      "Souls can fuse into Soul-Ascension-level soul",
+      "4th soul could battle Ascension cultivators (seized by 14th-gen Vermilion Bird Child)",
+      "Sentient — 37 main souls have independent will"
+    ],
+    "limitations": [
+      "4th soul seized by 14th-gen Vermilion Bird Child",
+      "All souls except 4 condensed main souls self-destructed vs Tuo Sen"
+    ],
+    "transformations": [
+      {
+        "from": "Damaged",
+        "to": "Repaired",
+        "trigger": "Repaired via Gate of Emptiness"
+      }
+    ],
+    "upgrades": [
+      "Repaired via Gate of Emptiness after soul self-destruction"
+    ],
+    "origin": "Gifted by Dun Tian (Soul Refining Sect predecessor)",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Soul Refining Sect guardian treasure",
+      "37 main souls + 1 billion ordinary souls",
+      "4th soul seized by 14th-gen Vermilion Bird Child",
+      "Most souls self-destructed vs Tuo Sen",
+      "Repaired via Gate of Emptiness"
+    ],
+    "relatedItems": [
+      "Soul Flag",
+      "Devil Soul Bottle",
+      "Heaven-Avoiding Coffin"
+    ]
+  },
+  {
+    "id": "I52",
+    "name": "Devil Soul Bottle",
+    "nameCn": "魔鬼魂瓶 · Mó Guǐ Hún Píng",
+    "type": "soul_artifact",
+    "category": "soul_related",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Ancient Tomb",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1388"
+      }
+    ],
+    "abilities": [
+      "Contains a number of Ancient Devil souls",
+      "Ancient Devil Treasure grade"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Ancient Tomb",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1388",
+    "knownFacts": [
+      "Ancient Devil Treasure",
+      "Stores Ancient Devil souls",
+      "From the Ancient Tomb"
+    ],
+    "relatedItems": [
+      "Billion Soul Flag",
+      "Soul Gourd"
+    ]
+  },
+  {
+    "id": "I53",
+    "name": "Soul Lasher / Kunji Whip",
+    "nameCn": "坤极鞭 · Kūn Jí Biān",
+    "type": "weapon",
+    "category": "soul_related",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Tian Yu Sect",
+        "era": "Heavy treasure"
+      },
+      {
+        "owner": "Qian Feng",
+        "era": "Given to Hong Die"
+      },
+      {
+        "owner": "Red Butterfly / Hong Die",
+        "era": "Used in battle"
+      },
+      {
+        "owner": "Wang Lin (took from corpse)",
+        "era": "After Hong Die's death"
+      },
+      {
+        "owner": "Fused into Karma Whip",
+        "era": "Ch. 731"
+      }
+    ],
+    "abilities": [
+      "Originally Tian Yu Sect heavy treasure",
+      "Directly attacks the primordial/origin soul at warp speed",
+      "Tian Yu Sect's most powerful weapon"
+    ],
+    "limitations": [
+      "Fused into Karma Whip — no longer exists separately"
+    ],
+    "transformations": [
+      {
+        "from": "Soul Lasher",
+        "to": "Burned by Ghostly Sky Fire",
+        "trigger": "Demon Spirit Land encounter"
+      },
+      {
+        "from": "Burned remnant",
+        "to": "Karma Whip",
+        "trigger": "Nourished by Wang Lin's Karma Concept at Ch. 731"
+      }
+    ],
+    "upgrades": [
+      "Evolved into Karma Whip"
+    ],
+    "origin": "Took from Hong Die's corpse (originally Red Butterfly's per wiki)",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Originally Tian Yu Sect heavy treasure",
+      "Attacks origin soul at warp speed",
+      "Burned by Ghostly Sky Fire → transformed → nourished by Karma Concept",
+      "Became the Karma Whip at Ch. 731"
+    ],
+    "relatedItems": [
+      "Karma Whip",
+      "Karma Domain"
+    ]
+  },
+  {
+    "id": "I54",
+    "name": "Carving with the Domain of Time",
+    "nameCn": "时间雕刻 · Shí Jiān Diāo Kè",
+    "type": "soul_artifact",
+    "category": "domain",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin (carved)",
+        "era": "After Tian Yun Zi's instruction"
+      },
+      {
+        "owner": "Destroyed",
+        "era": "Chapter unspecified"
+      }
+    ],
+    "abilities": [
+      "Carved by Wang Lin after experiencing Time domain with Yunzhe Zi's help",
+      "Allows one to stop time for a brief duration"
+    ],
+    "limitations": [
+      "Destroyed (chapter unspecified)",
+      "Time stop is brief only"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Self-carved after Tian Yun Zi tutelage",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Time-domain-bound carving",
+      "Stops time briefly",
+      "Self-carved after Time domain comprehension",
+      "Destroyed"
+    ],
+    "relatedItems": [
+      "True-False Domain",
+      "Flowing Time / Flowing Moon"
+    ]
+  },
+  {
+    "id": "I55",
+    "name": "Heaven-Avoiding Coffin",
+    "nameCn": "避天棺 · Bì Tiān Guān",
+    "type": "soul_artifact",
+    "category": "soul_related",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin (acquired)",
+        "era": "Ch. 819"
+      }
+    ],
+    "abilities": [
+      "Avoids heaven's perception — shields the soul from karmic detection",
+      "Holds Li Muwan's soul after her body perished during Nascent Soul formation"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Acquired specifically to hold Li Muwan's soul",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 819",
+    "knownFacts": [
+      "Spirit-tier coffin",
+      "Heaven-avoiding — shields from karmic detection",
+      "Holds Li Muwan's soul",
+      "Later Li Muwan is resurrected"
+    ],
+    "relatedItems": [
+      "Li Muwan",
+      "Heaven-Defying Bead / Pearl"
+    ]
+  },
+  {
+    "id": "I56",
+    "name": "Soul Gourd",
+    "nameCn": "魂葫芦 · Hún Hú Lu",
+    "type": "soul_artifact",
+    "category": "soul_related",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Great Soul Sect (9th ancestor Luo Yunhai)",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin (won in bet with Yan Lu)",
+        "era": "Ch. 1836"
+      },
+      {
+        "owner": "Destroyed",
+        "era": "Ch. 1869"
+      }
+    ],
+    "abilities": [
+      "Gathered 1 billion dao souls inside (now broken — 30 million remain)",
+      "Single-use: launches attack equal to peak mid-stage Void Tribulant cultivator",
+      "Great Soul Sect treasure"
+    ],
+    "limitations": [
+      "One-use only",
+      "Broken — only 30 million of original 1 billion dao souls remain",
+      "Destroyed at Ch. 1869"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Won in a bet with Yan Lu",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1836",
+    "knownFacts": [
+      "Great Soul Sect treasure (9th ancestor Luo Yunhai)",
+      "Originally 1 billion dao souls; 30 million after breaking",
+      "Single-use attack = peak mid-stage Void Tribulant",
+      "Destroyed at Ch. 1869"
+    ],
+    "relatedItems": [
+      "Billion Soul Flag",
+      "Devil Soul Bottle"
+    ]
+  },
+  {
+    "id": "I57",
+    "name": "Giant Head Skull of an Ancient Clansman",
+    "nameCn": "古族人头骨 · Gǔ Zú Rén Tóu Gǔ",
+    "type": "soul_artifact",
+    "category": "soul_related",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Ancient Tomb",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ancient Tomb"
+      }
+    ],
+    "abilities": [
+      "Trees on its head produce Ancient Leaves (99 total predicted by Grandmaster Yun Luo)"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Taken from Ancient Tomb",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "From the Ancient Tomb",
+      "Produces Ancient Leaves via trees on the skull",
+      "Ancient clansman-tier"
+    ],
+    "relatedItems": [
+      "Ancient Leaf / Ancient Breath Leaf"
+    ]
+  },
+  {
+    "id": "I58",
+    "name": "Infant Skull",
+    "nameCn": "婴儿头骨 · Yīng Ér Tóu Gǔ",
+    "type": "soul_artifact",
+    "category": "soul_related",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Immortal Clan's Da Yi Great Heavenly Venerable",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin (seized)",
+        "era": "Mid-late game"
+      }
+    ],
+    "abilities": [
+      "Filled with death energy",
+      "Contains information left by Lu Mo (Wang Lin's clone) — plot clue"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Seized from Da Yi Great Heavenly Venerable of the Immortal Clan",
+    "canonConfidence": 4,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Seized from Da Yi Great Heavenly Venerable",
+      "Filled with death energy",
+      "Contains Lu Mo's message",
+      "Wang Lin's soul felt strange familiarity"
+    ],
+    "relatedItems": [
+      "Lu Mo / Slaughter True Body",
+      "White Hair Strand"
+    ]
+  },
+  {
+    "id": "I59",
+    "name": "White Hair Strand",
+    "nameCn": "白发丝 · Bái Fà Sī",
+    "type": "soul_artifact",
+    "category": "soul_related",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Immortal Emperor's Palace",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Immortal Emperor's Palace"
+      }
+    ],
+    "abilities": [
+      "Cannot be destroyed by the Immortal Emperor",
+      "Contains information left by Lu Mo (Wang Lin's clone) to resolve confusion about reincarnation cycle"
+    ],
+    "limitations": [
+      "Plot-clue item rather than combat item"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Found in Immortal Emperor's Palace",
+    "canonConfidence": 4,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Indestructible — cannot be destroyed by the Immortal Emperor",
+      "Contains Lu Mo's message about reincarnation",
+      "Plot-clue item"
+    ],
+    "relatedItems": [
+      "Lu Mo / Slaughter True Body",
+      "Infant Skull"
+    ]
+  },
+  {
+    "id": "I60",
+    "name": "Blood-Red Nascent Soul",
+    "nameCn": "血红元神 · Xuè Hóng Yuán Shén",
+    "type": "soul_artifact",
+    "category": "soul_related",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Seven-Colored Realm",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1194"
+      },
+      {
+        "owner": "Used (consumed)",
+        "era": "One-time use"
+      }
+    ],
+    "abilities": [
+      "Blood-red nascent soul — consumable"
+    ],
+    "limitations": [
+      "One-time use only"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Acquired in Seven-Colored Realm",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1194",
+    "knownFacts": [
+      "Seven-Colored Realm treasure",
+      "Consumable nascent soul",
+      "Used (one-time)"
+    ],
+    "relatedItems": [
+      "Beads from Seven-Colored Realm",
+      "Heaven Dao Crystal"
+    ]
+  },
+  {
+    "id": "I61",
+    "name": "Blood Ancestor's Blood Body",
+    "nameCn": "血祖血身 · Xuè Zǔ Xuè Shēn",
+    "type": "soul_artifact",
+    "category": "soul_related",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Blood Ancestor",
+        "era": "Blood Planet"
+      },
+      {
+        "owner": "Wang Lin (taken)",
+        "era": "Ch. 769"
+      },
+      {
+        "owner": "Exploded (used)",
+        "era": "Ch. 789"
+      }
+    ],
+    "abilities": [
+      "Blood Body that Wang Lin took and exploded as a weapon",
+      "Ancient-blood-tier"
+    ],
+    "limitations": [
+      "One-use explosive only"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Taken from Blood Ancestor's Blood Planet",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 769",
+    "knownFacts": [
+      "Taken from Blood Ancestor's Blood Planet",
+      "Exploded as a weapon at Ch. 789",
+      "Ancient-blood-tier",
+      "One-use consumable"
+    ],
+    "relatedItems": [
+      "Blood Pavilion ×2"
+    ]
+  },
+  {
+    "id": "I62",
+    "name": "Wandering Souls",
+    "nameCn": "游魂 · Yóu Hún",
+    "type": "soul_artifact",
+    "category": "soul_related",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Spatial rifts (wild)",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin (commanded via Soul-Devourer nature)",
+        "era": "Ch. 119"
+      }
+    ],
+    "abilities": [
+      "Very strong souls found in spatial rifts",
+      "Obey Soul-Devourers as a subject obeys a king",
+      "Wang Lin commands them via his Soul-Devourer nature"
+    ],
+    "limitations": [
+      "Bound to Wang Lin's Soul-Devourer nature"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Wild-soul recruitment — Wang Lin's soul has Soul-Devourer nature",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 119",
+    "knownFacts": [
+      "Wild souls from spatial rifts",
+      "Obey Soul-Devourers",
+      "Wang Lin commands them naturally",
+      "Incorporated into soul-devourer ability"
+    ],
+    "relatedItems": [
+      "Billion Soul Flag",
+      "Soul Flag"
+    ]
+  },
+  {
+    "id": "I63",
+    "name": "Restriction Flag (set of three)",
+    "nameCn": "禁旗 · Jìn Qí",
+    "type": "banner",
+    "category": "restriction",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin (self-forged)",
+        "era": "Post-Ancient-Restrictions-trial"
+      },
+      {
+        "owner": "Retired",
+        "era": "Used previously"
+      }
+    ],
+    "abilities": [
+      "Made from inkstones with 99,999 restrictions each",
+      "1st: Left incomplete to summon divine tribulation in danger",
+      "2nd: Mixture of different restrictions",
+      "3rd: Pure attack restriction flag"
+    ],
+    "limitations": [
+      "Retired — used previously"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Self-forged (Tu Si gave the refining method after Wang Lin completed the Land of the Ancient God Restrictions Mountain trial — 4th person ever)",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Set of three flags from inkstones",
+      "99,999 restrictions each",
+      "4th person to complete the Ancient God Restrictions trial",
+      "Tu Si gave the refining method"
+    ],
+    "relatedItems": [
+      "3× Ink Stones",
+      "Four Great Restrictions"
+    ]
+  },
+  {
+    "id": "I64",
+    "name": "Three Purple Flags",
+    "nameCn": "三紫旗 · Sān Zǐ Qí",
+    "type": "banner",
+    "category": "defensive",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Unknown",
+        "era": "Early-mid era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Early acquisition"
+      },
+      {
+        "owner": "Retired",
+        "era": "Retired"
+      }
+    ],
+    "abilities": [
+      "Set of three purple flags — defensive treasure"
+    ],
+    "limitations": [
+      "Retired"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Early acquisition",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Set of three defensive flags",
+      "Spirit-tier",
+      "Retired"
+    ],
+    "relatedItems": [
+      "Heaven Tiger Flag",
+      "Restriction Flag"
+    ]
+  },
+  {
+    "id": "I65",
+    "name": "3× Ink Stones",
+    "nameCn": "三墨石 · Sān Mò Shí",
+    "type": "material",
+    "category": "restriction",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin",
+        "era": "Early era"
+      },
+      {
+        "owner": "Consumed",
+        "era": "Used to make Restriction Flags"
+      }
+    ],
+    "abilities": [
+      "Used by Wang Lin to create Restriction Flags"
+    ],
+    "limitations": [
+      "Consumed in crafting — no longer exist"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Early acquisition",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Crafting material",
+      "Used to create Restriction Flags",
+      "Consumed"
+    ],
+    "relatedItems": [
+      "Restriction Flag"
+    ]
+  },
+  {
+    "id": "I66",
+    "name": "Restriction Breaking Ancient Mirror",
+    "nameCn": "破禁古镜 · Pò Jìn Gǔ Jìng",
+    "type": "talisman",
+    "category": "restriction",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Tattoo Tribe era",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 774"
+      }
+    ],
+    "abilities": [
+      "Breaks restrictions/formations by reflecting the restriction's own logic back at it",
+      "Ancient treasure grade"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Tattoo Tribe era",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 774",
+    "knownFacts": [
+      "Ancient treasure grade",
+      "Breaks restrictions by reflecting their logic",
+      "Retained to end"
+    ],
+    "relatedItems": [
+      "Four Great Restrictions",
+      "Restriction Flag"
+    ]
+  },
+  {
+    "id": "I67",
+    "name": "Heart Compass (Annihilation Restriction Inheritance)",
+    "nameCn": "心罗盘 · Xīn Luó Pán",
+    "type": "compass",
+    "category": "restriction",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Annihilation Restriction inheritance",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 858"
+      }
+    ],
+    "abilities": [
+      "Annihilation Restriction inheritance treasure",
+      "Pairs with Destruction Restriction to seal all things (immortals, demons, mortal beasts)"
+    ],
+    "limitations": [
+      "Requires Destruction Restriction for full sealing power"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Annihilation Restriction inheritance",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 858",
+    "knownFacts": [
+      "Inheritance treasure",
+      "Pairs with Destruction Restriction",
+      "Can seal everything from immortals to mortal beasts"
+    ],
+    "relatedItems": [
+      "Four Great Restrictions",
+      "Soul Devil Ship"
+    ]
+  },
+  {
+    "id": "I68",
+    "name": "Ancient Soul Restriction Tortoise Beast",
+    "nameCn": "古魂禁龟兽 · Gǔ Hún Jìn Guī Shòu",
+    "type": "other",
+    "category": "restriction",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Old Vermilion Bird",
+        "era": "Fallen Land"
+      },
+      {
+        "owner": "Wang Lin (gifted)",
+        "era": "Ch. 1426"
+      }
+    ],
+    "abilities": [
+      "Living tortoise-beast with ancient-soul-restriction properties",
+      "Inheritance treasure grade"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Gifted by old Vermilion Bird in the Fallen Land",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1426",
+    "knownFacts": [
+      "Living formation component",
+      "Ancient soul restriction properties",
+      "Gifted by old Vermilion Bird"
+    ],
+    "relatedItems": [
+      "Soul Devil Ship",
+      "Ghostly Sail"
+    ]
+  },
+  {
+    "id": "I69",
+    "name": "Soul Devil Ship",
+    "nameCn": "魂魔船 · Hún Mó Chuán",
+    "type": "other",
+    "category": "restriction",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin (forged)",
+        "era": "Ch. 1789"
+      }
+    ],
+    "abilities": [
+      "Ship made up of the four great restrictions and many other restrictions",
+      "Pairs with Ghostly Sail",
+      "Used by Fan Shanmeng to cast multi-layered illusion spell"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Forged from the 4 great restrictions",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1789",
+    "knownFacts": [
+      "Composite formation treasure",
+      "Contains 4 great restrictions + many others",
+      "Pairs with Ghostly Sail",
+      "Used for multi-layered illusion spells"
+    ],
+    "relatedItems": [
+      "Ghostly Sail",
+      "Four Great Restrictions",
+      "Heart Compass"
+    ]
+  },
+  {
+    "id": "I70",
+    "name": "Ghostly Sail / Ghost Sail",
+    "nameCn": "鬼帆 · Guǐ Fān",
+    "type": "other",
+    "category": "restriction",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Great Soul Sect (vice sail)",
+        "era": "Sect-protection formation"
+      },
+      {
+        "owner": "Wang Lin (main refined)",
+        "era": "Main: Ch. 1699; refined Ch. 1854"
+      }
+    ],
+    "abilities": [
+      "Main sail for the Soul Devil Ship",
+      "Contains many restrictions — not simply a ghostly face",
+      "Everything about the Soul Devil Ship is encoded in the sail",
+      "Vice sail was used as sect-protection formation of the Great Soul Sect"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [
+      "Refined by Wang Lin himself at Ch. 1854 for multi-layered illusion"
+    ],
+    "origin": "1st: refined by Wang Lin; vice: from Great Soul Sect",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1699",
+    "knownFacts": [
+      "Main + vice sails",
+      "Sail-bound to Soul Devil Ship",
+      "All ship data encoded in sail",
+      "Wang Lin refined his own at Ch. 1854"
+    ],
+    "relatedItems": [
+      "Soul Devil Ship"
+    ]
+  },
+  {
+    "id": "I71",
+    "name": "Isolation Restriction Compass",
+    "nameCn": "隔离禁盘 · Gé Lí Jìn Pán",
+    "type": "compass",
+    "category": "restriction",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Green Devil Continent woman",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin (took)",
+        "era": "Ch. 1850"
+      },
+      {
+        "owner": "Discarded",
+        "era": "Ch. 1864"
+      }
+    ],
+    "abilities": [
+      "Contains the Devil Restriction Sect's Devil Isolation Restriction"
+    ],
+    "limitations": [
+      "Tracking vulnerability — someone used it to pinpoint Wang Lin's location",
+      "Discarded because of tracking risk"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Took from a beautiful woman of the Green Devil Continent at the pill sea",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1850",
+    "knownFacts": [
+      "Devil Restriction Sect treasure",
+      "Contains Devil Isolation Restriction",
+      "Discarded at Ch. 1864 due to tracking vulnerability"
+    ],
+    "relatedItems": [
+      "Heart Compass"
+    ]
+  },
+  {
+    "id": "I72",
+    "name": "Unnamed Wheel Formation",
+    "nameCn": "无名轮阵 · Wú Míng Lún Zhèn",
+    "type": "formation",
+    "category": "restriction",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin (self-erected)",
+        "era": "Ch. 1667"
+      }
+    ],
+    "abilities": [
+      "Replacement for the Realm-Sealing Formation",
+      "Stops all Outer-Realm cultivators from entering Inner Realm without restricting Joss Flames",
+      "Calls treasure spirits of destroyed treasures to fuse with formation → eternal",
+      "Calls souls of destroyed planets → fuse → eternal",
+      "Gathers soul fragments of dead Outer-Realm cultivators to push the wheel",
+      "Beseeches resting souls of Inner-Realm war dead to become immortal formation spirit"
+    ],
+    "limitations": [
+      "Third-Step-tier formation — extremely complex to maintain"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Self-erected as replacement for Realm-Sealing Formation",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1667",
+    "knownFacts": [
+      "Third-Step-tier formation",
+      "Replacement for Realm-Sealing Formation (fixes Joss Flame restriction flaw)",
+      "Soul-fueled and eternal",
+      "Active eternal formation to end of story"
+    ],
+    "relatedItems": [
+      "Realm-Sealing Formation",
+      "Four Great Restrictions",
+      "Heaven-Splitting Axe"
+    ]
+  },
+  {
+    "id": "I73",
+    "name": "Nine Deaths Perish Formation",
+    "nameCn": "九死灭阵 · Jiǔ Sǐ Miè Zhèn",
+    "type": "formation",
+    "category": "restriction",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Unknown (inherited)",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 829"
+      }
+    ],
+    "abilities": [
+      "Ancient deadly formation"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Inherited",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 829",
+    "knownFacts": [
+      "Ancient deadly formation",
+      "Inherited by Wang Lin",
+      "Retained"
+    ],
+    "relatedItems": [
+      "Basic Formation Book",
+      "Restriction Flag"
+    ]
+  },
+  {
+    "id": "I74",
+    "name": "Basic Formation Book",
+    "nameCn": "基础阵书 · Jī Chǔ Zhèn Shū",
+    "type": "material",
+    "category": "restriction",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Unknown",
+        "era": "Early era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Early acquisition"
+      }
+    ],
+    "abilities": [
+      "After mastering it, Wang Lin still kept the book — kept as memento"
+    ],
+    "limitations": [
+      "Mortal-grade — only useful for beginners"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Early acquired",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Mortal-grade formation manual",
+      "Wang Lin's first formation resource",
+      "Kept as memento after mastering"
+    ],
+    "relatedItems": [
+      "Nine Deaths Perish Formation"
+    ]
+  },
+  {
+    "id": "I75",
+    "name": "Collection Pavilion",
+    "nameCn": "藏经阁 · Cáng Jīng Gé",
+    "type": "other",
+    "category": "storage",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Thunder Celestial Realm",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 784"
+      },
+      {
+        "owner": "Friends in New Immortal World",
+        "era": "Per Baidu (late game)"
+      }
+    ],
+    "abilities": [
+      "Has various celestial spells stored within",
+      "Can change size",
+      "Only Wang Lin can command it",
+      "Also a celestial treasure"
+    ],
+    "limitations": [
+      "Gifted away to friends in New Immortal World"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Took from the Thunder Celestial Realm",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 784",
+    "knownFacts": [
+      "Celestial-tier storage treasure",
+      "Contains various celestial spells",
+      "Size-changing, master-locked",
+      "Gifted to friends in New Immortal World per Baidu"
+    ],
+    "relatedItems": [
+      "Space Stone",
+      "Earth Palace"
+    ]
+  },
+  {
+    "id": "I76",
+    "name": "Storage Space (Pocket)",
+    "nameCn": "storage pocket",
+    "type": "other",
+    "category": "storage",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin",
+        "era": "Always"
+      }
+    ],
+    "abilities": [
+      "Standard spatial storage all cultivators carry"
+    ],
+    "limitations": [
+      "Standard equipment — nothing special"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Standard cultivator storage",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Standard spatial storage pocket",
+      "All cultivators carry one"
+    ],
+    "relatedItems": [
+      "Space Stone",
+      "Sword Sheaths x5"
+    ]
+  },
+  {
+    "id": "I77",
+    "name": "Space Stone",
+    "nameCn": "空间石 · Kōng Jiān Shí",
+    "type": "material",
+    "category": "storage",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Founder of Great Soul Sect",
+        "era": "1/3 promised gifts"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1838"
+      }
+    ],
+    "abilities": [
+      "Take out one item from storage without damage (one pocket per use)",
+      "Second role: nurture a Heavenly Dao",
+      "Quasi-Third-Step grade"
+    ],
+    "limitations": [
+      "Cannot be used more than once per pocket (instability -> cluster collapse)"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Gift from founder of the Great Soul Sect (1 of 3 promised gifts)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1838",
+    "knownFacts": [
+      "Quasi-Third-Step grade",
+      "1 of 3 promised gifts from Great Soul Sect founder",
+      "One-use-per-pocket limitation",
+      "Can nurture a Heavenly Dao"
+    ],
+    "relatedItems": [
+      "A Jade (Soul Eye Dao)",
+      "A Drop of Crystal Clear Water"
+    ]
+  },
+  {
+    "id": "I78",
+    "name": "A Jade (Soul Eye Dao)",
+    "nameCn": "灵眼玉 · Líng Yǎn Yù",
+    "type": "accessory",
+    "category": "divine_sense",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Founder of Great Soul Sect",
+        "era": "2/3 promised gifts"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1840s"
+      },
+      {
+        "owner": "Used",
+        "era": "Ch. 2023"
+      }
+    ],
+    "abilities": [
+      "Formed by founder's lifetime of cultivating Soul Eye Dao",
+      "See changes in the Immortal Astral Continent ONCE",
+      "Divinate ONE thing - only once"
+    ],
+    "limitations": [
+      "ONE-TIME USE ONLY",
+      "Used at Ch. 2023"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Gift from founder of Great Soul Sect (2 of 3)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1840",
+    "knownFacts": [
+      "Quasi-Third-Step grade",
+      "Founder's lifetime Soul Eye Dao cultivation",
+      "One-time use: see Immortal Astral Continent changes OR divine one thing",
+      "Used at Ch. 2023"
+    ],
+    "relatedItems": [
+      "Space Stone",
+      "A Drop of Crystal Clear Water"
+    ]
+  },
+  {
+    "id": "I79",
+    "name": "A Drop of Crystal Clear Water (Water Essence Drop)",
+    "nameCn": "水元精滴 · Shuǐ Yuán Jīng Dī",
+    "type": "consumable",
+    "category": "cultivation_aid",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Founder of Great Soul Sect",
+        "era": "3/3 promised gifts"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1843"
+      }
+    ],
+    "abilities": [
+      "Founder refined 99 rivers in Heavenly River Continent",
+      "Uses cultivators with water essences to nourish them",
+      "Result: single drop of crystal clear water essence"
+    ],
+    "limitations": [
+      "Likely one-use"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Gift from founder of Great Soul Sect (3 of 3)",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1843",
+    "knownFacts": [
+      "Quasi-Third-Step grade",
+      "Refined from 99 rivers + water-essence cultivators",
+      "3 of 3 promised gifts from Great Soul Sect founder",
+      "Kept for water essence cultivation"
+    ],
+    "relatedItems": [
+      "Space Stone",
+      "A Jade (Soul Eye Dao)"
+    ]
+  },
+  {
+    "id": "I80",
+    "name": "Earth Palace",
+    "nameCn": "地宫 · Dì Gōng",
+    "type": "other",
+    "category": "storage",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Ye Mo",
+        "era": "Inheritance creator"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1478"
+      }
+    ],
+    "abilities": [
+      "The earth component of Ye Mo's Heaven-Earth-Human palace inheritance"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Ye Mo inheritance",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1478",
+    "knownFacts": [
+      "Ye Mo inheritance treasure",
+      "Earth component of Heaven-Earth-Human palaces",
+      "Retained"
+    ],
+    "relatedItems": [
+      "Palm-Sized Piece of Ice (Ye Mo's left arm)"
+    ]
+  },
+  {
+    "id": "I81",
+    "name": "Fate Sealing Ring",
+    "nameCn": "封命环 · Fēng Mìng Huán",
+    "type": "accessory",
+    "category": "other",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1631 (divine retribution forged)"
+      }
+    ],
+    "abilities": [
+      "Sealed within the divine retribution",
+      "Celestial-tier ring"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Divine-retribution-forged",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1631",
+    "knownFacts": [
+      "Celestial-tier ring",
+      "Forged within divine retribution",
+      "Retained"
+    ],
+    "relatedItems": []
+  },
+  {
+    "id": "I82",
+    "name": "Sword Sheaths x5",
+    "nameCn": "剑鞘 · Jiàn Qiào",
+    "type": "accessory",
+    "category": "storage",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Various",
+        "era": "Collected across journey"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Throughout early-mid era"
+      },
+      {
+        "owner": "Retired",
+        "era": "Retired"
+      }
+    ],
+    "abilities": [
+      "Mysterious sword sheaths - inserting a flying sword enhances different powers",
+      "Suspected Immortal World objects",
+      "One suspected to be a Sub-Void-Nirvana Sword",
+      "Another once appeared in Tuo Sen's possession"
+    ],
+    "limitations": [
+      "Retired - no longer used"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Collected across the journey (1st from former friend's enemy at Heng Yue Sect)",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Set of 5 mysterious sheaths",
+      "Enhance inserted flying swords' powers",
+      "Suspected Immortal World origin",
+      "One may be Sub-Void-Nirvana Sword"
+    ],
+    "relatedItems": [
+      "Wealth (First Flying Sword)",
+      "Rain Celestial Sword"
+    ]
+  },
+  {
+    "id": "I83",
+    "name": "Lu Fu Blood Balls",
+    "nameCn": "陆符血球 · Lù Fú Xuè Qiú",
+    "type": "consumable",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Lu Fu",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 947"
+      },
+      {
+        "owner": "Used",
+        "era": "Consumed"
+      }
+    ],
+    "abilities": [
+      "Consumable blood-ball weapon",
+      "6 used at once on one occasion"
+    ],
+    "limitations": [
+      "Consumable"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Early acquired from Lu Fu",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 947",
+    "knownFacts": [
+      "Spirit-tier consumable",
+      "x6 used simultaneously",
+      "From Lu Fu"
+    ],
+    "relatedItems": [
+      "Ji Qiong's Head"
+    ]
+  },
+  {
+    "id": "I84",
+    "name": "Ji Qiong's Head",
+    "nameCn": "计穷头 · Jì Qióng Tóu",
+    "type": "consumable",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Ji Qiong",
+        "era": "Pre-death"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1127"
+      },
+      {
+        "owner": "Used",
+        "era": "Used"
+      }
+    ],
+    "abilities": [
+      "Severed head used as consumable weapon"
+    ],
+    "limitations": [
+      "Consumable - one-time use"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Took from Ji Qiong",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1127",
+    "knownFacts": [
+      "Severed head of Ji Qiong",
+      "Used as consumable weapon",
+      "Spirit-tier"
+    ],
+    "relatedItems": [
+      "Lu Fu Blood Balls"
+    ]
+  },
+  {
+    "id": "I85",
+    "name": "Green Fragment with the Power of Heaven",
+    "nameCn": "青碎片 · Qīng Suì Piàn",
+    "type": "consumable",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Unknown",
+        "era": "Mid era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Mid era"
+      },
+      {
+        "owner": "Used",
+        "era": "Used"
+      }
+    ],
+    "abilities": [
+      "Green fragment containing a thread of Heavenly power",
+      "One-shot attack"
+    ],
+    "limitations": [
+      "One-use only",
+      "Celestial-tier but consumed"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Mid-era acquisition",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Contains Heavenly power thread",
+      "Celestial-tier",
+      "One-shot attack",
+      "Used"
+    ],
+    "relatedItems": [
+      "Heaven Dao Crystal"
+    ]
+  },
+  {
+    "id": "I86",
+    "name": "Beads from the Seven-Colored Realm",
+    "nameCn": "七彩界珠 · Qī Cǎi Jiè Zhū",
+    "type": "consumable",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Seven-Colored Realm",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1197"
+      },
+      {
+        "owner": "Used",
+        "era": "Used"
+      }
+    ],
+    "abilities": [
+      "Same appearance as Heaven-Defying Bead but without Five Elements pattern",
+      "Only a faint blurred pattern",
+      "Used as decoys / one-use attack beads"
+    ],
+    "limitations": [
+      "One-use decoy/attack beads",
+      "Lack the Five Elements pattern"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Seven-Colored Realm",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1197",
+    "knownFacts": [
+      "Heaven-Defying Bead mimics",
+      "Same appearance minus Five Elements pattern",
+      "Used as decoys and one-use attack beads",
+      "Seven-Colored Realm treasure"
+    ],
+    "relatedItems": [
+      "Heaven-Defying Bead / Pearl",
+      "Crystal Sword"
+    ]
+  },
+  {
+    "id": "I87",
+    "name": "Heaven Dao Crystal",
+    "nameCn": "天道晶 · Tiān Dào Jīng",
+    "type": "consumable",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Unknown",
+        "era": "Mid era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Mid era"
+      },
+      {
+        "owner": "Used",
+        "era": "Used"
+      }
+    ],
+    "abilities": [
+      "Crystallized shard of Heavenly Dao power",
+      "One-use consumable"
+    ],
+    "limitations": [
+      "One-use only"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Mid-era acquisition",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Crystallized Heavenly Dao power",
+      "Celestial-tier",
+      "One-use",
+      "Used"
+    ],
+    "relatedItems": [
+      "Green Fragment with Power of Heaven"
+    ]
+  },
+  {
+    "id": "I88",
+    "name": "Nine Drops of Poison",
+    "nameCn": "九滴毒 · Jiǔ Dī Dú",
+    "type": "consumable",
+    "category": "offensive",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1460"
+      },
+      {
+        "owner": "Used",
+        "era": "Ch. 1526"
+      }
+    ],
+    "abilities": [
+      "Refined from Joss Flames of Dao Master Miao Yin and Great Desolation's poison",
+      "Quasi-Third-Step grade"
+    ],
+    "limitations": [
+      "One-use - used at Ch. 1526"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Self-refined from Joss Flames + Great Desolation poison",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1460",
+    "knownFacts": [
+      "Quasi-Third-Step grade poison",
+      "Refined from Dao Master Miao Yin's Joss Flames + Great Desolation poison",
+      "Used at Ch. 1526 (killed Nan Zhao)"
+    ],
+    "relatedItems": []
+  },
+  {
+    "id": "I89",
+    "name": "Celestial Wine (in a jug)",
+    "nameCn": "仙酒 · Xiān Jiǔ",
+    "type": "consumable",
+    "category": "cultivation_aid",
+    "currentOwner": "destroyed",
+    "ownerHistory": [
+      {
+        "owner": "Qing Lin (false cave)",
+        "era": "Demon Spirit Land"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "~Ch. 625"
+      },
+      {
+        "owner": "Used",
+        "era": "Used"
+      }
+    ],
+    "abilities": [
+      "Drinking or spilling grants temporary celestial-spirit-energy boost"
+    ],
+    "limitations": [
+      "Consumable",
+      "Effect is temporary"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Found in one of Qing Lin's false caves in the Demon Spirit Land",
+    "canonConfidence": 5,
+    "firstAppearance": "~Ch. 625",
+    "knownFacts": [
+      "Celestial-tier consumable",
+      "Temporary celestial spirit energy boost",
+      "Found in Qing Lin's false cave",
+      "Used"
+    ],
+    "relatedItems": [
+      "Divine Soul Brush"
+    ]
+  },
+  {
+    "id": "I90",
+    "name": "Pair of Metal Element Flints",
+    "nameCn": "金属火石对 · Jīn Shǔ Huǒ Shí Duì",
+    "type": "other",
+    "category": "utility",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Huang Family member",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 672"
+      },
+      {
+        "owner": "Retired",
+        "era": "Retired"
+      }
+    ],
+    "abilities": [
+      "Naturally-formed magical treasure",
+      "One of two from Huang Family member's bag of holding"
+    ],
+    "limitations": [
+      "Retired"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Took from Huang Family member's bag of holding",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 672",
+    "knownFacts": [
+      "Naturally-formed magical treasure",
+      "From Huang Family member's bag of holding",
+      "Retired"
+    ],
+    "relatedItems": [
+      "Black Comb, Nineteen Teeth"
+    ]
+  },
+  {
+    "id": "I91",
+    "name": "God-Slaying War Chariot (set of 3)",
+    "nameCn": "杀神战车 · Shā Shén Zhàn Chē",
+    "type": "celestial_treasure",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Heavenly Treasure Master",
+        "era": "Forged"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 307"
+      },
+      {
+        "owner": "Situ Nan (1st given)",
+        "era": "Ch. 441"
+      },
+      {
+        "owner": "Wang Lin (restored)",
+        "era": "Ch. 1626"
+      }
+    ],
+    "abilities": [
+      "Three chariots with beast souls forged by Heavenly Treasure Master",
+      "Low: given to Situ Nan; Mid: Lightning Beast (becomes Lei Ji); High: Butterfly soul (strongest)",
+      "High Quality battles Insight-into-Annihilation with Mother-Child Dao Withered",
+      "Spirit can self-destruct then transform into five colors for repair"
+    ],
+    "limitations": [
+      "Mid and High destroyed vs Daoist Water Ch. 1277",
+      "Required self-destruct of beast spirit for repair"
+    ],
+    "transformations": [
+      {
+        "from": "Mid Quality chariot",
+        "to": "Silver-Horned Thunder Beast (Lei Ji)",
+        "trigger": "Unsealed from chariot"
+      },
+      {
+        "from": "Destroyed",
+        "to": "Restored",
+        "trigger": "Gate of Emptiness repair at Ch. 1626"
+      }
+    ],
+    "upgrades": [
+      "Restored via Gate of Emptiness after destruction"
+    ],
+    "origin": "Found during first expedition at the Celestial Realm",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 307",
+    "knownFacts": [
+      "Three tiers: Low/Mid/High Quality",
+      "Forged by Heavenly Treasure Master",
+      "Low given to Situ Nan; Mid became Lei Ji; High is butterfly-soul",
+      "Destroyed Ch. 1276, restored Ch. 1626"
+    ],
+    "relatedItems": [
+      "Lei Ji / Thunder Beast",
+      "Situ Nan"
+    ]
+  },
+  {
+    "id": "I92",
+    "name": "Celestial Capture Net",
+    "nameCn": "天罗网 · Tiān Luó Wǎng",
+    "type": "celestial_treasure",
+    "category": "utility",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Unknown",
+        "era": "Early Celestial era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 624"
+      }
+    ],
+    "abilities": [
+      "Entrapment net - captures targets",
+      "Used to capture Huang Yu (who gave Wang Lin the brush and celestial guard method)"
+    ],
+    "limitations": [
+      "Wang Lin never used it after getting it"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Used to capture Huang Yu in early Celestial era",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 624",
+    "knownFacts": [
+      "Celestial treasure - entrapment net",
+      "Used to capture Huang Yu",
+      "Never used again after initial capture"
+    ],
+    "relatedItems": [
+      "Divine Soul Brush",
+      "Celestial Guard - Copper Rank (Du Jian)"
+    ]
+  },
+  {
+    "id": "I93",
+    "name": "Sword with Teleportation Spell",
+    "nameCn": "传送剑 · Chuán Sòng Jiàn",
+    "type": "weapon",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin (crafted version)",
+        "era": "Ch. 662 (sold Ch. 665)"
+      },
+      {
+        "owner": "Bai Zhan",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin (took from Bai Zhan)",
+        "era": "After battle"
+      }
+    ],
+    "abilities": [
+      "Embeds a teleportation spell",
+      "Fused with Wang Lin's primordial spirit",
+      "Blood-refined; fused with Poison King Cauldron",
+      "Instant teleportation on strike"
+    ],
+    "limitations": [
+      "Wang Lin's first crafted version was sold"
+    ],
+    "transformations": [],
+    "upgrades": [
+      "Primordial spirit fusion + blood sacrifice + Poison King Cauldron fusion"
+    ],
+    "origin": "1st: Wang Lin-made (sold Ch. 665); 2nd: taken from Bai Zhan",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 662",
+    "knownFacts": [
+      "Pseudo Celestial Treasure",
+      "Teleportation on strike",
+      "Blood-refined and primordial-spirit-fused",
+      "Two versions: crafted (sold) and Bai Zhan version (retained)"
+    ],
+    "relatedItems": [
+      "Copper Mirror",
+      "Hairpin with Thousand Illusion"
+    ]
+  },
+  {
+    "id": "I94",
+    "name": "Hairpin with Thousand Illusion Ruthless Domain",
+    "nameCn": "千幻无情簪 · Qiān Huàn Wú Qíng Zān",
+    "type": "accessory",
+    "category": "offensive",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin (crafted)",
+        "era": "Ch. 662-ish"
+      },
+      {
+        "owner": "Sold",
+        "era": "Sold"
+      }
+    ],
+    "abilities": [
+      "Embeds the Thousand-Illusion Ruthless domain",
+      "Pseudo Celestial Treasure"
+    ],
+    "limitations": [
+      "Sold alongside other pseudo-celestial treasures"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Wang Lin-made on Planet Ran Yun",
+    "canonConfidence": 5,
+    "firstAppearance": "~Ch. 662",
+    "knownFacts": [
+      "Pseudo Celestial Treasure",
+      "Wang Lin-crafted on Planet Ran Yun",
+      "Embeds Thousand-Illusion Ruthless domain",
+      "Sold"
+    ],
+    "relatedItems": [
+      "Copper Mirror",
+      "Sword with Teleportation Spell"
+    ]
+  },
+  {
+    "id": "I95",
+    "name": "Black Comb, Nineteen Teeth",
+    "nameCn": "十九齿黑梳 · Shí Jiǔ Chǐ Hēi Shū",
+    "type": "accessory",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Huang Family member",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 672"
+      }
+    ],
+    "abilities": [
+      "Black comb with nineteen teeth",
+      "Has an attacking formation on it"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "One of two magical treasures from Huang Family member's bag of holding",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 672",
+    "knownFacts": [
+      "Pseudo Celestial Treasure",
+      "Nineteen-tooth comb with attacking formation",
+      "From Huang Family member's bag"
+    ],
+    "relatedItems": [
+      "Pair of Metal Element Flints"
+    ]
+  },
+  {
+    "id": "I96",
+    "name": "Celestial Emperor Crown",
+    "nameCn": "仙帝冠 · Xiān Dì Guān",
+    "type": "accessory",
+    "category": "cultivation_aid",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Celestial Emperor",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 717"
+      }
+    ],
+    "abilities": [
+      "Five jewels socketed: metal, wood, water, fire, earth powers flow from crown",
+      "Requires killing 9,999 mortal emperors and fusing their souls to fully activate",
+      "Usable due to the blue rose Red Butterfly left Wang Lin"
+    ],
+    "limitations": [
+      "Requires 9,999 mortal emperor souls to fully activate"
+    ],
+    "transformations": [],
+    "upgrades": [
+      "Blue rose from Red Butterfly enables partial use"
+    ],
+    "origin": "Early Celestial era acquisition",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 717",
+    "knownFacts": [
+      "Celestial-tier crown with five-element powers",
+      "Requires 9,999 mortal emperor souls",
+      "Blue rose from Red Butterfly enables use",
+      "Retained"
+    ],
+    "relatedItems": [
+      "Cloak of Vermilion Bird Divine Emperor"
+    ]
+  },
+  {
+    "id": "I97",
+    "name": "Straw Hat / Li Ming Straw Hat",
+    "nameCn": "黎明草帽 · Lí Míng Cǎo Mào",
+    "type": "other",
+    "category": "defensive",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Yun Quezi / Tian Yunzi",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Early Celestial era"
+      },
+      {
+        "owner": "Ling Er",
+        "era": "Ch. 965"
+      }
+    ],
+    "abilities": [
+      "Blocks out divine senses",
+      "Hides user's identity",
+      "Contains numerous intricate formations - concealment-type",
+      "Gift for potential candidates to Title of Suzaku"
+    ],
+    "limitations": [
+      "Given to Ling Er at Ch. 965"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Gifted by Yunque Zi (Tian Yunzi)",
+    "canonConfidence": 5,
+    "firstAppearance": null,
+    "knownFacts": [
+      "Celestial-tier concealment treasure",
+      "Blocks divine senses and hides identity",
+      "Given to Ling Er at Ch. 965"
+    ],
+    "relatedItems": [
+      "Three Bells Shield",
+      "Ling Er"
+    ]
+  },
+  {
+    "id": "I98",
+    "name": "A Bell (Sealing/Tracking)",
+    "nameCn": "封踪铃 · Fēng Zōng Líng",
+    "type": "other",
+    "category": "utility",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Unknown",
+        "era": "Early Celestial era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "~Ch. 307"
+      },
+      {
+        "owner": "Retired",
+        "era": "Retired"
+      }
+    ],
+    "abilities": [
+      "Sealing and tracking abilities",
+      "Celestial-tier bell"
+    ],
+    "limitations": [
+      "Retired"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Early Celestial era",
+    "canonConfidence": 5,
+    "firstAppearance": "~Ch. 307",
+    "knownFacts": [
+      "Celestial-tier bell",
+      "Sealing + tracking functions",
+      "Retired"
+    ],
+    "relatedItems": []
+  },
+  {
+    "id": "I99",
+    "name": "Star Compass",
+    "nameCn": "星罗盘 · Xīng Luó Pán",
+    "type": "compass",
+    "category": "movement",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Giant Demon Clan (Chi Hu)",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "~Ch. 477"
+      },
+      {
+        "owner": "Upgraded",
+        "era": "Ch. 477"
+      }
+    ],
+    "abilities": [
+      "Extremely fast movement in space",
+      "No energy cost",
+      "Enhanced with Ancient God memories"
+    ],
+    "limitations": [
+      "Void-only (cannot use on planets)",
+      "Upgraded into Silver Dragon Star Compass"
+    ],
+    "transformations": [
+      {
+        "from": "Star Compass",
+        "to": "Silver Dragon Star Compass",
+        "trigger": "Upgraded by Wang Lin at Ch. 477"
+      }
+    ],
+    "upgrades": [
+      "Upgraded to Silver Dragon Star Compass"
+    ],
+    "origin": "Exchanged with Giant Demon Clan Heir (got from Chi Hu)",
+    "canonConfidence": 5,
+    "firstAppearance": "~Ch. 477",
+    "knownFacts": [
+      "Celestial-tier compass/mount",
+      "Void-only transportation",
+      "No energy cost",
+      "Upgraded into Silver Dragon Star Compass"
+    ],
+    "relatedItems": [
+      "Silver Dragon Star Compass",
+      "Axe of Giant Demon Clan"
+    ]
+  },
+  {
+    "id": "I100",
+    "name": "Silver Dragon Star Compass",
+    "nameCn": "银龙星罗盘 · Yín Lóng Xīng Luó Pán",
+    "type": "compass",
+    "category": "movement",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 477 (upgraded)"
+      },
+      {
+        "owner": "Retired",
+        "era": "Retired"
+      }
+    ],
+    "abilities": [
+      "Upgraded Star Compass with silver dragon beast",
+      "Void-only transportation"
+    ],
+    "limitations": [
+      "Void-only",
+      "Retired"
+    ],
+    "transformations": [],
+    "upgrades": [
+      "Upgraded from Star Compass with silver dragon beast"
+    ],
+    "origin": "Self-upgraded from Star Compass",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 477",
+    "knownFacts": [
+      "Upgraded celestial-tier compass",
+      "Silver dragon beast bound",
+      "Void-only",
+      "Retired"
+    ],
+    "relatedItems": [
+      "Star Compass"
+    ]
+  },
+  {
+    "id": "I101",
+    "name": "Celestial Mountain Soul",
+    "nameCn": "仙山魂 · Xiān Shān Hún",
+    "type": "celestial_treasure",
+    "category": "utility",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Celestial-era",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 712"
+      },
+      {
+        "owner": "Sold",
+        "era": "Ch. 1177"
+      }
+    ],
+    "abilities": [
+      "Soul-fragment celestial treasure"
+    ],
+    "limitations": [
+      "Soul exploded at Ch. 853; became useless; sold at Ch. 1177"
+    ],
+    "transformations": [
+      {
+        "from": "Intact",
+        "to": "Collapsed (soul exploded)",
+        "trigger": "Ch. 853"
+      },
+      {
+        "from": "Collapsed",
+        "to": "Sold",
+        "trigger": "Ch. 1177"
+      }
+    ],
+    "upgrades": [],
+    "origin": "Celestial-era acquisition",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 712",
+    "knownFacts": [
+      "Celestial-tier soul fragment",
+      "Soul exploded at Ch. 853",
+      "Sold at Ch. 1177"
+    ],
+    "relatedItems": [
+      "Collection Pavilion"
+    ]
+  },
+  {
+    "id": "I102",
+    "name": "A Broken Statue (of the Ancient Celestial Emperor)",
+    "nameCn": "残像 · Cán Xiàng",
+    "type": "other",
+    "category": "other",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Ancient Celestial Emperor (depicted)",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1389"
+      }
+    ],
+    "abilities": [
+      "Carving of middle-aged man in cloud pattern robe",
+      "Plain appearance but sense of majesty",
+      "Wang Lin's body trembled when gazes met",
+      "Depicts the Ancient Celestial Emperor"
+    ],
+    "limitations": [
+      "Many damaged parts",
+      "Primarily a plot-clue item"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Ancient Tomb era",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1389",
+    "knownFacts": [
+      "Depicts the Ancient Celestial Emperor",
+      "Ancient-tier treasure",
+      "Majestic aura despite damage",
+      "Plot-clue item"
+    ],
+    "relatedItems": []
+  },
+  {
+    "id": "I103",
+    "name": "Cloak of Vermilion Bird Divine Emperor",
+    "nameCn": "朱雀神帝斗篷 · Zhū Què Shén Dì Dǒu Péng",
+    "type": "armor",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Vermilion Bird Divine Emperors",
+        "era": "Generational"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1090"
+      }
+    ],
+    "abilities": [
+      "Cloak of the Vermilion Bird Divine Emperor, passed down for generations"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Vermilion Bird Divine Emperor inheritance",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1090",
+    "knownFacts": [
+      "Vermilion Bird Divine Sect inheritance",
+      "Generational cloak",
+      "Retained"
+    ],
+    "relatedItems": [
+      "Vermilion Bird Holy Token",
+      "Holy Treasure (White Stone)"
+    ]
+  },
+  {
+    "id": "I104",
+    "name": "Vermilion Bird Holy Token",
+    "nameCn": "朱雀圣令 · Zhū Què Shèng Lìng",
+    "type": "accessory",
+    "category": "utility",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Vermilion Bird Divine Emperors",
+        "era": "Generational"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "~Ch. 1090"
+      }
+    ],
+    "abilities": [
+      "Identification token of generations of Vermilion Bird Divine Emperors"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Vermilion Bird Divine Emperor inheritance",
+    "canonConfidence": 5,
+    "firstAppearance": "~Ch. 1090",
+    "knownFacts": [
+      "Identity token for Vermilion Bird Divine Emperors",
+      "Generational inheritance item",
+      "Retained"
+    ],
+    "relatedItems": [
+      "Cloak of Vermilion Bird Divine Emperor"
+    ]
+  },
+  {
+    "id": "I105",
+    "name": "Holy Treasure (White Stone)",
+    "nameCn": "白石圣宝 · Bái Shí Shèng Bǎo",
+    "type": "material",
+    "category": "other",
+    "currentOwner": "lost",
+    "ownerHistory": [
+      {
+        "owner": "Vermilion Bird Divine Sect",
+        "era": "Sect supreme treasure"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "~Ch. 1090"
+      },
+      {
+        "owner": "Returned",
+        "era": "Ch. 1124"
+      }
+    ],
+    "abilities": [
+      "Most important treasure of the Vermilion Bird Divine Sect"
+    ],
+    "limitations": [
+      "Returned after saving the Azure Dragon Divine Emperor"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Vermilion Bird Divine Sect; returned at Ch. 1124",
+    "canonConfidence": 5,
+    "firstAppearance": "~Ch. 1090",
+    "knownFacts": [
+      "Vermilion Bird Divine Sect's supreme treasure",
+      "Returned at Ch. 1124 after saving Azure Dragon Divine Emperor"
+    ],
+    "relatedItems": [
+      "Vermilion Bird Holy Token"
+    ]
+  },
+  {
+    "id": "I106",
+    "name": "Vermilion Bird Feather",
+    "nameCn": "朱雀羽 · Zhū Què Yǔ",
+    "type": "other",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "First Generation Vermilion Bird",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Vermilion Bird lineage"
+      }
+    ],
+    "abilities": [
+      "Can summon a true Vermilion Bird",
+      "Used to kill the third-generation evil sparrow"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Gifted by 1st-Gen Vermilion Bird",
+    "canonConfidence": 4,
+    "firstAppearance": null,
+    "knownFacts": [
+      "1st-Gen Vermilion Bird gift",
+      "Summons true Vermilion Bird",
+      "Used to kill third-generation evil sparrow",
+      "Celestial-tier"
+    ],
+    "relatedItems": [
+      "Fire Bone",
+      "Cloak of Vermilion Bird Divine Emperor"
+    ]
+  },
+  {
+    "id": "I107",
+    "name": "Fire Bone",
+    "nameCn": "火骨 · Huǒ Gǔ",
+    "type": "material",
+    "category": "offensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Second Generation Vermilion Bird",
+        "era": "Ancient era"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Vermilion Bird lineage"
+      }
+    ],
+    "abilities": [
+      "Can unleash the ultimate technique 'World Incineration Art'",
+      "Used when killing the third-generation Vermilion Bird"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Gifted by 2nd-Gen Vermilion Bird",
+    "canonConfidence": 4,
+    "firstAppearance": null,
+    "knownFacts": [
+      "2nd-Gen Vermilion Bird gift",
+      "Unleashes World Incineration Art",
+      "Celestial-tier",
+      "Used to kill third-gen Vermilion Bird"
+    ],
+    "relatedItems": [
+      "Vermilion Bird Feather"
+    ]
+  },
+  {
+    "id": "I108",
+    "name": "Emerald Bracelet / Jade Bracelet",
+    "nameCn": "翡翠镯 · Fěi Cuì Zhuó",
+    "type": "accessory",
+    "category": "defensive",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Li Qianmei",
+        "era": "Pre-gift"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1178"
+      }
+    ],
+    "abilities": [
+      "Protective treasure",
+      "Last of three treasures Li Qianmei gave for answering her three questions"
+    ],
+    "limitations": [],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Gift from Li Qianmei",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1178",
+    "knownFacts": [
+      "Protective treasure",
+      "Gift from Li Qianmei",
+      "Last of three question-reward treasures"
+    ],
+    "relatedItems": [
+      "Divine Soul Brush",
+      "Li Qianmei"
+    ]
+  },
+  {
+    "id": "I109",
+    "name": "Jade Bottle with Black Liquid",
+    "nameCn": "黑液玉瓶 · Hēi Yè Yù Píng",
+    "type": "other",
+    "category": "utility",
+    "currentOwner": "Wang Lin",
+    "ownerHistory": [
+      {
+        "owner": "Seven-Colored Realm",
+        "era": "Pre-Wang Lin"
+      },
+      {
+        "owner": "Wang Lin",
+        "era": "Ch. 1191"
+      }
+    ],
+    "abilities": [
+      "Bottle half-filled with black liquid that looks like blood but has no blood smell"
+    ],
+    "limitations": [
+      "Mysterious liquid - purpose not fully explained"
+    ],
+    "transformations": [],
+    "upgrades": [],
+    "origin": "Seven-Colored Realm",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch. 1191",
+    "knownFacts": [
+      "Seven-Colored Realm treasure",
+      "Half-filled with mysterious black liquid",
+      "Liquid looks like blood without blood smell"
+    ],
+    "relatedItems": [
+      "Crystal Sword",
+      "Beads from Seven-Colored Realm"
+    ]
+  }
+]

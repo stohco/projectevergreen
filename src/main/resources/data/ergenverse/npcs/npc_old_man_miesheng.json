@@ -1,0 +1,38 @@
+{
+  "_comment": "NPC: Old Man Miesheng (灭生老人). Canon ID: N115. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_old_man_miesheng",
+  "name": "Old Man Miesheng",
+  "nameCn": "灭生老人",
+  "canon_id": "N115",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "peak Third Step+",
+  "personality": "destruction-incarnate ancient being",
+  "speech": "void-cold, annihilating",
+  "relationship_to_wanglin": "cosmic-level enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "Impossible to perceive",
+    "core_formation": "A void presence",
+    "nascent_soul": "An ancient destructive being",
+    "spirit_severing": "Peak Third Step+; destruction incarnate"
+  },
+  "canon_confidence": 4,
+  "note": "Cosmic-level antagonist; destruction-themed",
+  "derivation_type": "A",
+  "salt": 1246742247,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

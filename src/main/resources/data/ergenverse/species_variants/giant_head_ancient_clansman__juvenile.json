@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Giant Head Ancient Clansman (juvenile). Generated from canonical definition.",
+  "variant_id": "giant_head_ancient_clansman__juvenile",
+  "species_id": "giant_head_ancient_clansman",
+  "species_name": "Giant Head Ancient Clansman",
+  "life_state": "juvenile",
+  "modifiers": {
+    "size_multiplier": 0.15,
+    "power_multiplier": 0.1,
+    "temperament": "curious",
+    "rarity": "common"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 17548457
+}

@@ -1,0 +1,70 @@
+{
+  "comment": "Lei Ji Thunder Beast (雷击兽) — a massive thunder-aspect beast. Canon: Wang Lin encountered these in the Thunder Celestial Realm. They embody thunder itself.",
+  "taxonomy": {
+    "kingdom": "spirit_beast",
+    "phylum": "elemental",
+    "class": "quadruped",
+    "order": "thunder_beast",
+    "family": "lei_ji",
+    "genus": "tonitrus_bestia",
+    "species": "lei_ji"
+  },
+  "temperament": "aggressive_solitary",
+  "territory": "Thunder Celestial Realm and thunder-saturated dimensions",
+  "territorial_radius": 1000,
+  "diet": "thunder_essence_and_spirit_beast_flesh",
+  "prey": [
+    "thunder_toads",
+    "weaker_spirit_beasts",
+    "unwary_cultivators"
+  ],
+  "predators": [
+    "none_below_celestial_tier"
+  ],
+  "migration": "follows_thunder_storms_across_realms",
+  "sleep_cycle": "does_not_sleep — perpetually charged with thunder Qi",
+  "cultivation": {
+    "base_tier": "nascent_soul",
+    "max_tier": "celestial",
+    "growth_method": "thunder_tribulation_absorption"
+  },
+  "breeding": {
+    "method": "thunder_fusion",
+    "egg_count": 1,
+    "gestation": 365,
+    "maturity_age": 1000
+  },
+  "mutations": [
+    "tribulation_survivor",
+    "ancient_thunder_dragon",
+    "celestial_thunder_form"
+  ],
+  "leader_hierarchy": "solitary_apex — no hierarchy, each is a lone apex predator",
+  "nest_generation": "thunder_charged_mountain_peak",
+  "treasure_preferences": [
+    "thunder_essence",
+    "celestial_thunder_crystals",
+    "tribulation_lightning"
+  ],
+  "relationship_with_cultivators": "hostile — will attack any cultivator below Soul Transformation",
+  "fear_response": "none — fights_to_death",
+  "intelligence": 7,
+  "elemental_affinity": "thunder",
+  "law_affinity": "heavenly_tribulation",
+  "canon_source": "I095 — Lei Ji Thunder Beast",
+  "ecological_variants": [
+    "juvenile",
+    "adult",
+    "ancient",
+    "celestial"
+  ],
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

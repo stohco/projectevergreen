@@ -1,0 +1,87 @@
+{
+  "_comment": "Civilization: Soul Refining Sect (sect) at Sea of Devils. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "soul_refining_sect",
+  "name": "Soul Refining Sect",
+  "type": "sect",
+  "location": "Sea of Devils",
+  "peak_realm": "Ascendant (Ancestor)",
+  "canon_status": "major_devil_sect",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "population_structure": {
+    "outer_disciples": 3000,
+    "inner_disciples": 500,
+    "core_disciples": 50,
+    "elders": 15,
+    "peak_lords": 9,
+    "ancestor": 1,
+    "spirit_beasts": 1000
+  },
+  "economy": {
+    "spirit_stones": "abundant (devil-aspected)",
+    "food": "corpse-aspected",
+    "water": "nether-aspected",
+    "alchemy": "soul-pill focus",
+    "forging": "soul-weapon focus",
+    "formation": "soul-formation focus",
+    "trade": "black markets",
+    "recruitment": "fallen cultivators, devil-aspected youth"
+  },
+  "politics": {
+    "allies": [
+      "devil-sects of Sea of Devils"
+    ],
+    "enemies": [
+      "all orthodox sects"
+    ],
+    "vassals": [
+      "minor devil-sects"
+    ],
+    "rivals": [
+      "Heavenly Fate Sect (orthodox rival)"
+    ],
+    "internal_factions": [
+      "ancestor loyalists",
+      "reformist devil-cultivators"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "continuous; takes in fallen cultivators",
+    "expansion": "aggressive in Sea of Devils",
+    "decline": "none current; ancestor present",
+    "schisms": "orthodox-reformist tension",
+    "wars": [
+      "perennial with orthodox sects"
+    ],
+    "recovery": "strong; ancestor ensures continuity"
+  },
+  "libraries": [
+    "soul-refining techniques",
+    "devil-formation manuals",
+    "soul-beast catalogues",
+    "soul-pill recipes"
+  ],
+  "spirit_beasts": [
+    "nether beasts",
+    "soul lashers",
+    "ghost-spirit beasts",
+    "devil mounts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 418359873,
+  "spiritual_vein_grade": 7,
+  "heritage_treasures": [
+    "I13"
+  ],
+  "_xianxia_schema": 1
+}

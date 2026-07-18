@@ -1,0 +1,24 @@
+{
+  "_comment": "Item Properties: Mosquito Core. Per physical-size directive: every object has lore-accurate physical size, not block size. Length: 0.08 m, Weight: 1 jin, Material: condensed blood-essence, Suitable realm: Foundation Establishment, Body strength required: Qi Condensation. Prime Directive: physical size exists objectively; cultivation determines what the player can lift/activate.",
+  "item_id": "mosquito_core",
+  "name": "Mosquito Core",
+  "type": "core",
+  "physical_properties": {
+    "length_m": 0.08,
+    "weight_jin": 1,
+    "material_density": "condensed blood-essence"
+  },
+  "usage_requirements": {
+    "suitable_realm": "Foundation Establishment",
+    "body_strength_required": "Qi Condensation",
+    "effect_when_undersized": "Can hold; core is light but requires cultivation to absorb."
+  },
+  "canon_note": "A mosquito beast's core.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "simulation_notes": {
+    "no_locked_upgrades": "A cultivator who later reaches the required body strength will be able to lift/activate the item; the item does not change, only the cultivator does.",
+    "canon_fidelity": "This reflects the novels: Wang Lin could not lift the God-Slaying Sword until his body cultivation matched; he could barely use it as a heavy physical weapon before then."
+  },
+  "salt": 1396597237
+}

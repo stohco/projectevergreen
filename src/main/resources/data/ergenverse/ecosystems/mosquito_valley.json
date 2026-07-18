@@ -1,0 +1,172 @@
+{
+  "_comment": "Ecosystem: Mosquito Valley (Country of Zhao). Full food web with 6 trophic layers and 10 seasonal/environmental states. Prime Directive: ecology exists objectively; player perception determines what they observe. No-Locked-Upgrades: all seasonal states are reachable by time/weather/event.",
+  "ecosystem_id": "mosquito_valley",
+  "name": "Mosquito Valley",
+  "location": "Country of Zhao",
+  "description": "The canonical Mosquito Valley where Wang Lin obtained his mosquito beast swarm. Millions of larvae, adult swarms, queens, egg chambers, blood pools.",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "members": [
+        "blood_pool_algae",
+        "spirit_tree_roots",
+        "corpse_marrow_flora"
+      ],
+      "population": "environmental"
+    },
+    {
+      "layer": "primary",
+      "members": [
+        "mosquito_beast#larva"
+      ],
+      "population": 10000000,
+      "biomass_jin": 2000000
+    },
+    {
+      "layer": "secondary",
+      "members": [
+        "mosquito_beast#worker"
+      ],
+      "population": 1000000,
+      "biomass_jin": 4000000
+    },
+    {
+      "layer": "tertiary",
+      "members": [
+        "mosquito_beast#soldier"
+      ],
+      "population": 100000,
+      "biomass_jin": 500000
+    },
+    {
+      "layer": "quaternary",
+      "members": [
+        "mosquito_beast#elite"
+      ],
+      "population": 1000,
+      "biomass_jin": 200000
+    },
+    {
+      "layer": "apex",
+      "members": [
+        "mosquito_beast#queen",
+        "mosquito_beast#ancient_queen"
+      ],
+      "population": 11,
+      "biomass_jin": 500000
+    }
+  ],
+  "features": [
+    "blood_pools",
+    "egg_chambers",
+    "nest_tunnels",
+    "spirit_trees",
+    "corpse_middens",
+    "queen_chamber"
+  ],
+  "seasonal_states": {
+    "spring": {
+      "larva_mult": 1.2,
+      "worker_mult": 1.0,
+      "soldier_mult": 0.9,
+      "queen_mult": 1.0,
+      "behavior": "breeding",
+      "note": "Egg chambers swell; queens lay millions."
+    },
+    "summer": {
+      "larva_mult": 1.5,
+      "worker_mult": 1.3,
+      "soldier_mult": 1.1,
+      "queen_mult": 1.0,
+      "behavior": "peak_activity",
+      "note": "Swarms darken the sky; cultivation peaks."
+    },
+    "autumn": {
+      "larva_mult": 0.8,
+      "worker_mult": 1.0,
+      "soldier_mult": 1.2,
+      "queen_mult": 1.1,
+      "behavior": "hoarding",
+      "note": "Workers hoard blood-essence; queens cultivate."
+    },
+    "winter": {
+      "larva_mult": 0.1,
+      "worker_mult": 0.3,
+      "soldier_mult": 0.7,
+      "queen_mult": 1.2,
+      "behavior": "hibernation",
+      "note": "Larvae almost disappear; workers hibernate; queens cultivate in stillness."
+    },
+    "tribulation_storm": {
+      "larva_mult": 0.5,
+      "worker_mult": 0.8,
+      "soldier_mult": 1.0,
+      "queen_mult": 1.0,
+      "behavior": "awakening",
+      "note": "Ancient mosquitoes awaken; mutations possible from lightning."
+    },
+    "blood_moon": {
+      "larva_mult": 2.0,
+      "worker_mult": 2.0,
+      "soldier_mult": 2.0,
+      "queen_mult": 1.5,
+      "behavior": "frenzy",
+      "note": "Population doubles; all castes frenzied; mutations likely."
+    },
+    "nearby_corpse_battlefield": {
+      "larva_mult": 3.0,
+      "worker_mult": 3.0,
+      "soldier_mult": 3.0,
+      "queen_mult": 2.0,
+      "behavior": "explosion",
+      "note": "Population explodes; corpse-marrow fuels rapid breeding."
+    },
+    "nearby_spirit_spring": {
+      "larva_mult": 1.0,
+      "worker_mult": 1.0,
+      "soldier_mult": 1.0,
+      "queen_mult": 1.0,
+      "behavior": "mutation",
+      "note": "Population stable but mutations occur; gold-carapace chance +500%."
+    },
+    "nearby_dragon_corpse": {
+      "larva_mult": 1.5,
+      "worker_mult": 1.5,
+      "soldier_mult": 2.0,
+      "queen_mult": 2.0,
+      "behavior": "bloodline_evolution",
+      "note": "Bloodline evolution chance; ancient-queen-tier mutation possible."
+    },
+    "nearby_ancient_god_remains": {
+      "larva_mult": 1.0,
+      "worker_mult": 1.0,
+      "soldier_mult": 1.0,
+      "queen_mult": 5.0,
+      "behavior": "valley_transformation",
+      "note": "Entire valley changes; queens ascend to ancient-queen tier; ecosystem restructures."
+    }
+  },
+  "state_transitions": {
+    "spring->summer": "temperature_rise",
+    "summer->autumn": "temperature_fall",
+    "autumn->winter": "temperature_fall",
+    "winter->spring": "temperature_rise",
+    "any->tribulation_storm": "tribulation_event",
+    "any->blood_moon": "blood_moon_event",
+    "any->nearby_corpse_battlefield": "battlefield_proximity",
+    "any->nearby_spirit_spring": "spring_proximity",
+    "any->nearby_dragon_corpse": "dragon_corpse_proximity",
+    "any->nearby_ancient_god_remains": "ancient_god_proximity"
+  },
+  "perception_tiers": {
+    "mortal": "Sees beasts and terrain; does not perceive trophic structure.",
+    "qi_condensation": "Senses qi-flows of the ecosystem.",
+    "foundation_establishment": "Perceives trophic layers and seasonal shifts.",
+    "core_formation": "Perceives population dynamics and triggers.",
+    "nascent_soul": "Perceives mutation potential and bloodline flows.",
+    "spirit_severing": "Perceives complete ecology as a living system."
+  },
+  "salt": 102680208
+}

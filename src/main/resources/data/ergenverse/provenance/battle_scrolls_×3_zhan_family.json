@@ -1,0 +1,31 @@
+{
+  "_comment": "Provenance metadata for Battle Scrolls ×3 (Zhan Family) (战家三战卷). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I167",
+  "name": "Battle Scrolls ×3 (Zhan Family)",
+  "nameCn": "战家三战卷",
+  "type": "material",
+  "category": "offensive",
+  "origin": "Zhan Family (Ch. 1095)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Zhan Family's battle scrolls — set of 3",
+    "Spirit-tier combat scrolls"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Spirit-tier battle scrolls",
+    "Set of 3 from Zhan Family",
+    "Retained to end"
+  ],
+  "source": "Ch.1095 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Zhan Family (Ch. 1095)"
+  }
+}

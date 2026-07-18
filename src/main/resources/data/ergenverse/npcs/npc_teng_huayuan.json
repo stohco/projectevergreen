@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Teng Huayuan (藤化元). Canon ID: N83. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_teng_huayuan",
+  "name": "Teng Huayuan",
+  "nameCn": "藤化元",
+  "canon_id": "N83",
+  "type": "antagonist",
+  "faction": "teng_family",
+  "location": "teng_family_city",
+  "cultivation": "Half-Step Deity Transformation",
+  "personality": "ruthless, vengeful patriarch; destroyed Wang family",
+  "speech": "cold, commanding",
+  "relationship_to_wanglin": "sworn enemy; Wang Lin's first major antagonist",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A terrifyingly powerful cultivator",
+    "qi_condensation": "Teng family patriarch; overwhelming aura",
+    "core_formation": "Half-Step Deity Transformation; far beyond you",
+    "nascent_soul": "The man who destroyed the Wang family; Soul Transformation tier"
+  },
+  "canon_confidence": 5,
+  "note": "Destroyed Heng Yue Sect and Wang family; Wang Lin's first major enemy",
+  "derivation_type": "A",
+  "salt": 23020141,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

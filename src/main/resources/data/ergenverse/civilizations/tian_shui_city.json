@@ -1,0 +1,82 @@
+{
+  "_comment": "Civilization: Tian Shui City (mortal_city) at Zhao Country. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "tian_shui_city",
+  "name": "Tian Shui City",
+  "type": "mortal_city",
+  "location": "Zhao Country",
+  "peak_realm": "Core Formation (city lord)",
+  "canon_status": "major_zhao_city",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "mortals": 100000,
+    "qi_condensation": 500,
+    "foundation_establishment": 50,
+    "core_formation": 5,
+    "city_lord": 1,
+    "spirit_beasts": 200
+  },
+  "economy": {
+    "spirit_stones": "moderate",
+    "food": "trade hub",
+    "water": "river",
+    "alchemy": "basic",
+    "forging": "basic",
+    "formation": "basic",
+    "trade": "Zhao Country hub",
+    "recruitment": "migration"
+  },
+  "politics": {
+    "allies": [
+      "Zhao royal family"
+    ],
+    "enemies": [
+      "bandit clans"
+    ],
+    "vassals": [
+      "surrounding villages"
+    ],
+    "rivals": [
+      "other Zhao cities"
+    ],
+    "internal_factions": [
+      "merchant guild",
+      "cultivator guild",
+      "city guard"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "migration",
+    "expansion": "steady",
+    "decline": "none current",
+    "schisms": "merchant vs cultivator tension",
+    "wars": [
+      "bandit suppression"
+    ],
+    "recovery": "strong; trade hub"
+  },
+  "libraries": [
+    "city records",
+    "merchant ledgers",
+    "basic technique manuals"
+  ],
+  "spirit_beasts": [
+    "caravan beasts",
+    "guard beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 107052957,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

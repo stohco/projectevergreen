@@ -1,0 +1,14 @@
+{
+  "_comment": "Ecosystem integration: mosquito_valley. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "mosquito_valley",
+  "beasts": [
+    "mosquito_beast",
+    "spirit_bat",
+    "spirit_snake",
+    "corpse_yin_beast"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Mosquito Valley ecosystem; millions of mosquitoes + lesser beasts",
+  "salt": 102680208
+}

@@ -1,0 +1,68 @@
+{
+  "_comment": "Nether Beast (冥兽) — Renegade Immortal. Canon confidence: 5/5. Prime Directive: this beast exists objectively whether the player has the perception to recognize it.",
+  "species_id": "nether_beast",
+  "name": "Nether Beast",
+  "nameCn": "冥兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "canonical": {
+    "appearance": "Shadow-wreathed quadruped, body perpetually trailing black mist, eyes are pinpoints of cold green fire.",
+    "size": "3m long, 1200 jin",
+    "behavior": "See ecology definitions.",
+    "habitat": "Sea of Devils",
+    "cultivation": "Nascent Soul→Ascendant",
+    "intelligence": 8,
+    "diet": "See ecology definitions.",
+    "relationships": "See ecology definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": true,
+      "element": "dark",
+      "grade": "high",
+      "alchemy_use": "Nether core refines Soul Refining materials; used in dark-attribute restriction creation",
+      "canon_note": "Nether Beasts inhabit the Sea of Devils; their cores are used by Soul Refining Sect"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "nether_beast — not a hive-mind species"
+    },
+    "combat_ai": "hive_coordinated"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 129135726,
+  "bloodline_tier": "ancient_celestial",
+  "inner_dan_properties": {
+    "element": "yin",
+    "purity_tier": 8,
+    "dao_resonance": "nether_realm",
+    "side_effects": [
+      "soul_corruption"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

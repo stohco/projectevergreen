@@ -1,0 +1,23 @@
+{
+  "name": "Black-Scaled Wolf", "nameCn": "黑鳞狼", "pinyin": "Hēi Lín Láng", "novel": "Outside of Time",
+  "tier": "spirit", "baseRank": "foundation", "habitat": "forest", "diet": "carnivore",
+  "preysOn": ["spirit_rabbit"], "preyedUponBy": [], "temperament": "aggressive",
+  "value": "black-scale hide (Heterogeneity-resistant armor); wolf core",
+  "layer": 1, "behaviorScript": "Heterogeneity Host — from BTT; Black-Scaled Wolves in God-Face-afflicted regions may carry Grue-type entities in their shadow; the original host of the Mysterious Shadow before Xu Qing killed it; scales grant partial Heterogeneity resistance",
+  "voxelScale": "1.2x0.9x1.8", "aggroType": "Pack_Hunter", "category": "bloodline_mutant",
+  "drops": [
+    {"id": "black_scale_hide", "chance": 0.4, "count": "2-4", "use": "Heterogeneity-resistant armor"},
+    {"id": "wolf_core", "chance": 0.15, "count": "1", "use": "mid-tier refinement ingredient"}
+  ],
+  "classification": "Heterogeneity-Adapted Predator", "realm": "Foundation Establishment",
+  "threat": "Moderate (pack tactics; alpha spiritual pressure)",
+  "bodyMaterials": ["Black-Scale Hide (Heterogeneity-resistant armor base)", "Wolf Core (spiritual energy storage)"],
+  "weaknesses": ["Fire-element techniques (scales conduct heat)", "Alpha dependency (kill alpha, pack scatters)", "Lightning (bypasses scale armor)"],
+  "knownEnemies": ["Heterogeneity-Mutated Panthers (territorial competition)", "Human cultivators (hunted for scales)"],
+  "cultivationValue": "Black-Scale Hide is the standard material for Heterogeneity-resistant armor; Wolf Core is a mid-tier refinement ingredient",
+  "alchemyUses": ["Heterogeneity Resistance Pill (scale powder base)", "Pack-Spirit Elixir (wolf core)"],
+  "artifactUses": ["Black-Scale Armor (environmental protection)", "Wolf-Fang Dagger (piercing weapon)"],
+  "relatedDao": ["Shadow (incidental — as Shadow host)"],
+  "knownInheritances": ["None — the wolf's significance is historical, not cultivational"],
+  "provenance": {"source": "Outside of Time", "attestation": "EXPLICIT", "confidence": 5}
+}

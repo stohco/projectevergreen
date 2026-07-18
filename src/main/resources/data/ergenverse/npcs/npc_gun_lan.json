@@ -1,0 +1,36 @@
+{
+  "_comment": "NPC: Gun Lan (管岚). Canon ID: N93. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_gun_lan",
+  "name": "Gun Lan",
+  "nameCn": "管岚",
+  "canon_id": "N93",
+  "type": "antagonist",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect",
+  "cultivation": "Soul Formation",
+  "personality": "ambitious soul cultivator",
+  "speech": "measured, ambitious",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator",
+    "qi_condensation": "Soul cultivator",
+    "core_formation": "Soul Formation elder"
+  },
+  "canon_confidence": 3,
+  "note": "Soul Refining Sect Soul Formation elder",
+  "derivation_type": "B",
+  "salt": 1070990549,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "primordial_spirit",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,69 @@
+{
+  "_comment": "Provenance metadata for Seven-Colored God Void Nails (七彩通天钉). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I21",
+  "name": "Seven-Colored God Void Nails",
+  "nameCn": "七彩通天钉",
+  "type": "weapon",
+  "category": "offensive",
+  "origin": "Taken from Cang Songzi in Seven-Colored Realm battle (Ch. 1196)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "108-nail set designed to kill Third Step experts",
+    "Madness-inducing when pierced into a body",
+    "Forged by Cang Songzi (Palm Venerable) at Kongling-late stage",
+    "Made from meteorite of ancient exotic metal"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Pseudo Nirvana Void / Seven-Colored Realm Treasure",
+    "Once used by Palm Venerable to ambush Venerable Sealing Realm",
+    "Used to turn tables on Daoist Water"
+  ],
+  "source": "Ch.1196 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Taken from Cang Songzi in Seven-Colored Realm battle (Ch. 1196)"
+  },
+  "lifecycle": {
+    "creator": "Taken from Cang Songzi in Seven-Colored Realm battle (Ch. 1196)",
+    "creation_circumstances": "Taken from Cang Songzi in Seven-Colored Realm battle (Ch. 1196)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

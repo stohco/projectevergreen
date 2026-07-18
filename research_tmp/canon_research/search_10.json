@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://renegade-immortal-xian-ni.fandom.com/wiki/Wang_Lin/Items",
+    "name": "Wang Lin/Items - Renegade Immortal Xian Ni Wiki - Fandom",
+    "snippet": "Core-Treasure Sword: Has a teleportation effect. · The Dragon Formation (gifted by Li MuWan base on the formation at the ...",
+    "host_name": "renegade-immortal-xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin/Items",
+    "name": "Wang Lin/Items | Xian Ni Wikia - Fandom",
+    "snippet": "Core-Treasure Sword(Teleportation) --> Dark Green Flying Sword(Poison) · The Dragon Formation (gifted by Li MuWan, based ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1ryndtf/renegade_immortal_xian_ni_wang_lins_scroll",
+    "name": "Renegade Immortal Xian Ni, Wang Lin's scroll : r/Donghua - Reddit",
+    "snippet": "... Wang Lin. He quickly sorted them all and found that there were a lot of treasures and flying swords. However, besides a scroll, none of them ...",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=hBN9aGLkavw",
+    "name": "Why the Jufu Sword Is One of Wang Lin's Most Mysterious Weapons?",
+    "snippet": "Renegade Immortal - Why the Jufu Sword Is One of Wang Lin's Most Mysterious Weapons? Disclaimer: I do not own the anime, music, ...",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=vBDZ-wzka1E",
+    "name": "The Untouchable Power of Renegade Immortal Full 2K - YouTube",
+    "snippet": "Discover the Top 10 Supreme Divine Artifacts of Wang Lin in Renegade Immortal (Xian Ni) – treasures that shook the heavens and defied fate ...",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

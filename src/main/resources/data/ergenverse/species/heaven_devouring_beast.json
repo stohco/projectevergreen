@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Heaven-Devouring Beast (吞天兽) from A Will Eternal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "heaven_devouring_beast",
+  "name": "Heaven-Devouring Beast",
+  "nameCn": "吞天兽",
+  "novel": "A Will Eternal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Formless maw 20 m, can swallow mountains, body is hunger incarnate",
+    "size": "20 m adult, 100000 jin; true form swallows continents",
+    "behavior": "Cultivates by devouring everything; hunger drives all behavior",
+    "habitat": "Devour-aspected forbidden zones, void edges",
+    "cultivation": "Ascendant -> Immortal (devour attribute)",
+    "intelligence": 6,
+    "diet": "everything",
+    "relationships": "Enemy of all existence",
+    "techniques": [
+      "devour_swallow",
+      "void_maw",
+      "hunger_frenzy"
+    ],
+    "treasures": [
+      "devour_core",
+      "void_essence"
+    ],
+    "bloodline": "Devour lineage; devour-attribute bloodline",
+    "mutations": [
+      "true_devour_body",
+      "devour_immortal_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "heaven_devouring_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "heaven_devouring_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 795866557,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

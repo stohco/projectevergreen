@@ -1,0 +1,67 @@
+{
+  "_comment": "Provenance metadata for White Hair Strand (白发丝). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I59",
+  "name": "White Hair Strand",
+  "nameCn": "白发丝",
+  "type": "soul_artifact",
+  "category": "soul_related",
+  "origin": "Found in Immortal Emperor's Palace",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Cannot be destroyed by the Immortal Emperor",
+    "Plot clue containing Lu Mo's information about reincarnation cycle"
+  ],
+  "canon_confidence": 4,
+  "known_facts": [
+    "Indestructible by Immortal Emperor",
+    "Contains Lu Mo's message to resolve confusion about reincarnation",
+    "From Immortal Emperor's Palace"
+  ],
+  "source": "wiki-attested (Immortal Emperor's Palace); Fandom wiki; Baidu Baike",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Found in Immortal Emperor's Palace"
+  },
+  "lifecycle": {
+    "creator": "unknown (pre-canon)",
+    "creation_circumstances": "Found in Immortal Emperor's Palace",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "processor_type": "minecraft:rule",
+  "rules": [
+    {
+      "position_predicate": {
+        "predicate_type": "minecraft:random_block_match",
+        "block": "minecraft:stone_bricks",
+        "probability": 0.08
+      },
+      "input_predicate": {
+        "predicate_type": "minecraft:block_match",
+        "block": "minecraft:stone_bricks"
+      },
+      "location_predicate": {
+        "predicate_type": "minecraft:block_match",
+        "block": "minecraft:mossy_stone_bricks"
+      }
+    },
+    {
+      "position_predicate": {
+        "predicate_type": "minecraft:random_block_match",
+        "block": "minecraft:stone_bricks",
+        "probability": 0.05
+      },
+      "input_predicate": {
+        "predicate_type": "minecraft:block_match",
+        "block": "minecraft:stone_bricks"
+      },
+      "location_predicate": {
+        "predicate_type": "minecraft:block_match",
+        "block": "minecraft:cracked_stone_bricks"
+      }
+    },
+    {
+      "position_predicate": {
+        "predicate_type": "minecraft:random_block_match",
+        "block": "minecraft:cobblestone",
+        "probability": 0.1
+      },
+      "input_predicate": {
+        "predicate_type": "minecraft:block_match",
+        "block": "minecraft:cobblestone"
+      },
+      "location_predicate": {
+        "predicate_type": "minecraft:block_match",
+        "block": "minecraft:mossy_cobblestone"
+      }
+    }
+  ]
+}

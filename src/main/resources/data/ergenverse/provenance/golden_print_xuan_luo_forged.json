@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Golden Print (Xuan Luo-forged) (金印). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I173",
+  "name": "Golden Print (Xuan Luo-forged)",
+  "nameCn": "金印",
+  "type": "talisman",
+  "category": "offensive",
+  "origin": "Forged by Xuan Luo (Wang Lin's master) (Ch. 1772)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Sovereign's god-destruction dao spell turned into corporeal treasure",
+    "Contains hint of Nine Suns' power — indestructible",
+    "Quasi-Third-Step tier"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Quasi-Third-Step tier — Xuan Luo-forged",
+    "Indestructible — contains Nine Suns' power",
+    "Same strength as Sovereign using the spell himself"
+  ],
+  "source": "Ch.1772 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Forged by Xuan Luo (Wang Lin's master) (Ch. 1772)"
+  }
+}

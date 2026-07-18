@@ -1,0 +1,33 @@
+{
+  "_comment": "RI Canon Opportunity: Realm-Sealing Grand Array. Canon event: Wang Lin encounters the Realm-Sealing Grand Array that seals the Cave World. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_realm_sealing_grand_array",
+  "name": "Realm-Sealing Grand Array",
+  "canon_event": "Wang Lin encounters the Realm-Sealing Grand Array that seals the Cave World",
+  "location": "sealed_realm_boundary",
+  "age_requirement_years": 100000,
+  "cultivation_required": "Ascendant",
+  "perception_required": "Immortal",
+  "luck_modifier": 0.2,
+  "discovery_methods": [
+    "divine_sense",
+    "formation_study"
+  ],
+  "reward_tables": [
+    "realm_sealing_knowledge",
+    "array_fragment",
+    "sealed_realm_access"
+  ],
+  "why_untaken": "Requires Ascendant+ cultivation to even perceive the array.",
+  "natural_next_event": "The array was placed by the Seven-Colored Daoist; it persists.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 1835040541,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

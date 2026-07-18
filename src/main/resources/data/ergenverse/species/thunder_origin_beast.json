@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Thunder Origin True Body (雷霆本源真身) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "thunder_origin_beast",
+  "name": "Thunder Origin True Body",
+  "nameCn": "雷霆本源真身",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Formless beast of thunder-origin 8 m, body is living lightning, eyes are thunder-cracks",
+    "size": "8 m manifestation, 0 jin (thunder); true form spans thunder-realms",
+    "behavior": "Thunder-origin-incarnate being; cultivates by absorbing thunder-essence; Wang Lin obtained as treasure",
+    "habitat": "Thunder-aspected forbidden zones, tribulation sites",
+    "cultivation": "Immortal (thunder attribute)",
+    "intelligence": 11,
+    "diet": "thunder-essence, tribulation fragments, thunder-herbs",
+    "relationships": "Wang Lin obtained thunder origin true body as treasure (canon event)",
+    "techniques": [
+      "thunder_breath",
+      "lightning_rend",
+      "thunder_absorb",
+      "storm_body"
+    ],
+    "treasures": [
+      "thunder_origin_core",
+      "lightning_essence",
+      "thunder_fragment"
+    ],
+    "bloodline": "Thunder-Origin lineage; thunder bloodline",
+    "mutations": [
+      "true_thunder_body",
+      "thunder_immortal_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "thunder_origin_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "thunder_origin_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 998777103,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Lord of the Sealed Realm (封界尊 / 尊者封界). Canon ID: N128. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_lord_sealed_realm",
+  "name": "Lord of the Sealed Realm",
+  "nameCn": "封界尊 / 尊者封界",
+  "canon_id": "N128",
+  "type": "divine_emperor",
+  "faction": "sealed_realm",
+  "location": "sealed_realm",
+  "cultivation": "peak Third Step",
+  "personality": "sealed realm lord; guardian, powerful, complex",
+  "speech": "weighted, guardian",
+  "relationship_to_wanglin": "complex; Sealed Realm authority",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "A vast guardian presence",
+    "core_formation": "Lord of Sealed Realm; peak Third Step",
+    "nascent_soul": "Peak Third Step; Sealed Realm lord"
+  },
+  "canon_confidence": 5,
+  "note": "Lord of the Sealed Realm; peak Third Step guardian",
+  "derivation_type": "A",
+  "salt": 1872138352,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

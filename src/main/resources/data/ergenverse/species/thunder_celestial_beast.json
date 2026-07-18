@@ -1,0 +1,68 @@
+{
+  "_comment": "Thunder Celestial Beast (雷仙兽) — Renegade Immortal. Canon confidence: 5/5. Prime Directive: this beast exists objectively whether the player has the perception to recognize it.",
+  "species_id": "thunder_celestial_beast",
+  "name": "Thunder Celestial Beast",
+  "nameCn": "雷仙兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "canonical": {
+    "appearance": "Formless mass of living lightning vaguely shaped like a wolf, body crackles with nine colors of tribulation lightning. Born inside heavenly tribulations.",
+    "size": "Variable; 5m manifestation",
+    "behavior": "See ecology definitions.",
+    "habitat": "Thunder Celestial Realm",
+    "cultivation": "Ascendant→Immortal",
+    "intelligence": 9,
+    "diet": "See ecology definitions.",
+    "relationships": "See ecology definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": true,
+      "element": "thunder",
+      "grade": "extreme",
+      "alchemy_use": "Thunder Celestial Beast core refines Nine-Tribulation Thunder Pills; ingredient for Immortal breakthrough",
+      "canon_note": "Born inside heavenly tribulations; their cores embody tribulation lightning itself"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "thunder_celestial_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 196309793,
+  "bloodline_tier": "ancient_celestial",
+  "inner_dan_properties": {
+    "element": "thunder",
+    "purity_tier": 8,
+    "dao_resonance": "celestial_thunder",
+    "side_effects": [
+      "thunder_tempering"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

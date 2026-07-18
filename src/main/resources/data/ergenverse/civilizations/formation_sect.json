@@ -1,0 +1,81 @@
+{
+  "_comment": "Civilization: Formation Sect (sect) at Restriction Mountain region. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "formation_sect",
+  "name": "Formation Sect",
+  "type": "sect",
+  "location": "Restriction Mountain region",
+  "peak_realm": "Ascendant (formation ancestor)",
+  "canon_status": "major_formation_sect",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "population_structure": {
+    "outer_disciples": 2000,
+    "inner_disciples": 400,
+    "core_disciples": 40,
+    "elders": 12,
+    "peak_lords": 7,
+    "formation_ancestor": 1,
+    "spirit_beasts": 100
+  },
+  "economy": {
+    "spirit_stones": "moderate",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "basic",
+    "forging": "basic",
+    "formation": "apex",
+    "trade": "formation trade",
+    "recruitment": "formation-aspected youth"
+  },
+  "politics": {
+    "allies": [
+      "formation-aspected sects"
+    ],
+    "enemies": [
+      "rival formation sects"
+    ],
+    "vassals": [],
+    "rivals": [
+      "other formation powers"
+    ],
+    "internal_factions": [
+      "formation lineage",
+      "restriction lineage"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "formation-aspected examination",
+    "expansion": "steady",
+    "decline": "none current",
+    "schisms": "formation vs restriction tension",
+    "wars": [
+      "formation conflicts"
+    ],
+    "recovery": "strong; formation ancestor present"
+  },
+  "libraries": [
+    "apex formation",
+    "formation manuals",
+    "restriction catalogues",
+    "formation beast lore"
+  ],
+  "spirit_beasts": [
+    "restriction beasts (tamed)",
+    "formation guardians"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 1498218694,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

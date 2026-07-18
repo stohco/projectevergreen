@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Qilin (麒麟) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "qilin",
+  "name": "Qilin",
+  "nameCn": "麒麟",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Chimeric beast 5 m long, body of deer scaled in jade, tail of ox, single horn of crystal, hooves of fire",
+    "size": "5 m adult, 8000 jin; ancient 15 m, 100000 jin",
+    "behavior": "Auspicious beast; appears at the birth of great cultivators; avoids the wicked; cultivates by walking auspicious paths",
+    "habitat": "Auspicious spirit veins, Qilin City region, continent hearts",
+    "cultivation": "Ascendant -> Immortal (auspicious attribute)",
+    "intelligence": 11,
+    "diet": "auspicious herbs, spirit-rice, dawn-dew",
+    "relationships": "Bonded to Qilin City imperial lineage; auspicious to all cultivators",
+    "techniques": [
+      "auspicious_step",
+      "horn_pierce",
+      "jade_scale_defense",
+      "fire_hoof"
+    ],
+    "treasures": [
+      "qilin_core",
+      "horn_fragment",
+      "jade_scale"
+    ],
+    "bloodline": "True Auspicious lineage; one of the four auspicious beasts",
+    "mutations": [
+      "nine_horn",
+      "true_auspicious_awakening"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "qilin — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "qilin — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 72098622,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Qing Shuang (青霜). Canon ID: N32. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_qing_shuang",
+  "name": "Qing Shuang",
+  "nameCn": "青霜",
+  "canon_id": "N32",
+  "type": "disciple",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Immortal-tier",
+  "personality": "frost-aspected female cultivator",
+  "speech": "frosty, measured",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A frost-aspected woman",
+    "qi_condensation": "Immortal-tier; frost aura",
+    "core_formation": "Immortal-tier",
+    "nascent_soul": "Qing Shuang; Immortal-tier frost cultivator"
+  },
+  "canon_confidence": 3,
+  "note": "Immortal-tier frost cultivator NPC",
+  "derivation_type": "B",
+  "salt": 600362879,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

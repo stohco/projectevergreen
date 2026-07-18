@@ -1,0 +1,16 @@
+{
+  "_comment": "Start pool for Soul Refining Sect. Stand-in: vanilla village town_centers. Final: custom sect/city NBT templates.",
+  "name": "ergenverse:soul_refining_sect/start_pool",
+  "fallback": "minecraft:village/desert/terminators",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "projection": "rigid",
+        "location": "minecraft:village/desert/town_centers/desert_meeting_point_1",
+        "processors": "minecraft:empty"
+      }
+    }
+  ]
+}

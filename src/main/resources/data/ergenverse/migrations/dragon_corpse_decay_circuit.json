@@ -1,0 +1,71 @@
+{
+  "_comment": "Migration: Dragon Corpse Decay Circuit. 2 waypoints, 4 follower types, 1 emergent markets. Per migration directive: migration is a major simulation system. The world breathes because markets appear seasonally along routes. Prime Directive: route exists objectively; player enters a world already moving.",
+  "migration_id": "dragon_corpse_decay_circuit",
+  "name": "Dragon Corpse Decay Circuit",
+  "species": "multiple",
+  "description": "The migration of scavenger beasts toward dragon corpses, creating temporary ecology booms.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "waypoints": [
+    {
+      "point": "dragon_corpse_site",
+      "season": "corpse_event",
+      "duration_days": 365
+    },
+    {
+      "point": "scavenger_dispersion",
+      "season": "post_decay",
+      "duration_days": 180
+    }
+  ],
+  "follower_chain": [
+    {
+      "follower": "mosquito_beasts",
+      "relationship": "scavenger",
+      "distance_li": 50,
+      "note": "Mosquitoes feed on dragon blood."
+    },
+    {
+      "follower": "blood_beasts",
+      "relationship": "scavenger",
+      "distance_li": 80,
+      "note": "Blood beasts feed on dragon marrow."
+    },
+    {
+      "follower": "nether_beasts",
+      "relationship": "scavenger",
+      "distance_li": 100,
+      "note": "Nether beasts feed on dragon soul."
+    },
+    {
+      "follower": "treasure_seeking_cults",
+      "relationship": "opportunist",
+      "distance_li": 150,
+      "note": "Treasure seekers harvest dragon parts."
+    }
+  ],
+  "emergent_markets": [
+    {
+      "market": "dragon_part_market",
+      "season": "corpse_event",
+      "goods": [
+        "dragon_scale",
+        "dragon_blood",
+        "dragon_bone",
+        "dragon_core"
+      ]
+    }
+  ],
+  "simulation_notes": {
+    "world_breathes": "Markets appear and disappear seasonally; the world changes whether or not the player acts.",
+    "follower_dynamics": "Each follower type arrives with a delay proportional to distance_li; predators arrive after prey, scavengers after predators, bandits after cultivators, merchants after stability.",
+    "perception_tiers": {
+      "mortal": "Sees beasts moving.",
+      "qi_condensation": "Senses migration direction.",
+      "foundation_establishment": "Perceives follower chain.",
+      "core_formation": "Predicts market appearances.",
+      "nascent_soul": "Perceives complete migration system."
+    }
+  },
+  "salt": 1554973478
+}

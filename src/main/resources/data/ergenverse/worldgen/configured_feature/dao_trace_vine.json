@@ -1,0 +1,24 @@
+{
+  "_comment": "Dao-Trace Vine (道痕藤) — Dao-perception herb. Canon: a vine whose leaves bear natural Dao-patterns (纹路); cultivators meditate on the patterns to gain Dao comprehension. Grows on cliff faces and exposed stone where Qi has flowed for millennia, carving traces into the rock. Found in Zhao Mountains and Xuan Wu Country (mountainous, Dao-saturated stone). Custom block: ergenverse:dao_trace_vine
+  "type": "minecraft:flower",
+  "config": {
+    "feature": {
+      "type": "minecraft:simple_block",
+      "config": {
+        "to_place": {
+          "type": "minecraft:simple_state_provider",
+          "state": {
+            "Name": "ergenverse:dao_trace_vine",
+            "Properties": {
+              "half": "lower"
+            }
+          }
+        }
+      }
+    },
+    "tries": 1,
+    "xz_spread": 2,
+    "y_spread": 0,
+    "need_red_to_survive": false
+  }
+}

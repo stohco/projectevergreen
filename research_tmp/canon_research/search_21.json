@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Cultivation",
+    "name": "Cultivation | Xian Ni Wikia - Fandom",
+    "snippet": "Cultivation is the practice of absorbing spiritual energy, that is present throughout heaven and earth, through special breathing exercises.",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/RenegadeImmortal/comments/1tdzt8e/questions_regarding_cultivation",
+    "name": "Questions regarding cultivation : r/RenegadeImmortal - Reddit",
+    "snippet": "Thus we have the normal cultivation levels from Qi to Ascendant. Dao Fei, Dao Yi , got Heaven trampling. FIRST STEP: • Qi Condensation • ... I am looking for the progression of cultivation beyond the mortal realm ... Anyone knows the 9 stages of Cultivation? What's after Nascent ... More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Hcqr84_teko",
+    "name": "【22 cultivation levels in Renegade Immortal】 #renegadeimmortal",
+    "snippet": "Comments. 54. The real name of renegade immortal cultivation.... First step is... 1_ Qi condensation ... cultivation is 1_ Heavenly trampling.",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.facebook.com/groups/3292645077638326/posts/3923920337844127",
+    "name": "8. Illusionary Yin 9. Corporeal Yang 2nd Step (Cultivating the Dao): 10",
+    "snippet": "What people are saying. Heaven Trampling is confirmed as Step 4, with Ascendant Empyrean and Grand Empyrean still in Step 3.",
+    "host_name": "www.facebook.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://dynamic.webnovel.com/story/32474934408561305/87176147086921539",
+    "name": "Cultivation - Renegade Immortal: The God of Killing (Xian Ni) - Cherreads",
+    "snippet": "Qi Condensation (凝气 - Ning Qi) - Divided into 15 layers. ... However, it is imply that there is another way to breakthrough to Heaven Trampling Realm.",
+    "host_name": "dynamic.webnovel.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

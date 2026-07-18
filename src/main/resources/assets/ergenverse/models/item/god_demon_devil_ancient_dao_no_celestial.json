@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ergenverse:item/god_demon_devil_ancient_dao_no_celestial"
+  }
+}

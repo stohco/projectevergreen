@@ -1,0 +1,31 @@
+{
+  "_comment": "RI Canon Opportunity: Heaven Trampling Transcendence. Canon event: Wang Lin transcends by crossing the 9 Heaven Trampling Bridges with Li Muwan. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_heaven_trampling_transcendence",
+  "name": "Heaven Trampling Transcendence",
+  "canon_event": "Wang Lin transcends by crossing the 9 Heaven Trampling Bridges with Li Muwan",
+  "location": "heaven_trampling_bridges",
+  "age_requirement_years": 0,
+  "cultivation_required": "Heaven Trampling",
+  "perception_required": "Heaven Trampling",
+  "luck_modifier": 0.01,
+  "discovery_methods": [
+    "heaven_trampling_realm"
+  ],
+  "reward_tables": [
+    "transcendence",
+    "li_muwan_resurrection"
+  ],
+  "why_untaken": "Requires completing all 9 Heaven Trampling Bridges; the hardest challenge in existence.",
+  "natural_next_event": "Wang Lin transcends with Li Muwan.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 718873493,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

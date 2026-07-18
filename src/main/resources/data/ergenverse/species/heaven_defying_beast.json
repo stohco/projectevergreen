@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Heaven-Defying Beast (逆天兽) from I Shall Seal the Heavens. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "heaven_defying_beast",
+  "name": "Heaven-Defying Beast",
+  "nameCn": "逆天兽",
+  "novel": "I Shall Seal the Heavens",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Formless beast of defied-heaven law, manifests as a chimeric horror 10 m tall",
+    "size": "10 m adult, 20000 jin; true form spans skies",
+    "behavior": "Born of accumulated defied-heaven qi; hunts those who defy heaven; cultivates by absorbing heavenly backlash",
+    "habitat": "Heaven-defying forbidden zones, tribulation aftermath sites",
+    "cultivation": "Ascendant -> Immortal (defy attribute)",
+    "intelligence": 10,
+    "diet": "heavenly backlash, defied-heaven qi, tribulation remnants",
+    "relationships": "Enemy of all cultivators who defy heaven",
+    "techniques": [
+      "heaven_defy",
+      "backlash_absorb",
+      "defy_breath"
+    ],
+    "treasures": [
+      "defy_core",
+      "backlash_essence"
+    ],
+    "bloodline": "Heaven-Defying lineage; defy-attribute bloodline",
+    "mutations": [
+      "true_defy_body",
+      "defy_immortal_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "heaven_defying_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "heaven_defying_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1603207173,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

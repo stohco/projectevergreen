@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Devil Soul Beast (mutated). Generated from canonical definition.",
+  "variant_id": "devil_soul_beast__mutated",
+  "species_id": "devil_soul_beast",
+  "species_name": "Devil Soul Beast",
+  "life_state": "mutated",
+  "modifiers": {
+    "size_multiplier": 1.5,
+    "power_multiplier": 3.0,
+    "temperament": "aggressive",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1334872619
+}

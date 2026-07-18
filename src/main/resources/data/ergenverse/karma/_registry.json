@@ -1,0 +1,28 @@
+{
+  "_comment": "Karmic Nexus registry. Lists all canon karmic nodes. Consumed by WorldStateEngine.queryWhoKnows() and queryWhyUntaken().",
+  "subsystem": "karma",
+  "node_count": 16,
+  "nodes": [
+    "teng_family_massacre",
+    "heaven_defying_bead_discovery",
+    "ancient_god_inheritance",
+    "suzaku_inheritance",
+    "seven_colored_killing",
+    "blood_ancestor_battle",
+    "mosquito_valley_taming",
+    "situ_nan_friendship",
+    "qing_shui_mentorship",
+    "soul_refining_inheritance",
+    "foreign_battleground_participation",
+    "cave_world_ownership",
+    "heaven_trampling_transcendence",
+    "immortal_astral_arrival",
+    "heng_yue_sect_destruction",
+    "realm_sealing_grand_array"
+  ],
+  "schema": {
+    "karmic_weight": "signed int; + = debt owed TO bearer, - = grudge held BY bearer",
+    "consequences": "typed pointers to downstream effects; each has type/target_id/magnitude/resolved_at_tick",
+    "unresolved_until": "tick | condition | 'never' | 'resolved'; Prime Directive demands persistence"
+  }
+}

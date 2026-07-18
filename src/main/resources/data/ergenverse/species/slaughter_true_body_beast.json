@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Slaughter True Body (杀戮真身) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "slaughter_true_body_beast",
+  "name": "Slaughter True Body",
+  "nameCn": "杀戮真身",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Formless beast of slaughter 8 m, body is living killing-intent, eyes are blood-pools",
+    "size": "8 m manifestation, 0 jin (slaughter); true form spans battlefield-realms",
+    "behavior": "Slaughter-incarnate being; cultivates by absorbing slaughter-qi; Lu Mo's true body",
+    "habitat": "Slaughter-aspected forbidden zones, ancient battlefields",
+    "cultivation": "Immortal (slaughter attribute)",
+    "intelligence": 10,
+    "diet": "slaughter-qi, slaughter-herbs, wicked souls",
+    "relationships": "Lu Mo (Wang Lin's clone) obtained slaughter true body (canon event)",
+    "techniques": [
+      "slaughter_breath",
+      "killing_rend",
+      "slaughter_absorb",
+      "blood_maw"
+    ],
+    "treasures": [
+      "slaughter_core",
+      "slaughter_essence",
+      "killing_fragment"
+    ],
+    "bloodline": "Slaughter lineage; slaughter bloodline",
+    "mutations": [
+      "true_slaughter_body",
+      "slaughter_immortal_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "slaughter_true_body_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "slaughter_true_body_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 675424217,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

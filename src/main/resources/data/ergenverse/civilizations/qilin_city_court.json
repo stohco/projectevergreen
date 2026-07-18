@@ -1,0 +1,83 @@
+{
+  "_comment": "Civilization: Qilin City Court (royal_court) at Qilin City. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "qilin_city_court",
+  "name": "Qilin City Court",
+  "type": "royal_court",
+  "location": "Qilin City",
+  "peak_realm": "Ascendant (Qilin Emperor)",
+  "canon_status": "regional_power",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "mortals": "hundreds of thousands",
+    "qi_condensation": "thousands",
+    "foundation_establishment": "hundreds",
+    "core_formation": "dozens",
+    "elders": 20,
+    "qilin_emperor": 1,
+    "spirit_beasts": 500
+  },
+  "economy": {
+    "spirit_stones": "abundant",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "advanced",
+    "forging": "advanced",
+    "formation": "advanced",
+    "trade": "regional",
+    "recruitment": "Qilin City region"
+  },
+  "politics": {
+    "allies": [
+      "auspicious sects"
+    ],
+    "enemies": [
+      "corrupt powers"
+    ],
+    "vassals": [
+      "Qilin City sects"
+    ],
+    "rivals": [
+      "other regional powers"
+    ],
+    "internal_factions": [
+      "royal family",
+      "auspicious council"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "Qilin City nobility",
+    "expansion": "steady",
+    "decline": "none current",
+    "schisms": "royal vs council tension",
+    "wars": [
+      "regional conflicts"
+    ],
+    "recovery": "strong; Qilin bloodline"
+  },
+  "libraries": [
+    "auspicious techniques",
+    "Qilin formation manuals",
+    "auspicious beast catalogues",
+    "royal records"
+  ],
+  "spirit_beasts": [
+    "qilins (tributed)",
+    "auspicious beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 1161684610,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

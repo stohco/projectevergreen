@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Xuan Luo (玄罗). Canon ID: N28. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_xuan_luo",
+  "name": "Xuan Luo",
+  "nameCn": "玄罗",
+  "canon_id": "N28",
+  "type": "elder",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "Great Heavenly Venerable",
+  "personality": "profound, mysterious elder; Wang Lin's master",
+  "speech": "profound, deep",
+  "relationship_to_wanglin": "master",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "A profound elder",
+    "qi_condensation": "Great Heavenly Venerable; overwhelming",
+    "core_formation": "Xuan Luo; Great Heavenly Venerable",
+    "nascent_soul": "Great Heavenly Venerable; Wang Lin's master"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's master; Great Heavenly Venerable",
+  "derivation_type": "A",
+  "salt": 948522298,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

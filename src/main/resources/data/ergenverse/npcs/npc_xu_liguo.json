@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Xu Liguo (徐立国). Canon ID: N62. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_xu_liguo",
+  "name": "Xu Liguo",
+  "nameCn": "徐立国",
+  "canon_id": "N62",
+  "type": "artifact_spirit",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "devil soul (sword spirit)",
+  "personality": "loyal devil soul; Wang Lin's sword spirit servant",
+  "speech": "respectful, devil-touched",
+  "relationship_to_wanglin": "sword spirit servant; loyal",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A ghostly presence in a sword",
+    "qi_condensation": "Devil soul; sword spirit",
+    "core_formation": "Xu Liguo; devil soul servant of Wang Lin",
+    "nascent_soul": "Devil soul; Wang Lin's loyal sword spirit"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's devil soul sword spirit servant",
+  "derivation_type": "A",
+  "salt": 1454510478,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

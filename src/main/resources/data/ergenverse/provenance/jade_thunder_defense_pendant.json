@@ -1,0 +1,31 @@
+{
+  "_comment": "Provenance metadata for Jade Thunder Defense (pendant) (御雷玉 pendant). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I49",
+  "name": "Jade Thunder Defense (pendant)",
+  "nameCn": "御雷玉 pendant",
+  "type": "accessory",
+  "category": "defensive",
+  "origin": "Xi Zifeng gift (~Ch. 871)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Jade pendant warding against thunder tribulation",
+    "Spirit-tier tribulation protection"
+  ],
+  "canon_confidence": 4,
+  "known_facts": [
+    "Separate from the Jade (Thunder Defense)",
+    "Tribulation-ward specialization",
+    "Spirit-tier"
+  ],
+  "source": "Ch.871 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Xi Zifeng gift (~Ch. 871)"
+  }
+}

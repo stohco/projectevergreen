@@ -1,0 +1,3212 @@
+[
+  {
+    "id": "N01",
+    "name": "Wang Lin",
+    "nameCn": "王林",
+    "type": "protagonist",
+    "peakRealm": "Heaven Trampling",
+    "affiliation": "independent (multi-sect legacy: Heng Yue Sect → Cloud Sky Sect → Soul Refining Sect → Heavenly Fate Sect → Da Lou Sword Sect → Vermilion Bird Divine Sect → Origin Sect → Great Soul Sect → Dark Scorpion Clan → Sealed Realm → Cave World owner)",
+    "status": "transcended",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku / Cave World / Immortal Astral Continent",
+    "knownFacts": [
+      "Discovered the Heaven Defying Bead in a dead bird under a cliff as a child",
+      "Awakened the Ji Realm and later inherited Tu Si's Ancient God knowledge",
+      "Became the 6th-Generation Vermilion Bird Divine Emperor and Lord of the Sealed Realm",
+      "Killed the Seven-Colored Daoist to become the owner of the Cave World",
+      "Transcended with Li Muwan after crossing the 9 Heaven Trampling Bridges"
+    ],
+    "relationships": [
+      {"target": "Li Muwan", "relation": "love_interest"},
+      {"target": "Li Qianmei", "relation": "love_interest"},
+      {"target": "Mu Bingmei", "relation": "love_interest"},
+      {"target": "Wang Ping", "relation": "family"},
+      {"target": "Wang Yiyi", "relation": "family"},
+      {"target": "Situ Nan", "relation": "master"},
+      {"target": "Xuan Luo", "relation": "master"},
+      {"target": "All-Seer", "relation": "enemy"},
+      {"target": "Teng Huayuan", "relation": "enemy"},
+      {"target": "Seven-Colored Daoist", "relation": "enemy"},
+      {"target": "Tianyunzi", "relation": "enemy"},
+      {"target": "Xu Liguo", "relation": "disciple"},
+      {"target": "Thirteen", "relation": "disciple"},
+      {"target": "Xie Qing", "relation": "disciple"},
+      {"target": "Xi Zifeng", "relation": "disciple"},
+      {"target": "Lian Daofei", "relation": "disciple"},
+      {"target": "Tuo Sen", "relation": "rival"},
+      {"target": "Gu Dao", "relation": "rival"}
+    ]
+  },
+  {
+    "id": "N02",
+    "name": "Wang Tianshui",
+    "nameCn": "王天水",
+    "type": "family_head",
+    "peakRealm": "mortal",
+    "affiliation": "Wang Clan",
+    "status": "reincarnated",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Wang Family Village, Country of Zhao",
+    "knownFacts": [
+      "Wang Lin's father; called him 'Tie Zhu' to ward off bad fortune",
+      "Killed by Teng Huayuan; soul trapped in Teng's soul flag",
+      "Soul rescued by Situ Nan into the Heaven Defying Bead; later released"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "family"},
+      {"target": "Zhou Tingsu", "relation": "family"},
+      {"target": "Teng Huayuan", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N03",
+    "name": "Zhou Tingsu",
+    "nameCn": "周婷苏 / 周颖苏",
+    "type": "other",
+    "peakRealm": "mortal",
+    "affiliation": "Wang Clan",
+    "status": "reincarnated",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Wang Family Village, Country of Zhao",
+    "knownFacts": [
+      "Wang Lin's mother",
+      "Killed by Teng Huayuan; soul trapped in Teng's soul flag",
+      "Soul rescued by Situ Nan and later released"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "family"},
+      {"target": "Wang Tianshui", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N04",
+    "name": "Wang Tianshan",
+    "nameCn": "王天山",
+    "type": "elder",
+    "peakRealm": "low-tier cultivator",
+    "affiliation": "Wang Clan / Heng Yue Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Wang Family Village, Country of Zhao",
+    "knownFacts": [
+      "Wang Lin's fourth uncle; risked his sect position to get Wang Lin into Heng Yue Sect",
+      "Targeted by Teng Huayuan's diviner but spared",
+      "Survived the Wang Clan annihilation"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "family"},
+      {"target": "Teng Huayuan", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N05",
+    "name": "Wang Zhuo",
+    "nameCn": "王卓",
+    "type": "disciple",
+    "peakRealm": "Nascent Soul",
+    "affiliation": "Wang Clan / Heng Yue Sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Wang Family Village, Country of Zhao",
+    "knownFacts": [
+      "Wang Lin's cousin; married Teng Xiuxiu under duress after clan annihilation",
+      "Killed his wife and himself rather than betray the Wang clan; Wang Lin saved and reincarnated him",
+      "Wang Lin helped him form Nascent Soul; guarded the Wang family until lifespan ended"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "family"},
+      {"target": "Teng Xiuxiu", "relation": "family"},
+      {"target": "Qing Yi", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N06",
+    "name": "Wang Hao",
+    "nameCn": "王浩",
+    "type": "disciple",
+    "peakRealm": "low-tier cultivator",
+    "affiliation": "Wang Clan / Heng Yue Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Wang Family Village, Country of Zhao",
+    "knownFacts": [
+      "Wang Lin's cousin",
+      "Spared by Teng Huayuan because he was a sect member",
+      "One of the few Wang Clan survivors"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N07",
+    "name": "Wang Ping",
+    "nameCn": "王平",
+    "type": "other",
+    "peakRealm": "mortal",
+    "affiliation": "none (mortal)",
+    "status": "reincarnated",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Planet Ran Yun",
+    "knownFacts": [
+      "Wang Lin's son by Mu Bingmei/Liu Mei; refined into a resentful spirit by Liu Mei",
+      "Raised by Wang Lin as a mortal in a desolate village",
+      "His death triggered Wang Lin's Karma Domain evolution; eventually reunited with Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "family"},
+      {"target": "Mu Bingmei", "relation": "family"},
+      {"target": "Qing Yi", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N08",
+    "name": "Wang Yiyi",
+    "nameCn": "王一一",
+    "type": "other",
+    "peakRealm": "Paragon-tier",
+    "affiliation": "Vast Dao Palace / Wang Lin's lineage",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Xiangang Continent / AWWP Weiyang Boundary",
+    "knownFacts": [
+      "Wang Lin and Li Muwan's daughter; Saintess of the Vast Dao Palace",
+      "Escaped destruction of Vast Dao Palace by inhabiting a mask",
+      "Married Wang Baole (AWWP protagonist); brought back to Xiangang Continent by Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "family"},
+      {"target": "Li Muwan", "relation": "family"},
+      {"target": "Wang Baole", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N09",
+    "name": "Wang Jiduo",
+    "nameCn": "王继多 / 继度",
+    "type": "other",
+    "peakRealm": "Imperial Venerable",
+    "affiliation": "Ancient Clan (Primordial Ancient lineage)",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Wang Lin's adopted son/godson on the IAC",
+      "Of the Ancient Clan Primordial lineage",
+      "Wang Lin enabled him to become Imperial Venerable"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "family"},
+      {"target": "Song Yu", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N10",
+    "name": "Zhou Ru",
+    "nameCn": "周茹",
+    "type": "other",
+    "peakRealm": "Soul Transformation",
+    "affiliation": "Kunxu Realm (disciple of Mu Bingmei)",
+    "status": "reincarnated",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku / IAC",
+    "knownFacts": [
+      "Wang Lin's adopted daughter; vessel for Li Muwan's soul (intended)",
+      "Li Muwan chose not to devour Zhou Ru's soul; calls Wang Lin 'uncle'",
+      "Reincarnated on IAC and lives an ordinary life"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "family"},
+      {"target": "Li Muwan", "relation": "family"},
+      {"target": "Mu Bingmei", "relation": "master"},
+      {"target": "Xiao Bai", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N11",
+    "name": "Qing Yi",
+    "nameCn": "青衣",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "Wang family",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Wang Ping's wife (daughter-in-law to Wang Lin)"
+    ],
+    "relationships": [
+      {"target": "Wang Ping", "relation": "family"},
+      {"target": "Wang Lin", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N12",
+    "name": "Song Yu",
+    "nameCn": "宋玉",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "Wang family",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Wang Jiduo's wife"
+    ],
+    "relationships": [
+      {"target": "Wang Jiduo", "relation": "family"},
+      {"target": "Wang Lin", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N13",
+    "name": "Wang Baole",
+    "nameCn": "王宝乐",
+    "type": "protagonist",
+    "peakRealm": "Summer Immortal (9th Step)",
+    "affiliation": "Federation / Wang Lin's lineage",
+    "status": "transcended",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "AWWP world",
+    "knownFacts": [
+      "AWWP protagonist; Wang Yiyi's husband, therefore Wang Lin's son-in-law",
+      "Mentored/protected by Wang Lin ('Paragon Wang') in AWWP",
+      "Inherits the Eight Extreme Dao from Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "family"},
+      {"target": "Wang Yiyi", "relation": "love_interest"}
+    ]
+  },
+  {
+    "id": "N14",
+    "name": "Li Qiqing",
+    "nameCn": "李齐青",
+    "type": "disciple",
+    "peakRealm": "elite disciple",
+    "affiliation": "Luo He Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Fire Burn Country",
+    "knownFacts": [
+      "Li Muwan's older brother; raised her after their parents died",
+      "Luo He Sect elite disciple"
+    ],
+    "relationships": [
+      {"target": "Li Muwan", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N15",
+    "name": "Teng Xiuxiu",
+    "nameCn": "藤秀秀",
+    "type": "other",
+    "peakRealm": "low-tier cultivator",
+    "affiliation": "Teng Clan",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Country of Zhao",
+    "knownFacts": [
+      "Wang Zhuo's wife (forced marriage after Wang Clan annihilation)",
+      "Killed by Wang Zhuo when he chose the Wang clan over her"
+    ],
+    "relationships": [
+      {"target": "Wang Zhuo", "relation": "family"},
+      {"target": "Teng Huayuan", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N16",
+    "name": "Dao Master Blue Dreams",
+    "nameCn": "蓝梦道主",
+    "type": "elder",
+    "peakRealm": "Void Tribulant+",
+    "affiliation": "Blue Silk Clan",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Blue Silk Clan Star Domain",
+    "knownFacts": [
+      "Li Qianmei's father; taught Wang Lin Light Shadow Shield and Dao Art Fusion",
+      "Healed Li Qianmei at the cost of her memories",
+      "Wang Lin injured his palm at one point"
+    ],
+    "relationships": [
+      {"target": "Li Qianmei", "relation": "family"},
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N17",
+    "name": "Li Muwan",
+    "nameCn": "李慕婉",
+    "type": "other",
+    "peakRealm": "Treading Heaven Realm",
+    "affiliation": "Luo He Sect / Cloud Sky Sect",
+    "status": "transcended",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Fire Burn Country / Chu Country / Cave World",
+    "knownFacts": [
+      "Met Wang Lin escaping a Fire Beast; drained life force to refine Azure Dragon Jade Slip for him",
+      "Failed Nascent Soul formation multiple times; died at 500 years old",
+      "Soul preserved in Heaven Defying Bead 700 years; resurrected by Wang Lin at 4th Step; transcends with him"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "love_interest"},
+      {"target": "Li Qiqing", "relation": "family"},
+      {"target": "Wang Yiyi", "relation": "family"},
+      {"target": "Sun Zhenwei", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N18",
+    "name": "Li Qianmei",
+    "nameCn": "李千媚",
+    "type": "other",
+    "peakRealm": "Nirvana Scryer+",
+    "affiliation": "Ghost Sect / Wang Lin's lineage",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Origin Sect / IAC",
+    "knownFacts": [
+      "Daughter of Dao Master Blue Dream; Wang Lin's second wife",
+      "Smeared blood on Wang Lin's stone-petrified body for 10 years to save him from Daoist Water",
+      "Healed by her father at the cost of losing most memories of Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "love_interest"},
+      {"target": "Dao Master Blue Dreams", "relation": "family"},
+      {"target": "Wang Yiyi", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N19",
+    "name": "Mu Bingmei",
+    "nameCn": "慕冰媚 / 柳眉",
+    "type": "other",
+    "peakRealm": "Ascendant+",
+    "affiliation": "Vermilion Bird Country / Divine Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku / IAC",
+    "knownFacts": [
+      "Liu Mei's true form; Wang Lin's third wife",
+      "Had a son with Wang Lin (Wang Ping) whom she refined into a resentful spirit out of hatred",
+      "Wang Lin severed karmic ties with her via the Dream Dao; one of his clones accompanies her"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "love_interest"},
+      {"target": "Wang Ping", "relation": "family"},
+      {"target": "Zhou Ru", "relation": "disciple"}
+    ]
+  },
+  {
+    "id": "N20",
+    "name": "Situ Nan",
+    "nameCn": "司徒南",
+    "type": "divine_emperor",
+    "peakRealm": "Yang Solid Peak (reconstructed); Heaven Trampling (IAC reincarnation)",
+    "affiliation": "Vermilion Bird Country / Wu Xuan Country",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku / Immortal Execution Star",
+    "knownFacts": [
+      "Originally the Green Soul of the Seven-Colored Immortal Venerable; betrayed by 3rd-Gen Vermilion Bird",
+      "Fled into the Heaven Defying Pearl; met Wang Lin and became his first mentor",
+      "Sacrificed his remaining power to save Wang Lin; reincarnated on IAC as 'Si Nan' Grand Marshal of Wu Xuan Country"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Ye Wuyou", "relation": "ally"},
+      {"target": "Seven-Colored Daoist", "relation": "enemy"},
+      {"target": "Third Generation Vermilion Bird Master", "relation": "enemy"},
+      {"target": "Tan Lang", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N21",
+    "name": "All-Seer",
+    "nameCn": "全知者",
+    "type": "patriarch",
+    "peakRealm": "peak Third Step",
+    "affiliation": "Heavenly Fate Sect",
+    "status": "deceased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Planet Tian Yun",
+    "knownFacts": [
+      "Mortal-realm schemer ruling the Heavenly Fate Sect; false mentor to Wang Lin",
+      "Plotted to absorb source origins of Wang Lin, Ling Tianhou, and Blood Ancestor",
+      "Taught Wang Lin the Celestial Slaughter Art with a trap inside; killed by Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Tianyunzi", "relation": "family"},
+      {"target": "Blood Ancestor", "relation": "enemy"},
+      {"target": "Ling Tianhou", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N22",
+    "name": "Tu Si",
+    "nameCn": "涂司",
+    "type": "elder",
+    "peakRealm": "Ancient God 8-Star",
+    "affiliation": "Ancient Clan",
+    "status": "deceased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Chaotic Broken Stars",
+    "knownFacts": [
+      "His body became the Land of the Ancient God (3-level Chaotic Broken Stars realm)",
+      "Granted Wang Lin the 'Great Enlightened One' title and 'knowledge' inheritance",
+      "Tuo Sen inherited his 'power' inheritance (born from Tu Si's failed Ink Flow Split Soul Technique)"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "disciple"},
+      {"target": "Tuo Sen", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N23",
+    "name": "Du Tian",
+    "nameCn": "顿天",
+    "type": "elder",
+    "peakRealm": "Nirvana Scryer+",
+    "affiliation": "Soul Refining Sect",
+    "status": "self_erased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Pilu Kingdom",
+    "knownFacts": [
+      "Soul Refining Sect ancestor; gave Wang Lin the Ten Billion Soul Banner and sect inheritance",
+      "Helped Wang Lin's clone reach Nascent Soul peak and true body reach 3-Star Ancient God",
+      "Erased his own consciousness to become a soul within the Soul Banner"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Nian Tian", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N24",
+    "name": "Bai Fan",
+    "nameCn": "白凡",
+    "type": "divine_emperor",
+    "peakRealm": "Immortal Emperor (Third Step+)",
+    "affiliation": "Thunder Immortal World",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Thunder Immortal World",
+    "knownFacts": [
+      "Wang Lin inherited Bai Fan's Mountain Crumble spell and Six Paths Triple Techniques",
+      "Found Bai Fan's Collection Pavilion in the Thunder Immortal World",
+      "Long dead; inheritance passed to Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "disciple"},
+      {"target": "Qing Shui", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N25",
+    "name": "Lu Yun",
+    "nameCn": "陆云",
+    "type": "divine_emperor",
+    "peakRealm": "Void Flame Cultivator",
+    "affiliation": "Four Divine Sect / Vermilion Bird Divine Sect / Heng Yue Sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku",
+    "knownFacts": [
+      "5th-Gen Vermilion Bird Divine Emperor; secret identity was Huang Long Zhenren, Heng Yue Sect master",
+      "Gave Wang Lin the Vermilion Bird Sequence and taught him the Nine Mysterious Transformations",
+      "Infiltrated Cultivation Alliance HQ to gather info on Qing Shui; died after returning"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N26",
+    "name": "Qing Lin",
+    "nameCn": "青林",
+    "type": "divine_emperor",
+    "peakRealm": "Immortal Emperor",
+    "affiliation": "Xiangang Continent",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Xiangang Continent",
+    "knownFacts": [
+      "Wang Lin's 'master in name'; father of Qing Shuang",
+      "Left the Body Fixation Art for Qing Shuang; Wang Lin accidentally obtained it",
+      "Possessed by Taga (ancient demon); Wang Lin fought to save him"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "disciple"},
+      {"target": "Qing Shuang", "relation": "family"},
+      {"target": "Taga", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N27",
+    "name": "Su Dao",
+    "nameCn": "苏道",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "independent (scholar)",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Wang Lin's 'Scholar' mentor",
+      "Tangential figure in the story"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N28",
+    "name": "Xuan Luo",
+    "nameCn": "玄罗",
+    "type": "elder",
+    "peakRealm": "Great Heavenly Venerable",
+    "affiliation": "Ancient Clan (Dao Gu lineage)",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Wang Lin's true master (the only one he formally acknowledges on the IAC)",
+      "Fought Dao Yi Great Heavenly Venerable over a Primordial God Realm fragment",
+      "Helped over a dozen of Wang Lin's friends reincarnate into the Immortal Execution Continent"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "disciple"},
+      {"target": "Dao Yi Great Celestial Venerable", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N30",
+    "name": "Qing Shui",
+    "nameCn": "清水",
+    "type": "elder",
+    "peakRealm": "Third Step",
+    "affiliation": "Qing Shui Kingdom / Colorful Immortal Venerable's slaughter soul",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Cave World / Immortal Execution Star",
+    "knownFacts": [
+      "Formed from the Seven-Colored Immortal Venerable's lifetime of slaughter",
+      "Wang Lin's senior brother via Bai Fan's technique; saved him multiple times",
+      "Killed Russell with Ji Realm for offending Wang Lin; reincarnated on IAC with memories auto-recovered"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Hong Die", "relation": "family"},
+      {"target": "Seven-Colored Daoist", "relation": "family"},
+      {"target": "Russell", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N31",
+    "name": "Zhou Yi",
+    "nameCn": "周逸",
+    "type": "disciple",
+    "peakRealm": "Wending realm",
+    "affiliation": "independent (defected from original sect)",
+    "status": "reincarnated",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Rain Immortal Realm / IAC",
+    "knownFacts": [
+      "Found Qing Shuang's corpse and called her 'Ting'er'; defected from his sect to protect her",
+      "Burned his primordial spirit in defense; reached Wending realm; gave Wending Crystal to Wang Lin",
+      "His primordial spirit transformed into the sword spirit of the Rain Immortal Sword"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Qing Shuang", "relation": "love_interest"}
+    ]
+  },
+  {
+    "id": "N32",
+    "name": "Qing Shuang",
+    "nameCn": "青霜",
+    "type": "disciple",
+    "peakRealm": "Immortal-tier",
+    "affiliation": "Qing Lin lineage",
+    "status": "reincarnated",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Rain Immortal Realm / IAC",
+    "knownFacts": [
+      "Qing Lin's daughter; 'Ting'er' to Zhou Yi; the Body Fixation Art was her inheritance",
+      "Her corpse was protected by Zhou Yi for years",
+      "Her remnant soul awakened and transformed Zhou Yi into the Rain Immortal Sword's spirit; reincarnated with Zhou Yi on IAC"
+    ],
+    "relationships": [
+      {"target": "Qing Lin", "relation": "family"},
+      {"target": "Zhou Yi", "relation": "love_interest"},
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N33",
+    "name": "Chi Hu",
+    "nameCn": "赤虎",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "Giant Demon Clan",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Giant Demon Clan member who gifted Wang Lin the Star Compass",
+      "The Star Compass became Wang Lin's primary void-transportation tool"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N34",
+    "name": "Qiu Siping",
+    "nameCn": "邱思平",
+    "type": "disciple",
+    "peakRealm": "Nascent Soul",
+    "affiliation": "independent",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Qilin City",
+    "knownFacts": [
+      "Proficient in ancient restrictions; agreed to unlock Wang Lin's restriction on Yun Fei",
+      "Both he and Wang Lin reached Nascent Soul via consuming souls of Wang Lin's masters",
+      "Wang Lin spared him; they became allies"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N35",
+    "name": "Mo Ling",
+    "nameCn": "莫灵",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's allies; tangential figure"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N36",
+    "name": "Mo Lihai",
+    "nameCn": "莫离海",
+    "type": "other",
+    "peakRealm": "Ascendant+",
+    "affiliation": "Sky Demon Country",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Sky Demon Country",
+    "knownFacts": [
+      "Sky Demon Country general; befriended Wang Lin in the capital",
+      "Helped Wang Lin in the Demonic Drum tournament",
+      "Asked Wang Lin to help him obtain Vice Commander-in-Chief"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N37",
+    "name": "Sun Tai",
+    "nameCn": "孙泰",
+    "type": "servant",
+    "peakRealm": "Nirvana Scryer+",
+    "affiliation": "Corpse Yin Sect / Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Ran Yun",
+    "knownFacts": [
+      "Corpse Yin Sect member who tried to seize Qing Shuang; defeated by Zhou Yi",
+      "Became Wang Lin's servant after defeat",
+      "Spent his final years peacefully on Planet Ran Yun as Wang Lin's friend"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Qing Shuang", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N38",
+    "name": "Li Yuan",
+    "nameCn": "李远",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's allies; tangential figure"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N39",
+    "name": "Ling Tianhou",
+    "nameCn": "凌天候",
+    "type": "elder",
+    "peakRealm": "Third Step (Nirvana Void)",
+    "affiliation": "Da Lou Sword Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Allheaven Star System",
+    "knownFacts": [
+      "Da Lou Sword Sect elder/sect master; invited Wang Lin to be sect elder",
+      "Challenged Wang Lin to survive 3 sword strikes; Wang Lin survived all 3",
+      "Allied with Wang Lin during East Demon Spirit Sea arc; helped against All-Seer"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "All-Seer", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N40",
+    "name": "Bei Lou",
+    "nameCn": "贝罗",
+    "type": "other",
+    "peakRealm": "Third Step+",
+    "affiliation": "Thunder Celestial Temple",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Fire Demon Country / Celestial Emperors Tower",
+    "knownFacts": [
+      "Celestial from Thunder Celestial Temple; helped Wang Lin battle divine retribution during Ascendant breakthrough",
+      "Helped trap the scattered devil Tie Lan and weaken the fragmented ancient demon under Fire Demon Country",
+      "Among those who coldly stared at Master Void"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Master Void", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N41",
+    "name": "Wang Wei",
+    "nameCn": "王伟",
+    "type": "other",
+    "peakRealm": "Nirvana Shatterer",
+    "affiliation": "unknown",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Wang Lin's ally; injured by Master Void",
+      "Sneak-attacked by Master Void; Wang Lin used furnace to switch places and defended him"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Master Void", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N42",
+    "name": "Hu Juan",
+    "nameCn": "胡娟",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's allies; among those who coldly stared at Master Void"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N44",
+    "name": "Ta Shan",
+    "nameCn": "塔山",
+    "type": "servant",
+    "peakRealm": "Celestial Guard (refined)",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Wang Lin's side",
+    "knownFacts": [
+      "Wang Lin's refined Celestial Guard; serves as front-line combat puppet"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N45",
+    "name": "Big Head Cultivator",
+    "nameCn": "大头",
+    "type": "servant",
+    "peakRealm": "Kunie",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Luo Tian / IAC",
+    "knownFacts": [
+      "Originally from Luo Tian; sealed with slave seal during the invasion war",
+      "Followed Wang Lin for a long time; reincarnated on IAC with memories reawakened by Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N46",
+    "name": "Lei Ji",
+    "nameCn": "雷记",
+    "type": "mount",
+    "peakRealm": "beast",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku",
+    "knownFacts": [
+      "Wang Lin's mount; taken from the Corpse Yin Sect on Planet Suzaku"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N47",
+    "name": "Liu Jinbiao",
+    "nameCn": "刘金彪",
+    "type": "servant",
+    "peakRealm": "Peak Path of Deception cultivator",
+    "affiliation": "Three Auspicious Treasures",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Cave World / IAC",
+    "knownFacts": [
+      "One of the Three Auspicious Treasures (with Xu Liguo and Zhong Dahong)",
+      "Saved Wang Lin's life; found via Heavenly Fortune Calculation method",
+      "On IAC, used Path of Deception to help Wang Lin comprehend multiple Origins; gained Golden Sea Dragon's recognition"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"},
+      {"target": "Xu Liguo", "relation": "ally"},
+      {"target": "Zhong Dahong", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N48",
+    "name": "Ling Dong",
+    "nameCn": "凌东",
+    "type": "servant",
+    "peakRealm": "unknown",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Initially antagonistic to Wang Lin; later became his servant"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N49",
+    "name": "Zhou Jin",
+    "nameCn": "周瑾",
+    "type": "servant",
+    "peakRealm": "unknown",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Initially antagonistic to Wang Lin; later became his servant"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N50",
+    "name": "Zhong Dahong",
+    "nameCn": "钟大红",
+    "type": "servant",
+    "peakRealm": "unknown",
+    "affiliation": "Flash Thunder Clan / Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Cave World / IAC",
+    "knownFacts": [
+      "One of the Three Auspicious Treasures; originally from the Flash Thunder Clan",
+      "Followed Wang Lin when his clan was exterminated; asked 2nd-Gen Vermilion Bird to take care of him",
+      "Continues swindling on IAC"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"},
+      {"target": "Liu Jinbiao", "relation": "ally"},
+      {"target": "Xu Liguo", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N51",
+    "name": "Daoist Scattered Spirit",
+    "nameCn": "散灵道人",
+    "type": "elder",
+    "peakRealm": "Third Step",
+    "affiliation": "Scatter Thunder Clan",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Scatter Thunder Clan elder; gave Wang Lin tens of thousands of Spiritual Thunder bolts",
+      "Helped Wang Lin perfect his Thunder Essence"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N52",
+    "name": "Second Generation Vermilion Bird",
+    "nameCn": null,
+    "type": "divine_emperor",
+    "peakRealm": "Void Flame Cultivator",
+    "affiliation": "Vermilion Bird Divine Sect / Fallen Land",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Fallen Land",
+    "knownFacts": [
+      "2nd-Gen Vermilion Bird Divine Emperor; also called Young Emperor of the Fallen Land",
+      "Fished for a dragon and gifted its blood to Wang Lin; taught him the Dao of Strength",
+      "Stood up for Wang Lin at the Trial of Heaven; asked to take care of Zhong Dahong"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Zhong Dahong", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N53",
+    "name": "Master Hong Shan",
+    "nameCn": "洪山道主",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's allies; tangential figure"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N54",
+    "name": "Master South Cloud",
+    "nameCn": "南云道主",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's allies; tangential figure"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N55",
+    "name": "Twin Great Heavenly Venerables",
+    "nameCn": "双胞胎大天尊",
+    "type": "elder",
+    "peakRealm": "Great Heavenly Venerable",
+    "affiliation": "IAC",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Twin brothers who are both Great Heavenly Venerables on the IAC",
+      "Took Tan Lang as their 'pet'",
+      "Recurring but tangential allies of Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Tan Lang", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N56",
+    "name": "Tan Lang",
+    "nameCn": "贪狼",
+    "type": "other",
+    "peakRealm": "Third Step+",
+    "affiliation": "Seven-Colored Immortal Venerable (Yellow Soul)",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Yellow Soul of the Seven-Colored Immortal Venerable (good fortune soul)",
+      "His Primordial Thunder Dragon was half-devoured by Wang Lin; treasures repeatedly plundered",
+      "Reduced to a pet by the Twin Great Heavenly Venerables on the IAC"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "rival"},
+      {"target": "Situ Nan", "relation": "enemy"},
+      {"target": "Third Generation Vermilion Bird Master", "relation": "ally"},
+      {"target": "Seven-Colored Daoist", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N57",
+    "name": "Hong Die",
+    "nameCn": "红蝶",
+    "type": "disciple",
+    "peakRealm": "Nascent Soul",
+    "affiliation": "Vermilion Bird Country / Cultivation Alliance",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku / IAC",
+    "knownFacts": [
+      "Qing Shui's daughter; innate Five Elements spirit with Ruthlessness Concept",
+      "Schemed against by 14th-Gen Vermilion Bird and Qian Feng; vitality and Concept devoured",
+      "Begged Wang Lin to end her life in the Vermilion Bird Tomb; gave him a blue rose; soul reincarnated as Qing Hong on IAC"
+    ],
+    "relationships": [
+      {"target": "Qing Shui", "relation": "family"},
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Fourteenth Generation Vermilion Bird Master", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N58",
+    "name": "Zhou Wutai",
+    "nameCn": "周武泰",
+    "type": "divine_emperor",
+    "peakRealm": "Vermilion Bird Master (Wending+)",
+    "affiliation": "Vermilion Bird Country",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Vermilion Bird Star",
+    "knownFacts": [
+      "15th-Gen Vermilion Bird Master (position transferred by Wang Lin); bald with large ears",
+      "Azure Dragon bloodline; one of Yun Quezi's 4 chess pieces",
+      "Welcomed Wang Lin every return; informed him of Hong Die's split-soul reincarnation; eventually passed from old age"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Yun Quezi", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N59",
+    "name": "Yun Quezi",
+    "nameCn": "云阙子",
+    "type": "elder",
+    "peakRealm": "Late Nascent Soul",
+    "affiliation": "Immortal Remnant Clan / Vermilion Bird Country",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Vermilion Bird Star",
+    "knownFacts": [
+      "2nd Ancestor of Immortal Remnant Clan; 10-leaf curse master with Manic Concept",
+      "Helped Wang Lin comprehend Soul Transformation; selected him as one of 4 chess pieces",
+      "Gave Wang Lin the Li Ming Straw Hat; passed away before Wang Lin's 2nd return"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Qian Pinghai", "relation": "master"},
+      {"target": "Zhou Wutai", "relation": "disciple"}
+    ]
+  },
+  {
+    "id": "N60",
+    "name": "Mo Zhi",
+    "nameCn": "莫知",
+    "type": "elder",
+    "peakRealm": "Third Step+",
+    "affiliation": "Cultivation Alliance",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Vermilion Bird Star",
+    "knownFacts": [
+      "Cultivation Alliance emissary; their Dao discussion triggered Wang Lin's Soul Transformation enlightenment",
+      "Resolved the Immortal Remnant Clan war on Vermilion Bird Star",
+      "Intended Wang Lin to be the next Vermilion Child; asked when Wang Lin would return the Boundary Fixing Compass"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N61",
+    "name": "Lian Daofei",
+    "nameCn": "连道非",
+    "type": "divine_emperor",
+    "peakRealm": "Eight Extremities Great Heavenly Venerable",
+    "affiliation": "Xiangang Continent",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Brother of Lian Daozhen; fused supreme Immortal bloodline into Wang Lin's body",
+      "Imparted the Indestructible Immortal Body; Wang Lin made him a disciple",
+      "After Lian Daozhen failed, his bloodline awakened → inherited Eight Extremities title → new Immortal Emperor"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"},
+      {"target": "Lian Daozhen", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N62",
+    "name": "Xu Liguo",
+    "nameCn": "徐立国",
+    "type": "artifact_spirit",
+    "peakRealm": "devil soul (sword spirit)",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Cave World / IAC",
+    "knownFacts": [
+      "Wang Lin's first devil soul companion; captured from a Corpse Yin Sect corpse puppet",
+      "Consciousness erased; turned into a demonic head; constantly rebellious",
+      "Became sword spirit of one of Wang Lin's immortal swords; in ISSTH guarded Wang family descendants"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"},
+      {"target": "Liu Jinbiao", "relation": "ally"},
+      {"target": "Zhong Dahong", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N63",
+    "name": "Tuo Sen",
+    "nameCn": "拓山",
+    "type": "antagonist",
+    "peakRealm": "Ancient God 8-Star (potential)",
+    "affiliation": "Ancient Clan",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Chaotic Broken Stars / IAC",
+    "knownFacts": [
+      "Born from Tu Si's failed Ink Flow Split Soul Technique; inherited Tu Si's 'power' inheritance",
+      "Hunted Wang Lin for 1000+ years; trapped in Tu Si's body",
+      "After Wang Lin obtained Dao Ancient inheritance, returned the memory inheritance; reconciled"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "rival"},
+      {"target": "Tu Si", "relation": "family"},
+      {"target": "Duanmu Ji", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N64",
+    "name": "Xu Yunshan",
+    "nameCn": "许云山",
+    "type": "elder",
+    "peakRealm": "unknown",
+    "affiliation": "Xuan Yuan Sect",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Earth Planet",
+    "knownFacts": [
+      "Junior sect master of Xuan Yuan Sect on Earth Planet",
+      "Greeted Wang Lin on Earth Planet; tangential to main plot"
+    ],
+    "relationships": []
+  },
+  {
+    "id": "N65",
+    "name": "Ouyang Hua",
+    "nameCn": "欧阳华",
+    "type": "elder",
+    "peakRealm": "unknown",
+    "affiliation": "Mountain Valley Tribe / Soul Refining Tribe",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Pilu Kingdom",
+    "knownFacts": [
+      "Mountain Valley Tribe chief; recognized Wang Lin as the tribe's Ancestor",
+      "The tribe became the Soul Refining Tribe of the eastern sea under Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N66",
+    "name": "Li Dannan",
+    "nameCn": "李丹楠",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "independent",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Trading Planet",
+    "knownFacts": [
+      "Wang Lin's guide on the Trading Planet",
+      "Helped Wang Lin search for Void Wood Stone and snow ink"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N67",
+    "name": "Bai Wei",
+    "nameCn": "白薇",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "Da Lou Sword Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Trading Planet",
+    "knownFacts": [
+      "Met Wang Lin on Trading Planet; Wang Lin tried to help her with Yang energy secret",
+      "Revealed to be part of All-Seer's plot against Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "All-Seer", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N68",
+    "name": "Master Flamespark",
+    "nameCn": "火芒",
+    "type": "elder",
+    "peakRealm": "Third Step",
+    "affiliation": "Thunder Celestial Temple",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Thunder Celestial Realm",
+    "knownFacts": [
+      "Master of the Thunder Celestial Temple",
+      "Stopped Russell's final attack on Wang Lin",
+      "Sometimes antagonistic; multiple appearances in Thunder Celestial Realm arc"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Russell", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N69",
+    "name": "Russell",
+    "nameCn": "罗素",
+    "type": "antagonist",
+    "peakRealm": "Third Step",
+    "affiliation": "Thunder Celestial Temple",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Thunder Celestial Realm",
+    "knownFacts": [
+      "Thunder Celestial Temple test proctor; saw Wang Lin defeat his Golden Giant",
+      "Realized Wang Lin killed his brother; attacked Wang Lin",
+      "Killed by Qing Shui's Ji Realm for offending Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Qing Shui", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N70",
+    "name": "Zhao Yu",
+    "nameCn": "赵宇",
+    "type": "disciple",
+    "peakRealm": "low",
+    "affiliation": "Origin Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Cloud Sea Star System",
+    "knownFacts": [
+      "Arrogant Origin Sect disciple who made mortal villagers stand in the rain",
+      "Wang Lin enslaved him and had him lead back to the Origin Sect"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N71",
+    "name": "Lu Yanfei",
+    "nameCn": "陆燕飞",
+    "type": "disciple",
+    "peakRealm": "unknown",
+    "affiliation": "Origin Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Cloud Sea Star System",
+    "knownFacts": [
+      "Origin Sect member who guessed Wang Lin's situation accurately",
+      "Granted Wang Lin the 'ancestor' cover identity"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N72",
+    "name": "Xu Yun",
+    "nameCn": "许云",
+    "type": "disciple",
+    "peakRealm": "unknown",
+    "affiliation": "Origin Sect",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Cloud Sea Star System",
+    "knownFacts": [
+      "Origin Sect member who confronted Wang Lin alongside Lu Yanfei; tangential"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N73",
+    "name": "Lu Yuncong",
+    "nameCn": "陆云聪",
+    "type": "disciple",
+    "peakRealm": "unknown",
+    "affiliation": "Origin Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Cloud Sea Star System",
+    "knownFacts": [
+      "Came seeking revenge for his son with Li Qianmei",
+      "Realized he was no match for Wang Lin; discussed Dao all night and gained great benefits"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "rival"},
+      {"target": "Li Qianmei", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N74",
+    "name": "Song Wude",
+    "nameCn": "宋武德",
+    "type": "antagonist",
+    "peakRealm": "unknown",
+    "affiliation": "Invader sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Cloud Sea Star System",
+    "knownFacts": [
+      "Came with Rudy to take over the Origin Sect",
+      "Killed by Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Rudy", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N75",
+    "name": "Rudy",
+    "nameCn": null,
+    "type": "antagonist",
+    "peakRealm": "unknown",
+    "affiliation": "Invader sect",
+    "status": "deceased",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Cloud Sea Star System",
+    "knownFacts": [
+      "Came with Song Wude to take over the Origin Sect",
+      "Killed by Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Song Wude", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N76",
+    "name": "Ji Si",
+    "nameCn": "吉思",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "Dao Devil Sect / Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Implanted multiple Essences into Wang Lin's body (preparing him for Green Devil possession)",
+      "Granted Earth, Water, Wood, and Metal Essence components using rare materials",
+      "Wang Lin's body ultimately reclaimed all these Essences"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Green Devil", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N77",
+    "name": "Jiu Di",
+    "nameCn": "九地",
+    "type": "elder",
+    "peakRealm": "Grand Empyrean",
+    "affiliation": "IAC",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Grand Empyrean of the IAC; confronted Wang Lin in the Imperial City",
+      "Later gave Wang Lin the third fragment of the Celestial Ancestor's Immortal Absolute Sword"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N78",
+    "name": "Sea Child Celestial Venerable",
+    "nameCn": "海子大天尊",
+    "type": "elder",
+    "peakRealm": "Celestial Venerable",
+    "affiliation": "IAC",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "IAC Celestial Venerable; trapped with Wang Lin inside the Immortal Ancestor's severed palm",
+      "Broke free via a Great Celestial Venerable's scheme; fortune related to Metal and Wood Origins"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N79",
+    "name": "Ye Wuyou",
+    "nameCn": "叶无忧",
+    "type": "divine_emperor",
+    "peakRealm": "1st-Gen Vermilion Bird Master",
+    "affiliation": "Vermilion Bird Country",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku",
+    "knownFacts": [
+      "1st-Gen Vermilion Bird Master; Situ Nan's benefactor (the only person Situ Nan respected besides Wang Lin)",
+      "Situ Nan guarded the Vermilion Bird Star for 1000 years and sealed the Cultivation Star Crystal to repay his favor",
+      "Long deceased by main story"
+    ],
+    "relationships": [
+      {"target": "Situ Nan", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N80",
+    "name": "Qian Pinghai",
+    "nameCn": "钱平海",
+    "type": "divine_emperor",
+    "peakRealm": "13th-Gen Vermilion Bird Master",
+    "affiliation": "Vermilion Bird Country",
+    "status": "deceased",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Vermilion Bird Star",
+    "knownFacts": [
+      "13th-Gen Vermilion Bird Master; Yun Quezi's master",
+      "Backstory figure"
+    ],
+    "relationships": [
+      {"target": "Yun Quezi", "relation": "disciple"}
+    ]
+  },
+  {
+    "id": "N81",
+    "name": "Third Generation Vermilion Bird Master",
+    "nameCn": null,
+    "type": "antagonist",
+    "peakRealm": "3rd-Gen Vermilion Bird Master",
+    "affiliation": "Vermilion Bird Country",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Vermilion Bird Star",
+    "knownFacts": [
+      "Betrayed Situ Nan; took advantage of his weakened state after Cultivation Star Crystal sealing",
+      "Launched a sneak attack with Tan Lang, destroying Situ Nan's physical body"
+    ],
+    "relationships": [
+      {"target": "Situ Nan", "relation": "enemy"},
+      {"target": "Tan Lang", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N82",
+    "name": "Fourteenth Generation Vermilion Bird Master",
+    "nameCn": null,
+    "type": "antagonist",
+    "peakRealm": "14th-Gen Vermilion Bird Master",
+    "affiliation": "Vermilion Bird Country",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Vermilion Bird Star",
+    "knownFacts": [
+      "Severed Situ Nan's arm; berated by Situ Nan's damaged soul and severed his own fingers in fear",
+      "Schemed against Hong Die; attacked the Soul Refining Sect in EP96/ch1500",
+      "Fled at the mere mention of Situ Nan's name"
+    ],
+    "relationships": [
+      {"target": "Situ Nan", "relation": "enemy"},
+      {"target": "Hong Die", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N83",
+    "name": "Teng Huayuan",
+    "nameCn": "藤化元",
+    "type": "family_head",
+    "peakRealm": "Half-Step Deity Transformation",
+    "affiliation": "Teng Clan",
+    "status": "deceased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Country of Zhao",
+    "knownFacts": [
+      "Wang Lin's first major revenge target; exterminated the entire Wang family",
+      "Trapped Wang family souls in his banner; transmitted massacre scene to Wang Lin's mind",
+      "Wang Lin's 'Kill and Destroy the Heart' revenge: built tower of heads, killed all 9 Nascent Soul cultivators, finally slew Teng Huayuan"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Wang Tianshui", "relation": "enemy"},
+      {"target": "Teng Li", "relation": "family"},
+      {"target": "Gao Qiming", "relation": "ally"},
+      {"target": "Punnan Zi", "relation": "ally"},
+      {"target": "Lin Yi", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N84",
+    "name": "Teng Li",
+    "nameCn": "藤立",
+    "type": "disciple",
+    "peakRealm": "late Foundation Establishment",
+    "affiliation": "Teng Clan",
+    "status": "deceased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Country of Zhao",
+    "knownFacts": [
+      "Teng Huayuan's great-great-grandson; pursued Wang Lin for Old man Ji Mo's bounty",
+      "Killed by Wang Lin in the Forest of Distorted Divine Sense; Wang Lin stole his Foundation Establishment"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Teng Huayuan", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N85",
+    "name": "Sun Dazhu",
+    "nameCn": "孙大柱",
+    "type": "disciple",
+    "peakRealm": "Foundation Establishment",
+    "affiliation": "Heng Yue Sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Country of Zhao",
+    "knownFacts": [
+      "Zhang Hu's 'master'; killed by Wang Lin to help Zhang Hu out of trouble",
+      "This kindness led to Wang Lin's clan extermination (Teng Huayuan located Wang Lin via the trail)"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Zhang Hu", "relation": "rival"}
+    ]
+  },
+  {
+    "id": "N86",
+    "name": "Old man Ji Mo",
+    "nameCn": "极魔老人",
+    "type": "antagonist",
+    "peakRealm": "Core Formation+",
+    "affiliation": "Heng Yue Sect (associated)",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Country of Zhao",
+    "knownFacts": [
+      "Jimo Elder; sent disciples including Teng Li to take revenge on Wang Lin",
+      "Indirectly caused the Wang Clan's destruction"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Teng Li", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N87",
+    "name": "Gao Qiming",
+    "nameCn": "高启明",
+    "type": "other",
+    "peakRealm": "diviner",
+    "affiliation": "independent",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Country of Zhao",
+    "knownFacts": [
+      "Independent diviner; helped Teng Huayuan locate the Wang family",
+      "Requested Fourth Uncle as payment"
+    ],
+    "relationships": [
+      {"target": "Teng Huayuan", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N88",
+    "name": "Punnan Zi",
+    "nameCn": "飘南子 / 楼侯",
+    "type": "antagonist",
+    "peakRealm": "peak Third Step",
+    "affiliation": "Scattered Demon of Rain Country",
+    "status": "sealed",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Country of Zhao / IAC",
+    "knownFacts": [
+      "Also known as Piao Nanzi or Lou Hou; came to Teng Huayuan's aid",
+      "Sealed under the Ancient Shi Branch on the IAC",
+      "Wang Lin later used Lou Hou's soul to complete Slaughter, Restriction, Absolute Beginning, and Absolute End Essence True Bodies"
+    ],
+    "relationships": [
+      {"target": "Teng Huayuan", "relation": "ally"},
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N89",
+    "name": "Lin Yi",
+    "nameCn": "林怡",
+    "type": "antagonist",
+    "peakRealm": "unknown",
+    "affiliation": "Teng Huayuan's allies",
+    "status": "deceased",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Country of Zhao",
+    "knownFacts": [
+      "Came to Teng Huayuan's aid",
+      "Killed by Wang Lin when he returned to wipe out the Teng family"
+    ],
+    "relationships": [
+      {"target": "Teng Huayuan", "relation": "ally"},
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N90",
+    "name": "Duanmu Ji",
+    "nameCn": "端木吉",
+    "type": "antagonist",
+    "peakRealm": "Soul Formation",
+    "affiliation": "independent",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Sea of Devils / Xuan Wu / Chaotic Broken Stars",
+    "knownFacts": [
+      "Notorious evil cultivator attracted by rumors of Wang Lin's Death Spell",
+      "Chased Wang Lin for 3 years (Wang Lin hid in Heaven Defying Bead)",
+      "Eventually killed by Hunchback Meng (Tuo Sen's puppet)"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Wang Qingyue", "relation": "ally"},
+      {"target": "Hunchback Meng", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N91",
+    "name": "Hunchback Meng",
+    "nameCn": "驼背孟",
+    "type": "antagonist",
+    "peakRealm": "Soul Transformation (perfect circle)",
+    "affiliation": "Meng Sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Chaotic Broken Stars",
+    "knownFacts": [
+      "Ate his own toad to reach perfect circle Soul Transformation and killed the Hurricane Beast King",
+      "Revived from sea of blood as a Tuo Sen puppet; killed Duanmu Ji",
+      "Eventually killed"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Tuo Sen", "relation": "ally"},
+      {"target": "Duanmu Ji", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N92",
+    "name": "Xu Liqing",
+    "nameCn": "徐立清 / 六欲魔尊",
+    "type": "antagonist",
+    "peakRealm": "Soul Transformation",
+    "affiliation": "Six Desires Demon Lord",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Chaotic Broken Stars",
+    "knownFacts": [
+      "Demon Lord of Six Desires; modified Restriction Mountain restrictions (adding panic)",
+      "Attacked by Duanmu Ji; cornered by Hunchback Meng; eventually killed"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N93",
+    "name": "Gun Lan",
+    "nameCn": "管岚",
+    "type": "antagonist",
+    "peakRealm": "Soul Formation",
+    "affiliation": "unknown",
+    "status": "deceased",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Chaotic Broken Stars",
+    "knownFacts": [
+      "Listed among the evils Wang Lin outwitted in Chaotic Broken Stars; killed"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N94",
+    "name": "Wang Qingyue",
+    "nameCn": "王青叶",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "Duanmu Ji's group",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Chaotic Broken Stars",
+    "knownFacts": [
+      "Brought Wang Lin to Chaotic Broken Stars for Duanmu Ji to use Death Spell on the 3rd level"
+    ],
+    "relationships": [
+      {"target": "Duanmu Ji", "relation": "ally"},
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N95",
+    "name": "Yun Fei",
+    "nameCn": "云菲",
+    "type": "disciple",
+    "peakRealm": "Core Formation",
+    "affiliation": "Qihuang Sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Qilin City",
+    "knownFacts": [
+      "Qihuang Sect successor; Wang Lin placed a 3-day restriction on her",
+      "Visited other cultivators to find a way to unlock the ban",
+      "Killed by Wang Lin's devil when Qiu Siping agreed to unlock the restriction"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Qiu Siping", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N96",
+    "name": "Qian Kun",
+    "nameCn": "乾坤",
+    "type": "disciple",
+    "peakRealm": "Core Formation",
+    "affiliation": "Poison Palace",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Chaotic Broken Stars",
+    "knownFacts": [
+      "Poison Palace disciple; saw a Nascent Soul cultivator being devoured in Broken Stars",
+      "Killed by Wang Lin to leave no witness (also because he belonged to Hunchback Meng's sect)"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Hunchback Meng", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N97",
+    "name": "Master Void",
+    "nameCn": "虚空道主",
+    "type": "antagonist",
+    "peakRealm": "peak Nirvana Shatterer",
+    "affiliation": "independent",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Celestial Emperors Tower",
+    "knownFacts": [
+      "Could not allow Wang Lin (with awakened Vermilion Bird Divine Mark) to grow",
+      "Fought Wang Lin multiple times; injured from peak to mid Nirvana Shatterer",
+      "Later sealed by Ta Jia; killed by Wang Lin using Sundered Night"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Taga", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N98",
+    "name": "Blood Ancestor",
+    "nameCn": "血祖 / 姚星海",
+    "type": "patriarch",
+    "peakRealm": "peak Third Step",
+    "affiliation": "Yao Family",
+    "status": "deceased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Planet Tian Yun / Thunder Immortal Realm",
+    "knownFacts": [
+      "Yao Xinghai; father of Yao Xixue; unique cultivation system and formidable strength",
+      "Refined the Blood Soul Pill (resurrection pill); killed by Wang Lin in Thunder Immortal Realm",
+      "Wang Lin released a wisp of his remnant soul to perfect Karma Concept; amnesiac Yao Xixue departed with it"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Yao Xixue", "relation": "family"},
+      {"target": "All-Seer", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N99",
+    "name": "Yao Xixue",
+    "nameCn": "姚惜雪",
+    "type": "antagonist",
+    "peakRealm": "Infant Transformation Late Stage",
+    "affiliation": "Yao Family",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "Ch.491",
+    "location": "East Sea Demon Spirit Land / Immortal Monarch's Cave Mansion",
+    "knownFacts": [
+      "Blood Ancestor's only daughter; heterochromic red pupils, snow-white skin",
+      "Ambushed Wang Lin → imprisoned 100 years → body destroyed; used Blood Soul Pill to be reborn",
+      "Sacrificed her body to the Wind Demon for revenge; memories devoured → amnesiac; wanders with father's remnant soul"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Blood Ancestor", "relation": "family"},
+      {"target": "Wind Demon", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N100",
+    "name": "Wind Demon",
+    "nameCn": "风魔",
+    "type": "antagonist",
+    "peakRealm": "Third Step",
+    "affiliation": "independent (sealed demon)",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Emperor's Cave Mansion",
+    "knownFacts": [
+      "Sealed demon who made a deal with Yao Xixue (her body in exchange for killing Wang Lin)",
+      "Hundreds of rounds of fierce combat with Wang Lin",
+      "Slain by Wang Lin's God-Slaying Spear"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Yao Xixue", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N101",
+    "name": "Yao Family",
+    "nameCn": "姚家",
+    "type": "antagonist",
+    "peakRealm": "multiple Soul Transformation+",
+    "affiliation": "Yao Family (Southern Domain, Allheaven Star System)",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Allheaven Star System",
+    "knownFacts": [
+      "One of 4 major powers in the Southern Domain of the Allheaven Star System",
+      "Sent a kill order for Wang Lin after he killed Yao Family members in Thunder Celestial Realm",
+      "Wang Lin destroyed multiple planets chasing them; faction weakened"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N102",
+    "name": "Daoist Water",
+    "nameCn": "水道子",
+    "type": "antagonist",
+    "peakRealm": "peak Third Step (Nirvana Void+)",
+    "affiliation": "Rank 9 God Sect",
+    "status": "deceased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Cloud Sea Star System",
+    "knownFacts": [
+      "Sensed the Lord of the Sealed Realm's aura on Wang Lin and attacked him",
+      "Wang Lin petrified (turned to stone) fighting him; Li Qianmei's 10-year blood anointment saved Wang Lin",
+      "Eventually slain by Wang Lin in the Cloud Sea"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Li Qianmei", "relation": "enemy"},
+      {"target": "Lord of the Sealed Realm", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N103",
+    "name": "Wu Qing",
+    "nameCn": "吴情",
+    "type": "antagonist",
+    "peakRealm": "Nirvana Shatterer",
+    "affiliation": "Treasured Jade Sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Cloud Sea Star System",
+    "knownFacts": [
+      "Greedy old monster who tried to kill Wang Lin after a secret exchange",
+      "Killed by Wang Lin using the War Spirit Print"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N104",
+    "name": "Master Ashen Pine",
+    "nameCn": "灰松道主",
+    "type": "antagonist",
+    "peakRealm": "Third Step",
+    "affiliation": "independent",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Seven-Colored Realm",
+    "knownFacts": [
+      "Gathered cultivators to enter the Seven-Colored Realm; schemed against everyone",
+      "Killed by Wang Lin with the seven-colored nail"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Master Cloud Soul", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N105",
+    "name": "Master Cloud Soul",
+    "nameCn": "云魂道主",
+    "type": "antagonist",
+    "peakRealm": "Third Step",
+    "affiliation": "independent",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Seven-Colored Realm",
+    "knownFacts": [
+      "Schemed to team up with Master Ashen Pine against Wang Lin",
+      "Tricked by Wang Lin into a different spatial crack"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Master Ashen Pine", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N106",
+    "name": "Noble Money",
+    "nameCn": "贵钱",
+    "type": "antagonist",
+    "peakRealm": "unknown",
+    "affiliation": "independent",
+    "status": "deceased",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Cloud Sea Star System",
+    "knownFacts": [
+      "Tried to detain Wang Lin for questioning on his return from the Wild Continent",
+      "Killed by Wang Lin along with his group"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N107",
+    "name": "Cang Songzi",
+    "nameCn": "苍松子",
+    "type": "antagonist",
+    "peakRealm": "Sub-Empty Annihilation upper-grade",
+    "affiliation": "independent",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Seven-Colored Realm",
+    "knownFacts": [
+      "Original owner of the Seven-Colored Divine Sky Nail (108 nails designed to kill Third Step experts)",
+      "Destroyed Wang Lin's Rusty Iron Sword",
+      "Killed by Wang Lin; Wang Lin took his Seven-Colored Divine Sky Nail"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N108",
+    "name": "Lu Fuzi",
+    "nameCn": "陆夫子",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "independent (scholar)",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Cultivation world",
+    "knownFacts": [
+      "Literary contest opponent; defeated by Wang Lin",
+      "Wang Lin informed him of hidden dangers of the Seven-Colored Realm"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "rival"}
+    ]
+  },
+  {
+    "id": "N109",
+    "name": "Ye Dao",
+    "nameCn": "叶道",
+    "type": "antagonist",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's enemies; tangential figure"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N110",
+    "name": "Lian Daozhen",
+    "nameCn": "连道真",
+    "type": "divine_emperor",
+    "peakRealm": "Immortal Emperor",
+    "affiliation": "Xiangang Continent",
+    "status": "unknown",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Brother of Lian Daofei; Immortal Emperor of Xiangang Continent",
+      "Failed to inherit the Immortal Ancestor's plan; self-destructed",
+      "Wang Lin captured his soul and injured the Infant Skull belonging to Dao Yi"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Lian Daofei", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N111",
+    "name": "Yan Leizi",
+    "nameCn": "炎雷子",
+    "type": "antagonist",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "deceased",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Thunder Immortal Realm",
+    "knownFacts": [
+      "Listed in Wang Lin's enemies",
+      "Met Wang Lin in the Thunder Immortal Realm; taken into soul banner"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N112",
+    "name": "Su Dao",
+    "nameCn": "苏道",
+    "type": "antagonist",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's enemies (possibly same name as Su Dao the Scholar mentor)",
+      "Tangential figure"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N113",
+    "name": "Tianyunzi",
+    "nameCn": "天运子",
+    "type": "artifact_spirit",
+    "peakRealm": "Third Step+",
+    "affiliation": "Heavenly Fate Sect",
+    "status": "deceased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Planet Tian Yun / Primordial Divine Realm",
+    "knownFacts": [
+      "Clone of All-Seer / artifact spirit of the Realm-Defining Compass",
+      "Created clone to teach Wang Lin the Slaughter Immortal Art with a trap inside",
+      "Intended to possess Wang Lin but was defeated; killed/devoured by Wang Lin in the Primordial Divine Realm"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "All-Seer", "relation": "family"},
+      {"target": "Old Man Miesheng", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N114",
+    "name": "Seven-Colored Daoist",
+    "nameCn": "七彩道人 / 七彩仙尊",
+    "type": "antagonist",
+    "peakRealm": "Heaven Trampling",
+    "affiliation": "Creator of the Cave World",
+    "status": "deceased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Cave World / Luo Tian",
+    "knownFacts": [
+      "The cosmic-level creator-antagonist of RI; created the Cave World to harvest Joss Flames",
+      "Created the Three Souls and Seven Spirits (Situ Nan = Green Soul, Qing Shui = Slaughter Soul, Tan Lang = Yellow Soul, Xie Qing = Third Soul)",
+      "Killed by Wang Lin who became the new world-owner and renamed it 'Wang Lin's Cave World'"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Situ Nan", "relation": "family"},
+      {"target": "Qing Shui", "relation": "family"},
+      {"target": "Tan Lang", "relation": "family"},
+      {"target": "Xie Qing", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N115",
+    "name": "Old Man Miesheng",
+    "nameCn": "灭生老人",
+    "type": "antagonist",
+    "peakRealm": "peak Third Step+",
+    "affiliation": "independent",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Also called Old Man Samsara-Extinction; lent the Realm-Defining Compass to Lu Mo",
+      "Lu Mo blasted the Compass open using Dream Dao, releasing the artifact spirit Tianyunzi"
+    ],
+    "relationships": [
+      {"target": "Tianyunzi", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N116",
+    "name": "Taga",
+    "nameCn": "塔迦",
+    "type": "antagonist",
+    "peakRealm": "Ancient Demon (Third Step)",
+    "affiliation": "Demon Spirit Land",
+    "status": "sealed",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Celestial Emperors Tower",
+    "knownFacts": [
+      "Ancient Demon who possessed Qing Lin's body",
+      "Forced everyone to escape the Celestial Emperors Tower",
+      "Sealed by himself in the encounter with Master Void; later defeated by Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Qing Lin", "relation": "enemy"},
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Master Void", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N117",
+    "name": "Gu Dao",
+    "nameCn": "古道",
+    "type": "elder",
+    "peakRealm": "Grand Empyrean",
+    "affiliation": "IAC",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Strongest on IAC after Wang Lin; Wang Lin's final rival",
+      "Wang Lin's battle with Gu Dao triggered enlightenment → fused with Void Avatar → full Nine Songs Three Signs",
+      "Wang Lin became #1 on IAC after this battle"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "rival"}
+    ]
+  },
+  {
+    "id": "N118",
+    "name": "Song Tian Great Celestial Venerable",
+    "nameCn": null,
+    "type": "elder",
+    "peakRealm": "Great Celestial Venerable",
+    "affiliation": "IAC",
+    "status": "unknown",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "IAC antagonist; defeated by Wang Lin",
+      "Enables Ji Du to become Imperial Venerable"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Wang Jiduo", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N119",
+    "name": "Dao Ancient Great Celestial Venerable",
+    "nameCn": null,
+    "type": "elder",
+    "peakRealm": "Great Celestial Venerable",
+    "affiliation": "Ancient Clan",
+    "status": "unknown",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Ancient Clan Great Celestial Venerable; pressured Wang Lin",
+      "Defeated by Wang Lin after Wang Lin reached 7th bridge of Heaven Trampling"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N120",
+    "name": "Dao Yi Great Celestial Venerable",
+    "nameCn": null,
+    "type": "elder",
+    "peakRealm": "Great Celestial Venerable",
+    "affiliation": "IAC",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Fought Xuan Luo over a fragment of Primordial God Realm at the Seven Paths Sect entrance",
+      "Indirectly caused the Cave World's birth",
+      "His Infant Skull was injured by Wang Lin during the Lian Daozhen confrontation"
+    ],
+    "relationships": [
+      {"target": "Xuan Luo", "relation": "enemy"},
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N121",
+    "name": "Imperial Preceptor",
+    "nameCn": "Dao Gu Imperial Preceptor",
+    "type": "artifact_spirit",
+    "peakRealm": "artifact spirit",
+    "affiliation": "Dao Ancient Imperial Capital",
+    "status": "unknown",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Actually the missing piece of the Boundary Compass / artifact spirit",
+      "Possessed Wang Lin but Wang Lin hid his primordial spirit in the Heaven Defying Pearl",
+      "Wang Lin's 'previous life' seen by the Imperial Teacher was actually the Slaughter clone Lu Mo"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N122",
+    "name": "Dao Devil Sect Master",
+    "nameCn": null,
+    "type": "patriarch",
+    "peakRealm": "Third Step+",
+    "affiliation": "Dao Devil Sect (IAC)",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Captured Wang Lin to resurrect the Green Devil Scorpion",
+      "Fed his Thunder Essence into Wang Lin's to evolve it (controlled by him to erase Wang Lin's mind)",
+      "Wang Lin reclaimed the Essence True Body and annihilated the entire Dao Devil Sect"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Green Devil", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N123",
+    "name": "Du Qing",
+    "nameCn": "杜青",
+    "type": "elder",
+    "peakRealm": "Third Step",
+    "affiliation": "Canglong Sect",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Tianniu Province, IAC",
+    "knownFacts": [
+      "Canglong Sect ancestor; pursued Wang Lin after he extracted the Earth Fire Dragon's soul",
+      "Shocked and subdued by Wang Lin's 7 Origins + Xuan Luo's golden seal"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Kang Ren", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N124",
+    "name": "Kang Ren",
+    "nameCn": "康仁",
+    "type": "disciple",
+    "peakRealm": "unknown",
+    "affiliation": "Canglong Sect",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Tianniu Province, IAC",
+    "knownFacts": [
+      "Canglong Sect cultivator; took unconscious Wang Lin in",
+      "Led to the Du Qing pursuit"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Du Qing", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N125",
+    "name": "Purple Dawn Immortal Emperor",
+    "nameCn": null,
+    "type": "divine_emperor",
+    "peakRealm": "Immortal Emperor (Celestial)",
+    "affiliation": "IAC",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "IAC Immortal Emperor; captured by Wang Lin at the Cave World's core"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N126",
+    "name": "White Tiger General",
+    "nameCn": null,
+    "type": "antagonist",
+    "peakRealm": "Third Step+",
+    "affiliation": "IAC",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "One of the cruel cultivators with killing intent strong enough to shock even the most cruel",
+      "Subdued by Wang Lin as a slave"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N127",
+    "name": "Yun Yifeng",
+    "nameCn": "云一峰",
+    "type": "antagonist",
+    "peakRealm": "Third Step+",
+    "affiliation": "IAC",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "IAC antagonist in Five Flowers Eight Gates",
+      "Defeated by Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N128",
+    "name": "Lord of the Sealed Realm",
+    "nameCn": "封界尊 / 尊者封界",
+    "type": "divine_emperor",
+    "peakRealm": "peak Third Step",
+    "affiliation": "Sealed Realm",
+    "status": "unknown",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Sealed Realm",
+    "knownFacts": [
+      "Previous 'Lord of the Sealed Realm'; Wang Lin succeeds him",
+      "Forged the Seven-Colored Divine Sky Nail (108 nails to kill Third Step experts)",
+      "When Wang Lin was being killed by Daoist Water, his spirit appeared and saved Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Daoist Water", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N129",
+    "name": "Zhan Laogui",
+    "nameCn": "战老子",
+    "type": "antagonist",
+    "peakRealm": "Third Step+",
+    "affiliation": "IAC",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "IAC antagonist in Five Flowers Eight Gates",
+      "Defeated by Wang Lin after he obtained Ye Mo's heart inheritance"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N130",
+    "name": "Yun Kong",
+    "nameCn": "云空",
+    "type": "antagonist",
+    "peakRealm": "Third Step+",
+    "affiliation": "IAC",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "IAC antagonist; Wang Lin destroyed his clone",
+      "Wang Lin detonated the Immortal Pill"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N131",
+    "name": "Zhan Xingye",
+    "nameCn": "战星野",
+    "type": "antagonist",
+    "peakRealm": "Third Step+",
+    "affiliation": "Zhan Family (Battle)",
+    "status": "deceased",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Schemed against Wang Lin",
+      "Wang Lin merged 3 Zhen Family Battle Scrolls into the golden word 'Battle'; fused with Zhan Xingye's skeletons",
+      "Killed by Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N132",
+    "name": "Green Devil",
+    "nameCn": "绿魔 / 绿蝎",
+    "type": "antagonist",
+    "peakRealm": "peak Third Step+",
+    "affiliation": "Dao Devil Sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Immortal Astral Continent",
+    "knownFacts": [
+      "Ancient entity; also called Green Devil Scorpion; worshipped by Dao Devil Sect",
+      "Dao Devil Sect intended to use Wang Lin's body to resurrect him",
+      "Wang Lin reclaimed his body and devoured the Green Devil → immediately reached Arcane Void"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Dao Devil Sect Master", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N133",
+    "name": "Thirteen",
+    "nameCn": "十三",
+    "type": "disciple",
+    "peakRealm": "body refining",
+    "affiliation": "Soul Refining Tribe",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Pilu Kingdom / IAC",
+    "knownFacts": [
+      "Wang Lin's eldest disciple; originally a Mountain Valley Tribe native",
+      "Meridians severed by someone; Wang Lin taught him body refining techniques instead",
+      "Reincarnated on IAC; memories recovered by Wang Lin; followed Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"},
+      {"target": "Huo Pao", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N134",
+    "name": "Huo Pao",
+    "nameCn": "火炮",
+    "type": "disciple",
+    "peakRealm": "unknown",
+    "affiliation": "Soul Refining Tribe",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Pilu Kingdom / Sky Demon Country",
+    "knownFacts": [
+      "Wang Lin's junior disciple; taken with Thirteen to Sky Demon Country for trial"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"},
+      {"target": "Thirteen", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N135",
+    "name": "Xie Qing",
+    "nameCn": "谢青",
+    "type": "disciple",
+    "peakRealm": "Jingnie (Concept-only)",
+    "affiliation": "independent",
+    "status": "deceased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Planet Qing Ling",
+    "knownFacts": [
+      "Wang Lin's 2nd disciple; Third Soul of the Seven-Colored Immortal Venerable",
+      "Used 'fish, water, net, fishing' analogy to explain Dao → triggered Wang Lin's Nirvana Scryer breakthrough",
+      "Sat atop a mountain 800 years cultivating only Concepts; ended his own life and entrusted Third Soul memories to Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"},
+      {"target": "Seven-Colored Daoist", "relation": "family"}
+    ]
+  },
+  {
+    "id": "N136",
+    "name": "Xi Zifeng",
+    "nameCn": "席紫凤",
+    "type": "disciple",
+    "peakRealm": "Jingnie",
+    "affiliation": "Luo Tian Thunder Immortal Realm",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Luo Tian / Cave World",
+    "knownFacts": [
+      "Wang Lin's 3rd disciple; sole survivor of her family in the Luo Tian Alliance battle",
+      "Disfigured her own face for 800 years to prevent covetous gazes",
+      "Rescued by Wang Lin → beauty restored → cultivation raised to Jingnie → gifted Divine Thunder Blood Sword"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N137",
+    "name": "Adai",
+    "nameCn": "阿呆",
+    "type": "servant",
+    "peakRealm": "unknown",
+    "affiliation": "Wu Yu's servant",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku",
+    "knownFacts": [
+      "Blue-skinned man with 9 talismans attached to his body",
+      "Speaks in a language Wang Lin can't understand",
+      "Led Wang Lin to Wu Yu's Nascent Soul in the Forest of Distorted Divine Sense"
+    ],
+    "relationships": [
+      {"target": "Wu Yu", "relation": "master"},
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N138",
+    "name": "Wu Yu",
+    "nameCn": "吴宇",
+    "type": "elder",
+    "peakRealm": "Nascent Soul",
+    "affiliation": "Corpse Yin Sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku",
+    "knownFacts": [
+      "Corpse Yin Sect elder; only his Nascent Soul remained (long dead)",
+      "Let Wang Lin leave the forest and teleport to the Corpse Yin Sect"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Adai", "relation": "servant"}
+    ]
+  },
+  {
+    "id": "N139",
+    "name": "Ye Zi",
+    "nameCn": "叶紫",
+    "type": "elder",
+    "peakRealm": "Nascent Soul",
+    "affiliation": "Corpse Yin Sect",
+    "status": "unknown",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku",
+    "knownFacts": [
+      "Corpse Yin Sect elder; gave Wang Lin an immortal cave",
+      "Made Wang Lin slice a sliver of soul for the Jue Ming Valley competition",
+      "Wang Lin later attacked Corpse Yin Sect members and took back his soul"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N140",
+    "name": "Zhao Xingsha",
+    "nameCn": "赵星煞",
+    "type": "disciple",
+    "peakRealm": "Soul Transformation",
+    "affiliation": "Heavenly Fate Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Tian Yun",
+    "knownFacts": [
+      "Heavenly Fate Sect purple division rival; trapped Wang Lin with Sima Rufeng and others",
+      "Battled Wang Lin at All-Seer's birthday banquet; heavily injured",
+      "Elder stopped Wang Lin before he could kill Zhao Xingsha"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Sima Rufeng", "relation": "ally"},
+      {"target": "Zhao Xinming", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N141",
+    "name": "Sima Rufeng",
+    "nameCn": "司马如风",
+    "type": "disciple",
+    "peakRealm": "unknown",
+    "affiliation": "Heavenly Fate Sect",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Planet Tian Yun",
+    "knownFacts": [
+      "Heavenly Fate Sect fellow disciple; trapped Wang Lin with Zhao Xingsha",
+      "Wang Lin broke through mid-Soul Transformation and broke the formation"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Zhao Xingsha", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N142",
+    "name": "Zhao Xinming",
+    "nameCn": "赵新民",
+    "type": "disciple",
+    "peakRealm": "unknown",
+    "affiliation": "Heavenly Fate Sect",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Planet Tian Yun",
+    "knownFacts": [
+      "4th sister at Heavenly Fate Sect; battled Wang Lin at the birthday banquet",
+      "Wang Lin won the fight"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Zhao Xingsha", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N143",
+    "name": "Chen Tao",
+    "nameCn": "陈涛",
+    "type": "disciple",
+    "peakRealm": "mid-Ascendant",
+    "affiliation": "Heavenly Fate Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Planet Tian Yun",
+    "knownFacts": [
+      "6th brother at Heavenly Fate Sect; challenged Wang Lin after he defeated Zhao Xinming",
+      "Wang Lin didn't win but put up a good fight that shocked everyone"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "rival"}
+    ]
+  },
+  {
+    "id": "N144",
+    "name": "Wang Zhou",
+    "nameCn": "王周",
+    "type": "disciple",
+    "peakRealm": "Qi Condensation",
+    "affiliation": "Heng Yue Sect",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Heng Yue Sect, Country of Zhao",
+    "knownFacts": [
+      "Heng Yue Sect fellow disciple; mistaken for a girl due to long braided hair",
+      "Failed all 3 entrance tests alongside Wang Lin"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N145",
+    "name": "Wang Jie",
+    "nameCn": "王杰",
+    "type": "disciple",
+    "peakRealm": "Qi Condensation",
+    "affiliation": "Heng Yue Sect",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Heng Yue Sect, Country of Zhao",
+    "knownFacts": [
+      "Heng Yue Sect fellow disciple; took the entrance test alongside Wang Lin and Wang Zhou"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N146",
+    "name": "Sun Zhenwei",
+    "nameCn": "孙振威",
+    "type": "disciple",
+    "peakRealm": "Nascent Soul",
+    "affiliation": "Cloud Sky Sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Chu Country",
+    "knownFacts": [
+      "Li Muwan's suitor; she agreed to marry him to shatter her heart",
+      "Killed by Wang Lin at the wedding; Wang Lin then became Cloud Sky Sect leader"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"},
+      {"target": "Li Muwan", "relation": "love_interest"},
+      {"target": "Chen Bailiang", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N147",
+    "name": "Chen Bailiang",
+    "nameCn": "陈百良",
+    "type": "elder",
+    "peakRealm": "Nascent Soul",
+    "affiliation": "Cloud Sky Sect",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Chu Country",
+    "knownFacts": [
+      "Cloud Sky Sect elder; killed by Wang Lin",
+      "Wang Lin became Cloud Sky Sect leader after killing him"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N148",
+    "name": "Zhang Hu",
+    "nameCn": "张虎",
+    "type": "disciple",
+    "peakRealm": "Foundation Establishment",
+    "affiliation": "Heng Yue Sect",
+    "status": "deceased",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Country of Zhao",
+    "knownFacts": [
+      "Wang Lin's early friend; pretended not to know Wang Lin to save him",
+      "Wang Lin killed Sun Dazhu to help Zhang Hu (this led to Wang Lin's clan extermination)",
+      "Wang Lin later bestowed opportunities upon Zhang Hu's descendants to settle karma"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"},
+      {"target": "Sun Dazhu", "relation": "enemy"}
+    ]
+  },
+  {
+    "id": "N149",
+    "name": "Hui Bing",
+    "nameCn": "惠冰",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's relationships (Fandom nav-bar character); tangential"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N150",
+    "name": "Zhou Rui",
+    "nameCn": "周瑞",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's relationships (Fandom nav-bar female character); separate from Zhou Ru",
+      "Tangential figure"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N151",
+    "name": "Leng Sheng",
+    "nameCn": "冷生",
+    "type": "other",
+    "peakRealm": "unknown",
+    "affiliation": "unknown",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's relationships (Fandom nav-bar female character); tangential"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N152",
+    "name": "Da Niu",
+    "nameCn": "大牛",
+    "type": "other",
+    "peakRealm": "mortal",
+    "affiliation": "none",
+    "status": "unknown",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's friends; likely a mortal friend from early life"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N153",
+    "name": "Zhou Lin",
+    "nameCn": "周林",
+    "type": "disciple",
+    "peakRealm": "early Core Formation",
+    "affiliation": "Yuntian Sect",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Chu Country",
+    "knownFacts": [
+      "Li Muwan's disciple; 9th-generation Yuntian Sect disciple",
+      "Master of Wang Lin's doppelganger"
+    ],
+    "relationships": [
+      {"target": "Li Muwan", "relation": "master"},
+      {"target": "Wang Lin", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N154",
+    "name": "Xiao Bai",
+    "nameCn": "小白",
+    "type": "mount",
+    "peakRealm": "beast",
+    "affiliation": "none (Zhou Ru's pet)",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "Planet Suzaku",
+    "knownFacts": [
+      "Zhou Ru's pet tiger"
+    ],
+    "relationships": [
+      {"target": "Zhou Ru", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N155",
+    "name": "Mosquito Beast",
+    "nameCn": "蚊兽",
+    "type": "mount",
+    "peakRealm": "evolved (king mosquito beast)",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 5,
+    "firstAppearance": "unknown",
+    "location": "Sea of Devils / IAC",
+    "knownFacts": [
+      "Wang Lin's signature companion found in Sea of Devils; fed Brilliant Golden Fruit to evolve",
+      "Herd acquired in Wind Celestial Realm; king mosquito beast further evolved",
+      "Recurring across novels (RI, ISSTH, AWWP); saves Wang Lin in IAC void"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N156",
+    "name": "Thunder Toad",
+    "nameCn": "雷蟾",
+    "type": "mount",
+    "peakRealm": "evolved",
+    "affiliation": "Wang Lin's",
+    "status": "deceased",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Allheaven Star System",
+    "knownFacts": [
+      "Wang Lin's companion; fed Brilliant Golden Fruit to evolve",
+      "Sacrificed to create Bloodline Thunder for Wang Lin's Thunder Essence completion"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N157",
+    "name": "Thunder Celestial Beast",
+    "nameCn": "雷仙兽",
+    "type": "mount",
+    "peakRealm": "Ascendant-tier",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Wang Lin's combat mount/companion during Ascendant stage"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N158",
+    "name": "Nether Beast",
+    "nameCn": "冥兽",
+    "type": "mount",
+    "peakRealm": "beast (vast interior)",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "Wang Lin's side",
+    "knownFacts": [
+      "Wang Lin's life-bound beast with a vast sub-dimension interior",
+      "Wang Lin refined the Seal Immortal Seal inside the Nether Beast",
+      "Encountered the 'Madman' Lian Daofei inside"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"},
+      {"target": "Lian Daofei", "relation": "ally"}
+    ]
+  },
+  {
+    "id": "N159",
+    "name": "Brilliant Void",
+    "nameCn": "玄虚",
+    "type": "mount",
+    "peakRealm": "beast",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 3,
+    "firstAppearance": "unknown",
+    "location": "unknown",
+    "knownFacts": [
+      "Listed in Wang Lin's pets; named for the region"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"}
+    ]
+  },
+  {
+    "id": "N160",
+    "name": "Golden Exalt Sea Dragon",
+    "nameCn": "金尊海龙",
+    "type": "mount",
+    "peakRealm": "beast",
+    "affiliation": "Wang Lin's",
+    "status": "alive",
+    "canonConfidence": 4,
+    "firstAppearance": "unknown",
+    "location": "IAC",
+    "knownFacts": [
+      "Wang Lin's mount",
+      "Liu Jinbiao used Path of Deception to gain its recognition; Xu Liguo dared not bully Liu Jinbiao anymore"
+    ],
+    "relationships": [
+      {"target": "Wang Lin", "relation": "master"},
+      {"target": "Liu Jinbiao", "relation": "ally"}
+    ]
+  }
+]

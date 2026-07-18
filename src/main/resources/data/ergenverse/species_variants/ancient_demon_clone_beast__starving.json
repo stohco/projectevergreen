@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Ancient Demon Clone (starving). Generated from canonical definition.",
+  "variant_id": "ancient_demon_clone_beast__starving",
+  "species_id": "ancient_demon_clone_beast",
+  "species_name": "Ancient Demon Clone",
+  "life_state": "starving",
+  "modifiers": {
+    "size_multiplier": 0.85,
+    "power_multiplier": 0.7,
+    "temperament": "frenzied",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 310732340
+}

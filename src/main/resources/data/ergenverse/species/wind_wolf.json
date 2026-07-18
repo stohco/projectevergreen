@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Wind Wolf (风狼) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "wind_wolf",
+  "name": "Wind Wolf",
+  "nameCn": "风狼",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Wolf 2 m tall, fur silver-grey, moves faster than eye can track, breath carries cutting wind",
+    "size": "2 m adult, 150 jin; ancient 4 m, 2000 jin",
+    "behavior": "Pack hunter; surrounds prey then strikes as one; cultivates by running through storms",
+    "habitat": "Plains, wind-aspected spirit veins, mountain foothills",
+    "cultivation": "Foundation Establishment -> Core Formation (wind attribute)",
+    "intelligence": 6,
+    "diet": "plains beasts, spirit-herb grazers, lost travelers",
+    "relationships": "Pack hunters; preyed upon by thunder beasts",
+    "techniques": [
+      "wind_step",
+      "pack_surround",
+      "cutting_breath",
+      "storm_run"
+    ],
+    "treasures": [
+      "wolf_core",
+      "wind_fur",
+      "fang"
+    ],
+    "bloodline": "Wind-Wolf lineage; wind-attribute bloodline",
+    "mutations": [
+      "silver_fur",
+      "wind_body",
+      "ancient_wolf_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "wind_wolf — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "wind_wolf — not a hive-mind species"
+    },
+    "combat_ai": "pack_hunter"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1373715140,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,24 @@
+{
+  "name": "God Face Fragment", "nameCn": "神面碎片", "pinyin": "Shén Miàn Suìpiàn", "novel": "Outside of Time",
+  "tier": "ancient", "baseRank": "paragon", "habitat": "void", "diet": "conceptual",
+  "preysOn": [], "preyedUponBy": [], "temperament": "passive_cataclysmic",
+  "value": "god-face shard (reproduces God Eye-Opening scene); divine remnant will",
+  "layer": 5, "behaviorScript": "Cataclysm Source — from BTT; a broken piece of the God Face that once opened its eyes; its breath pollutes psychic energy with Heterogeneity; when it opens its eyes, heterogeneity concentration spikes and nearby cultivators transform or die",
+  "voxelScale": "mountain-scale stone face (partial)", "aggroType": "Passive_Cataclysmic", "category": "conceptual_law_bound",
+  "drops": [
+    {"id": "god_face_shard", "chance": 0.05, "count": "1", "use": "reproduces Eye-Opening catastrophe"},
+    {"id": "divine_remnant_will", "chance": 0.02, "count": "1", "use": "God State breakthrough material"}
+  ],
+  "classification": "Divine Remnant / Geological Catastrophe",
+  "realm": "Paragon (passive influence); Catastrophic (Eye-Opening event)",
+  "threat": "Catastrophic (regional corruption; Eye-Opening kills entire populations)",
+  "bodyMaterials": ["God Face Shard (reproduces Eye-Opening catastrophe on command)", "Divine Remnant Will (God State breakthrough material)"],
+  "weaknesses": ["Cannot be killed conventionally; only sealed or harvested by Transcendent beings", "Eye-Opening can be predicted by monitoring Heterogeneity concentration spikes"],
+  "knownEnemies": ["Xu Qing (consumed fragments to advance)", "Mysterious Shadow (devours exuded Heterogeneity, weakening the Fragment over centuries)"],
+  "cultivationValue": "Divine Remnant Will is the key material for God State breakthrough (5th God State progression)",
+  "alchemyUses": ["God State Ascension Pill (legendary, requires Divine Remnant Will)"],
+  "artifactUses": ["Eye-Opening Bomb (mass corruption weapon; forbidden)", "God Face Shield (passive Heterogeneity absorption field)"],
+  "relatedDao": ["Time", "Death", "Creation"],
+  "knownInheritances": ["God State cultivation path (6 levels; each requires progressively purer Divine Remnant Will)"],
+  "provenance": {"source": "Outside of Time", "attestation": "EXPLICIT", "confidence": 5}
+}

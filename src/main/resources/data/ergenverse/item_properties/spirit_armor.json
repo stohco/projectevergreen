@@ -1,0 +1,24 @@
+{
+  "_comment": "Item Properties: Spirit Armor. Per physical-size directive: every object has lore-accurate physical size, not block size. Length: 1.8 m, Weight: 80 jin, Material: spirit-steel, Suitable realm: Foundation Establishment, Body strength required: Qi Condensation. Prime Directive: physical size exists objectively; cultivation determines what the player can lift/activate.",
+  "item_id": "spirit_armor",
+  "name": "Spirit Armor",
+  "type": "armor",
+  "physical_properties": {
+    "length_m": 1.8,
+    "weight_jin": 80,
+    "material_density": "spirit-steel"
+  },
+  "usage_requirements": {
+    "suitable_realm": "Foundation Establishment",
+    "body_strength_required": "Qi Condensation",
+    "effect_when_undersized": "Can wear but is encumbered."
+  },
+  "canon_note": "Standard spirit armor.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "simulation_notes": {
+    "no_locked_upgrades": "A cultivator who later reaches the required body strength will be able to lift/activate the item; the item does not change, only the cultivator does.",
+    "canon_fidelity": "This reflects the novels: Wang Lin could not lift the God-Slaying Sword until his body cultivation matched; he could barely use it as a heavy physical weapon before then."
+  },
+  "salt": 1763819496
+}

@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Wang Tianshui (王天水). Canon ID: N02. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_wang_tianshui",
+  "name": "Wang Tianshui",
+  "nameCn": "王天水",
+  "canon_id": "N02",
+  "type": "family_head",
+  "faction": "wang_family_village",
+  "location": "wang_family_village",
+  "cultivation": "mortal",
+  "personality": "stern but loving father; village patriarch",
+  "speech": "formal, concerned for family",
+  "relationship_to_wanglin": "father",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "Village elder; Wang Lin's father",
+    "qi_condensation": "Same — mortal cannot perceive cultivation",
+    "core_formation": "Same — mortal",
+    "nascent_soul": "Same — mortal, but you sense his lifeforce flickering"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's father; driven to ruin by Teng family",
+  "derivation_type": "A",
+  "salt": 911002794,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

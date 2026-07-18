@@ -1,0 +1,69 @@
+{
+  "_comment": "Migration: Thunder Celestial Tribulation Hunt. 3 waypoints, 3 follower types, 1 emergent markets. Per migration directive: migration is a major simulation system. The world breathes because markets appear seasonally along routes. Prime Directive: route exists objectively; player enters a world already moving.",
+  "migration_id": "thunder_celestial_tribulation_hunt",
+  "name": "Thunder Celestial Tribulation Hunt",
+  "species": "thunder_celestial_beast",
+  "description": "The hunt of thunder celestial beasts appearing during heavenly tribulations.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "waypoints": [
+    {
+      "point": "tribulation_site_1",
+      "season": "tribulation",
+      "duration_days": 1
+    },
+    {
+      "point": "tribulation_site_2",
+      "season": "tribulation",
+      "duration_days": 1
+    },
+    {
+      "point": "tribulation_site_3",
+      "season": "tribulation",
+      "duration_days": 1
+    }
+  ],
+  "follower_chain": [
+    {
+      "follower": "thunder_cultivators",
+      "relationship": "symbiotic",
+      "distance_li": 50,
+      "note": "Thunder cultivators harvest tribulation fragments."
+    },
+    {
+      "follower": "lei_ji_packs",
+      "relationship": "prey",
+      "distance_li": 100,
+      "note": "Lei Ji are prey for celestials."
+    },
+    {
+      "follower": "thunder_hunters",
+      "relationship": "predator",
+      "distance_li": 200,
+      "note": "Spirit Severing hunters track celestials."
+    }
+  ],
+  "emergent_markets": [
+    {
+      "market": "tribulation_fragment_market",
+      "season": "tribulation",
+      "goods": [
+        "celestial_core",
+        "tribulation_fragment",
+        "nine_color_lightning"
+      ]
+    }
+  ],
+  "simulation_notes": {
+    "world_breathes": "Markets appear and disappear seasonally; the world changes whether or not the player acts.",
+    "follower_dynamics": "Each follower type arrives with a delay proportional to distance_li; predators arrive after prey, scavengers after predators, bandits after cultivators, merchants after stability.",
+    "perception_tiers": {
+      "mortal": "Sees beasts moving.",
+      "qi_condensation": "Senses migration direction.",
+      "foundation_establishment": "Perceives follower chain.",
+      "core_formation": "Predicts market appearances.",
+      "nascent_soul": "Perceives complete migration system."
+    }
+  },
+  "salt": 364088830
+}

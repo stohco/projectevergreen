@@ -1,0 +1,36 @@
+{
+  "_comment": "Faction relationships: yao_family. Per user directive: faction relationship network — allies/enemies/vassals/rivals. Prime Directive: relationships exist objectively.",
+  "faction_id": "yao_family",
+  "type": "clan",
+  "allies": [],
+  "enemies": [
+    "wang_lin"
+  ],
+  "vassals": [],
+  "rivals": [],
+  "neutral": [],
+  "note": "Blood Ancestor's family; major antagonist faction",
+  "salt": 220150009,
+  "spiritual_vein_grade": {
+    "grade": null,
+    "element": null,
+    "qi_modifier": null,
+    "canon_note": "yao_family — spiritual vein grade not specified in canon"
+  },
+  "heritage_treasures": [],
+  "_xianxia_schema": 2,
+  "relationship_metadata": {
+    "allies": [],
+    "enemies": [
+      {
+        "id": "wang_lin",
+        "strength": null,
+        "since": null,
+        "reason": null
+      }
+    ],
+    "vassals": [],
+    "rivals": [],
+    "neutral": []
+  }
+}

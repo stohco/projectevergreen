@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin/Items",
+    "name": "Wang Lin/Items | Xian Ni Wikia - Fandom",
+    "snippet": "1 Weapons · 2 Treasures. 2.1 Cultivation; 2.2 Ancient Order Treasures; 2.3 Tattoo Tribe Treasures; 2.4 Wang Lin Dao / Spell Treasures; 2.5 ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Uu4-kiDggMo",
+    "name": "Wang Lin Uncovers Immortal Emperor's Cave Secret ! Qing",
+    "snippet": "In this episode of Renegade Immortal, Wang Lin finally uncovers the terrifying truth hidden inside the Immortal Emperor's Cave.",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/RenegadeImmortal/comments/1gnzkui/wang_lin",
+    "name": "Wang lin : r/RenegadeImmortal - Reddit",
+    "snippet": "There is no explanation why the Ji Realm can be treated as a treasure. But I guess it is formed under certain extreme condition just like Wang ...",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1t7s40t/renegade_immortal_upcoming_movie_immortal_storage",
+    "name": "Immortal storage bag internal space concept design : r/Donghua - Reddit",
+    "snippet": "Renegade immortal upcoming Movie : Immortal storage bag internal space concept design ... And the red hair Wang Lin is going to ravage his entire ...",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=nXt6QLAvQag",
+    "name": "Who Is the Woman Inside the Scroll? Why Did Wang Lin Seal  - YouTube",
+    "snippet": "Renegade Immortal - Who Is the Woman Inside the Scroll? Why Did Wang Lin Seal Her for 2000 Years?! Disclaimer: I do not own the anime, ...",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

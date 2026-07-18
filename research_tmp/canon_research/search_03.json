@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Heaven_Defying_Bead",
+    "name": "Heaven Defying Bead - Xian Ni Wikia - Fandom",
+    "snippet": "When introduced to dew or water the Bead transforms it into a spiritual liquid that can hasten cultivation and also extend one's youth and lifespan (for ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=3C-AbUjO7a4",
+    "name": "Renegade Immortal The Heaven Defying Bead Explained - YouTube",
+    "snippet": "RenegadeImmortal #XianNi #Donghua Most people think the Heaven Defying Bead is just a lucky cheat item that fell into Wang Lin's hands.",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1avc8kg/renegade_immortal_few_questions",
+    "name": "Renegade Immortal: Few Questions : r/Donghua - Reddit",
+    "snippet": "it is hinted in the novel that only those who possess the Heaven Defying Bead can acquire the mythical “Ji Realm”. As for the sword, when Wang ... Ending Theory (spoilers for POT and RI ending) : r/RenegadeImmortal In whole Renegade Immortal most powerful thing is Heaven Defying ... More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.webnovel.com/ask/q335212104446994",
+    "name": "What is the use of the heaven defying bead? - WebNovel",
+    "snippet": "The heaven defying bead was an important item in Renegade Immortal and had many abilities. First of all, the heaven defying bead was the ...",
+    "host_name": "www.webnovel.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=VSWDmd8UEsE",
+    "name": "He Completes Heaven Defying Bead → Breaks Into Third Step! All-Seer",
+    "snippet": "He Completes Heaven Defying Bead → Breaks Into ... Renegade immortal 236 - Wang Lin Witnessed a Power That Could Become the Heavenly Dao.",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

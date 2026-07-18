@@ -1,0 +1,311 @@
+{
+  "_comment": "Faction relationships: wang_lin. Per user directive: faction relationship network — allies/enemies/vassals/rivals. Prime Directive: relationships exist objectively.",
+  "faction_id": "wang_lin",
+  "type": "independent",
+  "allies": [
+    "situ_nan",
+    "qing_shui",
+    "bai_fan",
+    "lu_yun",
+    "qing_lin",
+    "du_tian",
+    "all_seer",
+    "xuan_luo"
+  ],
+  "enemies": [
+    "seven_colored_daoist",
+    "blood_ancestor",
+    "teng_family",
+    "soul_refining_sect",
+    "dao_devil_sect",
+    "old_man_miesheng",
+    "daoist_water",
+    "master_void",
+    "wind_demon",
+    "green_devil",
+    "taga",
+    "tuo_sen"
+  ],
+  "vassals": [
+    "xu_liguo",
+    "tianyunzi",
+    "ta_shan",
+    "big_head_cultivator",
+    "liu_jinbiao",
+    "ling_dong",
+    "zhou_jin",
+    "zhong_dahong",
+    "adai",
+    "lei_ji",
+    "mosquito_beast",
+    "thunder_toad",
+    "thunder_celestial_beast",
+    "nether_beast",
+    "brilliant_void",
+    "golden_exalt_sea_dragon",
+    "xiao_bai"
+  ],
+  "rivals": [
+    "zhan_family",
+    "yun_family"
+  ],
+  "neutral": [
+    "heavenly_fate_sect",
+    "cloud_sky_sect",
+    "da_lou_sword_sect",
+    "wang_family_village"
+  ],
+  "note": "",
+  "salt": 231502434,
+  "spiritual_vein_grade": {
+    "grade": null,
+    "element": null,
+    "qi_modifier": null,
+    "canon_note": "wang_lin — spiritual vein grade not specified in canon"
+  },
+  "heritage_treasures": [],
+  "_xianxia_schema": 2,
+  "relationship_metadata": {
+    "allies": [
+      {
+        "id": "situ_nan",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "qing_shui",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "bai_fan",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "lu_yun",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "qing_lin",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "du_tian",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "all_seer",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "xuan_luo",
+        "strength": null,
+        "since": null,
+        "reason": null
+      }
+    ],
+    "enemies": [
+      {
+        "id": "seven_colored_daoist",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "blood_ancestor",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "teng_family",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "soul_refining_sect",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "dao_devil_sect",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "old_man_miesheng",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "daoist_water",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "master_void",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "wind_demon",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "green_devil",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "taga",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "tuo_sen",
+        "strength": null,
+        "since": null,
+        "reason": null
+      }
+    ],
+    "vassals": [
+      {
+        "id": "xu_liguo",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "tianyunzi",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "ta_shan",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "big_head_cultivator",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "liu_jinbiao",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "ling_dong",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "zhou_jin",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "zhong_dahong",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "adai",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "lei_ji",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "mosquito_beast",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "thunder_toad",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "thunder_celestial_beast",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "nether_beast",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "brilliant_void",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "golden_exalt_sea_dragon",
+        "obligation": null,
+        "since": null
+      },
+      {
+        "id": "xiao_bai",
+        "obligation": null,
+        "since": null
+      }
+    ],
+    "rivals": [
+      {
+        "id": "zhan_family",
+        "competition_over": null,
+        "intensity": null
+      },
+      {
+        "id": "yun_family",
+        "competition_over": null,
+        "intensity": null
+      }
+    ],
+    "neutral": [
+      {
+        "id": "heavenly_fate_sect",
+        "context": null
+      },
+      {
+        "id": "cloud_sky_sect",
+        "context": null
+      },
+      {
+        "id": "da_lou_sword_sect",
+        "context": null
+      },
+      {
+        "id": "wang_family_village",
+        "context": null
+      }
+    ]
+  }
+}

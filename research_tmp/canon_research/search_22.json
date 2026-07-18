@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin/Cultivation",
+    "name": "Wang Lin/Cultivation - Xian Ni Wikia - Fandom",
+    "snippet": "After his glimpse of the third step, Wang Lin comprehended the perfect Domain of Life and Death. His focus is now on the Karma Domain. Transitional Level ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/RenegadeImmortal/comments/1tdzt8e/questions_regarding_cultivation",
+    "name": "Questions regarding cultivation : r/RenegadeImmortal - Reddit",
+    "snippet": "Our hero wang lin's main body is a ancient God which cultivate ancient cultivation ... Transition to Third Step: • Five Heaven Blights ... How strong is Wang Lin? What are wang lin's feats at 10 step More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Hcqr84_teko",
+    "name": "【22 cultivation levels in Renegade Immortal】 #renegadeimmortal",
+    "snippet": "The real name of renegade immortal cultivation.... First step is... 1_ Qi condensation 2_foundation establishment 3_ core formation 4_ ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://m.webnovel.com/book/renegade-immortal_8094127105005005/fourth-step-of-cultivation-does-it-exist_30237044441676016",
+    "name": "Fourth Step of Cultivation, Does it Exist - WebNovel",
+    "snippet": "More than 900 years of cultivation allowed Wang Lin to reach the late stage of Ascendant, the same cultivation level as Zhuque Zi back then. If Zhuque Zi wasn't ...",
+    "host_name": "m.webnovel.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://renegade-immortal-xian-ni.fandom.com/wiki/Wang_Lin/Cultivation_Explanation",
+    "name": "Wang Lin/Cultivation Explanation - Renegade Immortal Xian Ni Wiki",
+    "snippet": "To reach the 4th step one must cross a total of 9 heaven trampling bridges. People who start crossing the bridges are much stronger than Grand Empyrean. Heaven ...",
+    "host_name": "renegade-immortal-xian-ni.fandom.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

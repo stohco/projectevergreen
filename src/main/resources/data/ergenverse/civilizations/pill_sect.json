@@ -1,0 +1,81 @@
+{
+  "_comment": "Civilization: Pill Sect (sect) at Pill Sea. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "pill_sect",
+  "name": "Pill Sect",
+  "type": "sect",
+  "location": "Pill Sea",
+  "peak_realm": "Ascendant (pill ancestor)",
+  "canon_status": "major_alchemy_sect",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "population_structure": {
+    "outer_disciples": 3000,
+    "inner_disciples": 600,
+    "core_disciples": 60,
+    "elders": 15,
+    "peak_lords": 9,
+    "pill_ancestor": 1,
+    "spirit_beasts": 300
+  },
+  "economy": {
+    "spirit_stones": "abundant",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "apex",
+    "forging": "basic",
+    "formation": "basic",
+    "trade": "pill trade (regional)",
+    "recruitment": "alchemy-aspected youth"
+  },
+  "politics": {
+    "allies": [
+      "alchemy-aspected sects"
+    ],
+    "enemies": [
+      "rival alchemy sects"
+    ],
+    "vassals": [],
+    "rivals": [
+      "other alchemy powers"
+    ],
+    "internal_factions": [
+      "pill lineage",
+      "furnace lineage"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "alchemy-aspected examination",
+    "expansion": "steady",
+    "decline": "none current",
+    "schisms": "pill vs furnace lineage tension",
+    "wars": [
+      "pill-trade conflicts"
+    ],
+    "recovery": "strong; pill ancestor present"
+  },
+  "libraries": [
+    "apex alchemy",
+    "pill recipes",
+    "alchemy formation manuals",
+    "herb catalogues"
+  ],
+  "spirit_beasts": [
+    "pill-aspected beasts",
+    "flame dragons (alchemy furnaces)"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 391239722,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

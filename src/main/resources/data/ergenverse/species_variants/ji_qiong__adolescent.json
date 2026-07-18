@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Ji Qiong (adolescent). Generated from canonical definition.",
+  "variant_id": "ji_qiong__adolescent",
+  "species_id": "ji_qiong",
+  "species_name": "Ji Qiong",
+  "life_state": "adolescent",
+  "modifiers": {
+    "size_multiplier": 0.45,
+    "power_multiplier": 0.35,
+    "temperament": "reckless",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1950275700
+}

@@ -1,0 +1,24 @@
+{
+  "_comment": "Item Properties: Black Tortoise Core. Per physical-size directive: every object has lore-accurate physical size, not block size. Length: 1.5 m, Weight: 8000 jin, Material: condensed divine earth-essence, Suitable realm: Immortal, Body strength required: Ascendant. Prime Directive: physical size exists objectively; cultivation determines what the player can lift/activate.",
+  "item_id": "black_tortoise_core",
+  "name": "Black Tortoise Core",
+  "type": "core",
+  "physical_properties": {
+    "length_m": 1.5,
+    "weight_jin": 8000,
+    "material_density": "condensed divine earth-essence"
+  },
+  "usage_requirements": {
+    "suitable_realm": "Immortal",
+    "body_strength_required": "Ascendant",
+    "effect_when_undersized": "Cannot lift; core is impossibly dense."
+  },
+  "canon_note": "The Black Tortoise's core.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "simulation_notes": {
+    "no_locked_upgrades": "A cultivator who later reaches the required body strength will be able to lift/activate the item; the item does not change, only the cultivator does.",
+    "canon_fidelity": "This reflects the novels: Wang Lin could not lift the God-Slaying Sword until his body cultivation matched; he could barely use it as a heavy physical weapon before then."
+  },
+  "salt": 1918580290
+}

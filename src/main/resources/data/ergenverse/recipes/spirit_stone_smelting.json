@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "ergenverse:spirit_stone_ore"
+  },
+  "result": {
+    "item": "ergenverse:spirit_stone"
+  },
+  "experience": 0.7,
+  "cookingtime": 200
+}

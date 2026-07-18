@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Noble Money (贵钱). Canon ID: N106. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_noble_money",
+  "name": "Noble Money",
+  "nameCn": "贵钱",
+  "canon_id": "N106",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "unknown",
+  "personality": "wealthy, greedy antagonist",
+  "speech": "haughty, money-obsessed",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A wealthy noble",
+    "qi_condensation": "Cultivator; wealthy"
+  },
+  "canon_confidence": 3,
+  "note": "Wealthy antagonist NPC",
+  "derivation_type": "B",
+  "salt": 1450696878,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

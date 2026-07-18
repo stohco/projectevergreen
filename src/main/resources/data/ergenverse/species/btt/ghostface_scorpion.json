@@ -1,0 +1,25 @@
+{
+  "name": "Ghostface Scorpion", "nameCn": "鬼面蝎", "pinyin": "Guǐ Miàn Xiē", "novel": "Outside of Time",
+  "tier": "demon", "baseRank": "soul_formation", "habitat": "underground", "diet": "carnivore",
+  "preysOn": [], "preyedUponBy": [], "temperament": "aggressive",
+  "innateTechnique": "Ghostface Venom Sting",
+  "value": "ghostface stinger (Xu Qing consumed vs Vajra Patriarch); venom sac; chitinous shell",
+  "layer": 2, "behaviorScript": "Venomous Ambush — from BTT; burrows in corrupted soil; stinger carries potent venom that damages soul force; Xu Qing consumed its tail as a one-time weapon against Vajra Ancestor",
+  "voxelScale": "0.8x0.6x2.5", "aggroType": "Poison_Ambush", "category": "bloodline_mutant",
+  "drops": [
+    {"id": "ghostface_stinger", "chance": 0.2, "count": "1", "use": "one-time soul-damage weapon"},
+    {"id": "ghostface_venom_sac", "chance": 0.3, "count": "1", "use": "soul-damaging poison"},
+    {"id": "chitinous_shell", "chance": 0.4, "count": "1", "use": "soul-resistant armor base"}
+  ],
+  "classification": "Venomous Arachnid / Soul-Damage Specialist", "realm": "Soul Formation",
+  "threat": "High (soul-damaging venom bypasses all physical/Qi defenses)",
+  "bodyMaterials": ["Ghostface Stinger (one-time soul-damage weapon)", "Ghostface Venom Sac (soul-damaging poison — black market commodity)", "Chitinous Shell (soul-resistant armor base)"],
+  "weaknesses": ["Fire-element techniques (scorpions are weak to heat)", "Loud vibrations (disrupts burrow ambush)", "Above-ground combat (loses home-tunnel advantage)"],
+  "knownEnemies": ["Xu Qing (consumed its tail as a weapon)", "Underground cultivators (hunted for venom sacs)"],
+  "cultivationValue": "Venom sacs are top-tier alchemical reagents for soul-targeting poisons and their antidotes",
+  "alchemyUses": ["Soul-Corroding Poison (venom sac base)", "Ghostface Antidote (counter-agent research)", "Divine Sense Restoration Pill (requires diluted venom as catalyst)"],
+  "artifactUses": ["Ghostface Stinger Dagger (one-use soul-piercing weapon)", "Chitinous Shell Shield (soul-resistant)"],
+  "relatedDao": ["Poison", "Soul", "Death"],
+  "knownInheritances": ["None — the scorpion is a natural creature, not an inheritance vessel"],
+  "provenance": {"source": "Outside of Time", "attestation": "EXPLICIT", "confidence": 5}
+}

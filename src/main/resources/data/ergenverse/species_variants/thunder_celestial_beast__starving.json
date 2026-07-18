@@ -1,0 +1,29 @@
+{
+  "_comment": "Life-state variant: Thunder Celestial Beast (Starving). Generated from canonical species definition. Prime Directive: this state exists objectively; perception tier determines whether player recognizes it.",
+  "variant_id": "thunder_celestial_beast__starving",
+  "species_id": "thunder_celestial_beast",
+  "species_name": "Thunder Celestial Beast",
+  "species_nameCn": "雷仙兽",
+  "novel": "Renegade Immortal",
+  "life_state": "starving",
+  "life_state_name": "Starving",
+  "description": "Depleted, frenzied, will attack anything; cultivates by any feeding",
+  "modifiers": {
+    "size_multiplier": 0.85,
+    "power_multiplier": 0.7,
+    "intelligence_multiplier": 0.6,
+    "temperament": "frenzied",
+    "rarity": "uncommon"
+  },
+  "perception_tiers": {
+    "mortal": "Sees a frenzied beast.",
+    "qi_condensation": "Sees a frenzied beast of thunder celestial beast kind.",
+    "foundation_establishment": "Recognizes life-state: Starving.",
+    "core_formation": "Recognizes species, life-state, and approximate cultivation.",
+    "nascent_soul": "Sees bloodline, mutation potential, and treasure affinity.",
+    "spirit_severing": "Sees complete ecology and Dao-comprehension state."
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1091928240
+}

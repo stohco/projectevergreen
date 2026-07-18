@@ -1,0 +1,71 @@
+{
+  "_comment": "Civilization: Seven-Colored Realm Court (secret_realm_court) at Seven-Colored Realm. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "seven_colored_realm_court",
+  "name": "Seven-Colored Realm Court",
+  "type": "secret_realm_court",
+  "location": "Seven-Colored Realm",
+  "peak_realm": "Immortal (realm lord)",
+  "canon_status": "secret_realm_power",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "population_structure": {
+    "cultivators": "thousands",
+    "elders": 20,
+    "realm_lord": 1,
+    "spirit_beasts": 500
+  },
+  "economy": {
+    "spirit_stones": "abundant",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "advanced",
+    "forging": "advanced",
+    "formation": "advanced",
+    "trade": "secret-realm goods",
+    "recruitment": "examination"
+  },
+  "politics": {
+    "allies": [],
+    "enemies": [
+      "invaders"
+    ],
+    "vassals": [],
+    "rivals": [],
+    "internal_factions": [
+      "realm lord loyalists"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "examination",
+    "expansion": "static (secret realm)",
+    "decline": "none current",
+    "schisms": "none",
+    "wars": [
+      "defense against invaders"
+    ],
+    "recovery": "strong; realm lord"
+  },
+  "libraries": [
+    "seven-colored techniques",
+    "realm lore",
+    "secret-realm collections"
+  ],
+  "spirit_beasts": [
+    "seven-colored beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 784072872,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

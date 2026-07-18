@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Fish (starving). Generated from canonical definition.",
+  "variant_id": "spirit_fish__starving",
+  "species_id": "spirit_fish",
+  "species_name": "Spirit Fish",
+  "life_state": "starving",
+  "modifiers": {
+    "size_multiplier": 0.85,
+    "power_multiplier": 0.7,
+    "temperament": "frenzied",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 382296889
+}

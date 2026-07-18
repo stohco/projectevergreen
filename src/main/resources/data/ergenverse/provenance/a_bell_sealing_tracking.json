@@ -1,0 +1,31 @@
+{
+  "_comment": "Provenance metadata for A Bell (Sealing/Tracking) (封踪铃). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I97",
+  "name": "A Bell (Sealing/Tracking)",
+  "nameCn": "封踪铃",
+  "type": "accessory",
+  "category": "utility",
+  "origin": "Early Celestial era (~Ch. 307)",
+  "current_owner": "Wang Lin (retired)",
+  "abilities": [
+    "Sealing and tracking abilities",
+    "Celestial-tier bell"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Celestial-tier bell",
+    "Dual sealing + tracking function",
+    "Retired — no longer used"
+  ],
+  "source": "Ch.~307 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Early Celestial era (~Ch. 307)"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Immortal Celestial Body (ancient). Generated from canonical definition.",
+  "variant_id": "immortal_celestial_body_beast__ancient",
+  "species_id": "immortal_celestial_body_beast",
+  "species_name": "Immortal Celestial Body",
+  "life_state": "ancient",
+  "modifiers": {
+    "size_multiplier": 2.5,
+    "power_multiplier": 4.0,
+    "temperament": "contemplative",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 406288019
+}

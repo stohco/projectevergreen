@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "": { "model": "ergenverse:block/cultivation_mat" },
+    "occupied=true": { "model": "ergenverse:block/cultivation_mat" }
+  }
+}

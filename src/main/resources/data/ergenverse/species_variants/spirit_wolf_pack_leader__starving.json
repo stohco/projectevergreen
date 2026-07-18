@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Wolf Pack Leader (starving). Generated from canonical definition.",
+  "variant_id": "spirit_wolf_pack_leader__starving",
+  "species_id": "spirit_wolf_pack_leader",
+  "species_name": "Spirit Wolf Pack Leader",
+  "life_state": "starving",
+  "modifiers": {
+    "size_multiplier": 0.85,
+    "power_multiplier": 0.7,
+    "temperament": "frenzied",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 1935761405
+}

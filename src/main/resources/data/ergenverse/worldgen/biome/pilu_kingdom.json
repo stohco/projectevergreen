@@ -1,0 +1,103 @@
+{
+  "_comment": "Pilu Kingdom — headquarters of the Soul Refining Sect. Canon: a kingdom on Planet Suzaku where Dun Tian was the Soul Refining Sect ancestor. Wang Lin inherited the Ten Billion Soul Banner and the Soul Refining Sect legacy here. After Wang Lin's actions, the Soul Refining Tribe (1M+ people) was elevated from the Mountain Valley Tribe. The land is arid and harsh, reflecting the soul-refining heritage — fire and soul energy are dominant. Prime Directive: the arid terrain and fire-aligned spiritual energy are objective properties.",
+  "temperature": 0.9,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 7254490,
+    "fog_color": 12694940,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:husk",
+        "weight": 40,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 30,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:blaze",
+        "weight": 25,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:stray",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:witch",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_granite_upper",
+      "minecraft:ore_granite_lower",
+      "minecraft:ore_diorite_upper",
+      "minecraft:ore_diorite_lower",
+      "minecraft:ore_andesite_upper",
+      "minecraft:ore_andesite_lower",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold_extra",
+      "minecraft:ore_gold_lower",
+      "minecraft:ore_copper",
+      "minecraft:ore_redstone",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [
+      "ergenverse:joss_flame_source"
+    ],
+    [
+      "minecraft:patch_tundra_grass",
+      "minecraft:dead_bush",
+      "minecraft:patch_gravel_badlands",
+      "ergenverse:demon_corpse_mushroom"
+    ],
+    []
+  ],
+  "structures": {
+    "ergenverse:soul_refining_sect": {}
+  }
+}

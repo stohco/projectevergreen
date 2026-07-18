@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Eight Extreme Daos (set of 8) (八极道). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I160",
+  "name": "Eight Extreme Daos (set of 8)",
+  "nameCn": "八极道",
+  "type": "other",
+  "category": "domain",
+  "origin": "Self-comprehended (first 5 by Empyrean Trial; last 3 on 5th Heaven-Trampling bridge)",
+  "current_owner": "Wang Lin (passed to Wang Baole in AWWP)",
+  "abilities": [
+    "8 Daos: Extreme Water, Metal, Wood, Earth, Fire, Heaven, Land, Life",
+    "First 5 = Five Elements; 6th & 7th = mutually opposing; 8th = life-bound Dao",
+    "Third-Step-tier Eight Extremities Dao"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Third-Step-tier set of 8 Daos",
+    "8th = Wang Lin's unique life-bound Dao",
+    "Transmitted to Wang Baole in AWWP (Another World of Padma)"
+  ],
+  "source": "Ch.1826, Ch.1958, Ch.2034, Ch.2063 (novel); Fandom wiki; Baidu Baike",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Self-comprehended (first 5 by Empyrean Trial; last 3 on 5th Heaven-Trampling bridge)"
+  }
+}

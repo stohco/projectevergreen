@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin/Cultivation",
+    "name": "Wang Lin/Cultivation - Xian Ni Wikia - Fandom",
+    "snippet": "He fused the three Fire, Earth and Water Essence True bodies. Wang Lin fused the Life and Death, Karma and True and False essences inside his own body, forming ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Essences_Evolutions",
+    "name": "Essences Evolutions | Xian Ni Wikia - Fandom",
+    "snippet": "14 Metal Essence Life and Death Essence. Wang Lin gained both a Thunder and a Fire Essence. Four Great Restrictions: Annihilation, Life and Death, Time and ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Rf0y2rM8pJM",
+    "name": "What are the Cultivation Levels in Renegade Immortal? | Wang Lin",
+    "snippet": "Explaining the second part of Cultivation Levels in Renegade Immortal Universe as continuation to the first video. Here I will be explaining ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/RenegadeImmortal/comments/1je1eph/what_are_wang_lins_feats_at_10_step",
+    "name": "What are wang lin's feats at 10 step : r/RenegadeImmortal - Reddit",
+    "snippet": "Wang Lin transcends the deep Earth Star Ring, a cosmological structure containing countless star systems, domains, and multiverses within the ...",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/shorts/R8ZtSZ2mAlY",
+    "name": "Wang Lin's FINAL 17 Domains HINDI Explained! Renegade",
+    "snippet": "WANG LIN'S 17 DOMAINS EXPLAINED! Every Domain He Masters in Renegade Immortal #shorts Alternative Titles All 17 Domains Wang Lin Will ...",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "Jul 7, 2026",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

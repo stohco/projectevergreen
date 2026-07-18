@@ -1,0 +1,23 @@
+{
+  "speciesId": "divine_fire_herb",
+  "name": "Divine Fire Herb",
+  "nameCn": "神火草",
+  "renderTier": "CROSS_SPRITE",
+  "defaultElement": "FIRE",
+  "baseMedicinalPotency": 0.8,
+  "baseQiSaturation": 0.65,
+  "minStageToHarvest": "flowering",
+  "harvestItemId": "ergenverse:divine_fire_herb_item",
+  "fruitItemId": null,
+  "growthDurationTicks": 168000,
+  "fruitingDurationTicks": 36000,
+  "requiresQiDensity": 0.5,
+  "biomeWhitelist": ["basalt_deltas", "nether_wastes", "crimson_forest"],
+  "ecologyAttracts": ["fire_phoenix"],
+  "ecologyRepels": ["frost_wolf"],
+  "canMutate": true,
+  "mutationChance": 0.04,
+  "perceptionTierToIdentify": "FOUNDATION",
+  "canonConfidence": 4,
+  "description": "Burns with spirit flame. Mortals who touch it suffer qi burns; they see only a strange red weed."
+}

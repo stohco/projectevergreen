@@ -1,0 +1,35 @@
+{
+  "_comment": "Thunder Bird — Renegade Immortal. A lightning-attribute avian beast. Canon: native to the Thunder Celestial Temple region; its feathers channel lightning.",
+  "species_id": "thunder_bird",
+  "name": "Thunder Bird",
+  "nameCn": "雷鸟",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 3,
+  "max_hp": 50,
+  "attack_damage": 10,
+  "speed": 0.45,
+  "follow_range": 32,
+  "canonical": {
+    "appearance": "A sleek, blue-black avian wreathed in crackling lightning. Smaller than the Fire Phoenix but faster. Feathers are metallic blue.",
+    "size": "Medium (2-3m wingspan, 1m body)",
+    "behavior": "Highly aggressive and territorial. Attacks with lightning strikes. Roosts on high peaks during storms.",
+    "habitat": "Planet Suzaku — mountain peaks, storm-prone regions, Thunder Celestial Temple approaches",
+    "cultivation": "Foundation Establishment to Core Formation equivalent",
+    "intelligence": "3-5 (pack tactics, calls allies when threatened)",
+    "diet": "Lightning-attributed spirit herbs, raw lightning energy during storms",
+    "relationships": "Natural enemy of Fire Phoenix (compete for spirit veins). Hunted for lightning feathers used in weapon forging.",
+    "techniques": ["Thunder strike (single-target lightning damage)", "Storm call (AoE lightning in rain)", "Lightning speed burst (temporary speed boost)"],
+    "treasures": ["Thunder Feather (weapon forging material)", "Lightning Core (formation power source)"],
+    "bloodline": "variant_beast",
+    "mutations": ["Storm Caller — during rain/thunder, attack damage doubled and gains AoE"],
+    "ecology": "Pack predator in mountainous regions. Hunts in groups of 2-4. Dominates aerial territory during storms.",
+    "bloodline_tier": "variant_beast",
+    "combat_ai": "pack_hunter"
+  },
+  "art_direction": {
+    "color_palette": ["#0066ff", "#00aaff", "#ffffff", "#001133"],
+    "model_notes": "Sleek bird with crackling lightning particle effects. Animated wing spread during thunder strike.",
+    "texture_notes": "Metallic blue-black plumage. White lightning patterns along wing edges. Glowing blue eyes."
+  }
+}

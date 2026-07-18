@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Bear (starving). Generated from canonical definition.",
+  "variant_id": "spirit_bear__starving",
+  "species_id": "spirit_bear",
+  "species_name": "Spirit Bear",
+  "life_state": "starving",
+  "modifiers": {
+    "size_multiplier": 0.85,
+    "power_multiplier": 0.7,
+    "temperament": "frenzied",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 1680997799
+}

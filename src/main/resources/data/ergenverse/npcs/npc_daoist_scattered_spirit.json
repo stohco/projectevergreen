@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Daoist Scattered Spirit (散灵道人). Canon ID: N51. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_daoist_scattered_spirit",
+  "name": "Daoist Scattered Spirit",
+  "nameCn": "散灵道人",
+  "canon_id": "N51",
+  "type": "elder",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "Third Step",
+  "personality": "scattered-spirit elder; ethereal, detached",
+  "speech": "ethereal, detached",
+  "relationship_to_wanglin": "complex; elder",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "An ethereal presence",
+    "qi_condensation": "Scattered-spirit; overwhelming",
+    "core_formation": "Third Step; scattered-spirit dao",
+    "nascent_soul": "Third Step; ethereal elder"
+  },
+  "canon_confidence": 3,
+  "note": "Scattered-spirit elder",
+  "derivation_type": "B",
+  "salt": 455216031,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

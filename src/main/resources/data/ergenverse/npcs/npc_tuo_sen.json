@@ -1,0 +1,38 @@
+{
+  "_comment": "NPC: Tuo Sen (拓山). Canon ID: N63. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_tuo_sen",
+  "name": "Tuo Sen",
+  "nameCn": "拓山",
+  "canon_id": "N63",
+  "type": "antagonist",
+  "faction": "ancient_god_clan",
+  "location": "ancient_god_territory",
+  "cultivation": "Ancient God 8-Star (potential)",
+  "personality": "rival Ancient God; ambitious, powerful",
+  "speech": "god-deep, resonant",
+  "relationship_to_wanglin": "rival for Ancient God inheritance",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "A vast god-presence",
+    "core_formation": "Ancient God; 8-Star potential",
+    "nascent_soul": "Ancient God rival; 8-Star potential",
+    "spirit_severing": "Rival for Tu Si's Ancient God inheritance"
+  },
+  "canon_confidence": 5,
+  "note": "Rival Ancient God; competed with Wang Lin for Tu Si's inheritance",
+  "derivation_type": "A",
+  "salt": 33001930,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,29 @@
+{
+  "karma_id": "suzaku_inheritance",
+  "name": "Suzaku Divine Emperor Inheritance",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 21000,
+  "karmic_weight": 2500,
+  "bearer": "N01",
+  "debtor": "suzaku_divine_emperor",
+  "description": "Wang Lin inherits the Suzaku divine emperor position and the Vermilion Bird inheritance.",
+  "consequences": [
+    {
+      "type": "inheritance_claimed",
+      "target_id": "I04",
+      "magnitude": 100,
+      "resolved_at_tick": 21000
+    },
+    {
+      "type": "faction_destroyed",
+      "target_id": "heavenly_fate_sect_leadership",
+      "magnitude": 60,
+      "resolved_at_tick": 21000
+    }
+  ],
+  "unresolved_until": "vermilion_bird_recognition",
+  "_comment": "Karmic Nexus node: Suzaku Divine Emperor Inheritance. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 1672357901
+}

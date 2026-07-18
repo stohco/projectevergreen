@@ -1,0 +1,80 @@
+{
+  "_comment": "Species: Golden Exalt Sea Dragon (金尊海龙) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "golden_exalt_sea_dragon",
+  "name": "Golden Exalt Sea Dragon",
+  "nameCn": "金尊海龙",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Serpentine sea dragon 50 m long, scales golden-jade, crest of crystal horns, breath commands water",
+    "size": "50 m adult, 100000 jin; ancient 200 m, millions of jin",
+    "behavior": "Solitary apex of seas; hoards water-attribute treasures; cultivates in ocean trenches",
+    "habitat": "Deep seas, water-aspected apex spirit veins, ocean trenches",
+    "cultivation": "Spirit Severing -> Ascendant (water attribute)",
+    "intelligence": 9,
+    "diet": "sea beasts, water-attribute herbs, spirit-pearls",
+    "relationships": "Wang Lin's bonded companion (N160); rival of cold dragon",
+    "techniques": [
+      "ocean_breath",
+      "tidal_command",
+      "dragon_dive",
+      "water_scales"
+    ],
+    "treasures": [
+      "golden_sea_dragon_core",
+      "dragon_pearl",
+      "golden_scale"
+    ],
+    "bloodline": "Sea-Dragon lineage; water-attribute true dragon bloodline (diluted)",
+    "mutations": [
+      "golden_pearl",
+      "true_sea_dragon_awakening"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": true,
+      "element": "water",
+      "grade": "extreme",
+      "alchemy_use": "Golden Sea Dragon core refines Ocean Sovereign Pills; supreme water-attribute alchemy material",
+      "canon_note": "Wang Lin's bonded sea dragon companion; its core commands oceanic qi"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "golden_exalt_sea_dragon — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1673753026,
+  "bloodline_tier": "ancient_celestial",
+  "inner_dan_properties": {
+    "element": "water",
+    "purity_tier": 8,
+    "dao_resonance": "dragon_sovereignty",
+    "side_effects": [
+      "dragon_pressure"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

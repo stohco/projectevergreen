@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Seven-Colored Deer (七色鹿) from A Will Eternal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "seven_colored_deer",
+  "name": "Seven-Colored Deer",
+  "nameCn": "七色鹿",
+  "novel": "A Will Eternal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Deer 2 m tall, coat shifts through seven colors, antlers of crystal",
+    "size": "2 m adult, 300 jin; ancient 5 m, 5000 jin",
+    "behavior": "Auspicious beast; appears to cultivators at breakthroughs; cultivates by walking auspicious paths",
+    "habitat": "Auspicious spirit veins, dawn-aspected groves",
+    "cultivation": "Nascent Soul -> Spirit Severing (auspicious attribute)",
+    "intelligence": 10,
+    "diet": "dawn-dew, auspicious herbs, spirit-rice",
+    "relationships": "Auspicious to all cultivators",
+    "techniques": [
+      "auspicious_step",
+      "seven_color_display",
+      "crystal_antler"
+    ],
+    "treasures": [
+      "deer_core",
+      "seven_color_fur",
+      "crystal_antler"
+    ],
+    "bloodline": "Seven-Color-Deer lineage; auspicious bloodline",
+    "mutations": [
+      "true_auspicious_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "seven_colored_deer — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "seven_colored_deer — not a hive-mind species"
+    },
+    "combat_ai": "migration_passive"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 175871111,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

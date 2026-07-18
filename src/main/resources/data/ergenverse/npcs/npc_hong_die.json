@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Hong Die (红蝶). Canon ID: N57. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_hong_die",
+  "name": "Hong Die",
+  "nameCn": "红蝶",
+  "canon_id": "N57",
+  "type": "disciple",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect",
+  "cultivation": "Nascent Soul",
+  "personality": "fierce, passionate female cultivator",
+  "speech": "direct, passionate",
+  "relationship_to_wanglin": "complex; rival then ally",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A beautiful female cultivator",
+    "qi_condensation": "Heavenly Fate disciple; Nascent Soul",
+    "core_formation": "Heavenly Fate elite; fierce fighter",
+    "nascent_soul": "Nascent Soul; complex relationship with Wang Lin"
+  },
+  "canon_confidence": 4,
+  "note": "Heavenly Fate female disciple; complex relationship with Wang Lin",
+  "derivation_type": "A",
+  "salt": 1128769358,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "nascent_soul",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

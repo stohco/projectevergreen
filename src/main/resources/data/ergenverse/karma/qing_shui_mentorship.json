@@ -1,0 +1,23 @@
+{
+  "karma_id": "qing_shui_mentorship",
+  "name": "Qing Shui Mentorship",
+  "novel": "Renegade Immortal",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "event_tick": 25550,
+  "karmic_weight": 1500,
+  "bearer": "N01",
+  "debtor": "qing_shui",
+  "description": "Qing Shui teaches Wang Lin the Heaven-Trampling Dao, the capstone of his cultivation.",
+  "consequences": [
+    {
+      "type": "technique_unlocked",
+      "target_id": "T_heaven_trampling_bridge",
+      "magnitude": 100,
+      "resolved_at_tick": 25550
+    }
+  ],
+  "unresolved_until": "resolved",
+  "_comment": "Karmic Nexus node: Qing Shui Mentorship. Per architectural review: RI is a novel about karma. karmic_weight is signed (+ = debt owed TO bearer, - = grudge held BY bearer). Prime Directive: unresolved karma persists objectively until paid.",
+  "salt": 1059614687
+}

@@ -1,0 +1,24 @@
+{
+  "_comment": "Macro-Terrain: Azure Dragon Spine Sea. Per scale directive: this terrain IS a being. Player shouldn't initially realize they're standing on bone. Divine Sense -> Perception changes -> 'You realize this mountain range... is one finger.' Prime Directive: the being's corpse is objectively terrain; perception tier determines what the player sees.",
+  "terrain_id": "azure_dragon_spine_sea",
+  "name": "Azure Dragon Spine Sea",
+  "being": "Azure Dragon",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "scale": "1000 li long — the spine of a divine dragon.",
+  "canonical_event": "The Azure Dragon's corpse formed this sea-ridge in the ancient era.",
+  "perception_tiered_appearance": {
+    "mortal": "A sea ridge 1000 li long, peaks break the surface as islands, stone is azure jade.",
+    "qi_condensation": "The sea currents swirl around the ridge in dragon-like patterns.",
+    "foundation_establishment": "The ridge is a petrified dragon spine; the islands are vertebrae.",
+    "core_formation": "This is the Azure Dragon's spine; the sea is its grave.",
+    "nascent_soul": "The dragon's water-essence still permeates the sea; cultivating here grants dragon-essence.",
+    "spirit_severing": "The Azure Dragon's soul sleeps in the deep; waking it would reshape the sea."
+  },
+  "perception_mechanic": {
+    "trigger": "When player's perception tier rises, the appearance re-rolls automatically.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does.",
+    "canon_fidelity": "This is exactly how Wang Lin perceived Ancient God Tu Si's remains — first as terrain, then as god-bone, then as god-memory."
+  },
+  "salt": 298524881
+}

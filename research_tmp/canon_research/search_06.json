@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin is the main protagonist of Renegade Immortal. Born with a weak body, Wang Lin's features begin as average before becoming moderately handsome as a ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1lvadil/renegade_immortal_questions_spoilers",
+    "name": "Renegade Immortal (Questions & Spoilers) : r/Donghua - Reddit",
+    "snippet": "Wang Lin got the inheritance of knowledge and Tu Sen has the inheritance of power. Without the inheritance of power hes not a true ancient god. Renegade immortal Renegade IMMORTAL More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Si%20Tu%20Nan/951161",
+    "name": "Si Tu Nan_Baiduwiki",
+    "snippet": "Si Tu Nan is the reincarnation of the Green Soul from the Three Souls and Seven Spirits of the Seven-Colored Immortal Venerable, endowed with exceptional talent ...",
+    "host_name": "baike.baidu.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=_vC6M8i5fcs",
+    "name": "Why Wang Lin Gave Situ Nan a Celestial Treasure - YouTube",
+    "snippet": "... Wang Lin, Situ Nan, Renegade Immortal, God Slaying Chariot, Renegade Immortal Explained, Wang Lin Situ Nan bond, Renegade Immortal treasures ...",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.wuxiaworld.com/novel/renegade-immortal/rge-chapter-993",
+    "name": "Renegade Immortal - Chapter 993 - Poison - Wuxiaworld",
+    "snippet": "I hope Situ Nan, along with Wang Lin, will get the inheritance of the ancient demon. It suits him a lot. I hope Situ Nan, along with Wang Lin, will get ...",
+    "host_name": "www.wuxiaworld.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

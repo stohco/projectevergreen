@@ -1,0 +1,31 @@
+{
+  "_comment": "Provenance metadata for Zhou Jin (captured then freed) (周谨). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I115",
+  "name": "Zhou Jin (captured then freed)",
+  "nameCn": "周谨",
+  "type": "other",
+  "category": "other",
+  "origin": "Captured (Ch. 1470)",
+  "current_owner": "Freed (when Wang Lin got injured)",
+  "abilities": [
+    "Temporary puppet — captured and held",
+    "Freed when Wang Lin was injured"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Temporary captive-puppet",
+    "Freed when Wang Lin sustained injuries",
+    "Short-term possession"
+  ],
+  "source": "Ch.1470 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Captured (Ch. 1470)"
+  }
+}

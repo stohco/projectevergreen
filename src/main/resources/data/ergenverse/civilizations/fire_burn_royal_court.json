@@ -1,0 +1,85 @@
+{
+  "_comment": "Civilization: Fire Burn Royal Court (royal_court) at Fire Burn Country. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "fire_burn_royal_court",
+  "name": "Fire Burn Royal Court",
+  "type": "royal_court",
+  "location": "Fire Burn Country",
+  "peak_realm": "Spirit Severing (Fire Emperor)",
+  "canon_status": "regional_power",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "mortals": 600000,
+    "qi_condensation": 6000,
+    "foundation_establishment": 600,
+    "core_formation": 60,
+    "elders": 25,
+    "fire_emperor": 1,
+    "spirit_beasts": 1200
+  },
+  "economy": {
+    "spirit_stones": "moderate",
+    "food": "volcano-aspected",
+    "water": "volcano-spring",
+    "alchemy": "fire-focus",
+    "forging": "fire-focus",
+    "formation": "fire-focus",
+    "trade": "fire-attribute goods",
+    "recruitment": "Fire Burn Country"
+  },
+  "politics": {
+    "allies": [
+      "fire-aspected sects",
+      "flame dragon (tributed)"
+    ],
+    "enemies": [
+      "ice-aspected powers"
+    ],
+    "vassals": [
+      "Fire Burn sects"
+    ],
+    "rivals": [
+      "Snow Domain Country"
+    ],
+    "internal_factions": [
+      "royal family",
+      "war council"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "Fire Burn nobility",
+    "expansion": "steady",
+    "decline": "none current",
+    "schisms": "royal vs war council tension",
+    "wars": [
+      "border conflicts with Snow Domain"
+    ],
+    "recovery": "strong; Fire Emperor + flame dragon tribute"
+  },
+  "libraries": [
+    "fire techniques",
+    "fire formation manuals",
+    "fire beast catalogues",
+    "royal records"
+  ],
+  "spirit_beasts": [
+    "flame dragons (tributed)",
+    "fire phoenixes",
+    "fire wolves"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 799391159,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

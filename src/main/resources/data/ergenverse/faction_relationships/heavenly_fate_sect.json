@@ -1,0 +1,82 @@
+{
+  "_comment": "Faction relationships: heavenly_fate_sect. Per user directive: faction relationship network — allies/enemies/vassals/rivals. Prime Directive: relationships exist objectively.",
+  "faction_id": "heavenly_fate_sect",
+  "type": "sect",
+  "allies": [
+    "orthodox_sects"
+  ],
+  "enemies": [
+    "soul_refining_sect",
+    "devil_sects",
+    "sky_demon_country"
+  ],
+  "vassals": [],
+  "rivals": [
+    "soul_refining_sect"
+  ],
+  "neutral": [
+    "wang_lin"
+  ],
+  "note": "",
+  "salt": 1339763362,
+  "spiritual_vein_grade": {
+    "grade": "high",
+    "element": null,
+    "qi_modifier": "Divination accuracy enhanced; all-affinity cultivation",
+    "canon_note": "Heavenly Fate Sect's high-grade null-element vein supports divination and all-element cultivation"
+  },
+  "heritage_treasures": [
+    {
+      "item_id": "heavenly_fate_seal",
+      "name": "Heavenly Fate Seal",
+      "status": "active",
+      "location_within_faction": "Sect Leader's hall",
+      "canon_note": null
+    }
+  ],
+  "_xianxia_schema": 2,
+  "relationship_metadata": {
+    "allies": [
+      {
+        "id": "orthodox_sects",
+        "strength": null,
+        "since": null,
+        "reason": null
+      }
+    ],
+    "enemies": [
+      {
+        "id": "soul_refining_sect",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "devil_sects",
+        "strength": null,
+        "since": null,
+        "reason": null
+      },
+      {
+        "id": "sky_demon_country",
+        "strength": null,
+        "since": null,
+        "reason": null
+      }
+    ],
+    "vassals": [],
+    "rivals": [
+      {
+        "id": "soul_refining_sect",
+        "competition_over": null,
+        "intensity": null
+      }
+    ],
+    "neutral": [
+      {
+        "id": "wang_lin",
+        "context": null
+      }
+    ]
+  }
+}

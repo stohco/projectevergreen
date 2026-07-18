@@ -1,0 +1,13 @@
+{
+  "_comment": "Ecosystem integration: celestial_realm_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "celestial_realm_ecology",
+  "beasts": [
+    "celestial_guard_beast",
+    "puppet_beast",
+    "thunder_celestial_beast"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Celestial Realm; constructed being ecology",
+  "salt": 1334418790
+}

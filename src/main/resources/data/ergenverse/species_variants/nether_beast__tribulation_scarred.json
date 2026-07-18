@@ -1,0 +1,29 @@
+{
+  "_comment": "Life-state variant: Nether Beast (Tribulation-Scarred). Generated from canonical species definition. Prime Directive: this state exists objectively; perception tier determines whether player recognizes it.",
+  "variant_id": "nether_beast__tribulation_scarred",
+  "species_id": "nether_beast",
+  "species_name": "Nether Beast",
+  "species_nameCn": "冥兽",
+  "novel": "Renegade Immortal",
+  "life_state": "tribulation_scarred",
+  "life_state_name": "Tribulation-Scarred",
+  "description": "Survived heavenly tribulation, body marked by lightning; cultivates by absorbing residual tribulation",
+  "modifiers": {
+    "size_multiplier": 1.2,
+    "power_multiplier": 2.5,
+    "intelligence_multiplier": 1.4,
+    "temperament": "sober",
+    "rarity": "rare"
+  },
+  "perception_tiers": {
+    "mortal": "Sees a sober beast.",
+    "qi_condensation": "Sees a sober beast of nether beast kind.",
+    "foundation_establishment": "Recognizes life-state: Tribulation-Scarred.",
+    "core_formation": "Recognizes species, life-state, and approximate cultivation.",
+    "nascent_soul": "Sees bloodline, mutation potential, and treasure affinity.",
+    "spirit_severing": "Sees complete ecology and Dao-comprehension state."
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 582981696
+}

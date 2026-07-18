@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Qing Shui (清水). Canon ID: N30. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_qing_shui",
+  "name": "Qing Shui",
+  "nameCn": "清水",
+  "canon_id": "N30",
+  "type": "elder",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "Third Step",
+  "personality": "serene, water-aspected immortal; mentor figure",
+  "speech": "calm, flowing, wise",
+  "relationship_to_wanglin": "mentor; gave Wang Lin the Slaughter Sword",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "A serene immortal",
+    "qi_condensation": "Water immortal; calm overwhelming aura",
+    "core_formation": "Qing Shui; Third Step",
+    "nascent_soul": "Third Step; water dao; Wang Lin's mentor"
+  },
+  "canon_confidence": 5,
+  "note": "Gave Wang Lin the Slaughter Sword; mentor figure",
+  "derivation_type": "A",
+  "salt": 1454779581,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

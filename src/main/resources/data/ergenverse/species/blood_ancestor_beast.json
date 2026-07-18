@@ -1,0 +1,80 @@
+{
+  "_comment": "Species: Blood Ancestor Beast (血祖兽) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "blood_ancestor_beast",
+  "name": "Blood Ancestor Beast",
+  "nameCn": "血祖兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Formless mass of congealed blood 50 m across, can shape into any beast form, perpetually dripping",
+    "size": "50 m mass, 100000 jin; ancient forms span kilometers",
+    "behavior": "Seeks bloodlines to consume; cultivates by absorbing entire bloodlines; killed by Wang Lin after long conflict",
+    "habitat": "Blood-aspected forbidden zones, ancient battlefields, Blood Sea",
+    "cultivation": "Ascendant -> Immortal (blood attribute)",
+    "intelligence": 8,
+    "diet": "bloodlines, blood-aspected herbs, entire beast species",
+    "relationships": "Enemy of Wang Lin; ancestor of all blood-mutation beasts",
+    "techniques": [
+      "blood_assimilate",
+      "form_shift",
+      "blood_sea_flood",
+      "bloodline_devour"
+    ],
+    "treasures": [
+      "blood_ancestor_core",
+      "congealed_blood_essence",
+      "bloodline_fragment"
+    ],
+    "bloodline": "Originator of all blood-mutation bloodlines",
+    "mutations": [
+      "formless",
+      "all_bloodline_absorption"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "blood_ancestor_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "blood_ancestor_beast — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 608453210,
+  "bloodline_tier": "ancient_celestial",
+  "inner_dan_properties": {
+    "element": "blood",
+    "purity_tier": 9,
+    "dao_resonance": "bloodline_sovereignty",
+    "side_effects": [
+      "blood_frenzy"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

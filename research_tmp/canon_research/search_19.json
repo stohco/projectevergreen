@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://renegade-immortal-xian-ni.fandom.com/wiki/Wang_Lin/Techniques",
+    "name": "Wang Lin/Techniques - Renegade Immortal Xian Ni Wiki - Fandom",
+    "snippet": "Call the Wind · Summon the Rain · Magic Arsenal · Mountain Crumbles · Lands Collapse · Dark Moon, Clear Skies.",
+    "host_name": "renegade-immortal-xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin/Techniques",
+    "name": "Wang Lin/Techniques | Xian Ni Wikia - Fandom",
+    "snippet": "This page is a list of Techniques Wang Lin practiced on his cultivation path. They define his cultivation, so a great part of his personality and innate self.",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=wl6PmCRorio",
+    "name": "3 Celestial Spells That Made Wang Lin UNSTOPPABLE - YouTube",
+    "snippet": "Before leaving Wang Lin, the legendary Situ Nan passed down three forbidden techniques — the Celestial Spells. Discover the truth behind the ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Wang%20Lin/986247",
+    "name": "Wang Lin - Renegade Immortal",
+    "snippet": "A low-level spell Wang Lin learned during his Qi Condensation period. It can manipulate objects from a distance. Yellow Springs Ascension Art, A high-level ...",
+    "host_name": "baike.baidu.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/noveltranslations/comments/mqjv42/renegade_immortal_questions",
+    "name": "Renegade Immortal Questions : r/noveltranslations - Reddit",
+    "snippet": "He then would have had to rely on celestial energy and celestial spells, the only way for his power to increase would be to increase his ...",
+    "host_name": "www.reddit.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

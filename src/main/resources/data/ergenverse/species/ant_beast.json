@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Ant Beast (蚁兽) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "ant_beast",
+  "name": "Ant Beast",
+  "nameCn": "蚁兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "canonical": {
+    "appearance": "Giant ant 1 m long (worker) to 3 m (soldier), mandibles can sever spirit-steel, queens 8 m",
+    "size": "1-8 m, 50-5000 jin by caste",
+    "behavior": "Eusocial; builds underground kingdoms millions strong; cultivates communally",
+    "habitat": "Underground spirit mines, ant kingdom biomes, earth-aspected deep caves",
+    "cultivation": "Foundation Establishment (worker) -> Core Formation (soldier) -> Nascent Soul (queen)",
+    "intelligence": 5,
+    "diet": "spirit-ore, underground herbs, lost miners",
+    "relationships": "Enemy of underground civilizations; rival of giant centipedes",
+    "techniques": [
+      "mandible_sever",
+      "acid_spit",
+      "swarm_overwhelm",
+      "tunnel_burst"
+    ],
+    "treasures": [
+      "ant_core",
+      "mandible_fragment",
+      "queen_pearl"
+    ],
+    "bloodline": "Earth-Ant lineage; collective cultivation bloodline",
+    "mutations": [
+      "winged_soldier",
+      "golden_mandible",
+      "ancient_ant_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "ant_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "ant_beast — not a hive-mind species"
+    },
+    "combat_ai": "hive_coordinated"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1213588244,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

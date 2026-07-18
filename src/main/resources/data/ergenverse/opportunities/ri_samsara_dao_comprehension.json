@@ -1,0 +1,33 @@
+{
+  "_comment": "RI Canon Opportunity: Samsara Dao Comprehension. Canon event: Wang Lin comprehends the Samsara Dao. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_samsara_dao_comprehension",
+  "name": "Samsara Dao Comprehension",
+  "canon_event": "Wang Lin comprehends the Samsara Dao",
+  "location": "reincarnation_realm",
+  "age_requirement_years": 0,
+  "cultivation_required": "Ascendant",
+  "perception_required": "Immortal",
+  "luck_modifier": 0.1,
+  "discovery_methods": [
+    "dao_comprehension",
+    "divine_sense"
+  ],
+  "reward_tables": [
+    "samsara_dao",
+    "reincarnation_essence",
+    "past_life_memories"
+  ],
+  "why_untaken": "Requires Immortal-tier perception to comprehend the Samsara Dao.",
+  "natural_next_event": "The Samsara Dao awaits a cultivator who can comprehend it.",
+  "canon_confidence": 4,
+  "derivation_type": "A",
+  "salt": 502906723,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

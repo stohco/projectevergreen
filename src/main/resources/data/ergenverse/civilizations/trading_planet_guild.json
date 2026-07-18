@@ -1,0 +1,81 @@
+{
+  "_comment": "Civilization: Trading Planet Guild (merchant_guild) at Trading Planet. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "trading_planet_guild",
+  "name": "Trading Planet Guild",
+  "type": "merchant_guild",
+  "location": "Trading Planet",
+  "peak_realm": "Spirit Severing (guild master)",
+  "canon_status": "major_merchant_power",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "population_structure": {
+    "mortals": "millions",
+    "cultivators": "thousands",
+    "elders": 50,
+    "guild_master": 1,
+    "spirit_beasts": 500
+  },
+  "economy": {
+    "spirit_stones": "vast",
+    "food": "trade",
+    "water": "trade",
+    "alchemy": "trade",
+    "forging": "trade",
+    "formation": "trade",
+    "trade": "inter-star-system apex",
+    "recruitment": "merchant families"
+  },
+  "politics": {
+    "allies": [
+      "all trade partners"
+    ],
+    "enemies": [
+      "bandit clans"
+    ],
+    "vassals": [
+      "caravan fleets"
+    ],
+    "rivals": [
+      "other merchant guilds"
+    ],
+    "internal_factions": [
+      "merchant families",
+      "caravan fleets"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "merchant family birth",
+    "expansion": "trade-route expansion",
+    "decline": "none current",
+    "schisms": "merchant family disputes",
+    "wars": [
+      "trade-route conflicts"
+    ],
+    "recovery": "strong; vast reserves"
+  },
+  "libraries": [
+    "trade records",
+    "star-system maps",
+    "goods catalogues",
+    "basic technique manuals"
+  ],
+  "spirit_beasts": [
+    "caravan beasts",
+    "guard beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 266392827,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

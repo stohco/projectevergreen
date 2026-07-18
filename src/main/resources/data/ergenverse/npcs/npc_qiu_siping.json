@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Qiu Siping (邱思平). Canon ID: N34. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_qiu_siping",
+  "name": "Qiu Siping",
+  "nameCn": "邱思平",
+  "canon_id": "N34",
+  "type": "disciple",
+  "faction": "heng_yue_sect",
+  "location": "heng_yue_sect",
+  "cultivation": "Nascent Soul",
+  "personality": "ambitious, scheming outer disciple who climbed to inner",
+  "speech": "polite but guarded",
+  "relationship_to_wanglin": "fellow disciple; rival then ally",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator in robes",
+    "qi_condensation": "Heng Yue inner disciple; Nascent Soul aura",
+    "core_formation": "Fellow disciple; scheming but reliable",
+    "nascent_soul": "Nascent Soul cultivator; reads as ambitious survivor"
+  },
+  "canon_confidence": 4,
+  "note": "Heng Yue Sect disciple; survived the sect's destruction",
+  "derivation_type": "A",
+  "salt": 1250886609,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "nascent_soul",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

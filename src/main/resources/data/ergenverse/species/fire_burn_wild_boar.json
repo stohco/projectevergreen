@@ -1,0 +1,66 @@
+{
+  "_comment": "Fire Burn Wild Boar (火焚野猪) — Renegade Immortal. Canon confidence: 3/5. Prime Directive: this beast exists objectively whether the player has the perception to recognize it.",
+  "species_id": "fire_burn_wild_boar",
+  "name": "Fire Burn Wild Boar",
+  "nameCn": "火焚野猪",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Aggressive boar with fire-attribute tusks. Common dangerous beast in Fire Burn Country wilderness.",
+    "size": "1.5m, 200 jin",
+    "behavior": "See ecology definitions.",
+    "habitat": "Fire Burn Country",
+    "cultivation": "Foundation Establishment",
+    "intelligence": 3,
+    "diet": "See ecology definitions.",
+    "relationships": "See ecology definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "fire_burn_wild_boar — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "fire_burn_wild_boar — not a hive-mind species"
+    },
+    "combat_ai": "territorial_defender"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1603855622,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

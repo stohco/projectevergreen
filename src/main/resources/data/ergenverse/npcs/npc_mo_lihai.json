@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Mo Lihai (莫离海). Canon ID: N36. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_mo_lihai",
+  "name": "Mo Lihai",
+  "nameCn": "莫离海",
+  "canon_id": "N36",
+  "type": "other",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "Ascendant+",
+  "personality": "powerful cultivator",
+  "speech": "measured",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A powerful cultivator",
+    "qi_condensation": "Ascendant+; overwhelming",
+    "core_formation": "Ascendant+",
+    "nascent_soul": "Mo Lihai; Ascendant+"
+  },
+  "canon_confidence": 3,
+  "note": "Ascendant+ cultivator NPC",
+  "derivation_type": "B",
+  "salt": 1294344655,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

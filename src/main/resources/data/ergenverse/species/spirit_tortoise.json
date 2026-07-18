@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Spirit Tortoise (灵龟) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "spirit_tortoise",
+  "name": "Spirit Tortoise",
+  "nameCn": "灵龟",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Ancient tortoise 1 m shell, shell spirit-jade, age measured in millennia",
+    "size": "1 m shell adult, 200 jin; ancient 5 m, 5000 jin",
+    "behavior": "Patient cultivator; cultivates by absorbing earth-essence; sleeps for centuries",
+    "habitat": "Earth-aspected springs, ancient caves, spirit veins",
+    "cultivation": "Core Formation -> Nascent Soul (earth attribute)",
+    "intelligence": 8,
+    "diet": "earth-herbs, spirit-minerals, spring-water",
+    "relationships": "Auspicious; rival of giant pythons",
+    "techniques": [
+      "shell_defense",
+      "earth_step",
+      "ancient_bite",
+      "spring_drink"
+    ],
+    "treasures": [
+      "spirit_tortoise_core",
+      "shell_fragment",
+      "ancient_pearl"
+    ],
+    "bloodline": "Spirit-Tortoise lineage; earth-attribute bloodline (dilute Black Tortoise)",
+    "mutations": [
+      "jade_shell",
+      "ancient_tortoise_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "spirit_tortoise — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "spirit_tortoise — not a hive-mind species"
+    },
+    "combat_ai": "territorial_defender"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 978989580,
+  "bloodline_tier": "ordinary",
+  "inner_dan_properties": {
+    "element": "water",
+    "purity_tier": 3,
+    "dao_resonance": "longevity",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

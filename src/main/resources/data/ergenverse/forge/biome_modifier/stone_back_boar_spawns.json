@@ -1,0 +1,15 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "ergenverse:zhao_plains",
+    "ergenverse:zhao_mountains",
+    "ergenverse:chu_country"
+  ],
+  "spawners": {
+    "ergenverse:stone_back_boar": {
+      "weight": 8,
+      "minCount": 1,
+      "maxCount": 3
+    }
+  }
+}

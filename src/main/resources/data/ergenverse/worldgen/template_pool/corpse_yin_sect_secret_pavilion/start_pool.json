@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:corpse_yin_sect_secret_pavilion/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "minecraft:nether_fortress/bridge_crossing",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

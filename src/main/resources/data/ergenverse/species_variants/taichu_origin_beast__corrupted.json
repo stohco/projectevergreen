@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Taichu Origin True Body (corrupted). Generated from canonical definition.",
+  "variant_id": "taichu_origin_beast__corrupted",
+  "species_id": "taichu_origin_beast",
+  "species_name": "Taichu Origin True Body",
+  "life_state": "corrupted",
+  "modifiers": {
+    "size_multiplier": 1.3,
+    "power_multiplier": 2.0,
+    "temperament": "malevolent",
+    "rarity": "rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 860319288
+}

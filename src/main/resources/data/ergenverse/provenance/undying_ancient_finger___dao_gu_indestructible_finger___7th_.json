@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Undying Ancient Finger / Dao Gu Indestructible Finger — 7th Original Spell (不古道指). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I151",
+  "name": "Undying Ancient Finger / Dao Gu Indestructible Finger — 7th Original Spell",
+  "nameCn": "不古道指",
+  "type": "other",
+  "category": "domain",
+  "origin": "Self-created (Ch. 1639)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Condenses power of three ancient clans into one finger",
+    "Terrifying offensive power AND terrifying recovery ability",
+    "Temporarily maintains one finger's indestructibility"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Ancient Clan / Immortal tier",
+    "7th self-created divine ability",
+    "Recovery beyond destruction"
+  ],
+  "source": "Ch.1639 (novel); Fandom wiki; Baidu Baike",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Self-created (Ch. 1639)"
+  }
+}

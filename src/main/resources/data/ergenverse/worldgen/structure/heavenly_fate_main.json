@@ -1,0 +1,16 @@
+{
+  "_comment": "Heavenly Fate Sect Main Grounds (天运宗主殿) — the main sect grounds of the Heavenly Fate Sect, powerhouse sect of the Zhao Country region (CANON_RI_COMPLETE_WORLD.md L23). Distinct from the existing heavenly_fate_outpost (which is a small forward camp); this is the grand main sect with fate-reading towers and assembly halls. Stand-in: plains village (grand). Final: fate-reading observatory towers, grand assembly halls, fate-qi gathering arrays, ancestor halls.",
+  "type": "minecraft:jigsaw",
+  "biomes": "ergenverse:zhao_plains",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "start_pool": "ergenverse:heavenly_fate_main/start_pool",
+  "size": 6,
+  "start_height": {
+    "type": "minecraft:constant",
+    "value": 0
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "max_distance_from_center": 116,
+  "use_expansion_hack": false
+}

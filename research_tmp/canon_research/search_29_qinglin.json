@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin is the main protagonist of Renegade Immortal. Born with a weak body, Wang Lin's features begin as average before becoming moderately handsome as a ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Wang%20Lin/986247",
+    "name": "Wang Lin - Renegade Immortal",
+    "snippet": "An Origin Treasure condensed and gifted to Wang Lin by Immortal Lord Qing ... Reincarnated in the Immortal Astral Continent under the name Qing Hong, she ...",
+    "host_name": "baike.baidu.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Qing_Lin",
+    "name": "Qing Lin | Xian Ni Wikia - Fandom",
+    "snippet": "Qing Lin was the strongest Celestial Emperor and the strongest person inside the Sealed Realm during the reign of the Celestial Domain.",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Uu4-kiDggMo",
+    "name": "Wang Lin Uncovers Immortal Emperor's Cave Secret ! Qing",
+    "snippet": "In this episode of Renegade Immortal, Wang Lin finally uncovers the terrifying truth hidden inside the Immortal Emperor's Cave.",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=41orDNiihXo",
+    "name": "Wang Lin's Mad Plan: Devour Scatter Devil Soul + Unlock Second",
+    "snippet": "In this episode, Wang Lin faces his deadliest challenges yet in the Demon Spirit Land. After a terrifying escape from the Black Tower, ...",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

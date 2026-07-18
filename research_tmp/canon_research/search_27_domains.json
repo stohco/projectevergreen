@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Essences_Evolutions",
+    "name": "Essences Evolutions | Xian Ni Wikia - Fandom",
+    "snippet": "... Domains, Wang Lin gained both a Thunder and a Fire Essence. After destroying the Scatter Thunder Clan, Wang Lin created 3 more types of Accompanying Thunder ...\nDuring his life and death battle with Daoist Water, Wang Lin comprehended Life and Death to a new level, awakening his Life and Death Essence.",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/RenegadeImmortal/comments/1l5poeh/fellow_daoists_i_am_in_need_of_enlightenment_from",
+    "name": "Fellow daoists i am in need of enlightenment from senior cultivator",
+    "snippet": "Wang Lin had 13 essences(counting the dual essences as one) while still in the 3rd step with most of them going beyond an essence into the state ... Questions regarding cultivation : r/RenegadeImmortal - Reddit What are the Cultivation Levels in Renegade Immortal? | Part 2 - Reddit More results from www.reddit.com\nWang Lin had 13 essences(counting the dual essences as one) while still in the 3rd step with most of them going beyond an essence into the state ... Questions regarding cultivation : r/RenegadeImmortal - Reddit End of renegade immortal : r/noveltranslations - Reddit More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/shorts/R8ZtSZ2mAlY",
+    "name": "Wang Lin's FINAL 17 Domains HINDI Explained! Renegade Immortal",
+    "snippet": "WANG LIN'S 17 DOMAINS EXPLAINED! Every Domain He Masters in Renegade Immortal #shorts Alternative Titles All 17 Domains Wang Lin Will ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "Jul 7, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://vsbattles.com/threads/wang-lins-soul-transformation-key.70882",
+    "name": "Wang Lin's Soul Transformation Key | VS Battles Wiki Forum",
+    "snippet": "Wang Lin does not have a Soul Formation key on his profile but he does have a Soul Transformation key which obviously has his Soul Formation stuff in it.",
+    "host_name": "vsbattles.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Wang%20Lin/986247",
+    "name": "Wang Lin - Renegade Immortal",
+    "snippet": "The difference between these two points is the distinction between a pseudo-source and a true source. Even if a Dao prover possesses the sources of many Daos, ...\nHe possesses a total of fourteen Origins ( Metal , Wood , Water , Fire , Earth , Thunder, Life and Death, True and False, Cause and Effect, Reincarnation, ...",
+    "host_name": "baike.baidu.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

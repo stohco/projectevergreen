@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Xu Liqing (Six-Desire Devil) (徐立清 / 六欲魔尊). Canon ID: N92. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_xu_liqing",
+  "name": "Xu Liqing (Six-Desire Devil)",
+  "nameCn": "徐立清 / 六欲魔尊",
+  "canon_id": "N92",
+  "type": "antagonist",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect",
+  "cultivation": "Soul Transformation",
+  "personality": "cunning, desire-manipulating devil cultivator",
+  "speech": "seductive, manipulative",
+  "relationship_to_wanglin": "enemy; soul-refining adversary",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A disturbingly beautiful cultivator",
+    "qi_condensation": "Devil cultivator; desire-aspected aura",
+    "core_formation": "Six-Desire Devil; Soul Transformation",
+    "nascent_soul": "Master of desire manipulation; Soul Transformation perfect circle"
+  },
+  "canon_confidence": 5,
+  "note": "Six-Desire Devil Venerable; major Soul Refining antagonist",
+  "derivation_type": "A",
+  "salt": 139114942,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,17 @@
+{
+  "_comment": "Ecosystem integration: spirit_vein_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "spirit_vein_ecology",
+  "beasts": [
+    "spirit_rabbit",
+    "spirit_deer",
+    "wind_wolf",
+    "mountain_lion",
+    "giant_python",
+    "spirit_tortoise",
+    "spirit_bear"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Spirit vein ecology; herbivores + predators + guardians",
+  "salt": 488172710
+}

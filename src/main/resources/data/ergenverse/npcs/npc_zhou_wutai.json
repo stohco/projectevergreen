@@ -1,0 +1,38 @@
+{
+  "_comment": "NPC: Zhou Wutai (周武泰). Canon ID: N58. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_zhou_wutai",
+  "name": "Zhou Wutai",
+  "nameCn": "周武泰",
+  "canon_id": "N58",
+  "type": "divine_emperor",
+  "faction": "vermilion_bird_divine_sect",
+  "location": "vermilion_bird_divine_sect",
+  "cultivation": "Vermilion Bird Master (Wending+)",
+  "personality": "wise, burdened divine emperor",
+  "speech": "measured, kingly",
+  "relationship_to_wanglin": "predecessor; mentor figure",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "An impossibly powerful cultivator",
+    "qi_condensation": "Vermilion Bird Master; overwhelming",
+    "core_formation": "Divine Emperor; beyond comprehension",
+    "nascent_soul": "Vermilion Bird Master; Wending realm",
+    "spirit_severing": "Wending realm; Wang Lin's predecessor as Divine Emperor"
+  },
+  "canon_confidence": 5,
+  "note": "Vermilion Bird Divine Emperor; Wang Lin's predecessor",
+  "derivation_type": "A",
+  "salt": 181531727,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

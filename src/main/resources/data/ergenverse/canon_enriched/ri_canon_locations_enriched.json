@@ -1,0 +1,1202 @@
+[
+  {
+    "id": "L01",
+    "name": "The Root Dao",
+    "nameCn": "本源大道",
+    "section": "1A. Cosmological Top Levels (dimensions / realms that contain other realms)",
+    "type": "dimension / root",
+    "cosmologicalPosition": "the outermost reality — the \"true\" Dao-source underlying everything",
+    "description": "The fundamental laws (Five Elements, Karma, Reincarnation, Life-Death, True-False, Absolute Beginning/End, Restriction, Slaughter) from which all cultivators draw. Not a place one \"lives in\"; it is the substrate of all existence.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin ultimately comprehends the Reincarnation Essence (his 14th) here, achieving Heaven Trampling. Source-thesis of all Daos."
+    ]
+  },
+  {
+    "id": "L02",
+    "name": "Luo Tian Star System / Luo Tian",
+    "nameCn": "罗天",
+    "section": "1A. Cosmological Top Levels (dimensions / realms that contain other realms)",
+    "type": "star-system / over-realm",
+    "cosmologicalPosition": "the \"true\" star-system-level reality outside the Cave World; the Immortal Astral Continent floats in Luo Tian's void",
+    "description": "The Star System tier above the IAC. Home of the Luo Tian Star Domain (where the Luo Tian Alliance War was fought). The \"Three Auspicious Treasures\" (Xu Liguo, Liu Jinbiao, Zhong Dahong) were cultivators from Luo Tian originally.",
+    "worldLawTier": "absolute",
+    "sealed": "No (it is outside the seal; this is what makes Luo Tian \"more real\" than the Cave World)",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin's \"Luo Tian Alliance War\" arc (Book 7-8); Wang Lin slew the Water Daoist here; the Luo Tian Thunder Immortal Realm existed here before collapsing."
+    ]
+  },
+  {
+    "id": "L03",
+    "name": "Immortal Astral Continent / Xian Gang Continent",
+    "nameCn": "仙罔大陆 / 仙罡大陆",
+    "section": "1A. Cosmological Top Levels (dimensions / realms that contain other realms)",
+    "type": "continent / realm",
+    "cosmologicalPosition": "the massive landmass floating in Luo Tian's void; the \"real\" world outside the Cave World. The Cave World is a pocket-world of the IAC.",
+    "description": "A continent so vast it has nine suns (the \"Nine Suns\" of the IAC — Grand Empyreans all). Subdivided into provinces/continents: Heavenly Bull Continent, Green Devil Continent, Mountain Sea Continent, Great Saint Continent, Mengtu Province, Tianniu Province, Green Bull Continent, and an Imperial City / Dao Ancient Imperial Capital. Originally ruled by Immortal Emperor Lian Daozhen; later by Ancient Clan Dao Ancient Great Heavenly Venerable; Wang Lin becomes its #1 power.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin arrives here as a Third-Step cultivator, condenses Void Clone (causing the 9 suns to manifest simultaneously), joins Great Soul Sect, devours Dao Demon Sect Master, obtains Ancient Clan inheritance, slays Gu Dao, becomes \"the Tenth Sun,\" Transcends the 9 Heaven Trampling Bridges, and leaves with Li Muwan."
+    ]
+  },
+  {
+    "id": "L04",
+    "name": "The Cave World / Dong Tian (洞天) — Wang Lin's Cave World",
+    "nameCn": null,
+    "section": "1A. Cosmological Top Levels (dimensions / realms that contain other realms)",
+    "type": "dimension / pocket-world",
+    "cosmologicalPosition": "a sealed dimensional bubble floating in Luo Tian's void; the universe inside it contains Planet Suzaku, the Brilliant Void Star System, etc. Created by the Seven-Colored Daoist (the original \"owner\").",
+    "description": "A pocket-world owned by a higher-tier cultivator (Seven-Colored Daoist) and farmed for Joss Flames (cultivation energy produced by mortal faith). Has a sealed inner half (the Sealed Realm) and an outer half (the Outer Realm). Contains billions of cultivation planets. The Cave World's \"law\" is that Third-Step cultivators cannot naturally arise — the seal suppresses them.",
+    "worldLawTier": "absolute (interior); medium-tier laws within (because the seal suppresses high-tier cultivation)",
+    "sealed": "YES — sealed by the Seven-Colored Daoist; unsealed when Wang Lin kills him",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "The entire Book 1-9 takes place inside the Cave World. Wang Lin discovers it IS a cave world only in Book 11 (\"Mysteries of the Ancient Era\") when he breaches the Ancient Immortal Domain and meets the Seven-Colored Daoist. After killing the Seven-Colored Daoist, Wang Lin renames it \"Wang Lin's Cave World\" and becomes the new owner."
+    ]
+  },
+  {
+    "id": "L05",
+    "name": "Sealed Realm / Inner Realm",
+    "nameCn": "封界 / 内界",
+    "section": "1A. Cosmological Top Levels (dimensions / realms that contain other realms)",
+    "type": "realm (inner half of the Cave World)",
+    "cosmologicalPosition": "the inner half of the Cave World; separated from the Outer Realm by the Realm-Sealing Grand Array. Contains Planet Suzaku, Brilliant Void Star System, Allheaven Star System, Cloud Sea Star System.",
+    "description": "Where Wang Lin and most of the Cave World's cultivators live. The Realm-Sealing Grand Array (whose spirit is the Heaven-Splitting Axe) suppresses Third-Step cultivation here — only \"Heaven Blight\" cultivators can squeeze through. The \"Outer Realm\" (L06 below) is the half outside this seal.",
+    "worldLawTier": "medium (the seal caps cultivation at Heaven Blight / quasi-Third-Step)",
+    "sealed": "YES — sealed by the Realm-Sealing Grand Array",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "The \"Sealed Realm War\" (Wang Lin as first responder, slaughtering thousands of Outer Realm cultivators). Wang Lin becomes \"Lord of the Sealed Realm.\" Wang Lin resets the Realm Sealing Grand Array at end of arc, planning new territories."
+    ]
+  },
+  {
+    "id": "L06",
+    "name": "Outer Realm",
+    "nameCn": "外界",
+    "section": "1A. Cosmological Top Levels (dimensions / realms that contain other realms)",
+    "type": "realm (outer half of the Cave World)",
+    "cosmologicalPosition": "the outer half of the Cave World; the half NOT inside the Sealed Realm. Higher-tier cultivators dwell here.",
+    "description": "The home of cultivators who invaded the Sealed Realm during the Sealed Realm War. Less restricted cultivation-wise than the Sealed Realm. Daoist Water (Shui Daozi) was from here. The Dao Devil Sect and other factions are partially based here.",
+    "worldLawTier": "high",
+    "sealed": "No (it is the side OUTSIDE the seal, but both sides are still sealed within the Cave World)",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin flees to the Outer Realm with Li Qianmei after the Wind Celestial Realm arc. Battles Outer-Realm cultivators throughout the late Sealed Realm War. Multiple Outer-Realm third-step cultivators are killed by Wang Lin borrowing the Heaven-Splitting Axe."
+    ]
+  },
+  {
+    "id": "L07",
+    "name": "Primordial Divine Realm",
+    "nameCn": "原神境",
+    "section": "1A. Cosmological Top Levels (dimensions / realms that contain other realms)",
+    "type": "dimension (special pocket-realm tied to the Heaven Defying Bead)",
+    "cosmologicalPosition": "a sub-dimension accessible from the Cave World after Wang Lin reaches Third Step; the place where Tianyunzi's true body hides.",
+    "description": "A realm that exists because of the Heaven Defying Bead / Realm-Defining Compass. Wang Lin meets Tianyunzi here in the endgame and learns that Lu Mo (his Slaughter-Silence clone) was sent back in time via the Flowing Moon technique to leave the resurrection method for Li Muwan.",
+    "worldLawTier": "absolute",
+    "sealed": "Was sealed (by Tianyunzi's design); unsealed by Wang Lin",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin's final battle with Tianyunzi (who intended to possess Wang Lin but was defeated). Wang Lin crosses the 9 Heaven Trampling Bridges here."
+    ]
+  },
+  {
+    "id": "L08",
+    "name": "Brilliant Void Star System / Alliance Star System",
+    "nameCn": "玄虚星系 / 联盟星系",
+    "section": "1B. Star Systems (inside the Sealed Realm / Cave World)",
+    "type": "star_system",
+    "cosmologicalPosition": "inside Sealed Realm; contains ~7 million cultivation planets. Originally called \"Brilliant Void,\" renamed \"Alliance Star System\" after the Cultivation Alliance rose to govern it.",
+    "description": "The primary star system of the early-to-mid story. Contains Planet Suzaku, Planet Tian Yun, Planet Ran Yun, Planet Qing Ling, plus the Vermilion Bird Starfield sub-region.",
+    "worldLawTier": "medium",
+    "sealed": "Yes (within Sealed Realm)",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin's home star system. Site of the Alliance-Allheaven War. After becoming Thunder Celestial, Wang Lin protects this entire star system."
+    ]
+  },
+  {
+    "id": "L09",
+    "name": "Allheaven Star System",
+    "nameCn": "诸天星系",
+    "section": "1B. Star Systems (inside the Sealed Realm / Cave World)",
+    "type": "star_system",
+    "cosmologicalPosition": "inside Sealed Realm; rival star system to the Alliance. Origin of many antagonists (Yao Family).",
+    "description": "The \"other\" major star system. The Southern Domain (containing the Thunder Celestial Realm and the Yao Family's headquarters) is here. Book 7 (\"Fame Shakes The Allheaven Star System\") is set here.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin's fame arc. Yao Family kill-order on Wang Lin. Thunder Celestial Tournament. Wang Lin destroys multiple planets here."
+    ]
+  },
+  {
+    "id": "L10",
+    "name": "Cloud Sea Star System",
+    "nameCn": "云海星系",
+    "section": "1B. Star Systems (inside the Sealed Realm / Cave World)",
+    "type": "star_system",
+    "cosmologicalPosition": "inside Sealed Realm; third major star system. Higher-tier than Alliance/Allheaven — Nirvana Scryer+ cultivators common here.",
+    "description": "A star system dominated by cloud-covered spirit worlds. Contains the Origin Sect, Treasured Jade Sect, Wild Continent, and the Daoist Water's domain. Books 9 (\"Peak of the Cloud Sea\") is set here.",
+    "worldLawTier": "medium-to-high",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin lives as a mortal village doctor here, joins Origin Sect as \"Ceng Niu,\" wins the ranking tournament, battles Daoist Water (turns to stone, saved by Li Qianmei's 10-year blood anointment), enters the Wind Celestial Realm, becomes \"Lord of the Sealed Realm.\""
+    ]
+  },
+  {
+    "id": "L11",
+    "name": "Vermilion Bird Starfield",
+    "nameCn": "朱雀星域",
+    "section": "1B. Star Systems (inside the Sealed Realm / Cave World)",
+    "type": "starfield / sub-region",
+    "cosmologicalPosition": "a sub-region within the Alliance Star System (some sources treat it as a separate starfield). Contains Planet Suzaku and the Four Divine Sect's territory.",
+    "description": "The starfield guarded by the Vermilion Bird Divine Sect. Contains Planet Suzaku (Wang Lin's birthplace), the Vermilion Bird Tomb, the Four Divine Sect headquarters.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin becomes the 6th-Generation Vermilion Bird Divine Emperor here."
+    ]
+  },
+  {
+    "id": "L12",
+    "name": "Blue Silk Clan Star Domain",
+    "nameCn": "蓝丝族星域",
+    "section": "1B. Star Systems (inside the Sealed Realm / Cave World)",
+    "type": "star_domain",
+    "cosmologicalPosition": "an outlying star domain within the Cave World; sub-region of unknown parent (probably Outer Realm or independent).",
+    "description": "The Blue Silk Clan's home star domain. Dao Master Blue Dream is based here. Wang Lin learns \"Dao Art Fusion\" and \"Light Shadow Shield\" from Blue Dream here.",
+    "worldLawTier": "high",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Wang Lin vs. Blue Dream Dao Venerable (heavily injured, saved by Li Qianmei's bracelet)."
+    ]
+  },
+  {
+    "id": "L13",
+    "name": "Luo Tian Star Domain",
+    "nameCn": "罗天星域",
+    "section": "1B. Star Systems (inside the Sealed Realm / Cave World)",
+    "type": "star_domain",
+    "cosmologicalPosition": "the star domain ABOVE the Cave World — outside the seal, in Luo Tian proper. The Luo Tian Alliance War was fought here.",
+    "description": "True-reality star domain. Higher-tier cultivators (Void Tribulant, Grand Empyrean) routinely operate here. The Thunder Immortal Realm and Luo Tian Thunder Immortal Realm were here before their collapse.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Luo Tian Alliance War. Wang Lin takes Xi Zifeng as his 3rd disciple after the Luo Tian Thunder Immortal Realm's collapse."
+    ]
+  },
+  {
+    "id": "L14",
+    "name": "Planet Suzaku / Vermilion Bird Star",
+    "nameCn": "朱雀星",
+    "section": "1C. Planets",
+    "type": "planet",
+    "cosmologicalPosition": "inside Vermilion Bird Starfield → Alliance Star System → Sealed Realm → Cave World",
+    "description": "A third-tier cultivation planet (later raised to higher tiers by Wang Lin's actions). Wang Lin's birthplace. Multiple cultivation countries on its surface (Zhao, Chu, Fire Burn, Sky Demon, Pilu, Snow Domain, etc.). Sealed Cultivation Planet Crystal inside.",
+    "worldLawTier": "low → medium (escalates as Wang Lin remakes the planet)",
+    "sealed": "Yes (Cultivation Planet Crystal seal)",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin's birth, clan annihilation, Ji Realm awakening, Teng Clan extermination, Vermilion Bird Divine Emperor ascension. Situ Nan sealed Cultivation Star Crystal here. Wang Lin returns multiple times to settle karma."
+    ]
+  },
+  {
+    "id": "L15",
+    "name": "Planet Tian Yun / Tianyun Star",
+    "nameCn": "天运星",
+    "section": "1C. Planets",
+    "type": "planet",
+    "cosmologicalPosition": "inside Alliance Star System → Sealed Realm",
+    "description": "A rank-7 cultivation planet. Home of the Heavenly Fate Sect (Tianyun Sect) ruled by the All-Seer, divided into seven color divisions (red/orange/yellow/green/blue/cyan/purple). Blood Ancestor Yao Xinghai's residence. East Sea Demon Spirit Land is here.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin becomes 7th disciple of Purple Division → challenged for True Disciple slot → Tianyunzi's plot → kills Blood Ancestor in Thunder Celestial Realm → captures Yao Xixue. Tuo Sen's territory in the deeper Ancient God Land is reached from here."
+    ]
+  },
+  {
+    "id": "L16",
+    "name": "Planet Qing Lin / Qing Ling",
+    "nameCn": "青灵星",
+    "section": "1C. Planets",
+    "type": "planet",
+    "cosmologicalPosition": "inside Alliance Star System → Sealed Realm",
+    "description": "Xie Qing's home planet. A backwater planet where Xie Qing was originally an ordinary old man before becoming Wang Lin's 2nd disciple. Wang Lin buried Xie Qing in Autumn Orchid Valley here.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Xie Qing's enlightenment (the \"fish, water, net, fishing\" analogy that led Wang Lin to Nirvana Scryer). Wang Lin's return visit when Xie Qing sits atop a mountain for 800 years cultivating only Concepts."
+    ]
+  },
+  {
+    "id": "L17",
+    "name": "Planet Ran Yun",
+    "nameCn": "染云星",
+    "section": "1C. Planets",
+    "type": "planet",
+    "cosmologicalPosition": "inside Allheaven Star System → Sealed Realm",
+    "description": "A planet Wang Lin visited under the alias \"Xu Mu.\" Sun Tai lived here as a friend in his final years. Liu Mei came here to attack Wang Lin and lost; her son Wang Ping was raised here as a mortal.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin raises Wang Ping as a mortal (one lifetime), develops Karma Domain."
+    ]
+  },
+  {
+    "id": "L18",
+    "name": "Earth Planet",
+    "nameCn": "土星",
+    "section": "1C. Planets",
+    "type": "planet",
+    "cosmologicalPosition": "inside Alliance Star System → Sealed Realm (sub-region of Brilliant Void)",
+    "description": "A planet named for its earth-element leanings. Visited by Wang Lin after his Heavenly Fate Sect training. Junior sect master Xu Yunshan of the Xuan Yuan Sect greeted him here.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin kills three Da Lou Sword Sect elders here (over Brilliant Golden Fruit); feeds the fruit to Mosquito Beast and Thunder Toad, triggering their evolution."
+    ]
+  },
+  {
+    "id": "L19",
+    "name": "Trading Planet",
+    "nameCn": "交易星",
+    "section": "1C. Planets",
+    "type": "planet",
+    "cosmologicalPosition": "inside Alliance Star System → Sealed Realm",
+    "description": "An ocean-dominated trading hub planet. Wang Lin and Situ Nan stop here on their way off Planet Suzaku. Mainly ocean; goods-flow economy.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin meets Li Dannan (guide) and Bai Wei here. Situ Nan steals from nearly every sect on the planet, causing a planet-wide chase."
+    ]
+  },
+  {
+    "id": "L20",
+    "name": "Water Spirit Star / Feng Luan Star",
+    "nameCn": "水灵星 / 凤鸾星",
+    "section": "1C. Planets",
+    "type": "planet",
+    "cosmologicalPosition": "inside Alliance Star System → Sealed Realm",
+    "description": "A water-spirit planet. Wang Lin obtained his Fire Essence potential here (first glimpse into the Fu Clan's Golden Leaf Flame Source Origin). Situ Nan founded his \"Southern Prince\" faction here.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin vs. Situ Nan reunion (Water Spirit Star). Situ Nan poisoned; Wang Lin's \"One Drop of Universe\" comprehension."
+    ]
+  },
+  {
+    "id": "L21",
+    "name": "Planet Five Elements",
+    "nameCn": "五行星",
+    "section": "1C. Planets",
+    "type": "planet",
+    "cosmologicalPosition": "inside Sealed Realm (specific sub-region unknown)",
+    "description": "A planet specialized in Five Elements cultivation materials. Water General's \"One Drop of Universe\" originates here.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Wang Lin comprehends 380 million changes to condense his Water Essence here."
+    ]
+  },
+  {
+    "id": "L22",
+    "name": "Immortal Execution Star / Xian Gang Star",
+    "nameCn": "仙罔星",
+    "section": "1C. Planets",
+    "type": "planet (after Wang Lin's reincarnation migration)",
+    "cosmologicalPosition": "within the Immortal Astral Continent proper (the destination of Cave World reincarnators)",
+    "description": "The \"reincarnation destination\" for Wang Lin's friends/allies from the Cave World. Situ Nan reincarnates here as \"Si Nan\" (Grand Marshal of Wu Xuan Country). Xu Liguo, Liu Jinbiao, Zhong Dahong (the Three Auspicious Treasures) continue their swindling ways here. Big Head Cultivator, Zhou Yi, Qing Shuang all reincarnate here.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin systematically awakens his allies' past-life memories here."
+    ]
+  },
+  {
+    "id": "L23",
+    "name": "Country of Zhao / Zhao Kingdom",
+    "nameCn": "赵国",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country",
+    "cosmologicalPosition": "on Planet Suzaku → Alliance Star System → Sealed Realm → Cave World",
+    "description": "A third-tier cultivation country on Planet Suzaku. Contains Wang Family Village, Heng Yue Sect, Tian Shui City, the Forest of Distorted Divine Sense, the Teng Family City. Wang Lin's birthplace.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin's birth; Teng Clan extermination; Wang Lin's return as Soul Formation cultivator to wipe out the Teng family and kill Teng Huayuan; Xuan Dao Sect (where he breaks through to Soul Formation)."
+    ]
+  },
+  {
+    "id": "L24",
+    "name": "Chu Country",
+    "nameCn": "楚国",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country",
+    "cosmologicalPosition": "on Planet Suzaku",
+    "description": "A neighboring country to Zhao. The Cloud Sky Sect (Cloud Heaven Sect / Yuntian Sect) is here. Li Muwan ends up here as an elder and eventually Sect Master.",
+    "worldLawTier": "fragile → low",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin kills Sun Zhenwei at Li Muwan's wedding; becomes Cloud Sky Sect leader; gives the seat to Li Muwan. Returns to build a small house with Li Muwan for her final 10 years."
+    ]
+  },
+  {
+    "id": "L25",
+    "name": "Fire Burn Country / Flame-Burning Country / Huofen Country",
+    "nameCn": "火焚国",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country",
+    "cosmologicalPosition": "on Planet Suzaku",
+    "description": "Li Muwan's home country. The Luo He Sect is based here. Li Qiqing (Li Muwan's brother) was an elite Luo He Sect disciple here. Fire Beasts roam this region.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin (in Ma Liang's body) meets Li Muwan here while escaping a Fire Beast. The Heaven Defying Bead eats the King of Fire Beasts here."
+    ]
+  },
+  {
+    "id": "L26",
+    "name": "Sky Demon Country",
+    "nameCn": "天魔国",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country",
+    "cosmologicalPosition": "on Planet Suzaku (likely the East Demon Spirit Sea region)",
+    "description": "A demonic-cultivation country. Mo Lihai is a city general here. The Demonic Drum tournament (15 rings → Ascendant breakthrough) is held in the capital city.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin takes Thirteen and Huo Pao here for trial. Wang Lin wins the Demonic Drum tournament and breaks through to Ascendant. Yao Xixue schemes against him in a cave here."
+    ]
+  },
+  {
+    "id": "L27",
+    "name": "Pilu Kingdom / Pi Lu Kingdom",
+    "nameCn": "毗卢国",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country",
+    "cosmologicalPosition": "on Planet Suzaku",
+    "description": "The kingdom where the Soul Refining Sect is headquartered. Dun Tian and Nian Tian are from here.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin inherits the Soul Refining Sect and the Ten Billion Soul Banner from Dun Tian here. Soul Transformation breakthrough. The Soul Refining Tribe (east-sea descendants) is the legacy Wang Lin teaches here."
+    ]
+  },
+  {
+    "id": "L28",
+    "name": "Snow Domain Country",
+    "nameCn": "雪域国",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country",
+    "cosmologicalPosition": "on Planet Suzaku (cold region)",
+    "description": "A cold-region country. Liao Fan, who attacked Wang Lin in EP80/ch1200 with Situ Nan's severed arm, was from here.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Tangential to main plot."
+    ]
+  },
+  {
+    "id": "L29",
+    "name": "Xuan Wu / Xuan Country",
+    "nameCn": "玄武国",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country",
+    "cosmologicalPosition": "on Planet Suzaku",
+    "description": "A country Wang Lin fled to while being chased by Duanmu Ji from the Sea of Devils. Mentioned as a destination during the Duanmu Ji arc.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Wang Lin hides in the Heaven Defying Bead for 3 years here to evade Duanmu Ji."
+    ]
+  },
+  {
+    "id": "L30",
+    "name": "Fire Demon Country",
+    "nameCn": "火魔国",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country",
+    "cosmologicalPosition": "on Planet Suzaku (likely near East Demon Spirit Sea)",
+    "description": "A country under which a fragmented ancient demon is sealed. Bei Luo helps Wang Lin weaken the demon here.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin creates his first devil (Xu Liguo) here in a black pagoda. Bei Luo devours the fragmented ancient demon here."
+    ]
+  },
+  {
+    "id": "L31",
+    "name": "Vermilion Bird Country",
+    "nameCn": "朱雀国",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country (cultivation nation-state)",
+    "cosmologicalPosition": "on Planet Suzaku; the highest-tier cultivation country on the planet (level 6, raised by Situ Nan)",
+    "description": "The ruling cultivation nation of Planet Suzaku. Its ruler is the \"Vermilion Bird Master / Vermilion Bird Child\" (a renewable office). Situ Nan was the 2nd-Generation Vermilion Bird Master; Ye Wuyou was the 1st; the 3rd betrayed Situ Nan; the 13th was Qian Pinghai; the 14th severed Situ Nan's arm; the 15th was Zhou Wutai; the 16th was Wang Lin.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin declines the position of Vermilion Bird Child (transferring it to Zhou Wutai). Later becomes the 6th-Generation Vermilion Bird Divine Emperor of the broader Vermilion Bird Divine Sect."
+    ]
+  },
+  {
+    "id": "L32",
+    "name": "Great Wang Dynasty",
+    "nameCn": "大王朝",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country / dynasty",
+    "cosmologicalPosition": "on Planet Suzaku",
+    "description": "Wang Lin's eponymous dynasty, founded after his rise to power. Made Wang Lin \"Ancestor of the Country of Zhao\" simultaneously.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Established offscreen during the Vermilion Bird Star period."
+    ]
+  },
+  {
+    "id": "L33",
+    "name": "Qing Shui Kingdom",
+    "nameCn": "清水国",
+    "section": "1D. Countries (on Planet Suzaku, unless noted)",
+    "type": "country",
+    "cosmologicalPosition": "on Planet Suzaku (former kingdom, destroyed before main story)",
+    "description": "Qing Shui's original mortal kingdom. Its destruction (and Qing Shui's family/clan annihilation) seeded his slaughter essence and his resolve to defy the heavens.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Backstory only — mentioned in Qing Shui's profile."
+    ]
+  },
+  {
+    "id": "L34",
+    "name": "Wang Family Village",
+    "nameCn": "王家村",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "village",
+    "cosmologicalPosition": "in Country of Zhao → Planet Suzaku",
+    "description": "Wang Lin's birthplace. A small mortal village of the impoverished Wang Family Carpenter Clan. ~100 families.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin born here; Teng Huayuan exterminates the village (sparing only Wang Hao and Wang Zhuo who were Heng Yue Sect disciples); Wang Lin returns as Soul Formation to bury the dead."
+    ]
+  },
+  {
+    "id": "L35",
+    "name": "Tian Shui City / Tianshui City",
+    "nameCn": "天水城",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "city",
+    "cosmologicalPosition": "in Country of Zhao → Planet Suzaku",
+    "description": "A major mortal+cultivator trading city. Wang Lin's first destination after his 4-year closed-door cultivation. The Heng Yue Sect has interests here.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin kills Teng Li (Teng Huayuan's great-great-grandson) and steals his Foundation Establishment. Old man Ji Mo's disciples attack Wang Lin here."
+    ]
+  },
+  {
+    "id": "L36",
+    "name": "Teng Family City",
+    "nameCn": "藤家城",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "city",
+    "cosmologicalPosition": "in Country of Zhao → Planet Suzaku",
+    "description": "The Teng Clan's stronghold city. De facto ruled by Teng Huayuan.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin's \"Kill and Destroy the Heart\" revenge: hunts Teng descendants one by one, builds a human-head tower to intimidate Teng Huayuan, finally slays him. The Teng Clan's nine Nascent Soul cultivators are killed and refined into demons."
+    ]
+  },
+  {
+    "id": "L37",
+    "name": "Nan Dou City / South Dou City",
+    "nameCn": "南斗城",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "city",
+    "cosmologicalPosition": "in/near Sea of Devils → Planet Suzaku",
+    "description": "A city Wang Lin visited to purchase an alchemy furnace for Li Muwan's Distant Heaven Pill.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin noticed by Fighting Evil Sect members here; 10 Core Formation cultivators chase him back to his cave."
+    ]
+  },
+  {
+    "id": "L38",
+    "name": "Qilin City",
+    "nameCn": "麒麟城",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "city",
+    "cosmologicalPosition": "on Planet Suzaku (or nearby star)",
+    "description": "A city Wang Lin visited after escaping the Chaotic Broken Stars. Yun Fei's cave is here.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin places a 3-day restriction on Yun Fei here. Qiu Siping (late Core Formation) tries to unlock it; Wang Lin's devil kills Yun Fei."
+    ]
+  },
+  {
+    "id": "L39",
+    "name": "Ancient Demon City / Demon Capital",
+    "nameCn": "古魔城",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "city",
+    "cosmologicalPosition": "in/near Sky Demon Country → Planet Suzaku",
+    "description": "The capital of the Sky Demon Country. Site of the Demonic Drum tournament.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin wins the tournament (15 rings), becomes an Ascendant. Defeats Mo Lihai's competitors."
+    ]
+  },
+  {
+    "id": "L40",
+    "name": "Shui City / Dou City",
+    "nameCn": "水城 / 斗城",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "city",
+    "cosmologicalPosition": "on Planet Suzaku",
+    "description": "Cities mentioned tangentially in the Sea of Devils arc.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Tangential."
+    ]
+  },
+  {
+    "id": "L41",
+    "name": "Hou Fen",
+    "nameCn": "侯分",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "region",
+    "cosmologicalPosition": "on Planet Suzaku (a region within the Suzaku cultivation world)",
+    "description": "A region listed in the Fandom nav-bar Locations. Specific details sparse.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Tangential."
+    ]
+  },
+  {
+    "id": "L42",
+    "name": "Blue Pine Peaks",
+    "nameCn": "蓝松峰",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "region",
+    "cosmologicalPosition": "on Planet Suzaku (likely a mountain range)",
+    "description": "A region listed in the Fandom nav-bar Locations.",
+    "worldLawTier": "fragile",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Tangential."
+    ]
+  },
+  {
+    "id": "L43",
+    "name": "Soul Refining Tribe",
+    "nameCn": "炼魂部族",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "village / tribal region",
+    "cosmologicalPosition": "in the East Demon Spirit Sea → Planet Suzaku",
+    "description": "A tribe of over 1 million people, founded by Wang Lin when he taught the Soul Refining Sect's heritage to the Mountain Valley tribe (chief: Ouyang Hua). Wang Lin is regarded as their Ancestor.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Restored Wang Lin's One Billion Soul Flag. Thirteen and Huo Pao trained here."
+    ]
+  },
+  {
+    "id": "L44",
+    "name": "Mountain Valley Tribe",
+    "nameCn": "山谷部落",
+    "section": "1E. Cities, Villages, Regions (on Planet Suzaku unless noted)",
+    "type": "village",
+    "cosmologicalPosition": "in the East Demon Spirit Sea → Planet Suzaku",
+    "description": "The original name of the Soul Refining Tribe before Wang Lin elevated it.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin displays power and is recognized; tribe chief Ouyang Hua."
+    ]
+  },
+  {
+    "id": "L45",
+    "name": "Sea of Devils / Demon Cultivation Sea",
+    "nameCn": "魔海 / 魔修海",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ocean / region",
+    "cosmologicalPosition": "on Planet Suzaku",
+    "description": "A vast demonic-sea region on Planet Suzaku, divided into \"districts\" (Wang Lin enters the 14th district). Inhabited by devils, beasts, and demonic cultivators. The Fighting Evil Sect, Soul Refining Sect, and Corpse Yin Sect all operate in/around it.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin's Core Formation breakthrough (with Li Muwan). The Fighting Evil Sect massacre. Wang Lin takes the Mosquito Beast here."
+    ]
+  },
+  {
+    "id": "L46",
+    "name": "Jue Ming Valley / Jueming Valley",
+    "nameCn": "绝命谷",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "valley",
+    "cosmologicalPosition": "on Planet Suzaku",
+    "description": "A valley where surrounding sects compete for tokens to enter the Foreign Battleground. A trapping formation holds cultivators inside until the competition ends.",
+    "worldLawTier": "low",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin's Ji Realm awakening here (driven by grief over his clan's annihilation). First duel with Teng Huayuan outside the valley. Wang Lin's physical body destroyed; soul flees to Foreign Battleground."
+    ]
+  },
+  {
+    "id": "L47",
+    "name": "Foreign Battleground / Extraterrestrial Battlefield / Outer Domain Battlefield",
+    "nameCn": "域外战场",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "realm / battleground",
+    "cosmologicalPosition": "a sealed battlefield accessible only via the Jue Ming Valley tokens; outside normal Suzaku geography",
+    "description": "A battleground used for sect competitions and \"death exile.\" Black-colored laws of death prevent souls from leaving. Anyone who dies here becomes a wandering soul.",
+    "worldLawTier": "medium (death-law-locked)",
+    "sealed": "Yes (soul-sealed)",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin becomes a Soul Devourer here (feeding on many souls). Wang Lin takes over Ma Liang's dying body. Escapes the death-law seal through observation, calculation, and knowledge."
+    ]
+  },
+  {
+    "id": "L48",
+    "name": "Land of the Ancient God / Ancient God Land",
+    "nameCn": "古神之地",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin / sub-dimension",
+    "cosmologicalPosition": "a pocket-realm accessible from Planet Suzaku (and other planets)",
+    "description": "The corpse-body of the 8-star Ancient God Tu Si, transformed into a 3-level realm. Level 1: hurricane of devils. Level 2: Bridge of No Return + Restriction Mountain. Level 3: Annihilation realm — Soul Devourer activation zone, where Tuo Sen is trapped.",
+    "worldLawTier": "medium → high",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin inherits Tu Si's knowledge. Tuo Sen born here (Tu Si's demonic thought). Wang Lin reshapes his body using the ancient knowledge and traps Tuo Sen for 1000+ years. Returns later as a 6-star Ancient God; Tuo Sen is injured."
+    ]
+  },
+  {
+    "id": "L49",
+    "name": "Restriction Mountain",
+    "nameCn": "禁制山",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin / trial-mountain",
+    "cosmologicalPosition": "inside Land of the Ancient God → Level 2",
+    "description": "A mountain made of ancient forbidden restrictions. Each level up is more complex. Demon Lord of Six Desires (Xu Liqing) modified them. The \"Great Enlightened One\" title is granted to anyone who breaks all restrictions (only 4 ever — Wang Lin is the 4th).",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin spends 7 (story) / 13 (subjective) years here; develops Illusionary Circle technique; hair turns white. Receives \"Great Enlightened One\" title from Tu Si."
+    ]
+  },
+  {
+    "id": "L50",
+    "name": "Bridge of No Return",
+    "nameCn": "不归桥",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin / bridge",
+    "cosmologicalPosition": "inside Land of the Ancient God → Level 2",
+    "description": "A bridge where devils can return but beasts (and most beings) who turn back are sucked into the void. Tests the heart.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin resists the illusion of his parents' voices calling him back; passes the test."
+    ]
+  },
+  {
+    "id": "L51",
+    "name": "Chaotic Broken Stars",
+    "nameCn": "混沌碎星",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin / star-cluster",
+    "cosmologicalPosition": "a chaotic star-cluster region accessible via teleportation; on/near Planet Suzaku's star system",
+    "description": "A 3-level chaotic star cluster. Level 1: hurricane of devils (Wang Lin creates his 2nd devil here). Level 2: Bridge of No Return + Restriction Mountain (entries above). Level 3: Annihilation realm — wandering souls, ancient god Tu Si's body.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Duanmu Ji (Soul Formation) chases Wang Lin here. Wang Lin outwits Duanmu Ji, Gun Lan, Xu Liqing, and Hunchback Meng. Inherits Tu Si's legacy."
+    ]
+  },
+  {
+    "id": "L52",
+    "name": "Suzaku Tomb / Cultivation Planet Crystal",
+    "nameCn": "朱雀墓",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin",
+    "cosmologicalPosition": "inside Planet Suzaku (underground)",
+    "description": "A multi-floor tomb within Planet Suzaku containing the Cultivation Planet Crystal (the seal-mechanism of the planet itself). Wang Lin found the Half-Moon Blade here.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin's tomb-raiding arc; encounters the scattered demon (Piao Nanzi/Lou Hou) sealed here."
+    ]
+  },
+  {
+    "id": "L53",
+    "name": "Thunder Celestial Realm",
+    "nameCn": "雷仙界",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "realm (sub-dimension)",
+    "cosmologicalPosition": "a pocket-realm within the Allheaven Star System",
+    "description": "The \"Thunder Immortal Realm\" — contains the Thunder Celestial Temple, the Thunder Lake, and the Chosen Immortal Clan (enslaved celestials). Ruled by Master Flamespark and Russell. The Celestial Slaughter Art trap is hidden here.",
+    "worldLawTier": "high",
+    "sealed": "Yes (sealed sub-realm; collapses later)",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin's Thunder Celestial Tournament victory. Kills Russell (with Qing Shui's Ji Realm help). Becomes Thunder Celestial of the Thunder Celestial Temple. Blood Ancestor killed here. Tide Abyss explored (locates Zhou Yi's spirit). Wang Lin obtains the God-Slaying War Chariot, Celestial Emperor Crown, and the Collection Pavilion (immortal arts library)."
+    ]
+  },
+  {
+    "id": "L54",
+    "name": "Thunder Celestial Temple",
+    "nameCn": "雷仙殿",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "sect-temple (sub-realm of L53)",
+    "cosmologicalPosition": "inside Thunder Celestial Realm → Allheaven Star System",
+    "description": "The temple ruling the Thunder Celestial Realm. 3 trials: heaven, earth, human. The Thunder Lake trial. Battle realm trial (kill-count).",
+    "worldLawTier": "high",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin becomes \"Thunder Celestial of the Thunder Celestial Temple.\" Zhan Li Yunzi ancestor (Qi Xi spell revival attempt for Li Muwan) referenced here."
+    ]
+  },
+  {
+    "id": "L55",
+    "name": "Rain Celestial Realm",
+    "nameCn": "雨仙界",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "realm (sub-dimension)",
+    "cosmologicalPosition": "within the Allheaven Star System",
+    "description": "A sub-realm of immortal jades and immortals' corpses. Zhou Yi discovered Qing Shuang's corpse here (\"Ting'er\"). The Rain Immortal Sword (Jufu) and War Spirit Print are here.",
+    "worldLawTier": "high",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin obtains the Shooting God Chariot, Star Compass, War Spirit Print, and Rain Immortal Sword. Takes Sun Tai as a servant. Helps Zhou Yi protect Ting'er's corpse."
+    ]
+  },
+  {
+    "id": "L56",
+    "name": "Wind Celestial Realm",
+    "nameCn": "风仙界",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "realm (sub-dimension)",
+    "cosmologicalPosition": "within the Cloud Sea Star System",
+    "description": "A wind-themed immortal sub-realm. Wang Lin acquires a large herd of Mosquito Beasts here. The Flowing Moon technique (rules of time) was created here under a stone gate.",
+    "worldLawTier": "high",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin evolves his king mosquito beast. Creates Flowing Moon divine ability (sends Lu Mo back in time). Severely wounded and petrified by Daoist Water here."
+    ]
+  },
+  {
+    "id": "L57",
+    "name": "Demon Spirit Land / East Demon Spirit Sea",
+    "nameCn": "魔灵地 / 东海魔灵海",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "region / sea",
+    "cosmologicalPosition": "on Planet Tian Yun (some sources say Planet Suzaku)",
+    "description": "A demonic-spirit region. The East Sea Demon Spirit Gate opens periodically. Contains the Immortal Monarch's Cave Mansion (Yao Xixue's target). The Mountain Valley Tribe is in the east of this region. The Ancient Demon City (Taga) is here.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 5,
+    "keyEvents": [
+      "Wang Lin takes Thirteen as his 1st disciple. Seals Yao Xixue. All-Seer, Ling Tianhou, Blood Ancestor, and others come here for the cave token. Wang Lin escapes into the abyss to the Allheaven Star System."
+    ]
+  },
+  {
+    "id": "L58",
+    "name": "Brilliant Void",
+    "nameCn": "玄虚",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "region (the original name of the Alliance Star System's interior void)",
+    "cosmologicalPosition": "within the Alliance Star System (its original name pre-Cultivation Alliance)",
+    "description": "The vast inner void of the Alliance Star System. Wang Lin's \"Brilliant Void\" pet is named after this region.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Tangential to plot (renamed to Alliance Star System by the Cultivation Alliance)."
+    ]
+  },
+  {
+    "id": "L59",
+    "name": "Wild Continent",
+    "nameCn": "莽荒大陆",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "continent",
+    "cosmologicalPosition": "within the Cloud Sea Star System",
+    "description": "A wild, primal continent. Wang Lin discovers \"the secret for the third step that caused a huge calamity in the Cloud Sea Star System thousands of years ago\" here.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin's discovery triggers a region-wide sect gathering; kills Noble Money and his group on the way back."
+    ]
+  },
+  {
+    "id": "L60",
+    "name": "Seven-Colored Realm",
+    "nameCn": "七彩界",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "realm (pocket-dimension)",
+    "cosmologicalPosition": "within the Cloud Sea Star System",
+    "description": "A pocket-realm of seven-colored light. Master Ashen Pine takes cultivators here to \"find something\" (actually a trap). Spatial cracks separate the cultivators. The Seven-Colored Divine Sky Nail (108 nails, designed to kill Third Step experts) is here.",
+    "worldLawTier": "high",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin tricks Master Cloud Soul into a different spatial crack. Steals treasures from Master Ashen Pine. Kills Master Ashen Pine with the seven-colored nail. Cang Songzi (Sub-Empty Annihilation cultivator) destroys Wang Lin's Rusty Iron Sword here."
+    ]
+  },
+  {
+    "id": "L61",
+    "name": "Ancient Tomb",
+    "nameCn": "古墓",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin / multi-floor tomb",
+    "cosmologicalPosition": "on the Immortal Astral Continent",
+    "description": "A vast multi-floor tomb on the IAC. Contains relics of the Ancient Clan: the Yi Si Puppet, Heaven-Splitting Axe, Eternal Wood Spirit, Fog Devil Lance, Ancient Breath Leaves (99-piece set), Emperor Furnace (Heavenly Emperor Furnace). Also Ye Mo's left eye and right arm.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin obtains numerous Ancient Clan relics here. Tan Lang is involved. Daogu Yemo's ancient devil corpse is here (used for Wang Lin's Third Avatar)."
+    ]
+  },
+  {
+    "id": "L62",
+    "name": "Pill Sea / Dan Sea",
+    "nameCn": "丹海",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "sea",
+    "cosmologicalPosition": "between Heavenly Bull Continent and Green Devil Continent → on IAC",
+    "description": "A vast sea of pills (alchemical waste + dissolved pills). Wang Lin completes his Water Essence 9th cycle here.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "A woman cultivator from the Green Bull Continent attacks Wang Lin with Ten Thousand Refined Corruption Liquid (containing Water Essence); he absorbs it to complete the 9th cycle."
+    ]
+  },
+  {
+    "id": "L63",
+    "name": "Dong Lin Pool / False Dong Lin Pool",
+    "nameCn": "东林池",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "wetland / pool",
+    "cosmologicalPosition": "on the IAC (Dong Lin Sect area)",
+    "description": "A pool with the sealed spirit of an Ancient God-tier entity beneath it. The False version (inside the Fifth Flower's illusory world) grants temporary power; the True version grants permanent Absolute Beginning and Reincarnation Essence comprehension.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin meditates for 13 years here; Absolute Beginning reaches completion; Reincarnation Essence begun."
+    ]
+  },
+  {
+    "id": "L64",
+    "name": "Immortal Emperor's Cave Mansion / Immortal Monarch's Cave Mansion",
+    "nameCn": "仙帝洞府",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin / cave mansion",
+    "cosmologicalPosition": "on/under Demon Spirit Land (Tian Yun Star)",
+    "description": "A cave-mansion left by an ancient immortal. Yao Xixue and Wang Lin explore it together (causing her hundred-year imprisonment). The Wind Demon (Feng Mo) is encountered here.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Yao Xixue ambushes Wang Lin → imprisoned for 100 years. Yao Xinghai seeks Wang Lin here. Wind Demon slain by Wang Lin's God-Slaying Spear. Celestial Emperor's Tower is part of this complex."
+    ]
+  },
+  {
+    "id": "L65",
+    "name": "Heavenly Bull Continent",
+    "nameCn": "天牛大陆",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "continent",
+    "cosmologicalPosition": "on the IAC",
+    "description": "One of the major continents of the IAC. Contains the Great Soul Sect, Gui Yi Sect, and 120+ Fire Veins. Wang Lin's IAC territory.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin joins Great Soul Sect here, becomes an elder, devours Earth Fire main vein. Manifests Fire Essence True Body."
+    ]
+  },
+  {
+    "id": "L66",
+    "name": "Green Devil Continent",
+    "nameCn": "绿魔大陆",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "continent",
+    "cosmologicalPosition": "on the IAC",
+    "description": "Home continent of the Green Devil (Green Scorpion) entity. The Dao Devil Sect (Dao Demon Sect) is based here.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin captured as Green Devil sacrifice (by Ji Si acting for Dao Demon Sect); reverses the ritual and devours Green Devil, reaching Arcane Void stage."
+    ]
+  },
+  {
+    "id": "L67",
+    "name": "Mountain Sea Continent",
+    "nameCn": "山海大陆",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "continent",
+    "cosmologicalPosition": "on the IAC",
+    "description": "A continent with the Mountain Tree Seal (where Wang Lin finds the second fragment of the Celestial Ancestor's Immortal Absolute Sword).",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Wang Lin obtains Metal Essence (initial) here."
+    ]
+  },
+  {
+    "id": "L68",
+    "name": "Great Saint Continent",
+    "nameCn": "大圣大陆",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "continent",
+    "cosmologicalPosition": "on the IAC",
+    "description": "A continent with a sealed Spirit beneath it (the entity whose comprehension gave Wang Lin Absolute Beginning and Absolute End Essences).",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Wang Lin meditates at Dong Lin Pool here (technically a sub-region)."
+    ]
+  },
+  {
+    "id": "L69",
+    "name": "Mengtu Province",
+    "nameCn": "孟图省",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "province",
+    "cosmologicalPosition": "on the IAC",
+    "description": "A province of the IAC. Wang Lin was captured by Dao Demon Sect here.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin captured; Dao Demon Sect Master intends to use him to resurrect the Green Devil Scorpion; Wang Lin turns the tables and obtains great fortune, reaching Empty Tribulation stage."
+    ]
+  },
+  {
+    "id": "L70",
+    "name": "Tianniu Province",
+    "nameCn": "天牛省",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "province",
+    "cosmologicalPosition": "on the IAC",
+    "description": "A province of the IAC. Contains the Canglong Sect (Azure Dragon Sect). Kang Ren (a cultivator who took Wang Lin in) is from here.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin enters here, unconscious; taken by Kang Ren into Canglong Sect; extracts Earth Fire Dragon's soul; pursued by ancestor Du Qing."
+    ]
+  },
+  {
+    "id": "L71",
+    "name": "Green Bull Continent",
+    "nameCn": "青牛大陆",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "continent",
+    "cosmologicalPosition": "on the IAC",
+    "description": "A continent whose cultivator attacked Wang Lin in the Pill Sea.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Woman cultivator attacks Wang Lin with Ten Thousand Refined Corruption Liquid."
+    ]
+  },
+  {
+    "id": "L72",
+    "name": "Imperial City / Dao Ancient Imperial Capital",
+    "nameCn": "皇城 / 道古皇都",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "city",
+    "cosmologicalPosition": "on the IAC; the Dao Ancient Imperial Capital of the Ancient Clan",
+    "description": "The Ancient Clan's imperial seat. Dao Ancient Imperial Venerable rules here. Lu Mo (Slaughter True Body) emerged here to defend Wang Lin.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin ambushed here; Lu Mo released and kills attackers. Wang Lin slays Dao Ancient Imperial Venerable to retrieve Li Muwan's remnant soul. Jiu Di Great Celestial Venerable confronted here."
+    ]
+  },
+  {
+    "id": "L73",
+    "name": "Ancient Clan Ancestral Temple / Ancient Shi Branch Temple",
+    "nameCn": "古族祖庙 / 古氏分支祖庙",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin / temple",
+    "cosmologicalPosition": "within the Ancient Clan territory on the IAC",
+    "description": "The temple where the Ancient Clan's ancestor rites are performed. Lou Hou's soul is sealed here (used by Wang Lin to complete Slaughter/Restriction/Absolute Beginning/End True Bodies).",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin completes his final Ancient Clan tribulation here; obtains 2 more drops of Soul Blood."
+    ]
+  },
+  {
+    "id": "L74",
+    "name": "Kunxu Realm",
+    "nameCn": "昆虚界",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "pocket-realm",
+    "cosmologicalPosition": "a sealed sub-dimension accessible from the Cave World",
+    "description": "A pocket-realm Mu Bingmei entered; took Zhou Ru as her disciple here.",
+    "worldLawTier": "medium",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Zhou Ru's cultivation arc here."
+    ]
+  },
+  {
+    "id": "L75",
+    "name": "Tide Abyss",
+    "nameCn": "潮渊",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "abyss",
+    "cosmologicalPosition": "within the Thunder Celestial Realm (Allheaven Star System)",
+    "description": "An abyss where Wang Lin locates Zhou Yi's spirit (with Bei Lou's help).",
+    "worldLawTier": "high",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Wang Lin finds Zhou Yi's spirit here."
+    ]
+  },
+  {
+    "id": "L76",
+    "name": "Immortal Graveyard (仙坟) — 17 Layers",
+    "nameCn": null,
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin / graveyard",
+    "cosmologicalPosition": "within the Vermilion Bird Starfield",
+    "description": "A 17-layer immortal graveyard. Wang Lin glimpses the Fu Clan's Golden Leaf Flame Source Origin on the 17th layer.",
+    "worldLawTier": "high",
+    "sealed": "Yes",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Wang Lin's Fire Essence potential awakened here."
+    ]
+  },
+  {
+    "id": "L77",
+    "name": "Five Flowers Eight Gates",
+    "nameCn": "五花八门",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin / formation-complex",
+    "cosmologicalPosition": "on the IAC",
+    "description": "A complex where Wang Lin encounters the Dong Lin Female Ancient God.",
+    "worldLawTier": "absolute",
+    "sealed": "No",
+    "canonConfidence": 3,
+    "keyEvents": [
+      "Wang Lin fuses with Ye Mo's heart's blood, subdues the Yi Si Puppet, defeats Yun Yifeng, defeats the Palm Venerable, and obtains Ye Mo's heart inheritance."
+    ]
+  },
+  {
+    "id": "L78",
+    "name": "Falling Land / Fallen Land",
+    "nameCn": "堕落之地",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "region / trial-ground",
+    "cosmologicalPosition": "within the Sealed Realm (a restricted sub-region)",
+    "description": "A trial region where the \"Young Emperor\" trial takes place. Wang Lin becomes \"Young Emperor of the Fallen Land.\" 2nd-Gen Vermilion Bird (young emperor of the Fallen Land) helps him.",
+    "worldLawTier": "high",
+    "sealed": "Yes",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin's Young Emperor trial. Fishes for a dragon, takes its blood. Passes the Trial of Man, Trial of Heaven. Becomes Void Flame Cultivator."
+    ]
+  },
+  {
+    "id": "L79",
+    "name": "Ancient Immortal Domain",
+    "nameCn": "古仙域",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "ruin / gateway",
+    "cosmologicalPosition": "a gateway-realm at the boundary of the Cave World;通往 Luo Tian",
+    "description": "The gateway Wang Lin breaches to discover the truth of the Cave World. The Flowing Moon divine ability was comprehended at its gate.",
+    "worldLawTier": "absolute",
+    "sealed": "Was sealed; unsealed by Wang Lin",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin discovers his world is the Seven-Colored Daoist's cave mansion. Resets the Realm Sealing Grand Array. Plans new territories."
+    ]
+  },
+  {
+    "id": "L80",
+    "name": "Yellow Spring Secret Realm",
+    "nameCn": "黄泉秘境",
+    "section": "1F. Realms / Dimensions / Ruins (special locations)",
+    "type": "secret-realm",
+    "cosmologicalPosition": "sub-realm within the Heaven Defying Bead (Situ Nan's creation for Wang Lin's breakthrough)",
+    "description": "An extremely-Yin-location sub-realm inside the Heaven Defying Bead, opened by Situ Nan for Wang Lin's secluded cultivation.",
+    "worldLawTier": "low (cultivable)",
+    "sealed": "Yes (it's INSIDE the Heaven Defying Bead)",
+    "canonConfidence": 4,
+    "keyEvents": [
+      "Wang Lin's Nascent Soul breakthrough training."
+    ]
+  }
+]

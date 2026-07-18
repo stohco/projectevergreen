@@ -1,0 +1,95 @@
+{
+  "_comment": "Migration: Flame Dragon Volcano Circuit. 4 waypoints, 5 follower types, 2 emergent markets. Per migration directive: migration is a major simulation system. The world breathes because markets appear seasonally along routes. Prime Directive: route exists objectively; player enters a world already moving.",
+  "migration_id": "flame_dragon_volcano_circuit",
+  "name": "Flame Dragon Volcano Circuit",
+  "species": "flame_dragon",
+  "description": "The centennial migration of flame dragons between volcanic regions.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "waypoints": [
+    {
+      "point": "fire_burn_volcano",
+      "season": "year_1",
+      "duration_days": 365
+    },
+    {
+      "point": "pill_sea_vents",
+      "season": "year_2",
+      "duration_days": 365
+    },
+    {
+      "point": "vermilion_realm_volcano",
+      "season": "year_3",
+      "duration_days": 365
+    },
+    {
+      "point": "foreign_battleground_volcano",
+      "season": "year_4",
+      "duration_days": 365
+    }
+  ],
+  "follower_chain": [
+    {
+      "follower": "fire_phoenix",
+      "relationship": "rival",
+      "distance_li": 200,
+      "note": "Phoenixes follow for fire-essence."
+    },
+    {
+      "follower": "fire_cultivators",
+      "relationship": "symbiotic",
+      "distance_li": 500,
+      "note": "Fire cultivators follow for dragon-essence."
+    },
+    {
+      "follower": "dragon_hunters",
+      "relationship": "predator",
+      "distance_li": 1000,
+      "note": "Spirit Severing hunters track dragons."
+    },
+    {
+      "follower": "treasure_seeking_cults",
+      "relationship": "opportunist",
+      "distance_li": 800,
+      "note": "Treasure seekers follow for fire-herbs."
+    },
+    {
+      "follower": "sky_merchants",
+      "relationship": "opportunist",
+      "distance_li": 1500,
+      "note": "Markets appear at volcano stops."
+    }
+  ],
+  "emergent_markets": [
+    {
+      "market": "fire_burn_dragon_market",
+      "season": "year_1",
+      "goods": [
+        "dragon_scale",
+        "fire_herb",
+        "dragon_blood"
+      ]
+    },
+    {
+      "market": "pill_sea_dragon_market",
+      "season": "year_2",
+      "goods": [
+        "dragon_core",
+        "pill_essence",
+        "volcano_crystal"
+      ]
+    }
+  ],
+  "simulation_notes": {
+    "world_breathes": "Markets appear and disappear seasonally; the world changes whether or not the player acts.",
+    "follower_dynamics": "Each follower type arrives with a delay proportional to distance_li; predators arrive after prey, scavengers after predators, bandits after cultivators, merchants after stability.",
+    "perception_tiers": {
+      "mortal": "Sees beasts moving.",
+      "qi_condensation": "Senses migration direction.",
+      "foundation_establishment": "Perceives follower chain.",
+      "core_formation": "Predicts market appearances.",
+      "nascent_soul": "Perceives complete migration system."
+    }
+  },
+  "salt": 1264565367
+}

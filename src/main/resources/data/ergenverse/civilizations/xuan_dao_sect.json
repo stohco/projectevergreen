@@ -1,0 +1,80 @@
+{
+  "_comment": "Civilization: Xuan Dao Sect (sect) at Chu Country. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "xuan_dao_sect",
+  "name": "Xuan Dao Sect",
+  "type": "sect",
+  "location": "Chu Country",
+  "peak_realm": "Spirit Severing (sect master)",
+  "canon_status": "major_chu_sect",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "outer_disciples": 4000,
+    "inner_disciples": 700,
+    "core_disciples": 70,
+    "elders": 18,
+    "peak_lords": 9,
+    "sect_master": 1,
+    "spirit_beasts": 300
+  },
+  "economy": {
+    "spirit_stones": "abundant",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "moderate",
+    "forging": "moderate",
+    "formation": "moderate",
+    "trade": "Chu Country",
+    "recruitment": "Chu Country"
+  },
+  "politics": {
+    "allies": [
+      "Chu royal family"
+    ],
+    "enemies": [
+      "rival Chu sects"
+    ],
+    "vassals": [],
+    "rivals": [
+      "Cloud Sky Sect"
+    ],
+    "internal_factions": [
+      "main lineage",
+      "branch lineages"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "annual examination",
+    "expansion": "steady",
+    "decline": "none current",
+    "schisms": "branch lineage tension",
+    "wars": [
+      "border conflicts"
+    ],
+    "recovery": "strong"
+  },
+  "libraries": [
+    "intermediate techniques",
+    "Xuan Dao formation manuals",
+    "spirit beast catalogues"
+  ],
+  "spirit_beasts": [
+    "mounts",
+    "guardian beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 1792462575,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

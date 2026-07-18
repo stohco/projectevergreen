@@ -1,0 +1,24 @@
+{
+  "name": "Heterogeneity Wraith", "nameCn": "异化幽魂", "pinyin": "Yìhuà Yōuhún", "novel": "Outside of Time",
+  "tier": "demon", "baseRank": "nascent_soul", "habitat": "void", "diet": "spiritivore",
+  "preysOn": [], "preyedUponBy": ["mysterious_shadow"], "temperament": "aggressive",
+  "value": "heterogeneity core (forbidden alchemy ingredient); corrupted soul fragment",
+  "layer": 2, "behaviorScript": "Mindless Corruption — from BTT; cultivator whose Heterogeneity accumulation exceeded threshold, transforming into a mindless alien beast; either explodes into blood mist or becomes this; aggressive, no cognition",
+  "voxelScale": "humanoid (distorted)", "aggroType": "Corrupted_Berserker", "category": "conceptual_law_bound",
+  "drops": [
+    {"id": "heterogeneity_core", "chance": 0.3, "count": "1", "use": "forbidden alchemy"},
+    {"id": "corrupted_soul_fragment", "chance": 0.5, "count": "1-2", "use": "soul research"}
+  ],
+  "classification": "Corrupted Cultivator / Heterogeneity Entity",
+  "realm": "Nascent Soul (from original cultivator's peak)",
+  "threat": "High (unpredictable; retains fragments of original techniques)",
+  "bodyMaterials": ["Heterogeneity Core (forbidden alchemy ingredient)", "Corrupted Soul Fragment (soul research)"],
+  "weaknesses": ["Mysterious Shadow (natural predator)", "Heterogeneity purification techniques", "Pure Yin isolation (starves them)"],
+  "knownEnemies": ["Mysterious Shadow", "Purification specialists"],
+  "cultivationValue": "Heterogeneity Core is a forbidden-but-powerful catalyst for dark arts; Soul Fragments reveal corruption mechanics",
+  "alchemyUses": ["Forbidden Heterogeneity Elixir (power boost, corruption risk)", "Soul-Reconstruction Pill base material"],
+  "artifactUses": ["Corrupted Soul Lantern (detects Heterogeneity)"],
+  "relatedDao": ["Death", "Corruption"],
+  "knownInheritances": ["None — Wraiths are failures, not inheritances"],
+  "provenance": {"source": "Outside of Time", "attestation": "EXPLICIT", "confidence": 5}
+}

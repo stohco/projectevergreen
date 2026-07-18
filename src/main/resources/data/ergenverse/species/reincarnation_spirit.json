@@ -1,0 +1,35 @@
+{
+  "_comment": "Reincarnation Spirit — Renegade Immortal. A being that cycles through lives. Canon: tied to the Samsara Dao concept. Appears at sites of rebirth and karmic resolution.",
+  "species_id": "reincarnation_spirit",
+  "name": "Reincarnation Spirit",
+  "nameCn": "轮回灵",
+  "novel": "Renegade Immortal",
+  "derivation_type": "C",
+  "canon_confidence": 3,
+  "max_hp": 45,
+  "attack_damage": 6,
+  "speed": 0.28,
+  "follow_range": 24,
+  "canonical": {
+    "appearance": "A luminous, ever-shifting form that cycles between infant, child, adult, and elder appearances. Each form has different abilities. Surrounded by a wheel-like pattern of faint light.",
+    "size": "Variable (0.5-2m, shifts with life-cycle form)",
+    "behavior": "Neutral unless attacked. Cycles through life stages every 30 seconds, changing abilities. Does not seek combat but defends itself with escalating power. Fosters growth in nearby cultivators.",
+    "habitat": "Reincarnation pools, karmic nexus points, Samsara Dao comprehension sites",
+    "cultivation": "Variable — each life-cycle form has a different effective realm",
+    "intelligence": "8-10 (transcendent wisdom — remembers fragments of countless past lives)",
+    "diet": "Absorbs karmic energy from the cycle of life and death",
+    "relationships": "Revered by cultivators on the Samsara Dao path. Attacked by karma demons (natural enemies). Sometimes guides worthy cultivators toward enlightenment.",
+    "techniques": ["Life cycle shift (changes form and abilities)", "Karmic insight (nearby cultivators gain temporary comprehension boost)", "Rebirth (revives once, returning to infant form)", "Samsara wheel (AoE that ages or rejuvenates targets)"],
+    "treasures": ["Samsara Essence (ultimate Dao comprehension material)", "Wheel Fragment (used in Life-Death restriction comprehension)"],
+    "bloodline": "ancient_beast",
+    "mutations": ["Eternal Cycle — upon death, returns in a new form 60 seconds later with full HP"],
+    "ecology": "Extremely rare. Only forms at karmic nexus points where massive life-death events have occurred. Neither predator nor prey — an ecological anomaly.",
+    "bloodline_tier": "ancient_beast",
+    "combat_ai": "passive_fleeing"
+  },
+  "art_direction": {
+    "color_palette": ["#ffddaa", "#aaddff", "#88ff88", "#ffaadd"],
+    "model_notes": "Shifting form that cycles between four life stages. Wheel-of-light particle orbit. Serene glow.",
+    "texture_notes": "Warm golden-white glow (infant) → blue-white (child) → green-white (adult) → silver-white (elder). Rotating light ring."
+  }
+}

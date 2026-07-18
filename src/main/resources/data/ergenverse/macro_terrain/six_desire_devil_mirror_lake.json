@@ -1,0 +1,24 @@
+{
+  "_comment": "Macro-Terrain: Six-Desire Devil Mirror Lake. Per scale directive: this terrain IS a being. Player shouldn't initially realize they're standing on bone. Divine Sense -> Perception changes -> 'You realize this mountain range... is one finger.' Prime Directive: the being's corpse is objectively terrain; perception tier determines what the player sees.",
+  "terrain_id": "six_desire_devil_mirror_lake",
+  "name": "Six-Desire Devil Mirror Lake",
+  "being": "Six-Desire Devil",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "scale": "5 li across — the congealed body of an ancient devil.",
+  "canonical_event": "An ancient Six-Desire Devil fell here; its desire-mass formed the lake.",
+  "perception_tiered_appearance": {
+    "mortal": "A lake 5 li across, surface perfectly mirror-still, reflects impossible scenes.",
+    "qi_condensation": "The lake radiates desire-essence; viewers see their desires reflected.",
+    "foundation_establishment": "The lake is a congealed desire-mass; the reflections are the devil's last dreams.",
+    "core_formation": "This is the Six-Desire Devil's corpse-lake; the desire-mass is its congealed body.",
+    "nascent_soul": "The devil's desire-will still lingers; cultivating here is corrupting.",
+    "spirit_severing": "The devil can reform from this lake; the lake is its anchor."
+  },
+  "perception_mechanic": {
+    "trigger": "When player's perception tier rises, the appearance re-rolls automatically.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does.",
+    "canon_fidelity": "This is exactly how Wang Lin perceived Ancient God Tu Si's remains — first as terrain, then as god-bone, then as god-memory."
+  },
+  "salt": 1004355800
+}

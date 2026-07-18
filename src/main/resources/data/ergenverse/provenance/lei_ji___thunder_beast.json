@@ -1,0 +1,68 @@
+{
+  "_comment": "Provenance metadata for Lei Ji / Thunder Beast (雷极). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I118",
+  "name": "Lei Ji / Thunder Beast",
+  "nameCn": "雷极",
+  "type": "other",
+  "category": "offensive",
+  "origin": "Unsealed from Mid-Quality God-Slaying Chariot (~Ch. 1080)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Silver-Horned Thunder Beast — late Soul-Ascension strength",
+    "Originally beast-soul of Mid Quality God-Slaying War Chariot",
+    "Fights alongside Wang Lin"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Silver-Horned Thunder Beast",
+    "Per Baidu: listed as Wang Lin's mount alongside Mosquito Beast",
+    "Destroyed Ch. 1276 vs Daoist Water, restored Ch. 1626"
+  ],
+  "source": "Ch.~1080 (novel); Fandom wiki; Baidu Baike",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Unsealed from Mid-Quality God-Slaying Chariot (~Ch. 1080)"
+  },
+  "lifecycle": {
+    "creator": "Unsealed from Mid-Quality God-Slaying Chariot (~Ch. 1080)",
+    "creation_circumstances": "Unsealed from Mid-Quality God-Slaying Chariot (~Ch. 1080)",
+    "every_known_owner": [
+      "wang lin"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

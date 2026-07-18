@@ -1,0 +1,122 @@
+{
+  "_comment": "Ecosystem: Snow Domain Ecology (Snow Domain Country). Full food web with 6 trophic layers and 4 seasonal/environmental states. Prime Directive: ecology exists objectively; player perception determines what they observe. No-Locked-Upgrades: all seasonal states are reachable by time/weather/event.",
+  "ecosystem_id": "snow_domain_ecology",
+  "name": "Snow Domain Ecology",
+  "location": "Snow Domain Country",
+  "description": "The ice-aspected ecology of the Snow Domain Country.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "trophic_layers": [
+    {
+      "layer": "producer",
+      "members": [
+        "ice_lotus",
+        "frost_herb",
+        "glacial_moss"
+      ],
+      "population": "environmental"
+    },
+    {
+      "layer": "primary",
+      "members": [
+        "spirit_rat#corrupted",
+        "wind_wolf#starving"
+      ],
+      "population": 8000,
+      "biomass_jin": 160000
+    },
+    {
+      "layer": "secondary",
+      "members": [
+        "wind_wolf#adult",
+        "mountain_lion#starving"
+      ],
+      "population": 800,
+      "biomass_jin": 400000
+    },
+    {
+      "layer": "tertiary",
+      "members": [
+        "mountain_lion#adult",
+        "ice_phoenix#juvenile"
+      ],
+      "population": 50,
+      "biomass_jin": 300000
+    },
+    {
+      "layer": "quaternary",
+      "members": [
+        "ice_phoenix#adult",
+        "cold_dragon#juvenile"
+      ],
+      "population": 5,
+      "biomass_jin": 5000000
+    },
+    {
+      "layer": "apex",
+      "members": [
+        "ice_phoenix#ancient",
+        "cold_dragon#adult"
+      ],
+      "population": 2,
+      "biomass_jin": 50000000
+    }
+  ],
+  "features": [
+    "glacial_peaks",
+    "ice_caves",
+    "frost_springs",
+    "phoenix_roosts",
+    "dragon_lairs"
+  ],
+  "seasonal_states": {
+    "winter": {
+      "wolf_mult": 1.5,
+      "phoenix_mult": 1.2,
+      "dragon_mult": 1.5,
+      "behavior": "peak",
+      "note": "Peak ice ecology."
+    },
+    "spring": {
+      "wolf_mult": 0.7,
+      "phoenix_mult": 0.8,
+      "dragon_mult": 0.5,
+      "behavior": "retreat",
+      "note": "Beasts retreat to glaciers."
+    },
+    "blizzard": {
+      "wolf_mult": 2.0,
+      "phoenix_mult": 1.5,
+      "dragon_mult": 2.0,
+      "behavior": "frenzy",
+      "note": "Blizzard; ice beasts empowered."
+    },
+    "ice_tribulation": {
+      "phoenix_mult": 3.0,
+      "dragon_mult": 3.0,
+      "behavior": "ascension",
+      "note": "Ice tribulation; phoenix/dragon ascend."
+    }
+  },
+  "state_transitions": {
+    "spring->summer": "temperature_rise",
+    "summer->autumn": "temperature_fall",
+    "autumn->winter": "temperature_fall",
+    "winter->spring": "temperature_rise",
+    "any->tribulation_storm": "tribulation_event",
+    "any->blood_moon": "blood_moon_event",
+    "any->nearby_corpse_battlefield": "battlefield_proximity",
+    "any->nearby_spirit_spring": "spring_proximity",
+    "any->nearby_dragon_corpse": "dragon_corpse_proximity",
+    "any->nearby_ancient_god_remains": "ancient_god_proximity"
+  },
+  "perception_tiers": {
+    "mortal": "Sees beasts and terrain; does not perceive trophic structure.",
+    "qi_condensation": "Senses qi-flows of the ecosystem.",
+    "foundation_establishment": "Perceives trophic layers and seasonal shifts.",
+    "core_formation": "Perceives population dynamics and triggers.",
+    "nascent_soul": "Perceives mutation potential and bloodline flows.",
+    "spirit_severing": "Perceives complete ecology as a living system."
+  },
+  "salt": 1407171627
+}

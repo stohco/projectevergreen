@@ -1,0 +1,31 @@
+{
+  "_comment": "Provenance metadata for Celestial Wine (in a jug) (仙酒). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I88",
+  "name": "Celestial Wine (in a jug)",
+  "nameCn": "仙酒",
+  "type": "consumable",
+  "category": "cultivation_aid",
+  "origin": "Found in Qing Lin's false cave in Demon Spirit Land (~Ch. 625)",
+  "current_owner": "Used (consumed)",
+  "abilities": [
+    "Drinking or spilling grants temporary celestial-spirit-energy boost",
+    "Celestial-tier consumable wine"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Celestial-tier consumable",
+    "From Qing Lin's false caves in Demon Spirit Land",
+    "Used and consumed"
+  ],
+  "source": "Ch.~625 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Found in Qing Lin's false cave in Demon Spirit Land (~Ch. 625)"
+  }
+}

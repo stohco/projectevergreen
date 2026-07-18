@@ -1,0 +1,68 @@
+{
+  "_comment": "Brilliant Void (玄虚) — Renegade Immortal. Canon confidence: 5/5. Prime Directive: this beast exists objectively whether the player has the perception to recognize it.",
+  "species_id": "brilliant_void",
+  "name": "Brilliant Void",
+  "nameCn": "玄虚",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "canonical": {
+    "appearance": "A mysterious void beast that Wang Lin obtained. Existence spans between reality and void. Can teleport through spatial cracks.",
+    "size": "Unknown (void entity)",
+    "behavior": "See ecology definitions.",
+    "habitat": "Brilliant Void Star System",
+    "cultivation": "Nascent Soul",
+    "intelligence": 10,
+    "diet": "See ecology definitions.",
+    "relationships": "See ecology definitions.",
+    "techniques": [],
+    "treasures": [],
+    "bloodline": "",
+    "mutations": [],
+    "ecology": "See ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": true,
+      "element": "void",
+      "grade": "extreme",
+      "alchemy_use": "Brilliant Void core refines Spatial Rift Pills; enables void-attribute breakthrough materials",
+      "canon_note": "Wang Lin's bonded void beast; its core bridges reality and void"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "brilliant_void — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1247302694,
+  "bloodline_tier": "ancient_celestial",
+  "inner_dan_properties": {
+    "element": "void",
+    "purity_tier": 9,
+    "dao_resonance": "void_dissolution",
+    "side_effects": [
+      "existence_erasure"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

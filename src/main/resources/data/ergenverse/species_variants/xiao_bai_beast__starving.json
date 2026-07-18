@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Xiao Bai (starving). Generated from canonical definition.",
+  "variant_id": "xiao_bai_beast__starving",
+  "species_id": "xiao_bai_beast",
+  "species_name": "Xiao Bai",
+  "life_state": "starving",
+  "modifiers": {
+    "size_multiplier": 0.85,
+    "power_multiplier": 0.7,
+    "temperament": "frenzied",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 1453224788
+}

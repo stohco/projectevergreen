@@ -1,0 +1,50 @@
+{
+  "_comment": "Scorched Glass Plains (焦玻璃平原) — lightning-blasted obsidian flats where Wang Lin cultivated his Ji Realm (a thunder-based killing technique). Canon: a sub-region of the Ancient Thunder Realm (古雷界). The ground here is glassy obsidian — every bolt of lightning that has struck over eons has fused the surface into a glass-like sheen. Sparse, arid, hostile. Wither skeletons roam here as thunder-corrupted remnants of cultivators who failed to withstand the thunder-aspect Qi. Wang Lin came here specifically to refine his Ji Realm because the constant lightning strikes provide an infinite source of thunder essence to absorb. Prime Directive: the scorched glass is an objective physical residue of centuries of lightning strikes — it exists whether or not anyone is here to perceive it.",
+  "precipitation": "none",
+  "effects": {
+    "sky_color": 2500134,
+    "fog_color": 2500134,
+    "water_color": 3618331,
+    "water_fog_color": 2236962,
+    "grass_color_modifier": "none",
+    "mood_sound": "minecraft:ambient.soul_sand_valley.mood"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      { "type": "minecraft:wither_skeleton", "weight": 30, "minCount": 1, "maxCount": 2 },
+      { "type": "minecraft:skeleton", "weight": 20, "minCount": 1, "maxCount": 2 },
+      { "type": "minecraft:blaze", "weight": 10, "minCount": 1, "maxCount": 1 }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:nether_cave"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [
+      "minecraft:basalt_pillar"
+    ],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_quartz",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "_comment": "Species: Soul Beast (魂兽) from Pursuit of the Truth. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "soul_beast",
+  "name": "Soul Beast",
+  "nameCn": "魂兽",
+  "novel": "Pursuit of the Truth",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Ghostly beast 3 m, body semi-translucent, eyes cold green fire",
+    "size": "3 m adult, 100 jin (mostly spirit)",
+    "behavior": "Hunts soul fragments; cultivates by consuming souls",
+    "habitat": "Soul-aspected forbidden zones, ghost valleys",
+    "cultivation": "Nascent Soul (soul attribute)",
+    "intelligence": 7,
+    "diet": "soul fragments, soul-aspected herbs",
+    "relationships": "Lesser kin of Nether Beast",
+    "techniques": [
+      "soul_drain",
+      "ghost_step",
+      "soul_rend"
+    ],
+    "treasures": [
+      "soul_core",
+      "soul_fragment"
+    ],
+    "bloodline": "Soul-Beast lineage; soul-attribute bloodline",
+    "mutations": [
+      "soul_immortal_body"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "soul_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "soul_beast — not a hive-mind species"
+    },
+    "combat_ai": "hive_coordinated"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 538748177,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

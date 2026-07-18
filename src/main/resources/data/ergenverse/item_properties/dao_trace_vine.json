@@ -1,0 +1,24 @@
+{
+  "_comment": "Item Properties: Dao Trace Vine. Per physical-size directive: every object has lore-accurate physical size, not block size. Length: 2.0 m, Weight: 3 jin, Material: law-herb, Suitable realm: Spirit Severing, Body strength required: Core Formation. Prime Directive: physical size exists objectively; cultivation determines what the player can lift/activate.",
+  "item_id": "dao_trace_vine",
+  "name": "Dao Trace Vine",
+  "type": "herb",
+  "physical_properties": {
+    "length_m": 2.0,
+    "weight_jin": 3,
+    "material_density": "law-herb"
+  },
+  "usage_requirements": {
+    "suitable_realm": "Spirit Severing",
+    "body_strength_required": "Core Formation",
+    "effect_when_undersized": "Can hold but cannot perceive; vine is heavy."
+  },
+  "canon_note": "A vine that traces the Dao.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "simulation_notes": {
+    "no_locked_upgrades": "A cultivator who later reaches the required body strength will be able to lift/activate the item; the item does not change, only the cultivator does.",
+    "canon_fidelity": "This reflects the novels: Wang Lin could not lift the God-Slaying Sword until his body cultivation matched; he could barely use it as a heavy physical weapon before then."
+  },
+  "salt": 1004418047
+}

@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:corpse_yin_sect_alchemy_courtyard/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "minecraft:nether_fortress/corridor_4",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

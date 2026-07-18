@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Sea Child Celestial Venerable (海子大天尊). Canon ID: N78. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_sea_child_tianzun",
+  "name": "Sea Child Celestial Venerable",
+  "nameCn": "海子大天尊",
+  "canon_id": "N78",
+  "type": "elder",
+  "faction": "immortal_astral_continent",
+  "location": "immortal_astral_continent",
+  "cultivation": "Celestial Venerable",
+  "personality": "sea-aspected celestial venerable",
+  "speech": "flowing, oceanic",
+  "relationship_to_wanglin": "complex; IAC power",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "Impossible to perceive",
+    "qi_condensation": "Oceanic celestial presence",
+    "core_formation": "Celestial Venerable",
+    "nascent_soul": "Sea Child Celestial Venerable"
+  },
+  "canon_confidence": 3,
+  "note": "Sea-aspected Celestial Venerable",
+  "derivation_type": "B",
+  "salt": 1863288370,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

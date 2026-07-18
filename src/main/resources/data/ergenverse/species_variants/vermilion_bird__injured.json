@@ -1,0 +1,29 @@
+{
+  "_comment": "Life-state variant: Vermilion Bird (Injured). Generated from canonical species definition. Prime Directive: this state exists objectively; perception tier determines whether player recognizes it.",
+  "variant_id": "vermilion_bird__injured",
+  "species_id": "vermilion_bird",
+  "species_name": "Vermilion Bird",
+  "species_nameCn": "朱雀",
+  "novel": "Renegade Immortal",
+  "life_state": "injured",
+  "life_state_name": "Injured",
+  "description": "Wounded, weakened, desperate; cultivates by seeking healing herbs",
+  "modifiers": {
+    "size_multiplier": 0.9,
+    "power_multiplier": 0.5,
+    "intelligence_multiplier": 1.1,
+    "temperament": "desperate",
+    "rarity": "uncommon"
+  },
+  "perception_tiers": {
+    "mortal": "Sees a desperate beast.",
+    "qi_condensation": "Sees a desperate beast of vermilion bird kind.",
+    "foundation_establishment": "Recognizes life-state: Injured.",
+    "core_formation": "Recognizes species, life-state, and approximate cultivation.",
+    "nascent_soul": "Sees bloodline, mutation potential, and treasure affinity.",
+    "spirit_severing": "Sees complete ecology and Dao-comprehension state."
+  },
+  "derivation_type": "B",
+  "canon_confidence": 5,
+  "salt": 1014674297
+}

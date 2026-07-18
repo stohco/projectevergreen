@@ -1,0 +1,80 @@
+{
+  "_comment": "Karma Wastes (因果荒原) — desolate hot plains of the Immortal Astral Continent where karmic debt crystallizes. Most cultivators avoid it: the crystallized karma here can strike back at those with heavy karmic burden. Red crystalline outcrops and a blood-red sky. Stand-in spawns: wither_skeleton=karma avatars (embodiments of accumulated karmic debt), blaze=refining karmic fire, ghast=wandering karmic wraiths. No native creatures — the land is too hostile. Desert pyramid structures stand in for karmic ruins (ancient sites where cultivators came to settle their karmic debt and died). Dense redstone ore represents the crystallized karmic veins. Patch_fire reflects the spontaneous combustion of heavy karmic burden. Prime Directive: the crystallized karma is an objective physical substance; it does not require a perceiver to exist. Cultivators avoid it because the karma interacts with their own — not because it is illusion.",
+  "temperature": 0.95,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 9308483,
+    "fog_color": 10066329,
+    "water_color": 3618331,
+    "water_fog_color": 2236962,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 10,
+        "minCount": 8,
+        "maxCount": 8
+      }
+    ],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:wither_skeleton",
+        "weight": 30,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:blaze",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:ghast",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:desert_pyramid"
+    ],
+    [],
+    [
+      "minecraft:ore_redstone",
+      "minecraft:ore_redstone_lower",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [
+      "minecraft:patch_fire"
+    ],
+    []
+  ],
+  "structures": [
+    "ergenverse:karma_crystal_formation"
+  ]
+}

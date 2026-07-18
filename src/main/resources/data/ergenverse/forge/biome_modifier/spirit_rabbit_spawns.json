@@ -1,0 +1,15 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "ergenverse:zhao_plains",
+    "ergenverse:zhao_mountains",
+    "ergenverse:chu_country"
+  ],
+  "spawners": {
+    "ergenverse:spirit_rabbit": {
+      "weight": 12,
+      "minCount": 2,
+      "maxCount": 4
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "_comment": "Provenance metadata for Lantern (origin soul protection) (长明灯). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I174",
+  "name": "Lantern (origin soul protection)",
+  "nameCn": "长明灯",
+  "type": "other",
+  "category": "soul_related",
+  "origin": "Taken after killing Xu Decai from Green Devil Continent (Ch. 1867)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Origin soul protection — user cannot die while fire is lit",
+    "Can nourish and slowly strengthen the origin soul",
+    "Refined into body: soft light surrounds body for extra protection layer"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Spirit-tier origin-soul protector",
+    "No offensive power but powerful defense",
+    "Can be body-refined for permanent protection"
+  ],
+  "source": "Ch.1867 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Taken after killing Xu Decai from Green Devil Continent (Ch. 1867)"
+  }
+}

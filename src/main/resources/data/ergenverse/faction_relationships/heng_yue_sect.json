@@ -1,0 +1,65 @@
+{
+  "_comment": "Faction relationships: heng_yue_sect. Per user directive: faction relationship network — allies/enemies/vassals/rivals. Prime Directive: relationships exist objectively.",
+  "faction_id": "heng_yue_sect",
+  "type": "sect",
+  "allies": [
+    "wang_family_village"
+  ],
+  "enemies": [
+    "teng_family",
+    "ji_mo_sect"
+  ],
+  "vassals": [],
+  "rivals": [
+    "other_zhao_sects"
+  ],
+  "neutral": [
+    "zhao_imperial"
+  ],
+  "note": "",
+  "salt": 601809554,
+  "spiritual_vein_grade": {
+    "grade": "mid",
+    "element": "wood",
+    "qi_modifier": "Outer disciples cultivate 1.5x faster",
+    "canon_note": "Heng Yue Sect sits on a mid-grade wood-aspected spiritual vein in the Zhao mountains"
+  },
+  "heritage_treasures": [
+    {
+      "item_id": "flying_sword_hengyue",
+      "name": "Heng Yue Flying Swords (set)",
+      "status": "vaulted",
+      "location_within_faction": "Sword Pavilion inner vault",
+      "canon_note": null
+    },
+    {
+      "item_id": "spirit_gathering_array",
+      "name": "Spirit Gathering Array",
+      "status": "active",
+      "location_within_faction": "Sect center formation room",
+      "canon_note": null
+    }
+  ],
+  "relationship_metadata": {
+    "allies": [
+      {
+        "id": "heavenly_fate_sect",
+        "strength": "moderate",
+        "since": "Pre-canon",
+        "reason": "Mutual defense pact in Zhao region"
+      }
+    ],
+    "enemies": [
+      {
+        "id": "teng_family",
+        "strength": "sect_war",
+        "since": "Pre-canon",
+        "reason": "Teng Family expansion threatened Heng Yue territory"
+      }
+    ],
+    "vassals": [],
+    "rivals": [],
+    "neutral": []
+  },
+  "_xianxia_schema": 2
+}

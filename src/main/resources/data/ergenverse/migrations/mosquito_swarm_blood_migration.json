@@ -1,0 +1,80 @@
+{
+  "_comment": "Migration: Mosquito Swarm Blood Migration. 4 waypoints, 4 follower types, 1 emergent markets. Per migration directive: migration is a major simulation system. The world breathes because markets appear seasonally along routes. Prime Directive: route exists objectively; player enters a world already moving.",
+  "migration_id": "mosquito_swarm_blood_migration",
+  "name": "Mosquito Swarm Blood Migration",
+  "species": "mosquito_beast",
+  "description": "The mass migration of mosquito swarms toward blood-rich events, triggered by wars or tribulations.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "waypoints": [
+    {
+      "point": "mosquito_valley",
+      "season": "pre_war",
+      "duration_days": 30
+    },
+    {
+      "point": "approaching_battlefield",
+      "season": "war",
+      "duration_days": 60
+    },
+    {
+      "point": "battlefield_aftermath",
+      "season": "post_war",
+      "duration_days": 180
+    },
+    {
+      "point": "mosquito_valley",
+      "season": "return",
+      "duration_days": 30
+    }
+  ],
+  "follower_chain": [
+    {
+      "follower": "blood_beasts",
+      "relationship": "symbiotic",
+      "distance_li": 30,
+      "note": "Blood beasts follow swarms."
+    },
+    {
+      "follower": "blood_cultivators",
+      "relationship": "symbiotic",
+      "distance_li": 80,
+      "note": "Blood cultivators harvest mosquito cores."
+    },
+    {
+      "follower": "scavenger_beasts",
+      "relationship": "scavenger",
+      "distance_li": 100,
+      "note": "Scavengers clean what swarms leave."
+    },
+    {
+      "follower": "orthodox_purifiers",
+      "relationship": "predator",
+      "distance_li": 200,
+      "note": "Purifiers cull swarms."
+    }
+  ],
+  "emergent_markets": [
+    {
+      "market": "blood_essence_market",
+      "season": "post_war",
+      "goods": [
+        "mosquito_core",
+        "blood_essence",
+        "carapace"
+      ]
+    }
+  ],
+  "simulation_notes": {
+    "world_breathes": "Markets appear and disappear seasonally; the world changes whether or not the player acts.",
+    "follower_dynamics": "Each follower type arrives with a delay proportional to distance_li; predators arrive after prey, scavengers after predators, bandits after cultivators, merchants after stability.",
+    "perception_tiers": {
+      "mortal": "Sees beasts moving.",
+      "qi_condensation": "Senses migration direction.",
+      "foundation_establishment": "Perceives follower chain.",
+      "core_formation": "Predicts market appearances.",
+      "nascent_soul": "Perceives complete migration system."
+    }
+  },
+  "salt": 1376244116
+}

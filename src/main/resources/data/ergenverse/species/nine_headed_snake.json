@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Nine-Headed Snake (九头蛇) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "nine_headed_snake",
+  "name": "Nine-Headed Snake",
+  "nameCn": "九头蛇",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Serpentine body 20 m long, nine snake-heads on branching necks, each head breathes a different element",
+    "size": "20 m adult, 15000 jin; ancient 100 m, 200000 jin",
+    "behavior": "Apex predator; each head cultivates independently; regenerates severed heads",
+    "habitat": "Forbidden valleys, deep swamps, chaos-aspected spirit veins",
+    "cultivation": "Nascent Soul -> Spirit Severing (chaos attribute)",
+    "intelligence": 8,
+    "diet": "nine-element herbs, weaker beasts, lost cultivators",
+    "relationships": "Rival of giant pythons; preyed upon only by Spirit Severing cultivators",
+    "techniques": [
+      "nine_breath",
+      "head_regen",
+      "coil_constrict",
+      "element_swap"
+    ],
+    "treasures": [
+      "nine_head_core",
+      "element_essence",
+      "snake_pearl"
+    ],
+    "bloodline": "Chaos-Snake lineage; nine-element bloodline",
+    "mutations": [
+      "hundred_head",
+      "chaos_body",
+      "ancient_snake_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "nine_headed_snake — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "nine_headed_snake — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 964377762,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

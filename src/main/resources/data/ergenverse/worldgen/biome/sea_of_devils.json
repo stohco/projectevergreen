@@ -1,0 +1,123 @@
+{
+  "_comment": "Sea of Devils (Mo Hai / Demon Cultivation Sea) — a vast corrupted wasteland on Planet Suzaku. Canon: divided into 14+ districts, inhabited by devils, demonic beasts, and rogue cultivators. The Fighting Evil Sect, Corpse Yin Sect, and various demonic factions operate here. The environment is hostile: corrupted air dampens divine sense, demonic energy interferes with techniques. Spirit veins are twisted and unstable. The land itself is hostile to normal life. Prime Directive: the corruption is objective — it exists regardless of who is looking. Mortals feel unease here even without cultivation.",
+  "temperature": 1.0,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 4163194,
+    "fog_color": 329011,
+    "water_color": 3145784,
+    "water_fog_color": 270131,
+    "mood_sound": "minecraft:ambient.warped_forest",
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:blaze",
+        "weight": 40,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:ghast",
+        "weight": 30,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:wither_skeleton",
+        "weight": 30,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:magma_cube",
+        "weight": 25,
+        "minCount": 1,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:enderman",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:nether_cave"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_gravel",
+      "minecraft:ore_blackstone",
+      "minecraft:ore_magma",
+      "minecraft:ore_gold_extra",
+      "minecraft:ore_quartz",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [
+      "ergenverse:joss_flame_source"
+    ],
+    [
+      "minecraft:basalt_pillar",
+      "minecraft:delta",
+      "minecraft:small_basalt_columns",
+      "minecraft:large_basalt_columns",
+      "ergenverse:demon_corpse_mushroom",
+      "ergenverse:heart_devil_flower",
+      "ergenverse:reincarnation_lily"
+    ],
+    []
+  ],
+  "structures": {
+    "ergenverse:corpse_yin_sect": {},
+    "ergenverse:fighting_evil_sect_alchemy_courtyard": {},
+    "ergenverse:fighting_evil_sect_ancestor_hall": {},
+    "ergenverse:fighting_evil_sect_array_hall": {},
+    "ergenverse:fighting_evil_sect_core_formation_hall": {},
+    "ergenverse:fighting_evil_sect_disciple_dormitories": {},
+    "ergenverse:fighting_evil_sect_hidden_treasury": {},
+    "ergenverse:fighting_evil_sect_inner_sect": {},
+    "ergenverse:fighting_evil_sect_library": {},
+    "ergenverse:fighting_evil_sect_main_plaza": {},
+    "ergenverse:fighting_evil_sect_mountain_cave": {},
+    "ergenverse:fighting_evil_sect_outer_gate": {},
+    "ergenverse:fighting_evil_sect_puppet_workshop": {},
+    "ergenverse:fighting_evil_sect_secret_pavilion": {},
+    "ergenverse:fighting_evil_sect_spirit_beast_pens": {},
+    "ergenverse:fighting_evil_sect_spirit_herb_garden": {},
+    "ergenverse:fighting_evil_sect_spirit_spring": {},
+    "ergenverse:fighting_evil_sect_sword_peak": {},
+    "ergenverse:fighting_evil_sect_sword_tomb": {},
+    "ergenverse:fighting_evil_sect_trial_grounds": {},
+    "ergenverse:fighting_evil_sect_underground_passage": {},
+    "ergenverse:soul_refining_ancestral": {}
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "_comment": "Species: Iron Bear (铁熊) from A Will Eternal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "iron_bear",
+  "name": "Iron Bear",
+  "nameCn": "铁熊",
+  "novel": "A Will Eternal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Bear 4 m tall, fur iron-grey, hide repels spirit-steel, claws cut armor",
+    "size": "4 m adult, 6000 jin; ancient 10 m, 80000 jin",
+    "behavior": "Territorial body-tempering beast; cultivates by absorbing metal-essence",
+    "habitat": "Metal-aspected mountains, iron-ore regions",
+    "cultivation": "Core Formation -> Nascent Soul (metal attribute)",
+    "intelligence": 5,
+    "diet": "metal-herbs, weaker beasts, lost miners",
+    "relationships": "Tributed by body-cultivation sects",
+    "techniques": [
+      "iron_hide",
+      "metal_claw",
+      "body_slam"
+    ],
+    "treasures": [
+      "iron_bear_core",
+      "iron_hide",
+      "metal_claw"
+    ],
+    "bloodline": "Iron-Bear lineage; metal-attribute bloodline",
+    "mutations": [
+      "iron_body",
+      "ancient_iron_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": "No alchemy value — common beast with no condensed inner core",
+      "canon_note": "iron_bear — common beast, no condensed inner core"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "iron_bear — not a hive-mind species"
+    },
+    "combat_ai": "territorial_defender"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 857597691,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

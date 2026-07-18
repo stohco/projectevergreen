@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "ergenverse:block/intent_herb_block"
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "_comment": "Provenance metadata for Azure Ancient God Shield / Cyan Light Shield (青光盾). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I36",
+  "name": "Azure Ancient God Shield / Cyan Light Shield",
+  "nameCn": "青光盾",
+  "type": "armor",
+  "category": "defensive",
+  "origin": "Ancient God inheritance (Ch. 980)",
+  "current_owner": "Wang Lin (restored)",
+  "abilities": [
+    "8-star Ancient God life-saving divine ability: Dreaming Back to Antiquity",
+    "Shatterable and repairable defensive shield",
+    "Saved Wang Lin's life multiple times (vs Tian Yunzi, vs Seven-Colored Daoist)",
+    "Repaired when Wang Lin blasted open Gate of Emptiness"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Ancient God Treasure — 8-star life-saving spell",
+    "Destroyed Ch. 1082, restored Ch. 1626 via Void Gate power",
+    "Named Dreaming Back to Antiquity (梦回太古)"
+  ],
+  "source": "Ch.980 obtained, Ch.1082 destroyed, Ch.1626 restored (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Ancient God inheritance (Ch. 980)"
+  },
+  "lifecycle": {
+    "creator": "Ancient God inheritance (Ch. 980)",
+    "creation_circumstances": "Ancient God inheritance (Ch. 980)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

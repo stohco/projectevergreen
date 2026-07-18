@@ -1,0 +1,21 @@
+{
+  "_comment": "Vermilion-Blood Ginseng — highest-tier herb on Planet Suzaku. Canon (CANON_RI_ECOLOGY.md 2.3, Type C conf 3): 'Vermilion-Blood Ginseng — Vermilion Bird Country; the dominant country has the best herbs.' Custom block: ergenverse:vermilion_blood_ginseng
+  "type": "minecraft:flower",
+  "config": {
+    "feature": {
+      "type": "minecraft:simple_block",
+      "config": {
+        "to_place": {
+          "type": "minecraft:simple_state_provider",
+          "state": {
+            "Name": "ergenverse:vermilion_blood_ginseng"
+          }
+        }
+      }
+    },
+    "tries": 1,
+    "xz_spread": 2,
+    "y_spread": 0,
+    "need_red_to_survive": false
+  }
+}

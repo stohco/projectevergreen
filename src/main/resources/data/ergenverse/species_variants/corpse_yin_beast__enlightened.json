@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Corpse Yin Beast (enlightened). Generated from canonical definition.",
+  "variant_id": "corpse_yin_beast__enlightened",
+  "species_id": "corpse_yin_beast",
+  "species_name": "Corpse Yin Beast",
+  "life_state": "enlightened",
+  "modifiers": {
+    "size_multiplier": 1.1,
+    "power_multiplier": 5.0,
+    "temperament": "serene",
+    "rarity": "very_rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 337232370
+}

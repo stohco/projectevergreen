@@ -1,0 +1,48 @@
+{
+  "_comment": "Heng Yue Sect internal structures — from xian-ni.fandom.com/wiki/Heng_Yue_Sect",
+  "sectId": "faction:heng_yue_sect",
+  "sectName": "Heng Yue Sect",
+  "sectNameCn": "恒岳派",
+  "location": "Country of Zhao, Planet Suzaku",
+  "status": "Disbanded (absorbed by Xuan Dao Sect)",
+  "subdivisions": [
+    {"name": "Metal Subdivision", "nameCn": "金峰", "element": "metal", "chapterRef": "Ch.13,20"},
+    {"name": "Wood Subdivision", "nameCn": "木峰", "element": "wood", "chapterRef": "Ch.13,20"},
+    {"name": "Water Subdivision", "nameCn": "水峰", "element": "water", "chapterRef": "Ch.13,20"},
+    {"name": "Earth Subdivision", "nameCn": "土峰", "element": "earth", "chapterRef": "Ch.13,20", "notableResidents": ["Wang Lin"]},
+    {"name": "Fire Subdivision", "nameCn": "火峰", "element": "fire", "chapterRef": "Ch.13,20"}
+  ],
+  "areas": [
+    {"name": "Main Courtyard", "nameCn": "主院", "description": "Inner disciples and elders live here", "chapterRef": "Ch.13"},
+    {"name": "Mountain Peaks", "nameCn": "山峰", "description": "Core Formation elders live on peaks", "chapterRef": "Ch.13"},
+    {"name": "Mountain of Stairs", "nameCn": "阶梯山", "description": "Entrance trial - climb to show perseverance", "chapterRef": "Ch.3-4", "function": "entrance_trial"},
+    {"name": "House of Sword", "nameCn": "剑室", "description": "Entrance trial - open doors to show sword spirit affinity", "chapterRef": "Ch.3-4", "function": "entrance_trial"}
+  ],
+  "discipleRanks": [
+    {"rank": "honorary_gray", "color": "gray", "description": "Lowest honorary disciple"},
+    {"rank": "honorary_yellow", "color": "yellow", "description": "Right to cultivate immortal technique"},
+    {"rank": "inner_purple", "color": "purple", "description": "Highest inner disciple"},
+    {"rank": "inner_black", "color": "black", "description": "Second inner disciple rank"},
+    {"rank": "inner_white", "color": "white", "description": "Third inner disciple rank"},
+    {"rank": "inner_red", "color": "red", "description": "Lowest inner disciple rank"}
+  ],
+  "leadership": [
+    {"role": "Ancestor", "name": "Heng Yue Zi", "nameCn": "恒岳子"},
+    {"role": "Ancestor", "name": "Ancestor Wang", "nameCn": "王老祖"},
+    {"role": "Sect Leader", "name": "Huang Long", "nameCn": "黄龙"},
+    {"role": "Grand Elder", "name": "Liu Wenju", "nameCn": "刘文举"},
+    {"role": "Elder", "name": "Hui Bing", "nameCn": "慧冰"},
+    {"role": "Elder", "name": "Sun Dazhu", "nameCn": "孙大柱", "note": "Wang Lin's first master"},
+    {"role": "Elder", "name": "Dao Xu", "nameCn": "道虚"},
+    {"role": "Elder", "name": "Elder Li", "nameCn": "李长老"},
+    {"role": "Elder", "name": "Elder Lu", "nameCn": "鲁长老"},
+    {"role": "Elder", "name": "Elder Ma", "nameCn": "马长老"},
+    {"role": "Elder", "name": "Elder Zhang", "nameCn": "张长老"},
+    {"role": "Elder", "name": "Elder Song", "nameCn": "宋长老"}
+  ],
+  "entranceRequirements": {
+    "tests": ["natural_talent", "perseverance_stairs", "sword_spirit_affinity"],
+    "chapterRef": "Ch.3-4,20",
+    "note": "Wang Lin failed all three but was admitted as honorary disciple due to Teng Clan influence"
+  }
+}

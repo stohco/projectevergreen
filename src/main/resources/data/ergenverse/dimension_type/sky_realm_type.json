@@ -1,0 +1,18 @@
+{
+  "_comment": "Sky Realm — the aerial dimension above cultivation worlds. Contains floating islands, cloud beasts, flying sects, and ancient sky battlefields. Accessed via flying sword, teleportation array, or spatial rift. Prime Directive: the sky realm exists objectively — it is not a perception effect.",
+  "ultrawarm": false,
+  "natural": false,
+  "piglin_safe": false,
+  "respawn_anchor_works": false,
+  "bed_works": true,
+  "has_raids": false,
+  "has_skylight": true,
+  "has_ceiling": false,
+  "coordinate_scale": 1.0,
+  "ambient_light": 0.5,
+  "logical_height": 384,
+  "min_y": -64,
+  "height": 448,
+  "infiniburn": "#minecraft:infiniburn_overworld",
+  "effects": "minecraft:overworld"
+}

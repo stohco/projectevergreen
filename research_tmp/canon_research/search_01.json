@@ -1,0 +1,50 @@
+🚀 Initializing Z-AI SDK...
+🚀 Invoking function: web_search...
+[
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin",
+    "name": "Wang Lin | Xian Ni Wikia - Fandom",
+    "snippet": "Wang Lin is the main protagonist of Renegade Immortal. Born with a weak body, Wang Lin's features begin as average before becoming moderately handsome as a ...",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Donghua/comments/1g83gfw/renegade_immortal_wang_lins_restriction_flag",
+    "name": "[Renegade Immortal] Wang Lin's Restriction Flag : r/Donghua - Reddit",
+    "snippet": "The restriction flag that Wang Lin is trying to make is super powerful weapon that used the ink given to him by the Ancient God (Tu Si) as a ... Renegade Immortal (Questions & Spoilers) Renegade Immortal: Few Questions More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://xian-ni.fandom.com/wiki/Wang_Lin/Techniques",
+    "name": "Wang Lin/Techniques | Xian Ni Wikia - Fandom",
+    "snippet": "1.4.Vermilion Bird Divine... · 1.6.1.Restrictions Spells",
+    "host_name": "xian-ni.fandom.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=r46zs_E6D4w",
+    "name": "Renegade Immortal - Wang Lin Ultimate Weapon - YouTube",
+    "snippet": "... Banner and the Soul Banner. Both weapons possess incredible power, terrifying abilities, and deep backstories tied to ancient gods and sect ...",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://baike.baidu.com/en/item/Wang%20Lin/986247",
+    "name": "Wang Lin - Renegade Immortal",
+    "snippet": "Bestowed with sealing divine abilities by Wang Lin, its power is immense. ... Took Xie Qing as a disciple and learned the Destruction Restriction, obtaining the ...",
+    "host_name": "baike.baidu.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
+🎉 Function invocation completed!

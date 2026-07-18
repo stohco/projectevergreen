@@ -1,0 +1,74 @@
+{
+  "_comment": "Migration: Ant Kingdom Expansion. 4 waypoints, 3 follower types, 1 emergent markets. Per migration directive: migration is a major simulation system. The world breathes because markets appear seasonally along routes. Prime Directive: route exists objectively; player enters a world already moving.",
+  "migration_id": "ant_kingdom_expansion",
+  "name": "Ant Kingdom Expansion",
+  "species": "ant_beast",
+  "description": "The decades-long expansion of ant kingdoms through underground spirit-vein networks.",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "waypoints": [
+    {
+      "point": "ant_kingdom_core",
+      "season": "continuous",
+      "duration_days": 3650
+    },
+    {
+      "point": "vein_tunnel_1",
+      "season": "continuous",
+      "duration_days": 3650
+    },
+    {
+      "point": "vein_tunnel_2",
+      "season": "continuous",
+      "duration_days": 3650
+    },
+    {
+      "point": "vein_tunnel_3",
+      "season": "continuous",
+      "duration_days": 3650
+    }
+  ],
+  "follower_chain": [
+    {
+      "follower": "giant_centipedes",
+      "relationship": "predator",
+      "distance_li": 1,
+      "note": "Centipedes prey on ant workers."
+    },
+    {
+      "follower": "underground_civilizations",
+      "relationship": "rival",
+      "distance_li": 10,
+      "note": "Civilizations fight ant expansion."
+    },
+    {
+      "follower": "miner_cults",
+      "relationship": "prey",
+      "distance_li": 5,
+      "note": "Miners are prey for ants."
+    }
+  ],
+  "emergent_markets": [
+    {
+      "market": "ant_pearl_market",
+      "season": "continuous",
+      "goods": [
+        "ant_pearl",
+        "mandible",
+        "spirit_ore"
+      ]
+    }
+  ],
+  "simulation_notes": {
+    "world_breathes": "Markets appear and disappear seasonally; the world changes whether or not the player acts.",
+    "follower_dynamics": "Each follower type arrives with a delay proportional to distance_li; predators arrive after prey, scavengers after predators, bandits after cultivators, merchants after stability.",
+    "perception_tiers": {
+      "mortal": "Sees beasts moving.",
+      "qi_condensation": "Senses migration direction.",
+      "foundation_establishment": "Perceives follower chain.",
+      "core_formation": "Predicts market appearances.",
+      "nascent_soul": "Perceives complete migration system."
+    }
+  },
+  "salt": 1536409176
+}

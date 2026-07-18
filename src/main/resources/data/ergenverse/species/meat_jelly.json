@@ -1,0 +1,76 @@
+{
+  "_comment": "Species: Meat Jelly (肉冻) from I Shall Seal the Heavens. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "meat_jelly",
+  "name": "Meat Jelly",
+  "nameCn": "肉冻",
+  "novel": "I Shall Seal the Heavens",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Quivering mass of sentient meat 1 m, can shape into any form, perpetually shimmering",
+    "size": "1 m mass, 200 jin; ancient 5 m, 5000 jin",
+    "behavior": "Companion beast; cultivates by absorbing meat-essence; speaks in squeaks",
+    "habitat": "Anywhere Meng Hao goes; meat-aspected spirit veins",
+    "cultivation": "Nascent Soul -> Spirit Severing (meat attribute)",
+    "intelligence": 8,
+    "diet": "meat, meat-essence, spirit-rice",
+    "relationships": "Bonded companion to Meng Hao",
+    "techniques": [
+      "meat_shape",
+      "meat_absorb",
+      "squeak_call"
+    ],
+    "treasures": [
+      "meat_jelly_core",
+      "meat_essence"
+    ],
+    "bloodline": "Meat-Jelly lineage; unique bloodline",
+    "mutations": [
+      "true_meat_body",
+      "meat_immortal_emperor"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ordinary_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": "No alchemy value — common beast with no condensed inner core",
+      "canon_note": "meat_jelly — common beast, no condensed inner core"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "meat_jelly — not a hive-mind species"
+    },
+    "combat_ai": "migration_passive"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 1591056523,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Chen Tao (陈涛). Canon ID: N143. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_chen_tao",
+  "name": "Chen Tao",
+  "nameCn": "陈涛",
+  "canon_id": "N143",
+  "type": "disciple",
+  "faction": "independent",
+  "location": "variable",
+  "cultivation": "mid-Ascendant",
+  "personality": "Ascendant cultivator",
+  "speech": "confident",
+  "relationship_to_wanglin": "complex",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A powerful cultivator",
+    "qi_condensation": "Ascendant; overwhelming",
+    "core_formation": "Mid-Ascendant",
+    "nascent_soul": "Mid-Ascendant cultivator"
+  },
+  "canon_confidence": 3,
+  "note": "Mid-Ascendant cultivator NPC",
+  "derivation_type": "B",
+  "salt": 1914404815,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

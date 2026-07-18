@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Daoist Water (水道子). Canon ID: N102. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_daoist_water",
+  "name": "Daoist Water",
+  "nameCn": "水道子",
+  "canon_id": "N102",
+  "type": "antagonist",
+  "faction": "independent",
+  "location": "unknown",
+  "cultivation": "peak Third Step (Nirvana Void+)",
+  "personality": "water-aspected ancient cultivator; serene exterior, ruthless interior",
+  "speech": "flowing, calm, deadly",
+  "relationship_to_wanglin": "enemy",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A serene cultivator",
+    "qi_condensation": "Water-aspected; overwhelming",
+    "core_formation": "Peak Third Step; water law",
+    "nascent_soul": "Nirvana Void+; water dao"
+  },
+  "canon_confidence": 4,
+  "note": "Water-aspected major antagonist",
+  "derivation_type": "A",
+  "salt": 1498907572,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

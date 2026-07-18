@@ -1,0 +1,68 @@
+{
+  "_comment": "Provenance metadata for Space Stone (空间石). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I76",
+  "name": "Space Stone",
+  "nameCn": "空间石",
+  "type": "celestial_treasure",
+  "category": "storage",
+  "origin": "Gift from founder of Great Soul Sect (Ch. 1838)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Extract one item from storage space without damage (one use per pocket)",
+    "Nurture a Heavenly Dao (second role)",
+    "Quasi-Third-Step tier — 1 of 3 promised gifts"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Quasi-Third-Step tier",
+    "1 of 3 promised gifts from Great Soul Sect founder",
+    "One-use-per-pocket limitation (cluster collapse risk)"
+  ],
+  "source": "Ch.1838 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Gift from founder of Great Soul Sect (Ch. 1838)"
+  },
+  "lifecycle": {
+    "creator": "unknown (pre-canon)",
+    "creation_circumstances": "Gift from founder of Great Soul Sect (Ch. 1838)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

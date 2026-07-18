@@ -1,0 +1,69 @@
+{
+  "_comment": "Provenance metadata for Unnamed Wheel Formation (无名轮阵). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I72",
+  "name": "Unnamed Wheel Formation",
+  "nameCn": "无名轮阵",
+  "type": "formation",
+  "category": "restriction",
+  "origin": "Self-erected as replacement formation (Ch. 1667)",
+  "current_owner": "Wang Lin (active)",
+  "abilities": [
+    "Replaces Realm-Sealing Formation — upgraded Life-Death/Karma/True-False Wheel",
+    "Stops Outer-Realm cultivators while allowing Joss Flames to enter",
+    "Calls treasure spirits and souls of destroyed planets to fuse eternally",
+    "Gathers soul fragments to push the wheel forever"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Third-Step-tier formation",
+    "Fixes Realm-Sealing Formation's biggest flaw (Joss Flames)",
+    "Active eternal formation with immortal formation spirit"
+  ],
+  "source": "Ch.1667 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Self-erected as replacement formation (Ch. 1667)"
+  },
+  "lifecycle": {
+    "creator": "Self-erected as replacement formation (Ch. 1667)",
+    "creation_circumstances": "Self-erected as replacement formation (Ch. 1667)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_comment": "Macro-Terrain: Vermilion Bird Ember Mountains. Per scale directive: this terrain IS a being. Player shouldn't initially realize they're standing on bone. Divine Sense -> Perception changes -> 'You realize this mountain range... is one finger.' Prime Directive: the being's corpse is objectively terrain; perception tier determines what the player sees.",
+  "terrain_id": "vermilion_bird_ember_mountains",
+  "name": "Vermilion Bird Ember Mountains",
+  "being": "Vermilion Bird",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "scale": "300 li long — the shed feathers of a divine bird.",
+  "canonical_event": "The Vermilion Bird nested here before ascending to the Divine Sect.",
+  "perception_tiered_appearance": {
+    "mortal": "A mountain range of red stone, perpetually warm, peaks glow at dusk.",
+    "qi_condensation": "The mountains radiate fire-essence; the stone is warm year-round.",
+    "foundation_establishment": "The mountains are petrified feathers; the glow is residual divine fire.",
+    "core_formation": "This is where the Vermilion Bird once nested; the mountains are its shed feathers.",
+    "nascent_soul": "The divine fire still smolders; cultivating here grants fire-essence.",
+    "spirit_severing": "The Vermilion Bird's nest-essence permeates the range; the divine bird returns here."
+  },
+  "perception_mechanic": {
+    "trigger": "When player's perception tier rises, the appearance re-rolls automatically.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does.",
+    "canon_fidelity": "This is exactly how Wang Lin perceived Ancient God Tu Si's remains — first as terrain, then as god-bone, then as god-memory."
+  },
+  "salt": 219461827
+}

@@ -1,0 +1,69 @@
+{
+  "_comment": "Provenance metadata for Karma Whip (因果鞭). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I12",
+  "name": "Karma Whip",
+  "nameCn": "因果鞭",
+  "type": "weapon",
+  "category": "offensive",
+  "origin": "Fused Soul Lasher (Red Butterfly's whip) + Karma Domain (Ch. 731)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Weaponizes karmic cause-effect",
+    "Once cleaved open 7 million worlds with a single whip-strike",
+    "Restrains soul-type entities",
+    "Pseudo-immortal / dao-domain treasure tier"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Evolved from Soul Lasher via Ghostly Sky Fire + Karma Concept",
+    "Soul Lasher originally belonged to Red Butterfly, won in battle from Hong Die",
+    "Retained to end — dao-domain weapon"
+  ],
+  "source": "Ch.731 (novel, Donghua EP147); Fandom wiki; Baidu Baike",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Fused Soul Lasher (Red Butterfly's whip) + Karma Domain (Ch. 731)"
+  },
+  "lifecycle": {
+    "creator": "Fused Soul Lasher (Red Butterfly's whip) + Karma Domain (Ch. 731)",
+    "creation_circumstances": "Fused Soul Lasher (Red Butterfly's whip) + Karma Domain (Ch. 731)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

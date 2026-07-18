@@ -1,0 +1,35 @@
+{
+  "_comment": "NPC: Teng Xiuxiu (藤秀秀). Canon ID: N15. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_teng_xiuxiu",
+  "name": "Teng Xiuxiu",
+  "nameCn": "藤秀秀",
+  "canon_id": "N15",
+  "type": "other",
+  "faction": "teng_family",
+  "location": "teng_family_city",
+  "cultivation": "low-tier",
+  "personality": "complex; Teng family member with conflicted loyalties",
+  "speech": "guarded, conflicted",
+  "relationship_to_wanglin": "complex; enemy family but not hostile",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A young female cultivator",
+    "qi_condensation": "Teng family member; low cultivation"
+  },
+  "canon_confidence": 3,
+  "note": "Teng family member with complex relationship to Wang Lin",
+  "derivation_type": "B",
+  "salt": 1585877813,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

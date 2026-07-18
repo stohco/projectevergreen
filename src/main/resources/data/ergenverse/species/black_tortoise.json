@@ -1,0 +1,80 @@
+{
+  "_comment": "Species: Black Tortoise (玄武) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "black_tortoise",
+  "name": "Black Tortoise",
+  "nameCn": "玄武",
+  "novel": "Renegade Immortal",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "canonical": {
+    "appearance": "Tortoise 20 m shell, shell black-jade with coiled snake-tail and snake-head neck",
+    "size": "20 m shell adult, 500000 jin; true form supports continents",
+    "behavior": "Divine spirit beast of defense; supports continents in slumber; awakens for world-founding events",
+    "habitat": "Xuan Wu country, deep ocean trenches, earth-aspected apex spirit veins",
+    "cultivation": "Immortal (earth/water attribute, true divine beast)",
+    "intelligence": 12,
+    "diet": "earth-attribute heavenly treasures, deep-sea beasts, continent-essence",
+    "relationships": "Bonded to Xuan Wu imperial lineage; rival of White Tiger",
+    "techniques": [
+      "shell_defense",
+      "snake_bite",
+      "continent_support",
+      "black_jade_shell"
+    ],
+    "treasures": [
+      "black_tortoise_core",
+      "shell_fragment",
+      "snake_pearl"
+    ],
+    "bloodline": "True Divine Beast lineage; one of Four Symbols",
+    "mutations": [
+      "six_leg",
+      "true_divine_awakening"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "ancient_celestial_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "black_tortoise — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "black_tortoise — not a hive-mind species"
+    },
+    "combat_ai": "deity_level"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 959769253,
+  "bloodline_tier": "ancient_celestial",
+  "inner_dan_properties": {
+    "element": "water",
+    "purity_tier": 9,
+    "dao_resonance": "primordial_water",
+    "side_effects": [
+      "spiritual_seal"
+    ]
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

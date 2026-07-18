@@ -1,0 +1,81 @@
+{
+  "_comment": "Civilization: Origin Sect (sect) at Immortal Astral Continent. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "origin_sect",
+  "name": "Origin Sect",
+  "type": "sect",
+  "location": "Immortal Astral Continent",
+  "peak_realm": "Immortal (sect master)",
+  "canon_status": "immortal_sect",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "population_structure": {
+    "outer_disciples": 50000,
+    "inner_disciples": 10000,
+    "core_disciples": 1000,
+    "elders": 100,
+    "peak_lords": 50,
+    "sect_master": 1,
+    "spirit_beasts": 5000
+  },
+  "economy": {
+    "spirit_stones": "vast",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "immortal-grade",
+    "forging": "immortal-grade",
+    "formation": "immortal-grade",
+    "trade": "continent-scale",
+    "recruitment": "continent-wide"
+  },
+  "politics": {
+    "allies": [
+      "vassal sects"
+    ],
+    "enemies": [
+      "rival immortal sects"
+    ],
+    "vassals": [
+      "entire mortal sects"
+    ],
+    "rivals": [
+      "other immortal sects"
+    ],
+    "internal_factions": [
+      "sect master loyalists",
+      "elder council"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "continent-wide examination",
+    "expansion": "continent-scale",
+    "decline": "none current",
+    "schisms": "elder council tension",
+    "wars": [
+      "immortal-sect wars"
+    ],
+    "recovery": "strong; immortal sect master"
+  },
+  "libraries": [
+    "origin techniques",
+    "vast collections",
+    "continent lore"
+  ],
+  "spirit_beasts": [
+    "immortal-grade beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 1042477227,
+  "spiritual_vein_grade": 3,
+  "heritage_treasures": [],
+  "_xianxia_schema": 1
+}

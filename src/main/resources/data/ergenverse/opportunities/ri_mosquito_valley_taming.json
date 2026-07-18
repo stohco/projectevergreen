@@ -1,0 +1,48 @@
+{
+  "_comment": "RI Canon Opportunity: Mosquito Valley Taming. Canon event: Wang Lin tames the Mosquito Beast swarm via Dream Dao in Mosquito Valley. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_mosquito_valley_taming",
+  "name": "Mosquito Valley Taming",
+  "canon_event": "Wang Lin tames the Mosquito Beast swarm via Dream Dao in Mosquito Valley",
+  "location": "mosquito_valley",
+  "age_requirement_years": 10000,
+  "cultivation_required": "Core Formation",
+  "perception_required": "Nascent Soul",
+  "luck_modifier": 0.5,
+  "discovery_methods": [
+    "exploration",
+    "divine_sense",
+    "rumor"
+  ],
+  "reward_tables": [
+    "mosquito_beast_swarm",
+    "mosquito_valley_ecosystem_access"
+  ],
+  "why_untaken": "Mosquito Valley is extremely dangerous; requires Core Formation+ to survive.",
+  "natural_next_event": "The ancient queen continues cultivating; swarm grows.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 596072420,
+  "karmic_weight": {
+    "value": 70,
+    "type": "bond",
+    "propagation": "continental",
+    "description": "Taming the Mosquito Beast swarm creates a permanent soul-bond"
+  },
+  "consequences": [
+    {
+      "event_id": "mosquito_beast_companion",
+      "type": "birth",
+      "target": "mosquito_beast_queen",
+      "description": "Mosquito Beast Queen becomes Wang Lin's companion",
+      "delay": "immediate"
+    },
+    {
+      "event_id": "swarm_combat_capability",
+      "type": "realm_change",
+      "target": "wang_lin",
+      "description": "Wang Lin gains continent-scale destructive capability",
+      "delay": "immediate"
+    }
+  ],
+  "_xianxia_schema": 2
+}

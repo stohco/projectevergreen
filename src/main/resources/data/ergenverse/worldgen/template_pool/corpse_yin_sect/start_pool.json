@@ -1,0 +1,16 @@
+{
+  "_comment": "Start pool for Corpse Yin Sect. Stand-in: vanilla village town_centers. Final: custom sect/city NBT templates.",
+  "name": "ergenverse:corpse_yin_sect/start_pool",
+  "fallback": "minecraft:village/snowy/terminators",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "projection": "rigid",
+        "location": "minecraft:village/snowy/town_centers/snowy_meeting_point_1",
+        "processors": "minecraft:empty"
+      }
+    }
+  ]
+}

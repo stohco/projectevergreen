@@ -1,0 +1,24 @@
+{
+  "name": "Heterogeneity-Mutated Panther", "nameCn": "异化豹", "pinyin": "Yìhuà Bào", "novel": "Outside of Time",
+  "tier": "spirit", "baseRank": "core_formation", "habitat": "forest", "diet": "carnivore",
+  "preysOn": [], "preyedUponBy": [], "temperament": "aggressive",
+  "value": "mutated pelt (Heterogeneity-laced); corrupted core",
+  "layer": 2, "behaviorScript": "Corrupted Predator — from BTT; a spirit beast exposed to concentrated Heterogeneity from God Face breath; lost original temperament, attacks indiscriminately; body partially crystallized with dark heterogeneity veins; stronger but mindless",
+  "voxelScale": "1.8x1.2x2.5", "aggroType": "Corrupted_Berserker", "category": "bloodline_mutant",
+  "drops": [
+    {"id": "heterogeneity_pelt", "chance": 0.4, "count": "1", "use": "forbidden armor (curses wearer)"},
+    {"id": "corrupted_core", "chance": 0.2, "count": "1", "use": "Heterogeneity research"}
+  ],
+  "classification": "Corrupted Predator / Heterogeneity Mutant",
+  "realm": "Core Formation (elevated from Foundation by mutation)",
+  "threat": "High (enhanced speed/power; Heterogeneity-laced claws resist healing)",
+  "bodyMaterials": ["Heterogeneity Pelt (forbidden armor — curses wearer with mild exposure)", "Corrupted Core (Heterogeneity research material)"],
+  "weaknesses": ["Heterogeneity purification techniques (destabilize crystallized veins)", "No strategy — purely berserker, exploitable by patient fighters", "Water-element techniques (crystallized veins are brittle when cooled rapidly)"],
+  "knownEnemies": ["Black-Scaled Wolves (territorial competition)", "Mysterious Shadow (preys on Heterogeneity within them)"],
+  "cultivationValue": "Corrupted Core reveals Heterogeneity crystallization mechanics; Pelt is the base for powerful but dangerous armor",
+  "alchemyUses": ["Berserker Elixir (corrupted core — power boost with corruption side effect)", "Heterogeneity Antidote research (reverse-engineering the mutation)"],
+  "artifactUses": ["Heterogeneity-Laced Armor (high defense, mild curse)", "Corrupted Claw Gauntlets (rending weapon)"],
+  "relatedDao": ["Corruption", "Body"],
+  "knownInheritances": ["None — the mutation is a degradation, not a path"],
+  "provenance": {"source": "Outside of Time", "attestation": "EXPLICIT", "confidence": 5}
+}

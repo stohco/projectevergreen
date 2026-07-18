@@ -1,0 +1,28 @@
+{
+  "_comment": "World State Engine query: Why hasn't it been taken already? Schema: untaken_reason_registry. Data sources: [].",
+  "question": "Why hasn't it been taken already?",
+  "schema": "untaken_reason_registry",
+  "fields": [
+    "object_id",
+    "reason",
+    "reason_type",
+    "reason_strength"
+  ],
+  "data_sources": [],
+  "reason_types": [
+    "sealed",
+    "hidden",
+    "guarded",
+    "too_dangerous",
+    "unknown",
+    "taboo",
+    "contested",
+    "requires_specific_cultivation",
+    "requires_specific_perception",
+    "requires_specific_luck"
+  ],
+  "note": "This is the most important question; it explains why opportunities persist for the player to find.",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "salt": 1272429104
+}

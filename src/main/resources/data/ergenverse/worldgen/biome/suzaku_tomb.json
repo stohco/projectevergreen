@@ -1,0 +1,100 @@
+{
+  "_comment": "Suzaku Tomb \u2014 underground tomb containing the Cultivation Planet Crystal. Canon (CANON_RI_COMPLETE_WORLD.md L52): A multi-floor tomb within Planet Suzaku containing the Cultivation Planet Crystal (the seal-mechanism of the planet itself). Wang Lin found the Half-Moon Blade here. Also where the scattered demon Piao Nanzi/Lou Hou was sealed. Dark, enclosed, tomb-like atmosphere. The tomb's existence is the reason Planet Suzaku is sealed \u2014 the Crystal is the seal anchor. Prime Directive: the tomb and Crystal existed long before Wang Lin; they are the reason the planet is sealed, not the other way around.",
+  "temperature": 0.0,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 0,
+    "fog_color": 1118481,
+    "water_color": 3145784,
+    "water_fog_color": 270131,
+    "mood_sound": "minecraft:ambient.cave",
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 15,
+        "minCount": 4,
+        "maxCount": 8
+      }
+    ],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:skeleton",
+        "weight": 40,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:creeper",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:wither_skeleton",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:witch",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:cave_spider",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_gold_lower",
+      "minecraft:ore_redstone",
+      "minecraft:ore_lapis",
+      "minecraft:ore_diamond",
+      "minecraft:ore_emerald"
+    ],
+    [
+      "ergenverse:spirit_vein_quartz_ore",
+      "minecraft:fossil_underground"
+    ],
+    [],
+    [
+      "minecraft:brown_mushroom_normal",
+      "minecraft:red_mushroom_normal"
+    ],
+    []
+  ]
+}

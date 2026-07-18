@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Yun Quezi (云阙子). Canon ID: N59. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_yun_quezi",
+  "name": "Yun Quezi",
+  "nameCn": "云阙子",
+  "canon_id": "N59",
+  "type": "elder",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect",
+  "cultivation": "Late Nascent Soul",
+  "personality": "traditional, strict elder",
+  "speech": "formal, stern",
+  "relationship_to_wanglin": "neutral; sect authority",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "An imposing elder",
+    "qi_condensation": "Heavenly Fate elder; Nascent Soul",
+    "core_formation": "Late Nascent Soul elder",
+    "nascent_soul": "Late Nascent Soul; sect traditionalist"
+  },
+  "canon_confidence": 3,
+  "note": "Heavenly Fate elder",
+  "derivation_type": "B",
+  "salt": 1948166821,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "nascent_soul",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

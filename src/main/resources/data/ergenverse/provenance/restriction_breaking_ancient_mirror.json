@@ -1,0 +1,67 @@
+{
+  "_comment": "Provenance metadata for Restriction Breaking Ancient Mirror (破禁古镜). Auto-generated from canon database. Every item answers: Where did this originate? Who made it? When? Why? How old? What cultivation? Current owner? Known history?",
+  "artifact_id": "I66",
+  "name": "Restriction Breaking Ancient Mirror",
+  "nameCn": "破禁古镜",
+  "type": "formation",
+  "category": "restriction",
+  "origin": "Tattoo Tribe era (Ch. 774)",
+  "current_owner": "Wang Lin",
+  "abilities": [
+    "Breaks restrictions/formations by reflecting restriction's logic back",
+    "Ancient treasure tier"
+  ],
+  "canon_confidence": 5,
+  "known_facts": [
+    "Ancient treasure tier",
+    "Restriction-breaking specialty",
+    "Retained to end"
+  ],
+  "source": "Ch.774 (novel); Fandom wiki",
+  "provenance_metadata": {
+    "derivation_type": "A",
+    "blood_bound": "unknown",
+    "has_restrictions": "unknown",
+    "repair_count": 0,
+    "known_owners": [],
+    "historical_events": [],
+    "estimated_age_years": "unknown",
+    "creation_circumstances": "Tattoo Tribe era (Ch. 774)"
+  },
+  "lifecycle": {
+    "creator": "Tattoo Tribe era (Ch. 774)",
+    "creation_circumstances": "Tattoo Tribe era (Ch. 774)",
+    "every_known_owner": [
+      "unknown"
+    ],
+    "documented_battles": [],
+    "repairs": [],
+    "refinements": [],
+    "blood_bonds": [],
+    "spirit_state": "dormant",
+    "seal_history": [],
+    "destruction_history": [],
+    "reconstruction_history": [],
+    "corruption_history": [],
+    "heavenly_tribulations_survived": []
+  },
+  "expanded_schema": {
+    "note": "Per provenance directive: schema supports emergent history even if many fields are empty initially.",
+    "fields": [
+      "creator",
+      "creation_circumstances",
+      "every_known_owner",
+      "documented_battles",
+      "repairs",
+      "refinements",
+      "blood_bonds",
+      "spirit_state",
+      "seal_history",
+      "destruction_history",
+      "reconstruction_history",
+      "corruption_history",
+      "heavenly_tribulations_survived"
+    ],
+    "emergent_history": "These fields will be populated by the World State Engine as history unfolds."
+  }
+}

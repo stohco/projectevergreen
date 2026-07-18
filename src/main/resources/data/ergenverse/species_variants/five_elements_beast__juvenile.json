@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Five Elements True Body (juvenile). Generated from canonical definition.",
+  "variant_id": "five_elements_beast__juvenile",
+  "species_id": "five_elements_beast",
+  "species_name": "Five Elements True Body",
+  "life_state": "juvenile",
+  "modifiers": {
+    "size_multiplier": 0.15,
+    "power_multiplier": 0.1,
+    "temperament": "curious",
+    "rarity": "common"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 4,
+  "salt": 1372066645
+}

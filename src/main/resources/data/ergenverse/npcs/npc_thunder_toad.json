@@ -1,0 +1,37 @@
+{
+  "_comment": "NPC: Thunder Toad (雷蟾). Canon ID: N156. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_thunder_toad",
+  "name": "Thunder Toad",
+  "nameCn": "雷蟾",
+  "canon_id": "N156",
+  "type": "mount",
+  "faction": "wang_lin",
+  "location": "variable",
+  "cultivation": "beast (evolved)",
+  "personality": "thunder-toad companion; cranky but loyal",
+  "speech": "croaking, thunder-rumble",
+  "relationship_to_wanglin": "bonded companion",
+  "dialogue_available": false,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A thunder-crackling toad",
+    "qi_condensation": "Thunder toad; Core Formation",
+    "core_formation": "Evolved thunder toad; Nascent Soul",
+    "nascent_soul": "Evolved; Wang Lin's thunder toad"
+  },
+  "canon_confidence": 5,
+  "note": "Wang Lin's thunder toad companion; evolved",
+  "derivation_type": "A",
+  "salt": 594181486,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1
+}

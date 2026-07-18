@@ -1,0 +1,79 @@
+{
+  "_comment": "Species: Spirit Ape (灵猿) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "spirit_ape",
+  "name": "Spirit Ape",
+  "nameCn": "灵猿",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Bipedal ape 3 m, fur spirit-gold, intelligent eyes, fists strong",
+    "size": "3 m adult, 1000 jin; ancient 8 m, 30000 jin",
+    "behavior": "Territorial mountain dweller; cultivates by absorbing spirit-fruit; uses simple tools",
+    "habitat": "Mountain forests, spirit-fruit groves, peaks",
+    "cultivation": "Foundation Establishment -> Core Formation (body/spirit attribute)",
+    "intelligence": 7,
+    "diet": "spirit-fruit, spirit-herbs, smaller beasts",
+    "relationships": "Lesser kin of giant savage ape; rival of spirit bears",
+    "techniques": [
+      "iron_fist",
+      "mountain_climb",
+      "spirit_throw",
+      "ape_roar"
+    ],
+    "treasures": [
+      "spirit_ape_core",
+      "spirit_fur",
+      "iron_fang"
+    ],
+    "bloodline": "Spirit-Ape lineage; body-attribute bloodline (dilute giant savage ape)",
+    "mutations": [
+      "four_arm",
+      "iron_body",
+      "ancient_ape_emperor"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "spirit_ape — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "spirit_ape — not a hive-mind species"
+    },
+    "combat_ai": "pack_hunter"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 316127223,
+  "bloodline_tier": "ordinary",
+  "inner_dan_properties": {
+    "element": "wood",
+    "purity_tier": 3,
+    "dao_resonance": "wild_strength",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

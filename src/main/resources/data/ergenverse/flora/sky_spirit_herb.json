@@ -1,0 +1,23 @@
+{
+  "speciesId": "sky_spirit_herb",
+  "name": "Sky Spirit Herb",
+  "nameCn": "天灵草",
+  "renderTier": "CROSS_SPRITE",
+  "defaultElement": "WIND",
+  "baseMedicinalPotency": 0.65,
+  "baseQiSaturation": 0.7,
+  "minStageToHarvest": "flowering",
+  "harvestItemId": "ergenverse:sky_spirit_herb_item",
+  "fruitItemId": null,
+  "growthDurationTicks": 192000,
+  "fruitingDurationTicks": 24000,
+  "requiresQiDensity": 0.4,
+  "biomeWhitelist": ["mountain_meadow", "windswept_hills", "windswept_gravelly_hills", "jagged_peaks", "meadow"],
+  "ecologyAttracts": ["thunder_bird"],
+  "ecologyRepels": [],
+  "canMutate": false,
+  "mutationChance": 0.0,
+  "perceptionTierToIdentify": "QI_CONDENSATION",
+  "canonConfidence": 3,
+  "description": "Grows on high peaks where sky qi concentrates. Carries the scent of distant clouds."
+}

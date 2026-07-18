@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ergenverse:item/call_wind_summon_rain_magic_arsenal"
+  }
+}

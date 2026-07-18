@@ -1,0 +1,215 @@
+[
+  {
+    "name": "Fire Vein",
+    "regions": [
+      "Law G1 — Mortal Population Density Tracks Spiritual Fertility (Type C, conf 3)",
+      "Law G3 — Spirit Veins Are The Foundation (Type A, conf 5)",
+      "THE CAVE WORLD AT LARGE (IAC Continents, 9 Suns, the Cave World Spirit)",
+      "OTHER NAMED GEOGRAPHY (Cross-Region Summary)",
+      "Heavenly Bull Continent (天牛大陆)",
+      "F45. Wu Xuan Country (吴玄国)",
+      "CIV-10: Ancient Clan (古族) 【F40】",
+      "CIV-13: Great Soul Sect (大魂宗) 【F13】",
+      "5.5 IAC Power Structure (Endgame, Cave World)"
+    ],
+    "contexts": [
+      "that region's spirit-vein density. A region with 120+ Fire Veins (Heavenly Bull",
+      "**Canon basis:** \"120+ Fire Veins on Heavenly Bull Continent\" (L65). \"Earth Fire main",
+      "- 120+ Fire Veins on Heavenly Bull Continent (L65) — the only explicitly enumerated",
+      "- 120+ Fire Veins on Heavenly Bull Continent (L65) — explicit",
+      "- Heavenly Bull: 120+ Fire Veins (Type A) — fire-aspect dominant",
+      "grows on the 120+ Fire Veins",
+      "tier; the staple predator of the Fire Veins",
+      "├──→ Heavenly Bull (120+ Fire Veins, Type A)",
+      "- **120+ Fire Veins on Heavenly Bull Continent** (L65) — the only explicitly enumerated",
+      "- **Description:** One of the major continents of the IAC. Contains the Great Soul Sect, Gui Yi Sect, and 120+ Fire Veins. Wang Lin's IAC territory.",
+      "│   ├── Heavenly Bull Continent (Great Soul Sect, Gui Yi Sect, 120+ Fire Veins)",
+      "| Earth Fire | 120+ Fire Veins on Heavenly Bull Continent alone (ECOLOGY L1409, L1458). | B |",
+      "| Fire Veins | 120+ on Heavenly Bull Continent (ECOLOGY L1409, L1458). | B |",
+      "│       └── 120+ Fire Veins"
+    ],
+    "canonConfidence": 5,
+    "type": "spirit_vein",
+    "tier": "unknown",
+    "daoAffinity": "Fire"
+  },
+  {
+    "name": "Cultivation Planet Crystal",
+    "regions": [
+      "Law G3 — Spirit Veins Are The Foundation (Type A, conf 5)",
+      "Law G4 — Ruin Ecology (Type C, conf 3)",
+      "PLANET SUZAKU (朱雀星) — All Countries Except Zhao",
+      "THE CAVE WORLD AT LARGE (IAC Continents, 9 Suns, the Cave World Spirit)",
+      "OTHER NAMED GEOGRAPHY (Cross-Region Summary)",
+      "6.5 Heritage Sites (Type A)",
+      "Planet Suzaku / Vermilion Bird Star (朱雀星)",
+      "Suzaku Tomb / Cultivation Planet Crystal (朱雀墓)",
+      "F45. Wu Xuan Country (吴玄国)",
+      "CIV-10: Ancient Clan (古族) 【F40】"
+    ],
+    "contexts": [
+      "vein devoured by Wang Lin at Great Soul Sect\" (F13). \"Cultivation Planet Crystal",
+      "- Suzaku Tomb → seal-spirit ecology (Cultivation Planet Crystal as anchor)",
+      "Sealed Cultivation Planet Crystal inside\" (L14)",
+      "- Suzaku Tomb: Cultivation Planet Crystal (the seal-mechanism of the planet itself),",
+      "- Cultivation Planet Crystal inside Suzaku Tomb (L52) — the planet's seal-mechanism",
+      "minor + 20–40 mid + 1 supreme (the Cultivation Planet Crystal). The planet is",
+      "- **Cultivation Planet Crystal** (L52) — the supreme spirit material of the planet",
+      "- **Suzaku Tomb:** Type A. Multi-floor tomb containing the Cultivation Planet Crystal",
+      "Cultivation Planet Crystal (planet's supreme spirit vein, sealed inside Suzaku Tomb)",
+      "└──→ Suzaku Tomb → Cultivation Planet Crystal + sealed Piao Nanzi/Lou Hou",
+      "- Cultivation Planet Crystal inside Planet Suzaku (L52) — the planet's seal-mechanism",
+      "- **Cultivation Planet Crystal inside Planet Suzaku** (L52) — the planet's",
+      "4. **Suzaku Tomb** — Cultivation Planet Crystal + Half-Moon Blade (Planet Suzaku)",
+      "- **Description:** A third-tier cultivation planet (later raised to higher tiers by Wang Lin's actions). Wang Lin's birthplace. Multiple cultivation countries on its surface (Zhao, Chu, Fire Burn, Sky Demon, Pilu, Snow Domain, etc.). Sealed Cultivation Planet Crystal inside.",
+      "- **Sealed?** Yes (Cultivation Planet Crystal seal)",
+      "- **Description:** A multi-floor tomb within Planet Suzaku containing the Cultivation Planet Crystal (the seal-mechanism of the planet itself). Wang Lin found the Half-Moon Blade here.",
+      "│       │           ├── Suzaku Tomb (Cultivation Planet Crystal)",
+      "| Cultivation Planet Crystal | Inside Suzaku Tomb (ECOLOGY L386-388). | B |"
+    ],
+    "canonConfidence": 5,
+    "type": "spirit_vein",
+    "tier": "supreme",
+    "daoAffinity": "mixed"
+  },
+  {
+    "name": "Spirit Vein",
+    "regions": [
+      "Law G6 — The Mortal Cycle (Type A, conf 5)",
+      "CIV-01: Heng Yue Sect (恒岳派) 【F01】",
+      "CIV-05: Vermilion Bird Country (朱雀国) 【F41】",
+      "CIV-08: Heavenly Fate Sect (天运宗) 【F05】",
+      "CIV-10: Ancient Clan (古族) 【F40】"
+    ],
+    "contexts": [
+      "3. **Spirit Vein Status** — canon if attested, derived (Type C) otherwise",
+      "| Spirit Veins | 1–3 minor veins (Zhao Country is a low-spirit-energy region) | C |",
+      "| Spirit Veins | Best on Planet Suzaku (ECOLOGY L404-408, L490-491) — the Level 6 nation controls the highest-quality veins. | B |",
+      "| Spirit Veins | 7 supreme + ~50-100 mid + ~500-1000 minor — the richest single-planet vein network in the Cave World. | B |",
+      "| Spirit Veins | 440+ on the IAC (7 continents) — the richest vein network in the Cave World. | B |"
+    ],
+    "canonConfidence": 3,
+    "type": "spirit_vein",
+    "tier": "unknown",
+    "daoAffinity": "Spirit"
+  },
+  {
+    "name": "minor spirit vein",
+    "regions": [
+      "ZHAO COUNTRY (赵国)",
+      "PLANET SUZAKU (朱雀星) — All Countries Except Zhao",
+      "THE SEA OF DEVILS (魔海)",
+      "ALLHEAVEN STAR SYSTEM (诸天星系)"
+    ],
+    "contexts": [
+      "- **Derived (Type C, conf 3):** Heng Yue Sect sits on a minor spirit vein (else it",
+      "1–3 minor spirit veins per major sect in Zhao Country.",
+      "├──→ 200-400 minor spirit veins (across all countries) → herbs → beasts → sects",
+      "minor spirit veins scattered across the districts.",
+      "Thousands of minor spirit veins (across all planets)"
+    ],
+    "canonConfidence": 3,
+    "type": "spirit_vein",
+    "tier": "minor",
+    "daoAffinity": "mixed"
+  },
+  {
+    "name": "Source Origin",
+    "regions": [
+      "PLANET SUZAKU (朱雀星) — All Countries Except Zhao",
+      "6.5 Heritage Sites (Type A)",
+      "Water Spirit Star / Feng Luan Star (水灵星 / 凤鸾星)",
+      "Immortal Graveyard (仙坟) — 17 Layers"
+    ],
+    "contexts": [
+      "- Immortal Graveyard (17 Layers): Fu Clan's Golden Leaf Flame Source Origin on the",
+      "— Fu Clan's Golden Leaf Flame Source Origin",
+      "Golden Leaf Flame Source Origin on the 17th layer. Wang Lin's Fire Essence",
+      "5. **Immortal Graveyard 17th Layer** — Fu Clan's Golden Leaf Flame Source Origin",
+      "- **Description:** A water-spirit planet. Wang Lin obtained his Fire Essence potential here (first glimpse into the Fu Clan's Golden Leaf Flame Source Origin). Situ Nan founded his \"Southern Prince\" faction here.",
+      "- **Description:** A 17-layer immortal graveyard. Wang Lin glimpses the Fu Clan's Golden Leaf Flame Source Origin on the 17th layer."
+    ],
+    "canonConfidence": 3,
+    "type": "spirit_vein",
+    "tier": "unknown",
+    "daoAffinity": "mixed"
+  },
+  {
+    "name": "Flame Source Origin",
+    "regions": [
+      "PLANET SUZAKU (朱雀星) — All Countries Except Zhao",
+      "6.5 Heritage Sites (Type A)",
+      "Water Spirit Star / Feng Luan Star (水灵星 / 凤鸾星)",
+      "Immortal Graveyard (仙坟) — 17 Layers"
+    ],
+    "contexts": [
+      "- Immortal Graveyard (17 Layers): Fu Clan's Golden Leaf Flame Source Origin on the",
+      "— Fu Clan's Golden Leaf Flame Source Origin",
+      "Golden Leaf Flame Source Origin on the 17th layer. Wang Lin's Fire Essence",
+      "5. **Immortal Graveyard 17th Layer** — Fu Clan's Golden Leaf Flame Source Origin",
+      "- **Description:** A water-spirit planet. Wang Lin obtained his Fire Essence potential here (first glimpse into the Fu Clan's Golden Leaf Flame Source Origin). Situ Nan founded his \"Southern Prince\" faction here.",
+      "- **Description:** A 17-layer immortal graveyard. Wang Lin glimpses the Fu Clan's Golden Leaf Flame Source Origin on the 17th layer."
+    ],
+    "canonConfidence": 3,
+    "type": "spirit_vein",
+    "tier": "unknown",
+    "daoAffinity": "mixed"
+  },
+  {
+    "name": "supreme spirit vein",
+    "regions": [
+      "PLANET SUZAKU (朱雀星) — All Countries Except Zhao",
+      "HEAVENLY FATE SECT REGION / PLANET TIAN YUN (天运星)",
+      "CIV-08: Heavenly Fate Sect (天运宗) 【F05】"
+    ],
+    "contexts": [
+      "Cultivation Planet Crystal (planet's supreme spirit vein, sealed inside Suzaku Tomb)",
+      "each likely have their own supreme spirit vein (one per color). This is the canon",
+      "7 supreme spirit veins (one per Heavenly Fate Sect color division)",
+      "Each division controls its own supreme spirit vein (ECOLOGY L817-819). Planet Tian Yun has ~500-1000 minor + 50-100 mid + 7 supreme (one per division) + 1 planetary supreme (the All-Seer's seat) spirit veins (ECOLOGY L820-822).",
+      "Given that Planet Tian Yun is a rank-7 cultivation planet with 5-20B mortals and 7 supreme spirit veins, the Heavenly Fate Sect would be massive:"
+    ],
+    "canonConfidence": 3,
+    "type": "spirit_vein",
+    "tier": "supreme",
+    "daoAffinity": "mixed"
+  },
+  {
+    "name": "Earth Fire main vein",
+    "regions": [
+      "THE CAVE WORLD AT LARGE (IAC Continents, 9 Suns, the Cave World Spirit)",
+      "OTHER NAMED GEOGRAPHY (Cross-Region Summary)",
+      "Heavenly Bull Continent (天牛大陆)",
+      "F13. Great Soul Sect (大魂宗)",
+      "CIV-13: Great Soul Sect (大魂宗) 【F13】"
+    ],
+    "contexts": [
+      "Earth Fire main vein\"",
+      "- Earth Fire main vein at Great Soul Sect (F13) — devoured by Wang Lin",
+      "│       │       └──→ Earth Fire main vein devoured by Wang Lin (Type A)",
+      "Empyrean (Wang Lin's), Earth Fire main vein (devoured by Wang Lin)",
+      "- **Earth Fire main vein at Great Soul Sect** (F13) — devoured by Wang Lin (Type A).",
+      "- **Key events:** Wang Lin joins Great Soul Sect here, becomes an elder, devours Earth Fire main vein. Manifests Fire Essence True Body.",
+      "- **Relationship to Wang Lin:** Wang Lin becomes an elder here; receives the Three Rites; devours Earth Fire main vein → Fire Essence True Body",
+      "| Wang Lin | **Elder**. Wang Lin joins, receives Three Rites, devours Earth Fire main vein. | A |",
+      "3. Wang Lin devours Earth Fire main vein → Fire Essence True Body **[A]**"
+    ],
+    "canonConfidence": 5,
+    "type": "spirit_vein",
+    "tier": "main",
+    "daoAffinity": "mixed"
+  },
+  {
+    "name": "Main Vein",
+    "regions": [
+      "CIV-13: Great Soul Sect (大魂宗) 【F13】"
+    ],
+    "contexts": [
+      "| Earth Fire Main Vein | At Great Soul Sect location; Wang Lin devours it → Fire Essence True Body. | A |"
+    ],
+    "canonConfidence": 3,
+    "type": "spirit_vein",
+    "tier": "main",
+    "daoAffinity": "Main"
+  }
+]

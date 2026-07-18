@@ -1,0 +1,27 @@
+{
+  "_comment": "Ecosystem integration: ancient_god_remains_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "ancient_god_remains_ecology",
+  "beasts": [
+    "giant_savage_ape",
+    "giant_python",
+    "blood_ancestor_beast",
+    "ji_qiong",
+    "restriction_beast",
+    "restriction_origin_beast",
+    "taichu_origin_beast",
+    "thunder_origin_beast",
+    "five_elements_beast",
+    "miemie_origin_beast",
+    "undying_ancient_body_beast",
+    "dao_gu_indestructible_body_beast"
+  ],
+  "npcs": [
+    "npc_tu_si",
+    "npc_tuo_sen"
+  ],
+  "enemies": [
+    "tuo_sen"
+  ],
+  "note": "Ancient God remains; god-aspected ecology + origin true bodies",
+  "salt": 187694227
+}

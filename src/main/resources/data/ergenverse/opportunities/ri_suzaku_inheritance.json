@@ -1,0 +1,34 @@
+{
+  "_comment": "RI Canon Opportunity: Suzaku Inheritance. Canon event: Wang Lin receives the Suzaku inheritance in the Suzaku Tomb. Per user directive: every canon event must be accessible in-game.",
+  "opportunity_id": "ri_suzaku_inheritance",
+  "name": "Suzaku Inheritance",
+  "canon_event": "Wang Lin receives the Suzaku inheritance in the Suzaku Tomb",
+  "location": "suzaku_tomb",
+  "age_requirement_years": 50000,
+  "cultivation_required": "Core Formation",
+  "perception_required": "Nascent Soul",
+  "luck_modifier": 0.4,
+  "discovery_methods": [
+    "divine_sense",
+    "rumor",
+    "seal_breaking"
+  ],
+  "reward_tables": [
+    "suzaku_inheritance",
+    "ji_realm",
+    "suzaku_treasures"
+  ],
+  "why_untaken": "Sealed in the underground Cultivation Planet Crystal; requires specific cultivation.",
+  "natural_next_event": "The seal weakens over millennia; eventually breaks.",
+  "canon_confidence": 5,
+  "derivation_type": "A",
+  "salt": 216460759,
+  "karmic_weight": {
+    "value": 0,
+    "type": null,
+    "propagation": "none",
+    "description": "No specific karmic consequence recorded in canon"
+  },
+  "consequences": [],
+  "_xianxia_schema": 2
+}

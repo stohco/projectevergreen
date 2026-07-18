@@ -1,0 +1,24 @@
+{
+  "_comment": "Macro-Terrain: Ancient God Eye Lake. Per scale directive: this terrain IS a being. Player shouldn't initially realize they're standing on bone. Divine Sense -> Perception changes -> 'You realize this mountain range... is one finger.' Prime Directive: the being's corpse is objectively terrain; perception tier determines what the player sees.",
+  "terrain_id": "ancient_god_eye_lake",
+  "name": "Ancient God Eye Lake",
+  "being": "Ancient God Tu Si",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "scale": "10 li diameter, depth immeasurable — one eye of a continent-spanning being.",
+  "canonical_event": "Tu Si's eye held his last sight before his god-body fell.",
+  "perception_tiered_appearance": {
+    "mortal": "A perfectly circular lake 10 li across, water unnaturally clear, depths immeasurable.",
+    "qi_condensation": "The water reflects light oddly; seems to track the viewer.",
+    "foundation_establishment": "The lake is an eye socket; the 'water' is petrified vitreous humor.",
+    "core_formation": "This is an Ancient God's eye; the socket still holds residual god-sight.",
+    "nascent_soul": "The eye holds Tu Si's last sight; those who meet its gaze see what he saw.",
+    "spirit_severing": "The eye is a window to Tu Si's god-memory; cultivating here grants god-knowledge."
+  },
+  "perception_mechanic": {
+    "trigger": "When player's perception tier rises, the appearance re-rolls automatically.",
+    "no_locked_upgrades": "A mortal who later reaches Core Formation will see the truth; the terrain does not change, only understanding does.",
+    "canon_fidelity": "This is exactly how Wang Lin perceived Ancient God Tu Si's remains — first as terrain, then as god-bone, then as god-memory."
+  },
+  "salt": 27952332
+}

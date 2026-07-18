@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Fox (injured). Generated from canonical definition.",
+  "variant_id": "spirit_fox__injured",
+  "species_id": "spirit_fox",
+  "species_name": "Spirit Fox",
+  "life_state": "injured",
+  "modifiers": {
+    "size_multiplier": 0.9,
+    "power_multiplier": 0.5,
+    "temperament": "desperate",
+    "rarity": "uncommon"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 1794257868
+}

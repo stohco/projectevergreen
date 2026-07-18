@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Restriction Beast (禁制兽) from Renegade Immortal. Canonical definition with all 13 fields per the Er Gen simulation spec. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every state described here exists independently of the player's perception.",
+  "species_id": "restriction_beast",
+  "name": "Restriction Beast",
+  "nameCn": "禁制兽",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Formless beast made of living restriction runes, body shifts between inscription patterns",
+    "size": "Variable; manifests as 2-20 m rune-cluster",
+    "behavior": "Inhabits ancient restriction arrays; attacks those who break restrictions; cultivates by absorbing broken restrictions",
+    "habitat": "Restriction Mountain, ancient formation sites, sealed caves",
+    "cultivation": "Spirit Severing -> Ascendant (restriction attribute)",
+    "intelligence": 10,
+    "diet": "broken restrictions, formation fragments, restriction-aspected herbs",
+    "relationships": "Guardian of Restriction Mountain; neutral to all cultivators who do not break restrictions",
+    "techniques": [
+      "restriction_rend",
+      "rune_burst",
+      "formation_absorb",
+      "seal_impose"
+    ],
+    "treasures": [
+      "restriction_core",
+      "rune_fragment",
+      "formation_essence"
+    ],
+    "bloodline": "Restriction-Dao lineage; born of accumulated broken restrictions",
+    "mutations": [
+      "formation_body",
+      "true_restriction_embodiment"
+    ],
+    "ecology": "Inferred AFTER canonical fields; see ecosystem definitions.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": null,
+      "canon_note": "restriction_beast — no specific inner dan documented in canon"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "restriction_beast — not a hive-mind species"
+    },
+    "combat_ai": "solo_ambush"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 950059771,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

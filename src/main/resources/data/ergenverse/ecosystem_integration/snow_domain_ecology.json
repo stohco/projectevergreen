@@ -1,0 +1,15 @@
+{
+  "_comment": "Ecosystem integration: snow_domain_ecology. Maps which beasts, NPCs, and enemies appear in this ecosystem. Per user directive: every being must be part of the ecosystem.",
+  "ecosystem_id": "snow_domain_ecology",
+  "beasts": [
+    "ice_phoenix",
+    "cold_dragon",
+    "wind_wolf",
+    "mountain_lion",
+    "spirit_fox"
+  ],
+  "npcs": [],
+  "enemies": [],
+  "note": "Snow Domain; ice-aspected ecology",
+  "salt": 1407171627
+}

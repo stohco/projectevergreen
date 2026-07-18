@@ -1,0 +1,16 @@
+{
+  "_comment": "Life-state variant: Spirit Fox (enlightened). Generated from canonical definition.",
+  "variant_id": "spirit_fox__enlightened",
+  "species_id": "spirit_fox",
+  "species_name": "Spirit Fox",
+  "life_state": "enlightened",
+  "modifiers": {
+    "size_multiplier": 1.1,
+    "power_multiplier": 5.0,
+    "temperament": "serene",
+    "rarity": "very_rare"
+  },
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "salt": 1659527270
+}

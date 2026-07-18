@@ -1,0 +1,78 @@
+{
+  "_comment": "Species: Xiao Bai (小白) from Renegade Immortal. Per user directive: every miscellaneous beast from RI must be accounted for and part of the ecosystem. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "species_id": "xiao_bai_beast",
+  "name": "Xiao Bai",
+  "nameCn": "小白",
+  "novel": "Renegade Immortal",
+  "derivation_type": "B",
+  "canon_confidence": 3,
+  "canonical": {
+    "appearance": "Small white-furred beast 0.5 m, endearing, eyes large and intelligent, fur glows faintly",
+    "size": "0.5 m adult, 5 jin; ancient 1.5 m, 200 jin",
+    "behavior": "Companion beast; curious, affectionate; cultivates by absorbing dawn-light",
+    "habitat": "Variable (follows Wang Lin); dawn-aspected spirit veins",
+    "cultivation": "Foundation Establishment -> Core Formation (light attribute)",
+    "intelligence": 7,
+    "diet": "dawn-dew, spirit-rice, light-attribute herbs",
+    "relationships": "Wang Lin's bonded companion (N154); auspicious",
+    "techniques": [
+      "dawn_light",
+      "small_bite",
+      "endearing_glow",
+      "curious_sense"
+    ],
+    "treasures": [
+      "xiao_bai_core",
+      "white_fur",
+      "dawn_essence"
+    ],
+    "bloodline": "Spirit-Beast lineage; light-attribute bloodline (rare)",
+    "mutations": [
+      "light_body",
+      "dawn_immortal"
+    ],
+    "ecology": "Integrated into RI ecosystem definitions; see ecosystem_integration.",
+    "bloodline_tier": "spiritual_beast",
+    "inner_dan_properties": {
+      "has_core": false,
+      "element": null,
+      "grade": null,
+      "alchemy_use": "No alchemy value — common beast with no condensed inner core",
+      "canon_note": "xiao_bai_beast — common beast, no condensed inner core"
+    },
+    "hive_mind_anchor": {
+      "is_hive": false,
+      "queen_id": null,
+      "swarm_id": null,
+      "coordination": null,
+      "canon_note": "xiao_bai_beast — not a hive-mind species"
+    },
+    "combat_ai": "pack_hunter"
+  },
+  "art_direction": {
+    "generator": "single canonical definition drives 10 life-state variants",
+    "variants": [
+      "juvenile",
+      "adolescent",
+      "adult",
+      "ancient",
+      "mutated",
+      "injured",
+      "starving",
+      "tribulation_scarred",
+      "corrupted",
+      "enlightened"
+    ],
+    "note": "Per art-direction directive: build generators, not assets."
+  },
+  "salt": 524293064,
+  "bloodline_tier": "spiritual",
+  "inner_dan_properties": {
+    "element": "neutral",
+    "purity_tier": 3,
+    "dao_resonance": "minor",
+    "side_effects": []
+  },
+  "hive_mind_anchor": null,
+  "_xianxia_schema": 2
+}

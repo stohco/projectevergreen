@@ -1,0 +1,85 @@
+{
+  "_comment": "Civilization: Great Soul Sect (sect) at Immortal Astral Continent. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "great_soul_sect",
+  "name": "Great Soul Sect",
+  "type": "sect",
+  "location": "Immortal Astral Continent",
+  "peak_realm": "Immortal (sect master)",
+  "canon_status": "immortal_sect",
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "population_structure": {
+    "outer_disciples": 100000,
+    "inner_disciples": 20000,
+    "core_disciples": 2000,
+    "elders": 200,
+    "peak_lords": 100,
+    "sect_master": 1,
+    "spirit_beasts": 10000
+  },
+  "economy": {
+    "spirit_stones": "vast",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "immortal-grade",
+    "forging": "immortal-grade",
+    "formation": "immortal-grade",
+    "trade": "continent-scale",
+    "recruitment": "continent-wide"
+  },
+  "politics": {
+    "allies": [
+      "vassal immortal sects"
+    ],
+    "enemies": [
+      "rival immortal sects"
+    ],
+    "vassals": [
+      "entire mortal sects"
+    ],
+    "rivals": [
+      "Dark Scorpion Clan"
+    ],
+    "internal_factions": [
+      "sect master loyalists",
+      "elder council"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "continent-wide examination",
+    "expansion": "continent-scale",
+    "decline": "none current",
+    "schisms": "elder council tension",
+    "wars": [
+      "immortal-sect wars"
+    ],
+    "recovery": "strong; immortal sect master"
+  },
+  "libraries": [
+    "immortal techniques",
+    "soul cultivation",
+    "vast collections",
+    "continent lore"
+  ],
+  "spirit_beasts": [
+    "immortal-grade beasts",
+    "soul beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 1417374407,
+  "spiritual_vein_grade": "immortal",
+  "heritage_treasures": [
+    "I01"
+  ],
+  "_xianxia_schema": 1
+}

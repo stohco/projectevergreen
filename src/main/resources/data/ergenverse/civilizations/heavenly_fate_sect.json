@@ -1,0 +1,90 @@
+{
+  "_comment": "Civilization: Heavenly Fate Sect (sect) at Heavenly Fate Country. Per civilization directive: sects are living organisms. Simulates population, economy, politics, lifecycle. Prime Directive: civilization exists objectively; player enters a world already in motion.",
+  "civilization_id": "heavenly_fate_sect",
+  "name": "Heavenly Fate Sect",
+  "type": "sect",
+  "location": "Heavenly Fate Country",
+  "peak_realm": "Ascendant (Sect Master)",
+  "canon_status": "major_orthodox_power",
+  "derivation_type": "A",
+  "canon_confidence": 5,
+  "population_structure": {
+    "outer_disciples": 8000,
+    "inner_disciples": 1500,
+    "core_disciples": 150,
+    "elders": 30,
+    "peak_lords": 18,
+    "ancestor": 3,
+    "spirit_beasts": 500
+  },
+  "economy": {
+    "spirit_stones": "abundant",
+    "food": "self-sufficient",
+    "water": "self-sufficient",
+    "alchemy": "advanced",
+    "forging": "advanced",
+    "formation": "advanced",
+    "trade": "regional + star-system",
+    "recruitment": "multiple countries"
+  },
+  "politics": {
+    "allies": [
+      "multiple orthodox sects"
+    ],
+    "enemies": [
+      "devil-sects",
+      "Sky Demon Country"
+    ],
+    "vassals": [
+      "minor orthodox sects"
+    ],
+    "rivals": [
+      "Soul Refining Sect"
+    ],
+    "internal_factions": [
+      "main lineage",
+      "elder council",
+      "peak lord council"
+    ]
+  },
+  "lifecycle": {
+    "recruitment": "annual examination across multiple countries",
+    "expansion": "steady; star-system influence",
+    "decline": "none current",
+    "schisms": "elder council vs peak lord tension",
+    "wars": [
+      "perennial with devil-sects"
+    ],
+    "recovery": "very strong; multiple Ascendant ancestors"
+  },
+  "libraries": [
+    "advanced techniques",
+    "Heavenly Fate formation manuals",
+    "spirit beast catalogues",
+    "advanced alchemy",
+    "star-system lore"
+  ],
+  "spirit_beasts": [
+    "mounts for inner disciples",
+    "guardian beasts",
+    "war beasts",
+    "star-system beasts"
+  ],
+  "simulation_notes": {
+    "living_organism": "Population, economy, and politics shift over time; the civilization changes whether or not the player acts.",
+    "lifecycle_phases": "recruitment -> expansion -> (decline OR stability) -> (schisms OR unity) -> (wars OR peace) -> recovery",
+    "perception_tiers": {
+      "mortal": "Sees the sect's outer face.",
+      "qi_condensation": "Sees population structure.",
+      "foundation_establishment": "Perceives economy and politics.",
+      "core_formation": "Perceives lifecycle phase and internal factions.",
+      "nascent_soul": "Perceives complete civilization as a living system."
+    }
+  },
+  "salt": 1339763362,
+  "spiritual_vein_grade": 7,
+  "heritage_treasures": [
+    "I02"
+  ],
+  "_xianxia_schema": 1
+}

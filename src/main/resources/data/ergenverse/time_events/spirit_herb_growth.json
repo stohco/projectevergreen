@@ -1,0 +1,36 @@
+{
+  "_comment": "Time-Event: Spirit Herb Growth. Per time directive: the world is not static. Trigger: seasonal, scope: local, duration: 90 days. Prime Directive: event occurs objectively; player perception determines whether they witness it.",
+  "event_id": "spirit_herb_growth",
+  "name": "Spirit Herb Growth",
+  "trigger": "seasonal",
+  "scope": "local",
+  "duration_days": 90,
+  "effects": [
+    "herb_tier_rises",
+    "herb_population_increases"
+  ],
+  "derivation_type": "A",
+  "canon_confidence": 4,
+  "note": "Herbs grow seasonally; ancient herbs take centuries.",
+  "simulation_notes": {
+    "world_breathes": "The world changes whether or not the player acts; a player who returns 200 years later will barely recognize it.",
+    "trigger_types": {
+      "seasonal": "occurs every season",
+      "decennial": "occurs every decade",
+      "centennial": "occurs every century",
+      "millennial": "occurs every millennium",
+      "era": "occurs every era (10000+ years)",
+      "random": "occurs randomly",
+      "political": "triggered by political events",
+      "tribulation": "triggered by tribulations"
+    },
+    "perception_tiers": {
+      "mortal": "Witnesses only local effects.",
+      "qi_condensation": "Senses the event occurring.",
+      "foundation_establishment": "Perceives the event's scope and effects.",
+      "core_formation": "Predicts the event's consequences.",
+      "nascent_soul": "Perceives the event's place in the larger pattern."
+    }
+  },
+  "salt": 738461700
+}

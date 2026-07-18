@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    "BSB",
+    " S "
+  ],
+  "key": {
+    "B": { "item": "minecraft:blast_furnace" },
+    "S": { "item": "minecraft:smooth_stone" }
+  },
+  "result": {
+    "item": "ergenverse:artifact_forge",
+    "count": 1
+  }
+}
