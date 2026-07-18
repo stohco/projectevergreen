@@ -31,6 +31,11 @@
     "last_tested_tick": null,
     "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
   },
+  "initiation_lines": [
+    "Hmph. Another junior disciple. The Wang clan produces cultivators of real talent — not all of us rely on sect charity.",
+    "The trial grounds open next week. If you think you're ready, sign up at the Main Hall. Don't embarrass yourself.",
+    "My cultivation advances faster than most. The clan elders invested heavily in my foundation. Don't assume we're equals."
+  ],
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
   "_xianxia_schema": 1

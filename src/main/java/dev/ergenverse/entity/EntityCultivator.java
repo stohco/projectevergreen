@@ -279,6 +279,10 @@ public class EntityCultivator extends PathfinderMob {
         // → moves to vantage point, etc.). When no Intent is active, it yields
         // so the fallback goals (RandomStroll, RandomLookAround) run.
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        // NpcInitiationGoal: Article XXIV — NPCs initiate gameplay (NPC→Player).
+        // Priority 2, above CognitionDrivenGoal(3). Fires when player enters range,
+        // sends a canon-faithful initiation line from NPC JSON data.
+        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcInitiationGoal(this));
         this.goalSelector.addGoal(3, new dev.ergenverse.entity.ai.CognitionDrivenGoal(this));
         this.goalSelector.addGoal(7, new net.minecraft.world.entity.ai.goal.RandomStrollGoal(this, 0.35D));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));

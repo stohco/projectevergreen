@@ -29,6 +29,11 @@
     "last_tested_tick": null,
     "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
   },
+  "initiation_lines": [
+    "Out of my way, junior. This training dummy is mine. Find your own.",
+    "You look weak. What realm are you? Qi Condensation? Pathetic. Don't waste my time.",
+    "If you want to survive in this sect, learn to stay out of the way of your seniors. Now move."
+  ],
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
   "_xianxia_schema": 1

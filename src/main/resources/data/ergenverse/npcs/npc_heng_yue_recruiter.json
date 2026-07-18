@@ -40,6 +40,11 @@
   "max_hp": 60,
   "soul_state": "none",
   "tribulation_debt": 0,
+  "initiation_lines": [
+    "You. Come here. Let me test your spiritual root.",
+    "The Heng Yue Sect accepts disciples once a year. Today is your chance — don't waste it.",
+    "Place your hand on this testing stone. If your aptitude is sufficient, you will join the outer sect."
+  ],
   "behaviors": {
     "conduct_aptitude_test": true,
     "issue_outer_disciple_token": true,

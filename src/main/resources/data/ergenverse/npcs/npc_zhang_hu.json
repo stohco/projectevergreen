@@ -29,6 +29,11 @@
     "last_tested_tick": null,
     "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
   },
+  "initiation_lines": [
+    "Hey! You're new here, aren't you? Good. We need more disciples who can actually fight. The beasts near the Spirit Herb Garden have been restless lately.",
+    "If you're heading to the Sword Peak, watch your step. The formations there are old and some of the paths are unstable.",
+    "Brother, have you eaten at the dining hall yet? The food is terrible, but it's better than nothing."
+  ],
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
   "_xianxia_schema": 1

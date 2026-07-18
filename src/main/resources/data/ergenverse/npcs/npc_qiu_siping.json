@@ -31,6 +31,12 @@
     "last_tested_tick": null,
     "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
   },
+  "initiation_lines": [
+    "You there. Have you completed today's patrol of the eastern ridge? Elder Liu won't tolerate slackers.",
+    "The Spirit Herb Garden needs tending. If you gather enough Cloud-Thread Moss, I'll put in a good word for you.",
+    "Word of advice — stay clear of the Sword Peak after dark. Senior Brother Zhou has been practicing a new technique. The last person who disturbed him... couldn't cultivate for a month.",
+    "The alchemy lecture is about to start at the Alchemy Courtyard. Elders take attendance. You don't want to miss it."
+  ],
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
   "_xianxia_schema": 1
