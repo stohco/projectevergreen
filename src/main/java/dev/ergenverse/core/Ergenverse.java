@@ -315,11 +315,11 @@ public final class Ergenverse {
         }
 
         // Loop G: ActorTickLoop — EVERY tick.
-        // The cognition pipeline (Perception → Beliefs → Goals → Reasoning → Decision).
-        // Internally gates: seasonal pass (every 7 MC days) for all actors,
-        // event-driven pass (every tick) for dirty actors only.
+        // The cognition pipeline (Perception → Beliefs → Goals → Reasoning → Decision → Intent).
+        // Also syncs linked entity positions into Actors so the IntentEngine
+        // has current positions for its situational queries.
         // Without this call, 5,800+ LOC of cognition is dead code (Art III, V, X).
-        dev.ergenverse.simulation.actor.ActorTickLoop.tick(ticks);
+        dev.ergenverse.simulation.actor.ActorTickLoop.tick(ticks, overworld);
 
         // Loop H: WorldEventBus — set current level for write-through.
         // The bus itself is event-driven (publish/subscribe); this just ensures

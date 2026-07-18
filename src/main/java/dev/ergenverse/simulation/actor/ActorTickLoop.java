@@ -38,9 +38,26 @@ public final class ActorTickLoop {
     /**
      * Run one actor-tick pass. Called from the main server tick loop.
      *
+     * <p>Also syncs linked actors' positions from their Minecraft entities
+     * (via {@link dev.ergenverse.simulation.intent.ActorEntityLink}) so the
+     * IntentEngine's situational queries use current positions.
+     *
      * @param currentTick the current server tick (overworld gameTime)
+     * @param level       the overworld ServerLevel (for entity lookups)
      */
-    public static void tick(long currentTick) {
+    public static void tick(long currentTick, net.minecraft.server.level.ServerLevel level) {
+        // ── Position sync: pull current entity positions into Actors ──
+        // This is critical for the cognition pipeline: the IntentEngine scores
+        // intents based on the actor's position, and the CognitionDrivenGoal
+        // needs the actor's blockX/Z to be current when it decomposes tasks.
+        if (level != null) {
+            for (Actor a : ActorRegistry.all()) {
+                if (dev.ergenverse.simulation.intent.ActorEntityLink.isLinked(a.id)) {
+                    dev.ergenverse.simulation.intent.ActorEntityLink.syncPosition(a.id, level);
+                }
+            }
+        }
+
         boolean seasonalTick = (currentTick % SEASON_TICKS == 0);
         if (!seasonalTick) {
             // Event-driven path: only re-tick actors flagged dirty (lastSimulatedTick==currentTick)

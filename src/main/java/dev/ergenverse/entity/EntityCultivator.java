@@ -203,6 +203,12 @@ public class EntityCultivator extends PathfinderMob {
             if (runtimeOverride != null && !runtimeOverride.isEmpty()) {
                 applyRuntimeOverrides(runtimeOverride);
             }
+
+            // ── Register with the ActorEntityLink ───────────────────────
+            // This bridges the simulation-layer Actor to this Minecraft entity,
+            // enabling the CognitionDrivenGoal to read the Actor's Intent and
+            // drive the entity's physical behavior.
+            dev.ergenverse.simulation.intent.ActorEntityLink.onEntitySpawn(this);
         }
 
         this.initialized = true;
@@ -265,11 +271,17 @@ public class EntityCultivator extends PathfinderMob {
 
     @Override
     protected void registerGoals() {
-        // v1: minimal passive AI. No combat, no sect routines, no dialogue.
-        // Just float in water, look around. Behavior brain is v2.
+        // ── Cognition-driven AI ──
+        // CognitionDrivenGoal is the bridge from the simulation layer's Intent
+        // to the Minecraft entity's physical behavior. When active, it controls
+        // movement and look so the NPC acts on its current Intent (e.g.
+        // AVOID_REVEALING_STRENGTH → moves away from player, OBSERVE_FROM_DISTANCE
+        // → moves to vantage point, etc.). When no Intent is active, it yields
+        // so the fallback goals (RandomStroll, RandomLookAround) run.
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(3, new dev.ergenverse.entity.ai.CognitionDrivenGoal(this));
+        this.goalSelector.addGoal(7, new net.minecraft.world.entity.ai.goal.RandomStrollGoal(this, 0.35D));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        // TODO v2: data-driven behavior trees per character
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -358,6 +370,12 @@ public class EntityCultivator extends PathfinderMob {
         // Sync to runtime layer on every NBT save (fires on chunk unload).
         // This is the dematerialization persistence hook.
         syncStateToRuntime();
+        // Sever the ActorEntityLink — the entity is being serialized/unloaded.
+        // The Actor remains in the registry (simulation continues at territory
+        // level), but the link to this Minecraft entity is gone.
+        if (!this.level().isClientSide) {
+            dev.ergenverse.simulation.intent.ActorEntityLink.onEntityUnload(this);
+        }
     }
 
     @Override
@@ -371,6 +389,11 @@ public class EntityCultivator extends PathfinderMob {
             this.setCultivationRealm(compound.getString("CultivationRealm"));
         }
         this.initialized = compound.getBoolean("Initialized");
+        // Re-establish the ActorEntityLink on chunk reload.
+        // The entity is materializing from NBT — link it back to its Actor.
+        if (!this.level().isClientSide && this.initialized && !this.getCharacterId().isEmpty()) {
+            dev.ergenverse.simulation.intent.ActorEntityLink.onEntitySpawn(this);
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════
