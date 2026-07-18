@@ -121,38 +121,46 @@ public final class ReificationScan {
         String resolvedLocation = spatialIndex.resolveAndCacheChunk(level, chunk);
         if (resolvedLocation == null) return; // chunk not fully generated yet
 
-        // ── v1: only handle zhao_plains (Wang Tiangui's location) ────────
-        // Future: data-driven spawn registry keyed by locationId
-        if ("zhao_plains".equals(resolvedLocation)) {
-            handleWangTiangui(level, player);
+        // ── Data-driven spawn: query the NpcSpawnRegistry ────────────────
+        // Any location can have zero or more NPCs registered to spawn there.
+        // The registry maps locationId → List<characterId>.
+        java.util.List<String> npcsHere = NpcSpawnRegistry.getNpcsForLocation(resolvedLocation);
+        if (npcsHere.isEmpty()) return;
+
+        for (String characterId : npcsHere) {
+            handleNpcSpawn(level, player, characterId);
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  v1 target: Wang Tiangui
+    //  Generic NPC materialization
     // ═══════════════════════════════════════════════════════════════════
 
     /**
-     * Materialize Wang Tiangui (王天贵, Wang Lin's mortal father) if the player
-     * is near his spawn anchor and he isn't already present.
+     * Materialize a canon NPC if the player is near the spawn point and the
+     * NPC isn't already present or dead.
      *
-     * <p>Canon: Wang Tiangui is a mortal resident of Wang Family Village in
-     * Zhao Country. He has no cultivation, ~20 HP, passive behavior. His
-     * death (when Wang Lin's family is massacred) is a canon event — but
-     * that's t>0 simulation, not t₀. At t₀ he is alive.
+     * <p>This is the generic version of the old {@code handleWangTiangui} —
+     * it works for ANY canon NPC registered in {@link NpcSpawnRegistry}.
+     * The spawn point is computed as a deterministic offset from the player's
+     * position (seeded by the character ID hash) so each NPC spawns at a
+     * consistent position relative to the player, not stacked on top of
+     * each other.
      *
-     * <p>Spawn anchor: TODO — replace with Wang Family Village structure
-     * anchor once Task 3 (structure JSONs) is complete. For now, spawn near
-     * the player's current position (surface heightmap) so the v1 proof of
-     * concept is testable.
+     * @param level       the server level
+     * @param player      the player whose proximity triggered the scan
+     * @param characterId the NPC's canon character ID (e.g. "situ_nan")
      */
-    private static void handleWangTiangui(ServerLevel level, ServerPlayer player) {
-        // ── v1 spawn anchor: near the player ─────────────────────────────
-        // TODO: Task 3 — replace with Wang Family Village structure anchor.
-        // For now, spawn 16 blocks north of the player's position on the surface.
-        // This is explicitly a placeholder to prove the materialization loop.
-        int spawnX = player.blockPosition().getX();
-        int spawnZ = player.blockPosition().getZ() - 16;
+    private static void handleNpcSpawn(ServerLevel level, ServerPlayer player, String characterId) {
+        // ── Compute spawn point: deterministic offset from player ────────
+        // Each NPC gets a unique offset (seeded by character ID hash) so
+        // multiple NPCs in the same location don't stack on the same block.
+        // Offset range: 8-48 blocks from the player, in a deterministic direction.
+        int hash = characterId.hashCode();
+        int angle = (hash & 0xFF) * 360 / 256;  // 0-359 degrees
+        int dist = 8 + ((hash >> 8) & 0x3F);     // 8-71 blocks
+        int spawnX = player.blockPosition().getX() + (int)(Math.cos(Math.toRadians(angle)) * dist);
+        int spawnZ = player.blockPosition().getZ() + (int)(Math.sin(Math.toRadians(angle)) * dist);
         int spawnY = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, spawnX, spawnZ);
         Vec3 spawnPoint = new Vec3(spawnX + 0.5, spawnY, spawnZ + 0.5);
 
@@ -160,42 +168,39 @@ public final class ReificationScan {
         double distSq = player.position().distanceToSqr(spawnPoint);
         if (distSq > ACTIVATION_RANGE_SQ) return;
 
-        // ── Duplicate check: is Wang Tiangui already spawned nearby? ─────
-        if (isCultivatorAlreadyPresent(level, "wang_tiangui", spawnPoint)) return;
+        // ── Duplicate check: is this NPC already spawned nearby? ────────
+        if (isCultivatorAlreadyPresent(level, characterId, spawnPoint)) return;
 
         // ── Read canon baseline ──────────────────────────────────────────
-        // This is the "Fix 4" that was commented out in the Gemini code.
-        // We actually call getEntry and use it.
-        var canonData = WorldStateDataLoader.getEntry("npcs", "wang_tiangui");
+        var canonData = WorldStateDataLoader.getEntry("npcs", characterId);
         if (canonData == null) {
-            Ergenverse.LOGGER.warn("[ReificationScan] No canon data for wang_tiangui — skipping spawn");
+            Ergenverse.LOGGER.warn("[ReificationScan] No canon data for {} — skipping spawn", characterId);
             return;
         }
 
         // ── Read runtime overrides (t>0 mutations) ───────────────────────
         WorldRuntimeState runtime = WorldRuntimeState.get(level);
-        CompoundTag runtimeOverride = runtime.getNpcState("wang_tiangui");
+        CompoundTag runtimeOverride = runtime.getNpcState(characterId);
 
         // ── Check if the NPC is canonically/runtime dead ─────────────────
         if (runtimeOverride != null && runtimeOverride.getBoolean("is_dead")) {
-            // Wang Tiangui died (canon event or player kill). Don't respawn.
             return;
         }
 
         // ── Materialize ──────────────────────────────────────────────────
         EntityCultivator cultivator = EREntityTypes.CULTIVATOR.get().create(level);
         if (cultivator == null) {
-            Ergenverse.LOGGER.error("[ReificationScan] Failed to create EntityCultivator");
+            Ergenverse.LOGGER.error("[ReificationScan] Failed to create EntityCultivator for {}", characterId);
             return;
         }
 
         cultivator.moveTo(spawnPoint.x, spawnPoint.y, spawnPoint.z,
                 level.random.nextFloat() * 360.0F, 0.0F);
-        cultivator.initializeFromData("wang_tiangui", runtimeOverride);
+        cultivator.initializeFromData(characterId, runtimeOverride);
 
         level.addFreshEntity(cultivator);
-        Ergenverse.LOGGER.info("[ReificationScan] Materialized wang_tiangui at ({}, {}, {}) — divergence={}",
-                spawnPoint.x, spawnPoint.y, spawnPoint.z, runtime.getDivergenceCounter());
+        Ergenverse.LOGGER.info("[ReificationScan] Materialized {} at ({}, {}, {}) — divergence={}",
+                characterId, spawnPoint.x, spawnPoint.y, spawnPoint.z, runtime.getDivergenceCounter());
     }
 
     // ═══════════════════════════════════════════════════════════════════

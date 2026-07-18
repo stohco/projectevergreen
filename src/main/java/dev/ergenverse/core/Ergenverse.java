@@ -285,14 +285,19 @@ public final class Ergenverse {
         net.minecraft.server.level.ServerLevel overworld = event.getServer().overworld();
         long ticks = overworld.getGameTime();
 
-        // ── Bootstrap: register WorldEventBus subscribers on first tick ──
+        // ── Bootstrap: register WorldEventBus subscribers + NpcSpawnRegistry on first tick ──
         // The bus is cleared on world unload, so subscribers must be
         // re-registered each session. We do it on tick 1 (before any
         // events can fire) and guard with a flag to avoid re-registering.
         if (ticks == 1) {
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.simulation.event.QiDisturbanceSubscriber());
-            LOGGER.info("[Ergenverse] Registered QiDisturbanceSubscriber on WorldEventBus.");
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.event.BirdFlightSubscriber());
+            LOGGER.info("[Ergenverse] Registered QiDisturbanceSubscriber + BirdFlightSubscriber on WorldEventBus.");
+            // Initialize the NPC spawn registry — maps locations to canon NPCs.
+            // Without this, only wang_tiangui would ever spawn.
+            dev.ergenverse.simulation.NpcSpawnRegistry.initialize();
         }
 
         // Loop A: CausalEcology — every tick (existing system, unchanged)
