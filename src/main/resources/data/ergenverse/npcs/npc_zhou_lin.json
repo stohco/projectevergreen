@@ -29,6 +29,11 @@
     "last_tested_tick": null,
     "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
   },
+  "initiation_lines": [
+    "The sect trial is approaching. Have you prepared your foundation? The elders test more than just Qi.",
+    "Watch how the senior disciples move during sparring. There's more to learn from observation than from books.",
+    "The spirit veins near the peak are strongest at dawn. If your cultivation has plateaued, try meditating there."
+  ],
   "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,

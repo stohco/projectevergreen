@@ -29,6 +29,11 @@
     "last_tested_tick": null,
     "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
   },
+  "initiation_lines": [
+    "If you have spirit stones to spare, I can point you toward useful cultivation resources. Don't waste them on trinkets.",
+    "The sect's mission board always has work. Elders reward diligence with pills and materials you can't find elsewhere.",
+    "I've traded for rare herbs in the eastern valleys. If you need alchemy ingredients, know where to look before you go."
+  ],
   "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1

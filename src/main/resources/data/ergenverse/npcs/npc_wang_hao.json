@@ -29,6 +29,11 @@
     "last_tested_tick": null,
     "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
   },
+  "initiation_lines": [
+    "Hey! You're that new disciple, right? Welcome to Heng Yue. If anyone gives you trouble, come find me.",
+    "The food hall's best meals are right after dawn. The senior disciples take the good portions first, so get there early!",
+    "Don't mind Sun Dazhu. He bullies everyone. Just stay out of his way until you're strong enough to ignore him."
+  ],
   "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,

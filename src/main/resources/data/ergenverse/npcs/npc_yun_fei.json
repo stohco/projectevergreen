@@ -29,6 +29,11 @@
     "last_tested_tick": null,
     "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
   },
+  "initiation_lines": [
+    "The library is quiet at this hour. If you want to study without interruption, now is the time.",
+    "Elder Wu Yu's lectures on Dao Heart are worth attending. I've attended three and I learn something new each time.",
+    "Don't let the sparring distract you. True advancement comes from stillness and understanding."
+  ],
   "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,

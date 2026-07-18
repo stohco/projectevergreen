@@ -29,6 +29,11 @@
     "last_tested_tick": null,
     "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
   },
+  "initiation_lines": [
+    "This sect has stood for a thousand years because its disciples understand discipline. Remember that.",
+    "The restriction formations around the Ancestor Hall are not to be tested. Even Nascent Soul cultivators have been trapped within.",
+    "If you seek to rise in the sect, prove yourself through deeds, not words. The elders are always watching."
+  ],
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
