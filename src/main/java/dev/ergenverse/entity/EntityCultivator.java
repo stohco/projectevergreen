@@ -289,6 +289,10 @@ public class EntityCultivator extends PathfinderMob {
         // Priority 2, above CognitionDrivenGoal(3). Fires when player enters range,
         // sends a canon-faithful initiation line from NPC JSON data.
         this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcInitiationGoal(this));
+        // NpcSectMissionGoal: Article XXIV/XXII — NPCs offer sect missions.
+        // Priority 2 (same as NpcInitiationGoal; both are one-shot LOOK-only goals
+        // with cooldowns, so the scheduler alternates between them naturally).
+        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcSectMissionGoal(this));
         // NpcScheduleGoal: Article XXIII — NPCs follow a canon-faithful daily
         // schedule (cultivate at dawn, lecture at midday, sleep at night).
         // Priority 3 (below NpcInitiationGoal=2, above CognitionDrivenGoal=4).

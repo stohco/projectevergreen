@@ -12,7 +12,7 @@
   "speech": "formal, concise, matter-of-fact",
   "relationship_to_wanglin": "recruiter \u2014 neutral",
   "dialogue_available": true,
-  "quest_available": false,
+  "quest_available": true,
   "trade_available": false,
   "teaching_available": false,
   "perception_tiers": {
@@ -32,6 +32,26 @@
   "soul_state": "none",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
+  "sect_tasks": [
+    {
+      "id": "patrol_report",
+      "description": "Report to Elder Zhang. Bring spirit stones as proof of sect contribution.",
+      "requires": [
+        {"item": "ergenverse:spirit_stone_fragment", "count": 10}
+      ],
+      "reward_item": "ergenverse:spirit_stone",
+      "reward_count": 3
+    },
+    {
+      "id": "iron_for_armory",
+      "description": "The sect armory needs cold iron for weapon repair. Mine in the northern caves.",
+      "requires": [
+        {"item": "ergenverse:cold_iron_ingot", "count": 3}
+      ],
+      "reward_item": "ergenverse:spirit_stone",
+      "reward_count": 4
+    }
+  ],
   "daily_schedule": [
     {
       "t0": 0,

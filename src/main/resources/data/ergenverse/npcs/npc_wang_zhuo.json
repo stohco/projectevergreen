@@ -39,6 +39,27 @@
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
+  "sect_tasks": [
+    {
+      "id": "formation_flag_supply",
+      "description": "Wang Zhuo says coolly: 'The clan needs formation flags for the upcoming trial. Bring blank flags and spirit ink.'",
+      "requires": [
+        {"item": "ergenverse:formation_flag_blank", "count": 3},
+        {"item": "ergenverse:spirit_ink", "count": 1}
+      ],
+      "reward_item": "ergenverse:foundation_pill",
+      "reward_count": 1
+    },
+    {
+      "id": "spirit_iron_request",
+      "description": "Wang Zhuo examines you: 'I need spirit iron for a clan commission. The reward is worth your time.'",
+      "requires": [
+        {"item": "ergenverse:spirit_iron_ingot", "count": 2}
+      ],
+      "reward_item": "ergenverse:spirit_stone",
+      "reward_count": 5
+    }
+  ],
   "daily_schedule": [
     {
       "t0": 0,

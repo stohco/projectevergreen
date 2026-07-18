@@ -205,6 +205,7 @@ public final class Ergenverse {
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ManifestationGiftCommand.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.HistoryCommand.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.history.HistoryEvents.class);
+        MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.SectMissionInteraction.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.advanced.AdvancedMechanicsCommand.class);
         // ── Cognition / LoS / Actor / Location-Layers / Ecology commands.
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.LocationLayersCommand.class);

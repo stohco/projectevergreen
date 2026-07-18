@@ -40,6 +40,37 @@
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
+  "sect_tasks": [
+    {
+      "id": "spirit_stone_collection",
+      "description": "The sect needs spirit stone fragments for the formation maintenance fund. Bring 5 to the treasury.",
+      "requires": [
+        {"item": "ergenverse:spirit_stone_fragment", "count": 5}
+      ],
+      "reward_item": "ergenverse:spirit_stone",
+      "reward_count": 2
+    },
+    {
+      "id": "beast_core_delivery",
+      "description": "The Alchemy Hall needs beast cores for refining Qi Gathering Pills. Hunt spirit wolves in the eastern forest.",
+      "requires": [
+        {"item": "ergenverse:wolf_core", "count": 2},
+        {"item": "ergenverse:beast_bone", "count": 3}
+      ],
+      "reward_item": "ergenverse:qi_gathering_pill",
+      "reward_count": 3
+    },
+    {
+      "id": "jade_slip_copying",
+      "description": "Help copy cultivation notes for the junior disciples. Bring blank jade slips and spirit ink.",
+      "requires": [
+        {"item": "ergenverse:jade_slip_blank", "count": 2},
+        {"item": "ergenverse:spirit_ink", "count": 1}
+      ],
+      "reward_item": "ergenverse:spirit_stone",
+      "reward_count": 3
+    }
+  ],
   "daily_schedule": [
     {
       "t0": 0,

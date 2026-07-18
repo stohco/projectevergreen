@@ -37,6 +37,26 @@
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
+  "sect_tasks": [
+    {
+      "id": "errand_boy",
+      "description": "Sun Dazhu sneers: 'I need beast bones for my weapon refinement. Go get them, junior.'",
+      "requires": [
+        {"item": "ergenverse:beast_bone", "count": 5}
+      ],
+      "reward_item": "ergenverse:spirit_stone_fragment",
+      "reward_count": 8
+    },
+    {
+      "id": "spirit_ink_fetch",
+      "description": "Sun Dazhu waves dismissively: 'Fetch me spirit ink. I have formations to draw and no time for errands.'",
+      "requires": [
+        {"item": "ergenverse:spirit_ink", "count": 2}
+      ],
+      "reward_item": "ergenverse:spirit_stone",
+      "reward_count": 1
+    }
+  ],
   "daily_schedule": [
     {
       "t0": 0,
