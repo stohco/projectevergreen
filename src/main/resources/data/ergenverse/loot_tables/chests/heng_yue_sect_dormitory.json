@@ -10,7 +10,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "ergenverse:spirit_stone_low",
+          "name": "ergenverse:spirit_stone_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "ergenverse:qi_gathering_grass",
+          "name": "ergenverse:spirit_herb_seed",
           "functions": [
             {
               "function": "minecraft:set_count",

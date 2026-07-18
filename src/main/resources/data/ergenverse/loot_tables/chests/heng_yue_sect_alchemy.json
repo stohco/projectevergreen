@@ -10,7 +10,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "ergenverse:qi_gathering_grass",
+          "name": "ergenverse:spirit_herb_seed",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -24,7 +24,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "ergenverse:snow_heart_herb",
+          "name": "ergenverse:spirit_herb_seed",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,27 +38,19 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "ergenverse:nine_leaf_clover",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
+          "name": "ergenverse:purification_pill",
+          "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "ergenverse:soul_nourishing_lotus",
+          "name": "ergenverse:qi_gathering_pill",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "ergenverse:blood_forgetting_grass",
+          "name": "ergenverse:spirit_herb_seed",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -98,7 +90,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "ergenverse:spirit_stone_low",
+          "name": "ergenverse:spirit_stone_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",

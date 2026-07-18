@@ -24,7 +24,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "ergenverse:spirit_stone_mid",
+          "name": "ergenverse:spirit_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "ergenverse:spirit_stone_low",
+          "name": "ergenverse:spirit_stone_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -64,19 +64,27 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "ergenverse:storage_pouch",
+          "name": "ergenverse:meditation_mat",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "ergenverse:flying_sword",
-          "functions": []
+          "name": "ergenverse:cold_iron_ingot",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
         },
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "ergenverse:spirit_armor",
+          "name": "ergenverse:spirit_iron_ingot",
           "functions": []
         },
         {
@@ -88,7 +96,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "ergenverse:dao_fragment",
+          "name": "ergenverse:foundation_pill",
           "functions": []
         },
         {
