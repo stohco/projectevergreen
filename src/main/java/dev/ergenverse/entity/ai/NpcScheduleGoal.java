@@ -76,6 +76,18 @@ public class NpcScheduleGoal extends Goal {
     /** Tick when we started moving toward the target. */
     private long moveStartTick = 0L;
 
+    /** For patrol behavior: tick when the current patrol waypoint was set. */
+    private long patrolWaypointTick = 0L;
+
+    /** For patrol behavior: how often to pick a new patrol waypoint (ticks). */
+    private static final long PATROL_REPATH_INTERVAL = 200L;
+
+    /** Random direction offsets for patrol circuit. */
+    private static final int[][] PATROL_DIRS = {
+        {0, 1}, {0, -1}, {1, 0}, {-1, 0},
+        {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
+    };
+
     public NpcScheduleGoal(EntityCultivator cultivator) {
         this.cultivator = cultivator;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
@@ -176,9 +188,19 @@ public class NpcScheduleGoal extends Goal {
 
         double distSq = cultivator.distanceToSqr(
                 targetPos.getX() + 0.5, cultivator.getY(), targetPos.getZ() + 0.5);
+
         if (distSq < CLOSE_DIST_SQ) {
             cultivator.getNavigation().stop();
-            if (homePos != null) {
+
+            // Patrol behavior: keep moving instead of standing still.
+            // A real patrol walks a circuit, not standing at one point.
+            if ("patrolling".equals(currentEntry.act) && homePos != null) {
+                long now = cultivator.level().getGameTime();
+                if (now - patrolWaypointTick >= PATROL_REPATH_INTERVAL) {
+                    pickNewPatrolWaypoint();
+                    patrolWaypointTick = now;
+                }
+            } else if (homePos != null) {
                 cultivator.getLookControl().setLookAt(
                         homePos.getX() + 0.5, homePos.getY() + 0.5, homePos.getZ() + 0.5);
             }
@@ -190,6 +212,29 @@ public class NpcScheduleGoal extends Goal {
                 || cultivator.tickCount % 60 == 0) {
             walkTowardTarget();
         }
+    }
+
+    /**
+     * Pick a new random patrol waypoint within the patrol radius from home.
+     * This creates a walking circuit instead of standing at one point.
+     */
+    private void pickNewPatrolWaypoint() {
+        if (homePos == null || currentEntry == null || currentEntry.dist <= 0) return;
+
+        // Pick a random direction and a random distance (60-100% of max patrol range)
+        int[] dir = PATROL_DIRS[cultivator.getRandom().nextInt(PATROL_DIRS.length)];
+        double distFactor = 0.6 + cultivator.getRandom().nextDouble() * 0.4;
+        int patrolDist = Math.max(5, (int)(currentEntry.dist * distFactor));
+
+        int px = homePos.getX() + dir[0] * patrolDist;
+        int pz = homePos.getZ() + dir[1] * patrolDist;
+        int py = cultivator.blockPosition().getY();
+
+        targetPos = new BlockPos(px, py, pz);
+        walkTowardTarget();
+
+        Ergenverse.LOGGER.debug("[NpcSchedule] {} patrol waypoint -> ({},{},{})",
+                cultivator.getCharacterId(), px, py, pz);
     }
 
     @Override

@@ -64,11 +64,17 @@ public class NpcInitiationGoal extends Goal {
     /** Cached initiation lines from NPC data (empty = goal never activates). */
     private final List<String> initiationLines = new ArrayList<>();
 
+    /** Cached night-specific initiation lines (used during dark hours). */
+    private final List<String> nightLines = new ArrayList<>();
+
     /** Per-player cooldown tracking: player UUID string → last initiation tick. */
     private final java.util.Map<String, Long> playerCooldowns = new java.util.HashMap<>();
 
     /** True once lines have been loaded from NPC data. */
     private boolean linesLoaded = false;
+
+    /** MC day ticks. Night in MC is approximately timeOfDay 12000-24000. */
+    private static final long MC_DAY_TICKS = 24000L;
 
     public NpcInitiationGoal(EntityCultivator cultivator) {
         this.cultivator = cultivator;
@@ -80,7 +86,10 @@ public class NpcInitiationGoal extends Goal {
     public boolean canUse() {
         if (cultivator.level().isClientSide) return false;
         if (!loadLinesIfNeeded()) return false;
-        if (initiationLines.isEmpty()) return false;
+
+        // Use night_lines during dark hours if available
+        List<String> activeLines = getActiveLines();
+        if (activeLines.isEmpty()) return false;
 
         // Find a player in range who isn't on cooldown
         return findEligiblePlayer() != null;
@@ -91,9 +100,10 @@ public class NpcInitiationGoal extends Goal {
         ServerPlayer target = findEligiblePlayer();
         if (target == null) return;
 
-        // Pick a random line
-        String line = initiationLines.get(
-                cultivator.getRandom().nextInt(initiationLines.size()));
+        // Pick a random line from the active set (day or night)
+        List<String> activeLines = getActiveLines();
+        String line = activeLines.get(
+                cultivator.getRandom().nextInt(activeLines.size()));
 
         // Send as action bar message (same channel as right-click dialogue)
         target.sendSystemMessage(
@@ -120,6 +130,7 @@ public class NpcInitiationGoal extends Goal {
 
     /**
      * Load initiation lines from the NPC's canon data (lazy, once).
+     * Also loads {@code night_lines} for time-aware dialogue.
      * Returns false if the NPC data couldn't be loaded.
      */
     private boolean loadLinesIfNeeded() {
@@ -135,12 +146,25 @@ public class NpcInitiationGoal extends Goal {
             com.google.gson.JsonObject data =
                     dev.ergenverse.simulation.WorldStateDataLoader.getEntry(
                             "npcs", characterId);
-            if (data != null && data.has("initiation_lines")
-                    && data.get("initiation_lines").isJsonArray()) {
-                JsonArray arr = data.getAsJsonArray("initiation_lines");
-                for (JsonElement elem : arr) {
-                    if (elem.isJsonPrimitive() && elem.getAsJsonPrimitive().isString()) {
-                        initiationLines.add(elem.getAsString());
+            if (data != null) {
+                // Load daytime initiation lines
+                if (data.has("initiation_lines")
+                        && data.get("initiation_lines").isJsonArray()) {
+                    JsonArray arr = data.getAsJsonArray("initiation_lines");
+                    for (JsonElement elem : arr) {
+                        if (elem.isJsonPrimitive() && elem.getAsJsonPrimitive().isString()) {
+                            initiationLines.add(elem.getAsString());
+                        }
+                    }
+                }
+                // Load night-specific initiation lines
+                if (data.has("night_lines")
+                        && data.get("night_lines").isJsonArray()) {
+                    JsonArray arr = data.getAsJsonArray("night_lines");
+                    for (JsonElement elem : arr) {
+                        if (elem.isJsonPrimitive() && elem.getAsJsonPrimitive().isString()) {
+                            nightLines.add(elem.getAsString());
+                        }
                     }
                 }
             }
@@ -151,6 +175,20 @@ public class NpcInitiationGoal extends Goal {
 
         linesLoaded = true;
         return true;
+    }
+
+    /**
+     * Get the active line set based on time of day.
+     * During night (MC time 12000-24000), prefers night_lines if available.
+     * Otherwise falls back to initiation_lines.
+     */
+    private List<String> getActiveLines() {
+        long timeOfDay = cultivator.level().getGameTime() % MC_DAY_TICKS;
+        boolean isNight = timeOfDay >= 12000L;
+        if (isNight && !nightLines.isEmpty()) {
+            return nightLines;
+        }
+        return initiationLines;
     }
 
     /**

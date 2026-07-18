@@ -33,10 +33,15 @@
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
   "initiation_lines": [
-    "The eastern patrol route needs covering tonight. Report any unusual spiritual fluctuations immediately.",
     "I have seen thousands of candidates pass through Heng Yue's gates. Few have what it takes to endure.",
     "The restriction arrays along the northern border are ancient. Do not test them. They will not warn you twice.",
     "Complete your sect duties before chasing personal breakthroughs. The sect protects you — you owe it your effort."
+  ],
+  "night_lines": [
+    "You should not be wandering the sect grounds at this hour. State your business, disciple.",
+    "The eastern perimeter needs watching tonight. If you see anything unusual — spiritual fluctuations, unfamiliar faces — report to me immediately.",
+    "Curfew is not a suggestion. Return to your quarters unless you have patrol duties.",
+    "I have walked these paths for decades. The night has eyes. Do nothing you would not explain to the Sect Master."
   ],
   "sect_tasks": [
     {
@@ -68,10 +73,38 @@
     },
     {
       "t0": 2000,
-      "t1": 12000,
+      "t1": 3000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "cultivating",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 6000,
+      "t1": 8000,
       "act": "wandering",
       "dir": null,
       "dist": 0
+    },
+    {
+      "t0": 8000,
+      "t1": 10000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "cultivating",
+      "dir": "east",
+      "dist": 10
     },
     {
       "t0": 12000,
@@ -82,23 +115,23 @@
     },
     {
       "t0": 13000,
-      "t1": 14000,
+      "t1": 15000,
       "act": "cultivating",
       "dir": "north",
       "dist": 20
     },
     {
-      "t0": 14000,
+      "t0": 15000,
       "t1": 23000,
-      "act": "sleeping",
-      "dir": null,
-      "dist": 0
+      "act": "patrolling",
+      "dir": "north",
+      "dist": 25
     },
     {
       "t0": 23000,
       "t1": 24000,
       "act": "patrolling",
-      "dir": "north",
+      "dir": "east",
       "dist": 20
     }
   ]
