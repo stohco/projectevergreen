@@ -279,6 +279,12 @@ public class EntityCultivator extends PathfinderMob {
         // → moves to vantage point, etc.). When no Intent is active, it yields
         // so the fallback goals (RandomStroll, RandomLookAround) run.
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        // NpcGiftOfferGoal: Article XXIV taken further — NPC walks up to the
+        // player and OFFERS a gift/teaching, using the existing
+        // ManifestationGiftSystem four-question gate. Priority 1 (above
+        // NpcInitiationGoal=2). Only activates for NPCs with offers_gifts=true
+        // in their JSON data and only after canon-faithful gates pass.
+        this.goalSelector.addGoal(1, new dev.ergenverse.entity.ai.NpcGiftOfferGoal(this));
         // NpcInitiationGoal: Article XXIV — NPCs initiate gameplay (NPC→Player).
         // Priority 2, above CognitionDrivenGoal(3). Fires when player enters range,
         // sends a canon-faithful initiation line from NPC JSON data.

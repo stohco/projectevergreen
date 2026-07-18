@@ -41,5 +41,14 @@
     "grant_gifts": true,
     "teach_techniques": true,
     "comment_on_location": true
-  }
+  },
+  "offers_gifts": true,
+  "gift_protagonist_id": "wang_lin",
+  "gift_offering_lines": [
+    "You walk the path. Hold out your hand.",
+    "I have watched you cultivate. Take this — and do not waste it.",
+    "This was mine. Now it is yours. The Dao is not hoarded.",
+    "You remind me of someone I once was. Here — carry this with you.",
+    "I predicted you would come this far. I prepared this for you."
+  ]
 }
