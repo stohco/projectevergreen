@@ -126,8 +126,7 @@ def write_block_state_compound(block_id):
         for prop in props_str.split(','):
             if '=' in prop:
                 k, v = prop.split('=', 1)
-                data += write_nbt_string(k, k)
-                data += write_nbt_string(v, v)
+                data += write_nbt_string(k, v)
         data += struct.pack('>b', TAG_END)  # End Properties
     else:
         data += write_nbt_string("Name", block_id)
