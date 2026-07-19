@@ -8,7 +8,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "projection": "rigid",
-        "location": "minecraft:village/plains/town_centers/plains_meeting_point_3",
+        "location": "ergenverse:wang_family_village/main",
         "processors": "minecraft:empty"
       }
     }

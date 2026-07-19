@@ -4,7 +4,7 @@
   "elements": [
     {
       "element_type": "minecraft:single_pool_element",
-      "location": "minecraft:village/plains/houses/plains_armorer_house_1",
+      "location": "ergenverse:wang_family_village/tavern_district",
       "projection": "rigid",
       "processors": "minecraft:empty",
       "weight": 1
