@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_xd_herb_tender_qing",
+  "name": "Herb Tender Qing",
+  "nameCn": "药园管事清",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_spirit_herb_garden",
+  "cultivation": "FOUNDATION_ESTABLISHMENT mid",
+  "personality": "peaceful, sees gardening as Dao cultivation",
+  "speech": "gentle, botanical, draws parallels between growth and comprehension",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400111,
+  "initiation_lines": [
+    "Every herb grows toward comprehension. Some faster than others. The Dao-blue lotus has been growing for four hundred years.",
+    "Bone meal nourishes the roots. But only spring water nourishes the comprehension. The difference is the Dao.",
+    "The Alchemist needs the Dao-blue lotus petals. They only fall when a cultivator with high comprehension walks past. It has been two years since the last fall.",
+    "Bring me bone meal and wheat. The herbs need feeding."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "tend",
+      "location": "xuan_dao_sect_spirit_herb_garden",
+      "duration": 300
+    },
+    {
+      "time": "1100",
+      "action": "gather",
+      "location": "xuan_dao_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "tend",
+      "location": "xuan_dao_sect_spirit_herb_garden",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "deliver",
+      "location": "xuan_dao_sect_alchemy_courtyard",
+      "duration": 60
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "xuan_dao_sect_disciple_dormitories",
+      "duration": 660
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "garden_dao_soil",
+      "name": "Garden Dao-Soil Nourishment",
+      "description": "The Dao-attributed herbs need bone meal and wheat to maintain comprehension-rich soil.",
+      "required_items": {
+        "minecraft:bone_meal": 6,
+        "minecraft:wheat": 8
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:lapis_lazuli": 3
+      }
+    },
+    {
+      "task_id": "herb_delivery_alchemist",
+      "name": "Herb Delivery to Alchemist",
+      "description": "The Alchemist needs fresh herbs and bottles from the garden and spring.",
+      "required_items": {
+        "minecraft:glass_bottle": 3,
+        "minecraft:bone_meal": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

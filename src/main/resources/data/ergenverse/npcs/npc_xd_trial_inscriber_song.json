@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_xd_trial_inscriber_song",
+  "name": "Trial Inscriber Song",
+  "nameCn": "试炼官宋",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_trial_grounds",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "methodical, records everything in formation patterns",
+  "speech": "administrative, references statistics and patterns",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400107,
+  "initiation_lines": [
+    "The trial has three stages: comprehend, inscribe, activate. Most fail at activation. The formation collapses.",
+    "Sixty-seven percent of disciples pass the comprehension stage. Thirty-one percent pass inscription. Eight percent activate.",
+    "A disciple from Heng Yue Sect attempted our trials once. She passed comprehension, failed inscription. She was gracious about it.",
+    "The trial grounds need redstone and arrows. The comprehension array consumes both."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0700",
+      "action": "oversee",
+      "location": "xuan_dao_sect_trial_grounds",
+      "duration": 240
+    },
+    {
+      "time": "1100",
+      "action": "evaluate",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "oversee",
+      "location": "xuan_dao_sect_trial_grounds",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "report",
+      "location": "xuan_dao_sect_inner_sect",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "xuan_dao_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "trial_array_maintenance",
+      "name": "Trial Array Maintenance",
+      "description": "The trial formation arrays need redstone and lapis for the comprehension stage.",
+      "required_items": {
+        "minecraft:redstone": 10,
+        "minecraft:lapis_lazuli": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:experience_bottle": 2
+      }
+    },
+    {
+      "task_id": "trial_record_compilation",
+      "name": "Trial Record Compilation",
+      "description": "Compile trial results. Bring paper and ink for the formation-pattern logs.",
+      "required_items": {
+        "minecraft:paper": 8,
+        "minecraft:ink_sac": 5
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

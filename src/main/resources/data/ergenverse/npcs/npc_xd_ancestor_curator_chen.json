@@ -1,0 +1,100 @@
+{
+  "npc_id": "npc_xd_ancestor_curator_chen",
+  "name": "Ancestor Curator Chen",
+  "nameCn": "祖师殿主陈",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_ancestor_hall",
+  "cultivation": "NASCENT_SOUL peak",
+  "personality": "serene, embodies Daoist tranquility, rarely speaks first",
+  "speech": "sparse, each word deliberate, pauses between sentences",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400109,
+  "initiation_lines": [
+    "...The ancestor wrote one scroll before founding this sect. It says: 'The Dao is a question. The answer is silence.'",
+    "Three thousand years. The ancestor's comprehension has not diminished. If anything, the silence has deepened.",
+    "A visitor came from the Heng Yue Sect once. He stood before the ancestor's shrine for three days without speaking. When he left, he was crying.",
+    "Bring obsidian and gold. The shrine maintenance requires devotion. The Dao rewards patience."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "xuan_dao_sect_ancestor_hall",
+      "duration": 240
+    },
+    {
+      "time": "0900",
+      "action": "ritual",
+      "location": "xuan_dao_sect_ancestor_hall",
+      "duration": 180
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "xuan_dao_sect_inner_sect",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "maintain",
+      "location": "xuan_dao_sect_ancestor_hall",
+      "duration": 240
+    },
+    {
+      "time": "1700",
+      "action": "ritual",
+      "location": "xuan_dao_sect_ancestor_hall",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "meditate",
+      "location": "xuan_dao_sect_ancestor_hall",
+      "duration": 300
+    },
+    {
+      "time": "0100",
+      "action": "rest",
+      "location": "xuan_dao_sect_ancestor_hall",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "ancestor_shrine_devotion",
+      "name": "Ancestor Shrine Devotion",
+      "description": "The ancestor's shrine requires gold and obsidian for the weekly Dao-contemplation ritual.",
+      "required_items": {
+        "minecraft:gold_ingot": 4,
+        "minecraft:obsidian": 6
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 3,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "ancestor_scroll_preservation",
+      "name": "Ancestor Scroll Preservation",
+      "description": "Preserve the ancestor's original scroll. The ink is fading and needs renewal.",
+      "required_items": {
+        "minecraft:ink_sac": 8,
+        "minecraft:paper": 6,
+        "minecraft:book": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

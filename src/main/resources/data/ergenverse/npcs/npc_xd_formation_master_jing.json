@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_xd_formation_master_jing",
+  "name": "Formation Master Jing",
+  "nameCn": "阵法大师静",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_array_hall",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "patient, sees the world as interconnected patterns",
+  "speech": "methodical, uses metaphors of weaving and calligraphy",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400102,
+  "initiation_lines": [
+    "A formation is a question written in redstone and obsidian. The world answers if you ask correctly.",
+    "The Heavenly Fate Sect sent an array student here once. His technique was brilliant but rigid. I sent him back to think more freely.",
+    "Every formation has a center stroke. Find it, and the entire pattern reveals itself. Miss it, and you are lost in the lines.",
+    "I need redstone and obsidian for the perimeter formation. The western quadrant is weakening."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "inspect",
+      "location": "xuan_dao_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "repair",
+      "location": "xuan_dao_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "1000",
+      "action": "work",
+      "location": "xuan_dao_sect_array_hall",
+      "duration": 240
+    },
+    {
+      "time": "1400",
+      "action": "eat",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1500",
+      "action": "inspect",
+      "location": "xuan_dao_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "work",
+      "location": "xuan_dao_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "xuan_dao_sect_inner_sect",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "perimeter_formation_repair",
+      "name": "Perimeter Formation Repair",
+      "description": "The western quadrant needs redstone and obsidian for the Dao-thread formation repair.",
+      "required_items": {
+        "minecraft:redstone": 12,
+        "minecraft:obsidian": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "formation_ink_supplies",
+      "name": "Formation Ink Supplies",
+      "description": "I need ink and ender pearls to draw the spatial anchor inscriptions.",
+      "required_items": {
+        "minecraft:ink_sac": 5,
+        "minecraft:ender_pearl": 2
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "ergenverse:jade_slip": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

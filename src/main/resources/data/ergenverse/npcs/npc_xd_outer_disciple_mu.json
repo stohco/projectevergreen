@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_xd_outer_disciple_mu",
+  "name": "Outer Disciple Mu",
+  "nameCn": "外门弟子慕",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_outer_gate",
+  "cultivation": "CONDENSATION early",
+  "personality": "earnest, calligraphy-obsessed, quotes the Dao",
+  "speech": "formal, slightly pretentious, references ancient texts",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400101,
+  "initiation_lines": [
+    "The Xuan Dao Sect seeks the Profound Way through scholarship, not violence. Though we are not incapable of the latter.",
+    "Every formation begins with a single stroke. The ancestor said: 'The Dao is in the ink.'",
+    "A cultivator from Nan Dou City came here seeking to join. We tested his formation comprehension. He failed.",
+    "The guard post needs supplies. If you wish to enter, bring paper and ink. We value preparation."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "patrol",
+      "location": "xuan_dao_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "0800",
+      "action": "stand_guard",
+      "location": "xuan_dao_sect_outer_gate",
+      "duration": 240
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "patrol",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1500",
+      "action": "train",
+      "location": "xuan_dao_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "stand_guard",
+      "location": "xuan_dao_sect_outer_gate",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "xuan_dao_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "gate_scholarship_supplies",
+      "name": "Gate Scholarship Supplies",
+      "description": "The outer gate guard needs paper and ink for the formation inspection logs.",
+      "required_items": {
+        "minecraft:arrow": 8,
+        "minecraft:paper": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:book": 1
+      }
+    },
+    {
+      "task_id": "formation_inspection_log",
+      "name": "Formation Inspection Log",
+      "description": "Record all formation fluctuations at the gate. Bring ink and paper for the logbook.",
+      "required_items": {
+        "minecraft:paper": 5,
+        "minecraft:ink_sac": 3
+      },
+      "rewards": {
+        "minecraft:emerald": 4,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

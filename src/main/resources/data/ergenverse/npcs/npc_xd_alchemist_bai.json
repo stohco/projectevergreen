@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_xd_alchemist_bai",
+  "name": "Dao Alchemist Bai",
+  "nameCn": "丹师白",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_alchemy_courtyard",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "philosophical about alchemy, sees pills as micro-formations",
+  "speech": "reflective, draws parallels between alchemy and the Dao",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400104,
+  "initiation_lines": [
+    "A pill is a formation you swallow. The ingredients are the redstone. The cauldron is the obsidian. The result is comprehension.",
+    "The Dao-essence Pill requires lapis and spring water. The blue color is not decorative. It is structural.",
+    "The Soul Refining Sect wanted our pill formula. We offered it freely. Their corruption ruined the ingredients.",
+    "Bring me bottles and coal. The furnace does not burn with flame. It burns with comprehension."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "gather",
+      "location": "xuan_dao_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "0700",
+      "action": "work",
+      "location": "xuan_dao_sect_alchemy_courtyard",
+      "duration": 300
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "work",
+      "location": "xuan_dao_sect_alchemy_courtyard",
+      "duration": 300
+    },
+    {
+      "time": "1800",
+      "action": "study",
+      "location": "xuan_dao_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "work",
+      "location": "xuan_dao_sect_alchemy_courtyard",
+      "duration": 180
+    },
+    {
+      "time": "2300",
+      "action": "rest",
+      "location": "xuan_dao_sect_inner_sect",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "dao_furnace_fuel",
+      "name": "Dao Furnace Fuel",
+      "description": "The Dao-essence furnace needs glass bottles and coal for the comprehension-burning cycle.",
+      "required_items": {
+        "minecraft:glass_bottle": 5,
+        "minecraft:coal": 8
+      },
+      "rewards": {
+        "minecraft:experience_bottle": 2,
+        "minecraft:emerald": 7
+      }
+    },
+    {
+      "task_id": "lapis_pill_ingredients",
+      "name": "Lapis Pill Ingredients",
+      "description": "The Dao-essence Pill needs lapis lazuli and blaze powder for the blue-structure binding.",
+      "required_items": {
+        "minecraft:lapis_lazuli": 6,
+        "minecraft:blaze_powder": 3
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "ergenverse:jade_slip": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

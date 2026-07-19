@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_xd_scholar_li",
+  "name": "Senior Scholar Li",
+  "nameCn": "藏经阁主李",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_library",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "reverent toward texts, dismissive of people",
+  "speech": "erudite, quotes scrolls, pedantic",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400103,
+  "initiation_lines": [
+    "The library holds five thousand scrolls. I have read four thousand nine hundred and twelve. The remaining eighty-eight are restricted.",
+    "Ink is the blood of scholarship. Paper is its skin. Together they preserve the Dao for eternity.",
+    "A rogue cultivator from this sect was seen in Nan Dou City. He left without permission. His name has been struck from the records.",
+    "Bring me paper and ink, and I will share what the scrolls have taught us about the Dao."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "organize",
+      "location": "xuan_dao_sect_library",
+      "duration": 240
+    },
+    {
+      "time": "1000",
+      "action": "study",
+      "location": "xuan_dao_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "teach",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1600",
+      "action": "study",
+      "location": "xuan_dao_sect_library",
+      "duration": 240
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "xuan_dao_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "scroll_copying_dao",
+      "name": "Scroll Copying: Dao Comprehension",
+      "description": "Copy the Dao comprehension scrolls for the inner elders. The ink must be precise.",
+      "required_items": {
+        "minecraft:paper": 8,
+        "minecraft:ink_sac": 5
+      },
+      "rewards": {
+        "minecraft:book": 2,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "restricted_scroll_recovery",
+      "name": "Restricted Scroll Recovery",
+      "description": "A scroll was removed from the restricted section. Return it with proper compensation.",
+      "required_items": {
+        "minecraft:book": 2,
+        "minecraft:emerald": 4
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "ergenverse:jade_slip": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

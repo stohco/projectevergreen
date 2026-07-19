@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_xd_underground_scribe_yuan",
+  "name": "Underground Scribe Yuan",
+  "nameCn": "地下书吏袁",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_underground_passage",
+  "cultivation": "FOUNDATION_ESTABLISHMENT late",
+  "personality": "obsessive note-taker, writes in the dark",
+  "speech": "muttering, reads aloud what he writes, slightly unhinged",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400108,
+  "initiation_lines": [
+    "You found the underground passage. I come here to write where no one can read over my shoulder.",
+    "The restricted scrolls down here are not dangerous. They are merely... incomplete. The ancestor died before finishing them.",
+    "I have been copying the forbidden formation diagrams for three years. I am on scroll seven hundred and twelve. There are three thousand.",
+    "Bring me paper and ink. I will share something interesting from the restricted section."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0800",
+      "action": "idle",
+      "location": "xuan_dao_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "1100",
+      "action": "research",
+      "location": "xuan_dao_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "idle",
+      "location": "xuan_dao_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "1700",
+      "action": "research",
+      "location": "xuan_dao_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "xuan_dao_sect_disciple_dormitories",
+      "duration": 660
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "forbidden_copying",
+      "name": "Forbidden Diagram Copying",
+      "description": "I need paper and ink to continue copying the ancestor's unfinished formation diagrams.",
+      "required_items": {
+        "minecraft:paper": 10,
+        "minecraft:ink_sac": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 7
+      }
+    },
+    {
+      "task_id": "hidden_scroll_access",
+      "name": "Hidden Scroll Access",
+      "description": "I can show you the ancestor's final unfinished scroll. The price is emeralds and gold.",
+      "required_items": {
+        "minecraft:gold_ingot": 3,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "ergenverse:jade_slip": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

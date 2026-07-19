@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_xd_sword_calligrapher_feng",
+  "name": "Sword Calligrapher Feng",
+  "nameCn": "剑书圣凤",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_sword_tomb",
+  "cultivation": "NASCENT_SOUL late",
+  "personality": "treats sword as brush, violence as calligraphy",
+  "speech": "artistic, references strokes and composition",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400105,
+  "initiation_lines": [
+    "Every sword stroke is a brush stroke. Every battle is a composition. The difference between art and death is intention.",
+    "The swords here were not forged. They were written. Their edges are the ancestor's calligraphy made steel.",
+    "One sword in the tomb has no inscription. It was the ancestor's first. He could not bring himself to improve it.",
+    "Bring me iron and ink. I am composing a new sword-form. The ink guides the metal."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "xuan_dao_sect_sword_tomb",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "maintain",
+      "location": "xuan_dao_sect_sword_tomb",
+      "duration": 300
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "maintain",
+      "location": "xuan_dao_sect_sword_tomb",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "practice",
+      "location": "xuan_dao_sect_sword_peak",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "meditate",
+      "location": "xuan_dao_sect_sword_tomb",
+      "duration": 180
+    },
+    {
+      "time": "2300",
+      "action": "rest",
+      "location": "xuan_dao_sect_sword_tomb",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "sword_composition_ink",
+      "name": "Sword Composition Ink",
+      "description": "I need iron and ink for the new sword-form composition. The ink binds the metal's intent.",
+      "required_items": {
+        "minecraft:iron_ingot": 6,
+        "minecraft:ink_sac": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "tomb_preservation",
+      "name": "Tomb Preservation Materials",
+      "description": "The sword tomb needs lapis and gold for the Dao-preservation ritual.",
+      "required_items": {
+        "minecraft:lapis_lazuli": 8,
+        "minecraft:gold_ingot": 4
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

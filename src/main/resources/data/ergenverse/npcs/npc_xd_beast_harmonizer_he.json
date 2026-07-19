@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_xd_beast_harmonizer_he",
+  "name": "Beast Harmonizer He",
+  "nameCn": "灵兽调和师何",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_spirit_beast_pens",
+  "cultivation": "CONDENSATION late",
+  "personality": "calm, believes beasts have Dao nature too",
+  "speech": "gentle, philosophical about harmony",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400106,
+  "initiation_lines": [
+    "These beasts do not serve us. They walk the Dao alongside us. The leash is merely a suggestion.",
+    "The ink-wolves in the eastern pen were bred here. Their howls form formation patterns. The ancestor was delighted.",
+    "A beast that has achieved Dao comprehension will sit still for hours, staring at a single redstone line. I have seen it.",
+    "Bring me redstone and leather. The harmonization collars need adjustment."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "work",
+      "location": "xuan_dao_sect_spirit_beast_pens",
+      "duration": 300
+    },
+    {
+      "time": "1100",
+      "action": "inspect",
+      "location": "xuan_dao_sect_mountain_cave",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "xuan_dao_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "work",
+      "location": "xuan_dao_sect_spirit_beast_pens",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "deliver",
+      "location": "xuan_dao_sect_alchemy_courtyard",
+      "duration": 60
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "xuan_dao_sect_disciple_dormitories",
+      "duration": 660
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "harmonization_collar",
+      "name": "Harmonization Collar Repair",
+      "description": "The beast collars need redstone and leather for the Dao-harmonization adjustment.",
+      "required_items": {
+        "minecraft:redstone": 8,
+        "minecraft:leather": 5
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "ergenverse:jade_slip": 1
+      }
+    },
+    {
+      "task_id": "beast_herbs",
+      "name": "Beast Herb Delivery",
+      "description": "Bring bone meal and wheat from the garden for the Dao-sensitive beasts.",
+      "required_items": {
+        "minecraft:bone_meal": 6,
+        "minecraft:wheat": 8
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:lapis_lazuli": 4
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

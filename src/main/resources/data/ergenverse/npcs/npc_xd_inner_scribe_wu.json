@@ -1,0 +1,100 @@
+{
+  "npc_id": "npc_xd_inner_scribe_wu",
+  "name": "Inner Scribe Wu",
+  "nameCn": "内门书吏吴",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "xuan_dao_sect",
+  "location": "xuan_dao_sect_core_formation_hall",
+  "cultivation": "NASCENT_SOUL peak",
+  "personality": "intellectually ambitious, believes writing can reshape reality",
+  "speech": "theoretical, references abstract Dao concepts, occasionally visionary",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 400110,
+  "initiation_lines": [
+    "The ancestor's final theory: if a formation is written with perfect comprehension, it becomes permanent. Self-sustaining. Alive.",
+    "I am close to proving this. I need spirit stones to power the experimental array. And patience. Mostly patience.",
+    "The Corpse Yin Sect writes with bone. The Heavenly Fate Sect writes with starlight. We write with ink. All three are correct. None are complete.",
+    "Bring me spirit stones and emeralds. I am conducting research that could redefine formation theory."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "research",
+      "location": "xuan_dao_sect_core_formation_hall",
+      "duration": 300
+    },
+    {
+      "time": "1000",
+      "action": "inspect",
+      "location": "xuan_dao_sect_inner_sect",
+      "duration": 120
+    },
+    {
+      "time": "1200",
+      "action": "meet",
+      "location": "xuan_dao_sect_secret_pavilion",
+      "duration": 120
+    },
+    {
+      "time": "1400",
+      "action": "research",
+      "location": "xuan_dao_sect_core_formation_hall",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "inspect",
+      "location": "xuan_dao_sect_hidden_treasury",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "research",
+      "location": "xuan_dao_sect_core_formation_hall",
+      "duration": 180
+    },
+    {
+      "time": "2300",
+      "action": "rest",
+      "location": "xuan_dao_sect_inner_sect",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "formation_research",
+      "name": "Formation Research Materials",
+      "description": "I need spirit stones and emeralds to power the self-sustaining formation experiment.",
+      "required_items": {
+        "ergenverse:spirit_stone": 3,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 2,
+        "ergenverse:jade_slip": 2
+      }
+    },
+    {
+      "task_id": "obsidian_dao_conduit",
+      "name": "Obsidian Dao Conduit",
+      "description": "The experimental array needs obsidian conduits to channel the Dao-comprehension flow.",
+      "required_items": {
+        "minecraft:obsidian": 10,
+        "minecraft:redstone": 12,
+        "minecraft:ender_pearl": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 3
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}
