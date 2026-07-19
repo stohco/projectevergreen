@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_lh_array_weaver_hu",
+  "name": "Array Weaver Hu",
+  "nameCn": "阵法织者胡",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_array_hall",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "analytical, creative, sees patterns everywhere",
+  "speech": "precise, pattern-focused, compares everything to water flow",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 936103281,
+  "initiation_lines": [
+    "A formation is a river. If the flow is correct, it nourishes everything. If the flow breaks, it floods.",
+    "The Xuan Dao Sect's ink arrays dry the water. Our water arrays nourish the ink. Both are valid. Ours are more alive.",
+    "I once wove a formation using only the river's natural currents. It lasted three hundred years. Then a drought came.",
+    "Redstone carries intent. Prismarine carries memory. Combine them, and the formation remembers what you intended."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "weave",
+      "location": "luo_he_sect_array_hall",
+      "duration": 240
+    },
+    {
+      "time": "1000",
+      "action": "inspect",
+      "location": "luo_he_sect_outer_gate",
+      "duration": 60
+    },
+    {
+      "time": "1100",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1200",
+      "action": "teach",
+      "location": "luo_he_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "1500",
+      "action": "research",
+      "location": "luo_he_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "weave",
+      "location": "luo_he_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "luo_he_sect_disciple_dormitories",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "water_formation_maintenance",
+      "name": "Water Formation Maintenance",
+      "description": "The water-flow formations need redstone and prismarine to maintain their pattern integrity.",
+      "required_items": {
+        "minecraft:redstone": 6,
+        "minecraft:prismarine_shard": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 8
+      }
+    },
+    {
+      "task_id": "array_hall_supply_requisition",
+      "name": "Array Hall Supply Requisition",
+      "description": "The array hall needs obsidian and ender pearls for high-level water-space formation experiments.",
+      "required_items": {
+        "minecraft:obsidian": 4,
+        "minecraft:ender_pearl": 1
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

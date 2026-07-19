@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_lh_outer_disciple_jiang",
+  "name": "Outer Disciple Jiang",
+  "nameCn": "外门弟子江",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_outer_gate",
+  "cultivation": "CONDENSATION early",
+  "personality": "vigilant, river-proud, respects the current",
+  "speech": "direct, watery metaphors, welcoming to respectful visitors",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 304787233,
+  "initiation_lines": [
+    "The Falling River never stops flowing. Neither do we. State your business at Luo He.",
+    "The Li family once walked this very gate. Their daughter was our finest scholar before she departed.",
+    "We guard the river's mouth. Everything that flows downstream passes through us first.",
+    "If you seek entry, bring prismarine shards. The gate formations run on river essence."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "patrol",
+      "location": "luo_he_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "0800",
+      "action": "stand_guard",
+      "location": "luo_he_sect_outer_gate",
+      "duration": 240
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "patrol",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1500",
+      "action": "train",
+      "location": "luo_he_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "stand_guard",
+      "location": "luo_he_sect_outer_gate",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "luo_he_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "river_gate_patrol_supplies",
+      "name": "River Gate Patrol Supplies",
+      "description": "The outer gate patrol needs arrows and river essence to maintain the water-current barrier.",
+      "required_items": {
+        "minecraft:arrow": 8,
+        "minecraft:prismarine_shard": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:book": 1
+      }
+    },
+    {
+      "task_id": "gate_current_barrier_repair",
+      "name": "Current Barrier Repair",
+      "description": "The water-current formation at the gate needs prismarine and clay to seal cracks in the flow pattern.",
+      "required_items": {
+        "minecraft:prismarine": 4,
+        "minecraft:clay": 5
+      },
+      "rewards": {
+        "minecraft:emerald": 4,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

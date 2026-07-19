@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_lh_river_librarian_he",
+  "name": "River Librarian He",
+  "nameCn": "河典阁主何",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_library",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "meticulous, protective of scrolls, values knowledge above combat",
+  "speech": "precise, scholarly, occasionally dry humor",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 75080501,
+  "initiation_lines": [
+    "Every scroll in this library has been waterproofed with river-silk resin. Touch them with dry hands only.",
+    "I have catalogued seven thousand two hundred and forty-one scrolls. Thirty-one are irreparably water-damaged. I remember each one.",
+    "The Xuan Dao Sect lent us three formation scrolls last year. We returned them with annotations in blue ink. They said the ink was wrong.",
+    "If you seek knowledge of the river Dao, begin with scroll four hundred. If you seek combat techniques, I suggest you leave."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "catalog",
+      "location": "luo_he_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "0900",
+      "action": "teach",
+      "location": "luo_he_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "research",
+      "location": "luo_he_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "1600",
+      "action": "inspect",
+      "location": "luo_he_sect_secret_pavilion",
+      "duration": 120
+    },
+    {
+      "time": "1800",
+      "action": "catalog",
+      "location": "luo_he_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "luo_he_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "scroll_waterproofing",
+      "name": "Scroll Waterproofing",
+      "description": "Apply river-silk resin to damaged scrolls. Bring clay and prismarine for the resin base.",
+      "required_items": {
+        "minecraft:clay": 6,
+        "minecraft:prismarine_shard": 4
+      },
+      "rewards": {
+        "minecraft:book": 2,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "rare_scroll_retrieval",
+      "name": "Rare Scroll Retrieval",
+      "description": "A rare scroll was misplaced. Bring ink and paper to copy the remaining fragments before water damage spreads.",
+      "required_items": {
+        "minecraft:ink_sac": 3,
+        "minecraft:paper": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 5
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_lh_tide_alchemist_shen",
+  "name": "Tide Alchemist Shen",
+  "nameCn": "潮汐炼丹师沈",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_alchemy_courtyard",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "intense, perfectionist, disdainful of impure methods",
+  "speech": "sharp, precise, frequently critical of other sects' alchemy",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 813110253,
+  "initiation_lines": [
+    "A pill refined without water-spirit essence is not a pill. It is a pebble you swallow.",
+    "The Soul Refining Sect sent an alchemist to study our Water Essence Pill. I refused. Their soul-corruption techniques would contaminate the river's purity.",
+    "Li Muwan was the only disciple who understood that alchemy is not chemistry. It is conversation with water.",
+    "Bring me kelp, nautilus shells, and glass bottles. If your ingredients are impure, I will know. The water always knows."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "gather",
+      "location": "luo_he_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "0700",
+      "action": "refine",
+      "location": "luo_he_sect_alchemy_courtyard",
+      "duration": 240
+    },
+    {
+      "time": "1100",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1200",
+      "action": "teach",
+      "location": "luo_he_sect_alchemy_courtyard",
+      "duration": 180
+    },
+    {
+      "time": "1500",
+      "action": "research",
+      "location": "luo_he_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "refine",
+      "location": "luo_he_sect_alchemy_courtyard",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "luo_he_sect_disciple_dormitories",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "water_essence_pill_ingredients",
+      "name": "Water Essence Pill Ingredients",
+      "description": "Gather river herbs and containers for the Tide Alchemist's signature Water Essence Pill refinement.",
+      "required_items": {
+        "minecraft:kelp": 8,
+        "minecraft:glass_bottle": 4
+      },
+      "rewards": {
+        "minecraft:experience_bottle": 2,
+        "minecraft:emerald": 7
+      }
+    },
+    {
+      "task_id": "tide_purification_fuel",
+      "name": "Tide Purification Fuel",
+      "description": "The alchemy furnace needs coal and nautilus shells to maintain the tidal flame pattern.",
+      "required_items": {
+        "minecraft:coal": 8,
+        "minecraft:nautilus_shell": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

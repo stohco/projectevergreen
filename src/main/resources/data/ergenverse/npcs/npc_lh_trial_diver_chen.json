@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_lh_trial_diver_chen",
+  "name": "Trial Diver Chen",
+  "nameCn": "试炼潜者陈",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_trial_grounds",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "strict, impartial, records everything",
+  "speech": "clipped, efficient, statistics-driven",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 228399069,
+  "initiation_lines": [
+    "Seventy-three percent of outer disciples fail the first dive. Forty-one percent fail the second. Twelve percent never resurface.",
+    "The trial is simple: hold your breath, walk to the bottom, retrieve the jade slip, return. The river decides who passes.",
+    "Last month a Heng Yue Sect disciple attempted our trials. He lasted eleven seconds. He said our river was too cold.",
+    "I have recorded every trial result for sixty years. The data does not lie. The river does not lie. Only disciples lie."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "prepare",
+      "location": "luo_he_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "0800",
+      "action": "judge",
+      "location": "luo_he_sect_trial_grounds",
+      "duration": 240
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "judge",
+      "location": "luo_he_sect_trial_grounds",
+      "duration": 180
+    },
+    {
+      "time": "1600",
+      "action": "record",
+      "location": "luo_he_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "1800",
+      "action": "inspect",
+      "location": "luo_he_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "luo_he_sect_disciple_dormitories",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "trial_equipment_maintenance",
+      "name": "Trial Equipment Maintenance",
+      "description": "The underwater trial arena needs prismarine and clay to repair the depth markers and safety formations.",
+      "required_items": {
+        "minecraft:prismarine_shard": 6,
+        "minecraft:clay": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:experience_bottle": 2
+      }
+    },
+    {
+      "task_id": "diving_supply_replenishment",
+      "name": "Diving Supply Replenishment",
+      "description": "Trials consume bread and arrows for survival supplies. Replenish the trial stores.",
+      "required_items": {
+        "minecraft:bread": 10,
+        "minecraft:arrow": 12
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "ergenverse:jade_slip": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

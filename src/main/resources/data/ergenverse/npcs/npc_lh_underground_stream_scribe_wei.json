@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_lh_underground_stream_scribe_wei",
+  "name": "Underground Stream Scribe Wei",
+  "nameCn": "地下溪流书吏魏",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_underground_passage",
+  "cultivation": "FOUNDATION late",
+  "personality": "nervous, knowledgeable, secretly brave",
+  "speech": "hushed, reverent, frequently glances at the water",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 974681087,
+  "initiation_lines": [
+    "The underground river whispers. I have been writing down what it says for eleven years. Scroll seven hundred and twelve of three thousand.",
+    "Corpses sometimes float downstream from Corpse Yin Sect territory. We return them. They never thank us. The river thanks us.",
+    "There is a chamber down here where the water flows upward. The ancestor said it leads to another country. I have not found it.",
+    "Bring me ink and paper. The river's whispers fade if not recorded within the hour."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0700",
+      "action": "record",
+      "location": "luo_he_sect_underground_passage",
+      "duration": 240
+    },
+    {
+      "time": "1100",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1200",
+      "action": "research",
+      "location": "luo_he_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "1500",
+      "action": "inspect",
+      "location": "luo_he_sect_mountain_cave",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "record",
+      "location": "luo_he_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "luo_he_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "river_whisper_recording",
+      "name": "River Whisper Recording",
+      "description": "The underground scribe needs ink and paper to record the river's whispers before they fade.",
+      "required_items": {
+        "minecraft:ink_sac": 4,
+        "minecraft:paper": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 7
+      }
+    },
+    {
+      "task_id": "underground_passage_lighting",
+      "name": "Underground Passage Lighting",
+      "description": "The passage torches need coal and glowstone. The river whispers are harder to read in darkness.",
+      "required_items": {
+        "minecraft:coal": 10,
+        "minecraft:prismarine_shard": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

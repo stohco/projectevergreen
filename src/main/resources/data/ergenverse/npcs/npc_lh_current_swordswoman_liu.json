@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_lh_current_swordswoman_liu",
+  "name": "Current Swordswoman Liu",
+  "nameCn": "流水剑师柳",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_sword_peak",
+  "cultivation": "NASCENT_SOUL late",
+  "personality": "flowing, unpredictable, treats sword like water",
+  "speech": "fluid metaphors, sudden shifts in tone, challenging",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 790848843,
+  "initiation_lines": [
+    "A sword that cuts like water cannot be blocked. A sword that IS water cannot be seen until it has already cut.",
+    "I trained at the Sword Tomb for forty years. The river carried away my first blade. I never replaced it. The river is my blade now.",
+    "The Heng Yue Sect's sword style is rigid. Mountains. Our style has no shape. You cannot block what has no form.",
+    "Stand in the river current and try to hold a stance. When you can stand for one hour, return. Until then, you are not ready."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0400",
+      "action": "train",
+      "location": "luo_he_sect_sword_peak",
+      "duration": 240
+    },
+    {
+      "time": "0800",
+      "action": "meditate",
+      "location": "luo_he_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "1000",
+      "action": "teach",
+      "location": "luo_he_sect_sword_peak",
+      "duration": 180
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "inspect",
+      "location": "luo_he_sect_sword_tomb",
+      "duration": 120
+    },
+    {
+      "time": "1600",
+      "action": "train",
+      "location": "luo_he_sect_trial_grounds",
+      "duration": 180
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "luo_he_sect_inner_sect",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "sword_river_essence_sharpening",
+      "name": "Sword River Essence Sharpening",
+      "description": "Bring river essence and iron to re-sharpen the training blades in the Sword Tomb using flowing water.",
+      "required_items": {
+        "minecraft:iron_ingot": 4,
+        "minecraft:prismarine_shard": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "current_endurance_supplies",
+      "name": "Current Endurance Supplies",
+      "description": "The sword disciples need food and healing supplies for their underwater endurance training.",
+      "required_items": {
+        "minecraft:bread": 8,
+        "minecraft:gold_ingot": 3
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:emerald": 8
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

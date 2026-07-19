@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_lh_flow_master_yun",
+  "name": "Flow Master Yun",
+  "nameCn": "流云长老",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_spirit_spring",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "calm, philosophic, speaks in water metaphors",
+  "speech": "measured, poetic, references the eternal flow",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 368026258,
+  "initiation_lines": [
+    "The spring does not choose to flow. It simply flows. That is the highest Dao of Luo He.",
+    "Li Muwan meditated here for three years. The spring remembers her still.",
+    "The Heavenly Fate Sect reads stars. We read water. The stars say nothing about rivers, but the river knows every star it reflects.",
+    "Sit by the spring. Close your eyes. The current will teach you what a thousand scrolls cannot."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "luo_he_sect_spirit_spring",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "teach",
+      "location": "luo_he_sect_spirit_spring",
+      "duration": 180
+    },
+    {
+      "time": "1100",
+      "action": "walk",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "inspect",
+      "location": "luo_he_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "1500",
+      "action": "meditate",
+      "location": "luo_he_sect_spirit_spring",
+      "duration": 240
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "luo_he_sect_inner_sect",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "spring_purification_essence",
+      "name": "Spring Purification Essence",
+      "description": "The sacred spring needs river essence and nautilus shells to purify its flow for the monthly ceremony.",
+      "required_items": {
+        "minecraft:prismarine_shard": 8,
+        "minecraft:nautilus_shell": 1
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "ergenverse:jade_slip": 1
+      }
+    },
+    {
+      "task_id": "lily_pad_harvest",
+      "name": "Lily Pad Harvest",
+      "description": "Gather lily pads from the spring for the alchemy courtyard. They need them for Water Essence Pills.",
+      "required_items": {
+        "minecraft:lily_pad": 8,
+        "minecraft:kelp": 5
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

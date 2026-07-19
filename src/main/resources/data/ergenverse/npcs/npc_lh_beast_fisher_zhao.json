@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_lh_beast_fisher_zhao",
+  "name": "Beast Fisher Zhao",
+  "nameCn": "灵兽渔夫赵",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_spirit_beast_pens",
+  "cultivation": "CONDENSATION late",
+  "personality": "patient, observant, deeply knowledgeable about river creatures",
+  "speech": "slow, gentle, full of aquatic observations",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 930921523,
+  "initiation_lines": [
+    "The river serpents here have lived for three hundred years. They remember the founding ancestor. I believe them.",
+    "Every creature in these pens was caught by hand. No nets. Nets are for those who do not understand the current.",
+    "A Corpse Yin Sect envoy once offered to trade zombie-fish for our river serpents. I told him our fish are alive. His were not.",
+    "The kelp you see in the herb garden was originally from the beast pens. One river serpent curled around it for a century. Now it glows."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "feed",
+      "location": "luo_he_sect_spirit_beast_pens",
+      "duration": 180
+    },
+    {
+      "time": "0900",
+      "action": "patrol",
+      "location": "luo_he_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "1100",
+      "action": "gather",
+      "location": "luo_he_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "feed",
+      "location": "luo_he_sect_spirit_beast_pens",
+      "duration": 180
+    },
+    {
+      "time": "1700",
+      "action": "inspect",
+      "location": "luo_he_sect_spirit_beast_pens",
+      "duration": 120
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "luo_he_sect_disciple_dormitories",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "serpent_feeding_ingredients",
+      "name": "Serpent Feeding Ingredients",
+      "description": "The river serpents need raw fish and clay for their monthly feeding. Clay settles their digestion.",
+      "required_items": {
+        "minecraft:tropical_fish": 6,
+        "minecraft:clay": 5
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "ergenverse:jade_slip": 1
+      }
+    },
+    {
+      "task_id": "pen_repair_materials",
+      "name": "Pen Repair Materials",
+      "description": "The underwater beast pens need prismarine and sticks to repair damage from the last storm.",
+      "required_items": {
+        "minecraft:prismarine": 5,
+        "minecraft:stick": 10
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

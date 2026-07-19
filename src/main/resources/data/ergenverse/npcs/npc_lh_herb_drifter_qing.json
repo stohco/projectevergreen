@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_lh_herb_drifter_qing",
+  "name": "Herb Drifter Qing",
+  "nameCn": "草药漂泊者青",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_spirit_herb_garden",
+  "cultivation": "FOUNDATION mid",
+  "personality": "gentle, dreamy, speaks to plants",
+  "speech": "soft, wandering, frequently loses track of conversations",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 705429919,
+  "initiation_lines": [
+    "The kelp here is four hundred years old. It remembers when the river was clear enough to see the bottom.",
+    "Water herbs grow differently from mountain herbs. You cannot pull them. You must ask. I ask every morning.",
+    "The Alchemist Shen says my herbs lack potency. I say his pills lack patience. The river agrees with me.",
+    "If you bring me clay and bone meal, I can grow river-lily seeds. They bloom underwater. It is quite beautiful."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "tend",
+      "location": "luo_he_sect_spirit_herb_garden",
+      "duration": 240
+    },
+    {
+      "time": "1000",
+      "action": "gather",
+      "location": "luo_he_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "tend",
+      "location": "luo_he_sect_spirit_herb_garden",
+      "duration": 180
+    },
+    {
+      "time": "1600",
+      "action": "deliver",
+      "location": "luo_he_sect_alchemy_courtyard",
+      "duration": 120
+    },
+    {
+      "time": "1800",
+      "action": "tend",
+      "location": "luo_he_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "luo_he_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "river_herb_garden_fertilizer",
+      "name": "River Herb Garden Fertilizer",
+      "description": "The water herbs need bone meal and kelp for fertilizer to maintain their spiritual potency.",
+      "required_items": {
+        "minecraft:bone_meal": 8,
+        "minecraft:kelp": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:lily_pad": 4
+      }
+    },
+    {
+      "task_id": "herb_delivery_to_alchemist",
+      "name": "Herb Delivery to Alchemist",
+      "description": "Deliver harvested herbs to the alchemy courtyard. Bring glass bottles and coal for the exchange.",
+      "required_items": {
+        "minecraft:glass_bottle": 4,
+        "minecraft:coal": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

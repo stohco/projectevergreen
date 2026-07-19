@@ -1,0 +1,105 @@
+{
+  "npc_id": "npc_lh_inner_river_elder_song",
+  "name": "Inner River Elder Song",
+  "nameCn": "内河长老宋",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "luo_he_sect",
+  "location": "luo_he_sect_core_formation_hall",
+  "cultivation": "NASCENT_SOUL peak",
+  "personality": "commanding, strategic, sees the sect as a living river system",
+  "speech": "authoritative, systemic, draws connections between all things",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 840042702,
+  "initiation_lines": [
+    "The Luo He Sect is not a collection of buildings. It is a river system. Every hall, every disciple, every formation is a tributary.",
+    "Our water arrays differ from the Xuan Dao Sect's ink arrays. Theirs record the Dao. Ours become the Dao. The water remembers.",
+    "The Soul Refining Sect's soul arrays are chains. The Corpse Yin Sect's bone arrays are cages. Our water arrays are freedom.",
+    "Three sects have asked for alliance this decade. Two were refused. The third has not yet been answered. The river is still deciding."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "luo_he_sect_core_formation_hall",
+      "duration": 120
+    },
+    {
+      "time": "0700",
+      "action": "meet",
+      "location": "luo_he_sect_inner_sect",
+      "duration": 180
+    },
+    {
+      "time": "1000",
+      "action": "inspect",
+      "location": "luo_he_sect_array_hall",
+      "duration": 120
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "luo_he_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "teach",
+      "location": "luo_he_sect_core_formation_hall",
+      "duration": 180
+    },
+    {
+      "time": "1600",
+      "action": "inspect",
+      "location": "luo_he_sect_hidden_treasury",
+      "duration": 120
+    },
+    {
+      "time": "1800",
+      "action": "meditate",
+      "location": "luo_he_sect_spirit_spring",
+      "duration": 180
+    },
+    {
+      "time": "2100",
+      "action": "rest",
+      "location": "luo_he_sect_inner_sect",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "core_formation_convergence",
+      "name": "Core Formation Convergence",
+      "description": "The core formation needs spirit stones and ender pearls to maintain the river convergence nexus.",
+      "required_items": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:ender_pearl": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 3,
+        "ergenverse:dao_fragment": 1
+      }
+    },
+    {
+      "task_id": "inner_sect_supply_chain",
+      "name": "Inner Sect Supply Chain",
+      "description": "The inner sect needs emeralds, enchanted books, and obsidian for formation maintenance and elder research.",
+      "required_items": {
+        "minecraft:emerald": 10,
+        "minecraft:enchanted_book": 1
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 3,
+        "ergenverse:jade_slip": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}
