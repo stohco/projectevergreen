@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Temple Priest Liu (庙祝刘). INFERRED from canon context: The Teng family has a temple district for ancestor worship. In Chinese xianxia culture, temples serve as spiritual centers where the community honors ancestors. A priest provides the player with lore about the Teng family's history and foreshadows their downfall.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_teng_temple_priest",
+  "name": "Temple Priest Liu",
+  "nameCn": "庙祝刘",
+  "canon_id": "I-npc_teng_temple_priest",
+  "type": "priest",
+  "faction": "none",
+  "location": "teng_family_city",
+  "cultivation": "mortal",
+  "personality": "pious, haunted, quietly defiant",
+  "speech": "measured, philosophical",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A pious priest",
+    "qi_condensation": "Temple Priest Liu, none priest"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: The Teng family has a temple district for ancestor worship. In Chinese xianxia culture, temples serve as spiritual centers where the community honors ancestors. A priest provides the player with lore about the Teng family's history and foreshadows their downfall.",
+  "derivation_type": "I",
+  "salt": 2020206308,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You come to the temple? Most visitors seek fortune, not wisdom. But you are welcome regardless. The ancestors judge intent, not cultivation.",
+    "The Teng family built this temple three generations ago, when they first rose to power. The founder was... a different man from the current patriarch.",
+    "I have read the ancestral tablets. There are warnings inscribed on the oldest ones. Warnings about arrogance and the heavens. The current family does not read them.",
+    "A young cultivator visited last month. He asked about the restrictions beneath the city. I told him nothing — some knowledge is too dangerous for the living."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 5000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 5000,
+      "t1": 6000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 6000,
+      "t1": 9000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 9000,
+      "t1": 10000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "temple_repair",
+      "description": "Priest Liu sighs: 'The temple needs repairs. The family has neglected it for years. Bring me planks and glass to fix the ancestral shrine. The ancestors deserve better than a crumbling roof.'",
+      "requires": [
+        {
+          "item": "minecraft:planks",
+          "count": 12
+        },
+        {
+          "item": "minecraft:glass",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "incense_materials",
+      "description": "Priest Liu nods: 'I need coal for the incense braziers and wheat for the offering bread. The ancestors must not be forgotten — even if the Teng family has forgotten their own teachings.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        },
+        {
+          "item": "minecraft:wheat",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 2
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Teng Family Servant (藤家仆人). INFERRED from canon context: Teng Huayuan's governor mansion would have servants maintaining the household. In RI, servants often overhear secrets and provide subtle information to the player about the family's activities.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_teng_servant",
+  "name": "Teng Family Servant",
+  "nameCn": "藤家仆人",
+  "canon_id": "I-npc_teng_servant",
+  "type": "servant",
+  "faction": "teng_family",
+  "location": "teng_family_city",
+  "cultivation": "mortal",
+  "personality": "obedient, fearful, secretly observant",
+  "speech": "subservient, hushed",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A obedient servant",
+    "qi_condensation": "Teng Family Servant, teng_family servant"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Teng Huayuan's governor mansion would have servants maintaining the household. In RI, servants often overhear secrets and provide subtle information to the player about the family's activities.",
+  "derivation_type": "I",
+  "salt": 2103695704,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You... you wish to speak with me? I am merely a servant of the Teng household. I should not dawdle.",
+    "The patriarch has been meeting with someone in the cultivation quarter. Late at night. I am not supposed to notice such things.",
+    "If you need food, the warehouse has bread. But do not take too much — the quartermaster counts everything.",
+    "Young master Teng Li has been in a foul temper lately. Someone bested him, I think. He trains twice as hard now."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 10
+    },
+    {
+      "t0": 3000,
+      "t1": 4000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 4000,
+      "t1": 7000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 8
+    },
+    {
+      "t0": 7000,
+      "t1": 8000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 8000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 12
+    },
+    {
+      "t0": 11000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "mansion_supplies",
+      "description": "The servant bows: 'The household needs bread and wheat for the patriarch's evening meal. The warehouse quartermaster is busy — could you bring the supplies directly to me? I will compensate you.'",
+      "requires": [
+        {
+          "item": "minecraft:bread",
+          "count": 8
+        },
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "cleaning_supplies",
+      "description": "The servant whispers: 'I need glass and sticks for repairs in the mansion. A certain... incident occurred in the west wing. The less said, the better. Bring me the materials.'",
+      "requires": [
+        {
+          "item": "minecraft:glass",
+          "count": 8
+        },
+        {
+          "item": "minecraft:stick",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    }
+  ]
+}

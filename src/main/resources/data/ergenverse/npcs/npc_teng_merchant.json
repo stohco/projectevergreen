@@ -1,0 +1,133 @@
+{
+  "_comment": "NPC: Teng Family Merchant (藤家商贩). INFERRED from canon context: The Teng family controls trade in Zhao Country. The market district structure implies commerce. A merchant NPC provides the player with a trading partner and economic node in the city.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_teng_merchant",
+  "name": "Teng Family Merchant",
+  "nameCn": "藤家商贩",
+  "canon_id": "I-npc_teng_merchant",
+  "type": "merchant",
+  "faction": "teng_family",
+  "location": "teng_family_city",
+  "cultivation": "mortal",
+  "personality": "shrewd, opportunistic, respectful to power",
+  "speech": "salesman-like, obsequious to cultivators",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A shrewd merchant",
+    "qi_condensation": "Teng Family Merchant, teng_family merchant"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: The Teng family controls trade in Zhao Country. The market district structure implies commerce. A merchant NPC provides the player with a trading partner and economic node in the city.",
+  "derivation_type": "I",
+  "salt": 1136262958,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Welcome, welcome! Fine goods from across Zhao Country — iron from the northern mines, wheat from the southern villages. What catches your eye?",
+    "The Teng family takes a modest commission on all trade, of course. But my prices remain fair. Fair for both of us, heh.",
+    "I heard the dock foreman needs help with a shipment. Heavy crates of... well, he did not say. Paid well though.",
+    "You look like someone who travels. I might have a special item — if you bring me the right materials."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 5000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 8
+    },
+    {
+      "t0": 5000,
+      "t1": 6000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 6000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 10
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "supply_run",
+      "description": "The merchant rubs his hands: 'I need wheat and coal for a trade caravan departing tomorrow. The northern villages owe tribute but are late. Help me fill the gap and I will pay you in emeralds.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 24
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    },
+    {
+      "id": "special_order",
+      "description": "The merchant leans closer: 'A cultivator from out of town requested iron and gold. I am short on both. Bring me the materials and I will give you a cut of the profit — and information about who the buyer is.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 8
+        },
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 10
+    }
+  ]
+}

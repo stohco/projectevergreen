@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Dock Foreman Chen (码头管事陈). INFERRED from canon context: Teng Family City has a port/docks structure. The Teng family controls trade routes. A dock foreman manages shipments of tribute, goods, and contraband. This connects the player to the trade economy and potentially the smuggler tunnels.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_teng_dock_foreman",
+  "name": "Dock Foreman Chen",
+  "nameCn": "码头管事陈",
+  "canon_id": "I-npc_teng_dock_foreman",
+  "type": "laborer",
+  "faction": "teng_family",
+  "location": "teng_family_city",
+  "cultivation": "mortal",
+  "personality": "gruff, overworked, honest",
+  "speech": "direct, no-nonsense",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A gruff laborer",
+    "qi_condensation": "Dock Foreman Chen, teng_family laborer"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Teng Family City has a port/docks structure. The Teng family controls trade routes. A dock foreman manages shipments of tribute, goods, and contraband. This connects the player to the trade economy and potentially the smuggler tunnels.",
+  "derivation_type": "I",
+  "salt": 1837354670,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Another pair of hands? Good. The next shipment arrives at dawn and the warehouse is already overflowing. Move crates if you want to eat.",
+    "The Teng family trades in everything — wheat, iron, wood, stone. What they do not say is that some crates are heavier than they should be.",
+    "The merchant in the market district owes me a favor. If you work here, I will put in a good word. Better prices.",
+    "Stay away from the lower dock after dark. That is all I will say about that."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 3000,
+      "t1": 4000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 4000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 12
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 11000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "crate_transport",
+      "description": "The foreman points to a stack of crates: 'These need to go to the warehouse district. But I need planks and sticks to repair the broken pallets first. Bring me the materials.'",
+      "requires": [
+        {
+          "item": "minecraft:planks",
+          "count": 16
+        },
+        {
+          "item": "minecraft:stick",
+          "count": 24
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "shipment_loading",
+      "description": "The foreman wipes his brow: 'A barge needs loading. Iron and coal for the northern trade route. Heavy work, good pay. Bring what you can carry.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 6
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}

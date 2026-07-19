@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Teng Guard Captain (藤家护卫统领). INFERRED from canon context: The Teng family is the dominant military force in Zhao Country. A city of this size and importance would have a guard captain overseeing security, curfews, and tribute enforcement. The city gate structure implies a garrison.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_teng_guard_captain",
+  "name": "Teng Guard Captain",
+  "nameCn": "藤家护卫统领",
+  "canon_id": "I-npc_teng_guard_captain",
+  "type": "guard",
+  "faction": "teng_family",
+  "location": "teng_family_city",
+  "cultivation": "mid Foundation Establishment",
+  "personality": "stern, disciplined, loyal to Teng Huayuan",
+  "speech": "blunt, authoritative",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A stern guard",
+    "qi_condensation": "Teng Guard Captain, teng_family guard"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: The Teng family is the dominant military force in Zhao Country. A city of this size and importance would have a guard captain overseeing security, curfews, and tribute enforcement. The city gate structure implies a garrison.",
+  "derivation_type": "I",
+  "salt": 2003114335,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Halt. State your name and business in Teng Family City. Strangers are watched here.",
+    "The patriarch's orders are clear: no unauthorized cultivators beyond the market district after dusk. I enforce that.",
+    "You look capable enough. The warehouse district needs extra hands moving tribute shipments. Speak to the Dock Foreman if you want to earn coin.",
+    "The smuggler tunnels? There are no smuggler tunnels. I suggest you stop asking questions."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 12
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "patrol_supplies",
+      "description": "The Guard Captain crosses his arms: 'My men need leather armor patches and arrows for the night patrol. Bring me leather and arrows and I will pay you from the garrison fund.'",
+      "requires": [
+        {
+          "item": "minecraft:leather",
+          "count": 8
+        },
+        {
+          "item": "minecraft:arrow",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    },
+    {
+      "id": "curfew_report",
+      "description": "The Guard Captain frowns: 'There have been unauthorized movements near the warehouse at night. Bring me coal and torches — we need to light the patrol route. Report anything suspicious.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 16
+        },
+        {
+          "item": "minecraft:torch",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:iron_ingot",
+      "reward_count": 4
+    }
+  ]
+}

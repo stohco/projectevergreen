@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: One-Eared Zhou (独耳周). INFERRED from canon context: The Teng family's smuggler tunnels imply an underground economy. A smuggler NPC provides the player with access to illicit goods, information about the Teng family's corruption, and potentially illegal cultivation resources. In RI, the Teng family's hidden dealings are central to their villainy.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_teng_smuggler",
+  "name": "One-Eared Zhou",
+  "nameCn": "独耳周",
+  "canon_id": "I-npc_teng_smuggler",
+  "type": "rogue",
+  "faction": "none",
+  "location": "teng_family_city",
+  "cultivation": "late Qi Condensation",
+  "personality": "cunning, paranoid, mercenary",
+  "speech": "whispered, transactional",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cunning rogue",
+    "qi_condensation": "One-Eared Zhou, none rogue"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: The Teng family's smuggler tunnels imply an underground economy. A smuggler NPC provides the player with access to illicit goods, information about the Teng family's corruption, and potentially illegal cultivation resources. In RI, the Teng family's hidden dealings are central to their villainy.",
+  "derivation_type": "I",
+  "salt": 1763083456,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You found the tunnels. Impressive. Or stupid. Time will tell which. What do you want? I deal in goods and information — both have a price.",
+    "The Teng family pretends these tunnels do not exist. But half their wealth flows through here. Tax-free. Untraceable. The patriarch is not as noble as he claims.",
+    "I have items you will not find in the market district. Rare things. Dangerous things. But I need materials first — gold and iron move fast down here.",
+    "Stay off the main tunnel after midnight. That is when the family's cultivators make their... personal deliveries. You do not want to see what they carry."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 4000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 4000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 14000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 6
+    },
+    {
+      "t0": 14000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "smuggler_goods",
+      "description": "One-Eared Zhou grins: 'I have a buyer who wants gold and emeralds. Bring me the goods and I will give you a cut. And maybe... a map. A map of places the Teng family does not want found.'",
+      "requires": [
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 6
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 12
+    },
+    {
+      "id": "tunnel_expansion",
+      "description": "Zhou narrows his one good eye: 'We are extending the tunnel toward the warehouse district. Need pickaxes — iron and stone. Discreetly, of course. The guards cannot know.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 8
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 32
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    }
+  ]
+}

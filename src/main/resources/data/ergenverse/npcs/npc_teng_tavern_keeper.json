@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Tavern Keeper Mei (酒馆老板娘梅). INFERRED from canon context: Every city has a tavern where information flows. In RI, taverns are where Wang Lin gathers intelligence. The tavern district structure demands a keeper who hears everything and shares carefully — a key NPC for the player to learn about the Teng family's activities.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_teng_tavern_keeper",
+  "name": "Tavern Keeper Mei",
+  "nameCn": "酒馆老板娘梅",
+  "canon_id": "I-npc_teng_tavern_keeper",
+  "type": "commoner",
+  "faction": "none",
+  "location": "teng_family_city",
+  "cultivation": "mortal",
+  "personality": "warm, gossipy, perceptive",
+  "speech": "friendly, knowing",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A warm commoner",
+    "qi_condensation": "Tavern Keeper Mei, none commoner"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Every city has a tavern where information flows. In RI, taverns are where Wang Lin gathers intelligence. The tavern district structure demands a keeper who hears everything and shares carefully — a key NPC for the player to learn about the Teng family's activities.",
+  "derivation_type": "I",
+  "salt": 512012886,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Sit down, sit down! You look like you have traveled far. The first drink is on the house — consider it an investment. Travelers always bring the best stories.",
+    "Guards come in here every night. They drink too much and talk too much. Last week one mentioned something about 'the underground operation.' He clammed up when he saw me listening.",
+    "A young woman comes in sometimes — Teng family, but different from the others. She asks about the mortal quarter. Worried about someone, maybe.",
+    "The merchant across the way? He is not as honest as he pretends. I have seen him meeting with men who do not look like traders."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "tavern_supplies",
+      "description": "Tavern Keeper Mei smiles: 'Running low on wheat for bread and coal for the hearth. If you keep the tavern warm and fed, the customers stay longer — and they talk more. Bring me supplies and I will share what I have heard.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    },
+    {
+      "id": "information_trade",
+      "description": "Mei leans in close: 'I know things. Guard rotations, merchant schedules, who is meeting whom. But information has a price — bring me paper and ink_sac so I can write it down safely. What I know is worth far more than what it costs.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 4
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    }
+  ]
+}
