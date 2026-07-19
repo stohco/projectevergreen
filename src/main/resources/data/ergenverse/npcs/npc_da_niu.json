@@ -94,5 +94,31 @@
       "dir": null,
       "dist": 0
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "fishing_trip",
+      "description": "Da Niu grins broadly: 'Eh heh! I want to go fishing at the river, but the last time I went alone, a wild beast chased me back! Come with me — bring coal for a campfire and I will share whatever we catch!'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:cooked_cod",
+      "reward_count": 5
+    },
+    {
+      "id": "log_carrying",
+      "description": "Da Niu flexes his thin arms: 'My grandfather says a real man can carry his own weight in logs! Help me bring oak logs to the carpenter and he might give us something good.'",
+      "requires": [
+        {
+          "item": "minecraft:oak_log",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:wooden_axe",
+      "reward_count": 1
+    }
   ]
 }

@@ -96,5 +96,31 @@
       "dir": null,
       "dist": 0
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "carpentry_wood",
+      "description": "Wang Tianshui sets down his tools: 'I need oak planks for the governor's commission. Can you bring me some? The family could use the extra copper.'",
+      "requires": [
+        {
+          "item": "minecraft:oak_planks",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:copper_ingot",
+      "reward_count": 3
+    },
+    {
+      "id": "carpentry_sticks",
+      "description": "Wang Tianshui wipes sawdust from his brow: 'If you can gather sticks for the framework, I will share some of my iron supply. We are running low.'",
+      "requires": [
+        {
+          "item": "minecraft:stick",
+          "count": 32
+        }
+      ],
+      "reward_item": "minecraft:iron_ingot",
+      "reward_count": 1
+    }
   ]
 }

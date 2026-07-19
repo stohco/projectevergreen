@@ -101,5 +101,39 @@
       "dir": null,
       "dist": 0
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "herb_gathering",
+      "description": "Zhou Tingsu clasps her hands worriedly: 'The healer in the market needs wheat and carrots for a poultice. My boy is coughing again. Please, can you help?'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 8
+        },
+        {
+          "item": "minecraft:carrot",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 2
+    },
+    {
+      "id": "mending_supplies",
+      "description": "Zhou Tingsu holds up a torn coat: 'Winter is coming and the children need warm clothes. If you could bring string and leather, I can mend everything.'",
+      "requires": [
+        {
+          "item": "minecraft:string",
+          "count": 8
+        },
+        {
+          "item": "minecraft:leather",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:bread",
+      "reward_count": 8
+    }
   ]
 }

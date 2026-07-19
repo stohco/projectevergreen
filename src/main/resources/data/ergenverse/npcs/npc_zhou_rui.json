@@ -94,5 +94,35 @@
       "dir": null,
       "dist": 0
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "harvest_help",
+      "description": "Zhou Rui sighs: 'The Teng family took half our wheat this season. If you can spare some from your travels, I will trade emeralds for it. We need to rebuild our stock before winter.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "market_run",
+      "description": "Zhou Rui adjusts his merchant's apron: 'I need glass bottles for the healer's medicine trade, and arrows for the village watch. Bring me both and I will pay well.'",
+      "requires": [
+        {
+          "item": "minecraft:glass_bottle",
+          "count": 4
+        },
+        {
+          "item": "minecraft:arrow",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    }
   ]
 }
