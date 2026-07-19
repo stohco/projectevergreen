@@ -1,0 +1,134 @@
+{
+  "_comment": "NPC: Merchant Liu (商贩刘). INFERRED: Tian Shui market merchant. The city's divination culture means merchants sell fortune-related items alongside normal goods.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_merchant_liu",
+  "name": "Merchant Liu",
+  "nameCn": "商贩刘",
+  "canon_id": "I-npc_tianshui_merchant_liu",
+  "type": "merchant",
+  "faction": "none",
+  "location": "tian_shui_city",
+  "cultivation": "none",
+  "personality": "shrewd, sells fortune-related trinkets alongside goods",
+  "speech": "salesman-like, mystical undertone",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A shrewd merchant",
+    "qi_condensation": "Merchant Liu, none merchant"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Tian Shui market merchant. The city's divination culture means merchants sell fortune-related items alongside normal goods.",
+  "derivation_type": "I",
+  "salt": 1294829566,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Fortune scrolls, protective talismans, iron tools, fresh bread — I sell what the people need. And what they fear they need.",
+    "Business was better before the Teng family raised taxes. Now even fate cannot predict my profits.",
+    "I heard Gao Qiming told a merchant that his ship would arrive safely. It did. That merchant now buys everything from me.",
+    "If you need paper and ink, I have the best in the city. The diviners use my supplies for their scrolls."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 10
+    },
+    {
+      "t0": 11000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "merchant_resupply",
+      "description": "Merchant Liu smiles: 'I need wheat for bread, coal for warmth, and iron for tools. The diviners say today is a good day for trade. Bring me supplies!'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    },
+    {
+      "id": "fortune_trinkets",
+      "description": "Liu leans in: 'I make fortune trinkets for the temple. Paper, ink, and glass bottles. Bring me the materials and I will pay — and give you a free reading.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 4
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 2
+        },
+        {
+          "item": "minecraft:glass_bottle",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}

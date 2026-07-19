@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Tavern Keeper Qin (酒馆老板秦). INFERRED: Tavern keeper in a divination city — people drink and talk about their fortunes, making the tavern an information hub.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_tavern_keeper",
+  "name": "Tavern Keeper Qin",
+  "nameCn": "酒馆老板秦",
+  "canon_id": "I-npc_tianshui_tavern_keeper",
+  "type": "tavern_keeper",
+  "faction": "none",
+  "location": "tian_shui_city",
+  "cultivation": "none",
+  "personality": "warm, listens more than talks, hears all rumors",
+  "speech": "friendly, knowing",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A warm tavern_keeper",
+    "qi_condensation": "Tavern Keeper Qin, none tavern_keeper"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Tavern keeper in a divination city — people drink and talk about their fortunes, making the tavern an information hub.",
+  "derivation_type": "I",
+  "salt": 1432123151,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Sit down. You look like someone with a story. In Tian Shui, everyone has a story — and everyone wants to know how it ends.",
+    "The diviners drink here after hours. When they drink, they talk. I have heard things about the governor that would make your hair stand on end.",
+    "A cultivator from the Teng family came in last week. Demanded to know his fortune. Gao Qiming refused. The man left in a fury.",
+    "If you bring me paper and ink, I can write down what I have heard. Some information is worth more than gold."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "tavern_supplies",
+      "description": "Tavern Keeper Qin smiles: 'Running low on wheat for bread and coal for the hearth. Bring supplies and I will share what the diviners said last night.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    },
+    {
+      "id": "tavern_intel",
+      "description": "Qin leans close: 'I know things. Guard rotations, merchant secrets, what the governor fears. Paper and ink to write it down. What I know is worth far more than what it costs.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 4
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    }
+  ]
+}

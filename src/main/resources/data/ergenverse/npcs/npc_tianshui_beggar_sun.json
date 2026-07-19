@@ -1,0 +1,122 @@
+{
+  "_comment": "NPC: Beggar Sun (乞丐孙). INFERRED: Tian Shui's mortal quarter beggar. In a city of diviners, even beggars claim mystical insight.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_beggar_sun",
+  "name": "Beggar Sun",
+  "nameCn": "乞丐孙",
+  "canon_id": "I-npc_tianshui_beggar_sun",
+  "type": "mortal",
+  "faction": "none",
+  "location": "tian_shui_city",
+  "cultivation": "none",
+  "personality": "cunning, claims to see fate, actually just observant",
+  "speech": "rambling, pseudo-mystical",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cunning mortal",
+    "qi_condensation": "Beggar Sun, none mortal"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Tian Shui's mortal quarter beggar. In a city of diviners, even beggars claim mystical insight.",
+  "derivation_type": "I",
+  "salt": 1487695942,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Spare a coin? Or spare a moment? The stars told me you would come. They tell me many things. Most of them involve food.",
+    "Gao Qiming? He is the real thing. Me? I just watch people. You learn more from watching than from any crystal ball.",
+    "The temple priests say the smuggler tunnels are cursed. I say they are just dark. But cursed sounds better for donations.",
+    "I know every crack in this city. Every hidden door. Not from divination — from hunger. Hungry people go everywhere."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 3000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 8
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "beggar_food",
+      "description": "Beggar Sun grins: 'The stars say you will feed me. Or maybe that is just my stomach talking. Bring bread and I will tell you where the night watch is weakest.'",
+      "requires": [
+        {
+          "item": "minecraft:bread",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 2
+    },
+    {
+      "id": "beggar_info",
+      "description": "Sun whispers: 'Coal for warmth, bread for my friends. In return — I saw the governor's men carrying something into the smuggler tunnels at midnight. Heavy crates. They were frightened.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        },
+        {
+          "item": "minecraft:bread",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    }
+  ]
+}

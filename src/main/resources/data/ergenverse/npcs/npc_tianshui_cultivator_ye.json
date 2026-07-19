@@ -1,0 +1,130 @@
+{
+  "_comment": "NPC: Cultivator Ye (修士叶). INFERRED: Tian Shui cultivator who serves the government but is privately skeptical of the city's obsession with fortune-telling.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_cultivator_ye",
+  "name": "Cultivator Ye",
+  "nameCn": "修士叶",
+  "canon_id": "I-npc_tianshui_cultivator_ye",
+  "type": "cultivator",
+  "faction": "tian_shui_government",
+  "location": "tian_shui_city",
+  "cultivation": "Foundation Establishment (early)",
+  "personality": "skeptical of divination, relies on cultivation",
+  "speech": "dry, slightly dismissive",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A skeptical of divination cultivator",
+    "qi_condensation": "Cultivator Ye, tian_shui_government cultivator"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Tian Shui cultivator who serves the government but is privately skeptical of the city's obsession with fortune-telling.",
+  "derivation_type": "I",
+  "salt": 32284897,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The cultivator quarter is for those who rely on their own power, not the stars. I have no patience for fortune-telling.",
+    "The governor consults Gao Qiming for every decision. Every. Single. One. It is exhausting. Cultivation requires action, not divination.",
+    "I heard Heng Yue Sect has a promising disciple. Wang something. Perhaps he will visit Tian Shui someday.",
+    "If you want to train, bring me cultivation materials. Coal, iron, emeralds for purchasing actual spirit stones. I will share what I know."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 12
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "cultivation_aid",
+      "description": "Cultivator Ye scowls: 'My breakthrough requires resources. Iron, coal, emeralds. I will not consult a diviner — I will make my own fate. Help me and I share a technique scroll.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 10
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 16
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 2
+    },
+    {
+      "id": "patrol_duty",
+      "description": "Ye sighs: 'The governor wants districts patrolled. The diviners said danger approaches. Bring arrows and coal for signal fires.'",
+      "requires": [
+        {
+          "item": "minecraft:arrow",
+          "count": 24
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ]
+}

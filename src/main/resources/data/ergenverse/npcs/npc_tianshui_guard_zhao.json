@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Guard Zhao (守卫赵). INFERRED: City gate guard. Tian Shui people believe in fate/omens, reflected in guard behavior.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_guard_zhao",
+  "name": "Guard Zhao",
+  "nameCn": "守卫赵",
+  "canon_id": "I-npc_tianshui_guard_zhao",
+  "type": "guard",
+  "faction": "tian_shui_government",
+  "location": "tian_shui_city",
+  "cultivation": "late Qi Condensation",
+  "personality": "alert, superstitious, respects omens",
+  "speech": "formal, cautious",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A alert guard",
+    "qi_condensation": "Guard Zhao, tian_shui_government guard"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: City gate guard. Tian Shui people believe in fate/omens, reflected in guard behavior.",
+  "derivation_type": "I",
+  "salt": 1573709429,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You approach Tian Shui City. The diviners say today is an auspicious day for travel — or perhaps not. Let me see your face before you enter.",
+    "Gao Qiming read my fortune once. Said I would live to see three hundred moons. I count every one.",
+    "The governor asks that all armed visitors register at the cultivator quarter. Fate favors the prepared.",
+    "A strange omen last night — the temple bells rang without wind. The priests are concerned."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 12
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "gate_supplies",
+      "description": "Guard Zhao checks his spear: 'The gate watch needs leather for armor and arrows for the towers. Bring me supplies and I will pay from the city fund.'",
+      "requires": [
+        {
+          "item": "minecraft:leather",
+          "count": 8
+        },
+        {
+          "item": "minecraft:arrow",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    },
+    {
+      "id": "omen_report",
+      "description": "Guard Zhao lowers his voice: 'Strange occurrences at night. I need torches and coal to light the watch route. If you see anything unusual, report it.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 16
+        },
+        {
+          "item": "minecraft:torch",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    }
+  ]
+}

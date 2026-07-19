@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Black Market Hei (黑市黑). INFERRED: Smuggler who cynically exploits the city's fortune-telling culture. Sells 'fate-changing' items at premium prices.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_smuggler_hei",
+  "name": "Black Market Hei",
+  "nameCn": "黑市黑",
+  "canon_id": "I-npc_tianshui_smuggler_hei",
+  "type": "rogue",
+  "faction": "none",
+  "location": "tian_shui_city",
+  "cultivation": "mid Qi Condensation",
+  "personality": "paranoid, cynical, mocks the divination culture",
+  "speech": "whispered, sarcastic",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A paranoid rogue",
+    "qi_condensation": "Black Market Hei, none rogue"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Smuggler who cynically exploits the city's fortune-telling culture. Sells 'fate-changing' items at premium prices.",
+  "derivation_type": "I",
+  "salt": 1050101738,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You found the tunnels. The diviners say there are no tunnels. Funny how heaven's will aligns with the governor's convenience.",
+    "I sell things the market cannot. Rare materials, forbidden knowledge. The diviners call it 'interfering with fate.' I call it business.",
+    "Gao Qiming is the only real seer in this city. Everyone else is selling snake oil. Including me. But at least I am honest about it.",
+    "Stay off the main tunnel past midnight. That is when the governor's cultivators make their deposits. Fate will not save you if they catch you."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 4000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 4000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 14000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 6
+    },
+    {
+      "t0": 14000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "smuggled_goods",
+      "description": "Hei grins: 'Gold and emeralds. I have buyers who pay premium for fate-altering materials. Bring me goods and I will give you a cut — and a map of places the diviners cannot see.'",
+      "requires": [
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 6
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 12
+    },
+    {
+      "id": "tunnel_expansion",
+      "description": "Hei whispers: 'Extending toward the warehouse. Iron and cobblestone. Discreetly. The governor's guards cannot know — fate has not foretold this.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 8
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 32
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Temple Priest Feng (庙祝冯). INFERRED: Tian Shui temple priest. The city is known for divination — the temple is its spiritual heart, more important than in other cities.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_temple_feng",
+  "name": "Temple Priest Feng",
+  "nameCn": "庙祝冯",
+  "canon_id": "I-npc_tianshui_temple_feng",
+  "type": "priest",
+  "faction": "tian_shui_temple",
+  "location": "tian_shui_city",
+  "cultivation": "none",
+  "personality": "devout, genuinely believes in fate, provides divination services",
+  "speech": "measured, prophetic",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A devout priest",
+    "qi_condensation": "Temple Priest Feng, tian_shui_temple priest"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Tian Shui temple priest. The city is known for divination — the temple is its spiritual heart, more important than in other cities.",
+  "derivation_type": "I",
+  "salt": 1788461388,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Welcome to the Temple of Heavenly Water. The diviners say your arrival was written in the stars long ago. Come — let me read your fortune.",
+    "Gao Qiming is our most gifted diviner, but he keeps to himself. If you seek a reading, I can perform a lesser one for a small donation.",
+    "The temple records every fortune told. Centuries of fate, catalogued in these books. The patterns... they repeat.",
+    "Bring me coal for the incense braziers and paper for the fortune scrolls. The ancestors must not be forgotten."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 5000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 5000,
+      "t1": 6000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 6000,
+      "t1": 9000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 9000,
+      "t1": 10000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "temple_incense",
+      "description": "Priest Feng bows: 'The incense braziers need coal. The fortune scrolls need paper. Heaven speaks through smoke and ink. Bring me the materials.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        },
+        {
+          "item": "minecraft:paper",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "temple_repair",
+      "description": "Feng sighs: 'The temple roof leaks. Rain damages the fortune archives. Bring planks and glass and I will reward you — and read your future.'",
+      "requires": [
+        {
+          "item": "minecraft:oak_planks",
+          "count": 12
+        },
+        {
+          "item": "minecraft:glass",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 2
+    }
+  ]
+}

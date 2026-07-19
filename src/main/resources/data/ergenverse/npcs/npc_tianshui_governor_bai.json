@@ -1,0 +1,122 @@
+{
+  "_comment": "NPC: Governor Bai (白太守). INFERRED: Tian Shui's governor. The city's divination culture means the governor consults fortune tellers like Gao Qiming for political decisions.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_governor_bai",
+  "name": "Governor Bai",
+  "nameCn": "白太守",
+  "canon_id": "I-npc_tianshui_governor_bai",
+  "type": "governor",
+  "faction": "tian_shui_government",
+  "location": "tian_shui_city",
+  "cultivation": "Foundation Establishment (early)",
+  "personality": "calculating, believes in fate, delegates to diviners",
+  "speech": "measured, oblique",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A calculating governor",
+    "qi_condensation": "Governor Bai, tian_shui_government governor"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Tian Shui's governor. The city's divination culture means the governor consults fortune tellers like Gao Qiming for political decisions.",
+  "derivation_type": "I",
+  "salt": 411801154,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Welcome to Tian Shui City, where heaven and water meet. I am Governor Bai. I trust your arrival was foretold.",
+    "Gao Qiming predicted a cultivator of unusual destiny would visit this month. I wonder if that is you.",
+    "The diviners advise caution in our dealings with the Teng family. Heaven's will is not always clear.",
+    "The governor mansion's treasury funds the temple district. Faith and governance are intertwined here."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 12
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "tribute_collection",
+      "description": "Governor Bai strokes his beard: 'The seasonal tribute from the outer villages is due. Bring me wheat as proof of collection. The diviners say a bountiful harvest this year.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    },
+    {
+      "id": "temple_donation",
+      "description": "Governor Bai nods: 'The temple requires emeralds for the fortune-telling ceremony. Bring me gold and I will convert it to the temple's offering. Heaven rewards generosity.'",
+      "requires": [
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 3
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    }
+  ]
+}

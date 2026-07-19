@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Dock Master Zhou (码头周). INFERRED: Tian Shui dock master. In a city obsessed with fate, he is the pragmatist who actually moves the goods.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_dock_zhou",
+  "name": "Dock Master Zhou",
+  "nameCn": "码头周",
+  "canon_id": "I-npc_tianshui_dock_zhou",
+  "type": "laborer",
+  "faction": "none",
+  "location": "tian_shui_city",
+  "cultivation": "none",
+  "personality": "gruff, practical, dismissive of fortune-telling",
+  "speech": "direct, no-nonsense",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A gruff laborer",
+    "qi_condensation": "Dock Master Zhou, none laborer"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Tian Shui dock master. In a city obsessed with fate, he is the pragmatist who actually moves the goods.",
+  "derivation_type": "I",
+  "salt": 827372369,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Another pair of hands? Good. The barge will not unload itself, no matter what the diviners say about favorable winds.",
+    "This city talks too much about fate and not enough about cargo manifests. Three crates are missing again.",
+    "A merchant from Heng Yue Sect came through last month. Bought a fortune reading and ten crates of iron. Make of that what you will.",
+    "The warehouse is that way. Tell Manager Feng that Zhou sent you. He might give you better rates."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 12
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 11000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "barge_unloading",
+      "description": "Dock Master Zhou wipes his brow: 'Barge needs unloading. Bring planks for pallets and sticks for bracing. Heavy work, fair pay. No fortune-telling required.'",
+      "requires": [
+        {
+          "item": "minecraft:oak_planks",
+          "count": 12
+        },
+        {
+          "item": "minecraft:stick",
+          "count": 24
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "dock_supplies",
+      "description": "Zhou points at the moorings: 'Storm season. Need coal for lanterns and iron for reinforcements. The diviners say storms are coming. For once, I believe them.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 12
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 6
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}

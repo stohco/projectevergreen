@@ -1,0 +1,133 @@
+{
+  "_comment": "NPC: Warehouse Manager Feng (库管冯). INFERRED: Warehouse manager in a city where even logistics is influenced by fortune-telling.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_warehouse_feng",
+  "name": "Warehouse Manager Feng",
+  "nameCn": "库管冯",
+  "canon_id": "I-npc_tianshui_warehouse_feng",
+  "type": "official",
+  "faction": "tian_shui_government",
+  "location": "tian_shui_city",
+  "cultivation": "none",
+  "personality": "meticulous, anxious, consults diviners for logistics decisions",
+  "speech": "clipped, slightly nervous",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A meticulous official",
+    "qi_condensation": "Warehouse Manager Feng, tian_shui_government official"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Warehouse manager in a city where even logistics is influenced by fortune-telling.",
+  "derivation_type": "I",
+  "salt": 596233246,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You are not authorized in the warehouse. All goods are property of Tian Shui City. The diviners said today would bring unexpected visitors — I suppose that is you.",
+    "The dock shipments were short again. I asked Gao Qiming if the missing goods were stolen or lost at sea. He just smiled.",
+    "We need more storage. The tribute keeps growing but the warehouse walls stay the same. Some things even fate cannot fix.",
+    "Bring me paper and ink for the inventory records. The old ones were damaged. Water damage. The diviners said it was a bad omen."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 3000,
+      "t1": 5000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 5000,
+      "t1": 6000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 6000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 12
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 6
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "inventory_audit",
+      "description": "Manager Feng checks his ledger: 'The diviners say the records must be rewritten. Bad energy clings to the old ones. Bring me paper and ink.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 8
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "storage_repair",
+      "description": "Feng wrings his hands: 'Moisture ruined storage bins. The diviners warned us. Planks and cobblestone for repairs. Heaven help us if the tribute is damaged.'",
+      "requires": [
+        {
+          "item": "minecraft:oak_planks",
+          "count": 16
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 24
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ]
+}

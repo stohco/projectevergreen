@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Granny Chen (陈婆婆). INFERRED: Elderly mortal who remembers Tian Shui before it became obsessed with divination. Provides historical perspective.. Derivation: I = INFERRED.",
+  "npc_id": "npc_tianshui_mortal_granny",
+  "name": "Granny Chen",
+  "nameCn": "陈婆婆",
+  "canon_id": "I-npc_tianshui_mortal_granny",
+  "type": "elder",
+  "faction": "none",
+  "location": "tian_shui_city",
+  "cultivation": "none",
+  "personality": "wise, remembers old Tian Shui, dismissive of new fortune-fad",
+  "speech": "slow, nostalgic",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A wise elder",
+    "qi_condensation": "Granny Chen, none elder"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Elderly mortal who remembers Tian Shui before it became obsessed with divination. Provides historical perspective.",
+  "derivation_type": "I",
+  "salt": 1044897271,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Young one. Sit. You look tired. In my day, people did not need diviners to tell them when to eat or sleep. They just ate and slept.",
+    "Tian Shui was a simple fishing city before the temple grew powerful. Now every decision requires a fortune. It is exhausting.",
+    "The Teng family changed everything. Before them, we governed ourselves. Now the governor asks crystal balls for permission to breathe.",
+    "If you have bread to share, I will tell you about the old days. The days when fate was something you made, not something you read."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 3000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 8
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "elder_food",
+      "description": "Granny Chen pats your hand: 'The mortal quarter needs food. The governor takes too much in tax. Bring bread and wheat and I will see it distributed. No fortune required — just kindness.'",
+      "requires": [
+        {
+          "item": "minecraft:bread",
+          "count": 12
+        },
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "elder_shelter",
+      "description": "Granny Chen shakes her head: 'Winter comes. The shelters need glass for windows, planks for walls. In the old days, the community built them together. Now we need strangers' help.'",
+      "requires": [
+        {
+          "item": "minecraft:glass",
+          "count": 8
+        },
+        {
+          "item": "minecraft:oak_planks",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    }
+  ]
+}
