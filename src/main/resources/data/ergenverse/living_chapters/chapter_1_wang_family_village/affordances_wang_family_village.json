@@ -1,0 +1,260 @@
+{
+  "_comment": "Populated affordances for key Wang Family Village entities. Per Article XXVIII, each entity exposes verbs the UI and AI discover. This file covers the entities a player is most likely to interact with in Chapter 1. Remaining village entities (other NPCs, minor items) will be populated in subsequent cycles following the same schema.",
+  "_schema": "affordance",
+  "_schema_version": 1,
+  "_article": "XXVIII",
+  "location": "wang_family_village",
+  "entities": [
+    {
+      "entity_id": "npc_wang_ping",
+      "entity_type": "npc",
+      "entity_name": "Wang Ping (Wang Lin's brother)",
+      "affordances": [
+        {
+          "verb": "talk",
+          "label": "Talk",
+          "description": "Speak with Wang Ping. He may share what's on his mind — his desires fire conversationally, not on demand.",
+          "perception_required": null,
+          "conditions": [],
+          "initiates_engine": null,
+          "cost": null,
+          "outcome": "Wang Ping says a context-appropriate line based on his current desire_state and the memory ledger.",
+          "outcome_variants": [
+            "If winter approaching and firewood low: asks for oak logs (request engine).",
+            "If dog recently died: goes quiet, then '...Used to have one.' (rumor/grief).",
+            "If Heng Yue recruiter present: asks you to pass the test (favor engine).",
+            "Default: invites fishing at the south bend (offer engine)."
+          ],
+          "memory_tag": "wang_ping_conversation"
+        },
+        {
+          "verb": "fish_with",
+          "label": "Go fishing with Wang Ping",
+          "description": "Accompany Wang Ping and Da Niu to the south bend to fish. If a wolf attack is staged, you face it together.",
+          "perception_required": null,
+          "conditions": ["time_of_day:morning", "weather:!storm", "nearby:npc_da_niu<20"],
+          "initiates_engine": "offer",
+          "cost": {"time": 2000},
+          "outcome": "Travel to south bend. Catch cod. If wolves spawn, the dog (if alive) defends; if the dog dies here, the canonical memory event fires.",
+          "outcome_variants": ["Peaceful trip: +morale, +cod, memory: fishing_trip.", "Wolf attack: dog may die (triggers staged_005 memory), Wang Ping traumatized."],
+          "memory_tag": "fishing_trip_south_bend"
+        },
+        {
+          "verb": "give_firewood",
+          "label": "Give oak logs for firewood",
+          "description": "Fulfill Wang Ping's firewood request. Builds favor; prepares the family for winter.",
+          "perception_required": null,
+          "conditions": ["item_in_inventory:oak_log>=8", "wang_ping.desire:firewood_request_active"],
+          "initiates_engine": "request",
+          "cost": {"item": "oak_log", "count": 8},
+          "outcome": "Wang Ping gives coal (4). Favor +2. winter_preparedness +1. Memory: firewood_delivered.",
+          "outcome_variants": [],
+          "memory_tag": "firewood_delivered"
+        },
+        {
+          "verb": "comfort",
+          "label": "Comfort Wang Ping (after the dog's death)",
+          "description": "Sit with Wang Ping after the dog dies. He won't say much. Neither do you. That is enough.",
+          "perception_required": null,
+          "conditions": ["memory_tag:dog_died_wolf_attack<7d", "nearby:npc_wang_ping<3"],
+          "initiates_engine": "favor",
+          "cost": {"time": 1000},
+          "outcome": "Wang Ping's grief easing. Favor +1. Memory: comforted_wang_ping. His grief_dog_death desire cools sooner.",
+          "outcome_variants": [],
+          "memory_tag": "comforted_wang_ping"
+        }
+      ]
+    },
+    {
+      "entity_id": "species:wang_family_hunting_dog",
+      "entity_type": "beast",
+      "entity_name": "Wang Family Hunting Dog (Old Chen's dog)",
+      "affordances": [
+        {
+          "verb": "pet",
+          "label": "Pet the dog",
+          "description": "The dog wags its tail. A small thing.",
+          "perception_required": null,
+          "conditions": ["dog.alive=true"],
+          "initiates_engine": null,
+          "cost": null,
+          "outcome": "+morale (tiny). The dog remembers you (affects its behavior if you return).",
+          "outcome_variants": [],
+          "memory_tag": null
+        },
+        {
+          "verb": "feed",
+          "label": "Feed the dog",
+          "description": "Give the dog food. It follows you for a while after.",
+          "perception_required": null,
+          "conditions": ["dog.alive=true", "item_in_inventory:cod OR chicken OR beef"],
+          "initiates_engine": "gift",
+          "cost": {"item": "any_meat", "count": 1},
+          "outcome": "The dog follows you for 6000 ticks. If a wolf attacks while the dog follows you, it defends you — and may die in your defense instead of Old Chen's.",
+          "outcome_variants": ["If the dog dies defending you: the memory event attributes the death to your presence, not Old Chen's. Different witnesses, different retelling, different grief."],
+          "memory_tag": "fed_the_dog"
+        },
+        {
+          "verb": "command_hunt",
+          "label": "Command the dog to hunt",
+          "description": "Send the dog after a spirit rabbit or fox. The dog may bring back prey — or may encounter wolves.",
+          "perception_required": "qi_condensation",
+          "conditions": ["dog.alive=true", "nearby:spirit_rabbit OR spirit_fox<30"],
+          "initiates_engine": null,
+          "cost": null,
+          "outcome": "Dog hunts. 70% brings back prey. 20% nothing. 10% encounters wolves — may trigger the staged wolf attack if the dog is at the south bend.",
+          "outcome_variants": [],
+          "memory_tag": "dog_hunt"
+        }
+      ]
+    },
+    {
+      "entity_id": "structure:wang_lin_childhood_home",
+      "entity_type": "structure",
+      "entity_name": "Wang Lin's Childhood Home",
+      "affordances": [
+        {
+          "verb": "enter",
+          "label": "Enter the childhood home",
+          "description": "Step inside the home where Wang Lin grew up. Modest. A wooden table, a straw mat, a faded family mark on the wall.",
+          "perception_required": null,
+          "conditions": [],
+          "initiates_engine": null,
+          "cost": null,
+          "outcome": "You see the interior. If it is night and you are quiet, you may notice a faint spiritual fluctuation — the residue of the Heaven Defying Bead's proximity, though you cannot identify it without higher perception.",
+          "outcome_variants": ["Mortal: 'A poor family's home.'", "Qi Condensation: 'Something feels... off. Like a memory of power.'", "Foundation Establishment: 'There is a spiritual residue here. Old. Faint. Coming from the ancestral hall direction.'"],
+          "memory_tag": "visited_childhood_home"
+        },
+        {
+          "verb": "examine_family_mark",
+          "label": "Examine the family mark on the wall",
+          "description": "Study the faded Wang family mark. It is older than it looks.",
+          "perception_required": "qi_condensation",
+          "conditions": ["location:inside_childhood_home"],
+          "initiates_engine": null,
+          "cost": null,
+          "outcome": "You realize the mark is not merely decorative — it is a faint, degraded formation fragment. The Wang family was once more than farmers. Knowledge +wang_family_history_fragment.",
+          "outcome_variants": [],
+          "memory_tag": "examined_family_mark"
+        }
+      ]
+    },
+    {
+      "entity_id": "location:ancestral_hall",
+      "entity_type": "location",
+      "entity_name": "Wang Family Village Ancestral Hall",
+      "affordances": [
+        {
+          "verb": "enter",
+          "label": "Enter the ancestral hall",
+          "description": "The hall holds the Wang family genealogy and ancestral tablets. Quiet. Old. The air is thicker here.",
+          "perception_required": null,
+          "conditions": [],
+          "initiates_engine": null,
+          "cost": null,
+          "outcome": "You enter. If perception >= foundation_establishment, you sense the strange jade among the records (seed_006 memory). Otherwise, you see only old scrolls.",
+          "outcome_variants": [],
+          "memory_tag": "visited_ancestral_hall"
+        },
+        {
+          "verb": "search_records",
+          "label": "Search the genealogy records",
+          "description": "Comb through the Wang family records. Time-consuming. May reveal history.",
+          "perception_required": "qi_condensation",
+          "conditions": ["location:inside_ancestral_hall", "time:2000"],
+          "initiates_engine": null,
+          "cost": {"time": 4000},
+          "outcome": "You find references to a cultivator ancestor three generations back — confirming the family mark fragment. You may (30%) notice the strange jade without the elder's gift.",
+          "outcome_variants": ["If you notice the jade: you may take it — but the village elder will know, and favor drops. Stealing has consequences.", "If Wang Tianshui is present and favor>=3: he may explain the jade and gift it freely."],
+          "memory_tag": "searched_ancestral_records"
+        },
+        {
+          "verb": "take_strange_jade",
+          "label": "Take the strange jade (steal)",
+          "description": "Take the jade without permission. It is theft. The village will know.",
+          "perception_required": "foundation_establishment",
+          "conditions": ["jade.present=true", "NOT npc_wang_tianshui.gifted_jade"],
+          "initiates_engine": null,
+          "cost": {"reputation": "wang_family_village -5", "favor": "npc_wang_tianshui -10"},
+          "outcome": "You obtain the Heaven Defying Bead (or fragment) — but as a thief, not a recipient. The village elder's trust is broken. Memory: stole_the_jade. Future mentorship from Wang Lin may be impossible — he judges motive (Article XXXI.2).",
+          "outcome_variants": ["If Wang Tianshui witnesses: confrontation. May escalate to violence (he is Qi Condensation).", "If unobserved: the theft is discovered days later when the jade's absence is noted. Rumor spreads."],
+          "memory_tag": "stole_the_jade"
+        },
+        {
+          "verb": "receive_strange_jade",
+          "label": "Receive the strange jade (gift)",
+          "description": "Wang Tianshui gifts you the jade. No explanation. No quest. Just a gift.",
+          "perception_required": null,
+          "conditions": ["jade.present=true", "favor:npc_wang_tianshui>=5", "npc_wang_tianshui.desire:gift_strange_jade_active"],
+          "initiates_engine": "gift",
+          "cost": null,
+          "outcome": "You receive the jade. Wang Tianshui says nothing useful about it. The plot begins — but quietly. Memory: received_the_jade. Wang Lin (when encountered) may sense the bead on you and judge you worthy of mentorship — or unworthy, if you stole it.",
+          "outcome_variants": [],
+          "memory_tag": "received_the_jade"
+        }
+      ]
+    },
+    {
+      "entity_id": "structure:south_bend",
+      "entity_type": "location",
+      "entity_name": "The South Bend (fishing spot, wolf territory)",
+      "affordances": [
+        {
+          "verb": "fish",
+          "label": "Fish at the south bend",
+          "description": "Cast a line. The fishing is good here — better than the north bank. But it is far from the village, and wolves hunt these woods.",
+          "perception_required": null,
+          "conditions": ["item_in_hand:fishing_rod OR item_in_inventory:string"],
+          "initiates_engine": null,
+          "cost": {"time": 2000},
+          "outcome": "Catch cod (1-3). 5% chance (raised to 25% at night) of a wolf encounter. If the dog is with you, it may die defending — the canonical memory event.",
+          "outcome_variants": ["After dog_died_wolf_attack memory + 7 days: Old Chen's grief makes the bend feel heavier. No mechanical change, but NPCs avoid it."],
+          "memory_tag": "fished_south_bend"
+        },
+        {
+          "verb": "investigate_wolf_tracks",
+          "label": "Investigate the wolf tracks",
+          "description": "You notice wolf tracks in the mud. Several. Recent.",
+          "perception_required": "qi_condensation",
+          "conditions": ["nearby:spirit_wolf_pack<50", "weather:!rain"],
+          "initiates_engine": null,
+          "cost": null,
+          "outcome": "Knowledge +south_bend_wolf_activity. You can warn the village (rumor engine) — if you do, the dog's death may be prevented. If you don't, it likely isn't.",
+          "outcome_variants": [],
+          "memory_tag": "investigated_wolf_tracks"
+        }
+      ]
+    },
+    {
+      "entity_id": "block:irrigation_ditch",
+      "entity_type": "structure",
+      "entity_name": "Village Irrigation Ditch",
+      "affordances": [
+        {
+          "verb": "inspect",
+          "label": "Inspect the irrigation ditch",
+          "description": "The ditch waters the village fields. It is cracked in places. The crops depend on it.",
+          "perception_required": null,
+          "conditions": [],
+          "initiates_engine": null,
+          "cost": null,
+          "outcome": "You see the state of the ditch. If damaged (world_state:irrigation_damaged=true), you may repair it. Wang Ping or Wang Tianshui may approach to help (their offer_labor / request_irrigation_repair desires).",
+          "outcome_variants": [],
+          "memory_tag": null
+        },
+        {
+          "verb": "repair",
+          "label": "Repair the irrigation ditch",
+          "description": "Fix the cracks. Hard work. The village depends on it. If you do, Wang Tianshui owes you a debt.",
+          "perception_required": null,
+          "conditions": ["world_state:irrigation_damaged=true", "item_in_inventory:cobblestone>=16 OR item_in_inventory:clay>=8"],
+          "initiates_engine": "request",
+          "cost": {"item": "cobblestone", "count": 16, "time": 6000},
+          "outcome": "Irrigation repaired. Village crop yield +1 (next harvest). Wang Tianshui favor +3, debt +1 (he may call it in later). Memory: repaired_irrigation. If Wang Ping's offer_labor fires, he joins and the time cost halves.",
+          "outcome_variants": [],
+          "memory_tag": "repaired_irrigation"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "_schema": "memory_ledger",
+  "_schema_version": 1,
+  "_article": "XXXI.5",
+  "_description": "Persistent record of witnessed events at a location. NPCs who witnessed an event can remember, forget, misremember, or retell it. This is what makes the world remember (Article XXXI.5). The existing WorldHistory system writes to this ledger; KnowledgeEngine lets NPCs retell entries they witnessed. This is DATA, not a Java class (Article XXVI).",
+  "_canonical_test": "Week 1 — Old Chen owns a dog. Week 3 — wolf attack — dog dies. Week 5 — Old Chen no longer mentions the dog; says 'Used to have one.' Months later — a child tells the story. When this sequence occurs WITHOUT developer scripting the specific beat, the world has memory. This ledger is the data structure that makes it possible.",
+  "_design_notes": {
+    "decay_model": "Every memory has a memory_decay block. 'linear' reduces recall probability by a fixed amount per tick. 'exponential' halves recall every half_life_ticks. 'none' means the memory is permanent (canonical events). When recall probability drops below forget_threshold, the NPC no longer mentions it — but it is not deleted; a trigger (a question, a similar event) can resurrect it.",
+    "distortion": "Each retelling may distort the memory. The distortion_over_time field describes how. A dog becomes 'a hound.' A wolf becomes 'a demon wolf.' A death becomes 'a sacrifice.' This is how rumors and legends form — and how the player, arriving late, hears a changed version of the truth.",
+    "witnesses_vs_participants": "Witnesses perceived the event (saw, heard, smelled). Participants were directly involved. A witness can retell; a participant can retell with more detail. A non-witness can only retell if they heard it from a witness — and then it is a rumor, not a memory.",
+    "retelling_hooks": "Each event has a retelling block listing who can retell it and lines they might use. KnowledgeEngine selects a line based on the reteller's relationship to the event, the time since, and the distortion level. A child retelling months later uses the most distorted line.",
+    "consequences": "Memory entries can carry consequences — world-state changes that persist. The dog's death might reduce Old Chen's morale permanently, shift his daily_schedule (no more walks to the south bend), and seed a rumor that the south bend is dangerous."
+  },
+  "schema": {
+    "location": "string — the location this ledger tracks",
+    "events": [
+      {
+        "event_id": "string — unique within the ledger, e.g. 'dog_died_wolf_attack_001'",
+        "event_type": "enum — birth | death | raid | cultivation_breakthrough | disappearance | arrival | departure | betrayal | gift | lesson | discovery | loss | marriage | scandal | miracle | catastrophe | ordinary_day",
+        "timestamp_tick": "int — the tick the event occurred (0 = pre-simulation / seed)",
+        "timestamp_display": "string — human-readable, e.g. 'Year 1, Autumn, Day 14'",
+        "description": "string — what happened, in plain language, as a participant would describe it",
+        "location_specific": "string — sub-location, e.g. 'south_bend', 'childhood_home'",
+        "witnesses": ["string — npc_ids who perceived the event"],
+        "participants": ["string — npc_ids directly involved"],
+        "significance": "int 1-10 — 1=ordinary, 5=notable, 10=canonical. High significance resists decay.",
+        "memory_decay": {
+          "model": "enum — linear | exponential | none",
+          "half_life_ticks": "int — for exponential; ticks for recall probability to halve",
+          "forget_threshold": "float 0-1 — below this, the NPC no longer mentions it unprompted",
+          "permanent": "bool — if true, never forgets (canonical events)"
+        },
+        "retelling": {
+          "who_can_retell": ["string — npc_ids, or 'any_witness', or 'any_child_after_N_days'"],
+          "retell_lines": [
+            "string — a line, used based on time since event and reteller"
+          ],
+          "distortion_over_time": "string — how the story changes. e.g. 'dog -> hound -> demon hound after 30 days; wolf -> spirit wolf -> demon wolf after 60 days'",
+          "trigger_topics": ["string — conversation topics that surface this memory, e.g. 'dog', 'south_bend', 'wolves', 'hunting'"]
+        },
+        "consequences": ["string — world-state changes. e.g. 'old_chen.morale-=3 (permanent)', 'old_chen.schedule: no south_bend walks', 'south_bend.danger_reputation+=2', 'rumor_seed: south_bend_haunted'"],
+        "tags": ["string — searchable tags for the engine"]
+      }
+    ],
+    "rumor_seeds": [
+      {
+        "rumor_id": "string",
+        "origin_event_id": "string — the event this rumor distorted from",
+        "current_form": "string — the current distorted version in circulation",
+        "believers": ["string — npc_ids who believe this version"],
+        "decays_to": "string — what the rumor becomes if unchecked, or 'fades' if it dies"
+      }
+    ]
+  }
+}

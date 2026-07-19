@@ -1,0 +1,200 @@
+{
+  "_comment": "Seed memory ledger for Wang Family Village. These are pre-simulation events — things that happened before the player arrives, or that are staged to occur. Each entry is a memory the world can carry forward. The canonical Article XXXI.5 test (dog/wolf attack) is included as a staged future event so the simulation can fire it organically when wolves spawn near the south bend.",
+  "_schema": "memory_ledger",
+  "_schema_version": 1,
+  "_article": "XXXI.5",
+  "location": "wang_family_village",
+  "events": [
+    {
+      "event_id": "seed_001_teng_family_established_tax",
+      "event_type": "ordinary_day",
+      "timestamp_tick": 0,
+      "timestamp_display": "Years before the player arrives",
+      "description": "The Teng family established a tax arrangement with Wang Family Village — half the autumn rice harvest, collected by armed men. The village has resented this quietly for as long as anyone can remember.",
+      "location_specific": "governor_mansion",
+      "witnesses": ["npc_wang_tianshui", "npc_wang_tianshan", "npc_zhang_tian"],
+      "participants": ["npc_wang_tianshui"],
+      "significance": 4,
+      "memory_decay": {
+        "model": "none",
+        "half_life_ticks": 0,
+        "forget_threshold": 0.0,
+        "permanent": true
+      },
+      "retelling": {
+        "who_can_retell": ["npc_wang_tianshui", "npc_wang_tianshan", "npc_zhang_tian", "any_witness"],
+        "retell_lines": [
+          "The Teng family has taken our rice since before I was grown. We pay. What else can we do?",
+          "Half the harvest. Every autumn. Armed men at the gate. You learn to keep your head down.",
+          "My father paid them. His father paid them. I pay them. That is how it is."
+        ],
+        "distortion_over_time": "Stable — this is a fact of village life, not a story. Retellings do not distort.",
+        "trigger_topics": ["teng_family", "tax", "rice", "autumn", "oppression"]
+      },
+      "consequences": ["village.resentment_teng_family=baseline", "village.economy.rice_retention=0.5", "wang_tianshui.trust_outsiders-=1"],
+      "tags": ["history", "teng_family", "economy", "oppression", "permanent"]
+    },
+    {
+      "event_id": "seed_002_wang_tianshui_cultivation_choice",
+      "event_type": "cultivation_breakthrough",
+      "timestamp_tick": 0,
+      "timestamp_display": "Twenty years before the player arrives",
+      "description": "Wang Tianshui, the village head, reached Qi Condensation as a young man — the only cultivator the village has produced in three generations. He chose to stay and protect the village rather than seek a sect. The village respects him; some quietly think he wasted his talent.",
+      "location_specific": "ancestral_hall",
+      "witnesses": ["npc_wang_tianshan", "npc_zhang_tian", "npc_zhou_tingsu"],
+      "participants": ["npc_wang_tianshui"],
+      "significance": 6,
+      "memory_decay": {
+        "model": "none",
+        "half_life_ticks": 0,
+        "forget_threshold": 0.0,
+        "permanent": true
+      },
+      "retelling": {
+        "who_can_retell": ["npc_wang_tianshui (reluctantly)", "npc_wang_tianshan", "npc_zhang_tian"],
+        "retell_lines": [
+          "I could have gone to a sect. I chose to stay. The village needed me. I do not regret it. ...I do not regret it.",
+          "Tianshui was the talented one. Could have been somebody. Stayed for us. Don't waste your talent the way he did, boy.",
+          "The village head cultivates? Hah. Qi Condensation. Twenty years and never broke through again. He's a farmer who can light a candle with his hand."
+        ],
+        "distortion_over_time": "Stable in fact, varies in judgment — some retellings admire, others pity, others scorn. The judgment depends on the reteller's relationship to ambition.",
+        "trigger_topics": ["cultivation", "talent", "duty", "regret", "wang_tianshui"]
+      },
+      "consequences": ["wang_tianshui.cultivation=qi_condensation", "wang_tianshui.morale_baseline=6 (quietly conflicted)", "village.has_cultivator=true"],
+      "tags": ["history", "cultivation", "wang_tianshui", "duty", "permanent"]
+    },
+    {
+      "event_id": "staged_003_wandering_cultivator_arrival",
+      "event_type": "arrival",
+      "timestamp_tick": -1,
+      "timestamp_display": "Staged to occur early in the player's time at the village",
+      "description": "A wandering cultivator arrives at Wang Family Village — the catalyst for the Heng Yue recruitment that follows. He stays at the tavern, asks questions about local children, and leaves after a few days. The village buzzes.",
+      "location_specific": "tavern_district",
+      "witnesses": [],
+      "participants": [],
+      "significance": 9,
+      "memory_decay": {
+        "model": "exponential",
+        "half_life_ticks": 96000,
+        "forget_threshold": 0.1,
+        "permanent": false
+      },
+      "retelling": {
+        "who_can_retell": ["any_witness", "any_child_after_3_days"],
+        "retell_lines": [
+          "A cultivator came through. Stayed at the tavern. Didn't say much. Watched the children play.",
+          "Did you see the robes? Old, but real. Foundation Establishment at least. What was he looking for?",
+          "The stranger left this morning. Wang Tianshui spoke with him privately. I saw them at the ancestral hall."
+        ],
+        "distortion_over_time": "cultivator -> 'an immortal' -> 'an elder from a great sect' after 14 days. 'Watched the children' -> 'tested the children' -> 'was looking for an apprentice' after 30 days.",
+        "trigger_topics": ["stranger", "cultivator", "tavern", "children", "heng_yue", "recruitment"]
+      },
+      "consequences": ["village.tension+=2", "npc_wang_tianshui.knowledge+=wanderer_visited", "rumor_seed: an_immortal_is_coming", "triggers: npc_heng_yue_recruiter arrival within 7 days"],
+      "tags": ["catalyst", "arrival", "cultivator", "heng_yue", "staged"]
+    },
+    {
+      "event_id": "staged_004_heng_yue_recruiter_arrival",
+      "event_type": "arrival",
+      "timestamp_display": "Staged to occur ~7 days after the wandering cultivator",
+      "description": "A Heng Yue Sect recruiter arrives following the wanderer's report. He tests village youth for cultivation aptitude. This is the moment that sets Wang Lin's path in motion — and, if the player is present, the player's.",
+      "location_specific": "governor_mansion",
+      "witnesses": [],
+      "participants": [],
+      "significance": 10,
+      "memory_decay": {
+        "model": "none",
+        "half_life_ticks": 0,
+        "forget_threshold": 0.0,
+        "permanent": true
+      },
+      "retelling": {
+        "who_can_retell": ["any_witness", "any_child_after_1_day"],
+        "retell_lines": [
+          "The Heng Yue Sect sent a recruiter! A real cultivator, from a real sect! He's testing the children tomorrow.",
+          "Old Tianshui actually got a sect to notice us. Twenty years of waiting. Maybe one of ours will leave this place.",
+          "I heard the recruiter barely looked at the Wang boy. Said his roots were thin. ...Then why did the boy's father look so relieved?"
+        ],
+        "distortion_over_time": "Stable — this is the founding event of the village's connection to the cultivation world. Retellings vary in which child they focus on, not in the fact.",
+        "trigger_topics": ["heng_yue", "recruiter", "test", "children", "sect", "wang_lin"]
+      },
+      "consequences": ["village.tension+=3", "npc_heng_yue_recruiter.present=true", "triggers: heng_yue_aptitude_test event", "memory_coupling: this is the event Wang Ping's request_heng_yue_test_hope desire responds to"],
+      "tags": ["catalyst", "arrival", "heng_yue", "canonical", "staged", "permanent"]
+    },
+    {
+      "event_id": "staged_005_dog_died_wolf_attack",
+      "event_type": "death",
+      "timestamp_tick": -1,
+      "timestamp_display": "Staged to occur when spirit_wolves spawn near the south bend and a hunting dog is present",
+      "description": "The canonical Article XXXI.5 memory test. The village hunting dog is killed by wolves at the south bend. The event is witnessed by Old Chen (the dog's owner) and any NPC or player nearby. Over the following weeks, Old Chen stops mentioning the dog; months later, a child retells the story.",
+      "location_specific": "south_bend",
+      "witnesses": [],
+      "participants": ["species:wang_family_hunting_dog"],
+      "significance": 8,
+      "memory_decay": {
+        "model": "exponential",
+        "half_life_ticks": 168000,
+        "forget_threshold": 0.15,
+        "permanent": false
+      },
+      "retelling": {
+        "who_can_retell": ["old_chen (the owner)", "any_witness", "any_child_after_30_days"],
+        "retell_lines": [
+          "Day 1 (Old Chen): The wolves got my dog. At the south bend. Good dog. Died fighting. I buried him by the oak.",
+          "Day 7 (Old Chen, grief): ...Used to have one. Good dog. Wouldn't go near the south bend after what happened.",
+          "Day 14 (Old Chen, quiet): The south bend's not safe. Take a stick if you go.",
+          "Day 30 (a child, distorted): Old Chen's dog fought a demon wolf! It was huge! Three wolves! The dog bit the leader's throat before it fell!",
+          "Day 60 (a merchant, rumor): They say the south bend is haunted. A dog's ghost. Or a wolf's. Depends who you ask.",
+          "Day 120 (a child, legend): Long ago, a brave dog gave its life at the south bend to save the village from the wolf pack. They say its spirit still guards the bend on moonless nights."
+        ],
+        "distortion_over_time": "dog -> hound -> brave hound -> spirit guardian (60-120 days). wolf -> wolf pack -> demon wolf -> spirit wolf. death -> fought -> sacrificed -> guards the village (120+ days). The story grows the further it travels from the event.",
+        "trigger_topics": ["dog", "hound", "south_bend", "wolves", "hunting", "old_chen", "haunted"]
+      },
+      "consequences": ["old_chen.morale-=3 (permanent)", "old_chen.schedule: remove south_bend walks", "south_bend.danger_reputation+=2", "rumor_seed: south_bend_haunted (forms after 30 days if unchecked)", "wang_ping.grief_dog_death desire activates for 60 days"],
+      "tags": ["canonical", "death", "dog", "wolf", "memory_test", "staged", "Article_XXXI_5"]
+    },
+    {
+      "event_id": "seed_006_strange_jade_in_ancestral_hall",
+      "event_type": "discovery",
+      "timestamp_tick": 0,
+      "timestamp_display": "Pre-simulation — the jade has been in the ancestral hall for generations, unnoticed",
+      "description": "A strange jade sits in the Wang Family Village ancestral hall, among the genealogy records. No one knows what it is. It has been there for three generations. It is the Heaven Defying Bead (or a fragment). The village elder will gift it to the player when favor is high — no explanation, no quest marker.",
+      "location_specific": "ancestral_hall",
+      "witnesses": ["npc_wang_tianshui (knows it exists, not what it is)", "npc_wang_tianshan (saw it once)"],
+      "participants": [],
+      "significance": 10,
+      "memory_decay": {
+        "model": "none",
+        "half_life_ticks": 0,
+        "forget_threshold": 0.0,
+        "permanent": true
+      },
+      "retelling": {
+        "who_can_retell": ["npc_wang_tianshui (only when gifting it)", "npc_wang_tianshan (vaguely)"],
+        "retell_lines": [
+          "There is a jade in the ancestral hall. Old. No one remembers who put it there. Take it. Maybe you'll figure out what it is. I never could.",
+          "I saw a jade once, in the hall. Glowed faintly at night. ...Probably my imagination. It was a long time ago."
+        ],
+        "distortion_over_time": "Stable in fact (it is a jade). The meaning is unknown to the village — that is the point. The player must discover what it is through experience, not through a villager explaining it.",
+        "trigger_topics": ["jade", "ancestral_hall", "treasure", "mystery", "heaven_defying_bead"]
+      },
+      "consequences": ["ancestral_hall.contains: strange_jade", "triggers: npc_wang_tianshui.gift_strange_jade desire when favor_player>=5"],
+      "tags": ["canonical", "discovery", "jade", "heaven_defying_bead", "mystery", "permanent", "observation_driven"]
+    }
+  ],
+  "rumor_seeds": [
+    {
+      "rumor_id": "rumor_south_bend_haunted",
+      "origin_event_id": "staged_005_dog_died_wolf_attack",
+      "current_form": "The south bend is haunted. Something took Old Chen's dog. Best avoid it after dark.",
+      "believers": [],
+      "decays_to": "fades after 60 days if no further incidents; becomes 'the south bend is unlucky' (a proverb, not a fear) after 180 days"
+    },
+    {
+      "rumor_id": "rumor_an_immortal_is_coming",
+      "origin_event_id": "staged_003_wandering_cultivator_arrival",
+      "current_form": "An immortal is coming to test the children. The Wang boy is sure to fail. ...Or is he?",
+      "believers": [],
+      "decays_to": "confirmed (becomes memory) when the Heng Yue recruiter arrives; otherwise fades after 14 days as 'a strange cultivator passed through once'"
+    }
+  ]
+}

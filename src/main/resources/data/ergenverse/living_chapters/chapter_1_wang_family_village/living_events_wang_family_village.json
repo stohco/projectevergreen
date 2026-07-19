@@ -1,0 +1,187 @@
+{
+  "_comment": "Living events for Wang Family Village — events that emerge beyond the daily_schedule loop. These are the beats that make the village feel alive: the wandering cultivator arrives, wolves hunt the south bend, the Teng family collects tax, a child is born, the harvest fails, the elder falls ill. Per Article XXXI, events fire when their conditions are met — not on a script. The existing WorldEventBus publishes these; the memory ledger records them.",
+  "_schema": "living_events",
+  "_schema_version": 1,
+  "_article": "XXIX (Opportunities) + XXXI (desire-driven) + XXXI.5 (memory)",
+  "location": "wang_family_village",
+  "events": [
+    {
+      "event_id": "le_wandering_cultivator_arrival",
+      "type": "arrival",
+      "name": "A Wandering Cultivator Arrives",
+      "description": "A wandering cultivator enters the village and takes a room at the tavern. He watches the children. He leaves after 3-5 days. His visit seeds the Heng Yue recruiter's arrival.",
+      "trigger": {
+        "kind": "staged",
+        "conditions": ["player.present_in_village", "time_in_village>2d"],
+        "probability": 1.0,
+        "cooldown_days": 0
+      },
+      "actors": ["wandering_cultivator (temporary NPC)"],
+      "consequences": [
+        "memory_ledger: staged_003_wandering_cultivator_arrival fires",
+        "npc_wang_tianshui.knowledge += wanderer_visited",
+        "village.tension += 2",
+        "schedules: tavern activity increases for 3-5 days",
+        "after 7 days: triggers le_heng_yue_recruiter_arrival"
+      ],
+      "memory_tag": "wanderer_arrived",
+      "canon_fidelity": "EXPLICIT — Wang Lin's story begins when a cultivator visits Wang Family Village and later Heng Yue sends a recruiter."
+    },
+    {
+      "event_id": "le_heng_yue_recruiter_arrival",
+      "type": "arrival",
+      "name": "The Heng Yue Recruiter Arrives",
+      "description": "A Heng Yue Sect recruiter arrives following the wanderer's report. He tests village youth for cultivation aptitude over 2 days. This is the founding event of the village's connection to the cultivation world.",
+      "trigger": {
+        "kind": "staged",
+        "conditions": ["memory_tag:wanderer_arrived", "memory_age:wanderer_arrived>=7d"],
+        "probability": 1.0,
+        "cooldown_days": 0
+      },
+      "actors": ["npc_heng_yue_recruiter", "village_youth (including the player if mortal)"],
+      "consequences": [
+        "memory_ledger: staged_004_heng_yue_recruiter_arrival fires",
+        "npc_heng_yue_recruiter.present = true",
+        "triggers: heng_yue_aptitude_test (2 days later)",
+        "village.tension += 3",
+        "npc_wang_ping.request_heng_yue_test_hope desire activates (high priority)"
+      ],
+      "memory_tag": "heng_yue_recruiter_arrived",
+      "canon_fidelity": "EXPLICIT — Wang Lin is recruited to Heng Yue Sect after a recruiter visits the village."
+    },
+    {
+      "event_id": "le_wolf_attack_south_bend",
+      "type": "catastrophe",
+      "name": "Wolf Pack Hunts the South Bend",
+      "description": "A spirit wolf pack hunts near the south bend. If the hunting dog is there (or following someone there), it may die defending. This is the canonical Article XXXI.5 memory test event.",
+      "trigger": {
+        "kind": "conditional_random",
+        "conditions": ["location:south_bend has entity (dog, NPC, or player)", "time:night OR season:winter", "biome:forest"],
+        "probability": 0.04,
+        "cooldown_days": 14
+      },
+      "actors": ["spirit_wolf_pack (3-5 wolves)", "species:wang_family_hunting_dog (if present)", "any NPC or player at south bend"],
+      "consequences": [
+        "if dog dies: memory_ledger staged_005_dog_died_wolf_attack fires (the canonical memory test)",
+        "south_bend.danger_reputation += 2",
+        "old_chen.morale -= 3 (permanent)",
+        "old_chen.schedule: remove south_bend walks",
+        "rumor_seed: south_bend_haunted (forms after 30 days)",
+        "wang_ping.grief_dog_death desire activates for 60 days"
+      ],
+      "memory_tag": "wolf_attack_south_bend",
+      "canon_fidelity": "INFERRED — Er Gen does not script this exact event, but the village's mortal vulnerability to beasts is canonical. The memory test sequence is the user's directive (Article XXXI.5)."
+    },
+    {
+      "event_id": "le_teng_family_tax_collection",
+      "type": "ordinary_day",
+      "name": "The Teng Family Collects Tax",
+      "description": "Armed Teng family men arrive at the village gate and collect half the autumn rice. This has happened every autumn for as long as anyone remembers. It is not a crisis; it is the texture of village life.",
+      "trigger": {
+        "kind": "seasonal",
+        "conditions": ["season:autumn", "day_of_season:first"],
+        "probability": 1.0,
+        "cooldown_days": 0
+      },
+      "actors": ["teng_family_tax_collectors (temporary)", "npc_wang_tianshui", "villagers"],
+      "consequences": [
+        "village.economy.rice -= 0.5 of harvest",
+        "village.resentment_teng_family += 1 (cumulative, never resets)",
+        "memory_ledger: teng_tax_visit fires",
+        "npc_wang_ping.warn_teng_family_tax desire activates (high urgency) for 3 days",
+        "if village.resentment_teng_family > 20: seeds le_bandit_raid_cooperation (villagers may shelter bandits who target the Teng family)"
+      ],
+      "memory_tag": "teng_tax_visit",
+      "canon_fidelity": "INFERRED — the Teng family's oppression of the Wang family is canonical; the specific tax mechanic is inferred to give it gameplay presence."
+    },
+    {
+      "event_id": "le_strange_jade_discovery",
+      "type": "discovery",
+      "name": "The Strange Jade Is Noticed",
+      "description": "A player or NPC with sufficient perception notices the strange jade in the ancestral hall. This may lead to the elder gifting it (if favor is high) or the player stealing it (if they choose). The jade is the Heaven Defying Bead (or a fragment).",
+      "trigger": {
+        "kind": "observation",
+        "conditions": ["entity in ancestral_hall", "perception >= foundation_establishation OR searched_records_succeed"],
+        "probability": 1.0,
+        "cooldown_days": 0
+      },
+      "actors": ["player OR npc with high perception"],
+      "consequences": [
+        "memory_ledger: noticed_strange_jade fires",
+        "if player noticed: npc_wang_tianshui.gift_strange_jade desire may activate (if favor>=5)",
+        "if player steals: memory stole_the_jade, village elder trust broken, Wang Lin mentorship may be blocked later"
+      ],
+      "memory_tag": "noticed_strange_jade",
+      "canon_fidelity": "EXPLICIT — Wang Lin obtains the Heaven Defying Bead; the specific origin in the ancestral hall is INFERRED to give it a discoverable location."
+    },
+    {
+      "event_id": "le_harvest_failure",
+      "type": "catastrophe",
+      "name": "The Harvest Fails",
+      "description": "A poor harvest — drought, blight, or wolf-driven livestock loss. The village faces a hard winter. Desires shift toward survival; the Teng tax becomes a crisis rather than a texture.",
+      "trigger": {
+        "kind": "conditional_random",
+        "conditions": ["season:autumn", "world_state:irrigation_damaged OR weather:drought>14d"],
+        "probability": 0.3,
+        "cooldown_days": 0
+      },
+      "actors": ["villagers"],
+      "consequences": [
+        "village.economy.food -= 0.4",
+        "village.tension += 4",
+        "all NPCs: survival desires activate (priority 9)",
+        "npc_wang_tianshui.request_grain_relief desire activates",
+        "may trigger le_villager_departs (a family leaves the village)"
+      ],
+      "memory_tag": "harvest_failure",
+      "canon_fidelity": "INFERRED — mortal villages face harvest failure; this gives the village's economy dimension real stakes."
+    },
+    {
+      "event_id": "le_elder_illness",
+      "type": "loss",
+      "name": "The Village Elder Falls Ill",
+      "description": "Wang Tianshui, the village's only cultivator and de facto leader, falls ill — overwork, age, or cultivation deviation. The village holds its breath. If he dies or is incapacitated, the village loses its protector.",
+      "trigger": {
+        "kind": "conditional_random",
+        "conditions": ["wang_tianshui.age > 60", "wang_tianshui.stress > 7"],
+        "probability": 0.05,
+        "cooldown_days": 60
+      },
+      "actors": ["npc_wang_tianshui", "village_healer (if any)"],
+      "consequences": [
+        "npc_wang_tianshui.incacipated = true (3-10 days)",
+        "village.tension += 5",
+        "npc_wang_ping.request_help_elder desire activates",
+        "if player has medical knowledge or herbs: affordance 'treat_elder' unlocks",
+        "if untreated and roll fails: wang_tianshui dies — village loses its cultivator, triggering long-term decline"
+      ],
+      "memory_tag": "elder_illness",
+      "canon_fidelity": "INFERRED — gives the village's mentorship dimension stakes; Wang Tianshui's choice to stay becomes poignant if his health fails."
+    },
+    {
+      "event_id": "le_child_tells_dog_story",
+      "type": "ordinary_day",
+      "name": "A Child Retells the Dog Story",
+      "description": "Months after the dog's death, a village child tells the story — distorted, heroic, legendary. This is the final beat of the Article XXXI.5 memory test. If it fires, the world has memory.",
+      "trigger": {
+        "kind": "memory_driven",
+        "conditions": ["memory_tag:dog_died_wolf_attack", "memory_age:dog_died_wolf_attack>=60d", "nearby:child_npc", "conversation_topic:dog OR south_bend OR wolves"],
+        "probability": 0.4,
+        "cooldown_days": 30
+      },
+      "actors": ["any_child_npc"],
+      "consequences": [
+        "memory_ledger: child_retold_dog_story fires (the memory test PASSES)",
+        "the retelling uses the Day 60 or Day 120 distorted line from the memory ledger",
+        "if the player hears it: knowledge += village_legend_of_the_dog"
+      ],
+      "memory_tag": "child_retold_dog_story",
+      "canon_fidelity": "INFERRED — this is the user's directive (Article XXXI.5). It is the proof that the world remembers."
+    }
+  ],
+  "_notes": {
+    "event_firing_model": "The existing WorldEventBus evaluates these events each tick. 'staged' events fire when conditions are first met. 'conditional_random' events roll probability each tick conditions are met. 'seasonal' fires on the first day of the season. 'observation' fires when the perception condition is met. 'memory_driven' fires when the referenced memory exists and ages past threshold.",
+    "no_scripting": "Per Article XXXI, none of these events are scripted story beats the player must experience. They fire when their conditions are met, whether the player is present or not. The player may witness them, hear about them later as rumors, or never know they happened. That is the point.",
+    "memory_coupling": "Every event writes to the memory ledger. The wolf attack is the canonical test; the child's retelling is the proof. If both fire in sequence without developer intervention, the world has memory."
+  }
+}

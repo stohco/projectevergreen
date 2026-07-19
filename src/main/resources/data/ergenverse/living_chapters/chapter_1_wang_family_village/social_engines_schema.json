@@ -1,0 +1,125 @@
+{
+  "_schema": "social_engines",
+  "_schema_version": 1,
+  "_article": "XXXI.1",
+  "_description": "The ten social engines, defined as DATA SCHEMAS (not Java classes — Article XXVI). Each engine is a template that desire_state entries instantiate via the 'engine' field. The existing IntentEngine reads a desire, looks up its engine here, and produces a directional social intent (NPC->NPC, NPC->Player, Player->NPC, World->Anyone). DecisionEngine then resolves the intent to a concrete action.",
+  "_non_negotiable": "These are NOT quest systems. They are social systems. An NPC with a 'request' desire is not giving a quest — they are expressing a need that may or may not be directed at the player. Sometimes another NPC fulfills it. Sometimes nobody does. Sometimes the need goes unmet and the world gets worse. That is the point.",
+  "engines": {
+    "request": {
+      "ordinal": 1,
+      "question": "I need something. Who can provide it?",
+      "direction": "initiator -> provider",
+      "semantics": "The initiator has a need. The provider is whoever can meet it — player, another NPC, or the world (a state change). Fulfilled requests build favor; ignored requests may fester (consequence_on_ignore).",
+      "fields_required": ["want", "target_type", "priority", "offer_in_return", "consequence_on_fulfill", "consequence_on_ignore"],
+      "can_target_player": true,
+      "can_target_npc": true,
+      "can_target_world": true,
+      "example_village": "npc_wang_tianshui requests irrigation ditch repair — target anyone. If Wang Ping's offer_labor fires nearby, NPC->NPC resolution. If the player is nearby, NPC->Player. If nobody, the crops fail."
+    },
+    "offer": {
+      "ordinal": 2,
+      "question": "I have something. Who needs it?",
+      "direction": "initiator -> recipient",
+      "semantics": "The initiator has something to give — labor, an item, information, company. The recipient is whoever needs it. Offers are the mirror of requests; the engine matches them.",
+      "fields_required": ["want", "target_type", "offer_in_return"],
+      "can_target_player": true,
+      "can_target_npc": true,
+      "can_target_world": false,
+      "example_village": "npc_wang_ping offers labor for village repairs. Matches npc_wang_tianshui's request_irrigation_repair."
+    },
+    "teaching": {
+      "ordinal": 3,
+      "question": "I know something. Who is ready to learn?",
+      "direction": "initiator -> student",
+      "semantics": "The initiator has knowledge and judges whether a candidate is ready. Readiness is evaluated against the student's demonstrated behavior, not a quest flag. This is how Wang Lin decides to share a copied jade slip (Article XXXI.2).",
+      "fields_required": ["want", "target_type", "conditions (readiness criteria)", "consequence_on_fulfill"],
+      "can_target_player": true,
+      "can_target_npc": true,
+      "can_target_world": false,
+      "example_village": "npc_wang_tianshui (the village's one Qi Condensation elder) may teach a child who has watched him cultivate for several mornings — not because a quest was completed, but because the child showed persistence."
+    },
+    "challenge": {
+      "ordinal": 4,
+      "question": "Test yourself. Or I will test you.",
+      "direction": "initiator -> challenged",
+      "semantics": "The initiator issues a test — a spar, a riddle, a trial of courage. The challenged may accept, refuse, or fail. Challenges build reputation and reveal capability. A rival disciple challenges you; a beast tests your nerve.",
+      "fields_required": ["want", "target_type", "priority", "consequence_on_fulfill", "consequence_on_ignore"],
+      "can_target_player": true,
+      "can_target_npc": true,
+      "can_target_world": false,
+      "example_village": "A wandering cultivator arriving at the village challenges any local who thinks they can cultivate — first step toward the Heng Yue recruitment."
+    },
+    "recruitment": {
+      "ordinal": 5,
+      "question": "Join me. Or I will join against you.",
+      "direction": "initiator -> recruit",
+      "semantics": "The initiator wants the target to join a faction, a sect, a bandit gang, a caravan. Recruitment is bidirectional — the target may refuse, and the initiator may then become an adversary. The Heng Yue recruiter who visits Wang Family Village is the canonical example.",
+      "fields_required": ["want", "target_type", "priority", "offer_in_return", "consequence_on_fulfill", "consequence_on_ignore"],
+      "can_target_player": true,
+      "can_target_npc": true,
+      "can_target_world": false,
+      "example_village": "npc_heng_yue_recruiter recruits promising village youth. If the player passes, they enter Heng Yue. If they refuse, the recruiter leaves and the opportunity may not return."
+    },
+    "rumor": {
+      "ordinal": 6,
+      "question": "I heard something. Whom should it reach?",
+      "direction": "initiator -> listener",
+      "semantics": "The initiator spreads information — true, distorted, or false. The listener may believe, disbelieve, or retransmit. Rumors decay and distort over retellings (memory_decay). This is how the village learns of the wandering cultivator, the Teng family's oppression, the strange jade.",
+      "fields_required": ["want", "target_type", "conditions (what triggered the rumor)", "memory_tag"],
+      "can_target_player": true,
+      "can_target_npc": true,
+      "can_target_world": false,
+      "example_village": "A child rumors that the hunting dog disappeared. By the time it reaches the village elder, it has become 'a beast took the dog.' By the time a traveling merchant hears it, 'the south bend is haunted.'"
+    },
+    "mentorship": {
+      "ordinal": 7,
+      "question": "I see potential. I will guide it.",
+      "direction": "initiator -> mentee",
+      "semantics": "Deeper than teaching — the initiator commits to ongoing guidance of the mentee. Mentorship is not a single exchange; it is a relationship that persists across cycles. The mentor watches, intervenes occasionally, and withdraws when the mentee is ready. This is Situ Nan to Wang Lin, Wang Lin to a promising player.",
+      "fields_required": ["want", "target_type", "conditions (potential criteria)", "consequence_on_fulfill", "consequence_on_ignore"],
+      "can_target_player": true,
+      "can_target_npc": true,
+      "can_target_world": false,
+      "example_village": "Wang Lin (when present via his manifestation) may take the player under mentorship if the player has demonstrated restraint, curiosity, and judgment — not power."
+    },
+    "gift": {
+      "ordinal": 8,
+      "question": "This belongs with you, not me.",
+      "direction": "initiator -> recipient",
+      "semantics": "The initiator gives something with no expectation of return — or so it appears. Gifts create informal debts (which the DebtEngine may later surface). A gift is the most Er Gen of social acts: it looks free, it is not.",
+      "fields_required": ["want", "target_type", "offer_in_return (usually null)", "memory_tag"],
+      "can_target_player": true,
+      "can_target_npc": true,
+      "can_target_world": false,
+      "example_village": "The village elder gifts the player a strange jade he found in the ancestral hall — no explanation. The jade is the Heaven Defying Bead (or a fragment). The gift sets the plot in motion without a quest log."
+    },
+    "debt": {
+      "ordinal": 9,
+      "question": "You owe me. Or I owe you. Both bind.",
+      "direction": "bidirectional — debtor <-> creditor",
+      "semantics": "Debts are tracked relationships. A debt can be called in later — the creditor may request repayment via the RequestEngine. Debts never expire unless explicitly forgiven. This is how Wang Lin's relationships in the novel work: favors given are favors owed.",
+      "fields_required": ["want", "target_type", "conditions (origin of debt)", "consequence_on_fulfill", "consequence_on_ignore"],
+      "can_target_player": true,
+      "can_target_npc": true,
+      "can_target_world": false,
+      "example_village": "If the player helps repair the irrigation ditch, the village elder owes a debt. Weeks later, when bandits raid, the elder calls in the debt — 'You helped us then. Help us now.'"
+    },
+    "favor": {
+      "ordinal": 10,
+      "question": "Between us, there is goodwill. Spend it.",
+      "direction": "bidirectional — mutual",
+      "semantics": "Favor is the soft currency of relationships — goodwill that can be spent on requests, gifts, or mentorship. Unlike debt (which is specific and owed), favor is diffuse and optional. High favor means the NPC will initiate positively toward you; low favor means they won't. Negative favor means they may work against you.",
+      "fields_required": ["want", "target_type", "conditions (favor threshold)", "consequence_on_fulfill", "consequence_on_ignore"],
+      "can_target_player": true,
+      "can_target_npc": true,
+      "can_target_world": false,
+      "example_village": "Wang Ping's favor toward the player rises with each fulfilled request. At favor>=5, his request_heng_yue_test_hope desire fires — the emotional sendoff. At favor<2, he stays distant and the sendoff never happens."
+    }
+  },
+  "_interaction_rules": {
+    "matching": "When a desire with engine='offer' or 'request' fires, IntentEngine scans other NPCs' desires for satisfies_desires_on_others matches. If found, NPC->NPC resolution occurs. The player is only targeted if no NPC match exists AND the player is the nearest sentient within proximity.",
+    "player_not_center": "The player is never the default target. The player is targeted only when (a) target_type=player explicitly, or (b) target_type=anyone and no NPC can fulfill and the player is nearest. This enforces Article V (everything exists without the player).",
+    "silence_is_valid": "If no desire fires this cycle for any NPC, the world is quiet. This is not a bug. Article XXXI: 'Sometimes the answer is nobody.'",
+    "memory_coupling": "Every firing and every resolution writes to the memory ledger via the desire's memory_tag. An NPC who repeatedly asks for firewood and is ignored develops a memory of being abandoned, which may surface as a rumor or a changed passive_state."
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "_schema": "desire_state",
+  "_schema_version": 1,
+  "_article": "XXXI.1",
+  "_description": "Per-cycle desire state for an NPC. The existing IntentEngine and DecisionEngine read this and decide whether to fire a SOCIAL_INITIATION intent this tick. This is DATA, not a Java class (Article XXVI). Every NPC under Article XXXI must eventually carry a desire_state block. An NPC with no desires this cycle is in a passive_state (sleeping, mourning, seclusion) — that is valid; the world does not force initiation, it permits it.",
+  "_design_notes": {
+    "evaluation_model": "Each NPC tick, IntentEngine evaluates the NPC's desires array. For each desire, it checks conditions. If conditions are met and priority exceeds the NPC's initiation threshold, IntentEngine emits a SOCIAL_INITIATION intent targeting the desire's target. DecisionEngine then resolves the intent to a concrete action (approach/speak/gift/follow/etc.) using the engine template from social_engines_schema.json.",
+    "target_resolution": "target_type=player resolves to the nearest player within requires_proximity blocks. target_type=npc resolves via target_filter (an npc_id, a faction, or a role like 'village_elder'). target_type=world means the desire is satisfied by a world-state change (e.g. 'irrigation ditch repaired'), not by a person. target_type=anyone means any sentient being nearby.",
+    "passive_states": "An NPC may have zero active desires any given cycle. This is not a failure — it is the world being calm. Article XXXI says 'sometimes the answer is nobody.' Passive states are listed so the engine knows the NPC is intentionally quiet, not broken.",
+    "memory_coupling": "Every desire has a memory_tag. When the desire fires (NPC initiates) and when it resolves (target responds or ignores), the memory ledger records it. This is how the world remembers who asked what of whom (Article XXXI.5).",
+    "cross_npc_triggers": "A desire on NPC A may list desire_ids on NPC B that it can satisfy. This enables NPC-to-NPC initiation without the player. Example: village_elder's 'request: repair irrigation' desire is satisfiable by wang_ping's 'offer: labor' desire. The engine matches these and fires NPC->NPC social intent."
+  },
+  "schema": {
+    "npc_id": "string — must match an existing npc_*.json npc_id",
+    "location": "string — the location this desire_state applies to (an NPC may have different desires in different locations)",
+    "evaluation_cycle_ticks": "int — how often the engine re-evaluates this NPC's desires (1000 = once per Minecraft day)",
+    "initiation_threshold": "int 1-10 — minimum priority for the NPC to actually initiate. A shy NPC has threshold 7; a desperate NPC has threshold 2.",
+    "desires": [
+      {
+        "id": "string — unique within this NPC, e.g. 'request_firewood_for_winter'",
+        "engine": "enum — one of: request, offer, teaching, challenge, recruitment, rumor, mentorship, gift, debt, favor",
+        "want": "string — plain-language description of what the NPC wants right now",
+        "target_type": "enum — npc | player | world | anyone",
+        "target_filter": "string|null — npc_id, faction id, role, or null. Examples: 'npc_wang_lin', 'wang_family_village', 'village_elder', null",
+        "priority": "int 1-10 — 1=whim, 5=normal, 10=life-or-death",
+        "urgency": "enum — low | medium | high | critical",
+        "conditions": ["string — condition expressions evaluated by the engine. Examples: 'time_of_day:night', 'weather:rain', 'nearby:npc_wang_lin<10', 'world_state:winter_approaching', 'memory_tag:dog_died<30d', 'inventory:oak_log<4'"],
+        "initiation": {
+          "mode": "enum — approach | gesture | line | gift | silence | follow | block | demonstrate",
+          "line": "string|null — the spoken line if mode=line. If mode=silence, null. If mode=demonstrate, a description of the action.",
+          "requires_proximity": "int — blocks within which the NPC will initiate (0 = no proximity requirement, e.g. world-state desires)",
+          "cooldown_ticks": "int — minimum ticks between firings of this desire"
+        },
+        "offer_in_return": "string|null — what the NPC offers if the target fulfills the desire. null if the desire is a pure request with no reciprocation.",
+        "consequence_on_fulfill": "string — what changes in NPC/world state when fulfilled. Examples: 'wang_ping.firewood_satisfied=true', 'village_elder.favor_player+=1', 'memory_ledger+=irrigation_repaired'",
+        "consequence_on_ignore": "string — what happens if the desire is never addressed. Examples: 'wang_ping.health-=1 (winter hardship)', 'village_elder.trust_player-=1', 'memory_ledger+=request_ignored'",
+        "memory_tag": "string — tag written to memory ledger when this desire fires and when it resolves",
+        "satisfies_desires_on_others": ["string|null — desire_ids on OTHER npcs that fulfilling this desire also satisfies. Enables NPC->NPC chains."]
+      }
+    ],
+    "passive_states": [
+      "string — states where the NPC desires nothing this cycle. Examples: 'sleeping', 'mourning (after memory_tag:dog_died for 7 days)', 'cultivating_in_seclusion', 'eating_quietly'"
+    ],
+    "cross_npc_triggers": [
+      "string — desire_ids on OTHER npcs that this npc's desires can satisfy, enabling NPC->NPC initiation. Examples: 'npc_wang_ping.offer_labor satisfies npc_village_elder.request_irrigation_repair'"
+    ]
+  },
+  "example_minimal": {
+    "npc_id": "npc_wang_ping",
+    "location": "wang_family_village",
+    "evaluation_cycle_ticks": 1000,
+    "initiation_threshold": 4,
+    "desires": [
+      {
+        "id": "request_firewood_for_winter",
+        "engine": "request",
+        "want": "Oak logs for the winter firewood pile — Father says winter will be hard.",
+        "target_type": "anyone",
+        "target_filter": null,
+        "priority": 6,
+        "urgency": "medium",
+        "conditions": ["season:autumn", "inventory:oak_log<8", "nearby:any_sentient<15"],
+        "initiation": {
+          "mode": "line",
+          "line": "Brother — the woodpile is low. If you bring oak logs, I'll help you split them and Mother can stay warm.",
+          "requires_proximity": 12,
+          "cooldown_ticks": 12000
+        },
+        "offer_in_return": "coal (4) — Wang Ping helps split and shares his own coal stash",
+        "consequence_on_fulfill": "wang_ping.winter_preparedness+=1; village_elder.favor_wang_ping+=1",
+        "consequence_on_ignore": "wang_ping.health-=1 after first snowfall; memory_ledger+=wang_ping_struggled_alone",
+        "memory_tag": "wang_ping_firewood_request",
+        "satisfies_desires_on_others": null
+      }
+    ],
+    "passive_states": ["sleeping", "eating_quietly", "fishing_with_da_niu"],
+    "cross_npc_triggers": []
+  }
+}

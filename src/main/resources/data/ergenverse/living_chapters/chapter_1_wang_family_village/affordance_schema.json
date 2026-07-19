@@ -1,0 +1,49 @@
+{
+  "_schema": "affordance",
+  "_schema_version": 1,
+  "_article": "XXVIII",
+  "_description": "The Affordance Ontology (Article XXVIII). Every entity — item, NPC, beast, plant, technique, formation, location, structure — exposes AFFORDANCES: verbs describing what can meaningfully occur with it. The UI discovers these. The AI discovers these. Nothing special-cases any entity. Two entities are mechanically unique when they expose different verbs. This is DATA, not a Java class (Article XXVI).",
+  "_design_notes": {
+    "discovery_not_hardcoding": "Systems must not hardcode 'if entity == spirit_herb then harvest().' Instead, they read the entity's affordances array and present/enable those verbs. A new entity with a new affordance requires no code change — only a data change.",
+    "verb_naming": "Affordances are single verbs or short verb phrases, lowercase, snake_case. Examples: harvest, transplant, smell, refine, study, steal, trade, bait, ask, observe, debate, learn, challenge, spar, request_advice, travel_together.",
+    "conditional_affordances": "An affordance may have conditions — requirements that must be met before the verb is available. A spirit herb cannot be 'refined' without an alchemy furnace nearby; Wang Lin cannot be 'requested_technique' without demonstrated judgment.",
+    "affordance_vs_desire": "Affordances are what CAN be done WITH an entity (player- or NPC-facing verbs). Desires (desire_state_schema) are what an NPC WANTS to do TO others. An NPC's affordances describe how others can engage it; its desires describe how it engages others. Both are needed.",
+    "perception_coupling": "An affordance may be hidden behind a perception tier (Article VI: reality -> perception). A mortal sees a spirit herb and affords only 'smell, pick.' A Qi Condensation cultivator sees the same herb and affords 'harvest, transplant, refine, study.' The herb has not changed; perception has."
+  },
+  "schema": {
+    "entity_id": "string — the entity's id (npc_id, item_id, block_id, species_id, structure_id, location_id)",
+    "entity_type": "enum — npc | item | block | beast | plant | technique | formation | structure | location | artifact",
+    "entity_name": "string — display name",
+    "affordances": [
+      {
+        "verb": "string — the affordance verb, snake_case",
+        "label": "string — player-facing label, e.g. 'Harvest', 'Ask about herbs'",
+        "description": "string — what happens when this affordance is invoked",
+        "perception_required": "enum|null — mortal | qi_condensation | foundation_establishment | core_formation | nascent_soul | soul_formation | soul_transformation | ancient_god | null (null = always visible)",
+        "conditions": ["string — condition expressions. e.g. 'nearby:alchemy_furnace<3', 'item_in_hand:jade_slip', 'favor:wang_lin>=5', 'time_of_day:night'"],
+        "initiates_engine": "enum|null — if invoking this affordance triggers a social engine, which one. e.g. asking Wang Lin for a technique initiates 'request'. null for non-social affordances like 'smell'.",
+        "cost": "object|null — what the invocation costs (items, time, favor, reputation). null if free.",
+        "outcome": "string — the canonical outcome. May be probabilistic — see outcome_variants.",
+        "outcome_variants": ["string — alternative outcomes based on conditions/state. The engine selects among these."],
+        "memory_tag": "string|null — tag written to memory ledger when this affordance is invoked (for significant interactions)"
+      }
+    ]
+  },
+  "example_canonical_affordances": {
+    "spirit_herb": {
+      "entity_type": "plant",
+      "affordances": ["harvest", "transplant", "smell", "refine", "study", "steal", "trade", "bait"],
+      "note": "From Article XXVIII. A mortal sees only 'smell, pick.' A cultivator sees all eight."
+    },
+    "li_muwan": {
+      "entity_type": "npc",
+      "affordances": ["discuss_herbs", "request_pill", "learn_alchemy", "gather_together", "request_diagnosis"],
+      "note": "From Article XXVIII. Li Muwan's affordances reflect her role as an alchemist, not a generic quest giver."
+    },
+    "wang_lin": {
+      "entity_type": "npc",
+      "affordances": ["ask", "observe", "debate", "learn", "challenge", "spar", "request_artifact_copy", "request_technique", "request_advice", "travel_together"],
+      "note": "From Article XXVIII. Wang Lin's affordances include the protagonist-copy mechanic (request_artifact_copy, request_technique) which he evaluates via judgment, not transaction — see wang_lin_bidirectional_protocol.json."
+    }
+  }
+}

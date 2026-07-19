@@ -1,0 +1,190 @@
+{
+  "_comment": "Wang Lin bidirectional protocol. Per Article XXXI.2: initiation works both ways. Sometimes the player asks Wang Lin. Sometimes Wang Lin approaches the player — unbidden, no marker, no quest log — and offers a copied jade slip, a silent demonstration, or one word of warning. This file defines how Wang Lin decides to approach, when, and what he offers. It also defines the protagonist-copy 'Request Capability' mechanic: Wang Lin evaluates understanding, harm, motive, judgment, and timing before his True Body creates a copy and a clone hands it over.",
+  "_schema": "wang_lin_bidirectional_protocol",
+  "_schema_version": 1,
+  "_article": "XXXI.2",
+  "entity_id": "npc_wang_lin",
+  "_design_notes": {
+    "wang_lin_is_not_a_quest_giver": "Wang Lin never gives quests. He observes. He judges. Occasionally, he intervenes. This file defines the conditions under which he intervenes — and what 'intervention' looks like (which is usually quiet, brief, and consequential).",
+    "no_marker": "Wang Lin's approaches never appear on a map, never trigger a quest log, never show a reward popup. The player either notices him or doesn't. If the player ignores him, he leaves. The opportunity may not return.",
+    "true_body_and_clone": "When Wang Lin offers an item (a copied jade slip, a technique), it is not 'Wang Lin gives item.' His True Body (elsewhere, cultivating or in seclusion) creates a copy, and a clone (present near the player) hands it over. This is canonical to Renegade Immortal and gives the mechanic its weight.",
+    "judgment_over_transaction": "Wang Lin does not trade. He judges. The player cannot buy a technique from him; the player must demonstrate they deserve it. This is what makes Wang Lin feel like Wang Lin."
+  },
+  "evaluation": {
+    "cycle_ticks": 2000,
+    "description": "Every 2000 ticks, Wang Lin's manifestation (if present in the same region as the player) evaluates whether to approach. The evaluation considers the player's observed behavior, not quest flags.",
+    "conditions_for_approach": [
+      "wang_lin_manifestation present in player's region",
+      "player has NOT stolen the Heaven Defying Bead (memory_tag: stole_the_jade blocks all mentorship)",
+      "player is not in active combat with a canonical ally of Wang Lin",
+      "player is in a calm moment (not mid-combat, not mid-tribulation)"
+    ]
+  },
+  "approach_triggers": [
+    {
+      "trigger_id": "wlp_observes_restriction_study",
+      "name": "Player repeatedly studies restrictions",
+      "conditions": [
+        "player.action: examine_restriction OR study_formation repeated >= 5 times across >= 3 days",
+        "player.knowledge: restriction_basics >= 1"
+      ],
+      "approach": {
+        "mode": "approach + gift",
+        "description": "Wang Lin walks over. Says nothing at first. Hands the player a copied jade slip. Then leaves. The slip contains a restriction technique the player could not have obtained otherwise.",
+        "line_on_approach": "You've noticed something.",
+        "line_on_handover": null,
+        "line_on_departure": null,
+        "requires_proximity": 5,
+        "cooldown_days": 30
+      },
+      "gift": {
+        "item": "jade_slip: restriction_fragment (Wang Lin's copy)",
+        "via": "clone (True Body created the copy elsewhere)",
+        "judgment": {
+          "can_understand": "player.knowledge.restriction_basics >= 1 (true by trigger condition)",
+          "will_harm": "false (restriction study is safe)",
+          "motive": "curiosity (observed — player studied voluntarily, not for reward)",
+          "judgment_demonstrated": "true (persistence across 3 days)",
+          "right_time": "true (player is calm, studying)"
+        },
+        "all_must_pass": true
+      },
+      "consequence_on_fulfill": "player.knowledge += wang_lin_restriction_fragment; memory_ledger += wang_lin_gifted_jade_quietly; favor:wang_lin += 2",
+      "consequence_on_ignore": "if player walks away before handover: Wang Lin pockets the slip and leaves; the opportunity does not recur for 60 days; memory_ledger += wang_lin_withdrew",
+      "memory_tag": "wang_lin_observed_restriction_study"
+    },
+    {
+      "trigger_id": "wlp_silent_demonstration",
+      "name": "Player struggles with a technique Wang Lin has mastered",
+      "conditions": [
+        "player.action: attempt_technique failing >= 3 times in 1 day",
+        "technique is one Wang Lin has canonically mastered (restriction, ji_realm, heaven_defying)"
+      ],
+      "approach": {
+        "mode": "demonstrate",
+        "description": "Wang Lin approaches and says one word: 'Watch.' He performs the technique once, flawlessly, then walks away. The player's Knowledge System records the observed demonstration. The player may now attempt the technique with improved odds — but Wang Lin has not taught it. He showed it. Understanding is the player's problem.",
+        "line_on_approach": "Watch.",
+        "line_on_demonstration": null,
+        "line_on_departure": null,
+        "requires_proximity": 8,
+        "cooldown_days": 45
+      },
+      "gift": null,
+      "consequence_on_fulfill": "player.knowledge += observed_demonstration: <technique>; player.technique_success_bonus: <technique> += 0.2 (one-time); memory_ledger += wang_lin_demonstrated_technique",
+      "consequence_on_ignore": "if player looks away during demonstration: no knowledge gained; Wang Lin notices and does not offer again for 90 days",
+      "memory_tag": "wang_lin_demonstrated"
+    },
+    {
+      "trigger_id": "wlp_one_word_warning",
+      "name": "Player is about to make a canonical mistake",
+      "conditions": [
+        "player is approaching a canonical danger Wang Lin has survived (e.g. attempting to refine a forbidden pill, entering a restriction beyond their realm, trusting a canonical betrayer)",
+        "wang_lin has observed the player enough to care (favor >= 3)"
+      ],
+      "approach": {
+        "mode": "line",
+        "description": "Wang Lin passes by. He says one word — 'Don't.' or 'Wait.' or the name of the danger. He does not explain. He keeps walking. The player can heed or ignore.",
+        "line_on_approach": "Don't.",
+        "line_on_departure": null,
+        "requires_proximity": 4,
+        "cooldown_days": 14
+      },
+      "gift": null,
+      "consequence_on_fulfill": "player.knowledge += wang_lin_warning: <danger>; if player heeds: favor += 1 (Wang Lin notices); memory_ledger += wang_lin_warned",
+      "consequence_on_ignore": "if player ignores and the danger manifests: Wang Lin does not intervene to save them; he warned; favor unchanged (he is not resentful, he is Wang Lin); memory_ledger += player_ignored_wang_lin",
+      "memory_tag": "wang_lin_warning"
+    },
+    {
+      "trigger_id": "wlp_travel_together",
+      "name": "Wang Lin invites the player to travel with him briefly",
+      "conditions": [
+        "favor:wang_lin >= 6",
+        "player has demonstrated restraint (no theft, no betrayal of canonical allies, no cruelty to mortals)",
+        "Wang Lin is traveling through a region the player is in"
+      ],
+      "approach": {
+        "mode": "follow_invite",
+        "description": "Wang Lin nods at the player and says 'Come.' No explanation. He walks. The player can follow or not. If they follow, he leads them to something — a hidden restriction, an abandoned cave, a view of a spirit vein. He does not explain what it is. He leaves the player to understand.",
+        "line_on_approach": "Come.",
+        "line_on_departure": null,
+        "requires_proximity": 6,
+        "cooldown_days": 90
+      },
+      "gift": null,
+      "consequence_on_fulfill": "player discovers a location/knowledge they could not have found alone; favor:wang_lin += 1; memory_ledger += wang_lin_travelled_with_player",
+      "consequence_on_ignore": "if player does not follow: Wang Lin does not invite again for 90 days; no resentment; memory_ledger += player_declined_wang_lin",
+      "memory_tag": "wang_lin_invited_travel"
+    },
+    {
+      "trigger_id": "wlp_request_capability_denied",
+      "name": "Player requests a capability Wang Lin judges they are not ready for",
+      "conditions": [
+        "player invokes request_technique or request_artifact_copy affordance on Wang Lin",
+        "Wang Lin's judgment fails on one or more criteria"
+      ],
+      "approach": {
+        "mode": "line",
+        "description": "Wang Lin does not hand over the capability. He may say nothing (silent refusal), or he may ask a question that reveals why he refused. He does not negotiate.",
+        "line_on_approach": null,
+        "line_variants": [
+          "(silent refusal — he turns back to what he was doing)",
+          "Why?",
+          "Not yet.",
+          "You would break.",
+          "Come back when you understand why I refuse."
+        ],
+        "requires_proximity": 4,
+        "cooldown_days": 30
+      },
+      "gift": null,
+      "judgment": {
+        "can_understand": "evaluated against player.knowledge prerequisites for the specific capability",
+        "will_harm": "evaluated against the capability's backlash risk vs player's realm",
+        "motive": "evaluated against player's observed pattern — greed, ambition, defense, curiosity, duty",
+        "judgment_demonstrated": "evaluated against player's past decisions (memory ledger: theft, mercy, restraint, courage)",
+        "right_time": "evaluated against current world state — is the player about to face something that needs this, or is it idle acquisition?"
+      },
+      "consequence_on_fulfill": "player.knowledge += wang_lin_refused_and_why (partial, if a line variant explained); favor unchanged; memory_ledger += wang_lin_refused_capability",
+      "consequence_on_ignore": "if player presses or demands: favor -= 2; Wang Lin may leave the region; memory_ledger += player_pressured_wang_lin",
+      "memory_tag": "wang_lin_refused"
+    },
+    {
+      "trigger_id": "wlp_request_capability_granted",
+      "name": "Player requests a capability Wang Lin judges they are ready for",
+      "conditions": [
+        "player invokes request_technique or request_artifact_copy affordance on Wang Lin",
+        "all judgment criteria pass"
+      ],
+      "approach": {
+        "mode": "gift_via_clone",
+        "description": "Wang Lin's True Body (wherever it is) creates a copy of the capability — a copied jade slip, a replicated artifact. A clone of Wang Lin (present with the player) hands it over. No ceremony. The player has earned it through demonstrated judgment, not transaction.",
+        "line_on_approach": null,
+        "line_on_handover": "You are ready.",
+        "line_on_departure": null,
+        "requires_proximity": 4,
+        "cooldown_days": 60
+      },
+      "gift": {
+        "item": "jade_slip or artifact_copy (the requested capability)",
+        "via": "clone (True Body created the copy)",
+        "judgment": {
+          "can_understand": "PASS",
+          "will_harm": "PASS (false)",
+          "motive": "PASS (aligned with growth, not greed)",
+          "judgment_demonstrated": "PASS (memory ledger shows restraint, mercy, courage as appropriate)",
+          "right_time": "PASS"
+        },
+        "all_must_pass": true
+      },
+      "consequence_on_fulfill": "player obtains the capability; favor:wang_lin += 1; memory_ledger += wang_lin_granted_capability",
+      "consequence_on_ignore": "n/a (this trigger fires only on player request)",
+      "memory_tag": "wang_lin_granted"
+    }
+  ],
+  "_player_to_wang_lin": {
+    "note": "The player may also approach Wang Lin. The affordances Wang Lin exposes (Article XXVIII) include: ask, observe, debate, learn, challenge, spar, request_artifact_copy, request_technique, request_advice, travel_together. These are the player-initiated verbs. Wang Lin's response to each is governed by the judgment block above — he does not transact, he judges.",
+    "request_advice": "Wang Lin may give a one-line answer, a silent look, or nothing. His advice is rarely direct — he prefers the player to reason.",
+    "spar": "Wang Lin will spar only if the player is within two realms of him. He pulls his strikes. The player will lose. The point is observation, not victory.",
+    "debate": "Wang Lin enjoys debate with a worthy interlocutor. A debate that changes his mind (rare) increases favor significantly. A debate that wastes his time decreases it."
+  }
+}

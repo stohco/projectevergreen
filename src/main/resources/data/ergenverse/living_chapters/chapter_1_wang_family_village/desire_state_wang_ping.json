@@ -1,0 +1,152 @@
+{
+  "_comment": "Desire-state for Wang Ping (Wang Lin's brother) at Wang Family Village. Per Article XXXI: the world must desire the player. Wang Ping does not wait for the player to click him — he initiates. He asks for firewood, he warns about the Teng family tax collectors, he invites fishing, he grieves if the dog dies, he asks the player to pass the Heng Yue test. This is the data the IntentEngine reads to make Wang Ping a living brother, not a quest dispenser.",
+  "_schema": "desire_state",
+  "_schema_version": 1,
+  "_article": "XXXI.1",
+  "npc_id": "npc_wang_ping",
+  "name": "Wang Ping",
+  "nameCn": "王平",
+  "location": "wang_family_village",
+  "evaluation_cycle_ticks": 1000,
+  "initiation_threshold": 4,
+  "desires": [
+    {
+      "id": "request_firewood_for_winter",
+      "engine": "request",
+      "want": "Oak logs for the winter firewood pile — Father says winter will be hard this year.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "priority": 6,
+      "urgency": "medium",
+      "conditions": ["season:autumn", "inventory:oak_log<8", "nearby:any_sentient<15"],
+      "initiation": {
+        "mode": "line",
+        "line": "Brother — the woodpile is low. If you bring oak logs, I'll help you split them and Mother can stay warm.",
+        "requires_proximity": 12,
+        "cooldown_ticks": 12000
+      },
+      "offer_in_return": "coal (4) — Wang Ping helps split and shares his own coal stash",
+      "consequence_on_fulfill": "wang_ping.winter_preparedness+=1; village_elder.favor_target+=1; memory_ledger+=firewood_delivered",
+      "consequence_on_ignore": "wang_ping.health-=1 after first snowfall; memory_ledger+=wang_ping_struggled_alone",
+      "memory_tag": "wang_ping_firewood_request",
+      "satisfies_desires_on_others": ["npc_wang_tianshui.need_labor_for_repairs"]
+    },
+    {
+      "id": "warn_teng_family_tax",
+      "engine": "rumor",
+      "want": "Warn anyone nearby that the Teng family tax collectors came again yesterday and took half the rice.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "priority": 5,
+      "urgency": "medium",
+      "conditions": ["memory_tag:teng_tax_visit<3d", "nearby:any_sentient<10", "time_of_day:day"],
+      "initiation": {
+        "mode": "line",
+        "line": "Father has been quiet lately. The Teng family's tax collectors came again yesterday. We gave them half our rice. I don't know what we'll eat come spring.",
+        "requires_proximity": 10,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "target.knowledge+=teng_family_oppression; memory_ledger+=teng_tax_rumor_spread",
+      "consequence_on_ignore": "rumor stays local; if no one hears it, the player never learns why the village is impoverished",
+      "memory_tag": "wang_ping_teng_tax_warning",
+      "satisfies_desires_on_others": null
+    },
+    {
+      "id": "invite_fishing_south_bend",
+      "engine": "offer",
+      "want": "Invite someone to fish at the south bend with Da Niu — Mother could use the extra food.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "priority": 4,
+      "urgency": "low",
+      "conditions": ["time_of_day:morning", "weather:!storm", "nearby:npc_da_niu<20", "nearby:any_sentient<15"],
+      "initiation": {
+        "mode": "line",
+        "line": "Da Niu wants to go fishing at the south bend. Will you come? We could use the extra food — and it's been a while since we did something that wasn't work.",
+        "requires_proximity": 12,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": "cod (3) — share of the catch",
+      "consequence_on_fulfill": "wang_ping.morale+=1; npc_da_niu.morale+=1; memory_ledger+=fishing_trip_south_bend",
+      "consequence_on_ignore": "wang_ping and da_niu go alone; if a wolf attack happens at the south bend, they face it without the player",
+      "memory_tag": "wang_ping_fishing_invite",
+      "satisfies_desires_on_others": ["npc_da_niu.want_fishing_companion"]
+    },
+    {
+      "id": "request_heng_yue_test_hope",
+      "engine": "favor",
+      "want": "Tell the player he hopes they pass the Heng Yue elder's test — he'll stay and care for Mother and Father, but the player could become someone.",
+      "target_type": "player",
+      "target_filter": null,
+      "priority": 7,
+      "urgency": "high",
+      "conditions": ["memory_tag:heng_yue_recruiter_present", "nearby:player<8", "player.cultivation:mortal"],
+      "initiation": {
+        "mode": "line",
+        "line": "If the Heng Yue elder tests us, I hope you pass. I'll stay and take care of Mother and Father — but you... you could become someone. Please. Don't stay here for us.",
+        "requires_proximity": 8,
+        "cooldown_ticks": 48000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "player.knowledge+=wang_ping_sacrifice_understood; wang_ping.bond_player+=2; memory_ledger+=wang_ping_wanglin_sendoff",
+      "consequence_on_ignore": "wang_ping never says it; player leaves for Heng Yue without understanding why Wang Lin's brother stayed behind",
+      "memory_tag": "wang_ping_heng_yue_hope",
+      "satisfies_desires_on_others": null
+    },
+    {
+      "id": "grief_dog_death",
+      "engine": "rumor",
+      "want": "Mourn the hunting dog that died in the wolf attack — no longer mention the dog; instead say 'Used to have one.'",
+      "target_type": "anyone",
+      "target_filter": null,
+      "priority": 8,
+      "urgency": "low",
+      "conditions": ["memory_tag:dog_died_wolf_attack", "memory_age:dog_died_wolf_attack>7d", "memory_age:dog_died_wolf_attack<60d", "nearby:any_sentient<8", "conversation_topic:dog OR conversation_topic:hunting"],
+      "initiation": {
+        "mode": "line",
+        "line": "...Used to have one. Good dog. Wouldn't go near the south bend after what happened.",
+        "requires_proximity": 8,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "memory_ledger+=wang_ping_remembers_dog; if target is a child, child.knowledge+=old_chen_dog_story (sets up the months-later retelling)",
+      "consequence_on_ignore": "Wang Ping stays silent about the dog; the memory decays faster",
+      "memory_tag": "wang_ping_dog_grief",
+      "satisfies_desires_on_others": null
+    },
+    {
+      "id": "offer_labor",
+      "engine": "offer",
+      "want": "Offer labor to anyone repairing village infrastructure — irrigation, fences, the elder's house.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "priority": 5,
+      "urgency": "low",
+      "conditions": ["nearby:world_event:repair_in_progress<20", "time_of_day:day"],
+      "initiation": {
+        "mode": "approach",
+        "line": null,
+        "requires_proximity": 15,
+        "cooldown_ticks": 12000
+      },
+      "offer_in_return": "labor — Wang Ping joins the repair, speeding it",
+      "consequence_on_fulfill": "repair.progress+=2; wang_ping.morale+=1 (feels useful); memory_ledger+=wang_ping_helped_repair",
+      "consequence_on_ignore": "repair proceeds slower; if it's the irrigation ditch, crops suffer",
+      "memory_tag": "wang_ping_labor_offer",
+      "satisfies_desires_on_others": ["npc_wang_tianshui.request_irrigation_repair", "npc_village_elder.request_repairs"]
+    }
+  ],
+  "passive_states": [
+    "sleeping (t0-t1: 0-2000)",
+    "eating_quietly (morning and evening meals)",
+    "fishing_with_da_niu (when fishing_invite accepted or unaddressed and weather is fair)",
+    "mourning (for 3 days after memory_tag:dog_died_wolf_attack — no desires except grief_dog_death)",
+    "winter_hardship (after first snowfall if winter_preparedness<3 — desires shift to survival, priority 9)"
+  ],
+  "cross_npc_triggers": [
+    "wang_ping.offer_labor satisfies wang_tianshui.request_irrigation_repair",
+    "wang_ping.invite_fishing_south_bend satisfies da_niu.want_fishing_companion",
+    "wang_ping.warn_teng_family_tax triggers village_elder.worry (if elder is within earshot)"
+  ]
+}
