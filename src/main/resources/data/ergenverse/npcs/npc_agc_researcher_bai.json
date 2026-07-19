@@ -1,0 +1,108 @@
+{
+  "npc_id": "npc_agc_researcher_bai",
+  "name": "Cave Researcher Bai",
+  "nameCn": "洞府研究者白",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Vermilion Bird Imperial Academy",
+  "location": "ancient_god_cave",
+  "cultivation": "NASCENT_SOUL_MID",
+  "personality": "obsessive, reckless, willing to die for knowledge, treats danger as data",
+  "speech": "rapid, excited, takes notes mid-sentence",
+  "relationship_to_wanglin": "neutral-friendly — happy to share findings with anyone interested",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "b2ccbbb0c175a5eb",
+  "initiation_lines": [
+    "The Vermilion Bird Capital sent me to study this cave. They said 'be careful.' I have been careful. I have also been nearly killed fourteen times.",
+    "The god who died here did not 'die' in any sense we understand. Its body became the cave. Its breath became the distortion fields.",
+    "A Xuan Dao Sect philosopher came once. He said the cave proved Dao is emergent from chaos. The Primordial Guardian said nothing. The philosopher left. The Guardian continued saying nothing.",
+    "Netherrack and bone — the cave's building materials. Bring them and I will share my fourteen near-death findings."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Morning cave survey",
+      "location": "ancient_god_cave",
+      "duration": 150
+    },
+    {
+      "time": "07:30",
+      "action": "Collect samples",
+      "location": "ancient_god_cave",
+      "duration": 180
+    },
+    {
+      "time": "10:30",
+      "action": "Analyze distortion fields",
+      "location": "ancient_god_cave",
+      "duration": 150
+    },
+    {
+      "time": "13:00",
+      "action": "Meal (dried rations)",
+      "location": "ancient_god_cave",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Record findings",
+      "location": "ancient_god_cave",
+      "duration": 180
+    },
+    {
+      "time": "17:30",
+      "action": "Probe deep cave",
+      "location": "ancient_god_cave",
+      "duration": 150
+    },
+    {
+      "time": "21:00",
+      "action": "Night analysis",
+      "location": "ancient_god_cave",
+      "duration": 180
+    },
+    {
+      "time": "00:00",
+      "action": "Brief sleep",
+      "location": "ancient_god_cave",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "agc_sample_collection",
+      "name": "Cave Sample Collection",
+      "description": "Researcher Bai needs netherrack and bone to continue her analysis of the ancient god's remains.",
+      "required_items": {
+        "minecraft:netherrack": 10,
+        "minecraft:bone": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "agc_distortion_measurement",
+      "name": "Distortion Field Measurement",
+      "description": "Ender pearls and experience bottles are needed to measure and record the cave's reality distortion fields.",
+      "required_items": {
+        "minecraft:ender_pearl": 4,
+        "minecraft:experience_bottle": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "minecraft:emerald": 8,
+        "experience": 35
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

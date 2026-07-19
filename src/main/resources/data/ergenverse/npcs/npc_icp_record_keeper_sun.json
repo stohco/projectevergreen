@@ -1,0 +1,108 @@
+{
+  "npc_id": "npc_icp_record_keeper_sun",
+  "name": "Record Keeper Sun",
+  "nameCn": "档案保管者孙",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Immortal Court Archives",
+  "location": "immortal_court_palace",
+  "cultivation": "NASCENT_SOUL_EARLY",
+  "personality": "meticulous, secretly knows where all the bodies are buried (metaphorically), values records above all",
+  "speech": "precise, references specific case numbers, slightly conspiratorial",
+  "relationship_to_wanglin": "neutral-talkative — trades information freely",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "f805865b534b104a",
+  "initiation_lines": [
+    "I have read every court record for the past six hundred years. There are things in these archives that would topple three sects.",
+    "The Soul Refining Sect's charter permits 'soul acquisition from hostile entities.' The Court has never defined 'hostile.' I find this interesting.",
+    "A Heng Yue Sect elder once filed a petition against the Teng family. The case lasted forty years. He died. The Teng family won. The records are in aisle seven.",
+    "Gold and emeralds. The archives accept the Court's standard currency. Knowledge costs extra."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Archive organization",
+      "location": "immortal_court_palace",
+      "duration": 150
+    },
+    {
+      "time": "08:30",
+      "action": "Retrieve records for court",
+      "location": "immortal_court_palace",
+      "duration": 150
+    },
+    {
+      "time": "11:00",
+      "action": "File new records",
+      "location": "immortal_court_palace",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal",
+      "location": "immortal_court_palace",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Secret reading",
+      "location": "immortal_court_palace",
+      "duration": 180
+    },
+    {
+      "time": "17:30",
+      "action": "Archive maintenance",
+      "location": "immortal_court_palace",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Index new entries",
+      "location": "immortal_court_palace",
+      "duration": 150
+    },
+    {
+      "time": ":23:00",
+      "action": "Rest",
+      "location": "immortal_court_palace",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "icp_archive_maintenance",
+      "name": "Archive Maintenance",
+      "description": "Keeper Sun needs gold and emeralds to maintain the ancient archive preservation formations.",
+      "required_items": {
+        "minecraft:gold_ingot": 8,
+        "minecraft:emerald": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:book": 3,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "icp_sensitive_records",
+      "name": "Sensitive Record Access",
+      "description": "For gold and books, Sun will provide access to restricted court records containing sect secrets.",
+      "required_items": {
+        "minecraft:gold_ingot": 6,
+        "minecraft:book": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 35
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

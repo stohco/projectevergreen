@@ -1,0 +1,108 @@
+{
+  "npc_id": "npc_scc_exiled_scholar_feng",
+  "name": "Exiled Scholar Feng",
+  "nameCn": "流放学者冯",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "none (exiled from Zhao Country)",
+  "location": "snow_country_capital",
+  "cultivation": "FOUNDATION_PEAK",
+  "personality": "bitter, intellectual, exiled for forbidden research, secretly content in the cold",
+  "speech": "literary, sardonic, quotes banned texts",
+  "relationship_to_wanglin": "neutral-sympathetic — recognizes fellow outcasts",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "a070c087b1e35fe3",
+  "initiation_lines": [
+    "I was exiled from Zhao Country for asking the wrong questions about karma. The Snow Country does not care about my questions. They care about survival. I prefer it.",
+    "The Heng Yue Sect library had seven thousand scrolls. I read them all. Then I read the forbidden ones. That is why I am here.",
+    "An elder from the Fighting Evil Sect visited the capital last year. He said the cold was 'a different kind of evil.' He was not wrong.",
+    "Ink and paper. Even in exile, a scholar writes. Bring them and I will share what Zhao Country banned."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Morning writing",
+      "location": "snow_country_capital",
+      "duration": 180
+    },
+    {
+      "time": "09:00",
+      "action": "Teach local children",
+      "location": "snow_country_capital",
+      "duration": 120
+    },
+    {
+      "time": "11:00",
+      "action": "Research in snow archives",
+      "location": "snow_country_capital",
+      "duration": 150
+    },
+    {
+      "time": "13:30",
+      "action": "Meal",
+      "location": "snow_country_capital",
+      "duration": 60
+    },
+    {
+      "time": "14:30",
+      "action": "Consult with frost alchemist",
+      "location": "snow_country_capital",
+      "duration": 90
+    },
+    {
+      "time": "16:30",
+      "action": "Evening lecture",
+      "location": "snow_country_capital",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Write by cold lamplight",
+      "location": "snow_country_capital",
+      "duration": 180
+    },
+    {
+      "time": "23:00",
+      "action": "Sleep",
+      "location": "snow_country_capital",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "scc_exiled_writing",
+      "name": "Exiled Scholar's Writing Materials",
+      "description": "Scholar Feng needs ink and paper to continue his forbidden research and record Snow Country's history.",
+      "required_items": {
+        "minecraft:ink_sac": 6,
+        "minecraft:paper": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 8,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "scc_forbidden_knowledge",
+      "name": "Forbidden Knowledge Exchange",
+      "description": "Feng trades banned Zhao Country knowledge for books and experience bottles.",
+      "required_items": {
+        "minecraft:book": 4,
+        "minecraft:experience_bottle": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "minecraft:emerald": 6,
+        "experience": 30
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

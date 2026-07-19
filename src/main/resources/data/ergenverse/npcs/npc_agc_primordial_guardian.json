@@ -1,0 +1,95 @@
+{
+  "npc_id": "npc_agc_primordial_guardian",
+  "name": "Primordial Guardian",
+  "nameCn": "原始守卫",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Ancient God Remnant",
+  "location": "ancient_god_cave",
+  "cultivation": "SOUL_TRANSFORMATION_EARLY",
+  "personality": "ageless, speaks in geological time, barely recognizes living beings as significant",
+  "speech": "slow, resonant, sentences span centuries",
+  "relationship_to_wanglin": "neutral-indifferent — all living things are brief",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "4d19be8b85c677df",
+  "initiation_lines": [
+    "This cave existed before the mountain. The mountain existed before the sects. The sects believe they are old.",
+    "The last being I spoke to was a Soul Refining elder. He sought to capture the god's residual soul. I did not permit it. He did not survive the refusal.",
+    "The Immortal Emperor's Cave Mansion is young. Three thousand years. This cave is older than the concept of 'emperor.'",
+    "Obsidian and ender pearls. The cave's reality-thin walls require constant reinforcement. Bring them or watch existence fray."
+  ],
+  "daily_schedule": [
+    {
+      "time": "00:00",
+      "action": "Patrol cave boundaries",
+      "location": "ancient_god_cave",
+      "duration": 360
+    },
+    {
+      "time": "06:00",
+      "action": "Reality reinforcement",
+      "location": "ancient_god_cave",
+      "duration": 180
+    },
+    {
+      "time": "09:00",
+      "action": "Commune with cave",
+      "location": "ancient_god_cave",
+      "duration": 240
+    },
+    {
+      "time": "14:00",
+      "action": "Inspect god remnants",
+      "location": "ancient_god_cave",
+      "duration": 180
+    },
+    {
+      "time": "18:00",
+      "action": "Evening vigil",
+      "location": "ancient_god_cave",
+      "duration": 240
+    },
+    {
+      "time": "23:00",
+      "action": "Deep meditation",
+      "location": "ancient_god_cave",
+      "duration": 60
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "agc_reality_reinforcement",
+      "name": "Reality Wall Reinforcement",
+      "description": "The Primordial Guardian needs obsidian and ender pearls to reinforce the cave's thinning reality walls.",
+      "required_items": {
+        "minecraft:obsidian": 10,
+        "minecraft:ender_pearl": 4
+      },
+      "rewards": {
+        "ergenverse:dao_fragment": 2,
+        "ergenverse:spirit_stone": 5,
+        "experience": 50
+      }
+    },
+    {
+      "task_id": "agc_god_remnant_preservation",
+      "name": "God Remnant Preservation",
+      "description": "Glowstone and gold are needed to preserve the ancient god's residual energy patterns.",
+      "required_items": {
+        "minecraft:glowstone": 8,
+        "minecraft:gold_ingot": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 3,
+        "ergenverse:spirit_stone": 4,
+        "experience": 40
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

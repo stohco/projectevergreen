@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_scc_frost_alchemist_han",
+  "name": "Frost Alchemist Han",
+  "nameCn": "霜炼丹师韩",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Snow Country Alchemy Hall",
+  "location": "snow_country_capital",
+  "cultivation": "NASCENT_SOUL_MID",
+  "personality": "precise, believes cold enhances pill quality, dismisses southern alchemy as 'sauna brewing'",
+  "speech": "precise, cold humor, compares everything to temperature",
+  "relationship_to_wanglin": "neutral — interested in southern reagents she has never seen",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "6253909aaaa2c853",
+  "initiation_lines": [
+    "A pill refined at sub-zero temperature is four times more potent. This is not theory. This is measurement.",
+    "A Luo He Sect alchemist visited once. He tried to refine underwater. The cold here is better. Water freezes. Pills crystallize.",
+    "The Vermilion Bird Capital sends us emeralds for our frost pills. They use them to cool temples. We use them to survive.",
+    "Snowballs and glass bottles — the cold here is a reagent, not a hazard. Bring them and I will show you."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Collect morning frost",
+      "location": "snow_country_capital",
+      "duration": 120
+    },
+    {
+      "time": "06:00",
+      "action": "Pill refinement",
+      "location": "snow_country_capital",
+      "duration": 180
+    },
+    {
+      "time": "09:00",
+      "action": "Analyze frost crystals",
+      "location": "snow_country_capital",
+      "duration": 120
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "snow_country_capital",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Afternoon pill refinement",
+      "location": "snow_country_capital",
+      "duration": 180
+    },
+    {
+      "time": "16:30",
+      "action": "Herb storage inspection",
+      "location": "snow_country_capital",
+      "duration": 90
+    },
+    {
+      "time": "19:00",
+      "action": "Record pill formulas",
+      "location": "snow_country_capital",
+      "duration": 120
+    },
+    {
+      "time": "22:00",
+      "action": "Rest",
+      "location": "snow_country_capital",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "scc_frost_pill_reagents",
+      "name": "Frost Pill Reagents",
+      "description": "Alchemist Han needs snowballs and glass bottles to refine frost-resistance pills.",
+      "required_items": {
+        "minecraft:snowball": 16,
+        "minecraft:glass_bottle": 5
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:experience_bottle": 2,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "scc_cold_furnace_fuel",
+      "name": "Cold Furnace Fuel",
+      "description": "Coal and blue ice are needed to maintain the sub-zero alchemical furnace.",
+      "required_items": {
+        "minecraft:coal": 8,
+        "minecraft:blue_ice": 4
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "ergenverse:jade_slip": 1,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

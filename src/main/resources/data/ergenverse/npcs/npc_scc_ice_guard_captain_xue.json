@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_scc_ice_guard_captain_xue",
+  "name": "Ice Guard Captain Xue",
+  "nameCn": "冰卫队长雪",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Snow Country Military",
+  "location": "snow_country_capital",
+  "cultivation": "NASCENT_SOUL_LATE",
+  "personality": "stern, cold demeanor, loyal to Snow Country, views southerners as soft",
+  "speech": "clipped, formal, references temperature frequently",
+  "relationship_to_wanglin": "neutral-suspicious — southerners require observation",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "147b4f56b99332c9",
+  "initiation_lines": [
+    "The Snow Country Capital does not welcome visitors from the south. You will find no warmth here — in any sense.",
+    "Zhao Country cultivators complain about the cold. Good. Cold builds discipline. Their sects are weak because they are comfortable.",
+    "A disciple from the Heavenly Fate Sect came once to read our 'fate in the stars.' He left within the hour. The cold cracked his star charts.",
+    "Iron and coal. The garrison needs constant fuel and weapons. The cold degrades everything."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Dawn patrol",
+      "location": "snow_country_capital",
+      "duration": 150
+    },
+    {
+      "time": "07:30",
+      "action": "Guard assembly",
+      "location": "snow_country_capital",
+      "duration": 90
+    },
+    {
+      "time": "09:00",
+      "action": "Inspect city walls",
+      "location": "snow_country_capital",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "snow_country_capital",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Train recruits in cold",
+      "location": "snow_country_capital",
+      "duration": 180
+    },
+    {
+      "time": "16:30",
+      "action": "Evening patrol",
+      "location": "snow_country_capital",
+      "duration": 150
+    },
+    {
+      "time": "20:00",
+      "action": "Night watch briefing",
+      "location": "snow_country_capital",
+      "duration": 60
+    },
+    {
+      "time": "21:00",
+      "action": "Night patrol",
+      "location": "snow_country_capital",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "scc_garrison_fuel",
+      "name": "Garrison Heating Fuel",
+      "description": "Captain Xue needs coal and iron to maintain the garrison in the perpetual cold.",
+      "required_items": {
+        "minecraft:coal": 10,
+        "minecraft:iron_ingot": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 8,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "scc_wall_repair",
+      "name": "City Wall Ice Repair",
+      "description": "Packed ice and spruce planks are needed to repair ice-damaged city wall sections.",
+      "required_items": {
+        "minecraft:packed_ice": 8,
+        "minecraft:spruce_planks": 10
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:emerald": 10,
+        "experience": 30
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

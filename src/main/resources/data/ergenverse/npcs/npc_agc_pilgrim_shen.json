@@ -1,0 +1,102 @@
+{
+  "npc_id": "npc_agc_pilgrim_shen",
+  "name": "God-Cave Pilgrim Shen",
+  "nameCn": "古神洞朝圣者沈",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "none (independent seeker)",
+  "location": "ancient_god_cave",
+  "cultivation": "CONDENSATION_LATE",
+  "personality": "reverent, seeks enlightenment from the ancient god's remnants, peaceful",
+  "speech": "soft, contemplative, pauses to listen to the cave",
+  "relationship_to_wanglin": "neutral-friendly — fellow seeker",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "5e6761c5a71e68c8",
+  "initiation_lines": [
+    "I have traveled from the Corpse Yin Sect's territory to reach this cave. They said a dead god has no wisdom. They are wrong.",
+    "The Heng Yue Sect meditates on mountains. The Luo He Sect meditates on rivers. I meditate on what existed before mountains and rivers.",
+    "A Cultivator from the Thunder Celestial Temple came seeking lightning in the god's remnants. He found silence. He said it was the loudest silence he had ever heard.",
+    "Coal and books. Even a pilgrim must eat and read. The cave provides silence. It does not provide lunch."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn meditation",
+      "location": "ancient_god_cave",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Morning pilgrimage circuit",
+      "location": "ancient_god_cave",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Contemplate god remnants",
+      "location": "ancient_god_cave",
+      "duration": 180
+    },
+    {
+      "time": ":13:00",
+      "action": "Meal",
+      "location": "ancient_god_cave",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Study cave inscriptions",
+      "location": "ancient_god_cave",
+      "duration": 150
+    },
+    {
+      "time": "17:00",
+      "action": "Evening meditation",
+      "location": "ancient_god_cave",
+      "duration": 180
+    },
+    {
+      "time": "21:00",
+      "action": "Sleep near god remnants",
+      "location": "ancient_god_cave",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "agc_pilgrim_supplies",
+      "name": "Pilgrim Provisions",
+      "description": "Pilgrim Shen needs coal and books to sustain his meditation and study in the cave.",
+      "required_items": {
+        "minecraft:coal": 8,
+        "minecraft:book": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 6,
+        "experience": 20
+      }
+    },
+    {
+      "task_id": "agc_inscription_study",
+      "name": "Incription Rubbing Materials",
+      "description": "Paper and ink are needed to create rubbings of the ancient god's cave wall inscriptions.",
+      "required_items": {
+        "minecraft:paper": 8,
+        "minecraft:ink_sac": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 1,
+        "minecraft:experience_bottle": 2,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

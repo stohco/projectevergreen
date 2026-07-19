@@ -1,0 +1,108 @@
+{
+  "npc_id": "npc_icp_court_magistrate_zhou",
+  "name": "Court Magistrate Zhou",
+  "nameCn": "仙朝判官周",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Immortal Court",
+  "location": "immortal_court_palace",
+  "cultivation": "NASCENT_SOUL_PEAK",
+  "personality": "imposing, bureaucratic, believes the Court is the only legitimate authority",
+  "speech": "formal, legalistic, cites court precedents",
+  "relationship_to_wanglin": "neutral-authoritative — all are subject to Immortal Court jurisdiction",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "08375eee5f876e54",
+  "initiation_lines": [
+    "You stand in the Immortal Court Palace. All cultivator disputes on Planet Suzaku fall under our jurisdiction. All of them.",
+    "The sects believe they are sovereign. They are not. They are registered organizations subject to Court law.",
+    "The Vermilion Bird Capital and the Immortal Court have coexisted for four thousand years. The Bird provides power. The Court provides order.",
+    "Paper and ink. The Court runs on documentation, not cultivation. Bring them."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Review overnight petitions",
+      "location": "immortal_court_palace",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Morning court session",
+      "location": "immortal_court_palace",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Hear sect disputes",
+      "location": "immortal_court_palace",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Meal",
+      "location": "immortal_court_palace",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Review provincial reports",
+      "location": "immortal_court_palace",
+      "duration": 150
+    },
+    {
+      "time": "17:00",
+      "action": "Issue court rulings",
+      "location": "immortal_court_palace",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Evening court session",
+      "location": "immortal_court_palace",
+      "duration": 120
+    },
+    {
+      "time": "23:00",
+      "action": "Rest",
+      "location": "immortal_court_palace",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "icp_court_documentation",
+      "name": "Court Documentation Supply",
+      "description": "Magistrate Zhou needs paper and ink to process the Court's backlog of planetary disputes.",
+      "required_items": {
+        "minecraft:paper": 12,
+        "minecraft:ink_sac": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 10,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "icp_provincial_records",
+      "name": "Provincial Record Compilation",
+      "description": "Books and quartz are needed to compile provincial cultivation records for Court review.",
+      "required_items": {
+        "minecraft:book": 5,
+        "minecraft:quartz": 8
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 8,
+        "experience": 30
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

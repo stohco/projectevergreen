@@ -1,0 +1,108 @@
+{
+  "npc_id": "npc_kcf_karma_observer_chen",
+  "name": "Karma Observer Chen",
+  "nameCn": "因果观察者陈",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "none (independent karma scholar)",
+  "location": "karma_crystal_formation",
+  "cultivation": "NASCENT_SOUL_PEAK",
+  "personality": "serene, detached, sees all actions as threads in a web",
+  "speech": "calm, philosophical, speaks in cause-and-effect chains",
+  "relationship_to_wanglin": "neutral-observant — watches all visitors' karmic threads",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "ee1bc9ea9670a6b2",
+  "initiation_lines": [
+    "Every action you have taken led you here. Every action you take here will lead somewhere else. This is not philosophy. It is visible.",
+    "The Heavenly Fate Sect reads stars to predict karma. They are looking at the reflection. We are looking at the water.",
+    "The Xuan Dao Sect's founder understood karma better than anyone. He chose not to build here. He said 'some things should not be crystallized.'",
+    "Amethyst shards and quartz — the physical material of karma. Bring them and I will show you your thread."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Observe karmic threads",
+      "location": "karma_crystal_formation",
+      "duration": 240
+    },
+    {
+      "time": "08:00",
+      "action": "Meditate among crystals",
+      "location": "karma_crystal_formation",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Teach karma reading",
+      "location": "karma_crystal_formation",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal (minimal)",
+      "location": "karma_crystal_formation",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Record karmic observations",
+      "location": "karma_crystal_formation",
+      "duration": 180
+    },
+    {
+      "time": "17:30",
+      "action": "Crystal maintenance",
+      "location": "karma_crystal_formation",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Night karmic observation",
+      "location": "karma_crystal_formation",
+      "duration": 240
+    },
+    {
+      "time": ":23:00",
+      "action": "Rest",
+      "location": "karma_crystal_formation",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "kcf_crystal_maintenance",
+      "name": "Karma Crystal Maintenance",
+      "description": "Observer Chen needs amethyst shards and quartz to maintain the karma crystal formation.",
+      "required_items": {
+        "minecraft:amethyst_shard": 10,
+        "minecraft:quartz": 8
+      },
+      "rewards": {
+        "ergenverse:dao_fragment": 1,
+        "ergenverse:jade_slip": 2,
+        "experience": 40
+      }
+    },
+    {
+      "task_id": "kcf_thread_reading",
+      "name": "Karmic Thread Reading",
+      "description": "Ender pearls and glowstone are needed to illuminate and read visitors' karmic threads.",
+      "required_items": {
+        "minecraft:ender_pearl": 4,
+        "minecraft:glowstone": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2,
+        "minecraft:experience_bottle": 2,
+        "experience": 35
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

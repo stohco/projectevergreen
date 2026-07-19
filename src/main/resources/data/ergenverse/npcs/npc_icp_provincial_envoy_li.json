@@ -1,0 +1,108 @@
+{
+  "npc_id": "npc_icp_provincial_envoy_li",
+  "name": "Provincial Envoy Li",
+  "nameCn": "省域使者李",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Immortal Court (Zhao Province)",
+  "location": "immortal_court_palace",
+  "cultivation": "NASCENT_SOUL_MID",
+  "personality": "diplomatic, weary from travel, knows every province's politics",
+  "speech": "measured, diplomatic, avoids committing to positions",
+  "relationship_to_wanglin": "neutral-friendly — useful contact for provincial information",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "01e8c05a30fa14de",
+  "initiation_lines": [
+    "I am the Court's envoy to Zhao Province. It is the most troublesome province on the planet. And I have been to all twenty-three.",
+    "The Corpse Yin Sect operates in a legal gray area. The Court has ruled three times on their practices. They comply with the rulings they agree with.",
+    "The Fighting Evil Sect requested Court recognition as a 'planetary defense force.' The request is in committee. It has been in committee for sixty years.",
+    "Emeralds and iron — the currency of diplomacy. I need supplies for my next provincial circuit."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Prepare dispatches",
+      "location": "immortal_court_palace",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Attend morning court",
+      "location": "immortal_court_palace",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Meet with provincial representatives",
+      "location": "immortal_court_palace",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Diplomatic lunch",
+      "location": "immortal_court_palace",
+      "duration": 90
+    },
+    {
+      "time": "14:00",
+      "action": "Draft provincial reports",
+      "location": "immortal_court_palace",
+      "duration": 180
+    },
+    {
+      "time": "17:00",
+      "action": "Evening audience with magistrate",
+      "location": "immortal_court_palace",
+      "duration": 90
+    },
+    {
+      "time": "19:00",
+      "action": "Social gathering",
+      "location": "immortal_court_palace",
+      "duration": 120
+    },
+    {
+      "time": "22:00",
+      "action": "Rest",
+      "location": "immortal_court_palace",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "icp_diplomatic_supplies",
+      "name": "Diplomatic Circuit Supplies",
+      "description": "Envoy Li needs emeralds and iron for his next provincial circuit across Planet Suzaku.",
+      "required_items": {
+        "minecraft:emerald": 12,
+        "minecraft:iron_ingot": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "icp_intelligence_trade",
+      "name": "Provincial Intelligence Trade",
+      "description": "Li trades provincial secrets for emeralds and books — useful for navigating sect politics.",
+      "required_items": {
+        "minecraft:emerald": 10,
+        "minecraft:book": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "minecraft:emerald": 8,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

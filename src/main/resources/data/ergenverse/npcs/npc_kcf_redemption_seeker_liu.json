@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_kcf_redemption_seeker_liu",
+  "name": "Redemption Seeker Liu",
+  "nameCn": "赎罪者刘",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "none (seeking karmic redemption)",
+  "location": "karma_crystal_formation",
+  "cultivation": "FOUNDATION_LATE",
+  "personality": "tormented, seeks to understand and atone for past sins through karma study",
+  "speech": "quiet, intense, speaks about guilt and causation",
+  "relationship_to_wanglin": "neutral-desperate — seeks understanding of own karma",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "8bd5f9ccce83d323",
+  "initiation_lines": [
+    "I came here because I heard the crystals can show you what you have done. I need to see it.",
+    "The Corpse Yin Sect trades in bodies. We trade in consequences. Both are currencies of death. Ours is more honest.",
+    "A cultivator from the Heng Yue Sect came seeking redemption for killing a fellow disciple. The crystals showed him nothing. He left relieved. I think the crystals were showing him that nothing needed forgiveness.",
+    "Books and experience bottles. I study karma theory. Perhaps understanding will bring peace."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Meditate near crystals",
+      "location": "karma_crystal_formation",
+      "duration": 180
+    },
+    {
+      "time": "08:00",
+      "action": "Study karma texts",
+      "location": "karma_crystal_formation",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Attempt to read own karma",
+      "location": "karma_crystal_formation",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal (barely eats)",
+      "location": "karma_crystal_formation",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Help miner with crystals",
+      "location": "karma_crystal_formation",
+      "duration": 150
+    },
+    {
+      "time": "17:00",
+      "action": "Evening meditation",
+      "location": "karma_crystal_formation",
+      "duration": 180
+    },
+    {
+      "time": "21:00",
+      "action": "Journal writing",
+      "location": "karma_crystal_formation",
+      "duration": 120
+    },
+    {
+      "time": "24:00",
+      "action": "Rest",
+      "location": "karma_crystal_formation",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "kcf_karma_study",
+      "name": "Karma Theory Study",
+      "description": "Liu needs books and experience bottles to study karma theory and seek understanding.",
+      "required_items": {
+        "minecraft:book": 4,
+        "minecraft:experience_bottle": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 6,
+        "experience": 20
+      }
+    },
+    {
+      "task_id": "kcf_crystal_meditation",
+      "name": "Crystal Meditation Aid",
+      "description": "Glowstone and emeralds help Liu maintain focus during long crystal meditation sessions.",
+      "required_items": {
+        "minecraft:glowstone": 6,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:amethyst_shard": 8,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

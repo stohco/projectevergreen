@@ -1,0 +1,101 @@
+{
+  "npc_id": "npc_kcf_crystal_miner_zhao",
+  "name": "Crystal Miner Zhao",
+  "nameCn": "晶矿工赵",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "none (independent miner)",
+  "location": "karma_crystal_formation",
+  "cultivation": "CONDENSATION_PEAK",
+  "personality": "pragmatic, has learned to sense karma through mining, surprisingly wise",
+  "speech": "blunt, practical, occasionally accidentally profound",
+  "relationship_to_wanglin": "neutral-friendly — trades crystals for supplies",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "c4a8db9dc5ef9b5a",
+  "initiation_lines": [
+    "I mine karma crystals. Twenty years. I have learned more about cause and effect from a pickaxe than most scholars learn from books.",
+    "The crystals grow when someone nearby makes a significant choice. I cannot see the choice. I see the crystal grow. It is enough.",
+    "A merchant from Tian Shui City came to buy crystals for divination. I sold him twelve. He said they were 'the most accurate he had ever used.' I do not know what that means.",
+    "Iron and emeralds. Mining tools and payment. I am simple. The crystals are not."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Begin mining shift",
+      "location": "karma_crystal_formation",
+      "duration": 240
+    },
+    {
+      "time": "09:00",
+      "action": "Sort crystals",
+      "location": "karma_crystal_formation",
+      "duration": 120
+    },
+    {
+      "time": "11:00",
+      "action": "Trade with visitors",
+      "location": "karma_crystal_formation",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal",
+      "location": "karma_crystal_formation",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Afternoon mining",
+      "location": "karma_crystal_formation",
+      "duration": 180
+    },
+    {
+      "time": "18:00",
+      "action": "Clean and count crystals",
+      "location": "karma_crystal_formation",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Rest",
+      "location": "karma_crystal_formation",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "kcf_mining_supplies",
+      "name": "Mining Tool Supply",
+      "description": "Miner Zhao needs iron and emeralds to maintain mining equipment and purchase crystal rights.",
+      "required_items": {
+        "minecraft:iron_ingot": 8,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:amethyst_shard": 12,
+        "experience": 20
+      }
+    },
+    {
+      "task_id": "kcf_crystal_trade",
+      "name": "Crystal Trade",
+      "description": "Zhao trades karma crystals for prismarine shards and emeralds — raw karmic materials.",
+      "required_items": {
+        "minecraft:prismarine_shard": 8,
+        "minecraft:emerald": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:quartz": 10,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}
