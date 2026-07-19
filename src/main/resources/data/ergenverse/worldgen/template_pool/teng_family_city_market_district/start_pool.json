@@ -4,7 +4,7 @@
   "elements": [
     {
       "element_type": "minecraft:single_pool_element",
-      "location": "minecraft:village/taiga/houses/taiga_medium_house_1",
+      "location": "ergenverse:teng_family_city/market_district",
       "projection": "rigid",
       "processors": "minecraft:empty",
       "weight": 1

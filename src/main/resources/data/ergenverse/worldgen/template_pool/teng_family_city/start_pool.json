@@ -8,7 +8,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "projection": "rigid",
-        "location": "minecraft:village/plains/town_centers/plains_meeting_point_2",
+        "location": "ergenverse:teng_family_city/city_gate",
         "processors": "minecraft:empty"
       }
     }

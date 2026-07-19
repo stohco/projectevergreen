@@ -4,7 +4,7 @@
   "elements": [
     {
       "element_type": "minecraft:single_pool_element",
-      "location": "minecraft:village/taiga/houses/taiga_small_house_1",
+      "location": "ergenverse:teng_family_city/port_docks",
       "projection": "rigid",
       "processors": "minecraft:empty",
       "weight": 1
