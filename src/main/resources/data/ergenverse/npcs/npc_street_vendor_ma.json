@@ -1,0 +1,130 @@
+{
+  "_comment": "NPC: Street Vendor Ma (摊贩马). INFERRED from canon context: A capital market needs vendors. Unlike the formal Merchant Hong, a street vendor operates on a smaller scale, hears street rumors, and provides the player with affordable goods and gossip.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_street_vendor_ma",
+  "name": "Street Vendor Ma",
+  "nameCn": "摊贩马",
+  "canon_id": "I-npc_street_vendor_ma",
+  "type": "merchant",
+  "faction": "none",
+  "location": "great_wang_capital",
+  "cultivation": "none",
+  "personality": "cheerful, shrewd, gossipy",
+  "speech": "loud, friendly, sales-oriented",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cheerful merchant",
+    "qi_condensation": "Street Vendor Ma, none merchant"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: A capital market needs vendors. Unlike the formal Merchant Hong, a street vendor operates on a smaller scale, hears street rumors, and provides the player with affordable goods and gossip.",
+  "derivation_type": "I",
+  "salt": 1182102937,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Fresh bread! Iron tools! Coal for the winter! Best prices in the capital — I guarantee it, or my name is not Ma!",
+    "Business has been slow since the Teng family raised the market tax. Three emeralds per stall, per month. How is a simple vendor supposed to survive?",
+    "You look like someone who travels. I heard a rumor that a cultivator from Heng Yue Sect passed through the capital last month. Looking for something — or someone.",
+    "The tavern keeper buys bread from me every morning. We have an arrangement. If you need information, he is the one to talk to."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 10
+    },
+    {
+      "t0": 11000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "vendor_resupply",
+      "description": "Vendor Ma grins: 'I am running low on stock! Bring me wheat for bread, coal for the forge, and iron for tools. I will pay you in emeralds — fair price, as always!'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    },
+    {
+      "id": "market_intel",
+      "description": "Ma leans in conspiratorially: 'For paper and ink, I can write down what I have heard about the Teng family's next tax increase. Information like that is worth gold to the right people.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 4
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Elder Wu (吴长老). INFERRED from canon context: The mortal quarter of a capital city would have community elders who mediate disputes, remember history, and care for the poor. Elder Wu provides the player with perspective on how mortals live under cultivator rule.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_mortal_elder_wu",
+  "name": "Elder Wu",
+  "nameCn": "吴长老",
+  "canon_id": "I-npc_mortal_elder_wu",
+  "type": "elder",
+  "faction": "none",
+  "location": "great_wang_capital",
+  "cultivation": "none",
+  "personality": "wise, tired, protective of his people",
+  "speech": "slow, story-telling",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A wise elder",
+    "qi_condensation": "Elder Wu, none elder"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: The mortal quarter of a capital city would have community elders who mediate disputes, remember history, and care for the poor. Elder Wu provides the player with perspective on how mortals live under cultivator rule.",
+  "derivation_type": "I",
+  "salt": 2057323929,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Young one. You carry the air of a cultivator. In the mortal quarter, that means either help or trouble. I hope it is the former.",
+    "This quarter has stood for four generations. Before the Teng family rose. Before the governor built his mansion. We remember what it was like.",
+    "The temple district used to be open to everyone. Now the priests charge for blessings. Everything has a price in the capital.",
+    "If you have bread to spare, share it. The children here have not eaten well since the tax increased."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 3000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 8
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "quarter_food",
+      "description": "Elder Wu's eyes soften: 'The quarter is running low on food. The governor's tax took most of our harvest. If you could bring bread and wheat, I will see it distributed fairly.'",
+      "requires": [
+        {
+          "item": "minecraft:bread",
+          "count": 12
+        },
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "repair_shelter",
+      "description": "Elder Wu points to a crumbling building: 'Winter is coming. The shelters need repairs. Glass for windows, planks for walls. The young ones cannot survive another cold season like the last.'",
+      "requires": [
+        {
+          "item": "minecraft:glass",
+          "count": 8
+        },
+        {
+          "item": "minecraft:oak_planks",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    }
+  ]
+}

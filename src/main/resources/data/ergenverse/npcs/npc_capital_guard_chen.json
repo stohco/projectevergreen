@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Capital Guard Chen (京卫兵陈). INFERRED from canon context: The capital of Zhao Country requires a garrison. The city gate structure implies guards who check visitors, enforce curfews, and maintain order under the governor's authority.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_capital_guard_chen",
+  "name": "Capital Guard Chen",
+  "nameCn": "京卫兵陈",
+  "canon_id": "I-npc_capital_guard_chen",
+  "type": "guard",
+  "faction": "zhao_country_government",
+  "location": "great_wang_capital",
+  "cultivation": "late Qi Condensation",
+  "personality": "disciplined, watchful, respects authority",
+  "speech": "formal, direct",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A disciplined guard",
+    "qi_condensation": "Capital Guard Chen, zhao_country_government guard"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: The capital of Zhao Country requires a garrison. The city gate structure implies guards who check visitors, enforce curfews, and maintain order under the governor's authority.",
+  "derivation_type": "I",
+  "salt": 1141829031,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Halt. You stand before the Great Wang Capital. State your name, origin, and business.",
+    "The governor's peace is maintained here. Weapons must be sheathed within the market district. Cultivation disputes are handled at the cultivator quarter.",
+    "The Teng family's envoys passed through last week. Heavy guard. Whatever they carried, it was important.",
+    "If you seek lodging, the residential district is to the west. If you seek trouble, the city gate is behind you."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 12
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "patrol_equipment",
+      "description": "Guard Chen nods: 'The night patrol needs leather for armor patches and arrows for the watchtowers. Bring me the materials and I will pay from the garrison fund.'",
+      "requires": [
+        {
+          "item": "minecraft:leather",
+          "count": 8
+        },
+        {
+          "item": "minecraft:arrow",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    },
+    {
+      "id": "gate_repairs",
+      "description": "Guard Chen gestures at the gate: 'The gate took damage during the last merchant caravan incident. Bring planks and iron to repair it. The governor will compensate you.'",
+      "requires": [
+        {
+          "item": "minecraft:oak_planks",
+          "count": 12
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    }
+  ]
+}

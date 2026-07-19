@@ -1,0 +1,133 @@
+{
+  "_comment": "NPC: Warehouse Manager Sun (库管孙). INFERRED from canon context: A capital city stores tribute and supplies in warehouses. The warehouse district implies a manager who tracks inventory, receives shipments from the docks, and distributes to other districts.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_warehouse_manager_sun",
+  "name": "Warehouse Manager Sun",
+  "nameCn": "库管孙",
+  "canon_id": "I-npc_warehouse_manager_sun",
+  "type": "official",
+  "faction": "zhao_country_government",
+  "location": "great_wang_capital",
+  "cultivation": "none",
+  "personality": "meticulous, stressed, loyal bureaucrat",
+  "speech": "clipped, efficient",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A meticulous official",
+    "qi_condensation": "Warehouse Manager Sun, zhao_country_government official"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: A capital city stores tribute and supplies in warehouses. The warehouse district implies a manager who tracks inventory, receives shipments from the docks, and distributes to other districts.",
+  "derivation_type": "I",
+  "salt": 749794291,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You are not authorized to enter the warehouse. All goods here are property of the Zhao Country government.",
+    "The dock shipments were short again. Three crates of iron missing. I have filed a report with the governor, but... well, the Teng family gets priority.",
+    "If you have goods to declare, see the tax office at the city gate. Everything that enters the capital is counted.",
+    "We need more storage space. The tribute from the outer provinces keeps growing, but the warehouse walls do not."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 3000,
+      "t1": 5000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 5000,
+      "t1": 6000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 6000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 12
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 6
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "inventory_audit",
+      "description": "Manager Sun checks his ledger: 'The governor demands an audit. I need paper and ink to rewrite the inventory records. The old ones were... damaged in a flood. Bring me materials.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 8
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "storage_repair",
+      "description": "Manager Sun sighs: 'Moisture ruined a section of the warehouse. We need planks and cobblestone to rebuild the storage bins. The tribute must be protected.'",
+      "requires": [
+        {
+          "item": "minecraft:oak_planks",
+          "count": 16
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 24
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ]
+}

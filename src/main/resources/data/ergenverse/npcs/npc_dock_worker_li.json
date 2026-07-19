@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Dock Worker Li (码头工李). INFERRED from canon context: A capital city on a river/coast needs docks. Dock workers handle shipments, hear rumors from traveling merchants, and provide the player with information about trade routes and incoming goods.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_dock_worker_li",
+  "name": "Dock Worker Li",
+  "nameCn": "码头工李",
+  "canon_id": "I-npc_dock_worker_li",
+  "type": "laborer",
+  "faction": "none",
+  "location": "great_wang_capital",
+  "cultivation": "none",
+  "personality": "strong, honest, overworked",
+  "speech": "blunt, friendly",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A strong laborer",
+    "qi_condensation": "Dock Worker Li, none laborer"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: A capital city on a river/coast needs docks. Dock workers handle shipments, hear rumors from traveling merchants, and provide the player with information about trade routes and incoming goods.",
+  "derivation_type": "I",
+  "salt": 1299220225,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Another pair of hands? Good. The barge from the southern provinces just arrived and the foreman is screaming about delays.",
+    "Most of what comes through these docks goes to the Teng family warehouses first. The capital gets the leftovers. That is just how it is.",
+    "A merchant came through last week asking about Wang Family Village. Unusual — nobody asks about that place. He was in a hurry.",
+    "If you need work, the warehouse manager is always short-staffed. Tell him Li sent you. Might get you better pay."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 12
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 11000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "barge_unloading",
+      "description": "Dock Worker Li wipes sweat: 'The barge needs unloading. Bring planks for pallets and sticks for bracing. Heavy crates of iron and coal. Hard work, fair pay.'",
+      "requires": [
+        {
+          "item": "minecraft:oak_planks",
+          "count": 12
+        },
+        {
+          "item": "minecraft:stick",
+          "count": 24
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "dock_supplies",
+      "description": "Li squints at the sky: 'Storm season is coming. We need coal for the dock lanterns and iron to reinforce the moorings. Help me out and I will share what the merchants pay me.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 12
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 6
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}

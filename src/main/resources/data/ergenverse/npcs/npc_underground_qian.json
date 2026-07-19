@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Underground Qian (地下钱). INFERRED from canon context: A capital city's smuggler tunnels imply a network of informants and black-market dealers. Qian provides the player with access to illegal information and goods, and hints at the governor's corruption.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_underground_qian",
+  "name": "Underground Qian",
+  "nameCn": "地下钱",
+  "canon_id": "I-npc_underground_qian",
+  "type": "rogue",
+  "faction": "none",
+  "location": "great_wang_capital",
+  "cultivation": "mid Qi Condensation",
+  "personality": "nervous, opportunistic, well-informed",
+  "speech": "whispered, coded",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A nervous rogue",
+    "qi_condensation": "Underground Qian, none rogue"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: A capital city's smuggler tunnels imply a network of informants and black-market dealers. Qian provides the player with access to illegal information and goods, and hints at the governor's corruption.",
+  "derivation_type": "I",
+  "salt": 3994524,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You found this place. Either you are very clever or very foolish. Let us hope it is the former. What do you need?",
+    "The governor's smuggler tunnels are not for the Teng family — they are his own. He skims from the tribute before reporting to Teng Huayuan. If the patriarch knew...",
+    "I can get you things that the market district cannot. Rare materials, forbidden texts, information about who really controls Zhao Country. But everything has a price.",
+    "Stay off the main tunnel after the sixth hour past midnight. That is when the governor's personal guard makes their deposits. You do not want to be seen."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 4000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 4000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 14000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 6
+    },
+    {
+      "t0": 14000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "smuggled_goods",
+      "description": "Qian glances around: 'I have a buyer for gold and emeralds. Bring me the goods and I will give you a cut — and a map. A map of places the governor does not want found.'",
+      "requires": [
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 6
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 12
+    },
+    {
+      "id": "tunnel_supplies",
+      "description": "Qian whispers: 'We are extending the tunnel toward the warehouse. Need iron and cobblestone — quietly. The governor's guards cannot know.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 8
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 32
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    }
+  ]
+}

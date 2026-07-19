@@ -1,0 +1,130 @@
+{
+  "_comment": "NPC: Cultivator Feng (修士冯). INFERRED from canon context: The capital's cultivator quarter would house cultivators who serve the government — enforcers, advisors, or those seeking patronage. In RI, cultivators in mortal cities often serve political roles.. Derivation: I = INFERRED. Per Article XV, this NPC fills a role implied by canon but not explicitly named.",
+  "npc_id": "npc_capital_cultivator_feng",
+  "name": "Cultivator Feng",
+  "nameCn": "修士冯",
+  "canon_id": "I-npc_capital_cultivator_feng",
+  "type": "cultivator",
+  "faction": "zhao_country_government",
+  "location": "great_wang_capital",
+  "cultivation": "Foundation Establishment (early)",
+  "personality": "ambitious, slightly cynical, politically aware",
+  "speech": "measured, slightly condescending",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A ambitious cultivator",
+    "qi_condensation": "Cultivator Feng, zhao_country_government cultivator"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: The capital's cultivator quarter would house cultivators who serve the government — enforcers, advisors, or those seeking patronage. In RI, cultivators in mortal cities often serve political roles.",
+  "derivation_type": "I",
+  "salt": 1286540102,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The cultivator quarter is not for idlers. We serve the governor and, through him, the Teng family. Our cultivation is the price of protection.",
+    "I have heard of Heng Yue Sect. A minor sect in the mountains. They produce decent disciples, but nothing compared to the major sects of the central regions.",
+    "The governor has a hidden collection of cultivation resources in the mansion. Officially, they are 'for the defense of the capital.' Unofficially... well.",
+    "If you seek cultivation guidance, I am not a teacher. But I might know where to find one — for the right price."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 12
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "cultivation_aid",
+      "description": "Cultivator Feng raises an eyebrow: 'My breakthrough requires resources. Iron for formations, coal for furnaces, emeralds to purchase spirit stones. Help me and I will share a technique scroll.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 10
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 16
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 2
+    },
+    {
+      "id": "patrol_duty",
+      "description": "Cultivator Feng smirks: 'The governor wants the outer districts patrolled. Bring arrows and coal for signal fires. Consider it... community service.'",
+      "requires": [
+        {
+          "item": "minecraft:arrow",
+          "count": 24
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ]
+}
