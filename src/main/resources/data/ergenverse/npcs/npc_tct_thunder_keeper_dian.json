@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_tct_thunder_keeper_dian",
+  "name": "Thunder Keeper Dian",
+  "nameCn": "雷霆守者电",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Thunder Celestial Temple",
+  "location": "thunder_celestial_temple",
+  "cultivation": "NASCENT_SOUL_MID",
+  "personality": "electric temperament, impatient, speaks in short bursts",
+  "speech": "rapid, crackling energy in voice, interrupts self",
+  "relationship_to_wanglin": "neutral — tests visitors with thunder tribulation",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "6ddf47622b59d98c",
+  "initiation_lines": [
+    "Thunder does not wait. Neither do I. State your purpose in three words or leave.",
+    "The Celestial Beast outside is a juvenile. The adult could level this temple. Respect it.",
+    "Cloud Sky Sect cultivators came for our thunder techniques. Their wind could not carry lightning. They left empty.",
+    "Copper and redstone — the body and blood of any thunder formation. Bring them or stop wasting time."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Absorb dawn thunder",
+      "location": "thunder_celestial_temple",
+      "duration": 120
+    },
+    {
+      "time": "06:00",
+      "action": "Inspect lightning rods",
+      "location": "thunder_celestial_temple",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Teach thunder cultivation",
+      "location": "thunder_celestial_temple",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Combat practice",
+      "location": "thunder_celestial_temple",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal",
+      "location": "thunder_celestial_temple",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Formation maintenance",
+      "location": "thunder_celestial_temple",
+      "duration": 180
+    },
+    {
+      "time": "18:00",
+      "action": "Evening thunder absorption",
+      "location": "thunder_celestial_temple",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Rest",
+      "location": "thunder_celestial_temple",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "tct_thunder_formation_repair",
+      "name": "Thunder Formation Repair",
+      "description": "Keeper Dian needs copper and redstone to repair the temple's thunder-gathering formations.",
+      "required_items": {
+        "minecraft:copper_ingot": 8,
+        "minecraft:redstone": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 8,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "tct_lightning_rod_upgrade",
+      "name": "Lightning Rod Upgrade",
+      "description": "Iron and glowstone are needed to upgrade the lightning rod array for stronger celestial thunder absorption.",
+      "required_items": {
+        "minecraft:iron_ingot": 6,
+        "minecraft:glowstone": 4
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:experience_bottle": 2,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

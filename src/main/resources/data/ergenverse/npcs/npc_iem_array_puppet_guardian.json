@@ -1,0 +1,101 @@
+{
+  "npc_id": "npc_iem_array_puppet_guardian",
+  "name": "Array Puppet Guardian",
+  "nameCn": "阵法傀儡守卫",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Immortal Emperor Legacy",
+  "location": "immortal_emperor_cave_mansion",
+  "cultivation": "NASCENT_SOUL_PEAK",
+  "personality": "mechanical, loyal to dead master, attacks intruders then offers tests",
+  "speech": "stilted, ancient formal, pauses between phrases as if processing",
+  "relationship_to_wanglin": "hostile until proven worthy — tests all who enter",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "4e299a9a2668a97b",
+  "initiation_lines": [
+    "This mansion belongs to the Immortal Emperor. Your presence is... unauthorized. However.",
+    "Three hundred cultivators have entered. Two hundred ninety-seven died. You may be the three hundredth.",
+    "The Emperor left puzzles, not walls. Solve them and you earn the right to breathe his air.",
+    "Bring me obsidian and ender pearls. The formations are weakening. I require materials to maintain them."
+  ],
+  "daily_schedule": [
+    {
+      "time": "00:00",
+      "action": "Patrol mansion perimeter",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 360
+    },
+    {
+      "time": "06:00",
+      "action": "Formation maintenance",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 180
+    },
+    {
+      "time": "09:00",
+      "action": "Test intruders",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Formation maintenance",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Record visitor attempts",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Deep patrol",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 300
+    },
+    {
+      "time": "23:00",
+      "action": "Dormant mode",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 60
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "iem_formation_repair",
+      "name": "Formation Repair Materials",
+      "description": "The puppet guardian needs obsidian and ender pearls to repair the weakening spatial formations.",
+      "required_items": {
+        "minecraft:obsidian": 8,
+        "minecraft:ender_pearl": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 3,
+        "experience": 40
+      }
+    },
+    {
+      "task_id": "iem_puppet_maintenance",
+      "name": "Puppet Self-Maintenance",
+      "description": "The ancient puppet needs gold and iron to repair its deteriorating frame.",
+      "required_items": {
+        "minecraft:gold_ingot": 5,
+        "minecraft:iron_ingot": 8
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:emerald": 10,
+        "experience": 30
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

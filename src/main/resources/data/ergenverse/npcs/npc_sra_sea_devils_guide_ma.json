@@ -1,0 +1,101 @@
+{
+  "npc_id": "npc_sra_sea_devils_guide_ma",
+  "name": "Sea of Devils Guide Ma",
+  "nameCn": "魔渊海向导马",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "none (independent guide)",
+  "location": "soul_refining_ancestral",
+  "cultivation": "CONDENSATION_LATE",
+  "personality": "pragmatic, fearless of souls, charges exorbitant fees",
+  "speech": "blunt, transactional, references danger casually",
+  "relationship_to_wanglin": "neutral-commercial — guides for pay",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "5b7b07ad24525630",
+  "initiation_lines": [
+    "You want to reach the Soul Refining Ancestral Ground? That will cost you. The Sea of Devils eats the unprepared.",
+    "I have guided forty-seven expeditions. Thirty-one returned. The others are part of this place now.",
+    "The Fighting Evil Sect sent a squad once. Brave. All of them. Dead within the hour.",
+    "Emeralds and iron. I need supplies for the return trip. This place does not give anything for free."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Check route markers",
+      "location": "soul_refining_ancestral",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Guide morning expedition",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Rest and resupply",
+      "location": "soul_refining_ancestral",
+      "duration": 120
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "soul_refining_ancestral",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Guide afternoon expedition",
+      "location": "soul_refining_ancestral",
+      "duration": 240
+    },
+    {
+      "time": "18:00",
+      "action": "Emergency route check",
+      "location": "soul_refining_ancestral",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Sleep with one eye open",
+      "location": "soul_refining_ancestral",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "sra_expedition_supplies",
+      "name": "Expedition Resupply",
+      "description": "Guide Ma needs emeralds and iron to fund and equip return expeditions through the Sea of Devils.",
+      "required_items": {
+        "minecraft:emerald": 10,
+        "minecraft:iron_ingot": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:soul_fragment": 3,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "sra_route_marking",
+      "name": "Route Marker Maintenance",
+      "description": "Coal and string are needed to maintain the dangerous route markers through the Sea of Devils.",
+      "required_items": {
+        "minecraft:coal": 10,
+        "minecraft:string": 8
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:emerald": 8,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

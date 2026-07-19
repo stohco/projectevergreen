@@ -1,0 +1,101 @@
+{
+  "npc_id": "npc_sra_ancestor_echo_gu",
+  "name": "Ancestor Echo Gu",
+  "nameCn": "祖灵回响古",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Soul Refining Sect (Ancestral Spirit)",
+  "location": "soul_refining_ancestral",
+  "cultivation": "SOUL_TRANSFORMATION_EARLY",
+  "personality": "ancient, fragmented consciousness, speaks in third person about the founding",
+  "speech": "echoing, overlapping phrases, ancient dialect",
+  "relationship_to_wanglin": "neutral-reverent — recognizes sect descendants",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "0daa3e1b6612221f",
+  "initiation_lines": [
+    "Gu founded this ground. Gu refined the first ten thousand souls. Gu does not remember why.",
+    "The Ten Billion Soul Banner... was not always a banner. It was a promise. Gu made it to someone. Who?",
+    "Heng Yue builds mountains. Luo He cultivates rivers. We... we collect what remains when mountains and rivers fail.",
+    "Spirit stones and obsidian. The anchors of this place. Without them, the souls scatter. Bring them."
+  ],
+  "daily_schedule": [
+    {
+      "time": "00:00",
+      "action": "Drift through ancestral ground",
+      "location": "soul_refining_ancestral",
+      "duration": 420
+    },
+    {
+      "time": "07:00",
+      "action": "Resonate with soul banners",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Flicker between visibility",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Ancient memory access",
+      "location": "soul_refining_ancestral",
+      "duration": 240
+    },
+    {
+      "time": "17:00",
+      "action": "Strengthen ward boundaries",
+      "location": "soul_refining_ancestral",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Commune with scattered souls",
+      "location": "soul_refining_ancestral",
+      "duration": 240
+    },
+    {
+      "time": "23:00",
+      "action": "Near-dissipation",
+      "location": "soul_refining_ancestral",
+      "duration": 60
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "sra_ward_anchor_repair",
+      "name": "Ancestral Ward Anchors",
+      "description": "Ancestor Echo Gu needs spirit stones and obsidian to anchor the soul ward boundaries.",
+      "required_items": {
+        "ergenverse:spirit_stone": 6,
+        "minecraft:obsidian": 8
+      },
+      "rewards": {
+        "ergenverse:dao_fragment": 1,
+        "ergenverse:jade_slip": 3,
+        "experience": 50
+      }
+    },
+    {
+      "task_id": "sra_memory_recovery",
+      "name": "Ancestral Memory Recovery",
+      "description": "Books and experience bottles help the ancient echo recover fragmented memories of the founding.",
+      "required_items": {
+        "minecraft:book": 5,
+        "minecraft:experience_bottle": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:soul_fragment": 5,
+        "experience": 45
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

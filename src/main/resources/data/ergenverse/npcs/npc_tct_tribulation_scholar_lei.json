@@ -1,0 +1,101 @@
+{
+  "npc_id": "npc_tct_tribulation_scholar_lei",
+  "name": "Tribulation Scholar Lei",
+  "nameCn": "天劫学者雷",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Thunder Celestial Temple",
+  "location": "thunder_celestial_temple",
+  "cultivation": "NASCENT_SOUL_LATE",
+  "personality": "obsessive documenter of thunder tribulations, treats lightning as a science",
+  "speech": "academic, precise, cites specific tribulation events",
+  "relationship_to_wanglin": "neutral — interested in anyone who has survived tribulation",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "22bde9caebf13187",
+  "initiation_lines": [
+    "I have documented four hundred and twelve thunder tribulations. Each one is unique. Each one lies.",
+    "The Heavenly Fate Sect claims stars predict tribulation timing. They do not. Thunder is not astrological.",
+    "A cultivator from the Heng Yue Sect survived a minor tribulation here last year. His sword conducted the lightning. He survived. The sword did not.",
+    "Books and experience bottles. I need to record. Bring them and I will share my tribulation catalog."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Morning tribulation observation",
+      "location": "thunder_celestial_temple",
+      "duration": 180
+    },
+    {
+      "time": "08:00",
+      "action": "Catalog previous tribulations",
+      "location": "thunder_celestial_temple",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Study ancient thunder texts",
+      "location": "thunder_celestial_temple",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal",
+      "location": "thunder_celestial_temple",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Teach tribulation survival",
+      "location": "thunder_celestial_temple",
+      "duration": 150
+    },
+    {
+      "time": "17:00",
+      "action": "Observe evening storms",
+      "location": "thunder_celestial_temple",
+      "duration": 180
+    },
+    {
+      "time": "21:00",
+      "action": "Write observations",
+      "location": "thunder_celestial_temple",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "tct_tribulation_documentation",
+      "name": "Tribulation Documentation",
+      "description": "Scholar Lei needs books and experience bottles to document thunder tribulation patterns.",
+      "required_items": {
+        "minecraft:book": 4,
+        "minecraft:experience_bottle": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "tth_storm_attractor",
+      "name": "Storm Attractor Construction",
+      "description": "Gold and blaze rods are needed to construct a storm attractor for controlled tribulation study.",
+      "required_items": {
+        "minecraft:gold_ingot": 6,
+        "minecraft:blaze_rod": 3
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "ergenverse:jade_slip": 1,
+        "experience": 30
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_vbc_vermilion_priestess_hong",
+  "name": "Vermilion Priestess Hong",
+  "nameCn": "朱雀祭司红",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Vermilion Bird Temple",
+  "location": "vermilion_bird_capital",
+  "cultivation": "NASCENT_SOUL_PEAK",
+  "personality": "devout, mystical, claims to communicate with the dormant Vermilion Bird",
+  "speech": "ceremonial, prophetic, pauses as if listening",
+  "relationship_to_wanglin": "neutral-reverent — evaluates visitors' spiritual resonance",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "eedad1f6c119f26b",
+  "initiation_lines": [
+    "The Vermilion Bird sleeps beneath this capital. I have felt its dreams. They are fire and sorrow.",
+    "Four thousand years ago, the Bird fought a war that cracked the planet. We maintain the temple. The war is not over.",
+    "The Xuan Dao Sect understands Dao philosophy. The Soul Refining Sect understands souls. We understand fire. Not blaze-rod fire. Phoenix fire.",
+    "Blaze rods and emeralds. The temple's eternal flame requires fuel. The Bird's dream requires tribute."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn fire meditation",
+      "location": "vermilion_bird_capital",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Temple ceremony",
+      "location": "vermilion_bird_capital",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Receive petitioners",
+      "location": "vermilion_bird_capital",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Sacred meal",
+      "location": "vermilion_bird_capital",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Eternal flame maintenance",
+      "location": "vermilion_bird_capital",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Vermilion dream interpretation",
+      "location": "vermilion_bird_capital",
+      "duration": 150
+    },
+    {
+      "time": "19:00",
+      "action": "Evening fire ceremony",
+      "location": "vermilion_bird_capital",
+      "duration": 120
+    },
+    {
+      "time": "22:00",
+      "action": "Commune with Bird's dream",
+      "location": "vermilion_bird_capital",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "vbc_eternal_flame_fuel",
+      "name": "Eternal Flame Fuel",
+      "description": "Priestess Hong needs blaze rods and emeralds to maintain the temple's eternal flame.",
+      "required_items": {
+        "minecraft:blaze_rod": 6,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 3,
+        "ergenverse:jade_slip": 2,
+        "experience": 40
+      }
+    },
+    {
+      "task_id": "vbc_dream_tribute",
+      "name": "Vermilion Dream Tribute",
+      "description": "Gold and redstone are needed as tribute for the Vermilion Bird's dream communion ritual.",
+      "required_items": {
+        "minecraft:gold_ingot": 6,
+        "minecraft:redstone": 8
+      },
+      "rewards": {
+        "ergenverse:dao_fragment": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 45
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

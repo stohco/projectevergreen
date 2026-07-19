@@ -1,0 +1,95 @@
+{
+  "npc_id": "npc_iem_trapped_explorer_lin",
+  "name": "Trapped Explorer Lin",
+  "nameCn": "被困探索者林",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "none (rogue cultivator)",
+  "location": "immortal_emperor_cave_mansion",
+  "cultivation": "FOUNDATION_LATE",
+  "personality": "desperate, knowledgeable about the mansion's traps, secretly hoarding treasures",
+  "speech": "nervous, rapid, glances over shoulder, whispers",
+  "relationship_to_wanglin": "cautiously friendly — needs help escaping",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "cf11292f829fe5a7",
+  "initiation_lines": [
+    "You are not a puppet. Thank the heavens. I have been here for six months.",
+    "The formations shift every three days. I have mapped forty percent of the patterns. Want to trade?",
+    "I came from the Heng Yue Sect. They said I was foolish to come alone. They were correct.",
+    "If you can bring me ender pearls and books, I can translate the Emperor's wall inscriptions."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Study wall inscriptions",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 240
+    },
+    {
+      "time": "09:00",
+      "action": "Probe formation boundaries",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Rationed meal",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Map formation patterns",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 240
+    },
+    {
+      "time": "17:00",
+      "action": "Avoid puppet patrol",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Rest in safe corner",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "iem_inscription_translation",
+      "name": "Emperor's Inscription Translation",
+      "description": "Explorer Lin needs ender pearls and books to translate ancient wall inscriptions about formation patterns.",
+      "required_items": {
+        "minecraft:ender_pearl": 4,
+        "minecraft:book": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "iem_escape_planning",
+      "name": "Escape Route Planning",
+      "description": "Lin needs diamonds and obsidian to construct a formation breaker for escaping the mansion.",
+      "required_items": {
+        "minecraft:diamond": 4,
+        "minecraft:obsidian": 6
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:emerald": 12,
+        "experience": 40
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

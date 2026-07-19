@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_vbc_imperial_guard_captain",
+  "name": "Imperial Guard Captain Zhu",
+  "nameCn": "禁卫队长朱",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Vermilion Bird Imperial Court",
+  "location": "vermilion_bird_capital",
+  "cultivation": "NASCENT_SOUL_LATE",
+  "personality": "imperious, loyal to the Vermilion Bird, suspicious of all outsiders",
+  "speech": "formal, commanding, uses imperial titles",
+  "relationship_to_wanglin": "neutral-suspicious — all visitors are potential threats to the Vermilion Bird",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "0d61cb2707de0bba",
+  "initiation_lines": [
+    "You stand in the Vermilion Bird Capital. The seat of Planet Suzaku's power. Conduct yourself accordingly.",
+    "The Vermilion Bird has not manifested in four thousand years. The capital still waits. That is faith.",
+    "Sects squabble over Zhao Country. They forget this capital exists. Their vision is small.",
+    "Gold and iron. The imperial guard requires constant resupply. We protect the entire planet."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Dawn guard assembly",
+      "location": "vermilion_bird_capital",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Patrol capital perimeter",
+      "location": "vermilion_bird_capital",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Receive reports from provinces",
+      "location": "vermilion_bird_capital",
+      "duration": 120
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "vermilion_bird_capital",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Inspect guard posts",
+      "location": "vermilion_bird_capital",
+      "duration": 150
+    },
+    {
+      "time": "16:00",
+      "action": "Train new recruits",
+      "location": "vermilion_bird_capital",
+      "duration": 180
+    },
+    {
+      "time": "20:00",
+      "action": "Night watch briefing",
+      "location": "vermilion_bird_capital",
+      "duration": 60
+    },
+    {
+      "time": "21:00",
+      "action": "Night patrol",
+      "location": "vermilion_bird_capital",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "vbc_guard_resupply",
+      "name": "Imperial Guard Resupply",
+      "description": "Captain Zhu needs gold and iron to equip the planetary imperial guard.",
+      "required_items": {
+        "minecraft:gold_ingot": 8,
+        "minecraft:iron_ingot": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "vbc_banner_repair",
+      "name": "Imperial Banner Repair",
+      "description": "Red wool and redstone are needed to repair the imperial vermilion banners.",
+      "required_items": {
+        "minecraft:red_wool": 8,
+        "minecraft:redstone": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 10,
+        "ergenverse:jade_slip": 1,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

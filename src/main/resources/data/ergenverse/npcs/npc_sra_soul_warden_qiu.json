@@ -1,0 +1,101 @@
+{
+  "npc_id": "npc_sra_soul_warden_qiu",
+  "name": "Soul Warden Qiu",
+  "nameCn": "魂卫邱",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Soul Refining Sect (Ancestral)",
+  "location": "soul_refining_ancestral",
+  "cultivation": "NASCENT_SOUL_PEAK",
+  "personality": "obsessed with soul collection, views all living things as potential soul material",
+  "speech": "whispery, occasionally speaks in plural 'we'",
+  "relationship_to_wanglin": "neutral-dangerous — evaluates visitors as soul sources",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "75c4651622b3460a",
+  "initiation_lines": [
+    "The souls here number in the billions. Each one has a name. I have forgotten most of them.",
+    "The Soul Refining Sect sends one elder per decade to maintain the ancestral ground. I am the sixty-third.",
+    "Corpse Yin Sect elders visit sometimes. They say our souls are 'improperly stored.' We say their corpses are 'poorly organized.'",
+    "Spirit stones and bone. The currency of this place is not emeralds. It is memory."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Soul census",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Inspect soul banners",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Collect stray soul fragments",
+      "location": "soul_refining_ancestral",
+      "duration": 150
+    },
+    {
+      "time": "13:00",
+      "action": "Meal (alone)",
+      "location": "soul_refining_ancestral",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Meditate with soul energy",
+      "location": "soul_refining_ancestral",
+      "duration": 240
+    },
+    {
+      "time": "18:00",
+      "action": "Record soul fluctuations",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "22:00",
+      "action": "Night vigil",
+      "location": "soul_refining_ancestral",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "sra_soul_banner_repair",
+      "name": "Soul Banner Repair",
+      "description": "Warden Qiu needs soul fragments and spirit stones to repair deteriorating soul banners.",
+      "required_items": {
+        "ergenverse:soul_fragment": 6,
+        "ergenverse:spirit_stone": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 5,
+        "experience": 45
+      }
+    },
+    {
+      "task_id": "sra_bone_ritual_supply",
+      "name": "Soul Binding Ritual",
+      "description": "Bone and ink are needed for the soul binding ritual that maintains the ancestral ward.",
+      "required_items": {
+        "minecraft:bone": 12,
+        "minecraft:ink_sac": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:soul_fragment": 4,
+        "experience": 35
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

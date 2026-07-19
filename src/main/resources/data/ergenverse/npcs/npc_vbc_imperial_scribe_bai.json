@@ -1,0 +1,102 @@
+{
+  "npc_id": "npc_vbc_imperial_scribe_bai",
+  "name": "Imperial Scribe Bai",
+  "nameCn": "皇室史官白",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Vermilion Bird Imperial Court",
+  "location": "vermilion_bird_capital",
+  "cultivation": "NASCENT_SOUL_EARLY",
+  "personality": "meticulous, secretly aware of the empire's decline, records everything",
+  "speech": "measured, literary, quotes imperial edicts",
+  "relationship_to_wanglin": "neutral-talkative — craves information from the provinces",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "7d1269e20be9a3e7",
+  "initiation_lines": [
+    "I have recorded eight hundred years of this capital's history. The last two hundred are... repetitive.",
+    "The Heavenly Fate Sect once sent astrologers to predict the Vermilion Bird's return. Their stars said 'soon.' That was six centuries ago.",
+    "Zhao Country is one province of twenty-three. Its sects believe they are the world. They are a footnote.",
+    "Ink, paper, and books. A scribe's needs are humble. An empire's history is not."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Review yesterday's records",
+      "location": "vermilion_bird_capital",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Interview visitors",
+      "location": "vermilion_bird_capital",
+      "duration": 150
+    },
+    {
+      "time": "10:30",
+      "action": "Write imperial records",
+      "location": "vermilion_bird_capital",
+      "duration": 180
+    },
+    {
+      "time": "13:30",
+      "action": "Meal",
+      "location": "vermilion_bird_capital",
+      "duration": 60
+    },
+    {
+      "time": "14:30",
+      "action": "Archive research",
+      "location": "vermilion_bird_capital",
+      "duration": 180
+    },
+    {
+      "time": "18:00",
+      "action": "Evening court session",
+      "location": "vermilion_bird_capital",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Write by candlelight",
+      "location": "vermilion_bird_capital",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "vbc_imperial_record_keeping",
+      "name": "Imperial Record Keeping",
+      "description": "Scribe Bai needs ink, paper, and books to maintain the imperial archives.",
+      "required_items": {
+        "minecraft:ink_sac": 6,
+        "minecraft:paper": 10,
+        "minecraft:book": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 8,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "vbc_province_intelligence",
+      "name": "Province Intelligence Report",
+      "description": "Scribe Bai trades knowledge for emeralds and experience bottles to fund intelligence networks.",
+      "required_items": {
+        "minecraft:emerald": 8,
+        "minecraft:experience_bottle": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1,
+        "experience": 30
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,101 @@
+{
+  "npc_id": "npc_tct_celestial_pilgrim_yun",
+  "name": "Celestial Pilgrim Yun",
+  "nameCn": "天朝朝圣者云",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "none (pilgrim from distant land)",
+  "location": "thunder_celestial_temple",
+  "cultivation": "FOUNDATION_PEAK",
+  "personality": "reverent, seeking enlightenment through thunder, deeply afraid but determined",
+  "speech": "soft, awed, frequently pauses to listen to distant thunder",
+  "relationship_to_wanglin": "friendly — fellow traveler seeking power",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "27c7c0366f6356ca",
+  "initiation_lines": [
+    "I traveled from the Vermilion Bird Capital to reach this temple. Forty days through the mountains.",
+    "They say if you meditate under the celestial thunder for seven days, your cultivation base shatters and reforms. I am on day three.",
+    "A Luo He Sect disciple was here before me. She said the river sects cannot understand thunder. Water and lightning are enemies.",
+    "Bread and coal. A pilgrim still needs to eat and stay warm, even in a temple of celestial power."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Pre-dawn meditation under sky",
+      "location": "thunder_celestial_temple",
+      "duration": 180
+    },
+    {
+      "time": "08:00",
+      "action": "Morning meal",
+      "location": "thunder_celestial_temple",
+      "duration": 60
+    },
+    {
+      "time": "09:00",
+      "action": "Thunder meditation",
+      "location": "thunder_celestial_temple",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Meal",
+      "location": "thunder_celestial_temple",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Study temple inscriptions",
+      "location": "thunder_celestial_temple",
+      "duration": 120
+    },
+    {
+      "time": "17:00",
+      "action": "Evening thunder meditation",
+      "location": "thunder_celestial_temple",
+      "duration": 180
+    },
+    {
+      "time": "21:00",
+      "action": "Sleep near lightning rods",
+      "location": "thunder_celestial_temple",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "tct_pilgrim_provisions",
+      "name": "Pilgrim Provisions",
+      "description": "Pilgrim Yun needs bread and coal to sustain her seven-day thunder meditation.",
+      "required_items": {
+        "minecraft:bread": 8,
+        "minecraft:coal": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "ergenverse:jade_slip": 1,
+        "experience": 20
+      }
+    },
+    {
+      "task_id": "tct_meditation_supplies",
+      "name": "Thunder Meditation Supplies",
+      "description": "Yun needs glowstone and emeralds to create meditation markers for her thunder cultivation.",
+      "required_items": {
+        "minecraft:glowstone": 4,
+        "minecraft:emerald": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:experience_bottle": 2,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

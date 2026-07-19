@@ -1,0 +1,95 @@
+{
+  "npc_id": "npc_iem_residual_spirit_wang",
+  "name": "Residual Spirit of the Emperor's Servant",
+  "nameCn": "仙帝侍者残灵",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Immortal Emperor Legacy",
+  "location": "immortal_emperor_cave_mansion",
+  "cultivation": "SOUL_FORMATION_EARLY",
+  "personality": "faded, speaks in riddles, sometimes forgets it is dead",
+  "speech": "echoing, fragmented sentences, ancient diction",
+  "relationship_to_wanglin": "neutral — offers cryptic guidance to those who prove respectful",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "d5ba5f7e04e276aa",
+  "initiation_lines": [
+    "The Emperor... departed. Long ago. I remain to guard. Or perhaps I forgot to leave.",
+    "This mansion exists in folded space. Time moves differently here. An hour outside is a day within.",
+    "The Soul Refining Sect sought this place once. Their elder could not break the first gate.",
+    "Netherite. The Emperor called it 'immortal bone.' Bring it to me and I will share what the walls remember."
+  ],
+  "daily_schedule": [
+    {
+      "time": "00:00",
+      "action": "Wander mansion corridors",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 480
+    },
+    {
+      "time": "08:00",
+      "action": "Fade into walls",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 240
+    },
+    {
+      "time": "12:00",
+      "action": "Manifest near treasure vault",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 120
+    },
+    {
+      "time": "14:00",
+      "action": "Wander mansion corridors",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 360
+    },
+    {
+      "time": "20:00",
+      "action": "Speak to walls",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 180
+    },
+    {
+      "time": "23:00",
+      "action": "Dissipate briefly",
+      "location": "immortal_emperor_cave_mansion",
+      "duration": 60
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "iem_immortal_bone_offering",
+      "name": "Immortal Bone Offering",
+      "description": "The residual spirit requires netherite ('immortal bone') and diamonds to strengthen its fading consciousness.",
+      "required_items": {
+        "minecraft:netherite_ingot": 3,
+        "minecraft:diamond": 5
+      },
+      "rewards": {
+        "ergenverse:dao_fragment": 1,
+        "ergenverse:spirit_stone": 4,
+        "experience": 50
+      }
+    },
+    {
+      "task_id": "iem_wall_knowledge",
+      "name": "Wall Memory Recovery",
+      "description": "The spirit needs experience bottles and emeralds to recover fragmented memories from the mansion's walls.",
+      "required_items": {
+        "minecraft:experience_bottle": 4,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 3,
+        "ergenverse:spirit_stone": 2,
+        "experience": 45
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}
