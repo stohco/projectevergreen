@@ -6,13 +6,13 @@
   "canon_id": "N46",
   "type": "mount",
   "faction": "wang_lin",
-  "location": "variable",
+  "location": "soul_refining_sect",
   "cultivation": "beast (Ascendant-tier)",
   "personality": "loyal thunder beast companion; imprinted on Wang Lin",
   "speech": "beast sounds; thunder-rumble",
   "relationship_to_wanglin": "bonded companion; loyal",
-  "dialogue_available": false,
-  "quest_available": false,
+  "dialogue_available": true,
+  "quest_available": true,
   "trade_available": false,
   "teaching_available": false,
   "perception_tiers": {
@@ -33,5 +33,93 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "*A deep thunderous rumble shakes the ground. Lei Ji's eyes crackle with blue lightning. The bonded thunder beast lowers its massive head, sniffing you with electric curiosity.*",
+    "*Lei Ji circles once, leaving scorch marks on the stone. A low growl vibrates through your chest. This Ascendant-tier thunder beast is clearly assessing whether you are a threat to its master.*",
+    "*Lei Ji's fur bristles with static charge. It seems to understand you are not an enemy, but its vigilance never wavers. It is bonded to Wang Lin. Its loyalty is absolute.*",
+    "*Lei Ji nudges a pile of blaze rods with its snout and looks at you expectantly. The thunder beast apparently wants something, though communicating with a beast requires patience and redstone.*"
+  ],
+  "daily_schedule": [
+    {
+      "time": "00:00",
+      "action": "Sleep curled around Soul Refining Sect courtyard",
+      "location": "soul_refining_sect",
+      "duration": 360
+    },
+    {
+      "time": "06:00",
+      "action": "Thunder-charged morning patrol",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "09:00",
+      "action": "Hunt for lightning-aspected prey in territory",
+      "location": "soul_refining_sect",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Rest and discharge stored lightning",
+      "location": "soul_refining_sect",
+      "duration": 120
+    },
+    {
+      "time": "15:00",
+      "action": "Cultivation — absorb ambient thunder energy",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "18:00",
+      "action": "Evening perimeter patrol",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "21:00",
+      "action": "Guard Wang Lin's quarters",
+      "location": "soul_refining_sect",
+      "duration": 300
+    },
+    {
+      "time": "02:00",
+      "action": "Sleep in guard position",
+      "location": "soul_refining_sect",
+      "duration": 240
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "lj_thunder_materials",
+      "name": "Thunder Beast Sustenance",
+      "description": "Lei Ji needs blaze rods and redstone to sustain its Ascendant-tier thunder energy. The bonded beast rewards those who care for it.",
+      "required_items": {
+        "minecraft:blaze_rod": 6,
+        "minecraft:redstone": 16
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "minecraft:experience_bottle": 3,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "lj_lightning_core",
+      "name": "Lightning Core Collection",
+      "description": "Lei Ji occasionally sheds charged lightning cores during thunder discharge. Bring copper and glowstone to help collect them safely.",
+      "required_items": {
+        "minecraft:copper_ingot": 8,
+        "minecraft:glowstone": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:spirit_stone": 1,
+        "experience": 30
+      }
+    }
+  ]
 }

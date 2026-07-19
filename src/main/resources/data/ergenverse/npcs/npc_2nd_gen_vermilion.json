@@ -34,5 +34,94 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You have entered the Fallen Land. Few survive the trial. Fewer still earn my attention. You have earned it. I am the Second Generation Vermilion Bird Divine Emperor. This trial will test not your strength, but your resolve.",
+    "Wang Lin passed this trial. He did not pass because he was the strongest. He passed because he refused to stop. Strength without resolve is fire without fuel. I have seen both fail.",
+    "I gave Wang Lin dragon blood and taught him the Dao of Strength. He asked me to look after Zhong Dahong. A small request from a man who had just proven he deserved anything he asked for.",
+    "Blaze rods and dragon breath. If you wish to attempt the Young Emperor trial, you will need fire-aspected materials to fuel the array. Bring them and I will assess your worthiness."
+  ],
+  "daily_schedule": [
+    {
+      "time": "03:00",
+      "action": "Void Flame meditation",
+      "location": "fallen_land",
+      "duration": 300
+    },
+    {
+      "time": "08:00",
+      "action": "Assess trial candidates",
+      "location": "fallen_land",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Maintain trial arrays",
+      "location": "fallen_land",
+      "duration": 180
+    },
+    {
+      "time": "14:00",
+      "action": "Cultivation at Divine Emperor level",
+      "location": "fallen_land",
+      "duration": 240
+    },
+    {
+      "time": "18:00",
+      "action": "Review trial records of past candidates",
+      "location": "fallen_land",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Commune with the Vermilion Bird flame remnant",
+      "location": "fallen_land",
+      "duration": 180
+    },
+    {
+      "time": "23:00",
+      "action": "Patrol Fallen Land perimeter",
+      "location": "fallen_land",
+      "duration": 180
+    },
+    {
+      "time": "02:00",
+      "action": "Rest in imperial chamber",
+      "location": "fallen_land",
+      "duration": 60
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "v2_trial_materials",
+      "name": "Young Emperor Trial Preparation",
+      "description": "The 2nd Generation Divine Emperor needs blaze rods and experience bottles to prepare the Young Emperor trial array for the next candidate.",
+      "required_items": {
+        "minecraft:blaze_rod": 12,
+        "minecraft:experience_bottle": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:spirit_stone": 3,
+        "ergenverse:dao_fragment": 1,
+        "experience": 55
+      }
+    },
+    {
+      "task_id": "v2_dao_strength",
+      "name": "Dao of Strength Instruction",
+      "description": "The 2nd Generation teaches fragments of the Dao of Strength to worthy cultivators. Bring iron and books to demonstrate your foundation.",
+      "required_items": {
+        "minecraft:iron_ingot": 20,
+        "minecraft:book": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 50
+      }
+    }
+  ]
 }

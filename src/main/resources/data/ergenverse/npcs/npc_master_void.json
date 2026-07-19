@@ -6,7 +6,7 @@
   "canon_id": "N97",
   "type": "antagonist",
   "faction": "independent",
-  "location": "unknown",
+  "location": "foreign_void_rift",
   "cultivation": "peak Nirvana Shatterer",
   "personality": "void-manipulating cultivator",
   "speech": "echoing, void-touched",
@@ -33,5 +33,93 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You stand at the edge of the void. Most who reach this point fall in. You have not. That is either wisdom or ignorance. I have not yet decided which.",
+    "The void does not destroy. It removes. Everything that enters ceases to exist not because it is broken, but because it was never there. I learned this truth and became its master. Or perhaps its servant. The distinction is unclear.",
+    "Wang Lin once stood where you stand. He did not fall in either. He reached into the void and pulled something out. That something should not have existed. The void has not forgiven him for that theft.",
+    "Endstone and obsidian. These are the only materials that anchor existence near the void. Bring them and I will teach you the first principle of void manipulation: to exist in nothing, you must first become nothing."
+  ],
+  "daily_schedule": [
+    {
+      "time": "02:00",
+      "action": "Void meditation at the rift's edge",
+      "location": "foreign_void_rift",
+      "duration": 300
+    },
+    {
+      "time": "07:00",
+      "action": "Study rift fluctuations",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Practice void manipulation techniques",
+      "location": "foreign_void_rift",
+      "duration": 240
+    },
+    {
+      "time": "14:00",
+      "action": "Seal expanding void tears",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "17:00",
+      "action": "Cultivation at Nirvana Shatterer level",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "20:00",
+      "action": "Observe entities that emerge from the void",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "23:00",
+      "action": "Deep void communion",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "02:00",
+      "action": "Rest in void-anchored chamber",
+      "location": "foreign_void_rift",
+      "duration": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "mv_void_anchoring",
+      "name": "Void Rift Anchoring Materials",
+      "description": "Master Void needs endstone and obsidian to anchor the void rift and prevent it from expanding into surrounding territory.",
+      "required_items": {
+        "minecraft:end_stone": 20,
+        "minecraft:obsidian": 16
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:spirit_stone": 3,
+        "experience": 50
+      }
+    },
+    {
+      "task_id": "mv_void_knowledge",
+      "name": "Void Manipulation Exchange",
+      "description": "Master Void trades void manipulation knowledge for jade slips containing information about other realms and dimensions.",
+      "required_items": {
+        "ergenverse:jade_slip": 3,
+        "ergenverse:spirit_stone": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:dao_fragment": 1,
+        "experience": 55
+      }
+    }
+  ]
 }

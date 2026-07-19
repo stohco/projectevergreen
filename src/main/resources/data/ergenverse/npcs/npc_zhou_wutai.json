@@ -34,5 +34,94 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The burden of the Divine Emperor is not power. It is watching everyone you protect grow old and die while you remain. I carried that burden before Wang Lin. He carries it now. The weight does not decrease with generations.",
+    "The Trial of Heaven is not a test of cultivation. It is a test of whether the universe accepts you. I stood before it once. It accepted me. When Wang Lin stood before it, it hesitated. That hesitation should tell you everything about who he is.",
+    "The Heavenly Fate Sect believes destiny is written in stars. The Soul Refining Sect believes power comes from suffering. The Vermilion Bird Divine Sect believes that fire purifies all things. We are all partially right. None of us are fully right.",
+    "Gold and blaze powder. The Divine Emperor's seal requires constant energy to maintain. If you contribute, you earn the right to observe the Trial of Heaven preparation. Whether you survive the observation is another matter."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Imperial seal meditation",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Receive reports from all sect branches",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Cultivation at Wending realm",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 240
+    },
+    {
+      "time": "14:00",
+      "action": "Advise inner disciples on cultivation",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "17:00",
+      "action": "Prepare Trial of Heaven logistics",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Diplomatic correspondence with other sects",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Night cultivation and reflection",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 300
+    },
+    {
+      "time": "02:00",
+      "action": "Rest",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "zw_imperial_seal",
+      "name": "Imperial Seal Maintenance",
+      "description": "Zhou Wutai needs gold and blaze powder to maintain the Divine Emperor's seal that protects the Vermilion Bird Divine Sect.",
+      "required_items": {
+        "minecraft:gold_ingot": 16,
+        "minecraft:blaze_powder": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 4,
+        "minecraft:enchanted_book": 1,
+        "experience": 50
+      }
+    },
+    {
+      "task_id": "zw_trial_records",
+      "name": "Trial of Heaven Records",
+      "description": "Zhou Wutai collects historical records of past Trial of Heaven attempts. Bring jade slips and books documenting cultivation breakthroughs.",
+      "required_items": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:book": 5,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 45
+      }
+    }
+  ]
 }

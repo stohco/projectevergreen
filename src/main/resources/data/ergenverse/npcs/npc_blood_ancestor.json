@@ -34,5 +34,94 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Blood is the original cultivation resource. Before spirit stones, before herbs, before jade slips — there was blood. The Yao Family remembers this. The Yao Family practices this. The Yao Family IS this.",
+    "Wang Lin killed me. Or rather, he killed this body. The Blood Sea reforms. The Blood Ancestor returns. Death is a temporary inconvenience for one who has mastered the art of blood reincarnation.",
+    "The Soul Refining Sect refines souls. The Corpse Yin Sect animates corpses. Both are crude imitations of what the Blood Sea accomplishes naturally. Blood carries memory, power, lineage. Everything else is a shadow of blood's truth.",
+    "Redstone and bone meal. The Blood Sea requires these to sustain its territorial expansion. Bring them, and I will teach you the first form of Blood Reincarnation. What you do with that knowledge is your own affair."
+  ],
+  "daily_schedule": [
+    {
+      "time": "01:00",
+      "action": "Blood Sea meditation",
+      "location": "blood_sea",
+      "duration": 300
+    },
+    {
+      "time": "06:00",
+      "action": "Absorb blood energy from the sea",
+      "location": "blood_sea",
+      "duration": 180
+    },
+    {
+      "time": "09:00",
+      "action": "Direct Yao Family operations",
+      "location": "blood_sea",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Cultivation at peak Third Step",
+      "location": "blood_sea",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Expand Blood Sea territory",
+      "location": "blood_sea",
+      "duration": 180
+    },
+    {
+      "time": "19:00",
+      "action": "Receive reports from Yao Xixue",
+      "location": "blood_sea",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Blood reincarnation body preparation",
+      "location": "blood_sea",
+      "duration": 180
+    },
+    {
+      "time": "00:00",
+      "action": "Rest in blood cocoon",
+      "location": "blood_sea",
+      "duration": 60
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "ba_blood_sea_materials",
+      "name": "Blood Sea Expansion Materials",
+      "description": "The Blood Ancestor needs redstone and bone meal to sustain and expand the Blood Sea's territorial boundary.",
+      "required_items": {
+        "minecraft:redstone": 32,
+        "minecraft:bone_meal": 24
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:soul_fragment": 2,
+        "ergenverse:spirit_stone": 3,
+        "experience": 55
+      }
+    },
+    {
+      "task_id": "ba_blood_reincarnation",
+      "name": "Blood Reincarnation Knowledge",
+      "description": "The Blood Ancestor trades forbidden Blood Reincarnation arts in exchange for soul fragments and jade slips documenting other cultivation methods.",
+      "required_items": {
+        "ergenverse:soul_fragment": 6,
+        "ergenverse:jade_slip": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 2,
+        "ergenverse:dao_fragment": 1,
+        "experience": 60
+      }
+    }
+  ]
 }

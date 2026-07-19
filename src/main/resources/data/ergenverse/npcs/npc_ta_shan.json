@@ -6,13 +6,13 @@
   "canon_id": "N44",
   "type": "servant",
   "faction": "wang_lin",
-  "location": "variable",
+  "location": "soul_refining_ancestral",
   "cultivation": "Celestial Guard (refined)",
   "personality": "loyal, silent guardian; refined celestial guard",
   "speech": "minimal, respectful",
   "relationship_to_wanglin": "servant; celestial guard",
   "dialogue_available": true,
-  "quest_available": false,
+  "quest_available": true,
   "trade_available": false,
   "teaching_available": false,
   "perception_tiers": {
@@ -33,5 +33,92 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "...",
+    "Master requires protection. I protect. That is sufficient.",
+    "I am Ta Shan. Celestial Guard. Refined for loyalty. Refined for silence. If Master's enemy approaches, they will face me first. They will not face anyone after.",
+    "...Materials for armor maintenance. Iron. Obsidian. Bring them. I will continue standing."
+  ],
+  "daily_schedule": [
+    {
+      "time": "00:00",
+      "action": "Stand guard at Soul Refining Ancestral entrance",
+      "location": "soul_refining_ancestral",
+      "duration": 480
+    },
+    {
+      "time": "08:00",
+      "action": "Patrol Ancestral Ground perimeter",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Armor maintenance and repair",
+      "location": "soul_refining_ancestral",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Stand guard at inner chamber",
+      "location": "soul_refining_ancestral",
+      "duration": 300
+    },
+    {
+      "time": "18:00",
+      "action": "Patrol outer Ancestral Ground",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "21:00",
+      "action": "Stand guard at Ten Billion Soul Banner chamber",
+      "location": "soul_refining_ancestral",
+      "duration": 360
+    },
+    {
+      "time": "03:00",
+      "action": "Brief cultivation cycle",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "06:00",
+      "action": "Resume entrance guard duty",
+      "location": "soul_refining_ancestral",
+      "duration": 120
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "ts_armor_maintenance",
+      "name": "Celestial Guard Armor Repair",
+      "description": "Ta Shan needs iron and obsidian to maintain his Celestial Guard armor. He offers protection knowledge in return.",
+      "required_items": {
+        "minecraft:iron_ingot": 20,
+        "minecraft:obsidian": 12
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "ts_patrol_report",
+      "name": "Ancestral Ground Patrol Report",
+      "description": "Ta Shan accepts reports of unusual activity near the Soul Refining Ancestral Ground. Bring jade slips with observations.",
+      "required_items": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 25
+      }
+    }
+  ]
 }

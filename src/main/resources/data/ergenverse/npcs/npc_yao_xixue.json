@@ -33,5 +33,93 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The Yao Family does not negotiate from weakness. We negotiate from the Blood Sea, which stretches further than your eye can see. If you want something from us, first understand that you are standing on our territory.",
+    "Wang Lin is a problem that the Blood Ancestor will solve. Personally, I find him fascinating. A cultivator who kills a Third Step being and simply walks away as if it were Tuesday. That is either supreme confidence or supreme ignorance.",
+    "The Blood Ancestor trusts me with the family's external affairs. I handle diplomacy, intelligence, and when diplomacy fails, other methods. The Soul Refining Sect calls us monsters. We call them amateurs.",
+    "Emeralds and gold. The Yao Family's external operations require funding. In exchange, I can provide intelligence on any faction on Planet Suzaku. Information is the one currency that appreciates in war."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Morning cultivation",
+      "location": "yao_family_territory",
+      "duration": 180
+    },
+    {
+      "time": "08:00",
+      "action": "Review intelligence reports from agents",
+      "location": "yao_family_territory",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Manage Yao Family external affairs",
+      "location": "yao_family_territory",
+      "duration": 180
+    },
+    {
+      "time": "14:00",
+      "action": "Report to Blood Ancestor",
+      "location": "blood_sea",
+      "duration": 120
+    },
+    {
+      "time": "16:00",
+      "action": "Diplomatic meetings with other factions",
+      "location": "yao_family_territory",
+      "duration": 180
+    },
+    {
+      "time": "19:00",
+      "action": "Cultivation at Infant Transformation stage",
+      "location": "yao_family_territory",
+      "duration": 180
+    },
+    {
+      "time": "22:00",
+      "action": "Coordinate agent network",
+      "location": "yao_family_territory",
+      "duration": 120
+    },
+    {
+      "time": "00:00",
+      "action": "Rest",
+      "location": "yao_family_territory",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "yx_external_funding",
+      "name": "Yao Family Intelligence Operations",
+      "description": "Yao Xixue needs emeralds and gold to fund the Yao Family's intelligence network across Planet Suzaku.",
+      "required_items": {
+        "minecraft:emerald": 16,
+        "minecraft:gold_ingot": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 3,
+        "minecraft:enchanted_book": 1,
+        "experience": 45
+      }
+    },
+    {
+      "task_id": "yx_faction_intelligence",
+      "name": "Cross-Faction Intelligence Trade",
+      "description": "Yao Xixue trades detailed intelligence on other factions in exchange for jade slips containing cultivation secrets.",
+      "required_items": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1,
+        "minecraft:emerald": 8,
+        "experience": 40
+      }
+    }
+  ]
 }

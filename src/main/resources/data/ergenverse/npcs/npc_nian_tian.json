@@ -6,15 +6,15 @@
   "canon_id": "N161",
   "type": "ally",
   "faction": "soul_refining_sect",
-  "location": "deceased",
+  "location": "soul_refining_ancestral",
   "cultivation": "Nirvana Scryer+",
   "personality": "loyal sworn brother; self-sacrificing",
   "speech": "steady, brotherly, weighted",
   "relationship_to_wanglin": "acquaintance (Du Tian's sworn brother)",
-  "dialogue_available": false,
-  "quest_available": false,
-  "trade_available": false,
-  "teaching_available": false,
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
   "perception_tiers": {
     "mortal": "A powerful cultivator with a brother's warmth",
     "qi_condensation": "Soul Refining Sect elder; Nirvana Scryer aura",
@@ -33,5 +33,93 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You can see me? My body died protecting Du Tian. My soul... fragments of it remain here, bound to the Ancestral Ground. I am a memory that refuses to fade.",
+    "Du Tian was my sworn brother. We shared the Ancient Clan bloodline. When the Soul Refining Sect was destroyed, I stood between him and death. Death took me instead. I do not regret it. A brother's duty is not negotiable.",
+    "Wang Lin inherited Du Tian's legacy. He carries the Ten Billion Soul Banner now. If you serve him, you serve the continuation of what Du Tian and I built. Remember that loyalty is not given. It is earned through sacrifice.",
+    "My soul fragments retain some knowledge. If you bring me soul fragments and spirit stones, I can share what I remember of the Ancient Clan bloodline arts. It is not much. But it is all I have left to give."
+  ],
+  "daily_schedule": [
+    {
+      "time": "00:00",
+      "action": "Drift through Ancestral Ground as remnant soul",
+      "location": "soul_refining_ancestral",
+      "duration": 480
+    },
+    {
+      "time": "08:00",
+      "action": "Linger near Du Tian's memorial",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Resonate with Ten Billion Soul Banner fragments",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "14:00",
+      "action": "Faintly manifest to speak with visitors",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "17:00",
+      "action": "Drift back toward deepest chamber",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "20:00",
+      "action": "Flicker between consciousness and void",
+      "location": "soul_refining_ancestral",
+      "duration": 360
+    },
+    {
+      "time": "02:00",
+      "action": "Brief moment of clarity near ancient altar",
+      "location": "soul_refining_ancestral",
+      "duration": 120
+    },
+    {
+      "time": "04:00",
+      "action": "Dissolve into scattered fragments",
+      "location": "soul_refining_ancestral",
+      "duration": 240
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "nt_soul_fragments",
+      "name": "Remnant Soul Stabilization",
+      "description": "Nian Tian's remnant soul needs soul fragments and spirit stones to maintain coherence. In return, he shares Ancient Clan bloodline knowledge.",
+      "required_items": {
+        "ergenverse:soul_fragment": 8,
+        "ergenverse:spirit_stone": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:dao_fragment": 1,
+        "experience": 60
+      }
+    },
+    {
+      "task_id": "nt_ancient_memory",
+      "name": "Ancient Clan Memory Recovery",
+      "description": "Nian Tian attempts to recover fragmented memories of the Ancient Clan. Bring books and jade slips to help reconstruct his knowledge.",
+      "required_items": {
+        "minecraft:book": 6,
+        "ergenverse:jade_slip": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:soul_fragment": 2,
+        "experience": 50
+      }
+    }
+  ]
 }
