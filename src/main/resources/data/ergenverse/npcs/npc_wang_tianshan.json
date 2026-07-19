@@ -94,5 +94,31 @@
       "dir": null,
       "dist": 0
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "shrine_incense_supplies",
+      "description": "Wang Tianshan gestures toward the memorial shrine: 'The ancestors watch over us, but the incense burns low. Bring coal for the braziers — our forefathers deserve warmth, even in death.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 2
+    },
+    {
+      "id": "village_patrol_arrows",
+      "description": "Wang Tianshan frowns: 'Bandits have been seen on the northern road. I am too old to patrol as I once did. Bring arrows — the village watch needs them.'",
+      "requires": [
+        {
+          "item": "minecraft:arrow",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:iron_ingot",
+      "reward_count": 2
+    }
   ]
 }

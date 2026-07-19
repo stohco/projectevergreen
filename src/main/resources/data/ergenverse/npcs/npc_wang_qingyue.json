@@ -94,5 +94,31 @@
       "dir": null,
       "dist": 0
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "sweep_ancestral_hall",
+      "description": "Wang Qingyue hands you a worn broom: 'The ancestral hall must be spotless before the Heng Yue elder arrives. If you bring sticks for new brooms, I will handle the rest. Our ancestors deserve respect.'",
+      "requires": [
+        {
+          "item": "minecraft:stick",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:wheat",
+      "reward_count": 8
+    },
+    {
+      "id": "ceremony_bread",
+      "description": "Wang Qingyue wrings her hands: 'The test ceremony will bring many families to the square. We need bread for the gathering. If you can provide some, the Wang family will not look poor before the cultivator.'",
+      "requires": [
+        {
+          "item": "minecraft:bread",
+          "count": 6
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 1
+    }
   ]
 }

@@ -12,7 +12,11 @@
   "cultivation": "Qi Condensation 3 (low-realm cultivator sent to test mortals)",
   "cultivation_realm": "qi_condensation_3",
   "realm": "qi_condensation_3",
-  "personality": ["indifferent", "dutiful", "slightly_bored"],
+  "personality": [
+    "indifferent",
+    "dutiful",
+    "slightly_bored"
+  ],
   "speech": "terse, official",
   "dialogue_style": "terse_official",
   "behavior": "visits_mortal_villages_for_recruitment",
@@ -50,5 +54,79 @@
     "issue_outer_disciple_token": true,
     "depart_after_ceremony": true
   },
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 10
+    },
+    {
+      "t0": 1000,
+      "t1": 2000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 15
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "idle",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "idle",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 8000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "aptitude_test",
+      "description": "The Heng Yue recruiter gestures to a pale jade stone on the table: 'Place your hand here. If you have any spiritual root at all, the stone will glow. This is your only chance to leave this mortal village.'",
+      "requires": [],
+      "reward_item": "minecraft:air",
+      "reward_count": 0
+    },
+    {
+      "id": "gather_village_children",
+      "description": "The recruiter narrows his eyes: 'I need every child in this village between twelve and sixteen brought to the square. The test will not wait. Go tell the Wang, Zhou, and Zhang families.'",
+      "requires": [],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 1
+    }
+  ]
 }
