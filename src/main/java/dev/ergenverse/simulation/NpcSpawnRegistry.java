@@ -78,6 +78,10 @@ public final class NpcSpawnRegistry {
         register("zhao_mountains", "npc_zhang_hu");          // Sect disciple
         register("zhao_mountains", "npc_zhou_lin");          // Sect disciple
 
+        // ── Zhao Spirit Herb Hills (ergenverse:zhao_spirit_herb_hills biome) ─
+        // INFERRED: Hills with 7 herb features must have a gatherer (Article II).
+        register("zhao_spirit_herb_hills", "npc_herb_gatherer_li");
+
         // ── Great Wang Capital (ergenverse:great_wang_dynasty biome) ─────
         // INFERRED: The Zhao Country capital must have inhabitants (Article II).
         // All NPCs are INFERRED from the 11-district city structure.

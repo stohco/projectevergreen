@@ -167,9 +167,13 @@ public final class SpatialBiomeCacheIndex {
         if (biomeId.startsWith("ergenverse:")) {
             String path = biomeId.substring("ergenverse:".length());
 
-            // Map sub-region biomes to their parent country/location.
-            // e.g. zhao_spirit_herb_hills, zhao_minor_spirit_vein_region → zhao_plains
-            // (These are sub-biomes within Zhao; for v1 we treat them as Zhao Plains.)
+            // Named sub-regions that deserve their own location ID.
+            // zhao_spirit_herb_hills is a distinct explorable area with unique
+            // flora, fauna, and NPCs (INFERRED herb gatherers per Article II).
+            if (path.equals("zhao_spirit_herb_hills")) {
+                return "zhao_spirit_herb_hills";
+            }
+            // Other zhao_* sub-biomes map to zhao_plains.
             if (path.startsWith("zhao_") && !path.equals("zhao_mountains")) {
                 return "zhao_plains";
             }

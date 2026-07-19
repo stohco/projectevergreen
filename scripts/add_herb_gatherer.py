@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+"""AUTO-CANON-025: Create herb gatherer NPC for zhao_spirit_herb_hills + register.
+
+Canon context (RI Ch.1-5):
+- Zhao Country has spirit herb hills near the mortal villages.
+- Mortal families (like Wang Lin's) are poor and might gather herbs to survive.
+- The zhao_spirit_herb_hills biome has 7 herb features (after enhancement).
+- An herb gatherer is INFERRED from the biome's existence (Article II).
+- Per Article XXIV: NPC initiates — the gatherer asks the player to help collect herbs.
+"""
+
+import json
+import os
+
+BASE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                     "src/main/resources/data/ergenverse/npcs")
+
+herb_gatherer = {
+    "_comment": "NPC: Herb Gatherer Old Li (INFERRED). An elderly mortal who has spent decades gathering spirit herbs in the Zhao Spirit Herb Hills. Knows which herbs are valuable, which are dangerous, and which sects buy them. INFERRED from the existence of zhao_spirit_herb_hills biome (Article II: Reality First). The hills exist; someone must gather from them.",
+    "npc_id": "npc_herb_gatherer_li",
+    "name": "Herb Gatherer Old Li",
+    "nameCn": "\u91c7\u8349\u8001\u674e",
+    "canon_id": "INF-ZSH-01",
+    "type": "herb_gatherer",
+    "faction": "none",
+    "location": "zhao_spirit_herb_hills",
+    "cultivation": "Mortal (non-cultivator, but knowledgeable about herbs)",
+    "personality": "weathered, patient, quietly knowledgeable; has survived the hills for decades",
+    "speech": "slow, earthy, practical",
+    "relationship_to_wanglin": "INFERRED — would recognize a local child; could guide a young cultivator toward herb knowledge",
+    "dialogue_available": True,
+    "quest_available": True,
+    "trade_available": False,
+    "teaching_available": False,
+    "perception_tiers": {
+        "mortal": "An old man with a woven basket, picking plants. His hands are stained green.",
+        "qi_condensation": "A mortal herb gatherer. Knows the hills well. Could point out rare herbs.",
+        "foundation": "Old Li has no spiritual root, but his knowledge of herbs rivals some outer disciples. Useful for gathering missions.",
+        "nascent_soul": "A mortal who has walked these hills for forty years. His herb knowledge is encyclopedic but he cannot cultivate."
+    },
+    "canon_confidence": 2,
+    "note": "INFERRED. The zhao_spirit_herb_hills biome exists with 7 herb features. Someone gathers them. Old Li is that someone.",
+    "derivation_type": "I",
+    "salt": 424242424,
+    "dao_heart": {
+        "stability": 30,
+        "cracks": [],
+        "last_tested_tick": None,
+        "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+    },
+    "soul_state": "none",
+    "tribulation_debt": 0,
+    "max_hp": 20,
+    "_xianxia_schema": 1,
+    "initiation_lines": [
+        "Careful where you step, young one. That patch of purple grass is blood-forgetting grass — touch it bare-handed and you will forget your own name for an hour.",
+        "These hills feed half the mortal villages in Zhao Country. Qi-gathering grass for the poor, foundation root vine for the sects. I have gathered here since before you were born.",
+        "The Heng Yue Sect sends disciples to buy herbs every spring. If you gather enough, they pay in spirit stones — or at least in silver. A mortal can make a living here, if he knows what to avoid.",
+        "Stay on the paths at night. Wolves hunt the lower slopes, and the herbs near the old mine shaft glow strangely after dark. I do not go there after sunset."
+    ],
+    "daily_schedule": [
+        {"t0": 0, "t1": 1000, "act": "sleeping", "dir": None, "dist": 0},
+        {"t0": 1000, "t1": 3000, "act": "wandering", "dir": "east", "dist": 15},
+        {"t0": 3000, "t1": 4000, "act": "eating", "dir": None, "dist": 0},
+        {"t0": 4000, "t1": 7000, "act": "wandering", "dir": "north", "dist": 18},
+        {"t0": 7000, "t1": 8000, "act": "eating", "dir": None, "dist": 0},
+        {"t0": 8000, "t1": 11000, "act": "wandering", "dir": "west", "dist": 20},
+        {"t0": 11000, "t1": 24000, "act": "sleeping", "dir": None, "dist": 0}
+    ],
+    "sect_tasks": [
+        {
+            "id": "gather_qi_grass",
+            "description": "Old Li squints at the hillsides: 'Qi-gathering grass grows thick on the eastern slope this time of year. The Heng Yue Sect pays well for fresh bundles. Bring me wheat — I use it to bundle the cuttings — and I will share the payment.'",
+            "requires": [
+                {"item": "minecraft:wheat", "count": 12}
+            ],
+            "reward_item": "minecraft:emerald",
+            "reward_count": 4
+        },
+        {
+            "id": "gather_rare_herbs",
+            "description": "Old Li's eyes brighten: 'I have heard nine-leaf clover growing near the old mine shaft. But wolves patrol that area. If you can bring me coal for my night fire and carrots for bait — I will share what I know about the herb locations with you.'",
+            "requires": [
+                {"item": "minecraft:coal", "count": 8},
+                {"item": "minecraft:carrot", "count": 8}
+            ],
+            "reward_item": "minecraft:emerald",
+            "reward_count": 5
+        }
+    ]
+}
+
+def main():
+    fname = "npc_herb_gatherer_li.json"
+    fpath = os.path.join(BASE, fname)
+    with open(fpath, "w") as f:
+        json.dump(herb_gatherer, f, indent=2)
+        f.write("\n")
+    print(f"Created {fname}: {herb_gatherer['name']}")
+
+    # Update _index.json
+    index_path = os.path.join(BASE, "_index.json")
+    with open(index_path, "r") as f:
+        index = json.load(f)
+    if fname not in index:
+        index.append(fname)
+        index.sort()
+        with open(index_path, "w") as f:
+            json.dump(index, f, indent=2)
+            f.write("\n")
+        print(f"Added {fname} to _index.json")
+    else:
+        print(f"{fname} already in _index.json")
+
+    lines = len(herb_gatherer["initiation_lines"])
+    sched = len(herb_gatherer["daily_schedule"])
+    tasks = len(herb_gatherer["sect_tasks"])
+    print(f"  {lines} initiation lines, {sched} schedule entries, {tasks} tasks")
+
+if __name__ == "__main__":
+    main()
