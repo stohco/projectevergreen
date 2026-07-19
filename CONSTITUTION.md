@@ -201,3 +201,131 @@ collection of features.
 But above all: the universe must be BUILT, not just architected.
 A perfect engine with an empty world is a greater failure than a rough world
 that feels alive. When in doubt, build the world.
+
+═══════════════════════════════════════════════════════════════
+THE LIVING WORLD AMENDMENTS (Articles XXVII–XXX)
+Added when the project shifted from "furnishing locations" to
+"proving locations are alive." These articles supersede any
+earlier interpretation that conflated file existence with
+completion, or count with depth.
+═══════════════════════════════════════════════════════════════
+
+Article XXVII — Completion Is Proven by Life
+A location is not complete because every file exists.
+A location is complete only when it demonstrates independent life.
+
+A complete location has inhabitants with routines, opportunities,
+relationships, ecological interactions, and historical continuity
+that continue whether or not the player is present.
+
+A location must answer yes to all of the following:
+  • Does something happen here without the player?
+  • Can the player discover something instead of being told?
+  • Can NPCs affect each other, not just the player?
+  • Can the location change over time?
+  • Would returning weeks later reveal different circumstances?
+
+If any answer is no, the location is not complete.
+It is furnished. Furnished is not complete.
+
+Article XXVIII — Affordance Ontology
+Objects do not define actions. Objects define possibilities.
+
+Every entity, item, location, artifact, beast, plant, technique,
+formation, and person exposes AFFORDANCES.
+Affordances describe what can meaningfully occur.
+Systems discover affordances. They do not hardcode interactions.
+
+A Spirit Herb affords:
+  harvest, transplant, smell, refine, study, steal, trade, bait.
+
+Li Muwan affords:
+  discuss herbs, request pill, learn alchemy,
+  gather together, request diagnosis.
+
+Wang Lin affords:
+  ask, observe, debate, learn, challenge, spar,
+  request artifact copy, request technique, request advice,
+  travel together.
+
+The UI discovers these. The AI discovers these.
+Nothing special-cases Wang Lin. Nothing special-cases any object.
+Two NPCs are mechanically unique when they expose different affordances.
+Two items are mechanically unique when they afford different verbs.
+
+Article XXIX — Reality Before Expansion
+The project expands geographically only after it expands vertically.
+
+Every completed region must demonstrate all of the following before
+another major region receives equivalent attention:
+  ecology, NPC life, opportunities, economy, interaction,
+  history, discovery, consequences.
+
+If a region lacks any of these, expanding to a new region is forbidden.
+A single region that feels alive is worth more than ten regions that
+are merely furnished.
+
+Article XXX — Canon Through Experience
+Canon is not represented when it exists in JSON.
+Canon is represented when the player experiences it.
+
+Every canon concept must become one or more of:
+  something observable
+  something interactable
+  something discoverable
+  something learnable
+  something survivable
+  something memorable
+
+If a chapter exists only in data, it does not yet exist in the game.
+
+═══════════════════════════════════════════════════════════════
+THE FINAL QUESTIONS
+═══════════════════════════════════════════════════════════════
+
+Every implementation must answer these three questions.
+If any answer is unsatisfactory, the implementation is not done.
+
+1. If the player never existed, would this system still function correctly?
+
+2. If the player enters the world, what new possibilities emerge
+   rather than what new scripts execute?
+
+3. Does this mechanic recreate an experience from Renegade Immortal,
+   or merely reference one?
+
+═══════════════════════════════════════════════════════════════
+LIVING CHAPTERS
+═══════════════════════════════════════════════════════════════
+
+Progress is measured in Living Chapters, not vertical slices.
+A Living Chapter is a playable experience that reproduces the
+pacing, atmosphere, and progression of a portion of the novel.
+
+Living Chapter 1: Wang Family Village
+Living Chapter 2: Journey to Heng Yue
+Living Chapter 3: Heng Yue Sect
+Living Chapter 4: Zhao Country Conflicts
+...
+
+Each Living Chapter contains:
+  locations, NPCs, ecosystems, opportunities, techniques,
+  artifacts, history, interactions — all working together.
+
+A Living Chapter is complete when the player can live through it
+without ever opening a quest log — when curiosity, not instruction,
+drives progression.
+
+═══════════════════════════════════════════════════════════════
+CLOSING
+═══════════════════════════════════════════════════════════════
+
+The Constitution above is the law of this project.
+The Prime Amendment sets the principle.
+Articles I–XXVI establish the foundation.
+Articles XXVII–XXX enforce what "done" actually means.
+The Final Questions guard against drift.
+
+When in doubt: build a living chapter, not a feature.
+When in doubt: prove life, do not count files.
+When in doubt: experience, not reference.
