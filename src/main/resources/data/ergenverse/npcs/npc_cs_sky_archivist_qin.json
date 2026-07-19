@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cs_sky_archivist_qin",
+  "name": "Sky Archivist Qin",
+  "nameCn": "天阁典藏秦",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_library",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "precise, slightly condescending, protective of cloud-silk scrolls",
+  "speech": "measured, academic, references altitude as intellectual superiority",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 675518686,
+  "initiation_lines": [
+    "Every scroll in this archive is written on cloud-silk. Ordinary paper decomposes at this altitude.",
+    "The Heavenly Fate Sect catalogs fate. The Xuan Dao Sect catalogs ink. We catalog the sky itself. There are more scrolls in the sky than in any library.",
+    "A Luo He Sect scribe once asked to borrow a scroll about underwater currents. I told him to ask the river. He did not appreciate that.",
+    "If you wish to read, bring ink and paper. But know: these scrolls will outlast every word you could ever write."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "catalog",
+      "location": "cloud_sky_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "0900",
+      "action": "teach",
+      "location": "cloud_sky_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "research",
+      "location": "cloud_sky_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "1600",
+      "action": "inspect",
+      "location": "cloud_sky_sect_secret_pavilion",
+      "duration": 120
+    },
+    {
+      "time": "1800",
+      "action": "catalog",
+      "location": "cloud_sky_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "cloud_sky_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "cloud_silk_scroll_preservation",
+      "name": "Cloud-Silk Scroll Preservation",
+      "description": "Preserve ancient cloud-silk scrolls. Bring quartz and string for the wind-proof binding process.",
+      "required_items": {
+        "minecraft:quartz": 6,
+        "minecraft:string": 5
+      },
+      "rewards": {
+        "minecraft:book": 2,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "wind_archive_copying",
+      "name": "Wind Archive Copying",
+      "description": "Copy weather-pattern records before the ink fades. Bring ink and paper.",
+      "required_items": {
+        "minecraft:ink_sac": 3,
+        "minecraft:paper": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 5
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

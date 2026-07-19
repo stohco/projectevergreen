@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cs_wind_trial_judge_han",
+  "name": "Wind Trial Judge Han",
+  "nameCn": "风试裁判韩",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_trial_grounds",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "impartial, stoic, secretly enjoys watching failures",
+  "speech": "flat, statistical, zero emotion",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 693967304,
+  "initiation_lines": [
+    "Sixty-one percent of outer disciples fail the wind trial on the first attempt. Thirty-three percent fail permanently. The remaining six percent become inner disciples.",
+    "The trial requires standing in a class-four gale formation for thirty minutes while identifying cloud patterns. Simple in description. Rare in accomplishment.",
+    "A disciple from Xuan Dao Sect once attempted our trials. He brought calligraphy brushes to 'write the wind.' He lasted four seconds.",
+    "I have judged eleven thousand four hundred and seven trials. The wind has never been wrong about a disciple's potential."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "prepare",
+      "location": "cloud_sky_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "0800",
+      "action": "judge",
+      "location": "cloud_sky_sect_trial_grounds",
+      "duration": 240
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "judge",
+      "location": "cloud_sky_sect_trial_grounds",
+      "duration": 180
+    },
+    {
+      "time": "1600",
+      "action": "record",
+      "location": "cloud_sky_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "1800",
+      "action": "inspect",
+      "location": "cloud_sky_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "cloud_sky_sect_disciple_dormitories",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "trial_formation_repair",
+      "name": "Trial Formation Repair",
+      "description": "The wind trial formation needs white wool and quartz to repair gale-pattern damage.",
+      "required_items": {
+        "minecraft:white_wool": 8,
+        "minecraft:quartz": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:experience_bottle": 2
+      }
+    },
+    {
+      "task_id": "trial_supply_replenishment",
+      "name": "Trial Supply Replenishment",
+      "description": "Trial candidates need arrows and bread for survival during the wind endurance test.",
+      "required_items": {
+        "minecraft:arrow": 12,
+        "minecraft:bread": 10
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "ergenverse:jade_slip": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

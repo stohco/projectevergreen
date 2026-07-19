@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cs_cloud_alchemist_su",
+  "name": "Cloud Alchemist Su",
+  "nameCn": "云丹师苏",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_alchemy_courtyard",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "pragmatic, results-driven, respects efficiency over tradition",
+  "speech": "direct, efficient, occasionally sarcastic",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 19689265,
+  "initiation_lines": [
+    "A Cloud Condensation Pill requires twenty-seven ingredients. Eighteen of them fall from the sky. The other nine must be carried up. Guess which I respect more.",
+    "The Tide Alchemist at Luo He Sect refines pills underwater. Underwater! The humidity ruins half his reagents. We do it above the clouds. Zero humidity issues.",
+    "A pill refined at this altitude is three times more potent than one refined at ground level. This is not opinion. This is measurement.",
+    "Bring me snowballs, phantom membrane, and glass bottles. The cold preserves. The membrane binds. The bottle contains. Simple."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "gather",
+      "location": "cloud_sky_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "0700",
+      "action": "refine",
+      "location": "cloud_sky_sect_alchemy_courtyard",
+      "duration": 240
+    },
+    {
+      "time": "1100",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1200",
+      "action": "teach",
+      "location": "cloud_sky_sect_alchemy_courtyard",
+      "duration": 180
+    },
+    {
+      "time": "1500",
+      "action": "research",
+      "location": "cloud_sky_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "refine",
+      "location": "cloud_sky_sect_alchemy_courtyard",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "cloud_sky_sect_disciple_dormitories",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "cloud_pill_cold_ingredients",
+      "name": "Cloud Pill Cold Ingredients",
+      "description": "The Cloud Condensation Pill needs snowballs and glass bottles for altitude-preserving refinement.",
+      "required_items": {
+        "minecraft:snowball": 10,
+        "minecraft:glass_bottle": 4
+      },
+      "rewards": {
+        "minecraft:experience_bottle": 2,
+        "minecraft:emerald": 7
+      }
+    },
+    {
+      "task_id": "alchemy_furnace_fuel",
+      "name": "Alchemy Furnace Wind Fuel",
+      "description": "The wind-powered furnace needs coal and feathers to maintain the high-altitude flame pattern.",
+      "required_items": {
+        "minecraft:coal": 8,
+        "minecraft:feather": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

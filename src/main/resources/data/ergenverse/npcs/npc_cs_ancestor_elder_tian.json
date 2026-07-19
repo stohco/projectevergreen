@@ -1,0 +1,100 @@
+{
+  "npc_id": "npc_cs_ancestor_elder_tian",
+  "name": "Ancestor Elder Tian",
+  "nameCn": "祖堂长老天",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_ancestor_hall",
+  "cultivation": "NASCENT_SOUL peak",
+  "personality": "ancient, dignified, speaks as if the sky itself is listening",
+  "speech": "slow, reverent, every word deliberate",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 165484835,
+  "initiation_lines": [
+    "The founding ancestor ascended from this very platform. Not to the Nascent Soul stage. To the actual sky. We are still searching for how.",
+    "Three ancestors have attempted the Sky Ascension. Two returned. One did not. We do not say which.",
+    "Every major sect in Zhao Country claims the founding ancestor visited them. They are all correct. The sky is above all of them.",
+    "The wind here carries voices. Not words — intentions. If the wind is warm, you are welcome. If it is cold... the stairs are behind you."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "cloud_sky_sect_ancestor_hall",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "maintain",
+      "location": "cloud_sky_sect_ancestor_hall",
+      "duration": 180
+    },
+    {
+      "time": "1100",
+      "action": "inspect",
+      "location": "cloud_sky_sect_spirit_spring",
+      "duration": 60
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "teach",
+      "location": "cloud_sky_sect_core_formation_hall",
+      "duration": 180
+    },
+    {
+      "time": "1600",
+      "action": "meditate",
+      "location": "cloud_sky_sect_ancestor_hall",
+      "duration": 240
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "cloud_sky_sect_inner_sect",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "ancestor_sky_offering",
+      "name": "Ancestor Sky Offering",
+      "description": "The monthly sky offering requires gold, obsidian, and phantom membrane to honor the ascended ancestors.",
+      "required_items": {
+        "minecraft:gold_ingot": 4,
+        "minecraft:obsidian": 3
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 3,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "ancestor_scroll_preservation",
+      "name": "Ancestor Scroll Preservation",
+      "description": "Preserve the ancestor's original sky-mapping scrolls. Bring books, ink, and paper.",
+      "required_items": {
+        "minecraft:book": 3,
+        "minecraft:ink_sac": 4,
+        "minecraft:paper": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

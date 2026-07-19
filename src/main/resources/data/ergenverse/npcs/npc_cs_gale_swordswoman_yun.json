@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cs_gale_swordswoman_yun",
+  "name": "Gale Swordswoman Yun",
+  "nameCn": "飓风剑师云",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_sword_peak",
+  "cultivation": "NASCENT_SOUL late",
+  "personality": "fierce, competitive, views everything as a contest",
+  "speech": "blunt, challenging, constantly compares sects",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 72213290,
+  "initiation_lines": [
+    "I have dueled sword cultivators from seven sects. None could land a blow at this altitude. The wind is my second blade.",
+    "Heng Yue's sword style is the mountain. Solid. Predictable. Luo He's is the river. Flowing. Avoidable. Ours is the gale. Unseen. Unstoppable.",
+    "There is a sword in the Sword Tomb that once belonged to a Heavenly Fate Sect elder. He left it here because he could not lift it above the clouds. The weakling.",
+    "If you can stand on Sword Peak for one hour in a gale-force wind, I will teach you one stroke. One. That is more than most receive in a lifetime."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0400",
+      "action": "train",
+      "location": "cloud_sky_sect_sword_peak",
+      "duration": 240
+    },
+    {
+      "time": "0800",
+      "action": "meditate",
+      "location": "cloud_sky_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "1000",
+      "action": "teach",
+      "location": "cloud_sky_sect_sword_peak",
+      "duration": 180
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "inspect",
+      "location": "cloud_sky_sect_sword_tomb",
+      "duration": 120
+    },
+    {
+      "time": "1600",
+      "action": "train",
+      "location": "cloud_sky_sect_trial_grounds",
+      "duration": 180
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "cloud_sky_sect_inner_sect",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "sword_peak_wind_blades",
+      "name": "Sword Peak Wind Blades",
+      "description": "Sharpen training swords using wind essence and iron. Bring feathers and iron for the wind-blade technique.",
+      "required_items": {
+        "minecraft:iron_ingot": 4,
+        "minecraft:feather": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "gale_endurance_rations",
+      "name": "Gale Endurance Rations",
+      "description": "Sword disciples training in gale-force winds need food and gold for endurance cultivation supplements.",
+      "required_items": {
+        "minecraft:bread": 8,
+        "minecraft:gold_ingot": 3
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:emerald": 8
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

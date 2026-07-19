@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cs_cloud_herb_tender_xue",
+  "name": "Cloud Herb Tender Xue",
+  "nameCn": "云草看守薛",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_spirit_herb_garden",
+  "cultivation": "FOUNDATION mid",
+  "personality": "dreamy, nurturing, treats herbs like children",
+  "speech": "soft, meandering, loses track of conversations",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 984628570,
+  "initiation_lines": [
+    "The cloud herbs here only grow because the wind carries seeds from places no map records. I have identified forty-seven species. Three are unnamed.",
+    "The Alchemist Su says my herbs lack altitude-potency. I say her pills lack patience. The herbs agree with me.",
+    "Once a year, a red feather falls into the garden. I do not know from what creature. I keep every one. I have sixty-three.",
+    "Bring me bone meal and quartz. The cloud herbs need minerals from the sky to maintain their spiritual resonance."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "tend",
+      "location": "cloud_sky_sect_spirit_herb_garden",
+      "duration": 240
+    },
+    {
+      "time": "1000",
+      "action": "gather",
+      "location": "cloud_sky_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "tend",
+      "location": "cloud_sky_sect_spirit_herb_garden",
+      "duration": 180
+    },
+    {
+      "time": "1600",
+      "action": "deliver",
+      "location": "cloud_sky_sect_alchemy_courtyard",
+      "duration": 120
+    },
+    {
+      "time": "1800",
+      "action": "tend",
+      "location": "cloud_sky_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "cloud_sky_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "cloud_herb_sky_minerals",
+      "name": "Cloud Herb Sky Minerals",
+      "description": "Cloud herbs need quartz and bone meal for sky-mineral fertilization to maintain spiritual potency.",
+      "required_items": {
+        "minecraft:quartz": 8,
+        "minecraft:bone_meal": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:feather": 4
+      }
+    },
+    {
+      "task_id": "herb_delivery_alchemist",
+      "name": "Herb Delivery to Alchemist",
+      "description": "Deliver harvested cloud herbs to the alchemy courtyard. Bring glass bottles and coal for the exchange.",
+      "required_items": {
+        "minecraft:glass_bottle": 4,
+        "minecraft:coal": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

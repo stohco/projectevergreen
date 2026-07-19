@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_cs_wind_tunnel_scribe_mo",
+  "name": "Wind Tunnel Scribe Mo",
+  "nameCn": "风洞书吏莫",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_underground_passage",
+  "cultivation": "FOUNDATION late",
+  "personality": "claustrophobic but dutiful, records air currents obsessively",
+  "speech": "rapid, breathless, frequently mentions pressure readings",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 281459072,
+  "initiation_lines": [
+    "The underground wind tunnels maintain constant airflow to the surface. I record every pressure fluctuation. Entry two thousand four hundred and one: three point seven pascals.",
+    "The Luo He Sect has underground rivers. We have underground wind. Theirs flows down. Ours flows up. Both are terrifying.",
+    "There is a chamber down here where the wind reverses direction every seventeen minutes. The ancestor who built it left no explanation.",
+    "Bring me ink and paper. The wind tunnels are eroding the old records. I must transcribe before the paper disintegrates."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0700",
+      "action": "record",
+      "location": "cloud_sky_sect_underground_passage",
+      "duration": 240
+    },
+    {
+      "time": "1100",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1200",
+      "action": "research",
+      "location": "cloud_sky_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "1500",
+      "action": "inspect",
+      "location": "cloud_sky_sect_mountain_cave",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "record",
+      "location": "cloud_sky_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "cloud_sky_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "wind_tunnel_pressure_log",
+      "name": "Wind Tunnel Pressure Log",
+      "description": "The wind tunnel scribe needs ink and paper to transcribe pressure records before old logs disintegrate.",
+      "required_items": {
+        "minecraft:ink_sac": 4,
+        "minecraft:paper": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 7
+      }
+    },
+    {
+      "task_id": "tunnel_lighting_maintenance",
+      "name": "Tunnel Lighting Maintenance",
+      "description": "The underground tunnels need coal and feathers for the wind-powered lanterns.",
+      "required_items": {
+        "minecraft:coal": 8,
+        "minecraft:feather": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

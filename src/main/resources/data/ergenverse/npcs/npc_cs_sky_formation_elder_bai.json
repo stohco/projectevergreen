@@ -1,0 +1,105 @@
+{
+  "npc_id": "npc_cs_sky_formation_elder_bai",
+  "name": "Sky Formation Elder Bai",
+  "nameCn": "天阵长老白",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_core_formation_hall",
+  "cultivation": "NASCENT_SOUL peak",
+  "personality": "brilliant, arrogant, views other sects' formations as primitive",
+  "speech": "condescending, precise, dismissive of ground-based methods",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 472093897,
+  "initiation_lines": [
+    "A formation anchored to the ground is limited by the ground. A formation anchored to the sky is limited by nothing.",
+    "The Xuan Dao Sect weaves ink arrays. The Luo He Sect weaves water arrays. The Soul Refining Sect weaves soul arrays. We weave wind arrays. Guess which covers the most area.",
+    "Three sects have asked to study our cloud-convergence formation. We refused all three. The wind does not share its secrets.",
+    "Bring spirit stones and ender pearls. The sky convergence needs spatial anchoring. If you do not know what that means, you are not ready."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "cloud_sky_sect_core_formation_hall",
+      "duration": 120
+    },
+    {
+      "time": "0700",
+      "action": "meet",
+      "location": "cloud_sky_sect_inner_sect",
+      "duration": 180
+    },
+    {
+      "time": "1000",
+      "action": "inspect",
+      "location": "cloud_sky_sect_array_hall",
+      "duration": 120
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "teach",
+      "location": "cloud_sky_sect_core_formation_hall",
+      "duration": 180
+    },
+    {
+      "time": "1600",
+      "action": "inspect",
+      "location": "cloud_sky_sect_hidden_treasury",
+      "duration": 120
+    },
+    {
+      "time": "1800",
+      "action": "meditate",
+      "location": "cloud_sky_sect_spirit_spring",
+      "duration": 180
+    },
+    {
+      "time": "2100",
+      "action": "rest",
+      "location": "cloud_sky_sect_inner_sect",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "sky_convergence_maintenance",
+      "name": "Sky Convergence Maintenance",
+      "description": "The cloud convergence formation needs spirit stones and ender pearls for spatial anchoring.",
+      "required_items": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:ender_pearl": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 3,
+        "ergenverse:dao_fragment": 1
+      }
+    },
+    {
+      "task_id": "inner_sect_formation_supplies",
+      "name": "Inner Sect Formation Supplies",
+      "description": "The inner sect needs emeralds and enchanted books for formation research and elder experiments.",
+      "required_items": {
+        "minecraft:emerald": 10,
+        "minecraft:enchanted_book": 1
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 3,
+        "ergenverse:jade_slip": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

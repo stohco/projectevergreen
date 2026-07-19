@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cs_wind_array_master_wei",
+  "name": "Wind Array Master Wei",
+  "nameCn": "风阵师魏",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_array_hall",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "obsessive about patterns, sees wind formations in everything",
+  "speech": "pattern-focused, draws comparisons to air currents constantly",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 231309854,
+  "initiation_lines": [
+    "A wind formation has no fixed shape. It adapts, shifts, evolves. A ground formation is a painting. A wind formation is a living thing.",
+    "The Luo He Sect's water arrays are elegant but slow. The Xuan Dao Sect's ink arrays are precise but fragile. Our wind arrays are neither elegant nor precise. They are overwhelming.",
+    "I once created a formation using only natural wind currents across twelve peaks. It formed the character for 'sky' in clouds. It lasted nine days.",
+    "Redstone carries the pattern. White wool carries the wind. Quartz carries the sky-memory. Combine all three and the formation breathes."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "weave",
+      "location": "cloud_sky_sect_array_hall",
+      "duration": 240
+    },
+    {
+      "time": "1000",
+      "action": "inspect",
+      "location": "cloud_sky_sect_outer_gate",
+      "duration": 60
+    },
+    {
+      "time": "1100",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1200",
+      "action": "teach",
+      "location": "cloud_sky_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "1500",
+      "action": "research",
+      "location": "cloud_sky_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "weave",
+      "location": "cloud_sky_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "cloud_sky_sect_disciple_dormitories",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "wind_formation_cloud_essence",
+      "name": "Wind Formation Cloud Essence",
+      "description": "Wind formations need white wool and redstone to maintain their adaptive cloud patterns.",
+      "required_items": {
+        "minecraft:white_wool": 8,
+        "minecraft:redstone": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 8
+      }
+    },
+    {
+      "task_id": "array_hall_spatial_experiment",
+      "name": "Array Hall Spatial Experiment",
+      "description": "The array hall needs obsidian and ender pearls for spatial-wind formation experiments.",
+      "required_items": {
+        "minecraft:obsidian": 4,
+        "minecraft:ender_pearl": 1
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

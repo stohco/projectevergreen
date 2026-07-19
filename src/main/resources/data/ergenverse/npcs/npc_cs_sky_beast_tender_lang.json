@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cs_sky_beast_tender_lang",
+  "name": "Sky Beast Tender Lang",
+  "nameCn": "天兽饲养员郎",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_spirit_beast_pens",
+  "cultivation": "CONDENSATION late",
+  "personality": "gentle with beasts, impatient with people, covered in feathers",
+  "speech": "warm when discussing creatures, curt otherwise",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 160203049,
+  "initiation_lines": [
+    "The wind hawks here nest at twelve thousand feet. They only descend for feeding. I am the only one they trust.",
+    "A Corpse Yin Sect envoy once tried to trade a zombie eagle for our wind hawks. I reported him. Trading a corpse for a living creature is obscene.",
+    "Feathers from the wind hawks are worth more than emeralds to the right alchemist. Cloud Alchemist Su pays twelve emeralds per feather.",
+    "Bring me feathers and string. The hawks need re-tying after yesterday's storm. Four nests were damaged."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "feed",
+      "location": "cloud_sky_sect_spirit_beast_pens",
+      "duration": 180
+    },
+    {
+      "time": "0900",
+      "action": "patrol",
+      "location": "cloud_sky_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "1100",
+      "action": "gather",
+      "location": "cloud_sky_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "feed",
+      "location": "cloud_sky_sect_spirit_beast_pens",
+      "duration": 180
+    },
+    {
+      "time": "1700",
+      "action": "inspect",
+      "location": "cloud_sky_sect_spirit_beast_pens",
+      "duration": 120
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "cloud_sky_sect_disciple_dormitories",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "hawk_nest_repair",
+      "name": "Hawk Nest Repair",
+      "description": "Storm-damaged hawk nests need string and white wool for re-weaving. The hawks only accept cloud-soft materials.",
+      "required_items": {
+        "minecraft:string": 8,
+        "minecraft:white_wool": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "ergenverse:jade_slip": 1
+      }
+    },
+    {
+      "task_id": "beast_pen_wind_barrier",
+      "name": "Beast Pen Wind Barrier",
+      "description": "The beast pens need quartz and feathers to maintain the wind-direction barrier that keeps predators out.",
+      "required_items": {
+        "minecraft:quartz": 6,
+        "minecraft:feather": 5
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

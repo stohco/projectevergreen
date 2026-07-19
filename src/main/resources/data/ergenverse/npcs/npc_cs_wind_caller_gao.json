@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cs_wind_caller_gao",
+  "name": "Wind Caller Gao",
+  "nameCn": "呼风者高",
+  "canon_id": null,
+  "type": "elder",
+  "faction": "cloud_sky_sect",
+  "location": "cloud_sky_sect_spirit_spring",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "ethereal, detached, speaks as if half-asleep",
+  "speech": "whispery, drifting, pauses mid-sentence as if listening to wind",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 391681692,
+  "initiation_lines": [
+    "The wind told me you were coming. Three days ago. I did not believe it. The wind is sometimes wrong.",
+    "This spring condensed from a cloud that formed above the Sword Tomb. A sword once cut that cloud in half. The spring remembers.",
+    "Luo He Sect cultivates water. We cultivate the sky that holds the water. They are grateful. They should be.",
+    "Sit by the spring. If the mist touches your face, the sky has accepted you. If it does not... the stairs are behind you."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "cloud_sky_sect_spirit_spring",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "teach",
+      "location": "cloud_sky_sect_spirit_spring",
+      "duration": 180
+    },
+    {
+      "time": "1100",
+      "action": "walk",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "cloud_sky_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "inspect",
+      "location": "cloud_sky_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "1500",
+      "action": "meditate",
+      "location": "cloud_sky_sect_spirit_spring",
+      "duration": 240
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "cloud_sky_sect_inner_sect",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "spring_mist_collection",
+      "name": "Spring Mist Collection",
+      "description": "The sky spring needs phantom membrane and snowballs to refine its condensed cloud-mist for the monthly ceremony.",
+      "required_items": {
+        "minecraft:phantom_membrane": 3,
+        "minecraft:snowball": 8
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "ergenverse:jade_slip": 1
+      }
+    },
+    {
+      "task_id": "cloud_herb_watering",
+      "name": "Cloud Herb Watering",
+      "description": "Bring spring water to the cloud herb garden. Snowballs provide the cold temperature the herbs need.",
+      "required_items": {
+        "minecraft:snowball": 10,
+        "minecraft:quartz": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}
