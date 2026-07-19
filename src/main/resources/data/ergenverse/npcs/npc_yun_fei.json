@@ -101,5 +101,39 @@
       "dir": "south",
       "dist": 10
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "library_research_materials",
+      "description": "Yun Fei looks up from a crumbling text: 'I am researching formation theory in the library, but several key scrolls are damaged. Bring me paper and a blank book — I will copy my notes for you. My research could accelerate your cultivation.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 10
+        },
+        {
+          "item": "minecraft:book",
+          "count": 1
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "meditation_fuel",
+      "description": "Yun Fei speaks softly: 'True advancement comes from stillness. I need coal for the meditation braziers near the peak and glowstone dust to enhance spiritual perception during deep meditation. Supply these and I will share a technique I discovered in the library.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 6
+        },
+        {
+          "item": "minecraft:glowstone_dust",
+          "count": 3
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 1
+    }
   ]
 }

@@ -136,5 +136,35 @@
       "dir": "north",
       "dist": 15
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "lecture_hall_preparation",
+      "description": "Elder Wu Yu frowns at the empty lecture podium: 'My lecture on Qi foundations requires writing materials for the disciples. Bring paper and writing coal. Punctuality in preparation reflects punctuality in cultivation.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 8
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 2
+    },
+    {
+      "id": "ancestor_hall_incense",
+      "description": "Wu Yu gestures toward the Ancestor Hall: 'The memorial tablets of our founders require fresh incense. Bring coal for the braziers. Respect for the past strengthens resolve for the future.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 12
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 1
+    }
   ]
 }

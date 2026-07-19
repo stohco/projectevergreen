@@ -114,5 +114,35 @@
     "You are out past curfew. I will not ask twice — return to the disciple dormitories.",
     "If I find you wandering near the restricted buildings again, you will answer to Elder Zhang Tian.",
     "The night patrol reports directly to the Sect Master. Move along, disciple."
+  ],
+  "sect_tasks": [
+    {
+      "id": "patrol_arrow_resupply",
+      "description": "Sun Zhenwei checks his quiver with a scowl: 'The night patrol depletes arrows faster than the armory restocks them. I need more. Bring arrows and I will compensate you with iron from the sect stores.'",
+      "requires": [
+        {
+          "item": "minecraft:arrow",
+          "count": 24
+        }
+      ],
+      "reward_item": "minecraft:iron_ingot",
+      "reward_count": 3
+    },
+    {
+      "id": "training_grounds_repair",
+      "description": "Sun Zhenwei surveys the damaged training dummies: 'Sparring destroys the equipment faster than the carpenters can repair it. Bring iron and planks — I will reinforce the dummies so the next session is not cut short.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 3
+        },
+        {
+          "item": "minecraft:oak_planks",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 2
+    }
   ]
 }

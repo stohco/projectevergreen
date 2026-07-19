@@ -108,5 +108,39 @@
       "dir": "south",
       "dist": 10
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "trade_herb_supplies",
+      "description": "Qian Kun leans in conspiratorially: 'I know a disciple who trades rare herbs from the eastern valleys. But he wants payment in gold and emeralds. If you supply the currency, I will split the herbs with you — fair deal.'",
+      "requires": [
+        {
+          "item": "minecraft:gold_nugget",
+          "count": 6
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:glowstone_dust",
+      "reward_count": 4
+    },
+    {
+      "id": "practical_alchemy_ingredients",
+      "description": "Qian Kun shrugs: 'Elder Chen needs herbs for his next lecture. I volunteered to gather them, but I am behind on my own cultivation. If you bring wheat and glowstone dust, I will give you my share of the lecture rewards.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 8
+        },
+        {
+          "item": "minecraft:glowstone_dust",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 2
+    }
   ]
 }

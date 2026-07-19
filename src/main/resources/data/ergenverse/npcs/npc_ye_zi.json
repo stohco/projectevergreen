@@ -94,5 +94,35 @@
       "dir": "south",
       "dist": 10
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "formation_maintenance",
+      "description": "Elder Ye Zi traces a glowing line in the air: 'The restriction formations around the Ancestor Hall are weakening. I need iron and coal to reinforce the array nodes. Do not touch the formations yourself — even Nascent Soul cultivators have been trapped.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "sect_patrol_report",
+      "description": "Ye Zi narrows his eyes: 'I need a written patrol report from the outer perimeter. Bring me paper — you will serve as my scribe while I dictate observations on the eastern approach.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 5
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 2
+    }
   ]
 }

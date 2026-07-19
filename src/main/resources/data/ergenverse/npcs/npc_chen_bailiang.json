@@ -124,5 +124,35 @@
       "dir": "south",
       "dist": 10
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "gather_alchemy_reagents",
+      "description": "Elder Chen Bailiang adjusts his spectacles: 'I need glass bottles and fuel for today's pill refinement lecture. Bring me those materials and I will share a cultivation technique from my personal notes.'",
+      "requires": [
+        {
+          "item": "minecraft:glass_bottle",
+          "count": 3
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 1
+    },
+    {
+      "id": "herb_garden_harvest",
+      "description": "Chen Bailiang examines a withered herb: 'The Spirit Herb Garden needs harvesting before the herbs lose potency. Gather wheat from the eastern valley — I use it as a base reagent for Qi Gathering Pills.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 12
+        }
+      ],
+      "reward_item": "minecraft:glowstone_dust",
+      "reward_count": 3
+    }
   ]
 }

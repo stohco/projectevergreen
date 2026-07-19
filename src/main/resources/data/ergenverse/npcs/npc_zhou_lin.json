@@ -94,5 +94,39 @@
       "dir": "south",
       "dist": 10
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "trial_preparation",
+      "description": "Zhou Lin speaks with measured urgency: 'The sect trial approaches. I need supplies — bread for endurance, coal for the trial braziers. The elders test more than Qi; they test preparation. Help me and I will share my trial strategy notes.'",
+      "requires": [
+        {
+          "item": "minecraft:bread",
+          "count": 6
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 2
+    },
+    {
+      "id": "dawn_meditation_supplies",
+      "description": "Zhou Lin lowers his voice: 'The spirit veins near the peak are strongest at dawn. I plan to meditate there tonight. I need glowstone dust to amplify the vein's energy and coal for the meditation brazier. Supply these and I will share what I learn.'",
+      "requires": [
+        {
+          "item": "minecraft:glowstone_dust",
+          "count": 4
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 6
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 1
+    }
   ]
 }

@@ -101,5 +101,35 @@
       "dir": "south",
       "dist": 10
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "sparring_equipment",
+      "description": "Wang Hao grins and flexes: 'The morning sparring session wiped out my arrows and leather armor patches. If you bring replacements, I will share some of the food I saved from the dining hall — the good portions, not the gruel.'",
+      "requires": [
+        {
+          "item": "minecraft:arrow",
+          "count": 16
+        },
+        {
+          "item": "minecraft:leather",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:bread",
+      "reward_count": 6
+    },
+    {
+      "id": "dining_hall_food_run",
+      "description": "Wang Hao whispers: 'I missed the dawn meal because Sun Dazhu blocked the door again. If you bring bread, I will pay you back with emeralds from my last mission reward. Please — I am starving.'",
+      "requires": [
+        {
+          "item": "minecraft:bread",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 1
+    }
   ]
 }

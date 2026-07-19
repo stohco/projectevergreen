@@ -94,5 +94,39 @@
       "dir": "south",
       "dist": 10
     }
+  ],
+  "sect_tasks": [
+    {
+      "id": "beast_den_clearing",
+      "description": "Zhang Hu cracks his knuckles: 'The spirit beasts near the herb garden have been aggressive lately. I need arrows and an iron sword to clear the den. Help me out and I will share whatever loot we find — those beasts sometimes carry spirit stones.'",
+      "requires": [
+        {
+          "item": "minecraft:arrow",
+          "count": 12
+        },
+        {
+          "item": "minecraft:iron_sword",
+          "count": 1
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "sword_peak_path_repair",
+      "description": "Zhang Hu points toward the peak: 'The Sword Peak formations are old and some paths are collapsing. I need coal for lantern fuel and iron to reinforce the railings. If you supply the materials, I will handle the dangerous climbing.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 10
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 3
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 1
+    }
   ]
 }
