@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Teng Huayuan (藤化元). Canon ID: N83. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Teng Huayuan (\u85e4\u5316\u5143). Canon ID: N83. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_teng_huayuan",
   "name": "Teng Huayuan",
-  "nameCn": "藤化元",
+  "nameCn": "\u85e4\u5316\u5143",
   "canon_id": "N83",
   "type": "antagonist",
   "faction": "teng_family",
@@ -33,5 +33,92 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The Teng family has ruled Zhao Country for three generations. Do not mistake our patience for weakness.",
+    "The villages send their tribute on time. If they do not... I make an example.",
+    "Heng Yue Sect? A minor sect clinging to the mountains. Their elders know better than to cross my path.",
+    "You carry the stench of a weak cultivator. State your business before I lose interest."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 10
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 15
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 12
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "tribute_collection",
+      "description": "Teng Huayuan's cold gaze falls on you: 'The outer villages are late with their grain tribute. Go to the warehouse and bring me proof of collection \u2014 16 wheat bundles. You will be compensated.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "family_weaponry",
+      "description": "Teng Huayuan waves dismissively: 'The family guard needs new equipment. Bring iron ingots and arrows. Do not waste my time.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 8
+        },
+        {
+          "item": "minecraft:arrow",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:gold_ingot",
+      "reward_count": 3
+    }
+  ]
 }

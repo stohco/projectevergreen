@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Teng Xiuxiu (藤秀秀). Canon ID: N15. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Teng Xiuxiu (\u85e4\u79c0\u79c0). Canon ID: N15. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_teng_xiuxiu",
   "name": "Teng Xiuxiu",
-  "nameCn": "藤秀秀",
+  "nameCn": "\u85e4\u79c0\u79c0",
   "canon_id": "N15",
   "type": "other",
   "faction": "teng_family",
@@ -31,5 +31,96 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "...You are not from the city. Be careful here. Not everyone in the Teng family speaks before they act.",
+    "The temple district is quiet at this hour. I go there to think. The ancestors... they were not always like this.",
+    "My cousin Teng Li enjoys his power too much. But the patriarch's word is absolute. I cannot interfere.",
+    "If you need supplies, the market district is to the south. The merchants there do not ask questions."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 18
+    },
+    {
+      "t0": 3000,
+      "t1": 4000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 4000,
+      "t1": 7000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 15
+    },
+    {
+      "t0": 7000,
+      "t1": 8000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 8000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 20
+    },
+    {
+      "t0": 11000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "herb_request",
+      "description": "Teng Xiuxiu lowers her voice: 'I need herbs for a poultice. Not for the family \u2014 for the mortal quarter. They have no healer. Bring me wheat and carrots and I will make it worth your while.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 8
+        },
+        {
+          "item": "minecraft:carrot",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "information_trade",
+      "description": "Teng Xiuxiu glances around nervously: 'If you bring me paper and ink, I can write down something useful \u2014 the patrol schedule of the city guard. Some people would pay good emeralds for that.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 4
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ]
 }

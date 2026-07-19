@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Teng Li (藤立). Canon ID: N84. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Teng Li (\u85e4\u7acb). Canon ID: N84. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_teng_li",
   "name": "Teng Li",
-  "nameCn": "藤立",
+  "nameCn": "\u85e4\u7acb",
   "canon_id": "N84",
   "type": "antagonist",
   "faction": "teng_family",
@@ -31,5 +31,96 @@
   },
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Foundation Establishment. Something you will never achieve, standing there gaping like a fish.",
+    "The Teng family does not speak to peasants. But since you are here \u2014 make yourself useful or leave.",
+    "My cousin speaks softly to everyone. I prefer honesty. You are weak. Accept it.",
+    "There is a village nearby where the mortals think they can hide their grain from us. Amusing, isn't it?"
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 20
+    },
+    {
+      "t0": 3000,
+      "t1": 4000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 4000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 25
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 9000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 20
+    },
+    {
+      "t0": 9000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "training_supplies",
+      "description": "Teng Li smirks: 'I am refining my Foundation Establishment. Bring me coal for the forge and iron for talismans. Do it quickly.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 16
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    },
+    {
+      "id": "humiliation_collection",
+      "description": "Teng Li laughs cruelly: 'Those villages think they can resist. Bring me their 'protection payment' \u2014 emeralds and gold. Show them what the Teng family means.'",
+      "requires": [
+        {
+          "item": "minecraft:emerald",
+          "count": 3
+        },
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:iron_sword",
+      "reward_count": 1
+    }
+  ]
 }
