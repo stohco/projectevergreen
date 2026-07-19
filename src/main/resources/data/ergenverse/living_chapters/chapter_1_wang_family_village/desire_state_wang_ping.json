@@ -1,5 +1,6 @@
 {
-  "_comment": "Desire-state for Wang Ping (Wang Lin's brother) at Wang Family Village. Per Article XXXI: the world must desire the player. Wang Ping does not wait for the player to click him — he initiates. He asks for firewood, he warns about the Teng family tax collectors, he invites fishing, he grieves if the dog dies, he asks the player to pass the Heng Yue test. This is the data the IntentEngine reads to make Wang Ping a living brother, not a quest dispenser.",
+  "_comment": "[SUPERSEDED by motivation_state — see motivation_state_schema.json (Article XXXIII, AUTO-CANON-052)] Desire-state for Wang Ping (Wang Lin's brother) at Wang Family Village. Per Article XXXI: the world must desire the player. Wang Ping does not wait for the player to click him — he initiates. He asks for firewood, he warns about the Teng family tax collectors, he invites fishing, he grieves if the dog dies, he asks the player to pass the Heng Yue test. This is the data the IntentEngine reads to make Wang Ping a living brother, not a quest dispenser.",
+  "_status": "SUPERSEDED — retained as reference example of the old desire_state schema. Wang Ping should be re-authored under motivation_state_schema (with driving_forces, player_relevance, alternative_resolution, reasoning) in a future cycle.",
   "_schema": "desire_state",
   "_schema_version": 1,
   "_article": "XXXI.1",

@@ -1,0 +1,93 @@
+{
+  "_comment": "Relationship graph schema (Article XXXIV). A relationship is not a number — it is a graph of distinct, independently-variable dimensions. 'Friendship > 50' is forbidden. Every NPC maintains a per-target relationship graph. This is the data the DecisionEngine, IntentEngine, and conversation system read to determine how an NPC treats a target. Two NPCs can have completely different graphs for the same player — the simulation treats them as different relationships because they ARE different relationships. DATA, not Java (Article XXVI).",
+  "_schema": "relationship_graph",
+  "_schema_version": 1,
+  "_article": "XXXIV",
+  "schema": {
+    "npc_id": "string — the NPC who owns this relationship graph",
+    "target_id": "string — who the graph is about (player, another NPC, a faction)",
+    "target_type": "enum — player | npc | faction | species | location",
+    "dimensions": {
+      "trust": {
+        "range": "0-100",
+        "description": "Does the NPC believe the target's words? Does the NPC believe the target will keep promises? High trust = the NPC shares information, accepts requests, lowers guard.",
+        "decay": "slow — trust decays toward baseline if no positive interactions for a long time, but never resets to 0 unless betrayed",
+        "gain_triggers": ["promise_kept (+5-15)", "vulnerability_respected (+5-10)", "honesty_in_hard_moments (+10-20)", "protected_what_NPC_cares_about (+10-25)"],
+        "loss_triggers": ["promise_broken (-15-30)", "lie_caught (-20-40)", "betrayed_ally (-30-50)", "stole_from_NPC (-20-40)"]
+      },
+      "respect": {
+        "range": "0-100",
+        "description": "Does the NPC esteem the target's capability? Respect is about power/skill/wisdom, not liking. An NPC can respect an enemy. Wang Lin respects Teng Huayuan (as a threat) while having 0 trust.",
+        "decay": "none — respect does not decay; it only changes through demonstration (gaining power, losing power, showing wisdom, showing folly)",
+        "gain_triggers": ["cultivation_breakthrough (+10-20)", "combat_victory_vs_superior (+15-30)", "demonstrated_skill (+5-15)", "wise_judgment (+5-15)"],
+        "loss_triggers": ["cultivation_loss (-10-20)", "cowardice_in_critical_moment (-15-30)", "foolish_decision (-5-15)", "begging (-10-20)"]
+      },
+      "fear": {
+        "range": "0-100",
+        "description": "Does the NPC fear the target? Fear is separate from respect — you can fear someone you don't respect (a berserker) or respect someone you don't fear (a wise elder). High fear makes an NPC cautious, deferential, or hostile-sneaky.",
+        "decay": "medium — fear decays if the target does not demonstrate power for a long time",
+        "gain_triggers": ["witnessed_target_overwhelming_power (+15-30)", "target_defeated_NPC_before (+10-25)", "target_has_reputation_for_cruelty (+5-15)"],
+        "loss_triggers": ["target_shown_weakness (-10-20)", "NPC_grew_stronger (-5-15)", "target_shown_mercy (fear may convert to respect, -fear +respect)"]
+      },
+      "debt": {
+        "type": "signed_int",
+        "description": "Outstanding favors owed. Positive = NPC owes target. Negative = target owes NPC. See favor_debt_ledger_schema for the structured favor records. This is the aggregate scalar; the ledger is the detail.",
+        "decay": "none — debts do not decay. They are resolved only by being called and honored, or explicitly forgiven."
+      },
+      "grievance": {
+        "range": "0-100",
+        "description": "Accumulated resentment from wrongs. Grievance is not the same as low trust — you can trust someone's competence while holding a grievance against them. High grievance makes an NPC cold, uncooperative, sabotaging, or vengeful. Grievances feed the RumorEngine (Art XXXI.1) and may drive vengeance motivations.",
+        "decay": "very_slow — grievances decay only if amends are made (restitution, apology backed by action). They never silently reset.",
+        "gain_triggers": ["wronged_by_target (+10-30 per incident)", "target_harmed_what_NPC_cares_about (+20-50)", "target_broke_oath_to_NPC (+30-60)"],
+        "loss_triggers": ["restitution_made (-10-30)", "sincere_amends_over_time (-5-15)", "target_saved_what_NPC_cares_about (-15-30, may fully clear if life-saving)"]
+      },
+      "shared_history": {
+        "type": "int",
+        "description": "Count of significant shared events. Not a rating — a count. Used to weight how much the NPC's graph is 'informed' vs 'assumed'. An NPC with shared_history=0 has a shallow graph based on reputation; an NPC with shared_history=20 has a deep graph based on experience.",
+        "decay": "none"
+      },
+      "known_skills": {
+        "type": "list[string]",
+        "description": "Skills the NPC has OBSERVED the target use. Not the target's full skill list — only what the NPC has witnessed. Wang Lin may know the player is good with restrictions (observed) but not know they can also refine pills (not observed). This gates which motivations the player becomes relevant to (Article XXXIII.3).",
+        "decay": "none — known skills do not decay; they accumulate"
+      },
+      "known_personality": {
+        "type": "list[string]",
+        "description": "Traits the NPC has INFERRED from observation. e.g. 'keeps_promises', 'does_not_betray_allies', 'greedy', 'merciful', 'patient', 'ruthless', 'honest', 'deceptive'. These are the NPC's working model of who the target IS. They shape how the NPC interprets the target's actions and words.",
+        "decay": "slow — outdated inferred traits may be revised if contradicted by consistent new behavior"
+      }
+    },
+    "last_updated_tick": "int — when this graph was last modified",
+    "last_interaction_tick": "int — when the NPC last interacted meaningfully with the target"
+  },
+  "examples": {
+    "village_elder_to_player_helpful": {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {"trust": 82, "respect": 71, "fear": 10, "debt": 2, "grievance": 0, "shared_history": 19, "known_skills": ["restriction_basic", "herb_gathering", "combat_mortal"], "known_personality": ["keeps_promises", "does_not_betray_allies", "merciful"]},
+      "interpretation": "The elder trusts the player (82), respects their capability (71), does not fear them (10), owes them two favors (debt +2), holds no grievance (0), has 19 shared events of history, knows three of the player's skills, and has inferred the player is trustworthy, loyal, and merciful. This is a deep, positive relationship — the elder would gift the strange jade (Trust >= 5, the Chapter 1 catalyst)."
+    },
+    "teng_huayuan_to_player_who_helped_wang_lin": {
+      "npc_id": "npc_teng_huayuan",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {"trust": 5, "respect": 91, "fear": 88, "debt": 0, "grievance": 64, "shared_history": 3, "known_skills": ["combat_mortal", "restriction_basic"], "known_personality": ["loyal_to_wang_lin", "meddlesome", "dangerous_for_their_realm"]},
+      "interpretation": "Teng Huayuan barely trusts the player (5), deeply respects their capability (91 — they are a genuine threat), fears them (88), owes nothing (0), holds a heavy grievance (64 — the player helped Wang Lin, Teng Huayuan's enemy), has little shared history (3), knows the player's combat and restriction skills, and has inferred the player is loyal to Wang Lin and meddlesome. This is a completely different relationship than the elder's, for the same player. The simulation treats them differently: the elder gifts the jade; Teng Huayuan plots an ambush. Article XXXIV.1."
+    },
+    "wang_lin_to_player_early_game": {
+      "npc_id": "npc_wang_lin",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {"trust": 15, "respect": 10, "fear": 0, "debt": 0, "grievance": 0, "shared_history": 1, "known_skills": [], "known_personality": []},
+      "interpretation": "Early game. Wang Lin has noticed the player (shared_history=1) but has minimal trust (15), low respect (10 — the player has not demonstrated capability), no fear (0 — the player is no threat), no debt, no grievance, and knows nothing about the player's skills or personality. The player is NOT YET RELEVANT to Wang Lin's motivations (Article XXXIII.2). He will not initiate. If the player approaches him, he will respond minimally. This is correct — this is how Wang Lin behaves in the novel toward strangers."
+    },
+    "wang_lin_to_player_after_favor": {
+      "npc_id": "npc_wang_lin",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {"trust": 65, "respect": 55, "fear": 0, "debt": 3, "grievance": 0, "shared_history": 12, "known_skills": ["restriction_basic", "herb_gathering", "restraint_under_provocation"], "known_personality": ["keeps_promises", "patient", "does_not_press", "merciful"]},
+      "interpretation": "The player protected Wang Lin's family (debt +3, includes a Major favor in the ledger). Trust has risen to 65. Respect to 55 (the player demonstrated capability and restraint). Wang Lin now knows the player is good with restrictions, gathers herbs, shows restraint, and is merciful. The player is NOW RELEVANT (Article XXXIII.3) — Wang Lin's m_decode_restriction_cave motivation may target the player. He may approach with 'Come.' and walk-and-talk to the cave. This is earned, not granted."
+    }
+  }
+}

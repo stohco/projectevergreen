@@ -1,0 +1,45 @@
+{
+  "_comment": "Favor & debt ledger schema (Article XXXIV.2). A favor is NOT 'relationship += 20'. A favor is a structured debt that persists and can be called in later. Wang Lin once saved the player — that is a Major favor, never expires. Years later, the player asks to study the Ji Realm. Wang Lin reasons: 'Player once risked his life for me. I owe him. Yes.' The favor is called. The debt is honored. This feels earned because it IS earned — the simulation tracked the favor for years and surfaced it at the right moment. DATA, not Java (Article XXVI).",
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "schema": {
+    "ledger_id": "string — unique ledger id, typically per-NPC: 'favor_ledger_<npc_id>'",
+    "owner": "string — the npc_id who owns this ledger (the one who may call favors)",
+    "favors": [
+      {
+        "favor_id": "string — unique, e.g. 'favor_001_player_saved_wang_lin'",
+        "direction": "enum — owed_to_player | owed_by_player. owed_to_player = the NPC owes the player (NPC did the favor for the player). owed_by_player = the player owes the NPC (player did the favor for the NPC).",
+        "magnitude": "enum — minor | moderate | major | life_saving",
+        "reason": "string — what happened. e.g. 'Player protected Wang Lin's family from bandits while Wang Lin was absent.'",
+        "origin_event_memory_tag": "string — the memory_ledger tag of the event that created this favor. Links the favor to the history.",
+        "created_tick": "int — when the favor was incurred",
+        "expires": "enum — never | callable_until_resolved | decays_after_N_ticks. life_saving magnitude = never. moderate = callable_until_resolved. minor = may decay.",
+        "callable": "bool — can the owner demand repayment? life_saving = always callable. moderate = callable. minor = callable but socially awkward.",
+        "called": "bool — has the owner called this favor in?",
+        "called_tick": "int|null — when it was called",
+        "called_context": "string|null — what the owner asked for when calling",
+        "honored": "bool|null — did the debtor honor the call? null if not yet called. true if honored. false if refused.",
+        "honored_tick": "int|null — when it was honored (or refused)",
+        "resolution_memory_tag": "string|null — memory_ledger tag for the resolution event",
+        "notes": "string — any context. e.g. 'Wang Lin does not call this casually — only for something of equivalent weight.'"
+      }
+    ],
+    "aggregates": {
+      "total_owed_to_player": "int — sum of outstanding favor magnitudes (minor=1, moderate=3, major=7, life_saving=15) the NPC owes the player",
+      "total_owed_by_player": "int — sum the player owes the NPC",
+      "net_debt": "signed int — total_owed_to_player - total_owed_by_player. Matches relationship_graph.debt dimension."
+    }
+  },
+  "magnitude_scale": {
+    "minor": {"weight": 1, "examples": ["carried a message", "gathered common herbs", "small loan repaid"], "social_weight": "the NPC will do a small favor in return without hesitation", "callable": true, "expires": "decays after ~30 days if not called"},
+    "moderate": {"weight": 3, "examples": ["escorted through danger", "provided rare reagents", "stood witness in a dispute"], "social_weight": "the NPC feels a meaningful obligation", "callable": true, "expires": "callable until resolved"},
+    "major": {"weight": 7, "examples": ["saved the NPC's life (non-life-threatening-context)", "protected what the NPC most cares about", "sacrificed significant resources for the NPC"], "social_weight": "the NPC remembers and will reciprocate significantly", "callable": true, "expires": "never"},
+    "life_saving": {"weight": 15, "examples": ["saved the NPC from certain death", "saved the NPC's family from certain death"], "social_weight": "the NPC's graph shifts permanently; this can be called for nearly anything", "callable": true, "expires": "never"}
+  },
+  "calling_mechanic": {
+    "description": "When the player asks the NPC for something (via a Request affordance), the NPC's reasoning (motivation_state) checks the favor ledger. If the player has an outstanding callable favor of sufficient magnitude, the NPC may call it: 'You once did X for me. I have not forgotten. I will grant this.' The favor is marked called=true, honored=true. If the player later refuses a called favor (rare — the player initiated the request), the favor is marked called=true, honored=false, and the relationship graph shifts (trust-, grievance+, the NPC may become hostile).",
+    "reasoning_example": "Player asks Wang Lin to teach the Ji Realm. Wang Lin's motivation_state m_call_in_favor_ji_realm evaluates: (1) player has favor 'life_saving' outstanding, callable, not called. (2) player has sufficient cultivation. (3) player has shown restraint. Decision: YES. Call the favor. Teach. Mark favor called=true, honored=true."
+  },
+  "bidirectional_note": "The ledger is per-NPC. Wang Lin's ledger tracks what Wang Lin owes and is owed. Li Muwan's ledger tracks what Li Muwan owes and is owed. They are independent — a favor with Wang Lin does not transfer to Li Muwan (unless canon says so, e.g. spouses may share certain debts — flagged per-NPC)."
+}

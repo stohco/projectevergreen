@@ -1,0 +1,155 @@
+{
+  "_comment": "Per-NPC conversation affordance expansions (Article XXXII.2). The same top-level verbs (Discuss, Request, Teach Me, Offer, Trade, Travel Together, Observe Technique, Challenge, Give Gift, Ask Opinion, Ask About..., Nevermind) produce entirely different submenus for different NPCs. The UI reads these — no special-casing in code. This file covers the canonical NPCs the player encounters in and around Chapter 1. Each NPC's verb-expansions reflect their role, skills, and personality — not a generic dialogue tree.",
+  "_schema": "conversation_affordances_per_npc",
+  "_schema_version": 1,
+  "_article": "XXXII.2",
+  "npcs": {
+    "npc_wang_lin": {
+      "name": "Wang Lin",
+      "role": "Protagonist-mentor (when present via manifestation)",
+      "personality_profile_ref": "conversation_system_schema.json#personality_rendering.profiles.wang_lin",
+      "verb_expansions": {
+        "Discuss": ["Dao", "Restrictions", "The Heaven Defying Bead (if relationship high)", "His past (rarely)", "The current situation"],
+        "Request": {
+          "Technique": ["Ji Realm (conditional)", "Restriction (conditional)", "Soul technique (conditional)", "Movement (conditional)"],
+          "Artifact Copy": ["God Slaying Sword (will refuse if not ready)", "Soul Banner (conditional)", "Restriction flag (conditional)"],
+          "Advice": ["On cultivation", "On a current problem", "On a person", "On a place"],
+          "Restriction": ["Help decipher (if player has shown skill)", "Teach a pattern"],
+          "Memory": ["Share a memory (rare, relationship-gated)"],
+          "Training": ["Spar (if within 2 realms)", "Observe his cultivation (rare)"]
+        },
+        "Teach Me": ["(Wang Lin rarely accepts being taught. If the player has knowledge he lacks, he may listen silently. Mostly this verb is unavailable — reflected by its absence or greyed state.)"],
+        "Offer": ["Item", "Information", "Help with a problem he has (if motivation_state reveals one)"],
+        "Trade": ["(Wang Lin does not trade. This verb is typically unavailable.)"],
+        "Travel Together": ["Walk with him (if he is going somewhere)", "He accompanies you (if relationship high and he is free)"],
+        "Observe Technique": ["Watch him cultivate (rare, relationship-gated)", "Watch him fight (if combat occurs)"],
+        "Challenge": ["Spar (if within 2 realms — you will lose)"],
+        "Give Gift": ["(Wang Lin accepts gifts neutrally. He does not owe you for a gift. Gifts shift Known Personality, not Debt.)"],
+        "Ask Opinion": ["On a technique", "On a person", "On a decision the player faces"],
+        "Ask About...": ["Recent Events", "His family (sensitive)", "The world (broad)"],
+        "Nevermind": "(ends conversation — Wang Lin resumes his schedule)"
+      },
+      "gating_notes": "Most Request submenus are greyed/hidden until relationship thresholds met. Wang Lin never explains why a verb is locked — the player simply sees fewer options. This is personality through UI (Article XXXII.7)."
+    },
+    "npc_li_muwan": {
+      "name": "Li Muwan",
+      "role": "Alchemist, Wang Lin's wife (in later chapters), skilled with herbs and pills",
+      "personality_profile_ref": "conversation_system_schema.json#personality_rendering.profiles.li_muwan",
+      "verb_expansions": {
+        "Discuss": ["Herbs", "Alchemy", "Medicine", "Wang Lin (if appropriate)", "Her work"],
+        "Request": {
+          "Pill": ["Healing pill", "Qi gathering pill", "Detoxification pill (if she has reagents)"],
+          "Herb Identification": ["Identify a herb the player has (free, she enjoys it)"],
+          "Medical Advice": ["Diagnose a condition", "Suggest treatment"],
+          "Alchemy Lesson": ["(if relationship high and player has aptitude)"]
+        },
+        "Teach Me": ["Herb lore", "Basic alchemy (if relationship high)"],
+        "Offer": ["Herbs you've gathered", "Reagents", "Help gathering (she may accept)"],
+        "Trade": ["Herbs for reagents", "Pills for spirit stones (fair trade)"],
+        "Travel Together": ["Gather herbs together (she often invites this)"],
+        "Observe Technique": ["Watch her refine a pill (informative)"],
+        "Challenge": ["(not applicable — she is not a combat mentor)"],
+        "Give Gift": ["Herbs, reagents, a useful tool (she appreciates practical gifts)"],
+        "Ask Opinion": ["On a herb", "On an alchemical approach"],
+        "Ask About...": ["Recent Events", "Her apprenticeship", "The local spirit herbs"],
+        "Nevermind": "(ends conversation — she resumes her work)"
+      },
+      "gating_notes": "Li Muwan is patient and explains thoroughly. More verbs are available at lower relationship thresholds than Wang Lin. She is the primary teaching NPC for alchemy/herb knowledge."
+    },
+    "npc_xu_liguo": {
+      "name": "Xu Liguo",
+      "role": "Wang Lin's subordinate (former enemy, soul-bound), trickster, thief, unreliable narrator",
+      "personality_profile_ref": "conversation_system_schema.json#personality_rendering.profiles.xu_liguo",
+      "verb_expansions": {
+        "Discuss": ["(he will talk endlessly about nothing — topics shift rapidly)"],
+        "Request": {
+          "Scout": ["Scout a location (he may lie about what he saw)"],
+          "Possess": ["Possess a weak being (controversial — Wang Lin may disapprove)"],
+          "Steal": ["Steal an item (risky — may draw aggro, Wang Lin may punish)"],
+          "Distract": ["Distract an NPC (he enjoys this)"],
+          "Cause Trouble": ["(he will suggest this unprompted — player initiates at their peril)"]
+        },
+        "Teach Me": ["(he claims to know everything. He knows little. Lessons are unreliable.)"],
+        "Offer": ["A 'stolen' item (may be worthless or may be valuable — player must judge)"],
+        "Trade": ["(he trades dishonestly. Caveat emptor.)"],
+        "Travel Together": ["(he follows uninvited anyway)"],
+        "Observe Technique": ["(his techniques are flashy but often ineffective)"],
+        "Challenge": ["(he will cheat)"],
+        "Give Gift": ["(he takes gifts as tribute, not gratitude)"],
+        "Ask Opinion": ["(his opinions are self-serving — useful for understanding what HE wants, not the truth)"],
+        "Ask About...": ["(he lies. Cross-reference everything with other NPCs.)"],
+        "Nevermind": "(he may not leave immediately — he has one more thing to say...)"
+      },
+      "gating_notes": "Xu Liguo's verbs are mostly available immediately — but their outcomes are unreliable. The player learns through experience that his 'Scout' reports may be fabricated, his 'stolen' items may be junk, his 'teaching' may be wrong. This is personality through interaction (Article XXXII.7). The UI does not warn the player — the world teaches them."
+    },
+    "npc_situ_nan": {
+      "name": "Situ Nan",
+      "role": "Ancient being in Wang Lin's storage space, mentor-figure, mocker",
+      "personality_profile_ref": "conversation_system_schema.json#personality_rendering.profiles.situ_nan",
+      "verb_expansions": {
+        "Discuss": ["Dao (he mocks)', 'The heavens (he mocks)', 'Your progress (he mocks)'"],
+        "Request": {
+          "Advice": ["(he gives advice mockingly — it is often correct, wrapped in insult)"],
+          "Knowledge": ["(he may share ancient knowledge if amused by you)"]
+        },
+        "Teach Me": ["(he does not teach. He mocks. But after enough mockery, you may realize you learned something.)"],
+        "Offer": ["(he accepts offerings as tribute — his favor shifts subtly)"],
+        "Trade": ["(he does not trade)"],
+        "Travel Together": ["(he is always 'with' Wang Lin — he does not travel separately)"],
+        "Observe Technique": ["(he may demonstrate something ancient if bored)"],
+        "Challenge": ["(you cannot challenge him. He would find it funny.)"],
+        "Give Gift": ["(he is amused by gifts — they do not buy favor, but they amuse him)"],
+        "Ask Opinion": ["(his opinion is always: you are inadequate. The subtext is often useful.)"],
+        "Ask About...": ["(he walks away mid-conversation. Often.)"],
+        "Nevermind": "(he was already walking away)"
+      },
+      "gating_notes": "Situ Nan's verbs are few and his conversations are short. He walks away mid-conversation (walks_away_mid_conversation: true). The player learns to be concise."
+    },
+    "npc_qing_shui": {
+      "name": "Qing Shui",
+      "role": "Wang Lin's Dao companion (late novel), quiet, profound",
+      "personality_profile_ref": "conversation_system_schema.json#personality_rendering.profiles.qing_shui",
+      "verb_expansions": {
+        "Discuss": ["Dao (deeply)", "The nature of things", "Silence (a valid topic)"],
+        "Request": {
+          "Advice": ["(he may answer '...'. Wait.)"],
+          "Insight": ["(rare — when he speaks, it matters)"]
+        },
+        "Teach Me": ["(he teaches through silence and demonstration, not words)"],
+        "Offer": ["(he accepts offerings quietly)"],
+        "Travel Together": ["(he is a good walking companion — comfortable silence)"],
+        "Observe Technique": ["(watching him is itself a lesson)"],
+        "Challenge": ["(you do not challenge Qing Shui)"],
+        "Give Gift": ["(he acknowledges gifts with a nod)"],
+        "Ask Opinion": ["(he may answer. In thirty seconds. With one word.)"],
+        "Ask About...": ["(silence is an answer)"],
+        "Nevermind": "(he nods. Resumes.)"
+      },
+      "gating_notes": "Qing Shui's silence_tolerance is up to 30000ms. The UI must not rush him. This is the strongest test of the personality_rendering system — if Qing Shui feels like every other NPC, the system has failed."
+    },
+    "npc_wang_tianshui": {
+      "name": "Wang Tianshui (Village Head)",
+      "role": "Wang Family Village's only cultivator, de facto leader, quietly conflicted about his choice to stay",
+      "personality_profile_ref": "(mortal-elder profile — patient, weary, responsible)",
+      "verb_expansions": {
+        "Discuss": ["The village", "The Teng family", "His cultivation (sensitive)", "The ancestors"],
+        "Request": {
+          "Advice": ["On village matters", "On cultivation (he knows little but shares what he knows)"],
+          "Help": ["Repair the irrigation", "Patrol for wolves", "Mediate a dispute"],
+          "The Strange Jade": ["(if relationship high — he gifts it, Article XXXI.2 gift engine)"]
+        },
+        "Teach Me": ["Basic Qi Condensation (he can teach the first steps — he went no further himself)"],
+        "Offer": ["Labor", "Information about the village", "A promise to protect the village"],
+        "Trade": ["Village goods (rice, fish, cloth) for tools or cultivation materials"],
+        "Travel Together": ["(he stays in the village — he cannot leave)"],
+        "Observe Technique": ["Watch him light a candle with Qi (a small thing, but the only cultivation the village sees)"],
+        "Challenge": ["(inappropriate — he is mortal-elder tier)"],
+        "Give Gift": ["(he accepts graciously — gifts shift Trust significantly for a mortal)"],
+        "Ask Opinion": ["On the player's path", "On whether to leave the village"],
+        "Ask About...": ["Recent Events", "Village history", "The Teng family", "The strange jade"],
+        "Nevermind": "(he nods. Resumes his duties.)"
+      },
+      "gating_notes": "Wang Tianshui is the primary early-game mentor for mortal/village life. His gift of the strange jade (the Heaven Defying Bead) is the Chapter 1 catalyst — gated on Trust>=5 and the player having helped the village."
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "_comment": "NPC initiation consent pipeline (Article XXXII, derived from user directive). NPCs do not 'start dialogue' — they decide to APPROACH. There is an 8-stage pipeline from noticing the player to conversation beginning. The player has interaction preferences that NPCs respect. NPCs have waiting behaviors (they are not frozen while waiting). Some personalities skip consent entirely (Xu Liguo just talks; Ta Shan waits silently and leaves; Bai Xiaochun starts talking before reaching you). This is the data the DecisionEngine reads to govern NPC→Player initiation. DATA, not Java (Article XXVI).",
+  "_schema": "npc_initiation_consent_pipeline",
+  "_schema_version": 1,
+  "_article": "XXXII (Conversation Is The World) + XXXIII (Motivations) + XXXIV (Relationships)",
+  "pipeline": [
+    {
+      "stage": 1,
+      "name": "notice",
+      "description": "The NPC perceives the player (PerceptionEngine). If the NPC cannot perceive the player (too far, hidden, in stealth), the pipeline does not start.",
+      "inputs": ["npc.perception_radius", "player.visibility", "player.distance", "player.stealth_state"],
+      "output": "player_noticed: bool"
+    },
+    {
+      "stage": 2,
+      "name": "should_i_interact",
+      "description": "The NPC's motivation_state is evaluated. Is there an active motivation that targets the player (player_relevance.relevant=true)? If no, the pipeline ends — the NPC noticed the player but has no reason to interact. This is why most NPCs who see you do not approach you.",
+      "inputs": ["npc.motivation_state (active motivations with player_relevant=true)"],
+      "output": "has_reason: bool, reason: motivation_id"
+    },
+    {
+      "stage": 3,
+      "name": "is_this_the_right_moment",
+      "description": "The NPC reasons about timing. Is the player busy (combat, meditation, tribulation, another conversation)? Is the player's interaction preference set to reject this NPC right now? Is there a world event that takes priority (a beast attacking, a sect alarm)? If the moment is wrong, the NPC either waits (if the motivation is time-tolerant) or abandons (if time-sensitive and another target exists).",
+      "inputs": ["player.state (combat/meditation/tribulation/conversing/idle)", "player.interaction_preferences", "world_event_bus (urgent events)", "motivation.urgency", "motivation.alternative_resolution"],
+      "output": "moment_right: bool, wait: bool, wait_duration: int|null"
+    },
+    {
+      "stage": 4,
+      "name": "can_i_reach_them",
+      "description": "Pathfinding and physical feasibility. Can the NPC reach the player? (Walls, locked doors, distance, the NPC's movement speed.) If not, the NPC may call out (if appropriate) or abandon. Situ Nan may simply appear beside you (canon — he is not bound by normal movement).",
+      "inputs": ["npc.path_to_player", "npc.movement_mode (walk/fly/teleport)", "obstacles"],
+      "output": "reachable: bool, approach_mode: walk|fly|appear|call_out"
+    },
+    {
+      "stage": 5,
+      "name": "approach",
+      "description": "The NPC moves toward the player (or appears, for canonical beings). The approach itself is a world event — other NPCs may notice the NPC approaching the player (perception), which may seed rumors ('Why was Wang Lin walking toward that cultivator?').",
+      "inputs": ["approach_mode", "npc.path"],
+      "output": "npc_now_near_player: bool",
+      "world_event": "approach_observed_by: [npc_ids who perceived the approach]"
+    },
+    {
+      "stage": 6,
+      "name": "wait_for_acknowledgement",
+      "description": "CRITICAL (user directive). The NPC does not force conversation. They enter a WAITING state near the player. They have waiting behaviors (looking at you, reading, meditating, watching surroundings, walking around, talking with companions, training). They are NOT frozen. The player must acknowledge (turn toward, right-click, approach) for the conversation to begin. Some personalities skip this stage (see personality_overrides).",
+      "inputs": ["npc.personality_profile", "player.interaction_preferences"],
+      "output": "waiting: bool, waiting_behavior: enum, wait_timeout: int",
+      "waiting_behaviors": ["looking_at_you", "reading", "meditating", "watching_surroundings", "walking_around", "talking_with_companions", "training", "leaning_on_wall", "sitting_nearby"]
+    },
+    {
+      "stage": 7,
+      "name": "player_accepts_or_declines",
+      "description": "The player acknowledges (conversation begins) or declines (ignores the NPC, walks away, or explicitly dismisses). If the player ignores, the NPC waits up to wait_timeout, then leaves (personality-dependent — Wang Lin leaves quietly; Xu Liguo may follow; Ta Shan leaves without a word). If the player declines explicitly, the NPC's motivation may shift (grievance if relationship low, understanding if high).",
+      "inputs": ["player.action (acknowledge|ignore|dismiss)", "wait_timeout"],
+      "output": "conversation_begins: bool, npc_reaction_if_declined: string|null"
+    },
+    {
+      "stage": 8,
+      "name": "conversation_begins",
+      "description": "If accepted, the conversation starts in the mode determined by the motivation (ambient/focus/major, Article XXXII.1). The NPC holds still (courtesy, § XXXII.1a). The consent pipeline ends — the conversation system takes over.",
+      "inputs": ["motivation.initiation.conversation_mode"],
+      "output": "conversation_active: bool, mode: enum"
+    }
+  ],
+  "personality_overrides": {
+    "_description": "Some NPCs do not follow the full 8-stage pipeline. Their personality_profile overrides stages. These are data the DecisionEngine reads — no special-casing in code.",
+    "npc_wang_lin": {
+      "skip_stages": [],
+      "modifications": {"stage_6_wait_behavior": "standing_quietly (may not even look at you directly — you have to choose to engage)", "stage_6_wait_timeout": "long (Wang Lin is patient, but will leave if ignored too long — he has things to do)", "stage_7_reaction_if_declined": "leaves silently, no grievance (understands the player is busy), motivation may reschedule"}
+    },
+    "npc_xu_liguo": {
+      "skip_stages": [6, 7],
+      "modifications": {"description": "Xu Liguo does not wait for acknowledgement. He just starts talking. 'Master! Look what I stole!' The player can tell him to stop (which becomes its own interaction). He interrupts (interrupt_frequency: often).", "stage_5_approach": "may approach rapidly and start talking before reaching you"}
+    },
+    "npc_ta_shan": {
+      "skip_stages": [],
+      "modifications": {"stage_6_wait_behavior": "standing_silently (does not look at you, does not fidget — a guardian waiting)", "stage_6_wait_timeout": "short (if not acknowledged, he leaves without a word — he was checking on you, not seeking conversation)", "stage_7_reaction_if_declined": "leaves silently, no grievance, may return later if the motivation persists"}
+    },
+    "npc_bai_xiaochun": {
+      "skip_stages": [6, 7],
+      "modifications": {"description": "Bai Xiaochun starts talking before reaching you. He approaches while already mid-sentence. The player cannot decline — they can only redirect.", "stage_5_approach": "approaches while talking"}
+    },
+    "npc_situ_nan": {
+      "skip_stages": [4, 6, 7],
+      "modifications": {"description": "Situ Nan does not walk to you — he appears beside you (canonical). He does not wait — he speaks. 'Come.' The player can follow, ask why, refuse, or ignore. He reacts accordingly (mocks if ignored).", "stage_5_approach": "appear (teleport-adjacent, canonical)"}
+    },
+    "npc_li_muwan": {
+      "skip_stages": [],
+      "modifications": {"stage_6_wait_behavior": "standing_nearby (may be holding herbs, looking patient)", "stage_6_wait_timeout": "medium", "stage_7_reaction_if_declined": "understands, may leave a note or return later if the matter (e.g. your injury) persists"}
+    }
+  },
+  "player_interaction_preferences": {
+    "_description": "The player configures how NPCs may initiate. NPCs respect these (stage 3 of the pipeline checks them). This is player agency over the consent system — the player is never mobbed, never interrupted during things that matter to them.",
+    "options": {
+      "auto_accept": "bool — NPCs may approach and begin without waiting (for players who want maximum interaction)",
+      "friends_only": "bool — only NPCs with relationship.trust >= threshold may initiate",
+      "urgent_only": "bool — only motivations with urgency=high or critical may initiate",
+      "never_during_combat": "bool — stage 3 rejects if player.state=combat (default: true)",
+      "never_during_meditation": "bool — stage 3 rejects if player.state=meditation (default: true)",
+      "never_during_tribulation": "bool — stage 3 rejects if player.state=tribulation (default: true)",
+      "silent_notifications": "bool — waiting NPCs do not show a UI indicator; the player must notice them in the world (for immersive players)",
+      "max_concurrent_waiting": "int — how many NPCs may be in stage 6 (waiting) simultaneously (default: 1, prevents mobbing even if deconfliction fails)"
+    },
+    "defaults": {"auto_accept": false, "friends_only": false, "urgent_only": false, "never_during_combat": true, "never_during_meditation": true, "never_during_tribulation": true, "silent_notifications": false, "max_concurrent_waiting": 1}
+  }
+}

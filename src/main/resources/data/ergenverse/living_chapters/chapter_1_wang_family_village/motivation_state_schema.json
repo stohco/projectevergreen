@@ -1,0 +1,62 @@
+{
+  "_schema": "motivation_state",
+  "_schema_version": 1,
+  "_article": "XXXIII",
+  "_supersedes": "desire_state_schema.json (Article XXXI.1, AUTO-CANON-051)",
+  "_description": "Per-cycle MOTIVATION STATE for an NPC. Replaces the narrower 'desire_state' (AUTO-CANON-051). Per Article XXXIII: 'desire' was too narrow a word. Wang Lin does not chase desires — he responds to necessity, protects what matters, honors debts, pursues long-term goals, and occasionally acts out of compassion or vengeance. This schema draws from a richer vocabulary of DRIVING FORCES: ambitions, fears, duties, debts, promises, grudges, curiosity, love, loyalty, survival, greed, vengeance, sect orders, cultivation bottlenecks, opportunities. The ten social engines (Art XXXI.1) remain the expression layer — what feeds them is this motivation state. DATA, not Java (Article XXVI).",
+  "_design_notes": {
+    "driving_forces_vocabulary": "Every motivation is tagged with one or more driving_forces. This is the key difference from the old desire_state: a motivation is not just 'I want X' but 'I am driven by FEAR for my family to acquire X' or 'I am driven by DUTY to my sect to report Y' or 'I am driven by a GRUDGE against the Teng family to undermine Z'. The force type changes how the NPC pursues the motivation and how they frame it when they initiate.",
+    "player_relevance_model": "CRITICAL (Article XXXIII.2). Every motivation has a player_relevance block. By default, player_relevant=false. The NPC's motivation exists and may drive NPC-to-NPC interaction, but the player is NOT targeted. The player becomes relevant only when: (a) the player has demonstrated a relevant skill, (b) the player owes or is owed a debt, (c) the player holds a grievance or is the target of one, (d) the player is physically the nearest capable being AND no NPC can fulfill. This is why Wang Lin does not talk to the player for the first 40 hours — the player has not become relevant to his motivations.",
+    "reasoning_over_threshold": "The old desire_state had a simple initiation_threshold (1-10). This schema replaces it with a reasoning block: the NPC evaluates whether to act on the motivation THIS cycle by considering urgency, alternative resolution (can another NPC handle it?), player state (if player-targeted: is the player busy? in combat? meditating?), relationship graph (Art XXXIV), and outstanding favors/debts. This is how six NPCs with the same need resolve to one approaching (Art XXXIV.4).",
+    "memory_and_relationship_coupling": "Every motivation references the NPC's relationship graph with potential targets (Art XXXIV) and writes to the memory ledger (Art XXXI.5) when it fires and resolves. A motivation directed at a target with high Grievance frames differently than one directed at a target with high Trust."
+  },
+  "schema": {
+    "npc_id": "string — must match an existing npc_*.json npc_id",
+    "name": "string",
+    "location": "string — the location this motivation_state applies to",
+    "evaluation_cycle_ticks": "int — how often the engine re-evaluates (1000 = once per Minecraft day)",
+    "long_term_priorities": ["string — the NPC's persistent priorities that do NOT cycle. e.g. Wang Lin: 'protect_family', 'become_stronger', 'avoid_attention', 'acquire_resources', 'study_restrictions'. These shape which motivations activate."],
+    "motivations": [
+      {
+        "id": "string — unique within this NPC, e.g. 'm_decode_restriction_cave'",
+        "driving_forces": ["enum — one or more of: ambition, fear, duty, debt, promise, grudge, curiosity, love, loyalty, survival, greed, vengeance, sect_order, cultivation_bottleneck, opportunity, compassion, necessity"],
+        "statement": "string — the motivation in the NPC's internal voice. e.g. 'The restriction in the cave above the village is incomplete. I cannot decipher the third layer alone. Who can help?'",
+        "target_type": "enum — npc | player | world | anyone | none",
+        "target_filter": "string|null — npc_id, faction, role, or null. null = unresolved (NPC is still reasoning about who to target).",
+        "player_relevance": {
+          "relevant": "bool — is the player a candidate target for this motivation?",
+          "relevance_reason": "string|null — WHY the player is or isn't relevant. e.g. 'player has demonstrated restriction skill (memory_tag: player_studied_restriction_3d)' or null if not relevant.",
+          "becomes_relevant_when": ["string — conditions that would make the player relevant. e.g. 'player.knowledge.restriction >= 2', 'player.relationship.wang_lin.trust >= 40', 'player.owes_wang_lin_favor'"]
+        },
+        "priority": "int 1-10 — 1=whim, 5=normal, 10=life-or-death",
+        "urgency": "enum — low | medium | high | critical",
+        "alternative_resolution": {
+          "can_resolve_without_target": "bool — can the NPC resolve this alone or via world-state change?",
+          "alternative_targets": ["string — other NPCs or factions who could fulfill this. e.g. 'npc_situ_nan (if present)', 'npc_li_muwan (if herb-related)', 'any_heng_yue_disciple'"],
+          "preferred_resolution": "string — the NPC's preferred path. e.g. 'ask_wang_lin_if_present_else_player_else_self'"
+        },
+        "reasoning": {
+          "should_i_act_this_cycle": "string — the NPC's internal reasoning about timing. e.g. 'Player is currently in combat (perception: combat_sounds). Do NOT interrupt. Wait.'",
+          "initiation_threshold": "int 1-10 — minimum priority to actually initiate (not just feel the motivation)",
+          "conditions": ["string — condition expressions. e.g. 'time_of_day:day', 'nearby:target<15', 'target.state:!combat', 'target.state:!meditation', 'memory_tag:player_studied_restriction<3d', 'relationship.trust>=40'"]
+        },
+        "initiation": {
+          "engine": "enum — one of the 10 social engines (request, offer, teaching, challenge, recruitment, rumor, mentorship, gift, debt, favor)",
+          "mode": "enum — approach | gesture | line | gift | silence | follow | block | demonstrate | walk_and_talk",
+          "line": "string|null — spoken line if mode=line/silence. null if mode=silence/demonstrate.",
+          "conversation_mode": "enum — ambient | focus | major (Article XXXII.1). Most motivations default to ambient.",
+          "requires_proximity": "int — blocks within which the NPC will initiate",
+          "requires_consent": "bool — must the NPC wait for player acknowledgement before conversing? (Article XXXII consent pipeline). true for most; false for urgent warnings.",
+          "cooldown_ticks": "int — minimum ticks between firings"
+        },
+        "offer_in_return": "string|null — what the NPC offers if the target fulfills. null if pure request.",
+        "consequence_on_fulfill": "string — world-state change. e.g. 'wang_lin.restriction_decoded=true; favor_ledger+=player_helped_wang_lin (Moderate, callable)'",
+        "consequence_on_ignore": "string — what happens if unaddressed. e.g. 'wang_lin.seeks_alternative; if none found, restriction remains undecoded (opportunity lost)'",
+        "memory_tag": "string — tag written to memory ledger when this fires and resolves",
+        "satisfies_motivations_on_others": ["string|null — motivation_ids on OTHER npcs that fulfilling this also satisfies"]
+      }
+    ],
+    "passive_states": ["string — states where the NPC has no active motivations directed outward. e.g. 'cultivating_in_seclusion', 'sleeping', 'mourning (after memory_tag:family_loss for 14 days)', 'observing (Wang Lin often just watches)'"],
+    "cross_npc_triggers": ["string — motivation_ids on OTHER npcs that this npc's motivations can satisfy"]
+  }
+}

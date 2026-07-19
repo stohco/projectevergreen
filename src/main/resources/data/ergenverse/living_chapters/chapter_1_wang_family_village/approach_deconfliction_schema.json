@@ -1,0 +1,62 @@
+{
+  "_comment": "Approach deconfliction schema (Article XXXIV.4 — the 'everyone lining up' problem). When multiple NPCs have motivations that could target the player simultaneously, they do NOT all approach. Each reasons independently about whether to approach, wait, defer to another NPC, self-resolve, or abandon. Only the NPC with the strongest claim actually approaches. This is the data the DecisionEngine reads to prevent mobbing. DATA, not Java (Article XXVI).",
+  "_schema": "approach_deconfliction",
+  "_schema_version": 1,
+  "_article": "XXXIV.4",
+  "problem_statement": "Without deconfliction, six NPCs who all need herbs would all walk toward the player. Terrible. The player is mobbed. The world feels like a theme park, not a place. Article XXXIV.4 requires that each NPC reasons independently and only one (or zero) approaches.",
+  "deconfliction_algorithm": {
+    "description": "Each simulation cycle, after all NPCs have evaluated their motivation_state, the DecisionEngine collects all motivations with player_relevant=true and initiation conditions met. It then runs a deconfliction pass:",
+    "steps": [
+      "1. COLLECT — gather all candidate NPC→Player initiations for this cycle.",
+      "2. FILTER_BY_PLAYER_STATE — remove candidates that violate player.interaction_preferences (never_during_combat, etc.).",
+      "3. FILTER_BY_MAX_CONCURRENT — if the player already has max_concurrent_waiting NPCs in stage 6 (waiting), remove candidates unless urgency=critical.",
+      "4. SCORE_EACH — score each remaining candidate: priority * urgency_weight * relationship_strength * time_sensitivity. Critical urgencies score highest. Life-saving favors owed score highest. Long-waiting motivations score higher (they've been deferred).",
+      "5. SELECT_ONE — the highest-scoring candidate is allowed to proceed to approach (stage 4 of consent pipeline). All others are deferred.",
+      "6. DEFER_OR_RESOLVE_OTHERS — for each deferred candidate, the NPC reasons (using motivation_state.alternative_resolution): can I resolve this without the player? (a) Yes, self-resolve or ask another NPC. (b) No, but it's not urgent — reschedule for a future cycle. (c) No, and it's urgent — enter a waiting state (the NPC will approach the player when the current conversation ends, if the player becomes free).",
+      "7. EMIT — the selected candidate's NPC begins approach. Deferred candidates' NPCs update their motivation_state (deferred_until, last_attempted)."
+    ],
+    "scoring_weights": {
+      "priority": "1-10 (from motivation.priority)",
+      "urgency_weight": {"low": 1, "medium": 2, "high": 4, "critical": 8},
+      "relationship_strength": "trust + respect (from relationship_graph) — higher relationship = more likely the NPC feels comfortable approaching",
+      "time_sensitivity": "if the motivation has been deferred N times, +N to score (prevents starvation)",
+      "favor_weight": "if the NPC owes the player a callable favor, +5 (the favor creates social obligation to be available)"
+    }
+  },
+  "example_six_npcs_need_herbs": {
+    "scenario": "Six NPCs in Wang Family Village all need spirit herbs this cycle. Without deconfliction, all six walk toward the player. With deconfliction:",
+    "candidates": [
+      {"npc": "npc_wang_ping", "motivation": "need_herbs_for_mother_medicine", "priority": 6, "urgency": "high", "relationship": "trust 70", "favor_owed": false, "deferred_count": 0},
+      {"npc": "npc_da_niu", "motivation": "need_herbs_for_fishing_bait", "priority": 3, "urgency": "low", "relationship": "trust 40", "favor_owed": false, "deferred_count": 0},
+      {"npc": "npc_wang_tianshui", "motivation": "need_herbs_for_village_elder_illness", "priority": 8, "urgency": "critical", "relationship": "trust 60", "favor_owed": true, "favor_owed_note": "player saved village", "deferred_count": 0},
+      {"npc": "npc_zhou_rui", "motivation": "need_herbs_for_trade", "priority": 4, "urgency": "medium", "relationship": "trust 30", "favor_owed": false, "deferred_count": 1},
+      {"npc": "npc_wang_qingyue", "motivation": "need_herbs_for_ancestral_hall_incense", "priority": 3, "urgency": "low", "relationship": "trust 50", "favor_owed": false, "deferred_count": 0},
+      {"npc": "npc_zhang_tian", "motivation": "need_herbs_for_patrol_potions", "priority": 5, "urgency": "medium", "relationship": "trust 45", "favor_owed": false, "deferred_count": 0}
+    ],
+    "scoring": [
+      "wang_ping: 6 * 4(high) * 0.7(rel) * 1(fresh) = 16.8",
+      "da_niu: 3 * 1(low) * 0.4(rel) * 1(fresh) = 1.2",
+      "wang_tianshui: 8 * 8(critical) * 0.6(rel) * 1(fresh) + 5(favor) = 43.6",
+      "zhou_rui: 4 * 2(medium) * 0.3(rel) * 2(deferred once) = 4.8",
+      "wang_qingyue: 3 * 1(low) * 0.5(rel) * 1(fresh) = 1.5",
+      "zhang_tian: 5 * 2(medium) * 0.45(rel) * 1(fresh) = 4.5"
+    ],
+    "resolution": {
+      "selected": "npc_wang_tianshui (score 43.6) — the village elder is critically ill, Wang Tianshui owes the player a favor. He approaches.",
+      "deferred": [
+        "npc_wang_ping: 'Player is busy with the elder's illness. My mother can wait a day.' (reschedule, urgency high but not critical, relationship high enough to understand)",
+        "npc_da_niu: 'I'll gather bait myself. Not worth bothering anyone.' (self-resolve via alternative_resolution)",
+        "npc_zhou_rui: 'The merchant in the next village has these herbs. I'll go there instead.' (resolve via alternative_target)",
+        "npc_wang_qingyue: 'The incense can wait. The elder cannot.' (reschedule, low urgency)",
+        "npc_zhang_tian: 'I'll ask Wang Tianshui for patrol potions instead — he's the cultivator. Oh, he's busy. Tomorrow.' (defer to alternative_target, then reschedule)"
+      ],
+      "result": "Only ONE NPC approaches the player. The other five resolved their motivation through reasoning, not through mobbing. This is Article XXXIV.4 in action."
+    }
+  },
+  "edge_cases": {
+    "two_critical_urgencies": "If two NPCs have critical urgency simultaneously (rare), the one with the higher favor_weight or relationship_strength approaches first. The second enters a waiting state (stage 6) and will approach when the first conversation ends. max_concurrent_waiting defaults to 1, but critical urgency may override to 2.",
+    "player_approaches_npc_first": "If the player initiates conversation with an NPC who had a deferred motivation, that motivation may surface during the conversation (the NPC brings it up: 'Actually, since you're here...'). This is the natural way deferred motivations get addressed.",
+    "starvation_prevention": "A motivation deferred more than 3 times gets +3 to score per additional deferral, ensuring it eventually approaches. No motivation starves forever.",
+    "npc_to_npc_deconfliction": "The same algorithm applies to NPC→NPC initiations. If three NPCs all want to ask Wang Lin something, only one approaches; the others defer or find alternatives."
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "_schema": "conversation_system",
+  "_schema_version": 1,
+  "_article": "XXXII",
+  "_description": "The conversation system (Article XXXII). Dialogue is not a menu layered over the world — it IS the world. This schema defines the three conversation modes, the conversation affordance UI, fuzzy asking, interruptions, walk-and-talk, personality-driven rendering, stateful memory, and conversations-as-world-events. DATA, not Java (Article XXVI). The existing IntentEngine/DecisionEngine/PerceptionEngine/WorldHistory read this and drive the conversation state machine.",
+  "_design_notes": {
+    "no_skyrim_problem": "The Skyrim dialogue tree (Hello → Tell me about → Goodbye, repeatable forever) is forbidden by Article XXXII. Conversations are verb-affordances (Article XXVIII) that expand per-NPC, are stateful (remember what was asked), and evolve with relationship/cultivation/history.",
+    "holds_still_courtesy": "CRITICAL (Article XXXII.1a, added per user refinement). When the player initiates conversation, the NPC HOLDS STILL — pausing their pathing/schedule as a courtesy so the player can explore the verb wheel and talk as much as they want. The world keeps running (other NPCs move, time passes, weather changes). The courtesy expires on: (a) player dismiss ('Nevermind'), (b) NPC hard-deadline ('I have to go.' — a scheduled event they cannot miss), or (c) world interruption (combat, disaster). The NPC does NOT wander off on idle — they wait patiently because that is what a person does when someone is talking to them.",
+    "conversation_is_simulation": "Conversation is not a separate mode. It is a simulation state. The NPC reasons about whether to converse (motivation_state), whether the timing is right (consent pipeline), what mode to use (ambient/focus/major), and what verbs to expose (affordances). The player's preferences (auto-accept, friends-only, urgent-only, never-during-X) are respected. Interruptions are natural — a beast appearing mid-conversation ends it because the world kept moving.",
+    "personality_renders_ui": "The same conversation engine renders differently per-NPC (Article XXXII.7). Wang Lin: few words, long pauses, silence as response. Xu Liguo: interrupts, jokes, lies. Li Muwan: detailed, patient. Situ Nan: mocks, walks away mid-conversation. Qing Shui: may answer '...' for 30 seconds. This is data the UI reads — personality_profile on the NPC shapes timing, word count, interrupt frequency, and silence tolerance."
+  },
+  "modes": {
+    "ambient": {
+      "ordinal": 1,
+      "frequency": "≈90% of interactions",
+      "trigger": "player right-clicks NPC in a non-critical context, OR NPC initiates a low-priority motivation toward player",
+      "player_movement": "ENABLED — player may walk-and-talk (§ XXXII.6), may step away, may look around",
+      "npc_behavior": "HOLDS STILL (courtesy, § XXXII.1a) — pauses pathing/schedule, waits for player to dismiss or for world interruption",
+      "camera": "no change",
+      "world_state": "RUNNING — other NPCs move, time passes, weather changes, rumors spread, beasts spawn",
+      "ui": "radial verb-prompts in corner or around cursor; no takeover",
+      "dismiss": "player selects 'Nevermind' / walks away / NPC hard-deadline triggers / world interruption",
+      "example": "Player right-clicks Wang Lin. He glances over, holds still. '...Yes?' Radial: Talk / Observe / Walk Together / Ask / Leave. Player clicks Ask → submenu: Cultivation / Restrictions / Travel / Items / Recent Events / Rumors. Meanwhile Li Muwan walks past carrying herbs. A child runs by. The sun moves. Nothing froze except Wang Lin's pathing."
+    },
+    "focus": {
+      "ordinal": 2,
+      "frequency": "occasional — when the conversation matters",
+      "trigger": "player invokes a focus-tier affordance (request_technique, request_artifact_copy, request_advice on a major topic, enter_sect, negotiate) OR NPC initiates a high-priority motivation (debt call-in, serious warning, recruitment)",
+      "player_movement": "DISABLED — player is busy talking",
+      "npc_behavior": "HOLDS STILL (courtesy) — faces player, full attention",
+      "camera": "subtle zoom toward the conversation",
+      "world_state": "RUNNING — other NPCs move, time passes, weather changes (this is the key difference from a cutscene)",
+      "ui": "expanded verb-affordance panel; may include fuzzy-ask text input (§ XXXII.4)",
+      "dismiss": "conversation resolves (request granted/refused/deferred), player selects 'Nevermind', OR world interruption (§ XXXII.5)",
+      "example": "Player asks Wang Lin for a technique copy. Camera zooms slightly. Player movement locks. Wang Lin reasons (motivation_state). '...No. You wouldn't survive using it.' Meanwhile the sun sets behind him. A disciple walks past in the background. The world did not stop — only the player did."
+    },
+    "major": {
+      "ordinal": 3,
+      "frequency": "very rare — inheritance, tribulation, True Body meeting, major revelation",
+      "trigger": "canonical story beat fires (living_event of type 'miracle' or 'catastrophe' with significance=10)",
+      "player_movement": "DISABLED",
+      "npc_behavior": "cinematic framing — NPC may move, gesture, demonstrate",
+      "camera": "cinematic — may cut, pan, frame dramatically",
+      "world_state": "PAUSED for the duration of the major moment (this is the ONLY mode that pauses the world, and only because the moment is canonical and rare)",
+      "ui": "special dialogue, music, animations",
+      "dismiss": "the moment concludes (not player-dismissable — it plays out)",
+      "example": "Wang Lin's True Body manifests before the player for the first time. Camera frames. Music shifts. He speaks. The world holds its breath — because this is the one moment in 40 hours where it earns the right to."
+    }
+  },
+  "affordance_ui": {
+    "structure": "radial or list of VERBS (not dialogue options). Top-level verbs: Discuss, Request, Teach Me, Offer, Trade, Travel Together, Observe Technique, Challenge, Give Gift, Ask Opinion, Ask About..., Nevermind",
+    "per_npc_expansion": "each verb expands into a submenu unique to the NPC (Article XXXII.2). Driven by the NPC's affordances data (Article XXVIII). No special-casing in code — the UI reads the NPC's affordances and renders them.",
+    "examples": {
+      "wang_lin_request": ["Technique", "Artifact Copy", "Advice", "Restriction", "Memory", "Training"],
+      "li_muwan_request": ["Pill", "Herb Identification", "Medical Advice", "Alchemy Lesson"],
+      "xu_liguo_request": ["Scout", "Possess", "Steal", "Distract", "Cause Trouble"]
+    },
+    "nevermind": "always present. Selecting it ends the conversation, the NPC resumes their schedule/pathing from where they paused (§ XXXII.1a)."
+  },
+  "fuzzy_asking": {
+    "description": "Article XXXII.4. The player does not select from item IDs. The player types or selects intent: 'I want something that helps fight souls.' The NPC REASONS about the intent — not a database search — and chooses what to offer or refuse.",
+    "input": "free text or intent-selection wheel",
+    "npc_reasoning": "the NPC's IntentEngine evaluates the player's stated intent against: (a) what the NPC has, (b) what the NPC is willing to share (relationship graph, motivation_state), (c) what the player can handle (cultivation, knowledge), (d) what the player actually needs (inferred from history). The NPC may offer something different from what was asked, refuse, or defer.",
+    "example": "Player: 'I want something that helps fight souls.' Wang Lin reasons: player wants soul combat. Player's cultivation is too low for the Soul Banner. Player has shown interest in restrictions. Wang Lin offers: a Soul Restriction jade slip instead. OR: 'Not yet.' OR: a challenge ('If you still want it after Mosquito Valley...')."
+  },
+  "interruptions": {
+    "description": "Article XXXII.5. Conversations are interruptible by world events.",
+    "triggers": ["thunder (startles)", "sect_attack", "spirit_beast_spawn", "tribulation", "explosion", "enemy_arrival", "npc_hard_deadline (scheduled event)", "another_npc_urgent_approach (Li Muwan arrives: 'I found it.')"],
+    "resolution": "the NPC stops talking mid-sentence. 'Later.' or 'I have to go.' The conversation ends. The NPC's motivation_state may preserve the conversation context so it can resume later. The player never entered a frozen dialogue world.",
+    "world_event_coupling": "interruptions are NOT scripted per-conversation. They fire because the world kept running and something happened. The conversation system listens to WorldEventBus and reacts."
+  },
+  "walk_and_talk": {
+    "description": "Article XXXII.6. NPCs do not stop to converse — they may walk and talk.",
+    "trigger": "NPC initiates with mode='walk_and_talk' (e.g., Wang Lin: 'Come.' and walks toward a mountain)",
+    "mechanic": "conversation UI stays open in corner. Both NPC and player move through the world. The NPC may point out things (a restriction on a cliff, a spirit beast, a view). Conversation naturally pauses during combat, then resumes.",
+    "player_can_leave": "the player can stop following at any time — the NPC may continue alone (the conversation ends, the NPC's motivation may shift to 'player declined') or stop and wait."
+  },
+  "personality_rendering": {
+    "description": "Article XXXII.7. The same conversation system renders differently per-NPC based on personality_profile.",
+    "dimensions": {
+      "word_count": "int — average words per response. Wang Lin: 3-8. Li Muwan: 20-40. Xu Liguo: 15-30 (rapid).",
+      "silence_tolerance": "int — ms the NPC will pause before responding. Wang Lin: 2000-5000. Xu Liguo: 0. Qing Shui: up to 30000.",
+      "interrupt_frequency": "enum — never | rare | sometimes | often. Wang Lin: never. Xu Liguo: often.",
+      "topic_stability": "enum — focused | moderate | flighty. Wang Lin: focused. Xu Liguo: flighty (changes topics, lies).",
+      "walks_away_mid_conversation": "bool — Situ Nan: true (may mock and leave).",
+      "lies": "bool — Xu Liguo: true. Wang Lin: false (but may omit).",
+      "explains_thoroughly": "bool — Li Muwan: true."
+    },
+    "profiles": {
+      "wang_lin": {"word_count": "3-8", "silence_tolerance": "2000-5000", "interrupt_frequency": "never", "topic_stability": "focused", "walks_away_mid_conversation": false, "lies": false, "explains_thoroughly": false, "note": "Observes you. Long pauses. Silence is a response."},
+      "xu_liguo": {"word_count": "15-30", "silence_tolerance": "0", "interrupt_frequency": "often", "topic_stability": "flighty", "walks_away_mid_conversation": false, "lies": true, "explains_thoroughly": false, "note": "Interrupts constantly. Makes jokes. Changes topics. Lies."},
+      "li_muwan": {"word_count": "20-40", "silence_tolerance": "500-1500", "interrupt_frequency": "rare", "topic_stability": "focused", "walks_away_mid_conversation": false, "lies": false, "explains_thoroughly": true, "note": "Detailed. Patient. Explains."},
+      "situ_nan": {"word_count": "5-15", "silence_tolerance": "1000-3000", "interrupt_frequency": "sometimes", "topic_stability": "moderate", "walks_away_mid_conversation": true, "lies": false, "explains_thoroughly": false, "note": "Laughs. Mocks. May walk away mid-conversation."},
+      "qing_shui": {"word_count": "1-5", "silence_tolerance": "5000-30000", "interrupt_frequency": "never", "topic_stability": "focused", "walks_away_mid_conversation": false, "lies": false, "explains_thoroughly": false, "note": "May answer '...'. For thirty seconds. When he does speak, it matters."}
+    }
+  },
+  "stateful_memory": {
+    "description": "Article XXXII.8. Conversations are stateful — the NPC remembers what was discussed, what was promised, what was refused.",
+    "tracked_per_npc": {
+      "topics_discussed": ["string — topics the player has asked about, with timestamp. Prevents repeat-exposition."],
+      "promises_made_by_npc": ["string — what the NPC promised (e.g., 'teach after Foundation Establishment'). Blocks the affordance until the condition is met."],
+      "promises_made_by_player": ["string — what the player promised. The NPC may call them on it."],
+      "refusals": ["string — requests the NPC refused, with reason. The NPC will not pretend it's the first time. Re-asking may shift to 'I told you no.' or 'Ask me again after...'"],
+      "relationship_at_last_talk": "object — snapshot of relationship graph when last conversed. The NPC notices if trust/fear/grievance has shifted since."
+    },
+    "evolution": "the verb-affordances available evolve as relationship, reputation, knowledge, and cultivation change. A verb locked at Trust<40 unlocks at Trust>=40. A refused request may unlock after the player has grown."
+  },
+  "world_event_coupling": {
+    "description": "Article XXXII.9. A conversation is itself a world event with location, volume, and witnesses.",
+    "properties": {
+      "location": "where the conversation happens — public (sect plaza) vs private (secluded cave) changes consequences",
+      "volume": "enum — whisper | quiet | normal | loud. Loudly asking Wang Lin about the Heaven Defying Bead in Heng Yue Sect is dangerous.",
+      "witnesses": ["npc_ids within earshot (perception-based). Witnesses may: update beliefs, form rumors, grow suspicious, follow the player, report to sect."],
+      "memory_ledger_entry": "every conversation writes a memory_ledger entry with topic, witnesses, and location. This is how the world remembers who said what to whom."
+    }
+  }
+}

@@ -1,0 +1,265 @@
+{
+  "_comment": "Motivation state for Wang Lin — the canonical example of Article XXXIII. Wang Lin does NOT chase desires. He responds to necessity, protects what matters, honors debts, and pursues long-term goals. This file shows: (1) his long-term priorities that shape which motivations activate, (2) the 'player is not default relevant' principle (Art XXXIII.2) — most of his motivations have player_relevant=false until the player earns relevance, (3) the favor call-in mechanic (Art XXXIV.2), (4) walk-and-talk initiation (Art XXXII.6), (5) the reasoning that prevents him from interrupting the player in combat. This is the data the IntentEngine reads to make Wang Lin feel like Wang Lin — not a quest giver, not a vendor, a person with problems who occasionally finds the player relevant.",
+  "_schema": "motivation_state",
+  "_schema_version": 1,
+  "_article": "XXXIII",
+  "npc_id": "npc_wang_lin",
+  "name": "Wang Lin",
+  "nameCn": "王林",
+  "location": "variable (manifestation travels; True Body in seclusion)",
+  "evaluation_cycle_ticks": 2000,
+  "long_term_priorities": [
+    "protect_family — Wang Ping, Mother, Father ( mortal, vulnerable, in Wang Family Village)",
+    "become_stronger — cultivation is survival; without power, nothing else holds",
+    "avoid_attracting_attention — powerful enemies exist; visibility is death",
+    "acquire_resources — spirit stones, jade slips, restriction materials",
+    "study_restrictions — the Dao that fascinates him; his curiosity, not just utility"
+  ],
+  "motivations": [
+    {
+      "id": "m_decode_restriction_cave",
+      "driving_forces": ["curiosity", "necessity"],
+      "statement": "The restriction in the cave above the village is incomplete. I cannot decipher the third layer alone. The pattern is old — pre-Heng Yue. Who can help?",
+      "target_type": "anyone",
+      "target_filter": null,
+      "player_relevance": {
+        "relevant": false,
+        "relevance_reason": "Player has not demonstrated restriction skill. Player is not yet relevant to this motivation.",
+        "becomes_relevant_when": [
+          "player.knowledge.restriction >= 2 (observed via perception: player studied restriction fragments 3+ times)",
+          "OR player.relationship.wang_lin.trust >= 50 AND player.knowledge.restriction >= 1",
+          "OR player.owes_wang_lin_favor AND player.knowledge.restriction >= 1 (debt creates obligation to involve)"
+        ]
+      },
+      "priority": 5,
+      "urgency": "low",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": ["npc_situ_nan (if present — but Situ Nan mocks restriction study)", "self (Wang Lin can brute-force it over weeks, but it delays other priorities)"],
+        "preferred_resolution": "ask_player_if_relevant_else_self_resolve"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Evaluate: is the player nearby and not busy? Has the player demonstrated restriction skill? If player not relevant, self-resolve over 14 days. If player relevant and free, approach.",
+        "initiation_threshold": 5,
+        "conditions": ["nearby:target<20", "target.state:!combat", "target.state:!meditation", "target.state:!tribulation", "memory_tag:player_studied_restriction<7d OR relationship.trust>=50"]
+      },
+      "initiation": {
+        "engine": "request",
+        "mode": "walk_and_talk",
+        "line": "Come.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 8,
+        "requires_consent": true,
+        "cooldown_ticks": 48000
+      },
+      "offer_in_return": "knowledge — Wang Lin shares a restriction insight in return (teaching engine, not transaction). If the player helps decode, Wang Lin may later gift a copied jade slip.",
+      "consequence_on_fulfill": "wang_lin.restriction_cave_decoded=true; favor_ledger+=player_helped_wang_lin (Moderate, callable, expires: never); memory_ledger+=decoded_restriction_together",
+      "consequence_on_ignore": "wang_lin.self_resolves_over_14d; player misses the opportunity; Wang Lin does not hold it against the player (no grievance — it was optional)",
+      "memory_tag": "wang_lin_restriction_cave_request",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_protect_family_passive",
+      "driving_forces": ["love", "duty", "fear"],
+      "statement": "Wang Ping, Mother, and Father are mortals in Wang Family Village. The Teng family oppresses them. Bandits raid. Wolves hunt. I cannot be there always. I must ensure their safety through means other than presence.",
+      "target_type": "world",
+      "target_filter": null,
+      "player_relevance": {
+        "relevant": false,
+        "relevance_reason": "This is Wang Lin's internal motivation. It does not target the player unless the player is near his family AND his family is in danger AND Wang Lin cannot intervene personally.",
+        "becomes_relevant_when": [
+          "player.present_in_wang_family_village AND wang_family_village.under_attack AND wang_lin.not_present",
+          "OR player.relationship.wang_lin.trust >= 70 AND player.visits_family (Wang Lin may ask the player to check on them)"
+        ]
+      },
+      "priority": 9,
+      "urgency": "high (when family threatened) / low (otherwise — passive worry)",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": ["npc_wang_tianshui (village cultivator, can protect in Wang Lin's absence)", "npc_situ_nan (occasionally)"],
+        "preferred_resolution": "arrange_protection_via_wang_tianshui_or_player_if_trusted"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If village is peaceful: passive worry, no action. If village threatened and Wang Lin present: handle personally. If village threatened and Wang Lin absent: request_player_if_trusted_nearby, else send message to wang_tianshui.",
+        "initiation_threshold": 8,
+        "conditions": ["wang_family_village.under_attack OR memory_tag:family_in_danger<1d", "wang_lin.not_in_village", "nearby:player<100 (if player is the one who can help)"]
+      },
+      "initiation": {
+        "engine": "request",
+        "mode": "line",
+        "line": "My family. Can you reach them before I do?",
+        "conversation_mode": "focus",
+        "requires_proximity": 15,
+        "requires_consent": true,
+        "cooldown_ticks": 0
+      },
+      "offer_in_return": "favor — Wang Lin owes the player a Major favor (never expires) if the player protects his family in his absence.",
+      "consequence_on_fulfill": "family.protected=true; favor_ledger+=player_protected_wang_family (Major, callable, expires: never); wang_lin.trust_player+=20; memory_ledger+=player_protected_family",
+      "consequence_on_ignore": "family may be harmed; if harmed, wang_lin.grievance_player+=30 (if player was nearby and capable but did nothing); wang_lin may become an adversary",
+      "memory_tag": "wang_lin_family_protection_request",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_call_in_favor_ji_realm",
+      "driving_forces": ["debt", "duty"],
+      "statement": "The player once risked their life for me. I owe them. The player now asks to study the Ji Realm. I must evaluate whether this is the right repayment.",
+      "target_type": "player",
+      "target_filter": null,
+      "player_relevance": {
+        "relevant": true,
+        "relevance_reason": "Player has invoked request_technique (Ji Realm) via the conversation affordance. Player has an outstanding favor from Wang Lin (Major, from m_protect_family_passive or prior life-saving). The favor is callable.",
+        "becomes_relevant_when": ["player.invokes:request_technique AND technique=ji_realm AND favor_ledger:player_protected_wang_lin exists AND favor.called=false"]
+      },
+      "priority": 7,
+      "urgency": "medium",
+      "alternative_resolution": {
+        "can_resolve_without_target": false,
+        "alternative_targets": [],
+        "preferred_resolution": "evaluate_and_respond (this motivation fires ONLY when the player asks)"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Player has asked. I must respond. Evaluate: (1) player once risked life for me — I owe. (2) player has shown restraint — yes (memory ledger). (3) player has sufficient cultivation — check realm. (4) teaching benefits player — yes. (5) I owe him — yes. Decision: YES. Call the favor. Teach.",
+        "initiation_threshold": 0,
+        "conditions": ["player.invokes:request_technique", "technique=ji_realm", "favor_ledger:player_protected_wang_lin.called=false", "player.cultivation>=foundation_establishment"]
+      },
+      "initiation": {
+        "engine": "teaching",
+        "mode": "demonstrate",
+        "line": "You once risked your life for mine. I have not forgotten. The Ji Realm... I will show you once. Watch carefully. I will not show you twice.",
+        "conversation_mode": "focus",
+        "requires_proximity": 5,
+        "requires_consent": false,
+        "cooldown_ticks": 0
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "player.knowledge+=ji_realm_observed; favor_ledger:player_protected_wang_lin.called=true; favor_ledger:player_protected_wang_lin.honored=true; wang_lin.trust_player+=5; memory_ledger+=wang_lin_taught_ji_realm",
+      "consequence_on_ignore": "n/a (fires only on player request)",
+      "memory_tag": "wang_lin_favor_called_ji_realm",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_refuse_god_slaying_sword",
+      "driving_forces": ["compassion", "duty", "fear"],
+      "statement": "The player asks for a copy of the God Slaying Sword. They are not ready. Using it would destroy them. I must refuse — not from greed, from care.",
+      "target_type": "player",
+      "target_filter": null,
+      "player_relevance": {
+        "relevant": true,
+        "relevance_reason": "Player has invoked request_artifact_copy (God Slaying Sword). This is a direct request requiring Wang Lin's judgment.",
+        "becomes_relevant_when": ["player.invokes:request_artifact_copy AND artifact=god_slaying_sword"]
+      },
+      "priority": 6,
+      "urgency": "medium",
+      "alternative_resolution": {
+        "can_resolve_without_target": false,
+        "alternative_targets": [],
+        "preferred_resolution": "evaluate_and_refuse_or_defer"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Player has asked. Evaluate: (1) can player understand it? NO — cultivation too low. (2) will it harm player? YES — the sword's backlash would shatter their soul. (3) motive? Ambition — observed. (4) judgment demonstrated? Insufficient. (5) right time? NO. Decision: REFUSE. But do not refuse coldly — redirect.",
+        "initiation_threshold": 0,
+        "conditions": ["player.invokes:request_artifact_copy", "artifact=god_slaying_sword", "player.cultivation<nascent_soul"]
+      },
+      "initiation": {
+        "engine": "teaching",
+        "mode": "line",
+        "line": "...No. You wouldn't survive using it. The sword does not care about your intent. It would take your soul as fuel. ...Learn this first.",
+        "conversation_mode": "focus",
+        "requires_proximity": 5,
+        "requires_consent": false,
+        "cooldown_ticks": 0
+      },
+      "offer_in_return": "a lesser technique — Wang Lin hands the player a different jade slip, one they can actually use, as redirect rather than refusal.",
+      "consequence_on_fulfill": "player.knowledge+=wang_lin_refused_god_slaying_explanation; player.receives: jade_slip (lesser technique); wang_lin.trust_player+=1 (player listened); memory_ledger+=wang_lin_refused_with_reason",
+      "consequence_on_ignore": "if player presses or demands: wang_lin.trust_player-=3; wang_lin.grievance_player+=5; wang_lin may leave; memory_ledger+=player_pressured_wang_lin",
+      "memory_tag": "wang_lin_refused_god_slaying",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_observe_player_quietly",
+      "driving_forces": ["curiosity"],
+      "statement": "The player is interesting. Not enough to approach. But enough to watch. I will observe from a distance and update my relationship graph.",
+      "target_type": "player",
+      "target_filter": null,
+      "player_relevance": {
+        "relevant": true,
+        "relevance_reason": "Player has done something noteworthy (cultivated, fought, helped someone, stolen something). Wang Lin's curiosity is piqued. He watches — does not interact.",
+        "becomes_relevant_when": ["player.action: noteworthy (cultivation_breakthrough, combat_victory, mercy_shown, theft, kindness_to_mortals) AND wang_lin.nearby<50"]
+      },
+      "priority": 3,
+      "urgency": "low",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [],
+        "preferred_resolution": "observe_and_update_graph (no initiation, just perception)"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Player did something noteworthy. I am nearby. I will watch — not approach. Update relationship graph: known_skills, known_personality. This is passive; it does not fire an initiation.",
+        "initiation_threshold": 10,
+        "conditions": ["player.action:noteworthy", "wang_lin.nearby<50", "wang_lin.not_engaged"]
+      },
+      "initiation": {
+        "engine": "favor",
+        "mode": "silence",
+        "line": null,
+        "conversation_mode": "ambient",
+        "requires_proximity": 0,
+        "requires_consent": false,
+        "cooldown_ticks": 6000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "wang_lin.relationship_graph.player.known_skills += observed_skill; wang_lin.relationship_graph.player.known_personality += inferred_trait; memory_ledger += wang_lin_observed_player (passive, no player notification)",
+      "consequence_on_ignore": "n/a",
+      "memory_tag": "wang_lin_observed_player",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_silent_warning_danger",
+      "driving_forces": ["compassion", "duty"],
+      "statement": "The player is about to do something that will get them killed. I have observed enough to care slightly. One word. Then I leave.",
+      "target_type": "player",
+      "target_filter": null,
+      "player_relevance": {
+        "relevant": true,
+        "relevance_reason": "Player is approaching a canonical danger Wang Lin has survived or knows about. Player has enough relationship (trust >= 20) that Wang Lin will offer one warning.",
+        "becomes_relevant_when": ["player.approaching:canonical_danger AND relationship.trust>=20 AND wang_lin.nearby<30"]
+      },
+      "priority": 7,
+      "urgency": "high",
+      "alternative_resolution": {
+        "can_resolve_without_target": false,
+        "alternative_targets": [],
+        "preferred_resolution": "one_word_warning_then_leave"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Player is approaching danger. I am near. I care enough (trust >= 20) to say one word. I will not explain. I will not stay. The player decides.",
+        "initiation_threshold": 6,
+        "conditions": ["player.approaching:canonical_danger", "relationship.trust>=20", "wang_lin.nearby<30", "target.state:!combat"]
+      },
+      "initiation": {
+        "engine": "rumor",
+        "mode": "line",
+        "line": "Don't.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 4,
+        "requires_consent": false,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "player.knowledge+=wang_lin_warning; if player heeds: wang_lin.trust_player+=1; memory_ledger+=wang_lin_warned",
+      "consequence_on_ignore": "if player ignores and danger manifests: wang_lin does not intervene to save them (he warned); no grievance (player chose); memory_ledger+=player_ignored_warning",
+      "memory_tag": "wang_lin_silent_warning",
+      "satisfies_motivations_on_others": null
+    }
+  ],
+  "passive_states": [
+    "cultivating_in_seclusion (True Body — no manifestation present, no outward motivations)",
+    "observing (manifestation present but no motivation exceeds threshold — Wang Lin watches the world)",
+    "traveling (manifestation moving between locations — may pass through player's area without stopping)",
+    "in_combat (all social motivations suspended — Wang Lin fights first, talks never)"
+  ],
+  "cross_npc_triggers": [
+    "wang_lin.m_decode_restriction_cave can satisfy npc_situ_nan.m_witness_wang_lin_growth (Situ Nan occasionally checks on Wang Lin's progress)",
+    "wang_lin.m_protect_family_passive can trigger npc_wang_tianshui.m_reinforce_village_defense (if Wang Lin sends word)"
+  ]
+}

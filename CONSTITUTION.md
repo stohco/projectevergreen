@@ -474,6 +474,268 @@ When that sequence can occur without any developer scripting
 the specific beat, the world has memory. Until then, it does not.
 
 ═══════════════════════════════════════════════════════════════
+THE CONVERSATION & MOTIVATION AMENDMENTS (Articles XXXII–XXXIV)
+Added when the project recognized that conversation is not a
+menu system layered over the world — it IS the world. And that
+"desire" was too narrow a word for what actually drives an
+Er Gen character. Wang Lin does not chase desires. He responds
+to necessity, protects what matters, honors debts, pursues
+long-term goals, and occasionally acts out of compassion or
+vengeance. The simulation must reflect that richness.
+═══════════════════════════════════════════════════════════════
+
+Article XXXII — Conversation Is The World
+Dialogue is not a separate menu system. Dialogue is a simulation
+system, governed by the same reasoning engine as cultivation,
+combat, and exploration. The Skyrim problem — "Hello. Tell me
+about... Goodbye." over and over — is forbidden.
+
+§ XXXII.1 — Three Conversation Modes
+There are exactly three conversation modes. The system selects
+the mode based on context, never on a toggle.
+
+  1. AMBIENT (≈90% of interactions) — No pause. No UI takeover.
+     The player right-clicks an NPC. The NPC glances over and
+     HOLDS STILL — pausing their pathing/schedule as a courtesy
+     so the player can explore the radial verb-prompts at their
+     own pace and talk as much as they want without the NPC
+     wandering off. "...Yes?" Radial verb-prompts appear. BUT
+     THE WORLD KEEPS RUNNING. Birds fly. OTHER NPCs walk.
+     Children run by. Li Muwan walks past carrying herbs. The
+     sun moves. Rain falls. Only the NPC you are talking to
+     holds still for you; everything else is alive. The player
+     remains mobile (may walk-and-talk, see § XXXII.6). When the
+     player selects "Nevermind" / dismisses the conversation,
+     the NPC resumes their schedule and pathing from where they
+     paused. This is the default.
+
+  2. FOCUS — When the conversation actually matters (discussing
+     Dao, requesting a Heaven Defying Bead copy, entering a sect,
+     negotiating). The camera subtly zooms. Player movement
+     disables. The NPC holds still (as in Ambient). BUT THE
+     WORLD KEEPS RUNNING. Other NPCs still move. The sun still
+     sets. Rain still falls. Rumors continue spreading. Only
+     the player stops moving because the player is busy talking.
+     Exactly like real life.
+
+  3. MAJOR CANON MOMENTS — Very rare. Inheritance, tribulation,
+     True Body meeting, major revelations. Cinematic framing —
+     camera, music, animations, special dialogue. These must be
+     incredibly uncommon. Otherwise they lose impact.
+
+§ XXXII.1a — "Holds Still" Is A Courtesy, Not A Freeze
+When an NPC holds still for the player, it is a behavioral
+courtesy, not a simulation freeze. The NPC is still perceiving
+the world: if a threat appears, they react (§ XXXII.5). If
+their schedule has a hard time-bound event (a sect lecture
+they must attend, a tribulation window), they may break the
+courtesy: "I have to go." and resume pathing. The courtesy
+expires on (a) player dismiss ("Nevermind"), (b) NPC
+hard-deadline, or (c) world interruption (combat, disaster).
+It does NOT expire on idle — the NPC will wait patiently
+because that is what a person does when someone is talking
+to them.
+
+§ XXXII.2 — Conversation Affordances, Not Dialogue Trees
+The interface shows VERBS, not dialogue options. Not "Tell me
+about yourself. Where are you from? Goodbye." Instead:
+Discuss, Request, Teach Me, Offer, Trade, Travel Together,
+Observe Technique, Challenge, Give Gift, Ask Opinion, Ask About...
+
+Each verb expands per-NPC. The same verb produces entirely
+different sub-menus for different NPCs:
+  Wang Lin → Request → {Technique, Artifact Copy, Advice,
+                         Restriction, Memory, Training}
+  Li Muwan → Request → {Pill, Herb Identification, Medical
+                         Advice, Alchemy Lesson}
+  Xu Liguo → Request → {Scout, Possess, Steal, Distract,
+                         Cause Trouble}
+Same system. Entirely different UI. No special-casing — the
+affordances are data the UI discovers (Article XXVIII).
+
+§ XXXII.3 — Requests Are Simulations, Not Transactions
+Asking Wang Lin for the God Slaying Sword does not instantly
+receive it. Wang Lin THINKS. He evaluates relationship, current
+cultivation, knowledge, judgment, intent, history. Then:
+  "..." / "No." / "You wouldn't survive using it."
+  OR "I can. But not yet. Learn this first." (hands something else)
+  OR "...Very well." (True Body manufactures a copy, clone
+      retrieves it, hands it over)
+  OR "If you still want it after Mosquito Valley..." (a challenge
+      begins naturally, no quest log)
+
+§ XXXII.4 — Fuzzy Asking
+The player does not select from item IDs. The player types or
+selects intent: "I want something that helps fight souls." The
+NPC REASONS about the intent — not a database search — and
+chooses: maybe a Soul Banner, maybe a Soul Restriction, maybe
+"Not yet." The NPC's response reflects their judgment of what
+the player needs, not what the player asked for verbatim.
+
+§ XXXII.5 — Conversations Are Interruptible
+If something happens — thunder, sect attack, spirit beast,
+tribulation, explosion, enemy arrives — NPCs react. Wang Lin
+stops talking mid-sentence. "Later." Draws his weapon. The
+conversation ends naturally because the world kept moving.
+The player never entered a frozen dialogue world.
+
+§ XXXII.6 — Walk And Talk
+NPCs do not stop to converse. Wang Lin says "Come." and walks
+toward a mountain. The player walks beside him. The conversation
+UI stays open in the corner. Both move through the world. He
+points out a restriction on a cliff. A spirit beast appears.
+The conversation naturally pauses while dealing with it. Then
+resumes. This is how conversations happen in Renegade Immortal
+— not standing face-to-face in a frozen box.
+
+§ XXXII.7 — Personality Changes The Interface
+The same conversation system renders differently per-NPC:
+  Wang Lin — very few words, lots of silence, observes you,
+              long pauses before responding.
+  Xu Liguo — interrupts constantly, makes jokes, changes
+              topics, lies.
+  Li Muwan — detailed, patient, explains thoroughly.
+  Situ Nan — laughs, mocks, walks away mid-conversation.
+  Qing Shui — may answer "...". For thirty seconds.
+This is personality through interaction, not just dialogue text.
+
+§ XXXII.8 — Conversations Are Stateful
+If the player asked Wang Lin about restrictions yesterday, he
+remembers. If he promised to teach after Foundation Establishment,
+that option is unavailable until then. If he refused the God
+Slaying Sword request because the player wasn't ready, he won't
+pretend it's the first time. Conversations evolve as relationship,
+reputation, knowledge, and cultivation change.
+
+§ XXXII.9 — Conversations Are World Events
+Dialogue is not outside the world. A conversation is an event
+with a location, volume, and witnesses. Nearby NPCs overhear.
+Beliefs update. Rumors may form. Relationships change. History
+records it. Loudly asking Wang Lin about the Heaven Defying Bead
+in the middle of Heng Yue Sect is potentially dangerous — someone
+may overhear fragments, grow suspicious, follow the player. A
+private discussion in a secluded cave has different consequences.
+The location of a conversation is a gameplay variable.
+
+Article XXXIII — Motivations, Not Desires
+Article XXXI.1 named the per-cycle NPC state "desire." That word
+is too narrow. Many interactions are motivated by things that are
+not desires at all: fears, duties, debts, grudges, survival.
+
+The per-cycle NPC state is hereby renamed MOTIVATION STATE.
+The ten social engines remain (Art XXXI.1) — they are the
+expression layer. What feeds them is the motivation state,
+which draws from a richer vocabulary of DRIVING FORCES:
+
+  ambitions, fears, duties, debts, promises, grudges,
+  curiosity, love, loyalty, survival, greed, vengeance,
+  sect orders, cultivation bottlenecks, opportunities.
+
+§ XXXIII.1 — Every Interaction Must Have A Reason
+Nobody wakes up wanting to talk to the player. Everyone wakes
+with problems, ambitions, fears, obligations, loyalties, and
+opportunities. Then they ask:
+  "Who, if anyone, can help me?"
+  "Who is standing in my way?"
+The player MIGHT be the answer. The player might not. The player
+is relevant only when circumstances make them relevant.
+
+§ XXXIII.2 — The Player Is Not Default Relevant
+Wang Lin's early priorities: protect family, become stronger,
+avoid attracting attention, acquire resources, study restrictions.
+Notice what is missing: the player. Until the player becomes
+relevant — by demonstrating a skill, owing a debt, holding a
+grudge, or standing in the way — Wang Lin has no motivation
+directed at the player. This is not coldness. This is how Er Gen
+characters actually behave. Relevance is earned, not assumed.
+
+§ XXXIII.3 — Relevance Is Earned Through Circumstance
+The player becomes relevant when an NPC's driving force intersects
+with the player's demonstrated behavior:
+  - Player excellent with restrictions + Wang Lin needs help
+    deciphering a restriction → player becomes relevant.
+  - Player knows herbs + Li Muwan needs Crimson Root → player
+    becomes relevant.
+  - Player helped Wang Lin + Wang Lin owes a favor → player
+    becomes relevant (Wang Lin may seek the player out).
+  - Player stole from merchant + merchant has a grievance →
+    player becomes relevant (merchant may warn others, refuse
+    trade, or set a trap).
+Relevance is never granted. It is earned or incurred.
+
+Article XXXIV — Relationships Are Graphs
+A relationship is not a number. A relationship is a graph of
+distinct, independently-variable dimensions. "Friendship > 50"
+is forbidden. NPCs maintain structured relationship state.
+
+§ XXXIV.1 — The Relationship Graph
+Every NPC maintains a per-target relationship graph with at
+minimum:
+  Trust (0-100)        — does the NPC believe the target's words
+  Respect (0-100)      — does the NPC esteem the target's capability
+  Fear (0-100)         — does the NPC fear the target
+  Debt (signed int)    — outstanding favors owed (+ = NPC owes
+                         target, - = target owes NPC)
+  Grievance (0-100)    — accumulated resentment from wrongs
+  Shared History (int) — count of significant shared events
+  Known Skills [list]  — skills the NPC has observed the target use
+  Known Personality [list] — traits the NPC has inferred
+                         (e.g. "keeps promises", "doesn't betray
+                         allies", "greedy", "merciful")
+
+Two NPCs can have completely different graphs for the same
+player. The village elder's graph (Trust 82, Respect 71, Fear
+10, Grievance 0) is a different relationship than Teng
+Huayuan's graph (Trust 5, Fear 88, Grievance 64, Respect 91).
+The simulation treats them as different relationships because
+they ARE different relationships.
+
+§ XXXIV.2 — Favors Are Callable Debts
+A favor is not "relationship += 20." A favor is a structured
+debt that persists and can be called in later:
+  Owner: who did the favor
+  Recipient: who received the benefit
+  Magnitude: Minor | Moderate | Major | Life-Saving
+  Reason: what happened
+  Expires: when (Never for Life-Saving)
+  Callable: can the owner demand repayment
+  Called: has it been called (and was it honored)
+
+Wang Lin once saved the player from a Core Formation cultivator.
+That is a Major favor, never expires. Years later, the player
+asks to study the Ji Realm. Wang Lin reasons:
+  "Player once risked his life for me. Player has shown
+   restraint. Player has sufficient cultivation. Teaching
+   benefits him. I owe him. Yes."
+The favor is called. The debt is honored. This feels earned
+because it IS earned — the simulation tracked the favor for
+years and surfaced it at the right moment.
+
+§ XXXIV.3 — Grievances Persist And Spread
+A grievance is not forgotten when the player leaves the area.
+If the player steals a spirit stone, the merchant remembers.
+The village remembers. A rumor spreads. People become cautious.
+Li Muwan may still trust the player (her graph is independent),
+but the merchant does not. Grievances feed the RumorEngine
+(Art XXXI.1) and shape future interactions. A grievance may
+decay if amends are made, but it never silently resets.
+
+§ XXXIV.4 — The Deconfliction Principle
+When multiple NPCs have motivations that could target the
+player simultaneously, they do NOT all approach. Each reasons
+independently:
+  NPC A: "Player is busy. Tomorrow."
+  NPC B: "The merchant can help instead. I'll ask him."
+  NPC C: "I'll gather the herbs myself."
+  NPC D: "I'll ask Wang Lin."
+  NPC E: "Not urgent."
+  NPC F: "Player owes me. I'll go now."
+Only NPC F actually approaches. The others resolved their
+motivation through alternative means. This is the "everyone
+lining up" problem, solved by the same reasoning engine that
+governs every other NPC decision. The player is never mobbed.
+
+═══════════════════════════════════════════════════════════════
 CLOSING
 ═══════════════════════════════════════════════════════════════
 
@@ -482,6 +744,12 @@ The Prime Amendment sets the principle.
 Articles I–XXVI establish the foundation.
 Articles XXVII–XXX enforce what "done" actually means.
 Article XXXI makes the world desire the player, not wait for him.
+Article XXXII makes conversation a simulation, not a menu.
+Article XXXIII replaces "desire" with the richer "motivation" —
+   because Wang Lin does not chase desires, he responds to necessity.
+Article XXXIV makes relationships graphs, not numbers —
+   because trust, respect, fear, debt, and grievance are not
+   the same axis.
 The Final Questions guard against drift.
 The Gold-Standard Template sets the bar for every location.
 The Memory Metric sets the bar for every Living Chapter.
@@ -491,3 +759,7 @@ When in doubt: prove life, do not count files.
 When in doubt: experience, not reference.
 When in doubt: make the world want something from someone —
                not wait for the player to ask.
+When in doubt: every interaction must have a reason —
+               the player is relevant only when earned.
+When in doubt: the conversation is the world —
+               never freeze it, never menu it, never script it.
