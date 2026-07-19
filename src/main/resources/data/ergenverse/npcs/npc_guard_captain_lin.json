@@ -1,0 +1,129 @@
+{
+  "_comment": "NPC: Guard Captain Lin (\u6797\u961f\u957f). INFERRED \u2014 Great Wang Capital inhabitant. Canon ID: INF-GWC-02. Per Article II (Reality First): the Zhao Country capital must have inhabitants. These NPCs are inferred from the city's district structure (governor mansion, temple, market, tavern, port). Prime Directive: these beings exist independently of the player's perception.",
+  "npc_id": "npc_guard_captain_lin",
+  "name": "Guard Captain Lin",
+  "nameCn": "\u6797\u961f\u957f",
+  "canon_id": "INF-GWC-02",
+  "type": "guard_captain",
+  "faction": "zhao_country_government",
+  "location": "great_wang_capital",
+  "cultivation": "Qi Condensation 9 (peak)",
+  "personality": "alert, suspicious, dutiful; takes security seriously",
+  "speech": "gruff, military",
+  "relationship_to_wanglin": "INFERRED \u2014 neutral; would treat Wang Lin as another traveler unless provoked",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A guard captain of the capital",
+    "qi_condensation": "Guard Captain Lin \u2014 Qi Condensation 9 (peak)",
+    "foundation": "Guard Captain Lin \u2014 Qi Condensation 9 (peak). INFERRED capital resident.",
+    "nascent_soul": "Guard Captain Lin \u2014 minor figure in the capital's power structure"
+  },
+  "canon_confidence": 2,
+  "note": "INFERRED from Great Wang Capital district structure. alert, suspicious, dutiful; takes security seriously",
+  "derivation_type": "I",
+  "salt": 595860445,
+  "dao_heart": {
+    "stability": 40,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Halt. The Great Wang Capital does not admit armed strangers without inspection. State your name and purpose.",
+    "The smuggler tunnels beneath the city are a persistent problem. My guards find new entrances every month. If you see anything suspicious, report it immediately.",
+    "The capital has not seen open conflict in years. But that is because the Teng family's reputation keeps the ambitious in check. Do not test that peace.",
+    "My guards patrol from the city gate to the port docks. If you are caught stealing from the warehouse district, I will personally escort you to the governor's dungeon."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 20
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 25
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 20
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "patrol_supplies",
+      "description": "Guard Captain Lin barks: 'My men need supplies. Iron for weapons, arrows for the watchtowers. The capital's safety is not free \u2014 bring me materials and I will pay from the guard treasury.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 8
+        },
+        {
+          "item": "minecraft:arrow",
+          "count": 32
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "smuggler_intel",
+      "description": "Guard Captain Lin scowls: 'The smugglers are getting bolder. If you can gather information \u2014 glass bottles for evidence collection, string for binding suspects \u2014 I will reward you. The governor wants those tunnels sealed.'",
+      "requires": [
+        {
+          "item": "minecraft:glass_bottle",
+          "count": 4
+        },
+        {
+          "item": "minecraft:string",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    }
+  ],
+  "max_hp": 120
+}

@@ -78,6 +78,15 @@ public final class NpcSpawnRegistry {
         register("zhao_mountains", "npc_zhang_hu");          // Sect disciple
         register("zhao_mountains", "npc_zhou_lin");          // Sect disciple
 
+        // ── Great Wang Capital (ergenverse:great_wang_dynasty biome) ─────
+        // INFERRED: The Zhao Country capital must have inhabitants (Article II).
+        // All NPCs are INFERRED from the 11-district city structure.
+        register("great_wang_dynasty", "npc_gov_zhao_ming");       // Governor
+        register("great_wang_dynasty", "npc_guard_captain_lin");   // Guard captain
+        register("great_wang_dynasty", "npc_priestess_yun");       // Temple priestess
+        register("great_wang_dynasty", "npc_merchant_hong");       // Market merchant
+        register("great_wang_dynasty", "npc_tavern_keeper_zhou");  // Tavern keeper
+
         // ── Vermilion Bird Country (ergenverse:vermilion_bird_* biomes) ──
         register("vermilion_bird_country", "npc_situ_nan");       // Divine Emperor
         register("vermilion_bird_country", "npc_daoist_water");   // Ancient cultivator

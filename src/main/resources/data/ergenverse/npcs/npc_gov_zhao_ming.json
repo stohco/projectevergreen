@@ -1,0 +1,125 @@
+{
+  "_comment": "NPC: Governor Zhao Ming (\u8d75\u660e\u592a\u5b88). INFERRED \u2014 Great Wang Capital inhabitant. Canon ID: INF-GWC-01. Per Article II (Reality First): the Zhao Country capital must have inhabitants. These NPCs are inferred from the city's district structure (governor mansion, temple, market, tavern, port). Prime Directive: these beings exist independently of the player's perception.",
+  "npc_id": "npc_gov_zhao_ming",
+  "name": "Governor Zhao Ming",
+  "nameCn": "\u8d75\u660e\u592a\u5b88",
+  "canon_id": "INF-GWC-01",
+  "type": "governor",
+  "faction": "zhao_country_government",
+  "location": "great_wang_capital",
+  "cultivation": "Foundation Establishment (mid-stage)",
+  "personality": "cautious, formal, politically astute; defers to Teng family authority",
+  "speech": "measured, diplomatic",
+  "relationship_to_wanglin": "INFERRED \u2014 indirect; governor of the country where Wang Lin was born",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A governor of the capital",
+    "qi_condensation": "Governor Zhao Ming \u2014 Foundation Establishment (mid-stage)",
+    "foundation": "Governor Zhao Ming \u2014 Foundation Establishment (mid-stage). INFERRED capital resident.",
+    "nascent_soul": "Governor Zhao Ming \u2014 minor figure in the capital's power structure"
+  },
+  "canon_confidence": 2,
+  "note": "INFERRED from Great Wang Capital district structure. cautious, formal, politically astute; defers to Teng family authority",
+  "derivation_type": "I",
+  "salt": 2086138522,
+  "dao_heart": {
+    "stability": 40,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Welcome to the Great Wang Capital. I am Governor Zhao Ming. State your business \u2014 the capital has rules that even cultivators must follow.",
+    "The Teng family's authority extends to every corner of Zhao Country. My role is to ensure order in their absence. I suggest you do not test that order.",
+    "The governor mansion's treasury is well-stocked. Do not mistake my hospitality for weakness. The last thief lost more than his hands.",
+    "Cultivators from the sects occasionally visit the capital on official business. If you are one of them, present your sect token. If not... the market district is that way."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 12
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "tax_collection",
+      "description": "Governor Zhao Ming adjusts his official robes: 'The outer provinces are due for their seasonal tax. Bring me 16 bundles of wheat as proof of collection. The capital's granaries must be filled before winter.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    },
+    {
+      "id": "intelligence_report",
+      "description": "Governor Zhao Ming leans closer: 'I need a report compiled. Bring me paper and ink. The Teng family expects regular updates on the capital's affairs \u2014 and I intend to provide them.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 8
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:gold_ingot",
+      "reward_count": 3
+    }
+  ],
+  "max_hp": 200
+}

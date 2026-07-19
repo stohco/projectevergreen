@@ -1,0 +1,129 @@
+{
+  "_comment": "NPC: Tavern Keeper Old Zhou (\u8001\u5468\u9152\u9986). INFERRED \u2014 Great Wang Capital inhabitant. Canon ID: INF-GWC-05. Per Article II (Reality First): the Zhao Country capital must have inhabitants. These NPCs are inferred from the city's district structure (governor mansion, temple, market, tavern, port). Prime Directive: these beings exist independently of the player's perception.",
+  "npc_id": "npc_tavern_keeper_zhou",
+  "name": "Tavern Keeper Old Zhou",
+  "nameCn": "\u8001\u5468\u9152\u9986",
+  "canon_id": "INF-GWC-05",
+  "type": "tavern_keeper",
+  "faction": "none",
+  "location": "great_wang_capital",
+  "cultivation": "Mortal (non-cultivator, but well-informed)",
+  "personality": "gossipy, welcoming, shrewd beneath cheerfulness; hears everything",
+  "speech": "warm, chatty",
+  "relationship_to_wanglin": "INFERRED \u2014 friendly; information is his currency",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A tavern keeper of the capital",
+    "qi_condensation": "Tavern Keeper Old Zhou \u2014 Mortal (non-cultivator, but well-informed)",
+    "foundation": "Tavern Keeper Old Zhou \u2014 Mortal (non-cultivator, but well-informed). INFERRED capital resident.",
+    "nascent_soul": "Tavern Keeper Old Zhou \u2014 minor figure in the capital's power structure"
+  },
+  "canon_confidence": 2,
+  "note": "INFERRED from Great Wang Capital district structure. gossipy, welcoming, shrewd beneath cheerfulness; hears everything",
+  "derivation_type": "I",
+  "salt": 690679330,
+  "dao_heart": {
+    "stability": 40,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Come in, come in! Sit down. The capital's finest tavern \u2014 well, the only one that doesn't water the drinks. What'll you have?",
+    "You hear things in a tavern. Merchants complain about taxes, guards grumble about patrols, cultivators whisper about sect politics. I remember it all. Information is more valuable than gold, you know.",
+    "The smuggler tunnels? Ha! Everyone knows they exist. The guards pretend not to notice because half of them drink here. But I didn't tell you that.",
+    "A piece of advice, traveler: do not anger the Teng family in this city. They control everything \u2014 the market, the port, the governor. Even the temple answers to them, indirectly. Keep your head down and your drink full."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 3000,
+      "t1": 4000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 4000,
+      "t1": 7000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 7000,
+      "t1": 8000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 8000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 12
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "food_supplies",
+      "description": "Old Zhou wipes the bar: 'Business is good but the kitchen is running low. Bring me wheat for bread and beef for the stew. I will pay in emeralds \u2014 and a free meal.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        },
+        {
+          "item": "minecraft:cooked_beef",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    },
+    {
+      "id": "rumor_network",
+      "description": "Old Zhou leans in: 'I trade in information, not just drinks. Bring me paper for recording rumors and glass bottles for... shall we say, 'verification.' I will share what I hear about the capital's power struggles.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 8
+        },
+        {
+          "item": "minecraft:glass_bottle",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    }
+  ],
+  "max_hp": 20
+}

@@ -1,0 +1,133 @@
+{
+  "_comment": "NPC: Merchant Hong (\u6d2a\u5546\u4eba). INFERRED \u2014 Great Wang Capital inhabitant. Canon ID: INF-GWC-04. Per Article II (Reality First): the Zhao Country capital must have inhabitants. These NPCs are inferred from the city's district structure (governor mansion, temple, market, tavern, port). Prime Directive: these beings exist independently of the player's perception.",
+  "npc_id": "npc_merchant_hong",
+  "name": "Merchant Hong",
+  "nameCn": "\u6d2a\u5546\u4eba",
+  "canon_id": "INF-GWC-04",
+  "type": "merchant",
+  "faction": "great_wang_merchants_guild",
+  "location": "great_wang_capital",
+  "cultivation": "Mortal (non-cultivator)",
+  "personality": "shrewd, opportunistic, well-informed; knows every price in the capital",
+  "speech": "fast, persuasive",
+  "relationship_to_wanglin": "INFERRED \u2014 neutral; sees everyone as a potential customer",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A merchant of the capital",
+    "qi_condensation": "Merchant Hong \u2014 Mortal (non-cultivator)",
+    "foundation": "Merchant Hong \u2014 Mortal (non-cultivator). INFERRED capital resident.",
+    "nascent_soul": "Merchant Hong \u2014 minor figure in the capital's power structure"
+  },
+  "canon_confidence": 2,
+  "note": "INFERRED from Great Wang Capital district structure. shrewd, opportunistic, well-informed; knows every price in the capital",
+  "derivation_type": "I",
+  "salt": 1352052944,
+  "dao_heart": {
+    "stability": 40,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Ah, a customer! Welcome to the Great Wang Capital market. I have goods from every province \u2014 iron from the northern mines, wheat from the southern farmlands, and rare items from the port.",
+    "The port docks see ships from distant lands. Well, distant provinces at least. If you need something specific, ask \u2014 I can get almost anything. For a price.",
+    "The Teng family's merchants get the best stalls. Those of us without cultivation backing make do with what remains. But I have connections. Do not underestimate a mortal with a network.",
+    "Gold and emeralds talk in this city. If you have materials to sell, I will give you fair prices. Fairer than the Teng family's buyers, at least."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 18
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 5000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 22
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 15
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "trade_goods",
+      "description": "Merchant Hong rubs his hands: 'I have a buyer in the cultivator quarter who needs iron and emeralds. Bring me the materials and I will pay you in gold \u2014 minus my commission, of course.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 8
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:gold_ingot",
+      "reward_count": 4
+    },
+    {
+      "id": "rare_herbs",
+      "description": "Merchant Hong whispers: 'A cultivator in the quarter is willing to pay well for mundane herbs with alchemical potential. Wheat, carrots, and coal for the furnace. Bring me these and I will handle the rest.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        },
+        {
+          "item": "minecraft:carrot",
+          "count": 8
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ],
+  "max_hp": 20
+}

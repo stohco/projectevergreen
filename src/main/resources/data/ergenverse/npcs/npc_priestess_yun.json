@@ -1,0 +1,129 @@
+{
+  "_comment": "NPC: Priestess Yun (\u4e91\u796d\u53f8). INFERRED \u2014 Great Wang Capital inhabitant. Canon ID: INF-GWC-03. Per Article II (Reality First): the Zhao Country capital must have inhabitants. These NPCs are inferred from the city's district structure (governor mansion, temple, market, tavern, port). Prime Directive: these beings exist independently of the player's perception.",
+  "npc_id": "npc_priestess_yun",
+  "name": "Priestess Yun",
+  "nameCn": "\u4e91\u796d\u53f8",
+  "canon_id": "INF-GWC-03",
+  "type": "priestess",
+  "faction": "great_wang_temple",
+  "location": "great_wang_capital",
+  "cultivation": "Qi Condensation 6 (mid-stage)",
+  "personality": "serene, compassionate, spiritually devoted; offers counsel to those who seek it",
+  "speech": "gentle, measured",
+  "relationship_to_wanglin": "INFERRED \u2014 benevolent; would offer guidance to any cultivator who seeks it",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A priestess of the capital",
+    "qi_condensation": "Priestess Yun \u2014 Qi Condensation 6 (mid-stage)",
+    "foundation": "Priestess Yun \u2014 Qi Condensation 6 (mid-stage). INFERRED capital resident.",
+    "nascent_soul": "Priestess Yun \u2014 minor figure in the capital's power structure"
+  },
+  "canon_confidence": 2,
+  "note": "INFERRED from Great Wang Capital district structure. serene, compassionate, spiritually devoted; offers counsel to those who seek it",
+  "derivation_type": "I",
+  "salt": 1444563802,
+  "dao_heart": {
+    "stability": 40,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Welcome, traveler. The temple district offers solace from the capital's noise. Light incense if you wish \u2014 the ancestors listen to those who are sincere.",
+    "Cultivation is not merely about power. It is about understanding. The temple preserves ancient teachings that even the sects have forgotten.",
+    "Many come to the capital seeking wealth or power. Few come seeking peace. I appreciate your visit. Stay as long as you like.",
+    "The offerings here are modest, but the ancestors do not judge by gold. They judge by the heart. Bring wheat for the poor, and the temple will bless your journey."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 1000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 1000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 3000,
+      "t1": 4000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 4000,
+      "t1": 7000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 7000,
+      "t1": 8000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 8000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 12
+    },
+    {
+      "t0": 11000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "temple_offerings",
+      "description": "Priestess Yun smiles gently: 'The temple needs offerings for the ancestral shrine. Gold nuggets for the altar, wheat for the poor. The ancestors will remember your generosity.'",
+      "requires": [
+        {
+          "item": "minecraft:gold_nugget",
+          "count": 6
+        },
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "incense_materials",
+      "description": "Priestess Yun bows: 'We are running low on incense materials. Coal for the braziers, paper for prayer slips. The temple's peace depends on these humble supplies.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 16
+        },
+        {
+          "item": "minecraft:paper",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    }
+  ],
+  "max_hp": 80
+}
