@@ -33,5 +33,91 @@
   },
   "soul_state": "primordial_spirit",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You do not belong here. The Soul Refining Sect does not welcome outsiders. We do not welcome insiders either, but at least they know what they are being used for.",
+    "Wang Lin was supposed to be a soul refinement ingredient. He became something else entirely. The sect still studies what went wrong. I study it too. From the other side.",
+    "Bones and soul fragments. These are the currency of the Soul Refining Sect. If you have them, I may allow you to observe our methods. Observe only. Touch nothing.",
+    "The Corpse Yin Sect refines corpses. We refine souls. They say we are different. We are not. We both take what is not ours."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Soul refinement meditation",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "08:00",
+      "action": "Oversee soul extraction rituals",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Study forbidden techniques",
+      "location": "soul_refining_sect",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal",
+      "location": "soul_refining_sect",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Interrogate captured souls",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "17:00",
+      "action": "Report to inner sect elders",
+      "location": "soul_refining_sect",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Cultivation",
+      "location": "soul_refining_sect",
+      "duration": 300
+    },
+    {
+      "time": "00:00",
+      "action": "Rest",
+      "location": "soul_refining_sect",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "dj_soul_materials",
+      "name": "Soul Refinement Materials",
+      "description": "Duanmu Ji needs bones and soul fragments for soul refinement experiments.",
+      "required_items": {
+        "minecraft:bone": 16,
+        "ergenverse:soul_fragment": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "dj_forbidden_knowledge",
+      "name": "Forbidden Technique Exchange",
+      "description": "Duanmu Ji trades soul refinement knowledge for jade slips and spirit stones.",
+      "required_items": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 3
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "minecraft:experience_bottle": 3,
+        "experience": 35
+      }
+    }
+  ]
 }

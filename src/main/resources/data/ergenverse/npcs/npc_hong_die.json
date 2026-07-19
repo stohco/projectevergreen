@@ -33,5 +33,91 @@
   },
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The Heavenly Fate Sect sees destiny in stars. I see it in fire. We disagree on methodology. We agree on results. My results are usually more convincing.",
+    "Wang Lin and I fought once. He won. I do not admit that to my sect. But I admit it to myself. A cultivator who cannot admit defeat cannot improve.",
+    "The Fighting Evil Sect calls us fortune tellers. They are wrong. We do not tell fortunes. We determine them. There is a difference.",
+    "Blaze rods and redstone. If you bring them, I will read your fate. Not the fate the stars show. The fate the fire shows. It is less accurate but more honest."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Fire meditation",
+      "location": "heavenly_fate_sect",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Morning star observation",
+      "location": "heavenly_fate_sect",
+      "duration": 90
+    },
+    {
+      "time": "09:00",
+      "action": "Fate calculation practice",
+      "location": "heavenly_fate_sect",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "heavenly_fate_sect",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Teach junior disciples",
+      "location": "heavenly_fate_sect",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Combat training",
+      "location": "heavenly_fate_sect",
+      "duration": 150
+    },
+    {
+      "time": "18:30",
+      "action": "Evening star reading",
+      "location": "heavenly_fate_sect",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Night cultivation",
+      "location": "heavenly_fate_sect",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "hd_fate_reading",
+      "name": "Fire Fate Reading",
+      "description": "Hong Die reads your fate using fire for blaze rods and redstone.",
+      "required_items": {
+        "minecraft:blaze_rod": 4,
+        "minecraft:redstone": 16
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:experience_bottle": 3,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "hd_combat_knowledge",
+      "name": "Combat Experience Exchange",
+      "description": "Hong Die trades her combat experience for jade slips and spirit stones.",
+      "required_items": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "minecraft:experience_bottle": 2,
+        "experience": 30
+      }
+    }
+  ]
 }

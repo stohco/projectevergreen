@@ -32,5 +32,91 @@
   },
   "soul_state": "primordial_spirit",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Ambition is not a sin in the Soul Refining Sect. It is a requirement. Without ambition, you cannot justify what we do. I have no trouble justifying it.",
+    "I knew Wang Lin before he became a problem. He was quiet. Unremarkable. That is always the dangerous kind.",
+    "The Soul Refining Ancestral Ground is where our power originates. I have been there once. The things I saw... I am still processing them.",
+    "Spirit stones and bones. Bring them, and I will teach you the first principle of soul refinement: everything has a soul, and every soul has a price."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn soul cultivation",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Compete with rival disciples",
+      "location": "soul_refining_sect",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Soul banner crafting",
+      "location": "soul_refining_sect",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Meal and networking",
+      "location": "soul_refining_sect",
+      "duration": 90
+    },
+    {
+      "time": "14:30",
+      "action": "Political maneuvering",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "17:30",
+      "action": "Advanced soul techniques",
+      "location": "soul_refining_sect",
+      "duration": 150
+    },
+    {
+      "time": "20:00",
+      "action": "Evening cultivation",
+      "location": "soul_refining_sect",
+      "duration": 300
+    },
+    {
+      "time": "01:00",
+      "action": "Rest",
+      "location": "soul_refining_sect",
+      "duration": 180
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "gl_banner_materials",
+      "name": "Soul Banner Materials",
+      "description": "Gun Lan needs spirit stones and bones to craft soul banners for sect use.",
+      "required_items": {
+        "ergenverse:spirit_stone": 3,
+        "minecraft:bone": 12
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:soul_fragment": 2,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "gl_political_favor",
+      "name": "Political Favor Exchange",
+      "description": "Gun Lan trades influence and knowledge for emeralds and jade slips.",
+      "required_items": {
+        "minecraft:emerald": 14,
+        "ergenverse:jade_slip": 1
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 25
+      }
+    }
+  ]
 }

@@ -6,7 +6,7 @@
   "canon_id": "N91",
   "type": "antagonist",
   "faction": "independent",
-  "location": "unknown",
+  "location": "soul_refining_ancestral",
   "cultivation": "Soul Transformation (perfect circle)",
   "personality": "hunchbacked, cunning antagonist",
   "speech": "wheedling, cunning",
@@ -33,5 +33,91 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Do not look at my back. Look at what I can do. What I can do is far more interesting than my appearance.",
+    "I have been inside the Soul Refining Ancestral Ground more times than anyone alive. Sixty-three times. Each time, the ancestors tried to keep me. I am still here. They are not.",
+    "Wang Lin entered the Ancestral Ground once. He left with the Ten Billion Soul Banner. I have entered sixty-three times and left with scars. The difference is not talent. It is ruthlessness.",
+    "Obsidian and bones. The Ancestral Ground demands payment. If you wish to enter, I can tell you what to bring. Whether you leave is not my concern."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Inspect ancestral ground entrance",
+      "location": "soul_refining_ancestral",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Trade with passing cultivators",
+      "location": "soul_refining_ancestral",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Scavenge ancestral ground perimeter",
+      "location": "soul_refining_ancestral",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Meal and rest",
+      "location": "soul_refining_ancestral",
+      "duration": 90
+    },
+    {
+      "time": "14:30",
+      "action": "Study ancestral formations",
+      "location": "soul_refining_ancestral",
+      "duration": 180
+    },
+    {
+      "time": "17:30",
+      "action": "Brief ancestral ground entry (shallow)",
+      "location": "soul_refining_ancestral",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Night watch",
+      "location": "soul_refining_ancestral",
+      "duration": 300
+    },
+    {
+      "time": "01:00",
+      "action": "Sleep",
+      "location": "soul_refining_ancestral",
+      "duration": 240
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "hm_ancestral_supplies",
+      "name": "Ancestral Ground Supplies",
+      "description": "Hunchback Meng needs obsidian and bones to prepare for his next Ancestral Ground expedition.",
+      "required_items": {
+        "minecraft:obsidian": 16,
+        "minecraft:bone": 20
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:soul_fragment": 2,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "hm_formation_knowledge",
+      "name": "Ancestral Formation Knowledge",
+      "description": "Meng trades knowledge of Ancestral Ground formations for jade slips and experience.",
+      "required_items": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:experience_bottle": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 30
+      }
+    }
+  ]
 }

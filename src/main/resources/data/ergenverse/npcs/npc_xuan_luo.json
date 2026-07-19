@@ -6,7 +6,7 @@
   "canon_id": "N28",
   "type": "elder",
   "faction": "independent",
-  "location": "unknown",
+  "location": "heng_yue_sect",
   "cultivation": "Great Heavenly Venerable",
   "personality": "profound, mysterious elder; Wang Lin's master",
   "speech": "profound, deep",
@@ -33,5 +33,92 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "I am Xuan Luo. You may have heard my name. You may not. Both are acceptable. A master's reputation should be earned, not inherited.",
+    "Wang Lin was my disciple. I taught him the foundations. He exceeded them. A teacher's greatest success is a student who surpasses them. A teacher's greatest fear is the same thing.",
+    "The Heng Yue Sect has forgotten what it means to cultivate the Dao. They cultivate power. They cultivate politics. They cultivate survival. These are not the Dao. The Dao is understanding.",
+    "Books and experience. If you seek instruction, bring these. I will teach you what the Heng Yue elders have forgotten: that cultivation is not accumulation. It is revelation."
+  ],
+  "daily_schedule": [
+    {
+      "time": "03:00",
+      "action": "Deep Dao meditation",
+      "location": "heng_yue_sect",
+      "duration": 240
+    },
+    {
+      "time": "07:00",
+      "action": "Morning lecture to core disciples",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Dao comprehension cultivation",
+      "location": "heng_yue_sect",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Meal with elders",
+      "location": "heng_yue_sect",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Review sect affairs",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "16:00",
+      "action": "Teach advanced disciples privately",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "19:00",
+      "action": "Walk the mountain paths",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Night cultivation",
+      "location": "heng_yue_sect",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "xl_dao_instruction",
+      "name": "Dao Comprehension Teaching",
+      "description": "Xuan Luo teaches Dao comprehension to disciples who bring books and experience.",
+      "required_items": {
+        "minecraft:book": 6,
+        "minecraft:experience_bottle": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2,
+        "experience": 40
+      }
+    },
+    {
+      "task_id": "xl_elder_guidance",
+      "name": "Sect Guidance Request",
+      "description": "Xuan Luo provides guidance on sect affairs and cultivation for jade slips and spirit stones.",
+      "required_items": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:dao_fragment": 1,
+        "minecraft:experience_bottle": 3,
+        "experience": 40
+      }
+    }
+  ]
 }

@@ -33,5 +33,91 @@
   },
   "soul_state": "nascent_soul",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The stars do not lie. They are simply complex. Most disciples cannot read them accurately. I can. That is why I am an elder and they are not.",
+    "Wang Lin's fate was recorded in our star charts seventeen years before he arrived. The charts said 'anomaly.' They were correct. He is the most disruptive force this planet has seen in millennia.",
+    "The Karma Crystal Formation Observer claims karma cannot be predicted by stars. He is partially right. Stars predict the shape of karma. The formation measures its weight. Both are incomplete without the other.",
+    "Books and emeralds. The sect's star charts require constant updating. If you provide materials, I will share what the stars reveal about your path."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn star observation",
+      "location": "heavenly_fate_sect",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Senior disciple lecture",
+      "location": "heavenly_fate_sect",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Star chart maintenance",
+      "location": "heavenly_fate_sect",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Meal and study",
+      "location": "heavenly_fate_sect",
+      "duration": 90
+    },
+    {
+      "time": "14:30",
+      "action": "Fate calculation for sect matters",
+      "location": "heavenly_fate_sect",
+      "duration": 180
+    },
+    {
+      "time": "17:30",
+      "action": "Advise sect leadership",
+      "location": "heavenly_fate_sect",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Night observation",
+      "location": "heavenly_fate_sect",
+      "duration": 180
+    },
+    {
+      "time": "23:00",
+      "action": "Rest",
+      "location": "heavenly_fate_sect",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "yq_star_chart_update",
+      "name": "Star Chart Materials",
+      "description": "Yun Quezi needs books and emeralds to maintain the Heavenly Fate Sect's star charts.",
+      "required_items": {
+        "minecraft:book": 8,
+        "minecraft:emerald": 12
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "yq_fate_calculation",
+      "name": "Fate Calculation Request",
+      "description": "Yun Quezi performs a fate calculation in exchange for jade slips and experience.",
+      "required_items": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:experience_bottle": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 35
+      }
+    }
+  ]
 }

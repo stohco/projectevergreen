@@ -33,5 +33,91 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The Heavenly Fate Sect predicted I would become an elder by forty. I became one by thirty-five. The stars were wrong. I was faster.",
+    "Wang Lin's fate thread crossed mine once. The Heavenly Fate Sect recorded it as 'convergence imminent.' It was not imminent. It was a warning. We did not listen.",
+    "The Xuan Dao Sect studies the Dao. The Heavenly Fate Sect studies fate. I study power. Fate and Dao are academic. Power is practical.",
+    "Spirit stones and jade slips. I am accelerating my cultivation. If you provide materials, I will share what the stars have shown me about the path ahead."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn fate cultivation",
+      "location": "heavenly_fate_sect",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Compete with rival disciples",
+      "location": "heavenly_fate_sect",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Advanced fate calculations",
+      "location": "heavenly_fate_sect",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Meal and political meetings",
+      "location": "heavenly_fate_sect",
+      "duration": 90
+    },
+    {
+      "time": "14:30",
+      "action": "Cultivation breakthrough attempts",
+      "location": "heavenly_fate_sect",
+      "duration": 180
+    },
+    {
+      "time": "17:30",
+      "action": "Report to Yun Quezi",
+      "location": "heavenly_fate_sect",
+      "duration": 60
+    },
+    {
+      "time": "18:30",
+      "action": "Combat training",
+      "location": "heavenly_fate_sect",
+      "duration": 150
+    },
+    {
+      "time": "21:00",
+      "action": "Night cultivation",
+      "location": "heavenly_fate_sect",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "zxs_cultivation_acceleration",
+      "name": "Cultivation Materials",
+      "description": "Zhao Xingsha needs spirit stones and jade slips to accelerate her breakthrough attempts.",
+      "required_items": {
+        "ergenverse:spirit_stone": 3,
+        "ergenverse:jade_slip": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "zxs_fate_intelligence",
+      "name": "Fate Intelligence Trade",
+      "description": "Zhao Xingsha trades fate calculations for emeralds and experience bottles.",
+      "required_items": {
+        "minecraft:emerald": 12,
+        "minecraft:experience_bottle": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 30
+      }
+    }
+  ]
 }
