@@ -1,0 +1,105 @@
+{
+  "npc_id": "npc_hf_star_reader_tian",
+  "name": "Star Reader Tian",
+  "nameCn": "观星师天",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_spirit_spring",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "distracted, gazes upward, speaks in riddles about stars",
+  "speech": "cryptic, poetic, references star positions",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390102,
+  "initiation_lines": [
+    "The Southern Dipper shifted three degrees last night. Someone in Zhao Country will die before dawn.",
+    "I do not predict the future. I read what the stars have already written. The difference is everything.",
+    "The spring here reflects starlight even at noon. Drink from it and you will see your fate-thread for one heartbeat.",
+    "Liu Mei left this sect three years ago. Her fate-thread was the brightest I have ever seen. Then it vanished."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "observe",
+      "location": "heavenly_fate_sect_spirit_spring",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "read_stars",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 180
+    },
+    {
+      "time": "1100",
+      "action": "meditate",
+      "location": "heavenly_fate_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "teach",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1600",
+      "action": "observe",
+      "location": "heavenly_fate_sect_mountain_cave",
+      "duration": 180
+    },
+    {
+      "time": "1900",
+      "action": "read_stars",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 300
+    },
+    {
+      "time": "2400",
+      "action": "rest",
+      "location": "heavenly_fate_sect_disciple_dormitories",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "star_observation_supplies",
+      "name": "Star Observation Supplies",
+      "description": "I need glowstone dust and ender pearls for the star-reflection array at the spring.",
+      "required_items": {
+        "minecraft:glowstone_dust": 8,
+        "minecraft:ender_pearl": 2
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "fate_reading_tools",
+      "name": "Fate Reading Tools",
+      "description": "Bring compasses and clocks. I need to calibrate the fate-thread detection instruments.",
+      "required_items": {
+        "minecraft:compass": 3,
+        "minecraft:clock": 2
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "ergenverse:jade_slip": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_hf_array_weaver_chen",
+  "name": "Array Weaver Chen",
+  "nameCn": "阵法师陈",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_array_hall",
+  "cultivation": "NASCENT_SOUL late",
+  "personality": "meticulous, paranoid about fate-disruption, checks threads constantly",
+  "speech": "precise, references measurements and fate-thread tensions",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390105,
+  "initiation_lines": [
+    "The fate-thread array at the eastern perimeter has a tension imbalance of 0.3 degrees. Unacceptable.",
+    "Other sects use redstone for power. We use it to weave fate-threads. There is a difference.",
+    "The Xuan Dao Sect sent an array student to study with us. I sent him back. His threads were too rigid.",
+    "If you stand on the center inscription at midnight, you will see your fate-thread for three heartbeats. Do not. It changes you."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "inspect",
+      "location": "heavenly_fate_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "repair",
+      "location": "heavenly_fate_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "1000",
+      "action": "work",
+      "location": "heavenly_fate_sect_array_hall",
+      "duration": 240
+    },
+    {
+      "time": "1400",
+      "action": "eat",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1500",
+      "action": "inspect",
+      "location": "heavenly_fate_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "work",
+      "location": "heavenly_fate_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "heavenly_fate_sect_inner_sect",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fate_array_redstone",
+      "name": "Fate Array Redstone Supply",
+      "description": "The perimeter fate arrays need redstone and ender pearls for thread-weaving maintenance.",
+      "required_items": {
+        "minecraft:redstone": 10,
+        "minecraft:ender_pearl": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "obsidian_fate_conduit",
+      "name": "Obsidian Fate Conduit",
+      "description": "The inner array needs obsidian conduits to redirect fate-thread flow.",
+      "required_items": {
+        "minecraft:obsidian": 6,
+        "minecraft:iron_ingot": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "ergenverse:jade_slip": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

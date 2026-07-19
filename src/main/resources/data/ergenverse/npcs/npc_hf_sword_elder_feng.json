@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_hf_sword_elder_feng",
+  "name": "Sword Elder Feng",
+  "nameCn": "剑峰长老风",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_sword_tomb",
+  "cultivation": "NASCENT_SOUL late",
+  "personality": "melancholic, traces sword-fate-threads, mourns fallen cultivators",
+  "speech": "soft, reverent, speaks of swords as if they are people",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390108,
+  "initiation_lines": [
+    "Every sword here has a fate-thread. Some are still attached to their owners. The threads glow blue at midnight.",
+    "The sword in the center has no thread. It was cut. By its owner. I do not know why.",
+    "Zhao Xingsha left his sword here before departing. Its thread still points south. Toward the Sea of Devils.",
+    "Bring me iron and glowstone. The fate-thread preservation ritual requires both."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "heavenly_fate_sect_sword_tomb",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "maintain",
+      "location": "heavenly_fate_sect_sword_tomb",
+      "duration": 300
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "maintain",
+      "location": "heavenly_fate_sect_sword_tomb",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "patrol",
+      "location": "heavenly_fate_sect_sword_peak",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "meditate",
+      "location": "heavenly_fate_sect_sword_tomb",
+      "duration": 180
+    },
+    {
+      "time": "2300",
+      "action": "rest",
+      "location": "heavenly_fate_sect_sword_tomb",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "sword_fate_preservation",
+      "name": "Sword Fate Preservation",
+      "description": "The sword fate-threads need iron and glowstone for the preservation ritual.",
+      "required_items": {
+        "minecraft:iron_ingot": 6,
+        "minecraft:glowstone_dust": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "xingsha_sword_retrieval",
+      "name": "Zhao Xingsha's Sword",
+      "description": "Retrieve items from the tomb for the elder council. Gold and obsidian as tribute.",
+      "required_items": {
+        "minecraft:gold_ingot": 4,
+        "minecraft:obsidian": 4
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

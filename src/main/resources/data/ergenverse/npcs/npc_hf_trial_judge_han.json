@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_hf_trial_judge_han",
+  "name": "Trial Judge Han",
+  "nameCn": "试炼官韩",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_trial_grounds",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "impartial, reads fate-threads during trials, unsettlingly calm",
+  "speech": "measured, references fate-percentages, never surprised",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390107,
+  "initiation_lines": [
+    "Eighty-two percent of disciples pass the fate-reading trial. Only twelve percent pass the fate-acceptance trial.",
+    "The trial is simple: read your own fate-thread. Those who see death weep. Those who accept it, advance.",
+    "We do not test talent. We test whether a disciple can bear knowing their own destiny.",
+    "The records show that disciples from the Zhao Country region have the highest fate-acceptance rate. Curious."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0700",
+      "action": "oversee",
+      "location": "heavenly_fate_sect_trial_grounds",
+      "duration": 240
+    },
+    {
+      "time": "1100",
+      "action": "evaluate",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "oversee",
+      "location": "heavenly_fate_sect_trial_grounds",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "report",
+      "location": "heavenly_fate_sect_inner_sect",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "heavenly_fate_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "trial_supplies",
+      "name": "Trial Grounds Supplies",
+      "description": "The trials need glowstone dust for fate-thread illumination and arrows for the defense portion.",
+      "required_items": {
+        "minecraft:glowstone_dust": 8,
+        "minecraft:arrow": 12
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:experience_bottle": 2
+      }
+    },
+    {
+      "task_id": "fate_record_compilation",
+      "name": "Fate Record Compilation",
+      "description": "Compile the trial results. Bring redstone for the recording array and paper for the logs.",
+      "required_items": {
+        "minecraft:redstone": 6,
+        "minecraft:paper": 8
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

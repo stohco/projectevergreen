@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_hf_library_keeper_xing",
+  "name": "Library Keeper Xing",
+  "nameCn": "藏经阁主星",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_library",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "precise, organized, treats fate-records as sacred",
+  "speech": "exact, references specific scrolls, mildly condescending",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390103,
+  "initiation_lines": [
+    "The library contains four thousand scrolls on fate manipulation. Section C-7 is restricted. Do not ask why.",
+    "Every cultivator's fate-thread is recorded here. Yours too, if you stay long enough.",
+    "Yun Quezi's star charts are in section A-3. Hong Die's fate-reading notes are in B-9. Both left decades ago.",
+    "The Corpse Yin Sect requested access to our fate archives. We refused. Their fate-threads are abhorrent."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "organize",
+      "location": "heavenly_fate_sect_library",
+      "duration": 240
+    },
+    {
+      "time": "1000",
+      "action": "study",
+      "location": "heavenly_fate_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "teach",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1600",
+      "action": "study",
+      "location": "heavenly_fate_sect_library",
+      "duration": 240
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "heavenly_fate_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "scroll_copying_fate",
+      "name": "Scroll Copying: Fate Arts",
+      "description": "Copy the fate manipulation scrolls for the inner elders. The ink must be precise.",
+      "required_items": {
+        "minecraft:paper": 6,
+        "minecraft:ink_sac": 4
+      },
+      "rewards": {
+        "minecraft:book": 2,
+        "minecraft:emerald": 5
+      }
+    },
+    {
+      "task_id": "restricted_section_retrieval",
+      "name": "Restricted Section Retrieval",
+      "description": "A scroll was borrowed from section C-7 without authorization. Return it.",
+      "required_items": {
+        "minecraft:book": 1,
+        "minecraft:emerald": 3
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "ergenverse:jade_slip": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

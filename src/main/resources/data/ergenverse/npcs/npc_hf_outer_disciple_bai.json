@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_hf_outer_disciple_bai",
+  "name": "Outer Disciple Bai",
+  "nameCn": "外门弟子白",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_outer_gate",
+  "cultivation": "CONDENSATION early",
+  "personality": "star-struck, romantic about fate, optimistic",
+  "speech": "wondering, starry-eyed, occasionally philosophical",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390101,
+  "initiation_lines": [
+    "Welcome to the Heavenly Fate Sect. The stars foretold your arrival. Or perhaps they foretold someone more interesting.",
+    "Every cultivator who passes through this gate has a fate-thread. I can see them, faintly, like spider silk in moonlight.",
+    "The Star Tower glows at night. Elder Tian says it is the ancestor's will. I say it is beautiful.",
+    "Do not linger at the gate. The fate currents here are chaotic. You might trip."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "patrol",
+      "location": "heavenly_fate_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "0800",
+      "action": "stand_guard",
+      "location": "heavenly_fate_sect_outer_gate",
+      "duration": 240
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "patrol",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1500",
+      "action": "train",
+      "location": "heavenly_fate_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "stand_guard",
+      "location": "heavenly_fate_sect_outer_gate",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "heavenly_fate_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "gate_star_dust",
+      "name": "Gate Star Dust Supply",
+      "description": "The gate formations need glowstone dust to maintain the fate-thread detection array.",
+      "required_items": {
+        "minecraft:arrow": 8,
+        "minecraft:glowstone_dust": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:book": 1
+      }
+    },
+    {
+      "task_id": "visitor_fate_record",
+      "name": "Visitor Fate Record",
+      "description": "Record every visitor's fate-thread reading. Bring paper and ink for the log.",
+      "required_items": {
+        "minecraft:paper": 5,
+        "minecraft:ink_sac": 2
+      },
+      "rewards": {
+        "minecraft:emerald": 4,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

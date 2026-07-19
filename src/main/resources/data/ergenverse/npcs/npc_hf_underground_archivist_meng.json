@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_hf_underground_archivist_meng",
+  "name": "Underground Archivist Meng",
+  "nameCn": "地下档案官孟",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_underground_passage",
+  "cultivation": "FOUNDATION_ESTABLISHMENT late",
+  "personality": "nervous, knows secrets that weigh on him, fidgets",
+  "speech": "whispered, checks over shoulder, drops hints about hidden knowledge",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390109,
+  "initiation_lines": [
+    "You found the passage. The fate-threads here are... tangled. Be careful where you step.",
+    "The underground archives contain every cultivator's fate prediction since the sect's founding. Some predictions came true. Some did not. The ancestors do not like to discuss the latter.",
+    "I am not supposed to be here. But the fate-threads in the archives called to me. They whisper names.",
+    "Bring me paper and redstone. I am... compiling something. For personal research. Not for the elders."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0800",
+      "action": "idle",
+      "location": "heavenly_fate_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "1100",
+      "action": "research",
+      "location": "heavenly_fate_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "idle",
+      "location": "heavenly_fate_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "1700",
+      "action": "research",
+      "location": "heavenly_fate_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "heavenly_fate_sect_disciple_dormitories",
+      "duration": 660
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "archive_compilation",
+      "name": "Archive Compilation",
+      "description": "I need paper and redstone to compile the fate-thread analysis. Do not tell the elders.",
+      "required_items": {
+        "minecraft:paper": 8,
+        "minecraft:redstone": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 7
+      }
+    },
+    {
+      "task_id": "hidden_archive_access",
+      "name": "Hidden Archive Access",
+      "description": "I can show you the forbidden predictions. The price is emeralds and gold.",
+      "required_items": {
+        "minecraft:gold_ingot": 3,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "ergenverse:jade_slip": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_hf_fate_alchemist_yue",
+  "name": "Fate Alchemist Yue",
+  "nameCn": "命丹师月",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_alchemy_courtyard",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "dreamy, impractical, believes alchemy is just applied fate",
+  "speech": "meandering, references fate in everything, gentle",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390104,
+  "initiation_lines": [
+    "Every pill is a small fate. The ingredients choose each other. I merely facilitate the meeting.",
+    "The Fate Pill requires starlight essence. I collect it in bottles from the spring at midnight.",
+    "The Soul Refining Sect's alchemist visited once. He wanted our Fate Pill formula. Fate said no.",
+    "Bring me bottles and coal. The furnace burns with starlight, not flame. It is very temperamental."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "gather",
+      "location": "heavenly_fate_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "0700",
+      "action": "work",
+      "location": "heavenly_fate_sect_alchemy_courtyard",
+      "duration": 300
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "work",
+      "location": "heavenly_fate_sect_alchemy_courtyard",
+      "duration": 300
+    },
+    {
+      "time": "1800",
+      "action": "collect_starlight",
+      "location": "heavenly_fate_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "work",
+      "location": "heavenly_fate_sect_alchemy_courtyard",
+      "duration": 180
+    },
+    {
+      "time": "2300",
+      "action": "rest",
+      "location": "heavenly_fate_sect_inner_sect",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "starlight_fuel",
+      "name": "Starlight Furnace Fuel",
+      "description": "The starlight furnace needs glass bottles and coal to maintain the star-fire.",
+      "required_items": {
+        "minecraft:glass_bottle": 4,
+        "minecraft:coal": 6
+      },
+      "rewards": {
+        "minecraft:experience_bottle": 2,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "fate_pill_ingredients",
+      "name": "Fate Pill Ingredients",
+      "description": "I need spirit stones and blaze powder for the Fate Pill refinement cycle.",
+      "required_items": {
+        "ergenverse:spirit_stone": 1,
+        "minecraft:blaze_powder": 2
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "ergenverse:jade_slip": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

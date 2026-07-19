@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_hf_herb_tender_xiao",
+  "name": "Herb Tender Xiao",
+  "nameCn": "药园管事萧",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_spirit_herb_garden",
+  "cultivation": "FOUNDATION_ESTABLISHMENT mid",
+  "personality": "patient, sings to plants, believes herbs have fate-threads too",
+  "speech": "gentle, botanical, occasionally mystical about plant fate",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390112,
+  "initiation_lines": [
+    "Every herb has a fate-thread. This one is destined to become a pill. That one is destined to wither. I still water it.",
+    "The star-nourished herbs grow only in glowstone-rich soil. Without starlight, they are just weeds.",
+    "The Alchemist needs the fate-lotus from the spring. I grow it here. It only blooms when a cultivator with a bright fate-thread walks past.",
+    "Bring me bone meal and wheat. The herbs need feeding, and the starlight alone is not enough."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "tend",
+      "location": "heavenly_fate_sect_spirit_herb_garden",
+      "duration": 300
+    },
+    {
+      "time": "1100",
+      "action": "gather",
+      "location": "heavenly_fate_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "tend",
+      "location": "heavenly_fate_sect_spirit_herb_garden",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "deliver",
+      "location": "heavenly_fate_sect_alchemy_courtyard",
+      "duration": 60
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "heavenly_fate_sect_disciple_dormitories",
+      "duration": 660
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "garden_starlight_soil",
+      "name": "Garden Starlight Soil",
+      "description": "The herbs need bone meal and wheat to enrich the glowstone-starlight soil.",
+      "required_items": {
+        "minecraft:bone_meal": 6,
+        "minecraft:wheat": 8
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:glowstone_dust": 3
+      }
+    },
+    {
+      "task_id": "herb_delivery_alchemist",
+      "name": "Herb Delivery to Alchemist",
+      "description": "The Alchemist needs fresh herbs and bottles from the garden.",
+      "required_items": {
+        "minecraft:glass_bottle": 3,
+        "minecraft:bone_meal": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

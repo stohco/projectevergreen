@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_hf_fate_beast_tender_lin",
+  "name": "Fate Beast Tender Lin",
+  "nameCn": "命兽管事林",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_spirit_beast_pens",
+  "cultivation": "CONDENSATION late",
+  "personality": "gentle with beasts, impatient with people, hums fate-melodies",
+  "speech": "soft when speaking of beasts, curt with humans",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390106,
+  "initiation_lines": [
+    "These beasts can see fate-threads more clearly than most elders. We do not cage them. We negotiate.",
+    "The star-gazing hawks in the eastern pen are from Qilin City. Their previous owner could not read their fate-calls.",
+    "A beast that has seen its own fate-thread goes quiet. Permanently. I do not let visitors near the western pen.",
+    "Bring me redstone and leather. The fate-sensing collars need constant adjustment."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "work",
+      "location": "heavenly_fate_sect_spirit_beast_pens",
+      "duration": 300
+    },
+    {
+      "time": "1100",
+      "action": "inspect",
+      "location": "heavenly_fate_sect_mountain_cave",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "heavenly_fate_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "work",
+      "location": "heavenly_fate_sect_spirit_beast_pens",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "deliver",
+      "location": "heavenly_fate_sect_alchemy_courtyard",
+      "duration": 60
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "heavenly_fate_sect_disciple_dormitories",
+      "duration": 660
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fate_collar_repair",
+      "name": "Fate-Sensing Collar Repair",
+      "description": "The beast collars need redstone and leather to maintain fate-thread detection.",
+      "required_items": {
+        "minecraft:redstone": 8,
+        "minecraft:leather": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "ergenverse:jade_slip": 1
+      }
+    },
+    {
+      "task_id": "beast_herbs",
+      "name": "Beast Herb Delivery",
+      "description": "Bring bone meal and wheat for the fate-sensitive beasts from the garden.",
+      "required_items": {
+        "minecraft:bone_meal": 6,
+        "minecraft:wheat": 8
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:glowstone_dust": 4
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

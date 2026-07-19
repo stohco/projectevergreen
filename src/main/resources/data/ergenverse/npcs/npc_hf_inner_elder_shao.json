@@ -1,0 +1,100 @@
+{
+  "npc_id": "npc_hf_inner_elder_shao",
+  "name": "Inner Elder Shao",
+  "nameCn": "内门长老邵",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_core_formation_hall",
+  "cultivation": "NASCENT_SOUL peak",
+  "personality": "calculating, views everything through fate-lens, manipulative but not evil",
+  "speech": "strategic, always assessing fate-probabilities, veiled threats",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390111,
+  "initiation_lines": [
+    "There is a sixty-three percent chance you will survive the next year. I can improve those odds. For a price.",
+    "The Corpse Yin Sect proposed an alliance. The fate-threads showed a seventy-eight percent chance of betrayal. We declined.",
+    "Liu Mei's departure was not a loss. Her fate-thread was always destined to leave. We merely accelerated the schedule.",
+    "Bring me spirit stones and emeralds. I am researching a technique to read fate-threads across distances."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "research",
+      "location": "heavenly_fate_sect_core_formation_hall",
+      "duration": 300
+    },
+    {
+      "time": "1000",
+      "action": "inspect",
+      "location": "heavenly_fate_sect_inner_sect",
+      "duration": 120
+    },
+    {
+      "time": "1200",
+      "action": "meet",
+      "location": "heavenly_fate_sect_secret_pavilion",
+      "duration": 120
+    },
+    {
+      "time": "1400",
+      "action": "research",
+      "location": "heavenly_fate_sect_core_formation_hall",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "inspect",
+      "location": "heavenly_fate_sect_hidden_treasury",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "research",
+      "location": "heavenly_fate_sect_core_formation_hall",
+      "duration": 180
+    },
+    {
+      "time": "2300",
+      "action": "rest",
+      "location": "heavenly_fate_sect_inner_sect",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fate_research_materials",
+      "name": "Fate Research Materials",
+      "description": "I need spirit stones and emeralds to power the long-range fate-thread array.",
+      "required_items": {
+        "ergenverse:spirit_stone": 3,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 2,
+        "ergenverse:jade_slip": 2
+      }
+    },
+    {
+      "task_id": "outpost_relay_supply",
+      "name": "Outpost Relay Supply",
+      "description": "The remote observation outpost needs supplies for the star-monitoring relay.",
+      "required_items": {
+        "minecraft:ender_pearl": 4,
+        "minecraft:obsidian": 8,
+        "minecraft:compass": 3
+      },
+      "rewards": {
+        "ergenverse:starry_sky_token": 1,
+        "ergenverse:spirit_stone": 3
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

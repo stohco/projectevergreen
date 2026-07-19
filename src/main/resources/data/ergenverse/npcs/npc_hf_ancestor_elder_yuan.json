@@ -1,0 +1,100 @@
+{
+  "npc_id": "npc_hf_ancestor_elder_yuan",
+  "name": "Ancestor Elder Yuan",
+  "nameCn": "祖师长老元",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "heavenly_fate_sect",
+  "location": "heavenly_fate_sect_ancestor_hall",
+  "cultivation": "NASCENT_SOUL peak",
+  "personality": "serene, speaks as if channeling the ancestor, unfathomable",
+  "speech": "slow, prophetic, references fate as if reading it in real-time",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 390110,
+  "initiation_lines": [
+    "The ancestor's fate-thread spans the entire sky. To look upon it is to see the shape of time.",
+    "I have read every fate-thread in this hall. Yours is... interesting. It branches in seven directions.",
+    "The Heavenly Fate Ancestor predicted the fall of three dynasties. Two have fallen. The third approaches.",
+    "Bring gold and obsidian. The ancestor's shrine needs devotion. Fate rewards the faithful. Eventually."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "heavenly_fate_sect_ancestor_hall",
+      "duration": 240
+    },
+    {
+      "time": "0900",
+      "action": "ritual",
+      "location": "heavenly_fate_sect_ancestor_hall",
+      "duration": 180
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "heavenly_fate_sect_inner_sect",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "maintain",
+      "location": "heavenly_fate_sect_ancestor_hall",
+      "duration": 240
+    },
+    {
+      "time": "1700",
+      "action": "ritual",
+      "location": "heavenly_fate_sect_ancestor_hall",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "meditate",
+      "location": "heavenly_fate_sect_ancestor_hall",
+      "duration": 300
+    },
+    {
+      "time": "0100",
+      "action": "rest",
+      "location": "heavenly_fate_sect_ancestor_hall",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "ancestor_devotion",
+      "name": "Ancestor Devotion Offering",
+      "description": "The ancestor's shrine requires gold and obsidian for the weekly fate-reading ritual.",
+      "required_items": {
+        "minecraft:gold_ingot": 4,
+        "minecraft:obsidian": 6
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 3,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "ancestor_fate_record",
+      "name": "Ancestor Fate Record",
+      "description": "Transcribe the ancestor's fate-predictions. The ink must be fresh and the paper pure.",
+      "required_items": {
+        "minecraft:paper": 8,
+        "minecraft:ink_sac": 5,
+        "minecraft:book": 2
+      },
+      "rewards": {
+        "ergenverse:starry_sky_token": 1,
+        "ergenverse:jade_slip": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}
