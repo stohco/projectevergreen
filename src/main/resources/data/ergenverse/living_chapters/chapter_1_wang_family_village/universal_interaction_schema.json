@@ -1,0 +1,99 @@
+{
+  "_comment": "THE UNIVERSAL INTERACTION (Article XXXVI). This is the single object through which every entity in the game engages every other entity. Every NPC, item, beast, plant, technique, formation, location, artifact, and sect exposes a set of interactions. The player, NPCs, beasts, and the world itself initiate interactions. The old affordance system (Art XXVIII) and social engines (Art XXXI.1) are now unified under this object. This is the AI's common language for engaging the world — and the player's UI for engaging it too. DATA, not Java (Article XXVI).",
+  "_schema": "universal_interaction",
+  "_schema_version": 1,
+  "_article": "XXXVI",
+  "_supersedes_and_unifies": ["affordance_schema.json (Art XXVIII)", "social_engines_schema.json (Art XXXI.1)", "conversation_affordances_per_npc.json (Art XXXII.2)"],
+  "_design_notes": {
+    "why_universal": "Before this, the project had three parallel systems: affordances (what an entity CAN do), social engines (what an NPC WANTS to do), and conversation verbs (what the player sees). They overlapped, conflicted, and required special-casing. The universal Interaction unifies them: an Interaction is the atomic unit of ALL engagement. An affordance is an interaction the entity exposes. A social intent is an interaction an NPC initiates. A conversation verb is an interaction the player initiates. Same object, three directions (NPC→NPC, NPC→Player, Player→NPC, World→Anyone).",
+    "bidirectional": "Every interaction has an initiator and a target. Either may be the player, an NPC, a beast, an item, a location, or the world. The negotiation engine does not care who is who — it evaluates the interaction on its merits.",
+    "negotiation_not_transaction": "Per Article XXXVI.3, an interaction is a negotiation, not a transaction. The initiator proposes (verb + intent); the target reasons (pros, cons, alternatives, risk); the target responds (grant / refuse / redirect / defer / counter). The interaction may iterate — the initiator may counter the counter. This is how Wang Lin says 'Not yet. Learn formations first.' instead of 'No.'",
+    "ai_language": "Per Article XXXVI.4, NPCs use interactions to engage EVERYTHING — not just the player. Wang Lin asks Li Muwan for herbs (interaction: Request). A sect elder challenges a disciple (interaction: Challenge). A beast stalks a rabbit (interaction: Hunt). The same object, the same reasoning, every direction. This is what makes the world feel inhabited rather than simulated."
+  },
+  "schema": {
+    "interaction_id": "string — unique, e.g. 'int_wanglin_teach_restriction_fragment'",
+    "verb": "enum — from the universal catalog (see interaction_catalog.json): ask, teach, trade, threaten, observe, challenge, gift, borrow, copy, cultivate_together, explore_together, travel_together, spar, escort, protect, hire, recruit, investigate, confess, lie, deceive, negotiate, call_debt, repay_debt, warn, reveal_secret, share_memory, study_together, meditate_together, request, offer, demonstrate, follow, block, approach, leave, hunt (beast-specific), consume (item-specific), harvest (plant-specific), etc.",
+    "initiator": "string — entity id (npc_id, 'player', item_id, beast_id, location_id, 'world')",
+    "target": "string — entity id",
+    "intent": "string — what the initiator wants to achieve, in plain language. e.g. 'Wang Lin wants to teach the player a restriction fragment because the player has demonstrated readiness.'",
+    "context": {
+      "location": "string — where the interaction happens (affects witnesses, Article XXXII.9)",
+      "time": "int — tick",
+      "conversation_mode": "enum — ambient | focus | major (Article XXXII.1)",
+      "witnesses": ["string — entity ids who can perceive the interaction"],
+      "player_knowledge_state": "object — what the player character currently knows that gates whether this interaction appears in the UI (Article XXXVII.5)"
+    },
+    "negotiation": {
+      "initiator_proposal": "string — what the initiator is offering/requesting/demonstrating",
+      "target_reasoning": {
+        "pros": ["string — reasons to accept"],
+        "cons": ["string — reasons to refuse"],
+        "alternatives": ["string — other options the target could propose"],
+        "risk_assessment": "string — what the target predicts will happen if they accept",
+        "gate_checks": ["string — capability compatibility gates (Art XXXVIII), relationship thresholds, knowledge prerequisites"]
+      },
+      "target_response": "enum — grant | refuse | redirect | defer | counter | partial_grant | silent_acknowledgement | ignore",
+      "response_line": "string|null — what the target says/does. null if silent.",
+      "counter_proposal": "string|null — if response=counter or redirect, what the target proposes instead. e.g. 'Not yet. Learn formations first.'"
+    },
+    "outcome": {
+      "resolved": "bool — did the interaction reach a conclusion?",
+      "resolution": "enum — granted | refused | redirected | deferred | abandoned | interrupted",
+      "consequences": ["string — world-state changes. e.g. 'player.knowledge += restriction_fragment', 'favor_ledger += player_helped_wang_lin (Moderate)', 'relationship.trust += 2'"],
+      "memory_tag": "string — tag written to memory ledger (Article XXXI.5)",
+      "follow_up_interactions": ["string — interaction_ids that this one enables. e.g. a deferred teaching enables a future 'teach' interaction when the condition is met"]
+    },
+    "ui_gating": {
+      "appears_in_player_ui_when": ["string — conditions for this interaction to appear in the player's verb wheel (Article XXXVII.6). e.g. 'player.knowledge.restriction >= 1', 'relationship.trust >= 40', 'player.cultivation >= foundation_establishment', 'memory_tag: player_witnessed_god_slaying_sword'"],
+      "ui_label": "string — what the player sees. e.g. 'Ask about the strange sword' (before learning the name) → 'Ask about the God Slaying Sword' (after learning) → 'Request a copy of the God Slaying Sword' (after relationship threshold). The label evolves with character knowledge (Article XXXVII.5).",
+      "ui_layer": "enum — layer1_obvious | layer2_context | layer3_natural_language. Most interactions are layer2 (drill-down). A few are layer1 (top-level verbs). Layer3 is always available via 'Something else...'"
+    }
+  },
+  "directionality": {
+    "npc_to_npc": "Wang Lin requests herbs from Li Muwan. Li Muwan reasons, responds. The interaction is recorded in both their memory ledgers. The player may witness it (if nearby) and learn from it.",
+    "npc_to_player": "Wang Lin approaches the player (via consent pipeline) and initiates an interaction: 'Come.' (travel_together). The player accepts/declines.",
+    "player_to_npc": "The player right-clicks Wang Lin, selects Request → Teach me restrictions. Wang Lin reasons, responds (redirect: 'Learn formations first').",
+    "world_to_anyone": "A spirit vein pulses (interaction: reveal — the world reveals an opportunity to anyone nearby who can perceive it). A beast spawns (interaction: hunt — the beast targets a rabbit).",
+    "player_to_item": "The player examines a strange jade (interaction: observe). The jade's affordances (now interactions) are discovered based on perception.",
+    "npc_to_item": "Wang Lin studies a restriction (interaction: study / observe). He may gain knowledge from it."
+  },
+  "example_full": {
+    "interaction_id": "int_player_requests_ji_realm_from_wanglin",
+    "verb": "request",
+    "initiator": "player",
+    "target": "npc_wang_lin",
+    "intent": "Player wants to learn the Ji Realm technique from Wang Lin.",
+    "context": {
+      "location": "wang_family_village_ancestral_hall (private)",
+      "time": 42000,
+      "conversation_mode": "focus",
+      "witnesses": [],
+      "player_knowledge_state": {"knows_wang_lin_has_ji_realm": true, "knows_ji_realm_name": true, "cultivation": "foundation_establishment", "relationship_trust": 65, "outstanding_favor": "life_saving (player saved wang_lin_family)"}
+    },
+    "negotiation": {
+      "initiator_proposal": "Teach me the Ji Realm.",
+      "target_reasoning": {
+        "pros": ["Player once risked life for me — I owe (favor: life_saving, callable)", "Player has shown restraint (memory ledger)", "Player has sufficient cultivation (foundation_establishment >= required)", "Teaching benefits player — he may become a useful ally", "Player has demonstrated judgment (known_personality: keeps_promises, patient)"],
+        "cons": ["Ji Realm is dangerous — player could misuse", "Exposes my capabilities to observers (none present — con mitigated)"],
+        "alternatives": ["Teach only the first layer (partial)", "Defer until Core Formation (conservative)"],
+        "risk_assessment": "Player at Foundation Establishment can survive Ji Realm first layer. Full Ji Realm requires Core Formation. Risk is acceptable for partial grant.",
+        "gate_checks": ["capability_compatibility.willingness: PASS (favor owed + judgment demonstrated)", "capability_compatibility.withstand: PASS for first layer at Foundation Establishment", "capability_compatibility.integrate: PASS for first layer — soul can hold it"]
+      },
+      "target_response": "partial_grant",
+      "response_line": "You once risked your life for mine. I have not forgotten. The Ji Realm... I will show you once. Watch carefully. I will not show you twice.",
+      "counter_proposal": null
+    },
+    "outcome": {
+      "resolved": true,
+      "resolution": "granted (partial — first layer only)",
+      "consequences": ["player.knowledge += ji_realm_first_layer", "favor_ledger: player_saved_wang_lin_family.called = true", "favor_ledger: player_saved_wang_lin_family.honored = true", "wang_lin.relationship.player.trust += 5", "memory_ledger += wang_lin_taught_ji_realm_first_layer"],
+      "memory_tag": "wang_lin_taught_ji_realm",
+      "follow_up_interactions": ["int_player_requests_ji_realm_second_layer (gated on player.cultivation >= core_formation)"]
+    },
+    "ui_gating": {
+      "appears_in_player_ui_when": ["player.knowledge.wang_lin_has_ji_realm = true (witnessed or told)", "relationship.trust >= 50", "player.cultivation >= foundation_establishation (withstand gate)", "favor_ledger: player has callable life_saving favor with wang_lin (willingness gate)"],
+      "ui_label": "Request → Teach me the Ji Realm",
+      "ui_layer": "layer2_context"
+    }
+  }
+}

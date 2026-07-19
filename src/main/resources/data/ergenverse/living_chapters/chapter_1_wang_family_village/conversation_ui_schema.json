@@ -1,0 +1,97 @@
+{
+  "_comment": "Conversation UI schema (Article XXXVII). The 3-layer UI that solves the 'player doesn't know what they don't know' problem. Layer 1: Obvious Actions (small clean verb wheel). Layer 2: Context Expansion (per-NPC drill-down). Layer 3: Natural Language (free text, 'Something else...'). Plus: the menu LEARNS (evolves with character knowledge + relationship), the UI reflects CHARACTER knowledge not world state (you can't request what you haven't witnessed), NPC reasoning gates which options appear, and 'Read the Room' (hold right-click for perception overlay). DATA, not Java (Article XXVI).",
+  "_schema": "conversation_ui",
+  "_schema_version": 1,
+  "_article": "XXXVII",
+  "layers": {
+    "layer_1_obvious_actions": {
+      "description": "The top-level verb wheel when the player right-clicks an NPC. Small, clean, no spoilers. The character knows they can always attempt these.",
+      "verbs": ["Observe", "Talk", "Ask", "Offer", "Request", "Train", "Travel", "Leave"],
+      "what_does_NOT_appear": ["Teach me Ji Realm", "Copy God Slaying Sword", "Request Heaven Defying Bead", "Anything the character hasn't learned is a possibility"],
+      "design_rule": "8 verbs maximum. If a 9th is needed, one is wrong. The wheel must be readable in a glance and feel like talking to a person, not browsing a database.",
+      "nevermind": "always present as 'Leave' — ends conversation, NPC resumes schedule (Article XXXII.1a holds-still courtesy expires)."
+    },
+    "layer_2_context_expansion": {
+      "description": "Clicking a Layer 1 verb drills down into a per-NPC submenu. The submenu is DIFFERENT for each NPC — same UI, different affordances, discovered from the NPC's interaction catalog (Article XXXVI).",
+      "example_ask_wang_lin": ["About this place", "About cultivation", "About recent events", "About himself", "Something else..."],
+      "example_ask_subdrill_wang_lin_cultivation": ["Beginner advice", "Current bottleneck", "Recommended techniques", "Breakthroughs", "Something else..."],
+      "example_ask_li_muwan_cultivation": ["Herbs", "Pills", "Poison", "Healing", "Something else..."],
+      "design_rule": "The submenu is generated from the NPC's interactions data (Article XXXVI), filtered by the player's character knowledge (Article XXXVII.5) and the NPC's reasoning gates (Article XXXVII.6). No hardcoded dialogue trees.",
+      "something_else": "always present at the end of every submenu — opens Layer 3."
+    },
+    "layer_3_natural_language": {
+      "description": "Free text input. 'What do you want to ask?' The player may type anything. The NPC's reasoning (character_reasoning_pipeline) interprets the intent. If the NPC cannot understand, they say 'I don't understand.' — exactly like talking to a real person.",
+      "usage_distribution": "~95% of interactions through Layers 1-2; ~5% through Layer 3.",
+      "feel": "Typing feels powerful, not mandatory. The player uses it when the menu doesn't offer what they want to say.",
+      "interpretation": "The NPC's BeliefRegistry + Understanding dimension determine how well they interpret. Low Understanding = misinterpretation. High Understanding = reads subtext.",
+      "failure_mode": "'I don't understand.' — the NPC does not pretend. The player learns to be clearer, or to use the menu."
+    }
+  },
+  "learning_menu": {
+    "description": "Article XXXVII.4. The UI evolves with the character's knowledge and relationship. New branches appear as the character learns. Existing branches expand as relationship deepens.",
+    "evolution_triggers": {
+      "observation": "If the player observes Wang Lin studying restrictions for several days, 'Ask → Restriction Formations' appears as a new branch. The character learned it.",
+      "relationship_threshold": "At Trust < 20: Request → Directions / Advice / Spar / Leave. At Trust >= 50: Request → + Travel Together / Demonstrate Technique / Borrow Item. At Trust >= 80 (sworn): Request → + Teach Technique / Copy Capability / Help Breakthrough / Hold Item.",
+      "witnessed_event": "If the player witnesses Wang Lin use the God Slaying Sword, 'Request → Ask about the strange sword' appears. Later, after learning its name, it becomes 'Ask about the God Slaying Sword.' Eventually 'Request a copy of the God Slaying Sword.'",
+      "cultivation_threshold": "Some options appear only when the player's cultivation reaches a realm where the interaction is survivable (Article XXXVIII withstand gate). 'Teach me Ji Realm' appears at Foundation Establishment, not before."
+    },
+    "evolution_example": {
+      "week_1_wang_lin_menu": {
+        "Observe": "available",
+        "Talk": "available (minimal — Wang Lin says little)",
+        "Ask": ["About this place", "About recent events", "Something else..."],
+        "Offer": "available (Wang Lin accepts neutrally)",
+        "Request": ["Directions", "Something else..."],
+        "Train": "greyed (relationship too low)",
+        "Travel": "greyed",
+        "Leave": "available"
+      },
+      "week_4_after_observing_restrictions": {
+        "Ask": ["About this place", "About cultivation", "About restriction formations (NEW)", "About recent events", "Something else..."]
+      },
+      "week_8_trusted_friend": {
+        "Request": ["Advice", "Spar", "Travel Together (NEW)", "Demonstrate Technique (NEW)", "Borrow Item (NEW)", "Something else..."],
+        "Train": "available (Wang Lin may teach basic)"
+      },
+      "week_20_sworn_brother": {
+        "Request": ["Teach Technique (NEW)", "Copy Capability (NEW)", "Help Breakthrough (NEW)", "Explore Together (NEW)", "Hold Item (NEW)", "Something else..."]
+      }
+    }
+  },
+  "character_knowledge_not_world_state": {
+    "description": "Article XXXVII.5. The UI tracks what the CHARACTER knows, not what the world contains. The player cannot request an item they haven't witnessed. This preserves discovery without hiding the mechanic.",
+    "knowledge_states": {
+      "unknown": "The item/technique/secret does not appear in any menu. The character has never encountered it.",
+      "witnessed_unnamed": "The character has seen it but doesn't know its name. Appears as 'the strange sword' / 'the unusual technique' / 'the hidden cave'.",
+      "named": "The character has learned its name. Appears with the name.",
+      "understood": "The character understands what it does. More interaction options unlock.",
+      "deemed_possible_to_request": "The character believes they could ask for it. The request option appears (gated by NPC reasoning, Article XXXVII.6)."
+    },
+    "example_god_slaying_sword": {
+      "stage_1_unknown": "Does not appear in any menu.",
+      "stage_2_witnessed": "Player sees Wang Lin use a strange sword in combat. Menu updates: Request → Ask about the strange sword (witnessed).",
+      "stage_3_named": "Player learns the name through dialogue or research. Menu updates: Request → Ask about the God Slaying Sword.",
+      "stage_4_understood": "Player learns what it does. Menu may show: Ask about the God Slaying Sword's backlash / history / origin.",
+      "stage_5_requestable": "Player's relationship + cultivation reach the point where Wang Lin's reasoning judges a copy survivable + the player has earned willingness. Menu shows: Request → Request a copy of the God Slaying Sword. (Article XXXVIII three gates all pass.)"
+    }
+  },
+  "npc_reasoning_gates_ui": {
+    "description": "Article XXXVII.6. An interaction option appears in the UI only if the NPC's current reasoning (character_reasoning_pipeline) judges it possible. The UI does not show options that the NPC would refuse outright — it shows options the NPC would at least consider. This prevents the player from wasting time on impossible requests and makes the UI a reflection of the current relationship state.",
+    "gate_evaluation": "When the player opens the verb wheel, the system queries the NPC's reasoning for each candidate interaction. If the NPC's predicted_outcome is 'refuse outright', the option is hidden. If 'redirect' or 'partial_grant' or 'grant', the option is shown.",
+    "example": "'Teach me Ji Realm' is hidden while Wang Lin's reasoning predicts 'refuse — player would die.' When the player reaches Foundation Establishment, Wang Lin's prediction shifts to 'partial_grant — first layer survivable.' The option appears. Nothing changed in the UI code — the world changed."
+  },
+  "read_the_room": {
+    "description": "Article XXXVII.7. Holding right-click for half a second (before the verb wheel opens) shows a perception overlay. No numbers, no gamey stats — just what the character can infer. This tells the player whether this is a good time to ask for something.",
+    "trigger": "hold right-click on NPC for >= 500ms",
+    "fields_shown": {
+      "current_mood": "enum — calm / irritated / focused / worried / amused / angry / melancholy / restless. Inferred from NPC's recent behavior + schedule + recent memories.",
+      "appears_to_be": "string — what the NPC is doing. 'Studying restrictions.' 'Eating.' 'Arguing with Xu Liguo.' 'Staring at the sky.'",
+      "seems_busy": "enum — no / somewhat / yes. Inferred from current activity.",
+      "seems_willing_to_talk": "enum — yes / maybe / no. Inferred from mood + busyness + relationship + recent interactions.",
+      "current_concern": "string|null — what the NPC appears preoccupied with, if the character can infer. 'Watching someone nearby.' 'Worried about the Teng clan.' null if unknown.",
+      "relationship": "string — natural language. 'Wary stranger.' 'Mutual respect.' 'Trusted friend.' 'Sworn brother.' 'Owes you a debt.' 'Holds a grievance against you.' Derived from relationship graph dimensions."
+    },
+    "perception_tier_gating": "Read the Room accuracy depends on the player's perception tier. A mortal sees only surface mood. A Qi Condensation cultivator infers busyness and willingness. A Foundation Establishment cultivator senses current concern. A Nascent Soul cultivator reads the relationship accurately. Article VI applies — reality doesn't change, perception does.",
+    "design_intent": "This is the missing social-perception layer. It lets the player decide whether to engage without trial-and-error. It rewards observation. It makes the world feel inhabited because the NPC has a STATE the player can read before acting."
+  }
+}

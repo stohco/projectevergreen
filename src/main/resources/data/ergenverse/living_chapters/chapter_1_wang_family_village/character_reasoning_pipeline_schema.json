@@ -1,0 +1,118 @@
+{
+  "_comment": "Character reasoning pipeline (Article XXXV). The world does not run on motivations — it runs on people. Wang Lin does not wake up and ask 'which motivation has the highest score?' He asks: 'What do I believe is happening? What kind of person am I? What matters today? What options do I actually have? What do I predict will happen if I act?' This schema defines the 9-stage pipeline that replaces the old motivation→interaction shortcut. Motivation is one ingredient, not the driver. DATA, not Java (Article XXVI). The existing PerceptionEngine, BeliefRegistry, IntentEngine, DecisionEngine read this pipeline.",
+  "_schema": "character_reasoning_pipeline",
+  "_schema_version": 1,
+  "_article": "XXXV",
+  "_supersedes": "The motivation→interaction shortcut implied by motivation_state_schema (Art XXXIII). motivation_state is retained as one INPUT to this pipeline (Stage 6: Opportunities), not as the driver.",
+  "pipeline": [
+    {
+      "stage": 1,
+      "name": "perception",
+      "description": "What does the character perceive right now? (PerceptionEngine output: nearby entities, events, environmental state, threats, resources, weather, time.) Perception is tiered — a mortal sees a spirit herb as a weed; a Qi Condensation cultivator sees it as a resource. Article VI applies.",
+      "inputs": ["PerceptionEngine", "perception_tier (cultivation-based)"],
+      "output": "perceived_world_state: object",
+      "example_wanglin": "Wang Lin perceives: player is nearby, cultivating quietly. Restriction cave exists (known). Family is alive (known). Teng clan activity (heard rumor). Player shows restraint (observed behavior)."
+    },
+    {
+      "stage": 2,
+      "name": "beliefs",
+      "description": "What does the character BELIEVE is happening, based on perception + memory + inference? Beliefs are not facts — they are the character's working model of the world. Beliefs may be wrong. (BeliefRegistry — existing system.) A character with low Understanding of another may hold false beliefs about them.",
+      "inputs": ["perceived_world_state", "memory_ledger", "relationship_graph (especially Understanding dimension)"],
+      "output": "beliefs: list of belief statements with confidence",
+      "example_wanglin": "Wang Lin believes: player is a Qi Condensation cultivator (confidence: high, observed). Player is interested in restrictions (confidence: medium, observed studying). Player is not a threat (confidence: high, shows restraint). Player may be useful ally (confidence: low, insufficient data). Teng clan may raid soon (confidence: medium, rumor + pattern)."
+    },
+    {
+      "stage": 3,
+      "name": "relationships",
+      "description": "What are the character's current relationships with perceived actors? (relationship_graph — Article XXXIV, extended with Understanding.) For each nearby actor, the character recalls Trust, Respect, Fear, Debt, Grievance, Shared History, Known Skills, Known Personality, Understanding, and current Relevance (Article XXXV.2).",
+      "inputs": ["relationship_graph (per target)", "relevance(target) calculation"],
+      "output": "relationship_context: per-actor graph snapshot",
+      "example_wanglin": "Wang Lin's relationship with player: Trust 15, Respect 10, Fear 0, Debt 0, Grievance 0, Shared History 1, Known Skills [], Known Personality [], Understanding 5. Relevance(player) = 3/100 (unknown traveler). Wang Lin's relationship with Situ Nan: Trust 80, Respect 90, Understanding 40 (trusts but doesn't always understand)."
+    },
+    {
+      "stage": 4,
+      "name": "identity",
+      "description": "What kind of person IS this character? Their identity shapes which options they consider. Identity is stable across cycles (it changes slowly, through character growth). It includes: core values, long-term priorities, personality traits, Dao heart state, cultivation goals, loyalties, fears, principles.",
+      "inputs": ["character identity profile (stable data on the NPC)"],
+      "output": "identity_context: who the character is right now",
+      "example_wanglin": "Wang Lin's identity: values family above all, pursues strength for protection not dominance, avoids attention (enemies are powerful), fascinated by restrictions, loyal to those who earn it, ruthless to those who betray, patient, observant, speaks little. Dao heart: stable but tested."
+    },
+    {
+      "stage": 5,
+      "name": "current_circumstances",
+      "description": "What matters TODAY? This filters identity + beliefs into immediate concerns. A character whose family is threatened has different immediate concerns than one in peaceful cultivation. Circumstances are short-term and reactive.",
+      "inputs": ["beliefs", "identity", "world_event_bus (recent events)", "motivation_state (active motivations as one input)"],
+      "output": "immediate_concerns: list of what matters right now, prioritized",
+      "example_wanglin": "Wang Lin's immediate concerns today: (1) restriction cave third layer — still undeciphered, curiosity pulling. (2) family safety — Teng clan rumor, mild worry. (3) player — observing, low priority, no action needed. (4) own cultivation — progressing, no bottleneck."
+    },
+    {
+      "stage": 6,
+      "name": "opportunities",
+      "description": "What options does the character actually have? Given beliefs, relationships, identity, and circumstances, what interactions CAN this character initiate right now? (interaction_catalog filtered by feasibility + relevance.) This is where motivation_state feeds in — active motivations surface as candidate opportunities. But so do identity-driven impulses (curiosity), circumstance-driven necessities (danger), and relationship-driven obligations (favor call-in).",
+      "inputs": ["immediate_concerns", "relationship_context", "interaction_catalog (universal, Article XXXVI)", "motivation_state"],
+      "output": "candidate_interactions: list of possible interactions, each with feasibility + relevance score",
+      "example_wanglin": "Wang Lin's candidate interactions: (a) approach player and invite to restriction cave (interaction: travel_together + request) — feasible, relevance(player)=3 is below threshold, DEFER. (b) ask Situ Nan about restriction (interaction: ask) — Situ Nan mocks, low expected value, DEFER. (c) continue self-study (interaction: study, self-targeted) — feasible, default. (d) observe player quietly (interaction: observe) — feasible, low cost, DO. Wang Lin chooses (d) — observe, update relationship graph, no initiation."
+    },
+    {
+      "stage": 7,
+      "name": "prediction",
+      "description": "For each candidate interaction, what does the character PREDICT will happen if they initiate it? Prediction uses the character's beliefs + relationship graphs + understanding of the target. A character with low Understanding of the target predicts poorly — they may misjudge the response.",
+      "inputs": ["candidate_interactions", "beliefs", "relationship_context (especially Understanding)"],
+      "output": "predicted_outcomes: per-candidate prediction of target response and consequences",
+      "example_wanglin": "Wang Lin predicts: (a) if I invite player to restriction cave — player is unknown, may refuse, may accept, may be useless. Prediction confidence: low (Understanding 5). Expected value: low. (d) if I observe player — no response needed, I gain information. Prediction confidence: high. Expected value: medium (information). Wang Lin chooses (d) — highest expected value given uncertainty."
+    },
+    {
+      "stage": 8,
+      "name": "intent",
+      "description": "What will the character attempt? The character commits to one (or few) interactions based on predicted outcomes. This is the INTENT — not yet the plan. Intent is 'I will observe the player' or 'I will teach the player a restriction fragment' or 'I will warn the player'.",
+      "inputs": ["predicted_outcomes", "identity (principles may override expected value)"],
+      "output": "intent: the chosen interaction(s) to attempt",
+      "example_wanglin": "Wang Lin's intent: observe player (interaction: observe, target: player, mode: silent, no initiation). This commits him to updating his relationship graph with the player as he watches."
+    },
+    {
+      "stage": 9,
+      "name": "plan_and_action",
+      "description": "How will the character execute the intent, and what do they DO? Plan decomposes the intent into steps (IntentDecomposer — existing system). Action executes the first step. For observe: move within perception range, watch, update beliefs + relationship graph. For travel_together: approach player, say 'Come.', begin walking. For teach: determine what to teach, demonstrate or hand over, record memory.",
+      "inputs": ["intent", "IntentDecomposer", "DecisionEngine"],
+      "output": "action: concrete behavior executed this tick",
+      "example_wanglin": "Wang Lin's action: manifest position adjusted to within 30 blocks of player. Observe mode active. PerceptionEngine records player behavior. BeliefRegistry + relationship_graph updated with new observations. No interaction initiated toward player. Wang Lin continues his own cultivation in parallel (the world does not stop because he is observing)."
+    }
+  ],
+  "the_progression_example": {
+    "_comment": "The canonical example from the user: how Wang Lin's relationship with the player evolves from irrelevant to relevant over days, driven by the pipeline — NOT by a motivation score crossing a threshold.",
+    "day_1": {
+      "perception": "Player cultivating quietly nearby.",
+      "beliefs": "Player exists. Unknown. No threat observed.",
+      "relationships": "Relevance(player) = 3/100. Unknown traveler.",
+      "identity": "I am Wang Lin. I observe. I do not engage strangers.",
+      "circumstances": "Restriction cave. Family safe. Nothing urgent.",
+      "opportunities": "Observe player (low cost) vs ignore (default).",
+      "prediction": "Observing yields information. No risk.",
+      "intent": "Observe.",
+      "action": "Watch player from distance. Update graph. Nothing happens."
+    },
+    "day_3": {
+      "perception": "Player studying formations. Has been for days.",
+      "beliefs": "Player is interested in formations. Persistent. Shows restraint.",
+      "relationships": "Relevance(player) = 8/100. Interesting stranger. Known Skills += formation_study. Known Personality += persistent.",
+      "identity": "I am Wang Lin. I respect persistence. I study restrictions.",
+      "circumstances": "Restriction cave still stuck. Player might... no, too early.",
+      "opportunities": "Observe (continue) vs approach (premature, relevance below threshold).",
+      "prediction": "Approaching now would startle. No benefit. Continue observing.",
+      "intent": "Continue observing.",
+      "action": "Watch. Note the formation study. Graph updates."
+    },
+    "day_7": {
+      "perception": "Player solved a formation puzzle cleverly.",
+      "beliefs": "Player has aptitude. Player is careful. Player may survive cultivation.",
+      "relationships": "Relevance(player) = 18/100. Potential. Respect += 5. Understanding += 5 (starting to read them).",
+      "identity": "I am Wang Lin. I recognize potential. I was once a struggling cultivator too.",
+      "circumstances": "Restriction cave. Player's aptitude is relevant to MY problem.",
+      "opportunities": "Observe (default) vs approach + invite to restriction cave (relevance now 18, approaching threshold).",
+      "prediction": "If I invite, player may help. If player helps, cave decoded. If cave decoded, I learn. Risk: player sees my work. Mitigation: player has shown discretion.",
+      "intent": "Approach player. Invite to restriction cave. (travel_together + request)",
+      "action": "Walk toward player. Hold still nearby (consent pipeline stage 6). If acknowledged: 'Come.' Walk toward cave. If ignored: leave, try another day."
+    },
+    "note": "Wang Lin initiated NOT because a motivation score crossed a threshold, but because his MODEL OF THE PLAYER changed. The player's demonstrated persistence, aptitude, and discretion shifted Wang Lin's beliefs, which shifted relevance, which shifted the predicted outcome of approaching, which shifted the intent. This is character-first reasoning, not simulation-first scoring."
+  }
+}

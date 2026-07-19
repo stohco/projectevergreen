@@ -1,0 +1,77 @@
+{
+  "_comment": "Capability Compatibility (Article XXXVIII) — the protagonist's cheat, refined. The cheat is NOT 'copy everything.' It is: the ability to perfectly integrate a copy of a technique or artifact IF (a) the source is willing to transmit, AND (b) the protagonist's cultivation can withstand it, AND (c) the protagonist's soul can integrate it. This makes the cheat powerful but bounded by the world's reality — the protagonist cannot shortcut to godhood. DATA, not Java (Article XXVI).",
+  "_schema": "capability_compatibility",
+  "_schema_version": 1,
+  "_article": "XXXVIII",
+  "the_three_gates": {
+    "gate_1_willingness": {
+      "description": "The source NPC must be willing to transmit the capability. Judged by the source's character reasoning pipeline (Article XXXV) — specifically their beliefs about the requester, their relationship graph, the favor ledger, and their assessment of the requester's judgment and motive.",
+      "inputs": ["source.relationship_graph(requester).trust", "source.relationship_graph(requester).understanding", "source.relationship_graph(requester).known_personality (judgment, restraint)", "favor_ledger (does source owe requester a callable favor?)", "source's assessment of requester's motive (inferred from history)"],
+      "pass_conditions": "trust >= capability.willingness_trust_threshold AND motive judged acceptable AND (no blocking grievance) AND (favor call-in may override low trust if life_saving favor exists)",
+      "fail_response": "Source refuses: 'No.' / 'You wouldn't survive using it.' / 'Not yet.' / silence. The UI option for this capability does not appear (Article XXXVII.6)."
+    },
+    "gate_2_withstand": {
+      "description": "The protagonist's cultivation realm must be sufficient to survive the technique's or artifact's backlash. Each capability has a withstand_threshold — the minimum cultivation realm at which using it does not destroy the user's body or meridians.",
+      "inputs": ["protagonist.cultivation_realm", "capability.withstand_threshold"],
+      "pass_conditions": "protagonist.cultivation_realm >= capability.withstand_threshold",
+      "fail_consequence": "If somehow obtained and used anyway (stolen, force-copied): backlash. Soul damage, meridian destruction, death. The world does not let the protagonist shortcut.",
+      "scale": {
+        "qi_condensation": "can withstand: mortal techniques, basic Qi techniques, minor formations",
+        "foundation_establishment": "can withstand: Foundation-tier techniques, first-layer restrictions, basic alchemy, Ji Realm first layer",
+        "core_formation": "can withstand: Core-tier techniques, mid-layer restrictions, Ji Realm full, minor soul techniques",
+        "nascent_soul": "can withstand: Nascent-tier techniques, God Slaying Sword (survivable), soul manipulation, major formations",
+        "soul_formation": "can withstand: Soul-tier techniques, Third Step fragments",
+        "soul_transformation_plus": "can withstand: high-tier techniques, ancient inheritances"
+      }
+    },
+    "gate_3_integrate": {
+      "description": "The protagonist's soul must be able to HOLD the capability. This is cultivation-tier-gated per capability, independent of withstand. A First Step soul cannot hold a Third Step technique, even if willing and even if the body survives. The soul's capacity grows with cultivation.",
+      "inputs": ["protagonist.soul_tier", "capability.integrate_threshold"],
+      "pass_conditions": "protagonist.soul_tier >= capability.integrate_threshold",
+      "fail_consequence": "The capability cannot be integrated. The copy attempt fails: the jade slip is blank, the technique fades, the artifact rejects the soul. No harm (unlike withstand failure) — just failure to take hold.",
+      "special_case_heaven_defying_bead": "The Heaven Defying Bead (Wang Lin's cheat in canon) allows the protagonist to integrate capabilities slightly above their soul tier, at a cost. This is the in-fiction reason the protagonist can grow faster than normal — but it is bounded and costly, not unlimited."
+    }
+  },
+  "evaluation_flow": {
+    "description": "When the player attempts to copy a capability (via the Request → Copy Capability interaction, Article XXXVI), the system evaluates all three gates in order. Willingness first (if the source won't transmit, the other gates are moot). Then Withstand (survival). Then Integrate (retention).",
+    "order": ["willingness", "withstand", "integrate"],
+    "all_must_pass": true,
+    "partial_pass_handling": "If willingness passes but withstand fails: source may say 'I would teach you, but it would kill you. Cultivate more.' (redirect). If willingness + withstand pass but integrate fails: source may say 'Your soul cannot hold it yet. Come back when you have broken through.' (defer)."
+  },
+  "capability_registry_example": {
+    "ji_realm": {
+      "willingness_trust_threshold": 50,
+      "withstand_threshold": "foundation_establishment (first layer) / core_formation (full)",
+      "integrate_threshold": "foundation_establishment (first layer) / core_formation (full)",
+      "canonical_source": "npc_wang_lin",
+      "notes": "Wang Lin's signature technique. He is willing to teach the first layer to a trusted friend who has done him a major favor. Full Ji Realm requires Core Formation and a life-saving favor or sworn brotherhood."
+    },
+    "god_slaying_sword": {
+      "willingness_trust_threshold": 80,
+      "withstand_threshold": "nascent_soul",
+      "integrate_threshold": "nascent_soul",
+      "canonical_source": "npc_wang_lin",
+      "notes": "Extremely dangerous. Wang Lin will refuse unless the requester is at Nascent Soul, has deep trust, has demonstrated judgment, and is not ambitious-in-a-dangerous-way. Even then, he may defer: 'If you still want it after Mosquito Valley...'"
+    },
+    "soul_banner_fragment": {
+      "willingness_trust_threshold": 40,
+      "withstand_threshold": "core_formation",
+      "integrate_threshold": "core_formation",
+      "canonical_source": "npc_wang_lin (or Soul Refining Sect NPCs)",
+      "notes": "A soul-manipulation tool. Lower willingness threshold than Ji Realm (it's less personal to Wang Lin) but requires Core Formation to survive soul backlash."
+    },
+    "basic_restriction_fragment": {
+      "willingness_trust_threshold": 30,
+      "withstand_threshold": "qi_condensation",
+      "integrate_threshold": "qi_condensation",
+      "canonical_source": "npc_wang_lin",
+      "notes": "Wang Lin shares this freely with anyone who has shown interest in restrictions and basic trust. The 'gateway' capability — once the player has this, deeper restriction study unlocks."
+    }
+  },
+  "why_this_is_elegant": {
+    "bounded_power": "The cheat is powerful (perfect integration, no practice needed once copied) but bounded (must earn willingness, must survive, must hold). The protagonist cannot shortcut to godhood — they must cultivate to the tier where each capability becomes compatible.",
+    "canon_fidelity": "Wang Lin in the novel grows into his copied abilities over thousands of chapters, not instantly. He copies what he can survive, defers what he cannot, and sometimes obtains things too early and suffers the backlash. This schema models that.",
+    "earned_not_granted": "The player watches the UI option appear only when all three gates pass, and knows the world judged them ready. This is the opposite of a skill tree where you spend points. The world is the skill tree.",
+    "narrative_driver": "The gates create narrative stakes. The player wants a capability they cannot yet withstand — that becomes a motivation to cultivate. The source is unwilling — that becomes a motivation to build the relationship or earn the favor. The cheat drives the player deeper into the world, not away from it."
+  }
+}

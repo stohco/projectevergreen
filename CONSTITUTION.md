@@ -736,6 +736,232 @@ lining up" problem, solved by the same reasoning engine that
 governs every other NPC decision. The player is never mobbed.
 
 ═══════════════════════════════════════════════════════════════
+THE CHARACTER-FIRST & UNIVERSAL INTERACTION AMENDMENTS
+(Articles XXXV–XXXVIII)
+Added when the project recognized that even motivation-driven
+simulation is still simulation-first. The world should not run
+on motivations. It should run on people. Wang Lin should not
+wake up and ask "which motivation has the highest score?" He
+should ask "What do I believe is happening? What kind of person
+am I? What matters today? What options do I actually have?"
+And the common language through which every entity — player,
+NPC, beast, artifact, sect, location — engages the world is a
+single universal object: the Interaction.
+═══════════════════════════════════════════════════════════════
+
+Article XXXV — Character-First, Not Simulation-First
+The world does not run on motivations. The world runs on people.
+Motivation is one ingredient in a character's reasoning, not
+the driver of it. The old pipeline (Motivation → Interaction)
+is superseded.
+
+The character reasoning pipeline is:
+  Perception → Beliefs → Relationships → Identity →
+  Current Circumstances → Opportunities → Prediction →
+  Intent → Plan → Action
+
+§ XXXV.1 — What A Character Asks Each Cycle
+Every character, each reasoning cycle, asks:
+  - What do I believe is happening? (Perception → Beliefs)
+  - What kind of person am I? (Identity)
+  - What matters today? (Identity + Circumstances)
+  - What options do I actually have? (Opportunities)
+  - What do I predict will happen if I act? (Prediction)
+  - What will I attempt? (Intent → Plan → Action)
+
+Motivation is one input to Intent — alongside beliefs,
+relationships, identity, circumstances, and prediction.
+It does not disappear, but it is no longer the apex.
+
+§ XXXV.2 — Relevance Is Universal, Not Player-Special
+The old `player_relevance` field (Article XXXIII) special-cased
+the player. That is forbidden. Relevance is calculated for EVERY
+actor a character can perceive, using the same system:
+  relevance(target) = f(perceived_threat, perceived_opportunity,
+                       shared_history, current_goals_alignment,
+                       power_differential, recent_interactions)
+
+Wang Lin calculates relevance for Li Muwan, Situ Nan, Teng
+Huayuan, a random disciple, and the player using the same
+function. The player is a variable, not a special case. This
+makes the system extensible to the entire Er Gen multiverse
+without per-player code paths.
+
+§ XXXV.3 — Understanding Is A Relationship Dimension
+The relationship graph (Article XXXIV) is extended with a new
+dimension: Understanding (0-100). This is NOT Respect — you can
+respect someone you do not understand, and understand someone
+you do not respect.
+  - Wang Lin trusts Situ Nan but does not always understand him.
+  - Li Muwan understands Wang Lin extremely well.
+  - Xu Liguo misunderstands everyone constantly.
+Understanding shapes dialogue: low understanding means the NPC
+misinterprets the player's intent, responds to what they THOUGHT
+was said, and may agree to the wrong thing or refuse the right
+one. High understanding means the NPC reads subtext and responds
+to what the player meant, not just what they said.
+
+Article XXXVI — The Universal Interaction
+There is one universal object through which every entity in the
+game engages every other entity: the INTERACTION. Every NPC,
+item, beast, plant, technique, formation, location, artifact,
+and sect exposes a set of interactions. The player, NPCs, beasts,
+and even the world itself initiate interactions. The affordance
+system (Article XXVIII) and the social engines (Article XXXI.1)
+are now unified under this single object.
+
+§ XXXVI.1 — What Is An Interaction
+An interaction is a bidirectional engagement between two entities
+(initiator and target) with: a verb, an intent, a context, a
+negotiation, and an outcome. It is not a quest, not a dialogue
+option, not a transaction. It is the atomic unit of all
+engagement in the world.
+
+§ XXXVI.2 — The Interaction Catalog
+Every entity exposes interactions from a shared catalog. The
+catalog includes but is not limited to:
+  Ask, Teach, Trade, Threaten, Observe, Challenge, Gift, Borrow,
+  Copy, Cultivate Together, Explore Together, Travel Together,
+  Spar, Escort, Protect, Hire, Recruit, Investigate, Confess,
+  Lie, Deceive, Negotiate, Call Debt, Repay Debt, Warn, Reveal
+  Secret, Share Memory, Study Together, Meditate Together,
+  Request, Offer, Demonstrate, Follow, Block, Approach, Leave.
+
+Two entities are mechanically unique when they expose different
+interaction sets (Article XXVIII, extended). The UI discovers
+these. The AI uses these as its language for engaging the world.
+
+§ XXXVI.3 — Conversations Are Negotiations
+When the player initiates an interaction (e.g., "Teach me
+restrictions"), the NPC does not simply grant or refuse. The NPC
+reasons as a planner: pros, cons, alternatives, risk. Then the
+NPC responds as a negotiator:
+  - "Not yet. Learn formations first." (redirect, not refusal)
+  - "I can. But not until you reach Foundation Establishment." (conditional)
+  - "...Very well. But only the first layer." (partial grant)
+  - "No. You would die." (refusal with reason)
+  - "If you still want it after Mosquito Valley..." (defer + challenge)
+The NPC is trying to satisfy their own goals while engaging the
+player's request. This is how Wang Lin actually converses.
+
+§ XXXVI.4 — Interactions Are The AI's Language
+NPCs do not have a separate system for "what to do with the
+player." They use interactions to engage everything: Wang Lin
+asks Li Muwan for herbs (interaction: Request), a sect elder
+challenges a disciple (interaction: Challenge), a beast stalks
+a spirit rabbit (interaction: Hunt — a beast-specific interaction).
+The same object, the same reasoning, every direction. This is
+what makes the world feel inhabited rather than simulated.
+
+Article XXXVII — The Conversation UI (Three Layers + Learning)
+The conversation UI must solve the hardest design problem in the
+project: the player does not know what they don't know. Showing
+every possible interaction spoils discovery. Making everything
+free-form typing leaves 99% of players lost. The answer is
+neither — it is three layers, with a UI that learns.
+
+§ XXXVII.1 — Layer 1: Obvious Actions
+When the player right-clicks an NPC, a small clean verb wheel
+appears: Observe, Talk, Ask, Offer, Request, Train, Travel,
+Leave. That is all. No spoilers. "Teach me Ji Realm" and "Copy
+God Slaying Sword" do NOT appear, because the character does not
+yet know those are possibilities. The wheel is small enough to
+read in a glance and clean enough to feel like talking to a
+person, not browsing a database.
+
+§ XXXVII.2 — Layer 2: Context Expansion
+Clicking a Layer 1 verb drills down. "Ask" expands to: About
+this place / About cultivation / About recent events / About
+himself / Something else... The submenu is PER-NPC — asking
+Wang Lin about cultivation yields (Beginner advice / Current
+bottleneck / Recommended techniques / Breakthroughs) while
+asking Li Muwan yields (Herbs / Pills / Poison / Healing).
+Same UI, different affordances, discovered from data.
+
+§ XXXVII.3 — Layer 3: Natural Language
+Every submenu ends with "Something else..." which opens a free
+text input: "What do you want to ask?" The player may type
+"Can you teach me restrictions?" or "Can I borrow your mosquito
+swarm?" or "Would you come with me?" The NPC's reasoning
+interprets the intent. If the NPC cannot understand, they say
+"I don't understand." — exactly like talking to a real person.
+~95% of interactions happen through Layers 1-2; ~5% through
+Layer 3. Typing feels powerful, not mandatory.
+
+§ XXXVII.4 — The Menu Learns
+The UI evolves with the character's knowledge and relationship.
+Before observing Wang Lin study restrictions: "Ask → Cultivation
+/ Recent Events / Himself." After weeks of observation: "Ask →
+Cultivation / Restriction Formations / Recent Events / Himself."
+A new branch appeared because the character learned. Before
+becoming friends: "Request → Directions / Advice / Spar / Leave."
+After becoming sworn brothers: "Request → Teach Technique / Copy
+Capability / Help Breakthrough / Explore Together / Hold Item /
+Leave." The UI is a reflection of the character's place in the
+world, not a static list.
+
+§ XXXVII.5 — The UI Reflects Character Knowledge, Not World State
+The player cannot request "God Slaying Sword" until they have
+witnessed it. First they see "a strange sword" (Request → Ask
+about the strange sword). Later, after learning its name:
+"Request → Ask about the God Slaying Sword." Eventually, after
+becoming close: "Request → Request a copy of the God Slaying
+Sword." The UI tracks what the CHARACTER knows, not what the
+world contains. This preserves discovery without hiding the
+mechanic.
+
+§ XXXVII.6 — NPC Reasoning Gates UI Options
+An interaction option appears only if the NPC's current
+reasoning judges it possible. "Teach me Ji Realm" does NOT
+appear while Wang Lin has decided the player would die. When
+the player reaches Core Formation, Wang Lin re-evaluates, and
+the option appears. Nothing changed in the UI — the world
+changed. This is the protagonist's growth made visible through
+the interface.
+
+§ XXXVII.7 — Read The Room
+Holding right-click for half a second (before the verb wheel
+opens) shows a perception overlay: Current mood, Appears to be
+[doing], Seems busy, Seems willing to talk, Current concern,
+Relationship (in natural language: "Mutual respect", "Trusted
+friend", "Wary stranger"). No numbers. No gamey stats. Just
+what the character can infer. This tells the player whether
+this is a good time to ask for something — and whether the
+NPC is even receptive. It is the missing social-perception
+layer that makes the world feel inhabited.
+
+Article XXXVIII — Capability Compatibility (The Protagonist Cheat)
+The protagonist's cheat is not "copy everything." It is
+Capability Compatibility: the ability to perfectly integrate
+a copy of a technique or artifact IF (a) the source is willing
+to transmit, AND (b) the protagonist's cultivation can withstand
+it, AND (c) the protagonist's soul can integrate it.
+
+§ XXXVIII.1 — The Three Gates
+Every capability-copy attempt passes three gates:
+  1. WILLINGNESS — the source NPC must be willing (judged by
+     their reasoning: relationship, understanding, motive,
+     favor ledger, judgment of the requester's readiness).
+  2. WITHSTAND — the protagonist's cultivation realm must be
+     sufficient to survive the technique's backlash. The God
+     Slaying Sword at Qi Condensation = soul destruction.
+     At Nascent Soul = survivable.
+  3. INTEGRATE — the protagonist's soul must be able to hold
+     the capability. This is cultivation-tier-gated per
+     capability. A First Step soul cannot hold a Third Step
+     technique, even if willing and even if the body survives.
+
+§ XXXVIII.2 — Why This Is Elegant
+The cheat is powerful but bounded by the world's reality. The
+protagonist cannot shortcut to godhood — they must cultivate
+to the tier where each capability becomes compatible. This
+matches canon (Wang Lin grows into his copied abilities over
+thousands of chapters, not instantly). It also makes the
+cheat feel earned rather than granted: the player watches the
+UI option appear only when all three gates pass, and knows
+the world judged them ready.
+
+═══════════════════════════════════════════════════════════════
 CLOSING
 ═══════════════════════════════════════════════════════════════
 
@@ -750,6 +976,17 @@ Article XXXIII replaces "desire" with the richer "motivation" —
 Article XXXIV makes relationships graphs, not numbers —
    because trust, respect, fear, debt, and grievance are not
    the same axis.
+Article XXXV makes the world character-first, not simulation-first —
+   because the world runs on people, not on motivations.
+Article XXXVI unifies all engagement under the universal Interaction —
+   because NPCs, beasts, artifacts, and locations all speak the same
+   language of verbs.
+Article XXXVII makes the conversation UI learn with the character —
+   because the player discovers possibilities by living, not by
+   reading a wiki.
+Article XXXVIII bounds the protagonist's cheat by Capability
+   Compatibility — willingness, withstand, integrate — because
+   growth must be earned, not shortcut.
 The Final Questions guard against drift.
 The Gold-Standard Template sets the bar for every location.
 The Memory Metric sets the bar for every Living Chapter.
@@ -763,3 +1000,7 @@ When in doubt: every interaction must have a reason —
                the player is relevant only when earned.
 When in doubt: the conversation is the world —
                never freeze it, never menu it, never script it.
+When in doubt: the world runs on people, not on motivations —
+               ask what the character believes, not what the system scores.
+When in doubt: one universal Interaction object —
+               every entity speaks the same language of verbs.

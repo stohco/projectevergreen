@@ -1,9 +1,10 @@
 {
   "_schema": "motivation_state",
-  "_schema_version": 1,
-  "_article": "XXXIII",
+  "_schema_version": 2,
+  "_article": "XXXIII (superseded as primary driver by Article XXXV — motivation is now one INPUT to the character reasoning pipeline, not the apex)",
   "_supersedes": "desire_state_schema.json (Article XXXI.1, AUTO-CANON-051)",
-  "_description": "Per-cycle MOTIVATION STATE for an NPC. Replaces the narrower 'desire_state' (AUTO-CANON-051). Per Article XXXIII: 'desire' was too narrow a word. Wang Lin does not chase desires — he responds to necessity, protects what matters, honors debts, pursues long-term goals, and occasionally acts out of compassion or vengeance. This schema draws from a richer vocabulary of DRIVING FORCES: ambitions, fears, duties, debts, promises, grudges, curiosity, love, loyalty, survival, greed, vengeance, sect orders, cultivation bottlenecks, opportunities. The ten social engines (Art XXXI.1) remain the expression layer — what feeds them is this motivation state. DATA, not Java (Article XXVI).",
+  "_status_note": "AUTO-CANON-053: The player_relevance field is replaced by universal relevance(target) (Article XXXV.2). Motivation is no longer the apex of NPC reasoning — it is one input to the character_reasoning_pipeline (Perception→Beliefs→Relationships→Identity→Circumstances→Opportunities→Prediction→Intent→Plan→Action). motivation_state feeds Stage 5 (Circumstances) and Stage 6 (Opportunities).",
+  "_description": "Per-cycle MOTIVATION STATE for an NPC. Replaces the narrower 'desire_state' (AUTO-CANON-051). Per Article XXXIII: 'desire' was too narrow a word. Wang Lin does not chase desires — he responds to necessity, protects what matters, honors debts, pursues long-term goals, and occasionally acts out of compassion or vengeance. This schema draws from a richer vocabulary of DRIVING FORCES: ambitions, fears, duties, debts, promises, grudges, curiosity, love, loyalty, survival, greed, vengeance, sect orders, cultivation bottlenecks, opportunities. NOTE (AUTO-CANON-053, Article XXXV): motivation is now one ingredient in the character reasoning pipeline, not the driver. The ten social engines (Art XXXI.1) and the universal Interaction (Art XXXVI) are the expression layer. DATA, not Java (Article XXVI).",
   "_design_notes": {
     "driving_forces_vocabulary": "Every motivation is tagged with one or more driving_forces. This is the key difference from the old desire_state: a motivation is not just 'I want X' but 'I am driven by FEAR for my family to acquire X' or 'I am driven by DUTY to my sect to report Y' or 'I am driven by a GRUDGE against the Teng family to undermine Z'. The force type changes how the NPC pursues the motivation and how they frame it when they initiate.",
     "player_relevance_model": "CRITICAL (Article XXXIII.2). Every motivation has a player_relevance block. By default, player_relevant=false. The NPC's motivation exists and may drive NPC-to-NPC interaction, but the player is NOT targeted. The player becomes relevant only when: (a) the player has demonstrated a relevant skill, (b) the player owes or is owed a debt, (c) the player holds a grievance or is the target of one, (d) the player is physically the nearest capable being AND no NPC can fulfill. This is why Wang Lin does not talk to the player for the first 40 hours — the player has not become relevant to his motivations.",
@@ -23,10 +24,17 @@
         "statement": "string — the motivation in the NPC's internal voice. e.g. 'The restriction in the cave above the village is incomplete. I cannot decipher the third layer alone. Who can help?'",
         "target_type": "enum — npc | player | world | anyone | none",
         "target_filter": "string|null — npc_id, faction, role, or null. null = unresolved (NPC is still reasoning about who to target).",
-        "player_relevance": {
-          "relevant": "bool — is the player a candidate target for this motivation?",
-          "relevance_reason": "string|null — WHY the player is or isn't relevant. e.g. 'player has demonstrated restriction skill (memory_tag: player_studied_restriction_3d)' or null if not relevant.",
-          "becomes_relevant_when": ["string — conditions that would make the player relevant. e.g. 'player.knowledge.restriction >= 2', 'player.relationship.wang_lin.trust >= 40', 'player.owes_wang_lin_favor'"]
+        "relevance_to_targets": {
+          "_note": "AUTO-CANON-053 (Article XXXV.2): replaces the old player_relevance block. Relevance is now calculated UNIVERSALLY for every candidate target (player, other NPCs, factions) using the same function. The player is NOT special-cased.",
+          "per_target": [
+            {
+              "target_id": "string — entity id (player, npc_id, faction_id)",
+              "relevance_score": "int 0-100 — current relevance of this target to this motivation",
+              "relevance_reason": "string — WHY this target is or isn't relevant. e.g. 'player has demonstrated restriction skill (memory_tag: player_studied_restriction_3d)' or 'npc_li_muwan knows herbs but not restrictions'",
+              "becomes_relevant_when": ["string — conditions that would raise this target's relevance. e.g. 'target.knowledge.restriction >= 2', 'relationship.trust >= 40', 'target.owes_npc_favor'"]
+            }
+          ],
+          "highest_relevance_target": "string|null — the target with the highest current relevance. null if no target exceeds the initiation threshold. The NPC's reasoning pipeline (Article XXXV) uses this to decide who to approach."
         },
         "priority": "int 1-10 — 1=whim, 5=normal, 10=life-or-death",
         "urgency": "enum — low | medium | high | critical",
