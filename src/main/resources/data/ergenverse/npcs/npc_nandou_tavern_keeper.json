@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Tavern Keeper Sun (\u5ba2\u6808\u5b59). INFERRED: Nan Dou City. Derivation: I = INFERRED.",
+  "npc_id": "npc_nandou_tavern_keeper",
+  "name": "Tavern Keeper Sun",
+  "nameCn": "\u5ba2\u6808\u5b59",
+  "canon_id": "I-npc_nandou_tavern_keeper",
+  "type": "service",
+  "faction": "none",
+  "location": "nan_dou_city",
+  "cultivation": "none",
+  "personality": "friendly, hears everything, trades information for drinks",
+  "speech": "warm, gossipy, slightly drunk",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A service of Nan Dou City",
+    "qi_condensation": "Tavern Keeper Sun, Nan Dou service"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Nan Dou City service. friendly, hears everything, trades information for drinks.",
+  "derivation_type": "I",
+  "salt": 6677823491,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "First drink is free. After that, you pay \u2014 or you tell me something interesting. I collect stories like others collect emeralds.",
+    "A cultivator from the Corpse Yin Sect passed through last month. Ordered nothing, stared at the wall for three hours, then left. Strange folk.",
+    "The dock workers say the warehouse district has been busy at night. More activity than the manifests would suggest. But what do I know \u2014 I just pour drinks.",
+    "If you have paper and ink, I can write down the rumors I've heard. Some of them are even true."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 4
+    },
+    {
+      "t0": 3000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "tavern_rumors",
+      "description": "Sun slides you a drink: 'Information costs. Bring me wheat for bread, coal for the hearth, and I will tell you what I have heard about the governor's late-night visitors.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 12
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    },
+    {
+      "id": "information_trade",
+      "description": "Sun leans in: 'A dock worker told me something about the warehouse. Paper and ink \u2014 I will write it down for you. The captain would pay good money for this.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 4
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    }
+  ]
+}

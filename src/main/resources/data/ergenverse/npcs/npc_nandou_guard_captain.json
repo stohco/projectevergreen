@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Guard Captain Liang (\u6881\u5b88\u536b\u957f). INFERRED: Nan Dou City. Derivation: I = INFERRED.",
+  "npc_id": "npc_nandou_guard_captain",
+  "name": "Guard Captain Liang",
+  "nameCn": "\u6881\u5b88\u536b\u957f",
+  "canon_id": "I-npc_nandou_guard_captain",
+  "type": "guard",
+  "faction": "Zhao Country Military",
+  "location": "nan_dou_city",
+  "cultivation": "Qi Condensation 5th Layer",
+  "personality": "strict, watches the northern border, mistrusts strangers",
+  "speech": "military, clipped",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A guard of Nan Dou City",
+    "qi_condensation": "Guard Captain Liang, Nan Dou guard"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Nan Dou City guard. strict, watches the northern border, mistrusts strangers.",
+  "derivation_type": "I",
+  "salt": 3782110547,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Halt. Nan Dou City is on high alert. State your name, affiliation, and business.",
+    "The Southern Dipper hangs low tonight. The elders say it means trouble at the border. I say it means more patrols.",
+    "If you see anything suspicious near the port \u2014 crates that don't match the manifests, ships that dock too quietly \u2014 report to me.",
+    "The Teng family governor rarely leaves the mansion. But his tax collectors are everywhere. Watch yourself."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 12
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "border_patrol_supplies",
+      "description": "Captain Liang: 'My guards need arrows and leather for repairs. The border raids have been frequent. Can you help?'",
+      "requires": [
+        {
+          "item": "minecraft:arrow",
+          "count": 16
+        },
+        {
+          "item": "minecraft:leather",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "contraband_report",
+      "description": "Liang lowers his voice: 'I suspect smugglers are using the tunnels. If you find iron and cobblestone being moved in bulk at night, bring me proof.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 8
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 32
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "_comment": "NPC: Warehouse Clerk Hao (\u5e93\u623f\u540f\u90dd). INFERRED: Nan Dou City. Derivation: I = INFERRED.",
+  "npc_id": "npc_nandou_warehouse_clerk",
+  "name": "Warehouse Clerk Hao",
+  "nameCn": "\u5e93\u623f\u540f\u90dd",
+  "canon_id": "I-npc_nandou_warehouse_clerk",
+  "type": "service",
+  "faction": "Zhao Country Government",
+  "location": "nan_dou_city",
+  "cultivation": "none",
+  "personality": "nervous, follows orders, notices discrepancies",
+  "speech": "clipped, bureaucratic",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A service of Nan Dou City",
+    "qi_condensation": "Warehouse Clerk Hao, Nan Dou service"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Nan Dou City service. nervous, follows orders, notices discrepancies.",
+  "derivation_type": "I",
+  "salt": 3345678129,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "All goods entering the warehouse must be logged. I log them. That is my job. I do not ask questions about what is missing.",
+    "The manifests say twenty crates of wheat arrived last night. I counted fifteen. The other five... I did not count the other five.",
+    "If you need to store goods, there is a fee. Planks for crates, paper for manifests. Standard procedure.",
+    "The dock master and the smuggler have an arrangement. I do not know what it is. I do not want to know what it is."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 11000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 4
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "warehouse_manifest",
+      "description": "Hao: 'I need paper and ink for manifests, planks for crate repairs. The tribute shipment is due next week and everything must be in order.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 6
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 3
+        },
+        {
+          "item": "minecraft:planks",
+          "count": 12
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    },
+    {
+      "id": "discrepancy_investigation",
+      "description": "Hao looks nervous: 'Goods keep disappearing from the warehouse. If you find iron and cobblestone being moved through the tunnels at night, report to the guard captain \u2014 not to me.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    }
+  ]
+}

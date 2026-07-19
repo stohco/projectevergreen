@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Astrologer Chen (\u661f\u8c61\u5e08\u9648). INFERRED: Nan Dou City. Derivation: I = INFERRED.",
+  "npc_id": "npc_nandou_temple_astrologer",
+  "name": "Astrologer Chen",
+  "nameCn": "\u661f\u8c61\u5e08\u9648",
+  "canon_id": "I-npc_nandou_temple_astrologer",
+  "type": "cultivator",
+  "faction": "Zhao Country Temple",
+  "location": "nan_dou_city",
+  "cultivation": "Qi Condensation 8th Layer",
+  "personality": "scholarly, obsessed with stars, mildly eccentric",
+  "speech": "measured, references constellations",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator of Nan Dou City",
+    "qi_condensation": "Astrologer Chen, Nan Dou cultivator"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Nan Dou City cultivator. scholarly, obsessed with stars, mildly eccentric.",
+  "derivation_type": "I",
+  "salt": 2293847561,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The Southern Dipper governs fate. Nan Dou City was built beneath its light. You stand in a city that reads the sky.",
+    "Unlike those fortune-tellers in Tian Shui City who read palms, we read the stars. The difference? Stars do not lie. Palms do.",
+    "I need paper and ink for my star charts. If you bring me materials, I will share what the heavens reveal about your path.",
+    "Last month the Dipper shifted. I reported it to the governor. He laughed. The old fool does not understand that stars are more powerful than armies."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 4000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 11000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "star_chart_materials",
+      "description": "Astrologer Chen: 'I require paper and ink to chart the Dipper's movement. The heavens wait for no one \u2014 bring me supplies and I shall read your fortune.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 8
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 2
+    },
+    {
+      "id": "temple_incense",
+      "description": "Chen: 'The temple incense is running low. Coal for the braziers, planks for the offering tables. The Southern Dipper must be honored.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 12
+        },
+        {
+          "item": "minecraft:planks",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    }
+  ]
+}

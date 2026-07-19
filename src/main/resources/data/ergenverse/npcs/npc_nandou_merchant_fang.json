@@ -1,0 +1,130 @@
+{
+  "_comment": "NPC: Merchant Fang (\u5546\u8d29\u65b9). INFERRED: Nan Dou City. Derivation: I = INFERRED.",
+  "npc_id": "npc_nandou_merchant_fang",
+  "name": "Merchant Fang",
+  "nameCn": "\u5546\u8d29\u65b9",
+  "canon_id": "I-npc_nandou_merchant_fang",
+  "type": "merchant",
+  "faction": "none",
+  "location": "nan_dou_city",
+  "cultivation": "none",
+  "personality": "chatty, knows trade routes, complains about taxes",
+  "speech": "salesman-like, gossipy",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A merchant of Nan Dou City",
+    "qi_condensation": "Merchant Fang, Nan Dou merchant"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Nan Dou City merchant. chatty, knows trade routes, complains about taxes.",
+  "derivation_type": "I",
+  "salt": 5519283746,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Welcome to Nan Dou! Finest goods north of the capital. Iron from the mountains, wheat from the plains, fish from the port.",
+    "Trade has been slow since the Teng family increased tariffs. I used to ship goods to Tian Shui City \u2014 now the diviners there can't afford my paper.",
+    "If you're heading south, be careful on the road. Bandits have been targeting cultivators near the Wang Family Village border.",
+    "The portmaster and I have an arrangement \u2014 I sell what arrives, he looks the other way on certain crates. Perfectly legal, of course."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 5
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "trade_resupply",
+      "description": "Fang: 'I need supplies for my next caravan. Wheat, coal, and iron \u2014 the three pillars of commerce. Bring them and I will pay well!'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    },
+    {
+      "id": "caravan_paper_trade",
+      "description": "Fang whispers: 'The temple needs paper and ink for their star charts. I buy low, they pay high. Bring me raw materials.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 8
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}

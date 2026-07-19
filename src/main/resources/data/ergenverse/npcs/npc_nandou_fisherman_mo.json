@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Fisherman Mo (\u6e14\u592b\u83ab). INFERRED: Nan Dou City. Derivation: I = INFERRED.",
+  "npc_id": "npc_nandou_fisherman_mo",
+  "name": "Fisherman Mo",
+  "nameCn": "\u6e14\u592b\u83ab",
+  "canon_id": "I-npc_nandou_fisherman_mo",
+  "type": "mortal",
+  "faction": "none",
+  "location": "nan_dou_city",
+  "cultivation": "none",
+  "personality": "quiet, observant, knows the waterways",
+  "speech": "simple, direct, occasionally insightful",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A mortal of Nan Dou City",
+    "qi_condensation": "Fisherman Mo, Nan Dou mortal"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Nan Dou City mortal. quiet, observant, knows the waterways.",
+  "derivation_type": "I",
+  "salt": 1192345678,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The river tells you things if you listen. Last night it carried the sound of hammering from beneath the warehouse. Tunnels, maybe.",
+    "I fish at dawn and dusk. The stars are clearest then. The temple astrologer says the Southern Dipper is my patron. I say it just means I wake up early.",
+    "Coal for my cooking fire, planks for my boat repairs. If you have spare materials, I will trade fish \u2014 or information about what floats downriver.",
+    "A body washed up last month. A cultivator, from the look of the robes. The guard captain said it was a river accident. I am not so sure."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 9000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 6
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "fishing_supplies",
+      "description": "Mo: 'I need coal for my fire and planks for my boat. The river fish are biting well \u2014 I can pay in emeralds from my catch.'",
+      "requires": [
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        },
+        {
+          "item": "minecraft:planks",
+          "count": 12
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "river_intelligence",
+      "description": "Mo looks at the water: 'I see things on the river at night. Lights under the warehouse. Boats that carry no fishing nets. Bring me sticks and coal for a signal fire and I will tell you the schedule.'",
+      "requires": [
+        {
+          "item": "minecraft:stick",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ]
+}

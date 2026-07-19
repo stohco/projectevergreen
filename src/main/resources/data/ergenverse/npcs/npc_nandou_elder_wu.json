@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Elder Wu (\u5434\u957f\u8005). INFERRED: Nan Dou City. Derivation: I = INFERRED.",
+  "npc_id": "npc_nandou_elder_wu",
+  "name": "Elder Wu",
+  "nameCn": "\u5434\u957f\u8005",
+  "canon_id": "I-npc_nandou_elder_wu",
+  "type": "mortal",
+  "faction": "none",
+  "location": "nan_dou_city",
+  "cultivation": "none",
+  "personality": "kind, remembers old times, gives context about the city",
+  "speech": "slow, nostalgic, wise",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A mortal of Nan Dou City",
+    "qi_condensation": "Elder Wu, Nan Dou mortal"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Nan Dou City mortal. kind, remembers old times, gives context about the city.",
+  "derivation_type": "I",
+  "salt": 7712345890,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "I have lived in Nan Dou for sixty years. Before the Teng family, before the Zhao Country governor. This city was built by star-worshippers.",
+    "The temple used to be the heart of the city. Now the governor's mansion is. That tells you everything about what this place has become.",
+    "If you are hungry, take this bread. Cultivators, mortals \u2014 hunger does not care about realm. I remember when Wang Lin's grandfather traded in this very market.",
+    "The mortal quarter used to stretch twice as far. The governor expanded the warehouse district. Storage for tribute, they said. Storage for greed, I say."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 4
+    },
+    {
+      "t0": 4000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 6
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 5
+    },
+    {
+      "t0": 11000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "elder_humanitarian",
+      "description": "Elder Wu: 'The mortal quarter is struggling. Bread and wheat would help the families here. I cannot pay much, but I can share what I know about this city's history.'",
+      "requires": [
+        {
+          "item": "minecraft:bread",
+          "count": 8
+        },
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "temple_glass",
+      "description": "Wu: 'The temple's star-gazing instruments need glass. If you bring glass bottles, I will tell you a secret about the smuggler tunnels that even the guard captain does not know.'",
+      "requires": [
+        {
+          "item": "minecraft:glass_bottle",
+          "count": 6
+        },
+        {
+          "item": "minecraft:planks",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    }
+  ]
+}

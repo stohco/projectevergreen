@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Smuggler Qin (\u8d70\u79c1\u8005\u79e6). INFERRED: Nan Dou City. Derivation: I = INFERRED.",
+  "npc_id": "npc_nandou_smuggler_qin",
+  "name": "Smuggler Qin",
+  "nameCn": "\u8d70\u79c1\u8005\u79e6",
+  "canon_id": "I-npc_nandou_smuggler_qin",
+  "type": "rogue",
+  "faction": "none",
+  "location": "nan_dou_city",
+  "cultivation": "Qi Condensation 6th Layer",
+  "personality": "nervous, greedy, knows the tunnels better than anyone",
+  "speech": "whispered, paranoid",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A rogue of Nan Dou City",
+    "qi_condensation": "Smuggler Qin, Nan Dou rogue"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Nan Dou City rogue. nervous, greedy, knows the tunnels better than anyone.",
+  "derivation_type": "I",
+  "salt": 9134567820,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You found the tunnels. Not many people know about these. The governor doesn't know. The guard captain doesn't know. Keep it that way.",
+    "I move goods that the Teng family would rather handle themselves. Gold, emeralds, the occasional spirit stone. Nothing illegal \u2014 just... untaxed.",
+    "If you have gold and emeralds, I can double them. The tunnels connect to the warehouse district \u2014 I know every route.",
+    "The dock master suspects something. The tavern keeper knows too much. I may need to relocate soon."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 12
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 6
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "smuggler_goods",
+      "description": "Qin: 'Gold and emeralds \u2014 I can move them through the tunnels and triple the value. Bring me materials and I will give you a cut.'",
+      "requires": [
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 6
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 14
+    },
+    {
+      "id": "tunnel_maintenance",
+      "description": "Qin: 'The tunnels need repairs. Iron for supports, cobblestone for walls. If the guard captain finds a collapse, my operation is finished.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 6
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 32
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 9
+    }
+  ]
+}

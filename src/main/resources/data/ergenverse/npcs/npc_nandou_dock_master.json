@@ -1,0 +1,123 @@
+{
+  "_comment": "NPC: Dock Master Zhou (\u7801\u5934\u5468). INFERRED: Nan Dou City. Derivation: I = INFERRED.",
+  "npc_id": "npc_nandou_dock_master",
+  "name": "Dock Master Zhou",
+  "nameCn": "\u7801\u5934\u5468",
+  "canon_id": "I-npc_nandou_dock_master",
+  "type": "laborer",
+  "faction": "none",
+  "location": "nan_dou_city",
+  "cultivation": "none",
+  "personality": "gruff, pragmatic, knows the harbor secrets",
+  "speech": "blunt, nautical",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A laborer of Nan Dou City",
+    "qi_condensation": "Dock Master Zhou, Nan Dou laborer"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Nan Dou City laborer. gruff, pragmatic, knows the harbor secrets.",
+  "derivation_type": "I",
+  "salt": 8823456102,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Ships come and go. Some carry wheat. Some carry questions I don't ask. That's the port.",
+    "The Northern Dipper constellation guides our ships at night. The temple priests chart the routes, but I've been sailing these waters since before they could read a star map.",
+    "Last week a ship arrived from Great Wang Capital. The cargo was marked 'tribute' but the crates were too light. Someone is skimming.",
+    "If you need work, the docks always need hands. Planks, sticks, coal \u2014 we burn through materials faster than the merchant can resupply."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 6
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "dock_repairs",
+      "description": "Zhou: 'Storms damaged the pier. I need planks and sticks for repairs. Coal for the work lamps too.'",
+      "requires": [
+        {
+          "item": "minecraft:planks",
+          "count": 16
+        },
+        {
+          "item": "minecraft:stick",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    },
+    {
+      "id": "unusual_cargo",
+      "description": "Zhou looks around: 'A ship came in with cargo that doesn't match the manifest. Iron ingots that were too light. If you find anything strange in the warehouse, bring it to me.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}
