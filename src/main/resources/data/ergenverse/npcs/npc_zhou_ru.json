@@ -6,7 +6,7 @@
   "canon_id": "N10",
   "type": "other",
   "faction": "independent",
-  "location": "variable",
+  "location": "heng_yue_sect",
   "cultivation": "Soul Transformation",
   "personality": "powerful cultivator",
   "speech": "measured",
@@ -33,5 +33,91 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "I am Zhou Ru. My master is away. He left instructions that I am to train the junior disciples in his absence. Do not underestimate me because of my appearance.",
+    "The Xuan Dao Sect once sent an elder to recruit me. I declined. My master's teachings are not transferable.",
+    "Spirit stones and books. If you bring them, I will share what my master taught me about the path of cultivation.",
+    "The Heng Yue Sect's elders worry about my cultivation speed. They should worry about their own."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn cultivation",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Sword practice",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Train junior disciples",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "heng_yue_sect",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Study ancient texts",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Solo cultivation",
+      "location": "heng_yue_sect",
+      "duration": 240
+    },
+    {
+      "time": "20:00",
+      "action": "Evening meditation",
+      "location": "heng_yue_sect",
+      "duration": 300
+    },
+    {
+      "time": "01:00",
+      "action": "Rest",
+      "location": "heng_yue_sect",
+      "duration": 180
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "zr_disciple_training",
+      "name": "Disciple Training Materials",
+      "description": "Zhou Ru needs spirit stones and books to train junior disciples in her master's absence.",
+      "required_items": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:book": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:experience_bottle": 2,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "zr_cultivation_aid",
+      "name": "Cultivation Support",
+      "description": "Zhou Ru needs emeralds and experience bottles to accelerate her cultivation while her master is away.",
+      "required_items": {
+        "minecraft:emerald": 12,
+        "minecraft:experience_bottle": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 1,
+        "experience": 25
+      }
+    }
+  ]
 }

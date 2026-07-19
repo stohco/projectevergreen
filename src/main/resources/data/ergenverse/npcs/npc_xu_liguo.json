@@ -6,7 +6,7 @@
   "canon_id": "N62",
   "type": "artifact_spirit",
   "faction": "wang_lin",
-  "location": "variable",
+  "location": "heng_yue_sect",
   "cultivation": "devil soul (sword spirit)",
   "personality": "loyal devil soul; Wang Lin's sword spirit servant",
   "speech": "respectful, devil-touched",
@@ -33,5 +33,91 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Master! I mean — you are not my master. My master is Wang Lin. But you have a similar... presence. Are you here to claim the sword? It is not ready. I am not ready. We are both working on it.",
+    "I was once a cultivator of the Soul Refining Sect. Then I was a sword. Then I was a sword spirit. The Soul Refining Sect makes many things. Swords. Spirits. Mistakes. I was all three.",
+    "Iron and coal. If you bring them, I will maintain the sword in my master's absence. He left instructions. I follow them. That is what sword spirits do.",
+    "The Corpse Yin Sect's envoy asked about me once. He wanted to know if a sword spirit could be extracted. I told him to try. He did not."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Sword maintenance and polishing",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "08:00",
+      "action": "Patrol master's quarters",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "10:00",
+      "action": "Cultivation within the sword",
+      "location": "heng_yue_sect",
+      "duration": 240
+    },
+    {
+      "time": "14:00",
+      "action": "Gather intelligence on sect affairs",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "16:00",
+      "action": "Sword training exercises",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "19:00",
+      "action": "Report to master's quarters",
+      "location": "heng_yue_sect",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Guard duty",
+      "location": "heng_yue_sect",
+      "duration": 360
+    },
+    {
+      "time": "02:00",
+      "action": "Dormant state",
+      "location": "heng_yue_sect",
+      "duration": 180
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "xlg_sword_maintenance",
+      "name": "Sword Maintenance Supplies",
+      "description": "Xu Liguo needs iron and coal to maintain his master's weapons in his absence.",
+      "required_items": {
+        "minecraft:iron_ingot": 12,
+        "minecraft:coal": 10
+      },
+      "rewards": {
+        "minecraft:emerald": 10,
+        "minecraft:experience_bottle": 2,
+        "experience": 20
+      }
+    },
+    {
+      "task_id": "xlg_intelligence_gathering",
+      "name": "Sect Intelligence",
+      "description": "Xu Liguo trades information for emeralds and books. He knows the sect's secrets.",
+      "required_items": {
+        "minecraft:emerald": 10,
+        "minecraft:book": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 8,
+        "experience": 25
+      }
+    }
+  ]
 }

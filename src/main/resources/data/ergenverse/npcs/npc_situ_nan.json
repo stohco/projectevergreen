@@ -34,5 +34,91 @@
   },
   "soul_state": "origin",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Ha! Another cultivator! You look like you can fight. Good. I like people who can fight. Come, sit. Tell me your name. I will tell you whether it is a good name for surviving.",
+    "I have lived longer than this sect. I have died and come back. Death is overrated. What matters is having a good friend to pull you back. Wang Lin is mine.",
+    "The Vermilion Bird Divine Sect thinks it owns me. The Heavenly Fate Sect thinks it can predict me. The Soul Refining Sect thinks it can capture me. They are all wrong. I am Situ Nan.",
+    "Spirit stones and jade slips. If you have them, I will share stories of battles that shook the planet. If you do not, I will share them anyway. I am generous like that."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Wake and stretch cultivation",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Patrol sect grounds (loudly)",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Train in combat forms",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal and boast about past battles",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 90
+    },
+    {
+      "time": "14:30",
+      "action": "Cultivation and recovery",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "17:30",
+      "action": "Evening storytelling for younger disciples",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Night meditation",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 300
+    },
+    {
+      "time": "01:00",
+      "action": "Rest",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "sn_battle_stories",
+      "name": "Battle Knowledge Exchange",
+      "description": "Situ Nan trades battle experience for spirit stones and jade slips. His knowledge spans millennia.",
+      "required_items": {
+        "ergenverse:spirit_stone": 3,
+        "ergenverse:jade_slip": 1
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "minecraft:experience_bottle": 3,
+        "experience": 40
+      }
+    },
+    {
+      "task_id": "sn_combat_training",
+      "name": "Combat Training Request",
+      "description": "Situ Nan offers combat guidance in exchange for emeralds and experience. His training is legendary.",
+      "required_items": {
+        "minecraft:emerald": 16,
+        "minecraft:experience_bottle": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2,
+        "experience": 45
+      }
+    }
+  ]
 }

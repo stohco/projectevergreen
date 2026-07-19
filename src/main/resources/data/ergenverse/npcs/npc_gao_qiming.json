@@ -118,5 +118,11 @@
       "reward_item": "minecraft:emerald",
       "reward_count": 6
     }
+  ],
+  "initiation_lines": [
+    "Sit. I have been expecting someone. The stars told me. They always tell me. The question is whether I should tell you what they said.",
+    "The Heavenly Fate Sect claims a monopoly on divination. They are wrong. My methods are older. Their methods are louder. Louder is not better.",
+    "Dark omens gather over Tian Shui City. A Soul Refining Sect envoy passed through last month. He did not like what I told him. The feeling was mutual.",
+    "Emeralds and paper, or coal and ink. Bring them, and I will read what the heavens permit."
   ]
 }

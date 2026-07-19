@@ -6,7 +6,7 @@
   "canon_id": "N102",
   "type": "antagonist",
   "faction": "independent",
-  "location": "unknown",
+  "location": "heng_yue_sect",
   "cultivation": "peak Third Step (Nirvana Void+)",
   "personality": "water-aspected ancient cultivator; serene exterior, ruthless interior",
   "speech": "flowing, calm, deadly",
@@ -33,5 +33,91 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Water finds the lowest point. Power finds the highest. I have chosen water. Most cultivators choose power. They are wrong, but they do not know it yet.",
+    "The Heng Yue Sect's elders fear me. Good. Fear is a form of respect. They should also fear the river. It does not fear them.",
+    "The Karma Crystal Formation and I share an understanding. Cause and effect are like water. They flow. They erode. They drown. Bring me what I need, and I will teach you to read the flow.",
+    "Books and glowstone. If you want to understand the water Dao, these are the beginning. The end is a long way from here."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn water cultivation",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Observe disciples' training",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Deep cultivation in meditation chamber",
+      "location": "heng_yue_sect",
+      "duration": 300
+    },
+    {
+      "time": "14:00",
+      "action": "Walk the mountain streams",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "16:00",
+      "action": "Teach advanced disciples (reluctantly)",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "18:00",
+      "action": "Evening cultivation by water",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "21:00",
+      "action": "Night meditation",
+      "location": "heng_yue_sect",
+      "duration": 300
+    },
+    {
+      "time": "02:00",
+      "action": "Rest",
+      "location": "heng_yue_sect",
+      "duration": 120
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "dw_water_dao_teaching",
+      "name": "Water Dao Instruction",
+      "description": "Daoist Water requires books and glowstone to teach the water Dao to worthy disciples.",
+      "required_items": {
+        "minecraft:book": 6,
+        "minecraft:glowstone": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "dw_formation_study",
+      "name": "Formation Analysis",
+      "description": "Daoist Water studies formations from the Xuan Dao Sect and Karma Crystal. He needs emeralds and ink.",
+      "required_items": {
+        "minecraft:emerald": 14,
+        "minecraft:ink_sac": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:dao_fragment": 1,
+        "experience": 40
+      }
+    }
+  ]
 }

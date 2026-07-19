@@ -6,7 +6,7 @@
   "canon_id": "N162",
   "type": "family",
   "faction": "independent",
-  "location": "planet_suzaku",
+  "location": "heng_yue_sect",
   "cultivation": "Foundation Establishment (child)",
   "personality": "innocent, gentle; protected child",
   "speech": "childlike, sweet",
@@ -33,5 +33,91 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Hello! Are you a disciple too? I am still learning. My cultivation is not very high yet, but Teacher says I have potential. Teacher says many things. I try to remember all of them.",
+    "Wang Lin found me when I was very small. I do not remember my parents. I remember the mountains. The mountains were safe. Wang Lin made them safe.",
+    "Bread and wheat! I get hungry when I cultivate. Teacher says cultivation burns energy. I believe her. I am always hungry.",
+    "The Heng Yue Sect elders are very serious. I try not to make them more serious. It does not always work."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Morning cultivation practice",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Attend elder's lecture",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "10:00",
+      "action": "Play in the sect gardens",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Lunch",
+      "location": "heng_yue_sect",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Study with teacher",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "17:00",
+      "action": "Explore sect grounds",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Dinner and stories",
+      "location": "heng_yue_sect",
+      "duration": 90
+    },
+    {
+      "time": "21:00",
+      "action": "Sleep",
+      "location": "heng_yue_sect",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "le_cultivation_snacks",
+      "name": "Cultivation Energy Snacks",
+      "description": "Ling'er gets hungry during cultivation. She needs bread and wheat for energy.",
+      "required_items": {
+        "minecraft:bread": 12,
+        "minecraft:wheat": 16
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:experience_bottle": 1,
+        "experience": 10
+      }
+    },
+    {
+      "task_id": "le_study_materials",
+      "name": "Study Materials",
+      "description": "Ling'er needs books and emeralds for her studies with her teacher.",
+      "required_items": {
+        "minecraft:book": 4,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:book": 2,
+        "experience": 15
+      }
+    }
+  ]
 }

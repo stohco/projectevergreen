@@ -6,7 +6,7 @@
   "canon_id": "N17",
   "type": "other",
   "faction": "independent",
-  "location": "variable",
+  "location": "heng_yue_sect",
   "cultivation": "Treading Heaven Realm",
   "personality": "gentle, devoted; Wang Lin's primary love interest",
   "speech": "soft, caring, devoted",
@@ -33,5 +33,94 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You must be new to the alchemy hall. I am Li Muwan. If you bring me herbs and reagents, I can refine pills. The Heng Yue Sect's alchemy has declined in recent years. I intend to restore it.",
+    "Wang Lin once sat where you stand. He was not the most talented disciple. He was the most determined. That matters more than talent.",
+    "The Soul Refining Sect's alchemists use souls as reagents. I use spirit herbs. The difference is not efficiency. It is what you are willing to sacrifice.",
+    "Bread and wheat for sustenance, or coal and bottles if you seek refined pills. Alchemy requires both patience and materials."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Pre-dawn herb preparation",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Alchemy lecture for junior disciples",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Pill refinement",
+      "location": "heng_yue_sect",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Meal and herb cataloging",
+      "location": "heng_yue_sect",
+      "duration": 90
+    },
+    {
+      "time": "14:30",
+      "action": "Advanced alchemy research",
+      "location": "heng_yue_sect",
+      "duration": 180
+    },
+    {
+      "time": "17:30",
+      "action": "Herb garden inspection",
+      "location": "heng_yue_sect",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Evening cultivation",
+      "location": "heng_yue_sect",
+      "duration": 300
+    },
+    {
+      "time": "01:00",
+      "action": "Rest",
+      "location": "heng_yue_sect",
+      "duration": 240
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "lmw_herb_refinement",
+      "name": "Herb Pill Refinement",
+      "description": "Li Muwan needs bread and wheat to sustain herself during long alchemy sessions, and coal and bottles for the refinement furnace.",
+      "required_items": {
+        "minecraft:bread": 8,
+        "minecraft:wheat": 12,
+        "minecraft:coal": 8,
+        "minecraft:glass_bottle": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:experience_bottle": 3,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "lmw_reagent_collection",
+      "name": "Alchemy Reagent Supply",
+      "description": "Li Muwan needs paper and ink to record alchemy formulas, and emeralds to purchase rare reagents from traveling merchants.",
+      "required_items": {
+        "minecraft:paper": 16,
+        "minecraft:ink_sac": 8,
+        "minecraft:emerald": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 25
+      }
+    }
+  ]
 }
