@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Guard Captain Xu (\u5f90\u5b88\u536b\u957f). INFERRED: Qilin City. Derivation: I = INFERRED.",
+  "npc_id": "npc_qilin_guard_captain",
+  "name": "Guard Captain Xu",
+  "nameCn": "\u5f90\u5b88\u536b\u957f",
+  "canon_id": "I-npc_qilin_guard_captain",
+  "type": "guard",
+  "faction": "Zhao Country Military",
+  "location": "qilin_city",
+  "cultivation": "Qi Condensation 6th Layer",
+  "personality": "gruff, inspects beast cargo, hates paperwork",
+  "speech": "military, impatient",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A guard of Qilin City",
+    "qi_condensation": "Guard Captain Xu, Qilin guard"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Qilin City guard. gruff, inspects beast cargo, hates paperwork.",
+  "derivation_type": "I",
+  "salt": 5829173640,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Halt. All beast cargo must be inspected before entering Qilin. The governor takes a cut of every trade \u2014 I just make sure nothing escapes the count.",
+    "Last week someone tried to smuggle a spirit wolf pup past the gate. A pup! As if the city doesn't have enough wolves already.",
+    "If you are not here to trade beasts, you are here to buy them. Either way, stay out of the warehouse district after dark.",
+    "The beast riots last month were bad. Three handlers dead, two spirit deer escaped. The governor blamed me. I blame the smugglers who drugged the animals."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 12
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "gate_inspection_supplies",
+      "description": "Captain Xu: 'Inspection supplies are low. I need arrows for the guards and lead for the beast pens. Bring them and I will pay.'",
+      "requires": [
+        {
+          "item": "minecraft:arrow",
+          "count": 16
+        },
+        {
+          "item": "minecraft:lead",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "contraband_beasts",
+      "description": "Xu frowns: 'Beast parts are being moved through the tunnels at night. If you find bones and leather in bulk, report to me \u2014 this is illegal trade.'",
+      "requires": [
+        {
+          "item": "minecraft:bone",
+          "count": 16
+        },
+        {
+          "item": "minecraft:leather",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}

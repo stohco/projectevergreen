@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Tavern Keeper Niu (\u5ba2\u6808\u725b). INFERRED: Qilin City. Derivation: I = INFERRED.",
+  "npc_id": "npc_qilin_tavern_keeper",
+  "name": "Tavern Keeper Niu",
+  "nameCn": "\u5ba2\u6808\u725b",
+  "canon_id": "I-npc_qilin_tavern_keeper",
+  "type": "service",
+  "faction": "none",
+  "location": "qilin_city",
+  "cultivation": "none",
+  "personality": "boisterous, loves beast-fighting stories, trades information",
+  "speech": "loud, friendly, gossipy",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A service of Qilin City",
+    "qi_condensation": "Tavern Keeper Niu, Qilin service"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Qilin City service. boisterous, loves beast-fighting stories, trades information.",
+  "derivation_type": "I",
+  "salt": 8923456178,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Welcome to the Iron Fang Tavern! Best roast boar in Zhao Country \u2014 I get the meat fresh from the market, if you know what I mean.",
+    "Beast handlers are the best customers. They work hard, they drink hard, and they talk too much. Perfect for a man who collects information.",
+    "A cultivator wearing Corpse Yin Sect robes came in last week. Ordered nothing, watched a beast fight in the alley, then left. Creepy.",
+    "If you want rumors, bring me wheat and coal. The tavern runs on bread and warmth, and my mouth runs on emeralds."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 4
+    },
+    {
+      "t0": 3000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "tavern_rumors",
+      "description": "Niu: 'Information costs bread and coal. Bring supplies and I will tell you what I heard about the governor's secret beast auctions.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 12
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    },
+    {
+      "id": "beast_fight_intel",
+      "description": "Niu: 'Paper and ink \u2014 I will write down what the beast handlers say about the smuggler tunnels. The captain would pay well for this.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 4
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    }
+  ]
+}

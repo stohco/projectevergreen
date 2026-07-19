@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Dock Handler Li (\u7801\u5934\u529b\u674e). INFERRED: Qilin City. Derivation: I = INFERRED.",
+  "npc_id": "npc_qilin_dock_handler",
+  "name": "Dock Handler Li",
+  "nameCn": "\u7801\u5934\u529b\u674e",
+  "canon_id": "I-npc_qilin_dock_handler",
+  "type": "laborer",
+  "faction": "none",
+  "location": "qilin_city",
+  "cultivation": "none",
+  "personality": "strong, works with beast transport, knows which ships carry contraband",
+  "speech": "blunt, nautical",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A laborer of Qilin City",
+    "qi_condensation": "Dock Handler Li, Qilin laborer"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Qilin City laborer. strong, works with beast transport, knows which ships carry contraband.",
+  "derivation_type": "I",
+  "salt": 7145623890,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The docks handle live cargo \u2014 mostly beasts, sometimes contraband. I load and unload. I do not ask what is in the unmarked crates.",
+    "Spirit deer are the hardest to transport. They panic in enclosed spaces. Last week one kicked through a crate and swam to the other side of the river.",
+    "If you need work, bring me planks and coal. The beast pens on the ships need constant repair. These animals are stronger than they look.",
+    "A ship from Great Wang Capital arrived last night. The manifest said 'tribute grain' but the crates were too light and they smelled of leather."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 6
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "pen_repairs",
+      "description": "Li: 'Beast pens on the ships need planks and coal for the work lamps. These animals break everything \u2014 bring supplies.'",
+      "requires": [
+        {
+          "item": "minecraft:planks",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    },
+    {
+      "id": "suspicious_cargo",
+      "description": "Li glances around: 'The Great Wang Capital ship last night \u2014 crates too light for grain. If you find anything strange near the warehouse, bring me proof.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:leather",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}

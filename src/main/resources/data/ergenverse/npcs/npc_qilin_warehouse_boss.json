@@ -1,0 +1,130 @@
+{
+  "_comment": "NPC: Warehouse Boss Deng (\u5e93\u623f\u9093). INFERRED: Qilin City. Derivation: I = INFERRED.",
+  "npc_id": "npc_qilin_warehouse_boss",
+  "name": "Warehouse Boss Deng",
+  "nameCn": "\u5e93\u623f\u9093",
+  "canon_id": "I-npc_qilin_warehouse_boss",
+  "type": "service",
+  "faction": "Zhao Country Government",
+  "location": "qilin_city",
+  "cultivation": "none",
+  "personality": "corrupt, skims from the governor's beast taxes",
+  "speech": "bureaucratic, evasive",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A service of Qilin City",
+    "qi_condensation": "Warehouse Boss Deng, Qilin service"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Qilin City service. corrupt, skims from the governor's beast taxes.",
+  "derivation_type": "I",
+  "salt": 9012345678,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "All beasts entering Qilin are logged, weighed, and taxed. I manage the records. The records are accurate. Mostly.",
+    "The governor taxes twenty percent of all beast trades. I record twenty percent. What happens between the docks and the warehouse is... logistics.",
+    "If you need to store goods, bring planks and paper. Storage is not free, even for the governor's men.",
+    "The beast merchant Zhao and I have an understanding. His invoices match my records. The actual numbers are between us and the river."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 11000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 4
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "warehouse_records",
+      "description": "Deng: 'I need paper and ink for manifests, planks for beast crates. The next shipment is due and everything must look... correct.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 6
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 3
+        },
+        {
+          "item": "minecraft:planks",
+          "count": 12
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    },
+    {
+      "id": "beast_inventory",
+      "description": "Deng: 'Beast feed and supplies are running low. Wheat and bones for the pens. If the animals starve, the governor will have my head.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        },
+        {
+          "item": "minecraft:bone",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    }
+  ]
+}

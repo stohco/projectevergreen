@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Beast Merchant Zhao (\u517d\u5546\u8d75). INFERRED: Qilin City. Derivation: I = INFERRED.",
+  "npc_id": "npc_qilin_beast_merchant",
+  "name": "Beast Merchant Zhao",
+  "nameCn": "\u517d\u5546\u8d75",
+  "canon_id": "I-npc_qilin_beast_merchant",
+  "type": "merchant",
+  "faction": "none",
+  "location": "qilin_city",
+  "cultivation": "none",
+  "personality": "shrewd, specializes in beast trades, has contacts across Zhao",
+  "speech": "salesman-like, animal metaphors",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A merchant of Qilin City",
+    "qi_condensation": "Beast Merchant Zhao, Qilin merchant"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Qilin City merchant. shrewd, specializes in beast trades, has contacts across Zhao.",
+  "derivation_type": "I",
+  "salt": 2938475610,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Welcome to Qilin City, the beast trading capital of Zhao Country. Spirit wolves, cloud deer, iron-crystal boars \u2014 I can source anything with claws.",
+    "Business is good. The Teng family buys war beasts. The Heng Yue Sect wants spirit herb gatherers. Everyone needs something from someone.",
+    "Leather and bone are the currency of Qilin. Bring me materials and I will trade fairly \u2014 unlike the dock masters who skim off the top.",
+    "A merchant from Nan Dou City was here last week. Said the star-readers there predict a beast plague. I told him the stars do not feed my animals \u2014 gold does."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 5
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "beast_trade_materials",
+      "description": "Zhao: 'I need leather and bone for my next shipment to the Teng family. Bring me materials and I will pay in emeralds \u2014 pure profit for you.'",
+      "requires": [
+        {
+          "item": "minecraft:leather",
+          "count": 12
+        },
+        {
+          "item": "minecraft:bone",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 9
+    },
+    {
+      "id": "cage_construction",
+      "description": "Zhao: 'My beast cages need repair. Iron for bars, planks for frames. The Teng family will not accept damaged goods.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 8
+        },
+        {
+          "item": "minecraft:planks",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}

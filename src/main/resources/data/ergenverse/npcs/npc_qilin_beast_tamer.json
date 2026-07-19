@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Beast Tamer Gao (\u9a6f\u517d\u5e08\u9ad8). INFERRED: Qilin City. Derivation: I = INFERRED.",
+  "npc_id": "npc_qilin_beast_tamer",
+  "name": "Beast Tamer Gao",
+  "nameCn": "\u9a6f\u517d\u5e08\u9ad8",
+  "canon_id": "I-npc_qilin_beast_tamer",
+  "type": "cultivator",
+  "faction": "Rogue Cultivator",
+  "location": "qilin_city",
+  "cultivation": "Foundation Establishment mid stage",
+  "personality": "quiet, bonds with beasts, distrusts city politics",
+  "speech": "soft-spoken, direct",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator of Qilin City",
+    "qi_condensation": "Beast Tamer Gao, Qilin cultivator"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Qilin City cultivator. quiet, bonds with beasts, distrusts city politics.",
+  "derivation_type": "I",
+  "salt": 3345678912,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "I tame beasts, not people. The cultivator quarter is too noisy for my work. I stay near the port where the animals are.",
+    "The governor wants me to train war beasts for the Teng family. I refuse. My beasts are not weapons.",
+    "If you bring me leather and lead, I can craft beast collars. In return, I will share what I know about restriction techniques \u2014 useful for trapping, not fighting.",
+    "A spirit wolf pup followed me home last week. Its mother was sold to the Teng family. I am raising it in secret. If the governor finds out, he will take it."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 4000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 11000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "beast_collars",
+      "description": "Gao: 'I need leather for collars and lead for chains. My beasts need new restraints. Bring materials and I will share restriction knowledge.'",
+      "requires": [
+        {
+          "item": "minecraft:leather",
+          "count": 8
+        },
+        {
+          "item": "minecraft:lead",
+          "count": 12
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 2
+    },
+    {
+      "id": "secret_pup",
+      "description": "Gao: 'The wolf pup needs wheat for food and coal for warmth. The governor's men are searching for it. Help me hide it.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    }
+  ]
+}

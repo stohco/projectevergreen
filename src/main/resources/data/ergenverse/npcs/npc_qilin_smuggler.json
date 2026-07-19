@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Smuggler Fang (\u8d70\u79c1\u8005\u65b9). INFERRED: Qilin City. Derivation: I = INFERRED.",
+  "npc_id": "npc_qilin_smuggler",
+  "name": "Smuggler Fang",
+  "nameCn": "\u8d70\u79c1\u8005\u65b9",
+  "canon_id": "I-npc_qilin_smuggler",
+  "type": "rogue",
+  "faction": "none",
+  "location": "qilin_city",
+  "cultivation": "Qi Condensation 9th Layer",
+  "personality": "cunning, moves live beasts through tunnels, sees himself as a freedom fighter",
+  "speech": "whispered, self-justifying",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A rogue of Qilin City",
+    "qi_condensation": "Smuggler Fang, Qilin rogue"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Qilin City rogue. cunning, moves live beasts through tunnels, sees himself as a freedom fighter.",
+  "derivation_type": "I",
+  "salt": 6578901234,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You found the tunnels. I move beasts \u2014 rare ones, the kind the governor claims for 'tax purposes' and sells for profit.",
+    "I am not a criminal. The governor taxes beast traders into poverty, then sells confiscated animals to the Teng family. I redistribute.",
+    "Gold and emeralds \u2014 I can move anything through these tunnels. The passages connect to the warehouse district and the port.",
+    "The beast tamer in the port knows about me. He does not approve, but he does not report me either. We have an understanding."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 12
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 6
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "beast_smuggling",
+      "description": "Fang: 'Gold and emeralds \u2014 I can triple their value moving rare beasts through the tunnels. Bring me materials for the operation.'",
+      "requires": [
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 6
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 14
+    },
+    {
+      "id": "tunnel_supports",
+      "description": "Fang: 'The tunnels are collapsing in places. Iron for supports, cobblestone for walls. If they collapse, the animals die.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 6
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 32
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 9
+    }
+  ]
+}

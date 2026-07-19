@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Elder Shen (\u6c88\u957f\u8005). INFERRED: Qilin City. Derivation: I = INFERRED.",
+  "npc_id": "npc_qilin_elder_shen",
+  "name": "Elder Shen",
+  "nameCn": "\u6c88\u957f\u8005",
+  "canon_id": "I-npc_qilin_elder_shen",
+  "type": "mortal",
+  "faction": "none",
+  "location": "qilin_city",
+  "cultivation": "none",
+  "personality": "wise, former beast handler, mourns the old ways",
+  "speech": "slow, nostalgic",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A mortal of Qilin City",
+    "qi_condensation": "Elder Shen, Qilin mortal"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Qilin City mortal. wise, former beast handler, mourns the old ways.",
+  "derivation_type": "I",
+  "salt": 1287654390,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "I trained beasts for forty years before the governor turned Qilin into a factory. Animals used to be partners. Now they are products.",
+    "The temple used to perform the Qilin Blessing every solstice. Now the governor sells the blessing ceremony tickets to merchants. Everything has a price.",
+    "If you are hungry, take this bread. The mortal quarter used to have plenty \u2014 before the governor expanded the beast pens into our farmland.",
+    "Wang Lin's father once came here to buy a spirit wolf for his son. The boy had no talent for cultivation, they said. How wrong they were."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 4
+    },
+    {
+      "t0": 4000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 6
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 5
+    },
+    {
+      "t0": 11000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "mortal_aid",
+      "description": "Shen: 'The mortal quarter families are starving. Bread and wheat would help. I cannot pay much, but I remember when this city was decent.'",
+      "requires": [
+        {
+          "item": "minecraft:bread",
+          "count": 8
+        },
+        {
+          "item": "minecraft:wheat",
+          "count": 16
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 3
+    },
+    {
+      "id": "old_tunnels",
+      "description": "Shen: 'Before the governor, there were older tunnels \u2014 ventilation shafts for the beast pens. Bring me planks and I will show you where they connect.'",
+      "requires": [
+        {
+          "item": "minecraft:planks",
+          "count": 8
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    }
+  ]
+}
