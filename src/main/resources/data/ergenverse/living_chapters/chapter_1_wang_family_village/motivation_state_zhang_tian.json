@@ -1,0 +1,130 @@
+{
+  "_comment": "Zhang Tian — village drunkard. INFERRED (Article XV). THE TWIST: Zhang Tian was once a Heng Yue outer disciple who failed his Foundation Establishment breakthrough and was expelled. He knows more about cultivation than anyone in the village except Wang Tianshui. He is the village's accidental sage.",
+  "_schema": "motivation_state",
+  "_schema_version": 2,
+  "_article": "XXXIII + XXXV",
+  "npc_id": "npc_zhang_tian",
+  "name": "Zhang Tian",
+  "nameCn": "张天",
+  "location": "wang_family_village",
+  "canon_fidelity": "INFERRED",
+  "evaluation_cycle_ticks": 2000,
+  "long_term_priorities": [
+    "drink",
+    "forget",
+    "avoid_cultivation_talk"
+  ],
+  "motivations": [
+    {
+      "id": "m_avoid_recruiter",
+      "driving_forces": [
+        "fear",
+        "grudge"
+      ],
+      "statement": "The Heng Yue recruiter is here. I cannot let them see me. If they recognize me — the disciple who failed — the shame would kill me.",
+      "target_type": "none",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "per_target": [],
+        "highest_relevance_target": null
+      },
+      "priority": 9,
+      "urgency": "critical (when recruiter present)",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [],
+        "preferred_resolution": "hide_in_cellar"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If recruiter in village, I am in the cellar.",
+        "initiation_threshold": 2,
+        "conditions": [
+          "heng_yue_recruiter.present=true"
+        ]
+      },
+      "initiation": {
+        "engine": "debt",
+        "mode": "silence",
+        "line": null,
+        "conversation_mode": "ambient",
+        "requires_proximity": 0,
+        "requires_consent": false,
+        "cooldown_ticks": 0
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "zhang_tian.hidden=true; if discovered: deep shame, grievance +=20 toward discoverer",
+      "consequence_on_ignore": "n/a",
+      "memory_tag": "zhang_tian_hiding_from_recruiter",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_drunk_truth",
+      "driving_forces": [
+        "necessity"
+      ],
+      "statement": "Someone is asking about cultivation. I should not answer. But the wine is talking and the truth comes out.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "player",
+            "relevance_score": 20,
+            "relevance_reason": "If I am drunk enough, I might tell them something useful — or dangerous.",
+            "becomes_relevant_when": [
+              "player.asks:cultivation",
+              "zhang_tian.intoxication >= 0.7"
+            ]
+          },
+          {
+            "target_id": "npc_da_niu",
+            "relevance_score": 25,
+            "relevance_reason": "Da Niu dreams of cultivation. I could crush that dream with honesty, or let him learn the hard way. The wine decides.",
+            "becomes_relevant_when": [
+              "da_niu.asks:cultivation",
+              "zhang_tian.intoxication >= 0.6"
+            ]
+          }
+        ],
+        "highest_relevance_target": null
+      },
+      "priority": 2,
+      "urgency": "low",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [],
+        "preferred_resolution": "say_nothing_if_sober"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Only if drunk AND someone asks.",
+        "initiation_threshold": 7,
+        "conditions": [
+          "zhang_tian.intoxication >= 0.6",
+          "target.asks:cultivation"
+        ]
+      },
+      "initiation": {
+        "engine": "rumor",
+        "mode": "line",
+        "line": "Foundation Establishment... they do not tell you the failure rate. One in three. The rest... come home. If they have a home.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 5,
+        "requires_consent": false,
+        "cooldown_ticks": 12000
+      },
+      "offer_in_return": "bitter_truth — the reality of cultivation failure",
+      "consequence_on_fulfill": "target.knowledge+=cultivation_failure_rate; if Da Niu: may shake his determination",
+      "consequence_on_ignore": "Zhang Tian passes out; nothing said",
+      "memory_tag": "zhang_tian_drunk_truth",
+      "satisfies_motivations_on_others": null
+    }
+  ],
+  "passive_states": [
+    "drinking",
+    "sleeping_off_wine",
+    "sober_moments (rare)"
+  ],
+  "cross_npc_triggers": [
+    "zhang_tian.m_drunk_truth can warn the player about cultivation failure before the Heng Yue test"
+  ]
+}

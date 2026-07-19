@@ -1,0 +1,820 @@
+{
+  "_comment": "GAME-START relationship graph seed for all 9 Wang Family Village NPCs. Per Article XXXIV (relationships are graphs, not numbers — 'friendship > 50' is forbidden) and Article XXXV.3 (the Understanding dimension is NOT respect; relevance is universal, not player-special). Each entry is one NPC's graph toward one target. Values reflect PRE-EXISTING history before the player arrives: the elder's old jade-debt to the Wang family line (the Chapter 1 catalyst seed), the Wang/Zhou family dynamics, Wang Lin's absence at Heng Yue, the Teng family's regional oppression, and the Heng Yue recruiter's professional-mode assessment. The player is a stranger at game start — most player graphs are shallow (Art XXXIII.2: the player is not default relevant). DATA-ONLY (Article XXVI).",
+  "_schema": "relationship_graph_seeds",
+  "_schema_version": 1,
+  "_article": "XXXIV + XXXV.3",
+  "_generated_by": "AUTO-CANON-054-b",
+  "_note": "Each entry is one NPC's graph toward one target. At game start, each NPC has graphs toward the other 8 village NPCs, toward key external figures (npc_wang_lin — absent at Heng Yue; npc_teng_huayuan — regional oppressor, not present), toward the player (mostly shallow/unknown — the player is a stranger), and toward factions (heng_yue_sect, teng_family, wang_family_village). Values reflect PRE-EXISTING history before the player arrives. The favor_debt_ledger_schema.json defines the structured favor records; the relationship_graph 'debt' dimension here is the aggregate scalar. Notable: npc_wang_tianshui (the village patriarch / Wang Lin's father) holds the strange jade catalyst in trust from an ancestral mandate — his debt toward npc_wang_lin (+7, Major) and toward the wang_family_village faction (+7, Major) is the SEED of the Chapter 1 catalyst. When the elder's trust toward a target (player or NPC) crosses the threshold, the jade is given and the debt is honored. The two Heng Yue outsiders (npc_heng_yue_recruiter, npc_zhang_tian) spawn on Day 3 for the aptitude test ceremony; their graphs represent the attitudes they arrive with.",
+  "graphs": [
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_wang_ping",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 80,
+        "respect": 35,
+        "fear": 0,
+        "debt": 3,
+        "grievance": 0,
+        "shared_history": 25,
+        "known_skills": ["fishing", "firewood_chopping", "carpentry_assist"],
+        "known_personality": ["gentle", "protective_of_family", "loyal", "self_sacrificing"],
+        "understanding": 75,
+        "relevance": 70
+      },
+      "interpretation": "Tianshui's younger son. Trust 80 — raised him, knows his heart. Respect only 35: Wang Ping is gentle but a mortal with no special capability (canon: stays behind to care for parents while Wang Lin leaves). Debt +3 (Moderate): the elder holds the strange jade in trust for the Wang family line, and Wang Ping as the staying son embodies that obligation. Understanding 75 — a father knows his son."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_zhou_tingsu",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 90,
+        "respect": 60,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 30,
+        "known_skills": ["herb_gathering_basics", "cooking", "mending", "childcare"],
+        "known_personality": ["gentle", "caring", "worried", "patient"],
+        "understanding": 85,
+        "relevance": 90
+      },
+      "interpretation": "Tianshui's wife, Wang Lin's mother (canon NPC file: relationship_to_wanglin=mother). Decades of marriage — trust 90, understanding 85. No structured debt between spouses. Relevance 90: she is central to his life. Her worry for their absent son is shared."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_da_niu",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 60,
+        "respect": 25,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 12,
+        "known_skills": ["fishing", "log_carrying", "manual_labor"],
+        "known_personality": ["simple", "strong", "loyal", "guileless"],
+        "understanding": 55,
+        "relevance": 25
+      },
+      "interpretation": "Wang Lin's childhood friend (canon NPC file: relationship_to_wanglin=childhood_friend). Tianshui has watched him grow up — a frequent visitor, simple and loyal. Trust 60, but respect only 25 (Da Niu is not wise). Relevance 25: noted as his son's friend and a useful pair of hands, not central."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_zhou_rui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 65,
+        "respect": 45,
+        "fear": 0,
+        "debt": -1,
+        "grievance": 0,
+        "shared_history": 15,
+        "known_skills": ["trade", "market_navigation", "harvesting"],
+        "known_personality": ["kind", "neighborly", "practical", "worried_about_future"],
+        "understanding": 60,
+        "relevance": 40
+      },
+      "interpretation": "Long-time neighbor; kind to the Wang family in hard times (canon NPC file). Trust 65. Debt -1 (Minor): Tianshui did carpentry for Zhou Rui ('He made my new shelves last week' — canon initiation line), so Zhou Rui owes Tianshui a small favor. Relevance 40: important neighbor, reciprocal help."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_wang_qingyue",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 65,
+        "respect": 35,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 14,
+        "known_skills": ["sweeping_ancestral_hall", "ceremony_preparation"],
+        "known_personality": ["measured", "family_pride", "curious_about_cultivators"],
+        "understanding": 55,
+        "relevance": 30
+      },
+      "interpretation": "Wang family cousin (canon: calls Wang Lin 'Cousin Wang Lin'). A young family member Tianshui has watched grow up. Respect only 35 — no special capability yet, but her perception_tiers hint at latent cultivation. Relevance 30: noted, helps with ancestral hall."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_wang_tianshan",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 75,
+        "respect": 70,
+        "fear": 5,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 30,
+        "known_skills": ["low_tier_cultivation", "village_patrol", "shrine_rituals"],
+        "known_personality": ["formal", "disciplined", "respects_tradition", "weary_of_teng_family"],
+        "understanding": 70,
+        "relevance": 60
+      },
+      "interpretation": "Wang family elder, low-tier cultivator (canon NPC file: type=elder, cultivation=low-tier cultivator). Likely Tianshui's older brother or uncle — lifelong relationship, shared_history 30. Fear 5: even a low-tier cultivator is dangerous to a mortal. Relevance 60: Tianshan's counsel matters to Tianshui's decisions."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_heng_yue_recruiter",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 25,
+        "respect": 55,
+        "fear": 30,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 1,
+        "known_skills": ["qi_condensation_cultivation", "aptitude_testing"],
+        "known_personality": ["indifferent", "dutiful", "bored_by_mortals"],
+        "understanding": 20,
+        "relevance": 55
+      },
+      "interpretation": "Heng Yue outer-sect functionary (Qi Condensation 3) dispatched annually for the aptitude test. Cautious respect (55) — a cultivator, even low-realm. Fear 30 — the sect could harm the village. Relevance 55: this recruiter holds the key to whether any Wang family child leaves the village. Article XXXIV: outsider dynamics, professional-mode."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_zhang_tian",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 25,
+        "respect": 65,
+        "fear": 50,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 1,
+        "known_skills": ["foundation_establishment_cultivation", "sect_patrol", "restriction_awareness"],
+        "known_personality": ["impassive", "dutiful", "weary_from_recruitment"],
+        "understanding": 20,
+        "relevance": 60
+      },
+      "interpretation": "Heng Yue outer sect elder, Foundation Establishment realm (canon NPC file). Far more powerful than the recruiter — fear 50. Respect 65: Foundation Establishment is overwhelming to mortals. Relevance 60: a senior sect elder commands more careful deference than the recruiter."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 90,
+        "respect": 70,
+        "fear": 5,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 25,
+        "known_skills": ["carpentry", "village_negotiation", "fatherly_wisdom"],
+        "known_personality": ["stern_but_loving", "protective_of_family", "worried_about_future", "proud_of_wang_lin"],
+        "understanding": 70,
+        "relevance": 75
+      },
+      "interpretation": "Wang Ping's father (canon NPC file: relationship_to_wanglin=father). Trust 90 — idolizes his father. Fear 5: Tianshui is stern. Debt 0: Wang Ping does not perceive the jade obligation (that debt is Tianshui's toward Wang Lin / the family line, not Wang Ping's perception). Understanding 70 — knows his father, but doesn't fully grasp his father's burdens."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "npc_zhou_tingsu",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 95,
+        "respect": 65,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 25,
+        "known_skills": ["cooking", "mending", "herb_poultice_basics", "childcare"],
+        "known_personality": ["gentle", "caring", "worried", "maternal"],
+        "understanding": 75,
+        "relevance": 80
+      },
+      "interpretation": "Wang Ping's mother (canon NPC file: relationship_to_wanglin=mother). Trust 95 — closest bond in his life. Understanding 75. Relevance 80: central. Wang Ping worries for her frailty (canon: 'Mother could use the extra food')."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "npc_wang_tianshan",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 65,
+        "respect": 60,
+        "fear": 8,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 12,
+        "known_skills": ["low_tier_cultivation", "shrine_rituals"],
+        "known_personality": ["formal", "disciplined", "respects_tradition"],
+        "understanding": 45,
+        "relevance": 30
+      },
+      "interpretation": "Wang family elder, low-tier cultivator (canon NPC file). Wang Ping respects him as family elder but doesn't deeply understand cultivation or Tianshan's history. Fear 8: cultivators are intimidating to a mortal youth. Relevance 30: noted, respected."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "npc_wang_qingyue",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 70,
+        "respect": 40,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 18,
+        "known_skills": ["sweeping_ancestral_hall", "ceremony_preparation"],
+        "known_personality": ["measured", "family_pride", "curious_about_cultivators"],
+        "understanding": 55,
+        "relevance": 35
+      },
+      "interpretation": "Wang family cousin (canon: calls Wang Lin 'Cousin Wang Lin' — peer to Wang Ping). Grew up together, shared_history 18. Trust 70. Relevance 35: interesting peer, possible young affection left unsaid (mortal village social fabric)."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "npc_da_niu",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 75,
+        "respect": 35,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 15,
+        "known_skills": ["fishing", "log_carrying", "manual_labor"],
+        "known_personality": ["simple", "strong", "loyal", "guileless"],
+        "understanding": 60,
+        "relevance": 35
+      },
+      "interpretation": "Wang Lin's childhood friend (canon). Wang Ping grew up around him — Da Niu visited often to play with Wang Lin and now invites Wang Ping fishing (canon: 'Da Niu wants to go fishing at the south bend'). Trust 75 — guileless and loyal. Relevance 35: peer, fishing companion."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "npc_zhou_rui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 65,
+        "respect": 40,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 12,
+        "known_skills": ["trade", "market_navigation"],
+        "known_personality": ["kind", "neighborly", "practical"],
+        "understanding": 50,
+        "relevance": 25
+      },
+      "interpretation": "Kind neighbor (canon NPC file: 'kind neighbor; helps Wang family in hard times'). Wang Ping trusts him (65) — Zhou Rui offers thread and needles for mending (canon initiation line). Relevance 25: noted, helpful neighbor."
+    },
+    {
+      "npc_id": "npc_da_niu",
+      "target_id": "npc_zhou_rui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 50,
+        "respect": 35,
+        "fear": 0,
+        "debt": -1,
+        "grievance": 15,
+        "shared_history": 10,
+        "known_skills": ["trade", "haggling"],
+        "known_personality": ["kind_to_wang_family", "shrewd", "slightly_condescending_to_simple_folk"],
+        "understanding": 40,
+        "relevance": 20
+      },
+      "interpretation": "Village social fabric — peer friction. Da Niu is the strong simple farmhand, Zhou Rui the shrewd merchant. Trust 50 — mutual wariness. Debt -1 (Minor): Zhou Rui gave Da Niu thread for fishing line (canon task context), Da Niu hasn't repaid. Grievance 15: Da Niu resents Zhou Rui's slight condescension toward 'simple folk.' Mortal-scale rivalry."
+    },
+    {
+      "npc_id": "npc_zhou_rui",
+      "target_id": "npc_da_niu",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 45,
+        "respect": 25,
+        "fear": 0,
+        "debt": 1,
+        "grievance": 10,
+        "shared_history": 10,
+        "known_skills": ["fishing", "manual_labor"],
+        "known_personality": ["simple", "strong", "guileless", "occasionally_clumsy"],
+        "understanding": 45,
+        "relevance": 18
+      },
+      "interpretation": "Reciprocal graph of the above. Debt +1 (reciprocal: Zhou Rui did Da Niu a favor, Da Niu owes him — from Zhou Rui's ledger). Grievance 10: Zhou Rui finds Da Niu clumsy and slow. Numbers are consistent with the reverse graph (trust 50↔45, shared_history 10↔10). Article XXXIV: same relationship, two different graphs."
+    },
+    {
+      "npc_id": "npc_wang_qingyue",
+      "target_id": "npc_wang_ping",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 75,
+        "respect": 40,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 18,
+        "known_skills": ["fishing", "carpentry_assist"],
+        "known_personality": ["gentle", "protective", "self_sacrificing"],
+        "understanding": 60,
+        "relevance": 40
+      },
+      "interpretation": "Wang family cousin (canon). Wang Qingyue has a soft spot for the gentle younger brother of her cousin Wang Lin — shared_history 18, trust 75. Relevance 40: interesting peer. Mortal-scale young affection, unspoken. (Compare with npc_wang_ping → npc_wang_qingyue: trust 70, shared_history 18 — consistent.)"
+    },
+    {
+      "npc_id": "npc_da_niu",
+      "target_id": "npc_wang_ping",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 80,
+        "respect": 35,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 14,
+        "known_skills": ["fishing", "carpentry_assist"],
+        "known_personality": ["gentle", "loyal", "self_sacrificing"],
+        "understanding": 65,
+        "relevance": 30
+      },
+      "interpretation": "Da Niu looks after his absent best friend's younger brother (canon: 'Da Niu wants to go fishing at the south bend' — invites Wang Ping). Trust 80 — guileless warmth. Understanding 65: knows him well. Relevance 30: noted, looks after him as Wang Lin's brother."
+    },
+    {
+      "npc_id": "npc_wang_tianshan",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 75,
+        "respect": 55,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 5,
+        "shared_history": 30,
+        "known_skills": ["carpentry", "village_negotiation"],
+        "known_personality": ["stern_but_loving", "protective_of_family", "proud_of_wang_lin"],
+        "understanding": 70,
+        "relevance": 55
+      },
+      "interpretation": "Elder's view of the family patriarch (likely Tianshui's older brother or uncle). Lifelong relationship, shared_history 30. Grievance 5: mild — Tianshan may feel Tianshui doesn't consult him enough on family matters, or is too soft on the Teng family. Relevance 55: the family head is significant to Tianshan's role."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_wang_lin",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 85,
+        "respect": 60,
+        "fear": 5,
+        "debt": 7,
+        "grievance": 0,
+        "shared_history": 25,
+        "known_skills": ["cultivation_basics_observed", "left_village_to_cultivate"],
+        "known_personality": ["determined", "filial", "calm_under_pressure", "left_home_young"],
+        "understanding": 50,
+        "relevance": 80
+      },
+      "interpretation": "CANON-CRITICAL. Tianshui's absent eldest son, now a cultivator at Heng Yue (canon: Wang Lin left the village to cultivate). Debt +7 (Major): Tianshui holds the strange jade catalyst in trust from an ancestral mandate — owed to Wang Lin as the eldest son. THIS IS THE SEED OF THE CHAPTER 1 CATALYST. When trust toward a worthy recipient crosses the threshold, the jade is given and the Major favor is honored (see favor_debt_ledger_schema). Understanding only 50: Tianshui knew his son's childhood self, but cultivation has changed Wang Lin — the father no longer fully understands the cultivator his son has become."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "npc_wang_lin",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 95,
+        "respect": 80,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 8,
+        "shared_history": 22,
+        "known_skills": ["cultivation_basics_observed", "mortal_combat_basics"],
+        "known_personality": ["determined", "filial", "protective_of_family", "calm"],
+        "understanding": 45,
+        "relevance": 75
+      },
+      "interpretation": "Brothers — Wang Ping idolizes his absent older brother (trust 95, respect 80). shared_history 22 (grew up together, then separated when Wang Lin left for Heng Yue). Grievance 8: mild, not resentment — Wang Ping grieves his brother's absence and worries about him. Understanding only 45: they grew apart when Wang Lin became a cultivator (Article XXXV.3 — you can love someone you no longer understand). Relevance 75: central, missed every day."
+    },
+    {
+      "npc_id": "npc_zhou_tingsu",
+      "target_id": "npc_wang_lin",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 95,
+        "respect": 65,
+        "fear": 5,
+        "debt": 0,
+        "grievance": 5,
+        "shared_history": 28,
+        "known_skills": ["cultivation_basics_observed", "left_village_to_cultivate"],
+        "known_personality": ["determined", "filial", "calm"],
+        "understanding": 55,
+        "relevance": 85
+      },
+      "interpretation": "Mother to absent son (canon NPC file: relationship_to_wanglin=mother). Trust 95. Grievance 5: she grieves his absence and fears for his safety. Understanding 55 — better than the father's, a mother's intuition. Relevance 85: central, always on her mind (canon initiation line: 'Wang Lin, take this bread. You always forget to eat...')."
+    },
+    {
+      "npc_id": "npc_wang_tianshan",
+      "target_id": "npc_wang_lin",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 70,
+        "respect": 75,
+        "fear": 10,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 18,
+        "known_skills": ["cultivation_basics_observed"],
+        "known_personality": ["determined", "filial", "left_home_young"],
+        "understanding": 45,
+        "relevance": 50
+      },
+      "interpretation": "Wang family elder's view of the Wang descendant who left for cultivation. Respect 75 — Tianshan, himself a low-tier cultivator, recognizes what Wang Lin has achieved. Fear 10: cultivation commands deference. Relevance 50: a point of family pride; Tianshan watches for news of him."
+    },
+    {
+      "npc_id": "npc_da_niu",
+      "target_id": "npc_wang_lin",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 90,
+        "respect": 75,
+        "fear": 5,
+        "debt": 0,
+        "grievance": 10,
+        "shared_history": 20,
+        "known_skills": ["cultivation_basics_observed", "mortal_combat_basics"],
+        "known_personality": ["determined", "calm", "loyal_to_family"],
+        "understanding": 40,
+        "relevance": 50
+      },
+      "interpretation": "Childhood friends (canon NPC file: relationship_to_wanglin=childhood_friend). Trust 90. Grievance 10: Da Niu's best friend left him behind in the mortal village — mild sadness, not resentment. Understanding only 40: cultivation is beyond Da Niu's comprehension; Wang Lin is no longer the boy he played with. Relevance 50: Da Niu thinks of him often."
+    },
+    {
+      "npc_id": "npc_wang_qingyue",
+      "target_id": "npc_wang_lin",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 80,
+        "respect": 70,
+        "fear": 5,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 16,
+        "known_skills": ["cultivation_basics_observed"],
+        "known_personality": ["determined", "filial", "calm"],
+        "understanding": 45,
+        "relevance": 40
+      },
+      "interpretation": "Cousin's admiration (canon: calls Wang Lin 'Cousin Wang Lin'). Trust 80, respect 70 — Wang Lin became a cultivator, a point of family pride. Understanding 45: she knew him as a child; cultivation has made him distant. Relevance 40: interesting, a figure of curiosity."
+    },
+    {
+      "npc_id": "npc_heng_yue_recruiter",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 35,
+        "respect": 45,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 2,
+        "known_skills": ["village_organization", "carpentry"],
+        "known_personality": ["stern", "cooperative_with_sect", "concerned_for_family"],
+        "understanding": 30,
+        "relevance": 50
+      },
+      "interpretation": "Professional regard. The recruiter (Qi Condensation 3) needs the village patriarch's cooperation to gather youth for the aptitude test (canon: 'gather_village_children' sect task). Trust 35 — knows Tianshui from prior annual visits as cooperative. Relevance 50: without Tianshui, the recruiter cannot do his job. Article XXXIV outsider dynamics."
+    },
+    {
+      "npc_id": "npc_heng_yue_recruiter",
+      "target_id": "npc_wang_ping",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 10,
+        "respect": 8,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 5,
+        "relevance": 35
+      },
+      "interpretation": "Assessing cultivation potential. Hasn't met Wang Ping yet — trust 10, respect 8, understanding 5. Relevance 35 (interesting — assessing): Wang Ping is the right age for the aptitude test, but the recruiter expects low aptitude based on his gentle demeanor. known_skills empty — observation begins when the test happens."
+    },
+    {
+      "npc_id": "npc_heng_yue_recruiter",
+      "target_id": "npc_da_niu",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 8,
+        "respect": 5,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 5,
+        "relevance": 25
+      },
+      "interpretation": "Assessing — strong but simple, unlikely to have spiritual root. Relevance 25 (noted): the recruiter will test him but expects to move on quickly. Pure professional-mode assessment; no personal relationship."
+    },
+    {
+      "npc_id": "npc_heng_yue_recruiter",
+      "target_id": "npc_wang_qingyue",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 10,
+        "respect": 10,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 5,
+        "relevance": 28
+      },
+      "interpretation": "Assessing. Wang Qingyue's perception_tiers hint at latent cultivation ('qi_condensation: Cultivator') — the recruiter may sense something. Relevance 28: noted, slight uptick in interest over the obvious mortals."
+    },
+    {
+      "npc_id": "npc_heng_yue_recruiter",
+      "target_id": "npc_zhang_tian",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 70,
+        "respect": 75,
+        "fear": 35,
+        "debt": 3,
+        "grievance": 0,
+        "shared_history": 6,
+        "known_skills": ["foundation_establishment_cultivation", "sect_patrol", "outer_sect_administration"],
+        "known_personality": ["impassive", "dutiful", "experienced"],
+        "understanding": 45,
+        "relevance": 60
+      },
+      "interpretation": "Recruiter's view of his senior — Zhang Tian, Foundation Establishment outer sect elder (canon NPC file). Fear 35: a Foundation Establishment cultivator is far above Qi Condensation 3. Debt +3 (Moderate): the senior elder mentored the recruiter; he owes Zhang Tian loyalty and dutiful service. Relevance 60: Zhang Tian oversees his work."
+    },
+    {
+      "npc_id": "npc_zhang_tian",
+      "target_id": "npc_heng_yue_recruiter",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 55,
+        "respect": 35,
+        "fear": 0,
+        "debt": -3,
+        "grievance": 0,
+        "shared_history": 6,
+        "known_skills": ["qi_condensation_cultivation", "recruitment_protocol"],
+        "known_personality": ["dutiful", "bored_by_mortals", "indifferent"],
+        "understanding": 50,
+        "relevance": 35
+      },
+      "interpretation": "Reciprocal graph. Zhang Tian's view of his subordinate. Debt -3 (reciprocal: the recruiter owes him; from Zhang Tian's ledger, the target owes the NPC). Respect only 35 — a low-realm functionary, competent but unimpressive. Article XXXIV: same relationship, two different graphs (recruiter's fear 35 ↔ Zhang Tian's fear 0; recruiter's debt +3 ↔ Zhang Tian's debt -3)."
+    },
+    {
+      "npc_id": "npc_zhang_tian",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 40,
+        "respect": 40,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 3,
+        "known_skills": ["village_organization", "carpentry"],
+        "known_personality": ["stern", "cooperative_with_sect", "concerned_for_family"],
+        "understanding": 30,
+        "relevance": 30
+      },
+      "interpretation": "Annual visits (canon NPC file: 'Annual recruiter. Appears at Wang Family Village on Day 3'). Trust 40 — cooperative but cautious. Zhang Tian respects the village patriarch as a useful mortal but is not impressed. Relevance 30: the patriarch is the gatekeeper to the youth Zhang Tian tests annually."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 12,
+        "respect": 8,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 8,
+        "relevance": 5
+      },
+      "interpretation": "GAME START — player is a stranger (Article XXXIII.2: player is not default relevant). Wang Ping has not noticed the player; he is preoccupied with his family's hardship and his absent brother. Relevance 5 (irrelevant). Article XXXV.2: the player is one variable among many, not a special case."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 10,
+        "respect": 8,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 8,
+        "relevance": 6
+      },
+      "interpretation": "GAME START — player is a stranger. Tianshui is busy with village matters, the Teng family's oppression, and the approaching aptitude test ceremony. Relevance 6 (irrelevant). Note: this is the elder who would later gift the strange jade — but only when trust crosses threshold (per relationship_graph_schema example: Trust >= 5 already enough for the catalyst, but only if shared_history and demonstrated worthiness also rise)."
+    },
+    {
+      "npc_id": "npc_zhou_tingsu",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 12,
+        "respect": 5,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 8,
+        "relevance": 5
+      },
+      "interpretation": "GAME START — stranger. Maternal wariness: a mortal mother protecting her family doesn't trust outsiders. Relevance 5 (irrelevant)."
+    },
+    {
+      "npc_id": "npc_da_niu",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 18,
+        "respect": 8,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 10,
+        "relevance": 10
+      },
+      "interpretation": "GAME START — stranger, but Da Niu is guileless and slightly more open than the others (canon personality: 'simple, strong, loyal'). Relevance 10 (top of irrelevant / low noted): he may approach with a fishing invitation if the player lingers (canon: invite_fishing_south_bend desire)."
+    },
+    {
+      "npc_id": "npc_zhou_rui",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 8,
+        "respect": 5,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 8,
+        "relevance": 8
+      },
+      "interpretation": "GAME START — stranger. Merchant's appraisal: is this a customer, a thief, or a waste of time? Trust 8 (wary — lower than the others). Relevance 8 (noted): assessing trade potential."
+    },
+    {
+      "npc_id": "npc_wang_qingyue",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 10,
+        "respect": 8,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 8,
+        "relevance": 6
+      },
+      "interpretation": "GAME START — stranger. Measured Wang family cousin, observes but does not engage. Relevance 6 (irrelevant)."
+    },
+    {
+      "npc_id": "npc_wang_tianshan",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 8,
+        "respect": 5,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 8,
+        "relevance": 5
+      },
+      "interpretation": "GAME START — stranger. The family elder is wary of strangers (canon personality: 'formal, elder'; initiation line: 'Young one, respect your elders'). Trust 8 (lowest — elders are cautious). Relevance 5 (irrelevant)."
+    },
+    {
+      "npc_id": "npc_heng_yue_recruiter",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 8,
+        "respect": 5,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 8,
+        "relevance": 30
+      },
+      "interpretation": "GAME START — stranger, BUT the recruiter's job is to assess village youth. Relevance 30 (top of noted): the player is a candidate for the aptitude test, an interesting target. If the player is in the right age range, the recruiter will summon them for testing (canon: 'You. Come here. Let me test your spiritual root.'). Higher than other NPCs' player-relevance, per task spec."
+    },
+    {
+      "npc_id": "npc_zhang_tian",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 8,
+        "respect": 5,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 8,
+        "relevance": 20
+      },
+      "interpretation": "GAME START — stranger. The Foundation Establishment outer elder is more reserved than the recruiter but also assessing — any unfamiliar face near a sect recruitment drive warrants attention. Relevance 20 (noted): observes but does not engage unless the player approaches."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "heng_yue_sect",
+      "target_type": "faction",
+      "dimensions": {
+        "trust": 40,
+        "respect": 65,
+        "fear": 35,
+        "debt": 0,
+        "grievance": 5,
+        "shared_history": 4,
+        "known_skills": ["qi_condensation_cultivation", "foundation_establishment_cultivation", "aptitude_testing", "spiritual_root_assessment"],
+        "known_personality": ["powerful", "indifferent_to_mortals", "hierarchical", "occasionally_cruel"],
+        "understanding": 30,
+        "relevance": 55
+      },
+      "interpretation": "Faction graph. The Heng Yue Sect took Wang Lin as a disciple — Tianshui respects the sect (65) for giving his son a chance at cultivation. But he doesn't fully trust cultivators (40) and fears their power (35). Grievance 5: slight — the sect is far away and didn't protect the village from the Teng family. Relevance 55: the sect holds Wang Lin's future."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "teng_family",
+      "target_type": "faction",
+      "dimensions": {
+        "trust": 5,
+        "respect": 50,
+        "fear": 75,
+        "debt": 0,
+        "grievance": 65,
+        "shared_history": 8,
+        "known_skills": ["martial_prowess", "spirit_stone_wealth", "cultivation_overwhelming_power", "tax_collection"],
+        "known_personality": ["ruthless", "vengeful", "proud", "cruel_to_mortals"],
+        "understanding": 35,
+        "relevance": 75
+      },
+      "interpretation": "Faction graph — the regional oppressor. Teng Huayuan (half-step Deity Transformation, canon NPC file) destroyed the Wang family in canon. Fear 75, grievance 65 — years of tax collection, squeezing the village to ruin (canon initiation lines: 'The Teng family's servants were in the market again, buying up grain'; 'We gave them half our rice'). Respect 50: Tianshui acknowledges their power even as he hates them. Relevance 75: central — the source of the Wang family's ruin."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "wang_family_village",
+      "target_type": "faction",
+      "dimensions": {
+        "trust": 70,
+        "respect": 50,
+        "fear": 0,
+        "debt": 7,
+        "grievance": 0,
+        "shared_history": 50,
+        "known_skills": ["carpentry", "farming", "village_organization", "family_rituals"],
+        "known_personality": ["proud", "poor_but_dignified", "oppressed_by_teng_family", "loyal_to_kin"],
+        "understanding": 60,
+        "relevance": 90
+      },
+      "interpretation": "Faction graph — the Wang family line itself. Debt +7 (Major): Tianshui holds the strange jade catalyst in trust from an ancestral mandate — owed to the Wang family line, to be given to the right Wang descendant (Wang Lin) when the time is right. THIS IS THE FACTION-LEVEL SEED OF THE CHAPTER 1 CATALYST (paired with the personal-level debt toward npc_wang_lin). Relevance 90: central — the Wang family is Tianshui's life's purpose."
+    },
+    {
+      "npc_id": "npc_heng_yue_recruiter",
+      "target_id": "heng_yue_sect",
+      "target_type": "faction",
+      "dimensions": {
+        "trust": 80,
+        "respect": 75,
+        "fear": 30,
+        "debt": 3,
+        "grievance": 0,
+        "shared_history": 12,
+        "known_skills": ["qi_condensation_cultivation", "outer_sect_duties", "recruitment_protocol", "spirit_stone_accounting"],
+        "known_personality": ["hierarchical", "dutiful", "occasionally_cruel_to_failures", "loyal_to_elders"],
+        "understanding": 50,
+        "relevance": 85
+      },
+      "interpretation": "Faction graph — the recruiter's loyalty to his own sect. Trust 80, respect 75 — the sect is his identity. Fear 30: the elders above him are far more powerful. Debt +3 (Moderate): the sect raised and trained him; he owes the sect his life and loyalty. Relevance 85: central — the sect is his life."
+    }
+  ]
+}

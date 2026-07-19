@@ -1,0 +1,133 @@
+{
+  "_comment": "Zhou Tingsu — village herbalist and midwife. INFERRED (Article XV). Learned herb-lore from her grandmother. Does not cultivate. Her motivations center on healing, gathering, and training a successor.",
+  "_schema": "motivation_state",
+  "_schema_version": 2,
+  "_article": "XXXIII + XXXV",
+  "npc_id": "npc_zhou_tingsu",
+  "name": "Zhou Tingsu",
+  "nameCn": "周婷苏",
+  "location": "wang_family_village",
+  "canon_fidelity": "INFERRED",
+  "evaluation_cycle_ticks": 1000,
+  "long_term_priorities": [
+    "heal_the_village",
+    "gather_herbs",
+    "train_a_successor",
+    "worry_about_wolves"
+  ],
+  "motivations": [
+    {
+      "id": "m_request_herb_gathering",
+      "driving_forces": [
+        "duty",
+        "survival"
+      ],
+      "statement": "I am running low on Crimson Root and Spirit Moss. The patches near the village are depleted. I need someone to go deeper into the forest, past the south bend. But the wolves...",
+      "target_type": "anyone",
+      "target_filter": "can_travel AND can_combat OR can_stealth",
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "npc_zhou_rui",
+            "relevance_score": 40,
+            "relevance_reason": "Village hunter. Knows the forest, knows how to avoid wolves.",
+            "becomes_relevant_when": [
+              "zhou_rui.nearby AND zhou_rui.state:!hunting"
+            ]
+          },
+          {
+            "target_id": "player",
+            "relevance_score": 5,
+            "relevance_reason": "A stranger. If they can fight and are willing, they could help.",
+            "becomes_relevant_when": [
+              "player.helped_village AND player.can_combat",
+              "OR relationship.trust >= 30 AND player.cultivation >= qi_condensation"
+            ]
+          }
+        ],
+        "highest_relevance_target": "npc_zhou_rui"
+      },
+      "priority": 6,
+      "urgency": "medium",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [
+          "self (risk the forest alone at dawn)"
+        ],
+        "preferred_resolution": "ask_zhou_rui_if_available_else_self"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If herb_stores < 40%: request help. If Zhou Rui available, ask him. Else go at dawn alone.",
+        "initiation_threshold": 5,
+        "conditions": [
+          "herb_stores.crimson_root < 0.4"
+        ]
+      },
+      "initiation": {
+        "engine": "request",
+        "mode": "line",
+        "line": "I need Crimson Root. The good patches are past the south bend. Stay on the ridge — the wolves run the valley floor.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 8,
+        "requires_consent": true,
+        "cooldown_ticks": 12000
+      },
+      "offer_in_return": "medical_favor — free treatment for one year",
+      "consequence_on_fulfill": "herb_stores.replenished=true; relationship.trust+=5; favor_ledger+=helper_gathered_herbs (Moderate); memory_ledger+=herb_gathering_trip",
+      "consequence_on_ignore": "zhou_tingsu goes alone at dawn; risk of wolf encounter",
+      "memory_tag": "herb_gathering_request",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_treat_injured_villager",
+      "driving_forces": [
+        "duty",
+        "compassion"
+      ],
+      "statement": "Someone is hurt. It is my job.",
+      "target_type": "none",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "per_target": [],
+        "highest_relevance_target": null
+      },
+      "priority": 8,
+      "urgency": "high (when injury exists)",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [],
+        "preferred_resolution": "treat_immediately"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If any villager injured and I am nearby, I treat them.",
+        "initiation_threshold": 3,
+        "conditions": [
+          "villager.injured=true",
+          "zhou_tingsu.nearby<30"
+        ]
+      },
+      "initiation": {
+        "engine": "offer",
+        "mode": "gesture",
+        "line": "Sit. Let me see.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 5,
+        "requires_consent": true,
+        "cooldown_ticks": 6000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "villager.injured=false; relationship.trust+=3; memory_ledger+=treated_injury",
+      "consequence_on_ignore": "injury worsens; if severe: villager may die",
+      "memory_tag": "treated_injury",
+      "satisfies_motivations_on_others": null
+    }
+  ],
+  "passive_states": [
+    "tending_herbs",
+    "sorting_dried_herbs",
+    "resting"
+  ],
+  "cross_npc_triggers": [
+    "zhou_tingsu.m_treat_injured_villager triggered by wolf_attack, bandit_raid, farming accidents"
+  ]
+}

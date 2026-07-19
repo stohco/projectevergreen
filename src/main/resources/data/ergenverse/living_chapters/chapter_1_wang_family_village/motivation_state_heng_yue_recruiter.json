@@ -1,0 +1,97 @@
+{
+  "_comment": "Heng Yue Sect Recruiter — outer disciple sent to test village youth. EXPLICIT (Heng Yue sends a recruiter). Neither cruel nor kind — efficient.",
+  "_schema": "motivation_state",
+  "_schema_version": 2,
+  "_article": "XXXIII + XXXV",
+  "npc_id": "npc_heng_yue_recruiter",
+  "name": "Heng Yue Recruiter",
+  "nameCn": "恒岳招新弟子",
+  "location": "wang_family_village (temporary, 2-3 days)",
+  "canon_fidelity": "EXPLICIT (recruiter) / INFERRED (name, personality)",
+  "evaluation_cycle_ticks": 2000,
+  "long_term_priorities": [
+    "test_village_youth",
+    "return_to_sect",
+    "maintain_sect_dignity"
+  ],
+  "motivations": [
+    {
+      "id": "m_test_village_youth",
+      "driving_forces": [
+        "sect_order",
+        "duty"
+      ],
+      "statement": "The wanderer reported potential aptitude. I am here to test. I will test every child between 12 and 16. Those who pass come with me.",
+      "target_type": "anyone",
+      "target_filter": "village_youth_12_to_16",
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "player",
+            "relevance_score": 25,
+            "relevance_reason": "If the player is a mortal youth of the right age, test them. Otherwise irrelevant.",
+            "becomes_relevant_when": [
+              "player.age >= 12 AND player.age <= 16 AND player.cultivation = none"
+            ]
+          },
+          {
+            "target_id": "npc_wang_ping",
+            "relevance_score": 30,
+            "relevance_reason": "Right age. The wanderer noted the Wang family.",
+            "becomes_relevant_when": [
+              "wang_ping.present",
+              "NOT memory_tag:wang_ping_tested"
+            ]
+          },
+          {
+            "target_id": "npc_da_niu",
+            "relevance_score": 28,
+            "relevance_reason": "Right age. Big and strong — that means nothing for cultivation aptitude.",
+            "becomes_relevant_when": [
+              "da_niu.asks:test_me",
+              "NOT memory_tag:da_niu_tested"
+            ]
+          }
+        ],
+        "highest_relevance_target": "npc_wang_ping"
+      },
+      "priority": 8,
+      "urgency": "high (2-day window)",
+      "alternative_resolution": {
+        "can_resolve_without_target": false,
+        "alternative_targets": [],
+        "preferred_resolution": "test_all_eligible_youth"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If untested youth remain and time is not up, call them in.",
+        "initiation_threshold": 3,
+        "conditions": [
+          "heng_yue_recruiter.present=true",
+          "youth_untested > 0"
+        ]
+      },
+      "initiation": {
+        "engine": "recruitment",
+        "mode": "line",
+        "line": "Place your hand here. Do not resist. This will not hurt.",
+        "conversation_mode": "focus",
+        "requires_proximity": 3,
+        "requires_consent": true,
+        "cooldown_ticks": 6000
+      },
+      "offer_in_return": "sect_membership (if aptitude passes)",
+      "consequence_on_fulfill": "target.tested=true; if aptitude > threshold: recruited; if zero: rejected, memory: failed_heng_yue_test",
+      "consequence_on_ignore": "untested youth miss their chance",
+      "memory_tag": "heng_yue_aptitude_test",
+      "satisfies_motivations_on_others": [
+        "npc_da_niu.m_beg_heng_yue_recruiter"
+      ]
+    }
+  ],
+  "passive_states": [
+    "waiting_in_tavern",
+    "reviewing_notes",
+    "preparing_to_leave"
+  ],
+  "cross_npc_triggers": []
+}

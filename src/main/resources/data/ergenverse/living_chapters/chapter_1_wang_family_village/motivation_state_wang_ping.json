@@ -1,0 +1,437 @@
+{
+  "_comment": "Motivation state for Wang Ping (王平) — Wang Lin's younger brother, mortal. Re-authored under v2 schema in AUTO-CANON-054-a from the v1 desire_state_wang_ping.json (which is now superseded). Wang Ping is mortal — his motivations are mortal-scale: family, firewood, the harvest, worry for his brother, the Teng family's squeeze, the Heng Yue test. He is NOT a cultivator and never will be. The player is NOT the default target of his motivations — Wang Ping's world is his family, Da Niu, the village. The player becomes relevant only by being present, helping, or being known to Wang Lin. This file shows: (1) mortal-scale motivations (love, duty, fear, survival) — Wang Ping does not have cultivation_bottleneck or sect_order driving forces, (2) cross-NPC chains (his motivations satisfy Da Niu's and Tianshui's), (3) the memory metric (his dog grief motivation is the canonical Article XXXI.5 test — the 'used to have one' retelling), (4) the player becoming relevant only through demonstrated action.",
+  "_schema": "motivation_state",
+  "_schema_version": 2,
+  "_article": "XXXIII + XXXV.2",
+  "npc_id": "npc_wang_ping",
+  "name": "Wang Ping",
+  "nameCn": "王平",
+  "location": "wang_family_village",
+  "evaluation_cycle_ticks": 1000,
+  "long_term_priorities": [
+    "care_for_mother_and_father — Mother is frail, Father is weary. I will not leave them.",
+    "prepare_for_winter — firewood, salted fish, mended coats. Winter is hard. Always hard.",
+    "watch_for_brother — Wang Lin left. He is somewhere becoming someone. I hope he comes back. I hope he does not need to.",
+    "survive_the_teng_tax — half the harvest gone. We eat less. We work harder. We do not resist.",
+    "be_a_good_brother — when Wang Lin returns, the house should still be standing and the parents should still be alive. That is my job."
+  ],
+  "motivations": [
+    {
+      "id": "m_request_firewood_for_winter",
+      "driving_forces": ["survival", "duty", "love"],
+      "statement": "Father says winter will be hard this year. The woodpile is low. Mother is already cold at night. I need oak logs. Someone nearby must have some — or time to help me split what we have.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "_note": "AUTO-CANON-054-a v2 (Article XXXV.2): Wang Ping calculates relevance for every nearby sentient. The player is one option. Da Niu (childhood friend, strong) is the default. Father, Mother, Tianshui, any villager — all are candidates. The player is not special-cased.",
+        "per_target": [
+          {
+            "target_id": "npc_da_niu",
+            "relevance_score": 75,
+            "relevance_reason": "Da Niu is my childhood friend, strong as an ox. He would help me split logs without asking. He is the first I would ask.",
+            "becomes_relevant_when": ["da_niu.nearby<20 AND da_niu.not_busy"]
+          },
+          {
+            "target_id": "npc_wang_tianshui",
+            "relevance_score": 30,
+            "relevance_reason": "The elder. He has axes and tools. He might lend them, or send a youth to help. But I would not ask him to split logs — he is old and tired.",
+            "becomes_relevant_when": ["tianshui.nearby<15 AND wang_ping.desperate"]
+          },
+          {
+            "target_id": "npc_wang_tianshui",
+            "relevance_score": 25,
+            "relevance_reason": "Father. He is tired. The Teng family's squeeze has worn him down. I would help HIM with the woodpile, not the other way around.",
+            "becomes_relevant_when": ["never_request — father is to be helped, not asked"]
+          },
+          {
+            "target_id": "npc_zhou_rui",
+            "relevance_score": 22,
+            "relevance_reason": "Uncle Zhou is a neighbor and a merchant. He has coin. He might trade firewood for labor. But trading labor means I am not splitting our own wood.",
+            "becomes_relevant_when": ["zhou_rui.nearby<15 AND wang_ping.has_no_other_option"]
+          },
+          {
+            "target_id": "player",
+            "relevance_score": 10,
+            "relevance_reason": "Stranger. I would not ask a stranger for firewood. But if the stranger has been kind to the village — helped someone, mended something — I might mention the woodpile in their hearing. A hint, not a request.",
+            "becomes_relevant_when": ["player.relationship.wang_ping.trust >= 15 AND player.nearby<12"]
+          },
+          {
+            "target_id": "self",
+            "relevance_score": 50,
+            "relevance_reason": "I can split the logs myself. It will take longer. But I can.",
+            "becomes_relevant_when": ["always — self is the fallback"]
+          }
+        ],
+        "highest_relevance_target": "npc_da_niu"
+      },
+      "priority": 6,
+      "urgency": "medium (autumn → winter)",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": ["npc_da_niu (helps split)", "self (splits alone, slower)"],
+        "preferred_resolution": "ask_da_niu_first_then_self"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If Da Niu is nearby and free: ask him. If not: mention it to whoever is nearby (a hint, not a request). If no one: split alone. The player is not the default — Wang Ping has a brother-like bond with Da Niu that the player has not earned.",
+        "initiation_threshold": 4,
+        "conditions": ["season:autumn OR season:early_winter", "inventory:oak_log<8", "nearby:any_sentient<15"]
+      },
+      "initiation": {
+        "engine": "request",
+        "mode": "line",
+        "line": "Brother — the woodpile is low. If you bring oak logs, I'll help you split them and Mother can stay warm.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 12,
+        "requires_consent": true,
+        "cooldown_ticks": 12000
+      },
+      "offer_in_return": "coal (4) — Wang Ping helps split and shares his own coal stash",
+      "consequence_on_fulfill": "wang_ping.winter_preparedness+=1; if target=player: tianshui.favor_target+=1 (village elder notices); memory_ledger+=firewood_delivered",
+      "consequence_on_ignore": "wang_ping.health-=1 after first snowfall; memory_ledger+=wang_ping_struggled_alone",
+      "memory_tag": "wang_ping_firewood_request",
+      "satisfies_motivations_on_others": ["npc_wang_tianshui.m_protect_village_passive (helps village resilience)"]
+    },
+    {
+      "id": "m_warn_teng_family_tax",
+      "driving_forces": ["fear", "duty", "grudge"],
+      "statement": "The Teng family's tax collectors came again yesterday. Half the rice. Father was quiet all evening. Mother did not cry where I could see. Someone should know. Someone should hear this. Even if they can do nothing.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "_note": "AUTO-CANON-054-a v2: this is a rumor-engine motivation. Wang Ping warns anyone within earshot. The player is one option. Other villagers are higher relevance — they share the burden.",
+        "per_target": [
+          {
+            "target_id": "npc_da_niu",
+            "relevance_score": 70,
+            "relevance_reason": "Da Niu's family was squeezed too. He would understand. We would grumble together. That is something.",
+            "becomes_relevant_when": ["da_niu.nearby<10 AND time_of_day:day"]
+          },
+          {
+            "target_id": "npc_zhou_rui",
+            "relevance_score": 55,
+            "relevance_reason": "Uncle Zhou sees the tax collectors at the market. He knows. But hearing it from us, neighbor to neighbor — it builds the village's quiet anger.",
+            "becomes_relevant_when": ["zhou_rui.nearby<12 AND time_of_day:day"]
+          },
+          {
+            "target_id": "npc_wang_tianshui",
+            "relevance_score": 40,
+            "relevance_reason": "The elder should know how bad it is. He sometimes intervenes — once, he persuaded the collectors to take a quarter instead of half. He cannot always.",
+            "becomes_relevant_when": ["tianshui.nearby<15 AND wang_ping.urgent"]
+          },
+          {
+            "target_id": "npc_wang_qingyue",
+            "relevance_score": 35,
+            "relevance_reason": "Cousin Qingyue is family. Her family was squeezed too. We would commiserate.",
+            "becomes_relevant_when": ["wang_qingyue.nearby<12"]
+          },
+          {
+            "target_id": "player",
+            "relevance_score": 12,
+            "relevance_reason": "If a stranger is in the village, they should know what the Teng family does. Maybe they care. Maybe they do not. But the story should be told.",
+            "becomes_relevant_when": ["player.nearby<10 AND player.demonstrated:willingness_to_listen"]
+          }
+        ],
+        "highest_relevance_target": "npc_da_niu"
+      },
+      "priority": 5,
+      "urgency": "medium",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": ["npc_zhou_rui (neighbor)", "npc_wang_qingyue (cousin)", "any_villager"],
+        "preferred_resolution": "tell_da_niu_or_any_neighbor_within_earshot"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If Da Niu or any neighbor is nearby: tell them. If only the player is nearby: mention it (the village's hardship should be visible to outsiders). If no one: keep it inside. The anger does not fade, but the words wait.",
+        "initiation_threshold": 4,
+        "conditions": ["memory_tag:teng_tax_visit<3d", "nearby:any_sentient<10", "time_of_day:day"]
+      },
+      "initiation": {
+        "engine": "rumor",
+        "mode": "line",
+        "line": "Father has been quiet lately. The Teng family's tax collectors came again yesterday. We gave them half our rice. I don't know what we'll eat come spring.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 10,
+        "requires_consent": false,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "target.knowledge+=teng_family_oppression; if target=villager: village.shared_anger+=1; memory_ledger+=teng_tax_rumor_spread",
+      "consequence_on_ignore": "rumor stays local; if no one hears it, the player never learns why the village is impoverished",
+      "memory_tag": "wang_ping_teng_tax_warning",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_invite_fishing_south_bend",
+      "driving_forces": ["love", "duty", "compassion"],
+      "statement": "Da Niu wants to fish at the south bend. Mother could use the extra food. And — I will not say this aloud — I want to do something that is not work, just once. Will someone come with us? The south bend is not safe alone.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "_note": "AUTO-CANON-054-a v2: Wang Ping's fishing invite targets Da Niu by default (the plan is theirs together). The player is a possible third. Other villagers are lower relevance — this is a young man's outing, not a village event.",
+        "per_target": [
+          {
+            "target_id": "npc_da_niu",
+            "relevance_score": 90,
+            "relevance_reason": "Da Niu is the one who suggested it. He is the default. We go together, or not at all.",
+            "becomes_relevant_when": ["da_niu.nearby<20 AND da_niu.free_this_morning"]
+          },
+          {
+            "target_id": "npc_wang_qingyue",
+            "relevance_score": 30,
+            "relevance_reason": "Cousin Qingyue might come. She is family. But she has her own tasks.",
+            "becomes_relevant_when": ["wang_qingyue.nearby<15 AND wang_qingyue.free"]
+          },
+          {
+            "target_id": "npc_wang_tianshui",
+            "relevance_score": 8,
+            "relevance_reason": "Father is too tired. I would not ask. But if he offered, I would be glad.",
+            "becomes_relevant_when": ["never_request — but accept_offer"]
+          },
+          {
+            "target_id": "player",
+            "relevance_score": 22,
+            "relevance_reason": "If the player is around and not a stranger to us — has shown kindness, or is known to my brother — I would invite. Three is safer than two at the south bend.",
+            "becomes_relevant_when": ["player.relationship.wang_ping.trust >= 20 AND player.nearby<15"]
+          }
+        ],
+        "highest_relevance_target": "npc_da_niu"
+      },
+      "priority": 4,
+      "urgency": "low",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": ["npc_da_niu (default)", "self (goes with Da Niu alone)"],
+        "preferred_resolution": "go_with_da_niu_invite_third_if_trusted"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If Da Niu is around: invite him (the plan is ours together). If a third trusted person is around: invite them too. If not: go with Da Niu alone. The south bend is not safe — the wolves are bolder — but the fish are needed.",
+        "initiation_threshold": 4,
+        "conditions": ["time_of_day:morning", "weather:!storm", "nearby:npc_da_niu<20", "nearby:any_sentient<15"]
+      },
+      "initiation": {
+        "engine": "offer",
+        "mode": "line",
+        "line": "Da Niu wants to go fishing at the south bend. Will you come? We could use the extra food — and it's been a while since we did something that wasn't work.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 12,
+        "requires_consent": true,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": "cod (3) — share of the catch",
+      "consequence_on_fulfill": "wang_ping.morale+=1; if da_niu.present: da_niu.morale+=1; memory_ledger+=fishing_trip_south_bend",
+      "consequence_on_ignore": "wang_ping and da_niu go alone; if a wolf attack happens at the south bend, they face it without the player",
+      "memory_tag": "wang_ping_fishing_invite",
+      "satisfies_motivations_on_others": ["npc_da_niu.m_want_fishing_companion"]
+    },
+    {
+      "id": "m_hope_player_passes_heng_yue_test",
+      "driving_forces": ["love", "compassion", "fear"],
+      "statement": "If the Heng Yue elder tests us, I will stay. Mother and Father need me. But if my brother — or someone with his chance — could pass, they could become someone. Leave this village. Become a cultivator. I will not say this is for me. It is for them.",
+      "target_type": "player",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "_note": "AUTO-CANON-054-a v2 (Article XXXV.2): this motivation is player-targeted by name, but Wang Ping's deeper hope is for his brother Wang Lin (who already left). The player becomes the surrogate target when Wang Lin is absent AND the player has shown any sign of cultivation potential. This is one of the few Wang Ping motivations where the player IS the highest_relevance_target — but only because Wang Lin is gone.",
+        "per_target": [
+          {
+            "target_id": "npc_wang_lin",
+            "relevance_score": 88,
+            "relevance_reason": "My brother. He left for Heng Yue years ago. He passed the test. He became someone. I am proud. I am also lonely. If he were here, I would tell him this — but he is not.",
+            "becomes_relevant_when": ["wang_lin.visits_village AND wang_ping.can_speak_privately"]
+          },
+          {
+            "target_id": "player",
+            "relevance_score": 45,
+            "relevance_reason": "If the player is here for the test, and the player is mortal, and the player has shown any kindness — I would say this. Not for me. For them. So they know what they are leaving behind, and what they are carrying with them.",
+            "becomes_relevant_when": ["memory_tag:heng_yue_recruiter_present", "player.cultivation:mortal", "player.relationship.wang_ping.trust >= 15"]
+          },
+          {
+            "target_id": "npc_wang_qingyue",
+            "relevance_score": 28,
+            "relevance_reason": "Cousin Qingyue will also be tested. If she passes, she leaves too. I would say the same to her.",
+            "becomes_relevant_when": ["wang_qingyue.attends_test AND wang_ping.can_speak_to_cousin"]
+          },
+          {
+            "target_id": "self",
+            "relevance_score": 10,
+            "relevance_reason": "I will not be tested. I am mortal. I will stay. That is my role. I do not resent it. ...I do not resent it.",
+            "becomes_relevant_when": ["never — Wang Ping has accepted his role"]
+          }
+        ],
+        "highest_relevance_target": "npc_wang_lin"
+      },
+      "priority": 7,
+      "urgency": "high (only fires during aptitude test ceremony window)",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": ["npc_wang_qingyue (if she is being tested)"],
+        "preferred_resolution": "speak_to_brother_if_present_else_player_if_known_else_qingyue"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If the recruiter is in the village AND my brother is here: speak to him privately. If brother is absent AND player is present and has shown kindness: speak to the player. If neither: speak to Qingyue. The words want out. They are not for me. They are for whoever has the chance I do not.",
+        "initiation_threshold": 5,
+        "conditions": ["memory_tag:heng_yue_recruiter_present", "nearby:player<8", "player.cultivation:mortal"]
+      },
+      "initiation": {
+        "engine": "favor",
+        "mode": "line",
+        "line": "If the Heng Yue elder tests us, I hope you pass. I'll stay and take care of Mother and Father — but you... you could become someone. Please. Don't stay here for us.",
+        "conversation_mode": "focus",
+        "requires_proximity": 8,
+        "requires_consent": true,
+        "cooldown_ticks": 48000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "player.knowledge+=wang_ping_sacrifice_understood; wang_ping.bond_player+=2; memory_ledger+=wang_ping_sendoff (permanent, significance 6)",
+      "consequence_on_ignore": "wang_ping never says it; player leaves for Heng Yue without understanding why Wang Lin's brother stayed behind",
+      "memory_tag": "wang_ping_heng_yue_hope",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_mourn_hunting_dog",
+      "driving_forces": ["love", "compassion"],
+      "statement": "The hunting dog is dead. The wolves got it at the south bend. I will not speak of it. But if someone mentions dogs, or hunting, or the south bend — I will say 'used to have one.' That is all. That is enough.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "_note": "AUTO-CANON-054-a v2 (Article XXXI.5 Memory Metric): the canonical 'used to have one' retelling. Wang Ping mourns to anyone who raises the topic. The player is one option — children are higher relevance (they are the ones who will retell the story months later, completing the Memory Metric test).",
+        "per_target": [
+          {
+            "target_id": "any_village_child",
+            "relevance_score": 65,
+            "relevance_reason": "Children ask. Children remember. If a child asks about the dog, I will tell them — and the child will retell it later, months from now, distorted by time and affection into a legend. This is how the village remembers.",
+            "becomes_relevant_when": ["child.present AND child.asks_about:dog OR conversation_topic:hunting"]
+          },
+          {
+            "target_id": "npc_da_niu",
+            "relevance_score": 55,
+            "relevance_reason": "Da Niu knew the dog. He would understand. We would not need to say much.",
+            "becomes_relevant_when": ["da_niu.nearby<8 AND conversation_topic:dog OR conversation_topic:south_bend"]
+          },
+          {
+            "target_id": "npc_wang_tianshui",
+            "relevance_score": 30,
+            "relevance_reason": "Father does not mention the dog. He grieves in his own way, quietly. I would not bring it up.",
+            "becomes_relevant_when": ["never_initiate — but if father mentions it, respond"]
+          },
+          {
+            "target_id": "player",
+            "relevance_score": 18,
+            "relevance_reason": "If the player asks about the dog or about hunting, I will say it. The player is a stranger, but grief is grief. The words come out the same.",
+            "becomes_relevant_when": ["player.nearby<8 AND player.asks_about:dog OR conversation_topic:hunting"]
+          }
+        ],
+        "highest_relevance_target": "any_village_child"
+      },
+      "priority": 8,
+      "urgency": "low (grief is patient)",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": ["self (grieve silently)"],
+        "preferred_resolution": "speak_if_topic_raised_else_silent"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Default: silent. If someone mentions dogs, hunting, or the south bend within 7-60 days of the dog's death: say the line. After 60 days: still say it, but rarer. The memory does not fade — it distorts. That is how it should be.",
+        "initiation_threshold": 4,
+        "conditions": ["memory_tag:dog_died_wolf_attack", "memory_age:dog_died_wolf_attack>7d", "memory_age:dog_died_wolf_attack<180d", "nearby:any_sentient<8", "conversation_topic:dog OR conversation_topic:hunting OR conversation_topic:south_bend"]
+      },
+      "initiation": {
+        "engine": "rumor",
+        "mode": "line",
+        "line": "...Used to have one. Good dog. Wouldn't go near the south bend after what happened.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 8,
+        "requires_consent": false,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "memory_ledger+=wang_ping_remembers_dog; if target is a child: child.knowledge+=old_chen_dog_story (sets up the months-later retelling — the Article XXXI.5 Memory Metric test)",
+      "consequence_on_ignore": "wang_ping stays silent about the dog; the memory decays faster; the Memory Metric test fails",
+      "memory_tag": "wang_ping_dog_grief",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_seek_protector_when_threatened",
+      "driving_forces": ["fear", "love", "survival"],
+      "statement": "There are sounds outside. Footsteps. Not a villager's footsteps. Mother is sleeping. Father is sleeping. I should wake someone. I should wake the elder. I should wake anyone.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "_note": "AUTO-CANON-054-a v2 (Article XXXV.2): when the family is threatened at night, Wang Ping seeks a protector. Tianshui (village cultivator) is the highest relevance. Father is woken first (he is in the house). The player is a candidate only if the player is present and trusted.",
+        "per_target": [
+          {
+            "target_id": "npc_wang_tianshui",
+            "relevance_score": 85,
+            "relevance_reason": "The elder. He is the cultivator. He is the one who can face whatever is outside. I would run to his house.",
+            "becomes_relevant_when": ["village.under_threat_at_night AND tianshui.reachable"]
+          },
+          {
+            "target_id": "npc_wang_tianshui",
+            "relevance_score": 70,
+            "relevance_reason": "Father. He is in the next room. I would wake him first — even before running to the elder. He would know what to do, even if he is frail.",
+            "becomes_relevant_when": ["wang_tianshui.in_house AND wang_ping.hears_threat"]
+          },
+          {
+            "target_id": "npc_wang_tianshan",
+            "relevance_score": 45,
+            "relevance_reason": "Tianshan is the family elder — a low-tier cultivator. If Tianshui is unreachable, Tianshan is the next. He can at least rally the watch.",
+            "becomes_relevant_when": ["tianshui.unreachable AND tianshan.reachable"]
+          },
+          {
+            "target_id": "npc_wang_lin",
+            "relevance_score": 50,
+            "relevance_reason": "If my brother were here, I would wake him. He is stronger than Father. But he is not here. He has not been here for years.",
+            "becomes_relevant_when": ["wang_lin.visits_village AND wang_lin.staying_at_family_home"]
+          },
+          {
+            "target_id": "player",
+            "relevance_score": 20,
+            "relevance_reason": "If the player is staying at our home — has earned our trust enough to sleep under our roof — I would wake them too. More hands. More eyes.",
+            "becomes_relevant_when": ["player.staying_at_wang_family_home AND player.relationship.wang_ping.trust >= 40"]
+          }
+        ],
+        "highest_relevance_target": "npc_wang_tianshui"
+      },
+      "priority": 9,
+      "urgency": "critical (only fires when family threatened at night)",
+      "alternative_resolution": {
+        "can_resolve_without_target": false,
+        "alternative_targets": ["npc_wang_tianshan", "village_watch"],
+        "preferred_resolution": "wake_father_first_then_run_to_tianshui"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If I hear a threat at night: wake Father first (he is here). Then run to Tianshui. Then, if needed, Tianshan. The player is a last option — only if the player is staying with us.",
+        "initiation_threshold": 8,
+        "conditions": ["time_of_day:night", "wang_ping.hears_threat", "wang_family_home.under_threat"]
+      },
+      "initiation": {
+        "engine": "request",
+        "mode": "line",
+        "line": "Father — wake up. There's someone outside. I'm going for the elder.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 4,
+        "requires_consent": false,
+        "cooldown_ticks": 0
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "family.alerted=true; tianshui.already_alerted (cross-NPC trigger); memory_ledger+=wang_ping_sought_protector",
+      "consequence_on_ignore": "family sleeps through the threat; if the threat is real, family may be harmed",
+      "memory_tag": "wang_ping_sought_protector",
+      "satisfies_motivations_on_others": ["npc_wang_tianshui.m_protect_village_passive (alert is mutual)"]
+    }
+  ],
+  "passive_states": [
+    "sleeping (t0-t1: 0-2000)",
+    "eating_quietly (morning and evening meals with family)",
+    "fishing_with_da_niu (when fishing_invite accepted or unaddressed and weather is fair)",
+    "mourning (for 3 days after memory_tag:dog_died_wolf_attack — no motivations except m_mourn_hunting_dog)",
+    "winter_hardship (after first snowfall if winter_preparedness<3 — motivations shift to survival, priority 9)",
+    "splitting_firewood_alone (when no one is around to help — Wang Ping works in silence)"
+  ],
+  "cross_npc_triggers": [
+    "wang_ping.m_request_firewood_for_winter satisfies npc_wang_tianshui.m_protect_village_passive (village resilience)",
+    "wang_ping.m_invite_fishing_south_bend satisfies npc_da_niu.m_want_fishing_companion",
+    "wang_ping.m_warn_teng_family_tax triggers village_elder.worry (if elder is within earshot)",
+    "wang_ping.m_mourn_hunting_dog satisfies the Article XXXI.5 Memory Metric (the canonical dog/wolf test)",
+    "wang_ping.m_seek_protector_when_threatened triggers npc_wang_tianshui.m_protect_village_passive (alert is mutual)"
+  ]
+}

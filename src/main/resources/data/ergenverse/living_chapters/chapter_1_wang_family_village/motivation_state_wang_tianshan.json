@@ -1,0 +1,87 @@
+{
+  "_comment": "Wang Tianshan — village gate guard, Wang Tianshui's younger relative. INFERRED (Article XV). Loyal, suspicious of strangers, takes his job seriously.",
+  "_schema": "motivation_state",
+  "_schema_version": 2,
+  "_article": "XXXIII + XXXV",
+  "npc_id": "npc_wang_tianshan",
+  "name": "Wang Tianshan",
+  "nameCn": "王天山",
+  "location": "wang_family_village",
+  "canon_fidelity": "INFERRED",
+  "evaluation_cycle_ticks": 1000,
+  "long_term_priorities": [
+    "guard_the_gate",
+    "serve_the_elder",
+    "resent_the_teng_family"
+  ],
+  "motivations": [
+    {
+      "id": "m_question_stranger",
+      "driving_forces": [
+        "duty",
+        "fear"
+      ],
+      "statement": "Someone is approaching the gate. I do not know them. I need to know why they are here.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "player",
+            "relevance_score": 75,
+            "relevance_reason": "A stranger at the gate. My job is to question them.",
+            "becomes_relevant_when": [
+              "player.approaching_gate=true"
+            ]
+          },
+          {
+            "target_id": "npc_heng_yue_recruiter",
+            "relevance_score": 50,
+            "relevance_reason": "A cultivator. I cannot stop them but can announce them to the elder.",
+            "becomes_relevant_when": [
+              "heng_yue_recruiter.approaching=true"
+            ]
+          }
+        ],
+        "highest_relevance_target": "player"
+      },
+      "priority": 7,
+      "urgency": "high (when someone approaches)",
+      "alternative_resolution": {
+        "can_resolve_without_target": false,
+        "alternative_targets": [],
+        "preferred_resolution": "confront_and_question"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Someone at the gate. Ask their business.",
+        "initiation_threshold": 2,
+        "conditions": [
+          "entity.approaching_gate=true",
+          "tianshan.on_duty=true"
+        ]
+      },
+      "initiation": {
+        "engine": "challenge",
+        "mode": "line",
+        "line": "Stop. State your business.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 6,
+        "requires_consent": false,
+        "cooldown_ticks": 6000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "stranger.identified=true; if hostile: elder warned; if peaceful: enters village",
+      "consequence_on_ignore": "stranger enters unchallenged",
+      "memory_tag": "tianshan_gate_challenge",
+      "satisfies_motivations_on_others": null
+    }
+  ],
+  "passive_states": [
+    "on_gate_duty",
+    "eating",
+    "sharpening_spear"
+  ],
+  "cross_npc_triggers": [
+    "wang_tianshan.m_question_stranger is the first social interaction most visitors experience"
+  ]
+}

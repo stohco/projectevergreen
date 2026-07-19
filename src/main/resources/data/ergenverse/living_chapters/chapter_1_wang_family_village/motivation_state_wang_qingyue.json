@@ -1,0 +1,148 @@
+{
+  "_comment": "Wang Qingyue — village trader. INFERRED (Article XV). Shrewd, practical, knows everyone's business. Information flows through the market.",
+  "_schema": "motivation_state",
+  "_schema_version": 2,
+  "_article": "XXXIII + XXXV",
+  "npc_id": "npc_wang_qingyue",
+  "name": "Wang Qingyue",
+  "nameCn": "王清月",
+  "location": "wang_family_village",
+  "canon_fidelity": "INFERRED",
+  "evaluation_cycle_ticks": 1000,
+  "long_term_priorities": [
+    "maintain_trade_routes",
+    "profit",
+    "know_everything",
+    "marry_well"
+  ],
+  "motivations": [
+    {
+      "id": "m_trade_with_merchant",
+      "driving_forces": [
+        "greed",
+        "duty"
+      ],
+      "statement": "A merchant caravan is passing through. I should negotiate for salt and iron before the Teng family buys in bulk.",
+      "target_type": "npc",
+      "target_filter": "traveling_merchant",
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "traveling_merchant_generic",
+            "relevance_score": 70,
+            "relevance_reason": "Has what the village needs. Must reach them first.",
+            "becomes_relevant_when": [
+              "merchant.present=true",
+              "NOT merchant.traded_with_teng_family"
+            ]
+          },
+          {
+            "target_id": "player",
+            "relevance_score": 8,
+            "relevance_reason": "If the player has rare items, I can include them in the trade.",
+            "becomes_relevant_when": [
+              "player.has:rare_item AND merchant.present"
+            ]
+          }
+        ],
+        "highest_relevance_target": "traveling_merchant_generic"
+      },
+      "priority": 6,
+      "urgency": "medium",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [],
+        "preferred_resolution": "negotiate_directly"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If merchant present and I have goods, go now.",
+        "initiation_threshold": 4,
+        "conditions": [
+          "merchant.present=true",
+          "qingyue.has_trade_goods=true"
+        ]
+      },
+      "initiation": {
+        "engine": "trade",
+        "mode": "line",
+        "line": "Salt. Iron. I have rice and three wolf pelts. What is your price?",
+        "conversation_mode": "ambient",
+        "requires_proximity": 5,
+        "requires_consent": true,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": "village_supplies — salt, iron, cloth",
+      "consequence_on_fulfill": "village.supplies.replenished=true; qingyue.profit+=small_cut; memory_ledger+=trade_with_merchant",
+      "consequence_on_ignore": "merchant moves on; village goes without until next caravan",
+      "memory_tag": "qingyue_trade_negotiation",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_share_rumor",
+      "driving_forces": [
+        "curiosity",
+        "greed"
+      ],
+      "statement": "I heard something interesting. If I share it, the listener owes me a favor. Information is currency.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "player",
+            "relevance_score": 15,
+            "relevance_reason": "A stranger might pay for information. Or might be the subject of the rumor.",
+            "becomes_relevant_when": [
+              "player.nearby AND qingyue.has_rumor=true"
+            ]
+          },
+          {
+            "target_id": "npc_wang_tianshui",
+            "relevance_score": 40,
+            "relevance_reason": "The elder should know if the rumor affects the village.",
+            "becomes_relevant_when": [
+              "rumor.affects_village=true",
+              "wang_tianshui.nearby"
+            ]
+          }
+        ],
+        "highest_relevance_target": "npc_wang_tianshui"
+      },
+      "priority": 3,
+      "urgency": "low",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [],
+        "preferred_resolution": "share_if_opportunity"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If I have a rumor and the listener would value it, share.",
+        "initiation_threshold": 4,
+        "conditions": [
+          "qingyue.has_rumor=true",
+          "target.nearby<8"
+        ]
+      },
+      "initiation": {
+        "engine": "rumor",
+        "mode": "line",
+        "line": "The Teng family's second son was seen near the mountain pass. He was not hunting.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 5,
+        "requires_consent": false,
+        "cooldown_ticks": 48000
+      },
+      "offer_in_return": "information",
+      "consequence_on_fulfill": "target.knowledge+=rumor; memory_ledger+=rumor_shared; relationship.debt+=1 (minor)",
+      "consequence_on_ignore": "rumor may spread through other channels or die",
+      "memory_tag": "qingyue_shared_rumor",
+      "satisfies_motivations_on_others": null
+    }
+  ],
+  "passive_states": [
+    "inventorying_goods",
+    "watching_the_road",
+    "gossiping"
+  ],
+  "cross_npc_triggers": []
+}

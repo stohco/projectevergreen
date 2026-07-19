@@ -1,0 +1,145 @@
+{
+  "_comment": "Da Niu ('Big Ox') — village strongman, Wang Ping's closest friend. INFERRED (Article XV). Dreams of cultivation but has zero aptitude. The Heng Yue recruiter will crush that dream. Per Article XXXI, he wants something from someone every cycle.",
+  "_schema": "motivation_state",
+  "_schema_version": 2,
+  "_article": "XXXIII + XXXV",
+  "npc_id": "npc_da_niu",
+  "name": "Da Niu",
+  "nameCn": "大牛",
+  "location": "wang_family_village",
+  "canon_fidelity": "INFERRED",
+  "evaluation_cycle_ticks": 1000,
+  "long_term_priorities": [
+    "become_a_cultivator",
+    "prove_usefulness",
+    "protect_wang_ping",
+    "impress_the_recruiter"
+  ],
+  "motivations": [
+    {
+      "id": "m_beg_heng_yue_recruiter",
+      "driving_forces": [
+        "ambition",
+        "desire"
+      ],
+      "statement": "The recruiter is here. This is my chance. I know I can do it. I just need him to test me.",
+      "target_type": "npc",
+      "target_filter": "npc_heng_yue_recruiter",
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "npc_heng_yue_recruiter",
+            "relevance_score": 95,
+            "relevance_reason": "The only person who can give Da Niu what he wants. His entire life hinges on this moment.",
+            "becomes_relevant_when": [
+              "heng_yue_recruiter.present=true"
+            ]
+          },
+          {
+            "target_id": "npc_wang_ping",
+            "relevance_score": 30,
+            "relevance_reason": "Wang Ping is also being tested. Da Niu wants them both to pass.",
+            "becomes_relevant_when": [
+              "wang_ping.nearby AND heng_yue_recruiter.present"
+            ]
+          }
+        ],
+        "highest_relevance_target": "npc_heng_yue_recruiter"
+      },
+      "priority": 10,
+      "urgency": "critical (2-day window)",
+      "alternative_resolution": {
+        "can_resolve_without_target": false,
+        "alternative_targets": [],
+        "preferred_resolution": "approach_recruiter_directly"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "The recruiter is HERE. I go NOW.",
+        "initiation_threshold": 1,
+        "conditions": [
+          "heng_yue_recruiter.present=true"
+        ]
+      },
+      "initiation": {
+        "engine": "recruitment",
+        "mode": "line",
+        "line": "Test me! I can do it. Please — test me.",
+        "conversation_mode": "focus",
+        "requires_proximity": 5,
+        "requires_consent": true,
+        "cooldown_ticks": 12000
+      },
+      "offer_in_return": "loyalty — Da Niu would serve Heng Yue with every fiber",
+      "consequence_on_fulfill": "heng_yue_recruiter.tests_da_niu; aptitude=zero (canon): rejection. Memory: da_niu_rejected_by_heng_yue. Personality shifts: quieter, sadder, eventually stronger in a mortal way.",
+      "consequence_on_ignore": "recruiter leaves; opportunity lost forever; deep regret",
+      "memory_tag": "da_niu_begged_recruiter",
+      "satisfies_motivations_on_others": [
+        "npc_heng_yue_recruiter.m_test_village_youth"
+      ]
+    },
+    {
+      "id": "m_fish_with_wang_ping",
+      "driving_forces": [
+        "love",
+        "loyalty"
+      ],
+      "statement": "Wang Ping has been quiet since the dog died. I should take him fishing. He always feels better at the south bend.",
+      "target_type": "npc",
+      "target_filter": "npc_wang_ping",
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "npc_wang_ping",
+            "relevance_score": 60,
+            "relevance_reason": "Best friend. Grieving. Da Niu cannot fix it but can be there.",
+            "becomes_relevant_when": [
+              "wang_ping.nearby",
+              "OR memory_tag:dog_died_wolf_attack<30d"
+            ]
+          }
+        ],
+        "highest_relevance_target": "npc_wang_ping"
+      },
+      "priority": 4,
+      "urgency": "low",
+      "alternative_resolution": {
+        "can_resolve_without_target": false,
+        "alternative_targets": [],
+        "preferred_resolution": "invite_wang_ping_fishing"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Morning, Wang Ping free, weather good: ask him to fish. If he refuses, sit with him instead.",
+        "initiation_threshold": 3,
+        "conditions": [
+          "time_of_day:morning",
+          "weather:!storm",
+          "wang_ping.nearby<15"
+        ]
+      },
+      "initiation": {
+        "engine": "offer",
+        "mode": "line",
+        "line": "South bend? The cod are running this morning.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 6,
+        "requires_consent": true,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": "companionship",
+      "consequence_on_fulfill": "both travel to south bend; +morale; if wolf_attack: both face it; memory: fishing_trip_with_da_niu",
+      "consequence_on_ignore": "Da Niu goes alone; nothing changes",
+      "memory_tag": "da_niu_fishing_invite",
+      "satisfies_motivations_on_others": [
+        "npc_wang_ping.m_grieve_dog"
+      ]
+    }
+  ],
+  "passive_states": [
+    "working_fields",
+    "training_alone (futile cultivation)",
+    "moping (post-rejection)"
+  ],
+  "cross_npc_triggers": [
+    "da_niu.m_fish_with_wang_ping can trigger le_wolf_attack_south_bend"
+  ]
+}

@@ -1,0 +1,645 @@
+{
+  "_comment": "Universal Interaction sets for Wang Family Village NPCs (Article XXXVI.2). Each NPC exposes a subset. The UI discovers these; the AI uses these as its language.",
+  "_schema": "interaction_sets",
+  "_schema_version": 1,
+  "_article": "XXXVI.2",
+  "npcs": {
+    "npc_wang_tianshui": {
+      "exposed_interactions": [
+        {
+          "verb": "ask",
+          "gating": "always",
+          "subtopics": [
+            "About the village",
+            "About cultivation (vague)",
+            "About the jade (if trust >= 50)",
+            "About the Teng family (if trust >= 60)"
+          ]
+        },
+        {
+          "verb": "request",
+          "gating": "always",
+          "subtopics": [
+            "Advice",
+            "Help with village matters",
+            "The jade (if trust >= 50)"
+          ]
+        },
+        {
+          "verb": "offer",
+          "gating": "always",
+          "subtopics": [
+            "Help with a village task",
+            "Information about the area"
+          ]
+        },
+        {
+          "verb": "teach",
+          "gating": "trust >= 40",
+          "subtopics": [
+            "Basic Qi sensing (if player has zero cultivation)",
+            "Village history"
+          ]
+        },
+        {
+          "verb": "gift",
+          "gating": "always",
+          "subtopics": [
+            "Items",
+            "Labor",
+            "Information"
+          ]
+        },
+        {
+          "verb": "trade",
+          "gating": "always",
+          "subtopics": [
+            "Village supplies"
+          ]
+        },
+        {
+          "verb": "warn",
+          "gating": "always",
+          "subtopics": [
+            "Village dangers",
+            "The Teng family"
+          ]
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "approach",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "leave",
+          "gating": "always",
+          "subtopics": null
+        }
+      ],
+      "rarely_exposed": [
+        {
+          "verb": "reveal_secret",
+          "gating": "trust >= 80 AND shared_history >= 20",
+          "subtopics": [
+            "The hidden grain",
+            "What he knows about the jade's true origin"
+          ]
+        }
+      ]
+    },
+    "npc_zhou_tingsu": {
+      "exposed_interactions": [
+        {
+          "verb": "ask",
+          "gating": "always",
+          "subtopics": [
+            "About herbs",
+            "About healing",
+            "About village health"
+          ]
+        },
+        {
+          "verb": "request",
+          "gating": "always",
+          "subtopics": [
+            "Treatment",
+            "Herb identification",
+            "Medical advice"
+          ]
+        },
+        {
+          "verb": "offer",
+          "gating": "always",
+          "subtopics": [
+            "Help with herb gathering",
+            "Help tending the sick"
+          ]
+        },
+        {
+          "verb": "teach",
+          "gating": "trust >= 30",
+          "subtopics": [
+            "Basic herb identification",
+            "Wound treatment",
+            "Poisonous plants"
+          ]
+        },
+        {
+          "verb": "gift",
+          "gating": "always",
+          "subtopics": [
+            "Herbs",
+            "Medicine"
+          ]
+        },
+        {
+          "verb": "trade",
+          "gating": "always",
+          "subtopics": [
+            "Herbs for other goods"
+          ]
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "approach",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "leave",
+          "gating": "always",
+          "subtopics": null
+        }
+      ],
+      "rarely_exposed": []
+    },
+    "npc_da_niu": {
+      "exposed_interactions": [
+        {
+          "verb": "ask",
+          "gating": "always",
+          "subtopics": [
+            "About cultivation (he has opinions)",
+            "About Wang Ping",
+            "About the recruiter"
+          ]
+        },
+        {
+          "verb": "request",
+          "gating": "always",
+          "subtopics": [
+            "Help with heavy labor",
+            "Accompany to south bend"
+          ]
+        },
+        {
+          "verb": "offer",
+          "gating": "always",
+          "subtopics": [
+            "Physical labor",
+            "Fishing company",
+            "Protection (he will try)"
+          ]
+        },
+        {
+          "verb": "teach",
+          "gating": "trust >= 40",
+          "subtopics": [
+            "Fishing technique",
+            "How to carry heavy loads (he is serious)"
+          ]
+        },
+        {
+          "verb": "challenge",
+          "gating": "always",
+          "subtopics": [
+            "Arm wrestling",
+            "Stone throwing"
+          ]
+        },
+        {
+          "verb": "spar",
+          "gating": "always",
+          "subtopics": [
+            "Play fighting"
+          ]
+        },
+        {
+          "verb": "gift",
+          "gating": "always",
+          "subtopics": [
+            "Food",
+            "Fish",
+            "A carved wooden toy"
+          ]
+        },
+        {
+          "verb": "travel_together",
+          "gating": "trust >= 25",
+          "subtopics": [
+            "To the south bend",
+            "To the forest edge"
+          ]
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "approach",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "leave",
+          "gating": "always",
+          "subtopics": null
+        }
+      ],
+      "rarely_exposed": [
+        {
+          "verb": "confess",
+          "gating": "trust >= 60 AND post_heng_yue_rejection",
+          "subtopics": [
+            "His shame at failing the test"
+          ]
+        }
+      ]
+    },
+    "npc_zhou_rui": {
+      "exposed_interactions": [
+        {
+          "verb": "ask",
+          "gating": "always",
+          "subtopics": [
+            "About the forest",
+            "About wolf movements",
+            "About hunting routes",
+            "About tracks (if trust >= 30)"
+          ]
+        },
+        {
+          "verb": "request",
+          "gating": "trust >= 20",
+          "subtopics": [
+            "Hunting lessons",
+            "Safe route guidance",
+            "Pelts or meat"
+          ]
+        },
+        {
+          "verb": "offer",
+          "gating": "always",
+          "subtopics": [
+            "Wolf warning",
+            "Forest guidance",
+            "Meat (if surplus)"
+          ]
+        },
+        {
+          "verb": "teach",
+          "gating": "trust >= 30 AND target.asks:hunting",
+          "subtopics": [
+            "Safe hunting routes",
+            "Track reading",
+            "Snare placement"
+          ]
+        },
+        {
+          "verb": "travel_together",
+          "gating": "trust >= 40",
+          "subtopics": [
+            "Hunting trip (daytime only)"
+          ]
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "approach",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "leave",
+          "gating": "always",
+          "subtopics": null
+        }
+      ],
+      "rarely_exposed": []
+    },
+    "npc_wang_qingyue": {
+      "exposed_interactions": [
+        {
+          "verb": "ask",
+          "gating": "always",
+          "subtopics": [
+            "About trade",
+            "About village gossip",
+            "About the Teng family (if trust >= 40)"
+          ]
+        },
+        {
+          "verb": "request",
+          "gating": "always",
+          "subtopics": [
+            "Trade assistance",
+            "Information about prices"
+          ]
+        },
+        {
+          "verb": "offer",
+          "gating": "always",
+          "subtopics": [
+            "Trade deal",
+            "Information (for a price or favor)"
+          ]
+        },
+        {
+          "verb": "trade",
+          "gating": "always",
+          "subtopics": [
+            "Village goods for player goods"
+          ]
+        },
+        {
+          "verb": "negotiate",
+          "gating": "trust >= 25",
+          "subtopics": [
+            "Better prices",
+            "Joint trade venture"
+          ]
+        },
+        {
+          "verb": "gift",
+          "gating": "always",
+          "subtopics": [
+            "Trade goods",
+            "Cloth"
+          ]
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "approach",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "leave",
+          "gating": "always",
+          "subtopics": null
+        }
+      ],
+      "rarely_exposed": [
+        {
+          "verb": "reveal_secret",
+          "gating": "trust >= 70",
+          "subtopics": [
+            "Teng family internal politics",
+            "Why the Teng family taxes this village specifically"
+          ]
+        }
+      ]
+    },
+    "npc_wang_tianshan": {
+      "exposed_interactions": [
+        {
+          "verb": "ask",
+          "gating": "always",
+          "subtopics": [
+            "About village security",
+            "About the elder",
+            "About recent visitors"
+          ]
+        },
+        {
+          "verb": "request",
+          "gating": "trust >= 20",
+          "subtopics": [
+            "Gate access",
+            "Village directions"
+          ]
+        },
+        {
+          "verb": "challenge",
+          "gating": "trust < 20",
+          "subtopics": [
+            "Who are you? Why are you here?"
+          ]
+        },
+        {
+          "verb": "offer",
+          "gating": "trust >= 30",
+          "subtopics": [
+            "Gate watch relief",
+            "Who entered today"
+          ]
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "approach",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "leave",
+          "gating": "always",
+          "subtopics": null
+        }
+      ],
+      "rarely_exposed": []
+    },
+    "npc_zhang_tian": {
+      "exposed_interactions": [
+        {
+          "verb": "ask",
+          "gating": "always",
+          "subtopics": [
+            "About nothing (deflects)",
+            "About wine",
+            "About cultivation (goes silent or drunk-truth)"
+          ]
+        },
+        {
+          "verb": "offer",
+          "gating": "intoxication >= 0.7",
+          "subtopics": [
+            "A drunk story (may contain truth)"
+          ]
+        },
+        {
+          "verb": "teach",
+          "gating": "trust >= 50 AND intoxication >= 0.6",
+          "subtopics": [
+            "What Foundation Establishment feels like (trauma)",
+            "Why most cultivators fail",
+            "Truth about sect life"
+          ]
+        },
+        {
+          "verb": "gift",
+          "gating": "always",
+          "subtopics": [
+            "Wine (accepts eagerly)"
+          ]
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "approach",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "leave",
+          "gating": "always",
+          "subtopics": null
+        }
+      ],
+      "rarely_exposed": [
+        {
+          "verb": "confess",
+          "gating": "trust >= 70 AND intoxication >= 0.8",
+          "subtopics": [
+            "The breakthrough he failed",
+            "Why he really drinks"
+          ]
+        }
+      ]
+    },
+    "npc_heng_yue_recruiter": {
+      "exposed_interactions": [
+        {
+          "verb": "ask",
+          "gating": "always",
+          "subtopics": [
+            "About Heng Yue Sect",
+            "About cultivation (general)",
+            "About the test"
+          ]
+        },
+        {
+          "verb": "challenge",
+          "gating": "always",
+          "subtopics": [
+            "Aptitude test (if player is eligible)"
+          ]
+        },
+        {
+          "verb": "recruit",
+          "gating": "player.passed_test",
+          "subtopics": [
+            "Join Heng Yue Sect"
+          ]
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "approach",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "leave",
+          "gating": "always",
+          "subtopics": null
+        }
+      ],
+      "rarely_exposed": []
+    },
+    "npc_wang_lin": {
+      "ref": "conversation_affordances_per_npc.json#npcs.npc_wang_lin",
+      "exposed_interactions": [
+        {
+          "verb": "ask",
+          "gating": "relationship.trust >= 15",
+          "subtopics": [
+            "About Dao (if trust >= 30)",
+            "About restrictions (if trust >= 40 OR player showed skill)"
+          ]
+        },
+        {
+          "verb": "request",
+          "gating": "relationship.trust >= 25",
+          "subtopics": [
+            "Technique (gated by capability compatibility)",
+            "Advice (if trust >= 30)"
+          ]
+        },
+        {
+          "verb": "teach",
+          "gating": "trust >= 70 AND player.cultivation_gap <= 2",
+          "subtopics": [
+            "Restriction fragment (if he judges ready)"
+          ]
+        },
+        {
+          "verb": "travel_together",
+          "gating": "trust >= 50 AND wang_lin.going_somewhere",
+          "subtopics": [
+            "Walk with him"
+          ]
+        },
+        {
+          "verb": "spar",
+          "gating": "trust >= 40 AND player.cultivation_gap <= 2",
+          "subtopics": [
+            "You will lose"
+          ]
+        },
+        {
+          "verb": "warn",
+          "gating": "trust >= 20 AND danger_nearby",
+          "subtopics": [
+            "Don't."
+          ]
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "approach",
+          "gating": "always",
+          "subtopics": null
+        },
+        {
+          "verb": "leave",
+          "gating": "always",
+          "subtopics": null
+        }
+      ],
+      "rarely_exposed": [
+        {
+          "verb": "copy",
+          "gating": "capability_compatibility.all_three_gates_pass",
+          "subtopics": [
+            "Technique copy",
+            "Artifact copy"
+          ]
+        },
+        {
+          "verb": "reveal_secret",
+          "gating": "trust >= 90 AND shared_history >= 15",
+          "subtopics": [
+            "The Heaven Defying Bead's nature"
+          ]
+        },
+        {
+          "verb": "share_memory",
+          "gating": "trust >= 95 AND shared_history >= 20",
+          "subtopics": [
+            "A memory from his life"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "_comment": "Wang Tianshui — village elder, de facto leader, Qi Condensation 3rd layer. Holds the strange jade. 40 years of service. EXPLICIT (village elder) / INFERRED (name). Per Article XXXIII, he wakes up worrying about the harvest, not about the player.",
+  "_schema": "motivation_state",
+  "_schema_version": 2,
+  "_article": "XXXIII + XXXV",
+  "npc_id": "npc_wang_tianshui",
+  "name": "Wang Tianshui",
+  "nameCn": "王天水",
+  "location": "wang_family_village",
+  "canon_fidelity": "EXPLICIT (village elder exists) / INFERRED (name, personality details)",
+  "evaluation_cycle_ticks": 1000,
+  "long_term_priorities": [
+    "protect_the_village",
+    "manage_the_harvest",
+    "resist_the_teng_family",
+    "guide_the_youth",
+    "understand_the_jade"
+  ],
+  "motivations": [
+    {
+      "id": "m_ensure_winter_ready",
+      "driving_forces": [
+        "duty",
+        "survival",
+        "fear"
+      ],
+      "statement": "Winter is coming. The grain stores are low. If the Teng family takes half and the irrigation is damaged, we will not make it. I need firewood, grain, and repaired ditches.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "npc_wang_ping",
+            "relevance_score": 35,
+            "relevance_reason": "Reliable. Gathers firewood. Family.",
+            "becomes_relevant_when": [
+              "wang_ping.nearby AND wang_ping.state:!busy"
+            ]
+          },
+          {
+            "target_id": "npc_da_niu",
+            "relevance_score": 30,
+            "relevance_reason": "Strong. Can carry stone for irrigation. Young and willing.",
+            "becomes_relevant_when": [
+              "da_niu.nearby AND irrigation_damaged=true"
+            ]
+          },
+          {
+            "target_id": "player",
+            "relevance_score": 8,
+            "relevance_reason": "A stranger. May be capable. May not.",
+            "becomes_relevant_when": [
+              "player.helped_village (memory_tag:repaired_irrigation OR delivered_firewood)",
+              "OR player.cultivation>=qi_condensation AND irrigation_damaged=true"
+            ]
+          }
+        ],
+        "highest_relevance_target": "npc_wang_ping"
+      },
+      "priority": 8,
+      "urgency": "high (autumn) / low (spring/summer)",
+      "alternative_resolution": {
+        "can_resolve_without_target": false,
+        "alternative_targets": [
+          "any_able_villager"
+        ],
+        "preferred_resolution": "delegate_to_known_villagers_first"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If autumn and stores < 60%: ask Wang Ping for firewood, Da Niu for ditch repair.",
+        "initiation_threshold": 4,
+        "conditions": [
+          "season:autumn",
+          "village.grain_stores < 0.6"
+        ]
+      },
+      "initiation": {
+        "engine": "request",
+        "mode": "line",
+        "line": "The irrigation needs fixing before winter. Can you carry stone from the north bank?",
+        "conversation_mode": "ambient",
+        "requires_proximity": 12,
+        "requires_consent": true,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": "village_favor — the elder's gratitude is social currency",
+      "consequence_on_fulfill": "village.irrigation_repaired=true; village.winter_survival_chance+=0.2; relationship.debt+=1; memory_ledger+=helped_elder_winter_prep",
+      "consequence_on_ignore": "village.winter_survival_chance-=0.1; if winter harsh: villager may fall ill or leave",
+      "memory_tag": "elder_winter_preparation_request",
+      "satisfies_motivations_on_others": [
+        "npc_wang_ping.m_help_family"
+      ]
+    },
+    {
+      "id": "m_gift_strange_jade",
+      "driving_forces": [
+        "duty",
+        "curiosity"
+      ],
+      "statement": "The jade in the ancestral hall... I have kept it for decades. It belongs to whoever can use it. If someone shows the right signs — cultivation, character, patience — I should let them have it.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "player",
+            "relevance_score": 15,
+            "relevance_reason": "Has helped the village. Shows patience. But cultivation aptitude unknown.",
+            "becomes_relevant_when": [
+              "relationship.trust >= 50 AND player.cultivation >= qi_condensation_2",
+              "OR player.helped_village >= 3 times AND player.character_judged_patient"
+            ]
+          },
+          {
+            "target_id": "npc_wang_lin",
+            "relevance_score": 0,
+            "relevance_reason": "Wang Lin is beyond this jade. He has the real thing.",
+            "becomes_relevant_when": []
+          }
+        ],
+        "highest_relevance_target": null
+      },
+      "priority": 4,
+      "urgency": "low (the jade has waited decades)",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [],
+        "preferred_resolution": "wait_for_right_person_or_take_to_grave"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Has someone earned the jade? Check: helped village, shows cultivation potential, demonstrates patience. If all three, offer.",
+        "initiation_threshold": 6,
+        "conditions": [
+          "target.relationship.trust >= 50",
+          "target.helped_village >= 3",
+          "target.state:!combat",
+          "jade.present=true"
+        ]
+      },
+      "initiation": {
+        "engine": "gift",
+        "mode": "gesture",
+        "line": "Take this. It has been here longer than I have.",
+        "conversation_mode": "focus",
+        "requires_proximity": 3,
+        "requires_consent": false,
+        "cooldown_ticks": 0
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "target.receives:strange_jade; memory_ledger+=received_the_jade_from_elder; jade.present=false",
+      "consequence_on_ignore": "the jade stays. It has waited decades. It can wait.",
+      "memory_tag": "elder_gifted_strange_jade",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_resist_teng_family_quietly",
+      "driving_forces": [
+        "grudge",
+        "duty"
+      ],
+      "statement": "The Teng family takes half our harvest every autumn. Thirty years. I hide one in ten sacks of grain in the root cellar. If discovered, they would retaliate.",
+      "target_type": "none",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "per_target": [],
+        "highest_relevance_target": null
+      },
+      "priority": 6,
+      "urgency": "medium (year-round, peaks in autumn)",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [],
+        "preferred_resolution": "self_resolve (hide grain, do not provoke)"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Always active. I act alone. No one else can know.",
+        "initiation_threshold": 10,
+        "conditions": []
+      },
+      "initiation": {
+        "engine": "debt",
+        "mode": "silence",
+        "line": null,
+        "conversation_mode": "ambient",
+        "requires_proximity": 0,
+        "requires_consent": false,
+        "cooldown_ticks": 0
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "village.hidden_grain += harvest * 0.1; if discovered: teng_family.grievance+=40",
+      "consequence_on_ignore": "n/a (always active)",
+      "memory_tag": "elder_hides_grain",
+      "satisfies_motivations_on_others": null
+    }
+  ],
+  "passive_states": [
+    "meditating_morning",
+    "inspecting_fields",
+    "resting_afternoon"
+  ],
+  "cross_npc_triggers": [
+    "wang_tianshui.m_ensure_winter_ready can satisfy npc_da_niu.m_prove_usefulness"
+  ]
+}

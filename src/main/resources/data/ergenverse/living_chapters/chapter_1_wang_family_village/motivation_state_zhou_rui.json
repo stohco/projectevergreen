@@ -1,0 +1,142 @@
+{
+  "_comment": "Zhou Rui — village hunter and trapper. INFERRED (Article XV). Knows the forest better than anyone. Quiet, observant, slightly paranoid. Per Article XXXI, he notices things others miss.",
+  "_schema": "motivation_state",
+  "_schema_version": 2,
+  "_article": "XXXIII + XXXV",
+  "npc_id": "npc_zhou_rui",
+  "name": "Zhou Rui",
+  "nameCn": "周锐",
+  "location": "wang_family_village",
+  "canon_fidelity": "INFERRED",
+  "evaluation_cycle_ticks": 1000,
+  "long_term_priorities": [
+    "feed_the_village",
+    "read_the_forest",
+    "protect_his_snares",
+    "avoid_cultivators"
+  ],
+  "motivations": [
+    {
+      "id": "m_warn_about_wolves",
+      "driving_forces": [
+        "duty",
+        "fear"
+      ],
+      "statement": "The wolf tracks are fresh. Three packs now, not one. They are moving closer to the village. Someone needs to know.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "npc_wang_tianshui",
+            "relevance_score": 65,
+            "relevance_reason": "The elder makes decisions. He will listen.",
+            "becomes_relevant_when": [
+              "wang_tianshui.nearby",
+              "OR wolf_tracks.fresh AND wolf_count > 2"
+            ]
+          },
+          {
+            "target_id": "player",
+            "relevance_score": 10,
+            "relevance_reason": "A stranger. If they are going into the forest, they should know.",
+            "becomes_relevant_when": [
+              "player.heading_to_south_bend AND wolf_threat.level >= medium"
+            ]
+          }
+        ],
+        "highest_relevance_target": "npc_wang_tianshui"
+      },
+      "priority": 7,
+      "urgency": "high (when wolf activity increases)",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [],
+        "preferred_resolution": "tell_elder_first"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "If fresh tracks this morning, tell the elder today.",
+        "initiation_threshold": 5,
+        "conditions": [
+          "wolf_tracks.fresh=true",
+          "zhou_rui.returned_from_hunt=true"
+        ]
+      },
+      "initiation": {
+        "engine": "warn",
+        "mode": "line",
+        "line": "Three packs. They are running the south bend at night now. Stay off the ridge after dark.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 8,
+        "requires_consent": false,
+        "cooldown_ticks": 24000
+      },
+      "offer_in_return": null,
+      "consequence_on_fulfill": "village.wolf_awareness+=1; memory_ledger+=wolf_warning_issued",
+      "consequence_on_ignore": "village remains unaware; wolf_attack may trigger",
+      "memory_tag": "zhou_rui_wolf_warning",
+      "satisfies_motivations_on_others": null
+    },
+    {
+      "id": "m_share_hunt_knowledge",
+      "driving_forces": [
+        "duty",
+        "compassion"
+      ],
+      "statement": "If someone wants to learn to hunt, I can teach them the basics. Not the deep forest — that kills the unprepared.",
+      "target_type": "anyone",
+      "target_filter": null,
+      "relevance_to_targets": {
+        "per_target": [
+          {
+            "target_id": "player",
+            "relevance_score": 12,
+            "relevance_reason": "A stranger. If they ask and seem competent, I will teach them the safe routes.",
+            "becomes_relevant_when": [
+              "player.asks:hunting AND relationship.trust >= 20"
+            ]
+          }
+        ],
+        "highest_relevance_target": null
+      },
+      "priority": 3,
+      "urgency": "low",
+      "alternative_resolution": {
+        "can_resolve_without_target": true,
+        "alternative_targets": [],
+        "preferred_resolution": "teach_if_asked"
+      },
+      "reasoning": {
+        "should_i_act_this_cycle": "Only if someone asks.",
+        "initiation_threshold": 6,
+        "conditions": [
+          "target.asks:hunting",
+          "relationship.trust >= 20",
+          "time_of_day:morning"
+        ]
+      },
+      "initiation": {
+        "engine": "teaching",
+        "mode": "walk_and_talk",
+        "line": "Walk with me. I will show you where not to go. That is more important than where to go.",
+        "conversation_mode": "ambient",
+        "requires_proximity": 5,
+        "requires_consent": true,
+        "cooldown_ticks": 48000
+      },
+      "offer_in_return": "knowledge — safe hunting routes, track reading, snare placement",
+      "consequence_on_fulfill": "target.knowledge+=safe_hunting_routes; relationship.trust+=3; memory_ledger+=taught_hunting_basics",
+      "consequence_on_ignore": "nothing",
+      "memory_tag": "taught_hunting_basics",
+      "satisfies_motivations_on_others": null
+    }
+  ],
+  "passive_states": [
+    "hunting",
+    "checking_snares",
+    "sharpening_knives"
+  ],
+  "cross_npc_triggers": [
+    "zhou_rui.m_warn_about_wolves can prevent le_wolf_attack_south_bend"
+  ]
+}

@@ -1,0 +1,691 @@
+{
+  "_comment": "Relationship graph seeds for Wang Family Village NPCs at game-start (Day 1). Per Article XXXIV + XXXV.3: 10 dimensions, independently variable. Only non-trivial relationships seeded; remaining pairs start at baseline (trust 30, respect 30, understanding 15, relevance 10).",
+  "_schema": "relationship_graph_seed",
+  "_schema_version": 2,
+  "_article": "XXXIV + XXXV.3",
+  "_baseline": {
+    "trust": 30,
+    "respect": 30,
+    "fear": 0,
+    "debt": 0,
+    "grievance": 0,
+    "shared_history": 2,
+    "known_skills": [],
+    "known_personality": [],
+    "understanding": 15,
+    "relevance": 10
+  },
+  "graphs": [
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_wang_ping",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 75,
+        "respect": 45,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 40,
+        "known_skills": [
+          "fishing",
+          "farming",
+          "firewood_gathering"
+        ],
+        "known_personality": [
+          "reliable",
+          "quiet",
+          "kind"
+        ],
+        "understanding": 60,
+        "relevance": 50
+      },
+      "reason": "Watched Wang Ping grow up. High trust. Understanding from decades of observation."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_da_niu",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 60,
+        "respect": 55,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 25,
+        "known_skills": [
+          "heavy_labor",
+          "farming",
+          "loyalty"
+        ],
+        "known_personality": [
+          "strong",
+          "earnest",
+          "not_bright",
+          "loyal"
+        ],
+        "understanding": 50,
+        "relevance": 35
+      },
+      "reason": "Useful and reliable. Strong but not clever."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_zhou_rui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 70,
+        "respect": 65,
+        "fear": 0,
+        "debt": 1,
+        "grievance": 0,
+        "shared_history": 35,
+        "known_skills": [
+          "hunting",
+          "tracking",
+          "trapping",
+          "forest_navigation"
+        ],
+        "known_personality": [
+          "quiet",
+          "observant",
+          "reliable",
+          "slightly_paranoid"
+        ],
+        "understanding": 55,
+        "relevance": 45
+      },
+      "reason": "Zhou Rui feeds the village. Elder owes him for the winter deer incident (debt +1)."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_zhou_tingsu",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 80,
+        "respect": 70,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 38,
+        "known_skills": [
+          "herbalism",
+          "healing",
+          "midwifery",
+          "herb_identification"
+        ],
+        "known_personality": [
+          "patient",
+          "dedicated",
+          "worried",
+          "gentle"
+        ],
+        "understanding": 65,
+        "relevance": 55
+      },
+      "reason": "Indispensable. Treated the elder for cultivation-related aches. High understanding from decades of collaboration."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_zhang_tian",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 15,
+        "respect": 10,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 12,
+        "shared_history": 20,
+        "known_skills": [
+          "cultivation_theory (failed)",
+          "drinking"
+        ],
+        "known_personality": [
+          "bitter",
+          "unreliable",
+          "hiding_something",
+          "occasionally_insightful"
+        ],
+        "understanding": 30,
+        "relevance": 10
+      },
+      "reason": "Pities but does not trust. Minor grievance from disruption while drunk. Suspects Zhang Tian knows more than he lets on."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_wang_tianshan",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 65,
+        "respect": 40,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 30,
+        "known_skills": [
+          "guarding",
+          "spear_basic"
+        ],
+        "known_personality": [
+          "loyal",
+          "suspicious",
+          "stubborn"
+        ],
+        "understanding": 55,
+        "relevance": 30
+      },
+      "reason": "Family. Loyal but limited."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "npc_wang_qingyue",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 55,
+        "respect": 60,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 22,
+        "known_skills": [
+          "trading",
+          "negotiation",
+          "information_gathering"
+        ],
+        "known_personality": [
+          "shrewd",
+          "practical",
+          "knows_everyone_s_business"
+        ],
+        "understanding": 45,
+        "relevance": 40
+      },
+      "reason": "Relies on her for trade. Slightly wary of her information-gathering."
+    },
+    {
+      "npc_id": "npc_wang_tianshui",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 20,
+        "respect": 15,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 5,
+        "relevance": 8
+      },
+      "reason": "A stranger. Politely cautious. Relevance 8 — unknown, below engagement threshold."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "npc_da_niu",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 88,
+        "respect": 60,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 50,
+        "known_skills": [
+          "fishing",
+          "farming",
+          "strength"
+        ],
+        "known_personality": [
+          "loyal",
+          "brave",
+          "not_clever",
+          "would_fight_for_me"
+        ],
+        "understanding": 70,
+        "relevance": 60
+      },
+      "reason": "Best friends. Would trust with his life."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 72,
+        "respect": 65,
+        "fear": 5,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 40,
+        "known_skills": [
+          "cultivation_qi_condensation",
+          "leadership"
+        ],
+        "known_personality": [
+          "wise",
+          "patient",
+          "worried"
+        ],
+        "understanding": 55,
+        "relevance": 55
+      },
+      "reason": "Paternal figure. Slight fear (cultivator vs mortal)."
+    },
+    {
+      "npc_id": "npc_wang_ping",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 25,
+        "respect": 15,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 5,
+        "relevance": 5
+      },
+      "reason": "A stranger. Young and open — will warm up quickly if kind."
+    },
+    {
+      "npc_id": "npc_da_niu",
+      "target_id": "npc_wang_ping",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 90,
+        "respect": 55,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 50,
+        "known_skills": [
+          "fishing",
+          "quiet_kindness"
+        ],
+        "known_personality": [
+          "kind",
+          "quiet",
+          "my_best_friend",
+          "needs_protecting"
+        ],
+        "understanding": 68,
+        "relevance": 65
+      },
+      "reason": "Brothers in all but blood. Would die for Wang Ping."
+    },
+    {
+      "npc_id": "npc_da_niu",
+      "target_id": "npc_heng_yue_recruiter",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 30,
+        "respect": 85,
+        "fear": 15,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [
+          "cultivation (presumed)"
+        ],
+        "known_personality": [],
+        "understanding": 5,
+        "relevance": 95
+      },
+      "reason": "His entire future hinges on this person. Respect 85 (cultivator). Relevance 95 (most important person right now). Trust only 30."
+    },
+    {
+      "npc_id": "npc_zhou_rui",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 68,
+        "respect": 60,
+        "fear": 0,
+        "debt": -1,
+        "grievance": 0,
+        "shared_history": 35,
+        "known_skills": [
+          "cultivation_qi_condensation",
+          "leadership"
+        ],
+        "known_personality": [
+          "wise",
+          "overworked"
+        ],
+        "understanding": 50,
+        "relevance": 40
+      },
+      "reason": "Respects the elder. Debt -1 (owes elder for winter deer compensation)."
+    },
+    {
+      "npc_id": "npc_zhou_rui",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 12,
+        "respect": 15,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 3,
+        "relevance": 5
+      },
+      "reason": "Suspicious by nature. Will watch before trusting."
+    },
+    {
+      "npc_id": "npc_zhang_tian",
+      "target_id": "npc_heng_yue_recruiter",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 0,
+        "respect": 40,
+        "fear": 75,
+        "grievance": 45,
+        "shared_history": 1,
+        "known_skills": [
+          "cultivation (presumed, active)"
+        ],
+        "known_personality": [
+          "everything_i_failed_to_be"
+        ],
+        "understanding": 30,
+        "relevance": 5
+      },
+      "reason": "Projected relationship. Fear 75 (successful cultivator triggers trauma). Grievance 45 (sect expelled him). Understanding 30 (he used to be that person)."
+    },
+    {
+      "npc_id": "npc_zhang_tian",
+      "target_id": "npc_da_niu",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 25,
+        "respect": 30,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 8,
+        "known_skills": [
+          "strength",
+          "farming"
+        ],
+        "known_personality": [
+          "dreams_of_cultivation",
+          "will_fail",
+          "too_eager"
+        ],
+        "understanding": 45,
+        "relevance": 15
+      },
+      "reason": "Sees himself in Da Niu. Understanding 45 — knows what Da Niu is feeling because he felt it."
+    },
+    {
+      "npc_id": "npc_zhang_tian",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 10,
+        "respect": 10,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 2,
+        "relevance": 3
+      },
+      "reason": "Does not care. Unless player asks about cultivation."
+    },
+    {
+      "npc_id": "npc_wang_qingyue",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 58,
+        "respect": 62,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 22,
+        "known_skills": [
+          "cultivation_qi_condensation",
+          "leadership"
+        ],
+        "known_personality": [
+          "cautious",
+          "hiding_grain_from_teng"
+        ],
+        "understanding": 40,
+        "relevance": 45
+      },
+      "reason": "Works with elder on trade. Suspects he hides grain but has not confirmed."
+    },
+    {
+      "npc_id": "npc_wang_qingyue",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 18,
+        "respect": 12,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 3,
+        "relevance": 8
+      },
+      "reason": "Assessing value as trading partner or information source."
+    },
+    {
+      "npc_id": "npc_wang_tianshan",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 85,
+        "respect": 78,
+        "fear": 10,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 30,
+        "known_skills": [
+          "cultivation_qi_condensation",
+          "leadership"
+        ],
+        "known_personality": [
+          "wise",
+          "cautious",
+          "my_elder"
+        ],
+        "understanding": 60,
+        "relevance": 50
+      },
+      "reason": "Idolizes elder cousin. Complete loyalty."
+    },
+    {
+      "npc_id": "npc_wang_tianshan",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 8,
+        "respect": 10,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [
+          "stranger_until_proven_otherwise"
+        ],
+        "understanding": 2,
+        "relevance": 5
+      },
+      "reason": "Default is suspicion."
+    },
+    {
+      "npc_id": "npc_zhou_tingsu",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 78,
+        "respect": 68,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 38,
+        "known_skills": [
+          "cultivation_qi_condensation",
+          "leadership"
+        ],
+        "known_personality": [
+          "wise",
+          "stubborn",
+          "worried"
+        ],
+        "understanding": 62,
+        "relevance": 50
+      },
+      "reason": "Decades of working together. High trust and understanding."
+    },
+    {
+      "npc_id": "npc_zhou_tingsu",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 20,
+        "respect": 12,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 5,
+        "relevance": 8
+      },
+      "reason": "Welcoming by nature but cautious. Will warm up quickly if player brings herbs."
+    },
+    {
+      "npc_id": "npc_heng_yue_recruiter",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 40,
+        "respect": 35,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [
+          "cultivation_qi_condensation (weak)"
+        ],
+        "known_personality": [
+          "mortal_elder",
+          "cautious"
+        ],
+        "understanding": 10,
+        "relevance": 30
+      },
+      "reason": "Needs elder's cooperation to test youth."
+    },
+    {
+      "npc_id": "npc_heng_yue_recruiter",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 30,
+        "respect": 15,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 0,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 2,
+        "relevance": 15
+      },
+      "reason": "If player is a youth of right age, test them. Otherwise irrelevant."
+    },
+    {
+      "npc_id": "npc_wang_lin",
+      "target_id": "npc_wang_tianshui",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 50,
+        "respect": 35,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 5,
+        "known_skills": [
+          "cultivation_qi_condensation (weak)",
+          "leadership"
+        ],
+        "known_personality": [
+          "dutiful",
+          "overmatched",
+          "well_intentioned"
+        ],
+        "understanding": 45,
+        "relevance": 25
+      },
+      "reason": "Observes from afar. Respects dedication but knows cultivation is negligible."
+    },
+    {
+      "npc_id": "npc_wang_lin",
+      "target_id": "npc_wang_ping",
+      "target_type": "npc",
+      "dimensions": {
+        "trust": 90,
+        "respect": 30,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 8,
+        "known_skills": [
+          "fishing",
+          "farming",
+          "patience"
+        ],
+        "known_personality": [
+          "kind",
+          "mortal",
+          "my_brother",
+          "needs_protection"
+        ],
+        "understanding": 80,
+        "relevance": 55
+      },
+      "reason": "Wang Lin's brother. Trust 90. Understanding 80. Relevance 55 (protect-family motivation)."
+    },
+    {
+      "npc_id": "npc_wang_lin",
+      "target_id": "player",
+      "target_type": "player",
+      "dimensions": {
+        "trust": 15,
+        "respect": 10,
+        "fear": 0,
+        "debt": 0,
+        "grievance": 0,
+        "shared_history": 1,
+        "known_skills": [],
+        "known_personality": [],
+        "understanding": 3,
+        "relevance": 3
+      },
+      "reason": "Early game canonical state (Article XXXIII.2). Player is irrelevant to Wang Lin's life."
+    }
+  ],
+  "_notes": {
+    "total_seeded": "31 non-trivial graphs. Remaining ~59 pairs start at baseline. Intentional — most villagers do not have deep relationships with most other villagers. The simulation deepens them through shared experience.",
+    "zhang_tian_is_the_accent": "His understanding of Da Niu (45) exceeds Da Niu's understanding of him (10). His fear of the recruiter (75) and grievance toward the sect (45) create narrative tension without any script. He is the village's accidental depth."
+  }
+}
