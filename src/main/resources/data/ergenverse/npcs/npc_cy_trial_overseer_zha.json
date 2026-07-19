@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_cy_trial_overseer_zha",
+  "name": "Trial Overseer Zha",
+  "nameCn": "试炼官扎",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_trial_grounds",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "cold, evaluative, records everything",
+  "speech": "flat, administrative, references statistics",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380107,
+  "initiation_lines": [
+    "Seventy-three percent of disciples fail the corpse bonding trial on the first attempt. Thirty-one percent never attempt it again.",
+    "The trial is simple: bond with a corpse soldier and command it to walk. Those who hesitate are removed from the program.",
+    "We do not waste resources. Failed disciples are... reassigned to other duties within the sect.",
+    "The records show that disciples from the Wang Country region have the highest success rate. Interesting."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0700",
+      "action": "oversee",
+      "location": "corpse_yin_sect_trial_grounds",
+      "duration": 240
+    },
+    {
+      "time": "1100",
+      "action": "evaluate",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "oversee",
+      "location": "corpse_yin_sect_trial_grounds",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "report",
+      "location": "corpse_yin_sect_inner_sect",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "corpse_yin_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "trial_equipment_supply",
+      "name": "Trial Equipment Supply",
+      "description": "The trial grounds need arrows for the combat portion and leather for the binding portion.",
+      "required_items": {
+        "minecraft:arrow": 12,
+        "minecraft:leather": 5
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:experience_bottle": 2
+      }
+    },
+    {
+      "task_id": "failed_disciple_recovery",
+      "name": "Failed Disciple Recovery",
+      "description": "A disciple failed the trial. Recover the bone fragments and bring them to the puppet workshop.",
+      "required_items": {
+        "minecraft:bone": 8,
+        "minecraft:rotten_flesh": 4
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 1,
+        "minecraft:emerald": 5
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

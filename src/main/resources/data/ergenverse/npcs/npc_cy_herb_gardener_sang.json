@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_cy_herb_gardener_sang",
+  "name": "Herb Gardener Sang",
+  "nameCn": "药园管事桑",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_spirit_herb_garden",
+  "cultivation": "FOUNDATION_ESTABLISHMENT mid",
+  "personality": "hunched, soil-stained, hums to the plants",
+  "speech": "gentle, distracted, botanical",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380112,
+  "initiation_lines": [
+    "The yin-soil here grows herbs that wither in sunlight. This garden has not seen the sun in four hundred years.",
+    "Bone meal from Foundation Establishment beasts makes the best fertilizer. Condensation bones are too weak.",
+    "The Alchemist needs the black lotus from the spring. I grow it here. The petals are the color of a bruise.",
+    "Bring me wheat and bone meal. The corpse nourishment herbs need feeding, and I am running low."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "tend",
+      "location": "corpse_yin_sect_spirit_herb_garden",
+      "duration": 300
+    },
+    {
+      "time": "1100",
+      "action": "gather",
+      "location": "corpse_yin_sect_spirit_spring",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "tend",
+      "location": "corpse_yin_sect_spirit_herb_garden",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "deliver",
+      "location": "corpse_yin_sect_alchemy_courtyard",
+      "duration": 60
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "corpse_yin_sect_disciple_dormitories",
+      "duration": 660
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "garden_fertilizer",
+      "name": "Garden Fertilizer Supply",
+      "description": "The corpse nourishment herbs need bone meal and wheat to grow in yin-soil.",
+      "required_items": {
+        "minecraft:bone": 6,
+        "minecraft:wheat": 8
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:glowstone_dust": 3
+      }
+    },
+    {
+      "task_id": "herb_delivery_alchemist",
+      "name": "Herb Delivery to Alchemist",
+      "description": "The Alchemist needs fresh herbs and bottles from the garden and spring.",
+      "required_items": {
+        "minecraft:glass_bottle": 3,
+        "minecraft:bone_meal": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

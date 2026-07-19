@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cy_sword_caretaker_yan",
+  "name": "Sword Caretaker Yan",
+  "nameCn": "剑冢守燕",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_sword_tomb",
+  "cultivation": "NASCENT_SOUL late",
+  "personality": "melancholic, speaks to swords, grieving",
+  "speech": "soft, reverent, tells stories of the fallen",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380108,
+  "initiation_lines": [
+    "Each sword here once belonged to a cultivator. Some were our enemies. Some were our own.",
+    "The Ancestor says weapons retain a fragment of their wielder's soul. I believe him. I hear them at night.",
+    "Do not touch the black iron sword in the center. It belongs to someone who is not yet dead.",
+    "The Corpse Refiner wants to melt these swords for materials. I will not allow it. Not while I breathe."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "corpse_yin_sect_sword_tomb",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "maintain",
+      "location": "corpse_yin_sect_sword_tomb",
+      "duration": 300
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "maintain",
+      "location": "corpse_yin_sect_sword_tomb",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "patrol",
+      "location": "corpse_yin_sect_sword_peak",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "meditate",
+      "location": "corpse_yin_sect_sword_tomb",
+      "duration": 180
+    },
+    {
+      "time": "2300",
+      "action": "rest",
+      "location": "corpse_yin_sect_sword_tomb",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "sword_preservation",
+      "name": "Sword Preservation Materials",
+      "description": "The swords need oil and cloth to prevent yin corrosion. Bring iron and bone for the preservation ritual.",
+      "required_items": {
+        "minecraft:iron_ingot": 6,
+        "minecraft:bone": 8
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 2,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "forbidden_sword_retrieval",
+      "name": "Forbidden Sword Retrieval",
+      "description": "A sword was removed from the tomb. Find it and return it before the Ancestor notices.",
+      "required_items": {
+        "minecraft:emerald": 6,
+        "minecraft:obsidian": 4
+      },
+      "rewards": {
+        "ergenverse:realm_sealing_flag": 1,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_cy_library_curator_po",
+  "name": "Library Curator Po",
+  "nameCn": "藏经阁主薄",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_library",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "elegant, soft-spoken, unsettling calm",
+  "speech": "measured, poetic, drops hints about forbidden knowledge",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380103,
+  "initiation_lines": [
+    "The library holds three thousand scrolls on the art of preservation. Some were written on the skin of the authors.",
+    "Knowledge of death is the most valuable knowledge. All other cultivation paths end here eventually.",
+    "The Array Master asked for scrolls on yin-necrotic formations. I refused. His techniques are too crude.",
+    "Bring me paper and ink, and I will share what the dead have taught us."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "organize",
+      "location": "corpse_yin_sect_library",
+      "duration": 240
+    },
+    {
+      "time": "1000",
+      "action": "study",
+      "location": "corpse_yin_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "teach",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1600",
+      "action": "study",
+      "location": "corpse_yin_sect_library",
+      "duration": 240
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "corpse_yin_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "scroll_copying_preservation",
+      "name": "Scroll Copying: Preservation Arts",
+      "description": "I need materials to copy the forbidden preservation scrolls for the inner elders.",
+      "required_items": {
+        "minecraft:paper": 6,
+        "minecraft:ink_sac": 4
+      },
+      "rewards": {
+        "minecraft:book": 2,
+        "minecraft:emerald": 5
+      }
+    },
+    {
+      "task_id": "forbidden_text_retrieval",
+      "name": "Forbidden Text Retrieval",
+      "description": "A scroll was taken from the restricted section. Return it and I will reward you with knowledge.",
+      "required_items": {
+        "minecraft:book": 1,
+        "minecraft:emerald": 3
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "ergenverse:soul_fragment": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

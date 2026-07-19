@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cy_yin_alchemist_gui",
+  "name": "Yin Alchemist Gui",
+  "nameCn": "阴丹师桂",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_alchemy_courtyard",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "coughing, pale, surrounded by fumes",
+  "speech": "wheezing, distracted, mutters formulae",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380104,
+  "initiation_lines": [
+    "Cough, cough. The Yin Corpse Pill requires fresh bone marrow and ghast tears. Do you have any?",
+    "The last batch exploded. Three disciples were... repurposed. Progress demands sacrifice.",
+    "The Soul Refining Sect's alchemist visited once. He vomited when he saw my ingredients.",
+    "Bring me bottles and coal. The furnace must burn without flame — yin fire feeds on ash."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "gather",
+      "location": "corpse_yin_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "0700",
+      "action": "work",
+      "location": "corpse_yin_sect_alchemy_courtyard",
+      "duration": 300
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "work",
+      "location": "corpse_yin_sect_alchemy_courtyard",
+      "duration": 300
+    },
+    {
+      "time": "1800",
+      "action": "study",
+      "location": "corpse_yin_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "work",
+      "location": "corpse_yin_sect_alchemy_courtyard",
+      "duration": 180
+    },
+    {
+      "time": "2300",
+      "action": "rest",
+      "location": "corpse_yin_sect_inner_sect",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "yin_fuel_supplies",
+      "name": "Yin Fire Fuel",
+      "description": "The yin furnace requires specific fuel. No normal flame can refine corpse pills.",
+      "required_items": {
+        "minecraft:glass_bottle": 4,
+        "minecraft:coal": 6
+      },
+      "rewards": {
+        "minecraft:experience_bottle": 2,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "corpse_pill_ingredients",
+      "name": "Corpse Pill Ingredients",
+      "description": "I need blood essence and blaze powder for the Yin Corpse Pill refinement.",
+      "required_items": {
+        "ergenverse:blood_essence": 1,
+        "minecraft:blaze_powder": 2
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "ergenverse:soul_fragment": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

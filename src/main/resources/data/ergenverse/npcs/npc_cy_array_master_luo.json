@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cy_array_master_luo",
+  "name": "Array Master Luo",
+  "nameCn": "阵法师罗",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_array_hall",
+  "cultivation": "NASCENT_SOUL late",
+  "personality": "paranoid, checks arrays constantly, trusts no one",
+  "speech": "precise, clipped, references measurements",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380105,
+  "initiation_lines": [
+    "The yin-necrotic array at the eastern perimeter is three inches off alignment. Unacceptable.",
+    "The Soul Refining Sect's array master came to study our formations. I showed him the outer ring. The inner ring would break his mind.",
+    "Obsidian conducts yin energy better than any other material. That is why this hall is built from it.",
+    "If you disturb any array inscriptions while walking, I will have you repurposed. Politely."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "inspect",
+      "location": "corpse_yin_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "repair",
+      "location": "corpse_yin_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "1000",
+      "action": "work",
+      "location": "corpse_yin_sect_array_hall",
+      "duration": 240
+    },
+    {
+      "time": "1400",
+      "action": "eat",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1500",
+      "action": "inspect",
+      "location": "corpse_yin_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "work",
+      "location": "corpse_yin_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "corpse_yin_sect_inner_sect",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "array_repair_obsidian",
+      "name": "Array Repair: Obsidian Inscription",
+      "description": "The eastern perimeter array needs obsidian and ender pearls for the yin conduit.",
+      "required_items": {
+        "minecraft:obsidian": 4,
+        "minecraft:ender_pearl": 1
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 2,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "perimeter_redstone",
+      "name": "Perimeter Redstone Supply",
+      "description": "The corpse soldier patrol paths need redstone for their activation circuits.",
+      "required_items": {
+        "minecraft:redstone": 8,
+        "minecraft:iron_ingot": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "ergenverse:soul_fragment": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

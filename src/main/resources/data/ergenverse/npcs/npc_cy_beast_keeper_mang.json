@@ -1,0 +1,93 @@
+{
+  "npc_id": "npc_cy_beast_keeper_mang",
+  "name": "Beast Keeper Mang",
+  "nameCn": "灵兽管事莽",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_spirit_beast_pens",
+  "cultivation": "CONDENSATION late",
+  "personality": "brutal, efficient, treats beasts as raw materials",
+  "speech": "gruff, dismissive, businesslike",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380106,
+  "initiation_lines": [
+    "The beasts in the eastern pen are ready for refinement. The ones in the western pen need another week.",
+    "Qilin City merchants bring the best specimens. Their beast trade feeds our entire operation.",
+    "A corpse soldier made from a Foundation Establishment beast is worth ten made from mortals.",
+    "Do not feed them. They are not pets. They are materials awaiting transformation."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "work",
+      "location": "corpse_yin_sect_spirit_beast_pens",
+      "duration": 300
+    },
+    {
+      "time": "1100",
+      "action": "inspect",
+      "location": "corpse_yin_sect_mountain_cave",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "work",
+      "location": "corpse_yin_sect_spirit_beast_pens",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "deliver",
+      "location": "corpse_yin_sect_puppet_workshop",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "corpse_yin_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "beast_pen_reinforcement",
+      "name": "Beast Pen Reinforcement",
+      "description": "The pens need lead bars and iron to prevent escapes. The last one killed two disciples.",
+      "required_items": {
+        "minecraft:iron_ingot": 4,
+        "minecraft:lead": 3
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 2,
+        "minecraft:emerald": 5
+      }
+    },
+    {
+      "task_id": "raw_material_delivery",
+      "name": "Raw Material Delivery",
+      "description": "Bring bone and leather from the latest beast haul to the Refiner.",
+      "required_items": {
+        "minecraft:bone": 10,
+        "minecraft:leather": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "minecraft:arrow": 12
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

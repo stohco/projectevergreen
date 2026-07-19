@@ -1,0 +1,100 @@
+{
+  "npc_id": "npc_cy_ancestor_attendant_hui",
+  "name": "Ancestor Attendant Hui",
+  "nameCn": "祖师殿侍惠",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_ancestor_hall",
+  "cultivation": "NASCENT_SOUL peak",
+  "personality": "fanatical, eyes vacant, speaks as if possessed",
+  "speech": "reverent, prophetic, third-person references to the Ancestor",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380110,
+  "initiation_lines": [
+    "The Ancestor's will permeates this hall. Can you feel it? The yin energy responds to his presence.",
+    "He does not sleep. He waits. The Corpse Yin Ancestor has waited for three thousand years.",
+    "The ancestor's journals mention a cultivator named Wang Lin. The name is circled. Three times.",
+    "Bring offerings of gold and obsidian. The Ancestor appreciates devotion. He rewards it. In time."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "corpse_yin_sect_ancestor_hall",
+      "duration": 240
+    },
+    {
+      "time": "0900",
+      "action": "ritual",
+      "location": "corpse_yin_sect_ancestor_hall",
+      "duration": 180
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "corpse_yin_sect_inner_sect",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "maintain",
+      "location": "corpse_yin_sect_ancestor_hall",
+      "duration": 240
+    },
+    {
+      "time": "1700",
+      "action": "ritual",
+      "location": "corpse_yin_sect_ancestor_hall",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "meditate",
+      "location": "corpse_yin_sect_ancestor_hall",
+      "duration": 300
+    },
+    {
+      "time": "0100",
+      "action": "rest",
+      "location": "corpse_yin_sect_ancestor_hall",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "ancestor_offering_gold",
+      "name": "Ancestor Offering: Gold and Obsidian",
+      "description": "The ancestor's shrine requires gold and obsidian for the weekly offering ritual.",
+      "required_items": {
+        "minecraft:gold_ingot": 4,
+        "minecraft:obsidian": 6
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 3,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "ancestor_journal_copying",
+      "name": "Ancestor Journal Copying",
+      "description": "Copy the ancestor's most recent revelations. The ink must be fresh and the paper pure.",
+      "required_items": {
+        "minecraft:paper": 8,
+        "minecraft:ink_sac": 5,
+        "minecraft:book": 2
+      },
+      "rewards": {
+        "ergenverse:realm_sealing_flag": 1,
+        "ergenverse:soul_fragment": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

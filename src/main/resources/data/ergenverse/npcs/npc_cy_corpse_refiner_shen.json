@@ -1,0 +1,101 @@
+{
+  "npc_id": "npc_cy_corpse_refiner_shen",
+  "name": "Corpse Refiner Shen",
+  "nameCn": "炼尸师沈",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_puppet_workshop",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "obsessive, meticulous, speaks to corpses as if alive",
+  "speech": "clinical, detached, occasionally tender toward subjects",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380102,
+  "initiation_lines": [
+    "This one has good bone structure. A Condensation cultivator, perhaps. Yes, the marrow is still fresh.",
+    "Do not call them corpses. They are preserved vessels awaiting purpose. There is a difference.",
+    "The Soul Refining Sect thinks they understand souls. They play with wisps. We give the dead form.",
+    "I need more bone and sinew. The corpse soldiers in the outer patrols are deteriorating."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "work",
+      "location": "corpse_yin_sect_puppet_workshop",
+      "duration": 300
+    },
+    {
+      "time": "1000",
+      "action": "inspect",
+      "location": "corpse_yin_sect_spirit_beast_pens",
+      "duration": 120
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "work",
+      "location": "corpse_yin_sect_puppet_workshop",
+      "duration": 240
+    },
+    {
+      "time": "1700",
+      "action": "study",
+      "location": "corpse_yin_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "1900",
+      "action": "work",
+      "location": "corpse_yin_sect_puppet_workshop",
+      "duration": 180
+    },
+    {
+      "time": "2200",
+      "action": "rest",
+      "location": "corpse_yin_sect_inner_sect",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "corpse_repair_materials",
+      "name": "Corpse Repair Materials",
+      "description": "The outer patrol soldiers need bone and sinew for emergency repairs. Do not ask what sinew is.",
+      "required_items": {
+        "minecraft:bone": 8,
+        "minecraft:leather": 4,
+        "minecraft:string": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "ergenverse:soul_fragment": 1
+      }
+    },
+    {
+      "task_id": "preservation_ink_formula",
+      "name": "Preservation Ink Formula",
+      "description": "I need ink and blood to prepare the preservation formula for the new batch.",
+      "required_items": {
+        "minecraft:ink_sac": 4,
+        "minecraft:glass_bottle": 3,
+        "minecraft:rotten_flesh": 3
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

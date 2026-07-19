@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cy_outer_disciple_hei",
+  "name": "Outer Disciple Hei",
+  "nameCn": "外门弟子黑",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_outer_gate",
+  "cultivation": "CONDENSATION early",
+  "personality": "gaunt, nervous, whispers, avoids eye contact",
+  "speech": "quiet, hesitant, fearful",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380101,
+  "initiation_lines": [
+    "The Corpse Yin Sect does not welcome visitors. State your purpose or leave.",
+    "You can smell it, can you not? The yin energy seeps from the ground here.",
+    "Do not wander. The corpse soldiers patrol at night and they do not distinguish friend from foe.",
+    "The ancestors say a great one will rise from our sect. I pray I live to see it."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "patrol",
+      "location": "corpse_yin_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "0800",
+      "action": "stand_guard",
+      "location": "corpse_yin_sect_outer_gate",
+      "duration": 240
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "patrol",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1500",
+      "action": "train",
+      "location": "corpse_yin_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "stand_guard",
+      "location": "corpse_yin_sect_outer_gate",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "corpse_yin_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "gate_patrol_bones",
+      "name": "Gate Patrol Bone Supply",
+      "description": "The outer gate corpse soldiers need fresh bones for repair. Bring them.",
+      "required_items": {
+        "minecraft:arrow": 8,
+        "minecraft:bone": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:book": 1
+      }
+    },
+    {
+      "task_id": "visitor_registry_ink",
+      "name": "Visitor Registry Ink",
+      "description": "We record all who enter the sect. The yin-infused ink preserves the names of the dead.",
+      "required_items": {
+        "minecraft:paper": 5,
+        "minecraft:ink_sac": 3
+      },
+      "rewards": {
+        "minecraft:emerald": 4,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

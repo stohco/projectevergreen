@@ -1,0 +1,100 @@
+{
+  "npc_id": "npc_cy_inner_elder_qiu",
+  "name": "Inner Elder Qiu",
+  "nameCn": "内门长老邱",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_core_formation_hall",
+  "cultivation": "NASCENT_SOUL peak",
+  "personality": "ambitious, calculating, watches everyone",
+  "speech": "measured, strategic, drops veiled threats",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380111,
+  "initiation_lines": [
+    "The Corpse Yin Ancestor's techniques can raise the dead. But can they create life? That is the question that drives me.",
+    "The Heavenly Fate Sect proposed an alliance last year. We refused. Their fate manipulation is child's play compared to our arts.",
+    "The Sea of Devils holds secrets even the Ancestor has not fully explored. I intend to be the one who finds them.",
+    "Bring me spirit stones and emeralds. I am conducting research that could change the balance of power."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "research",
+      "location": "corpse_yin_sect_core_formation_hall",
+      "duration": 300
+    },
+    {
+      "time": "1000",
+      "action": "inspect",
+      "location": "corpse_yin_sect_inner_sect",
+      "duration": 120
+    },
+    {
+      "time": "1200",
+      "action": "meet",
+      "location": "corpse_yin_sect_secret_pavilion",
+      "duration": 120
+    },
+    {
+      "time": "1400",
+      "action": "research",
+      "location": "corpse_yin_sect_core_formation_hall",
+      "duration": 240
+    },
+    {
+      "time": "1800",
+      "action": "inspect",
+      "location": "corpse_yin_sect_hidden_treasury",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "research",
+      "location": "corpse_yin_sect_core_formation_hall",
+      "duration": 180
+    },
+    {
+      "time": "2300",
+      "action": "rest",
+      "location": "corpse_yin_sect_inner_sect",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "core_formation_research",
+      "name": "Core Formation Research Materials",
+      "description": "I need spirit stones and emeralds to power the formation research array.",
+      "required_items": {
+        "ergenverse:soul_fragment": 3,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 2,
+        "ergenverse:blood_essence": 2
+      }
+    },
+    {
+      "task_id": "sea_of_devils_expedition",
+      "name": "Sea of Devils Expedition Supplies",
+      "description": "Prepare supplies for the expedition into the Sea of Devils. We search for the Ancestor's original tomb.",
+      "required_items": {
+        "minecraft:glass_bottle": 6,
+        "minecraft:emerald": 10,
+        "minecraft:obsidian": 8
+      },
+      "rewards": {
+        "ergenverse:realm_sealing_flag": 1,
+        "ergenverse:soul_fragment": 3
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

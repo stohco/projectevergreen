@@ -1,0 +1,99 @@
+{
+  "npc_id": "npc_cy_underground_guide_mo",
+  "name": "Underground Guide Mo",
+  "nameCn": "地下通道向导莫",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "corpse_yin_sect",
+  "location": "corpse_yin_sect_underground_passage",
+  "cultivation": "FOUNDATION_ESTABLISHMENT late",
+  "personality": "shifty-eyed, greedy, knows too many secrets",
+  "speech": "whispered, conspiratorial, always looking over shoulder",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 380109,
+  "initiation_lines": [
+    "You found the passage. Not many do. The elders do not know I use it for... supplementary income.",
+    "Bodies come through here. Not just beasts. Cultivators too, sometimes. I do not ask questions.",
+    "The smuggling route goes to the Sea of Devils. The Soul Refining Sect pays well for fresh specimens.",
+    "Bring me gold and emeralds. I can get you things the elders keep locked in the treasury."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0800",
+      "action": "idle",
+      "location": "corpse_yin_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "1100",
+      "action": "smuggle",
+      "location": "corpse_yin_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "corpse_yin_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "idle",
+      "location": "corpse_yin_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "1700",
+      "action": "smuggle",
+      "location": "corpse_yin_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "1900",
+      "action": "deliver",
+      "location": "corpse_yin_sect_hidden_treasury",
+      "duration": 60
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "corpse_yin_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "smuggling_route_supplies",
+      "name": "Smuggling Route Supplies",
+      "description": "The passage needs ink and paper to forge transit documents for the shipments.",
+      "required_items": {
+        "minecraft:ink_sac": 4,
+        "minecraft:paper": 6
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 2,
+        "minecraft:emerald": 7
+      }
+    },
+    {
+      "task_id": "underground_treasure_access",
+      "name": "Underground Treasury Access",
+      "description": "I can get you into the treasury through the tunnels. The price is gold and emeralds.",
+      "required_items": {
+        "minecraft:gold_ingot": 3,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "ergenverse:blood_essence": 2,
+        "ergenverse:soul_fragment": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}
