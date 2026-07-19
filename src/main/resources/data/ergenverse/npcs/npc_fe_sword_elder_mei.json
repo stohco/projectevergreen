@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fe_sword_elder_mei",
+  "name": "Sword Elder Mei",
+  "nameCn": "剑长老梅",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Fighting Evil Sect",
+  "location": "fighting_evil_sect_sword_peak",
+  "cultivation": "NASCENT_SOUL_LATE",
+  "personality": "cold, precise, haunted by the evil she has killed",
+  "speech": "measured, pauses before speaking, occasionally dark",
+  "relationship_to_wanglin": "neutral — respects cultivators who have faced true danger",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "e716313f809aca4a",
+  "initiation_lines": [
+    "Every sword in this sect was quenched in the blood of something evil. That is not metaphor.",
+    "I have killed three Nascent Soul stage corrupted cultivators. Each one screamed the same word before they died.",
+    "Heng Yue's sword style builds on mountains. Ours builds on corpses. Both reach upward.",
+    "Iron and gold — one for the blade, one for the will. Bring both and I will sharpen your understanding."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Pre-dawn sword meditation",
+      "location": "fighting_evil_sect_sword_peak",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Teach sword class",
+      "location": "fighting_evil_sect_sword_peak",
+      "duration": 150
+    },
+    {
+      "time": "09:30",
+      "action": "Solo sword practice",
+      "location": "fighting_evil_sect_sword_peak",
+      "duration": 120
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Inner sect combat meeting",
+      "location": "fighting_evil_sect_inner_sect",
+      "duration": 90
+    },
+    {
+      "time": "15:00",
+      "action": "Advanced sword training",
+      "location": "fighting_evil_sect_sword_peak",
+      "duration": 180
+    },
+    {
+      "time": "18:00",
+      "action": "Visit sword tomb",
+      "location": "fighting_evil_sect_sword_tomb",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Rest",
+      "location": "fighting_evil_sect_inner_sect",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fe_sword_sharpening",
+      "name": "Evil-Slaying Blade Sharpening",
+      "description": "Elder Mei needs iron and gold to forge and temper evil-slaying blades.",
+      "required_items": {
+        "minecraft:iron_ingot": 6,
+        "minecraft:gold_ingot": 4
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:emerald": 8,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "fe_demon_fire_tempering",
+      "name": "Demon-Fire Tempering Supply",
+      "description": "Blaze rods and iron are needed to temper swords in demon-fire for corruption resistance.",
+      "required_items": {
+        "minecraft:iron_ingot": 8,
+        "minecraft:blaze_rod": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 3,
+        "minecraft:enchanted_book": 1,
+        "experience": 40
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,114 @@
+{
+  "npc_id": "npc_fe_ancestor_keeper_shi",
+  "name": "Ancestor Spirit-Keeper Shi",
+  "nameCn": "祖灵守者石",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Fighting Evil Sect",
+  "location": "fighting_evil_sect_ancestor_hall",
+  "cultivation": "NASCENT_SOUL_PEAK",
+  "personality": "ancient, serene, speaks as if the ancestors are present",
+  "speech": "formal, reverent, pauses as if listening to unseen voices",
+  "relationship_to_wanglin": "neutral — evaluates visitors through the ancestors' wisdom",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "491b99a17bedb175",
+  "initiation_lines": [
+    "Our ancestors did not die. They departed to fight evil in places we cannot follow.",
+    "The first founder killed a Soul Transformation corruption with his bare hands. His sword is in the tomb. His will is in the walls.",
+    "Three ancestors attempted the Evil-Purging Ascension. One returned. We do not speak of what he saw.",
+    "Gold and obsidian for the ancestor tablets. Books and ink to record their deeds. These are not trades. They are devotions."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Ancestor meditation",
+      "location": "fighting_evil_sect_ancestor_hall",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Incense and offerings",
+      "location": "fighting_evil_sect_ancestor_hall",
+      "duration": 90
+    },
+    {
+      "time": "09:00",
+      "action": "Advise inner sect elders",
+      "location": "fighting_evil_sect_inner_sect",
+      "duration": 120
+    },
+    {
+      "time": "11:00",
+      "action": "Visit sword tomb",
+      "location": "fighting_evil_sect_sword_tomb",
+      "duration": 60
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "fighting_evil_sect_inner_sect",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Teach ancestral combat forms",
+      "location": "fighting_evil_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "16:00",
+      "action": "Core formation consultation",
+      "location": "fighting_evil_sect_core_formation_hall",
+      "duration": 90
+    },
+    {
+      "time": "19:00",
+      "action": "Evening ancestor communion",
+      "location": "fighting_evil_sect_ancestor_hall",
+      "duration": 180
+    },
+    {
+      "time": "22:00",
+      "action": "Rest",
+      "location": "fighting_evil_sect_ancestor_hall",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fe_ancestor_tablet_maintenance",
+      "name": "Ancestor Tablet Restoration",
+      "description": "Keeper Shi needs gold and obsidian to restore damaged ancestor memorial tablets.",
+      "required_items": {
+        "minecraft:gold_ingot": 6,
+        "minecraft:obsidian": 5
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 3,
+        "minecraft:emerald": 6,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "fe_ancestor_deeds_recording",
+      "name": "Ancestral Deed Documentation",
+      "description": "Books, ink, and paper are needed to record the deeds of fallen sect warriors for the ancestor hall.",
+      "required_items": {
+        "minecraft:book": 4,
+        "minecraft:ink_sac": 6,
+        "minecraft:paper": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2,
+        "experience": 30
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

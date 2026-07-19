@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fe_array_master_fang",
+  "name": "Evil-Binding Array Master Fang",
+  "nameCn": "镇邪阵法师方",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Fighting Evil Sect",
+  "location": "fighting_evil_sect_array_hall",
+  "cultivation": "NASCENT_SOUL_MID",
+  "personality": "obsessive, perfectionist, views arrays as the ultimate weapon against evil",
+  "speech": "technical, intense, compares everything to formations",
+  "relationship_to_wanglin": "neutral — evaluates visitors by their understanding of formations",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "bfb287d1713c3b14",
+  "initiation_lines": [
+    "An array that cannot restrain evil is just pretty lights on the ground.",
+    "I have designed forty-three binding arrays. Forty-two work. The forty-third will be my masterpiece.",
+    "Cloud Sky Sect's wind arrays are elegant. Ours are functional. When evil comes, functional matters.",
+    "Redstone and iron form the skeleton of any binding array. Bring them and I will teach you."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Inspect morning arrays",
+      "location": "fighting_evil_sect_array_hall",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Teach array class",
+      "location": "fighting_evil_sect_array_hall",
+      "duration": 150
+    },
+    {
+      "time": "11:00",
+      "action": "Repair outer gate arrays",
+      "location": "fighting_evil_sect_outer_gate",
+      "duration": 90
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Design new binding array",
+      "location": "fighting_evil_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Test arrays on mountain cave",
+      "location": "fighting_evil_sect_mountain_cave",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Consult with Core Elder",
+      "location": "fighting_evil_sect_core_formation_hall",
+      "duration": 60
+    },
+    {
+      "time": "21:00",
+      "action": "Rest",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fe_binding_array_materials",
+      "name": "Binding Array Skeleton",
+      "description": "Master Fang needs redstone and iron ingots to construct the framework of a new evil-binding array.",
+      "required_items": {
+        "minecraft:redstone": 8,
+        "minecraft:iron_ingot": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 8,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "fe_trap_string_gunpowder",
+      "name": "Explosive Trap Components",
+      "description": "String and gunpowder are needed for the array hall's perimeter trap system.",
+      "required_items": {
+        "minecraft:string": 6,
+        "minecraft:gunpowder": 5
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

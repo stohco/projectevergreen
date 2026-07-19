@@ -1,0 +1,106 @@
+{
+  "npc_id": "npc_fe_war_puppet_smith_han",
+  "name": "War Puppet Smith Han",
+  "nameCn": "战傀匠人韩",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Fighting Evil Sect",
+  "location": "fighting_evil_sect_puppet_workshop",
+  "cultivation": "NASCENT_SOUL_EARLY",
+  "personality": "mechanical, single-minded, treats puppets as his children",
+  "speech": "precise, refers to puppets by name, mildly unsettling calm",
+  "relationship_to_wanglin": "neutral — interested in anyone who understands machinery",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "6342fde439a13fce",
+  "initiation_lines": [
+    "A puppet that hesitates is a puppet that dies. My puppets do not hesitate.",
+    "Iron Slaughter Unit Seven has killed more corrupted beasts than most inner disciples.",
+    "Redstone is the blood. Iron is the bone. Coal is the breath. A puppet is not so different from you.",
+    "Bring me iron and redstone. I will show you what discipline looks like when it has no fear."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Puppet maintenance",
+      "location": "fighting_evil_sect_puppet_workshop",
+      "duration": 150
+    },
+    {
+      "time": "08:30",
+      "action": "Forge new puppet parts",
+      "location": "fighting_evil_sect_puppet_workshop",
+      "duration": 150
+    },
+    {
+      "time": "11:00",
+      "action": "Test puppets in arena",
+      "location": "fighting_evil_sect_trial_grounds",
+      "duration": 90
+    },
+    {
+      "time": "12:30",
+      "action": "Meal",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 60
+    },
+    {
+      "time": "13:30",
+      "action": "Puppet combat calibration",
+      "location": "fighting_evil_sect_puppet_workshop",
+      "duration": 150
+    },
+    {
+      "time": "16:00",
+      "action": "Deploy patrol puppets",
+      "location": "fighting_evil_sect_outer_gate",
+      "duration": 90
+    },
+    {
+      "time": "18:00",
+      "action": "Evening repairs",
+      "location": "fighting_evil_sect_puppet_workshop",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Rest",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fe_puppet_forging",
+      "name": "War Puppet Skeleton Forging",
+      "description": "Smith Han needs iron and redstone to forge the skeletal framework of a new combat puppet.",
+      "required_items": {
+        "minecraft:iron_ingot": 8,
+        "minecraft:redstone": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 7,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "fe_puppet_fuel_supply",
+      "name": "Puppet Power Supply",
+      "description": "Coal and bone are needed to fuel the puppet workshop's furnaces and provide calcium-hardening compounds.",
+      "required_items": {
+        "minecraft:coal": 8,
+        "minecraft:bone": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

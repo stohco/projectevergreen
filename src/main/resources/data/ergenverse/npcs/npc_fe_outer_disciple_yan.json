@@ -1,0 +1,100 @@
+{
+  "npc_id": "npc_fe_outer_disciple_yan",
+  "name": "Outer Disciple Yan",
+  "nameCn": "外门弟子严",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Fighting Evil Sect",
+  "location": "fighting_evil_sect_outer_gate",
+  "cultivation": "CONDENSATION_EARLY",
+  "personality": "rigid, suspicious of outsiders, fiercely proud of the sect's mission",
+  "speech": "clipped, militaristic, uses combat metaphors",
+  "relationship_to_wanglin": "neutral — assesses all visitors as potential threats",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "dc8b4f092623ec00",
+  "initiation_lines": [
+    "Halt. State your purpose. The Fighting Evil Sect does not accept visitors without cause.",
+    "That weapon you carry — has it drawn evil blood? If not, it is decoration.",
+    "Every disciple here has killed at least one corrupted spirit. What have you killed?",
+    "The gate stays open during the day. At night, it closes. We are not fools."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Gate inspection",
+      "location": "fighting_evil_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Patrol outer perimeter",
+      "location": "fighting_evil_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "10:00",
+      "action": "Weapon maintenance",
+      "location": "fighting_evil_sect_outer_gate",
+      "duration": 90
+    },
+    {
+      "time": "12:00",
+      "action": "Meal at barracks",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Combat drills",
+      "location": "fighting_evil_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "17:00",
+      "action": "Gate duty",
+      "location": "fighting_evil_sect_outer_gate",
+      "duration": 180
+    },
+    {
+      "time": "20:00",
+      "action": "Return to barracks",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fe_gate_patrol_supplies",
+      "name": "Gate Patrol Resupply",
+      "description": "The outer gate guard needs arrows and iron to maintain patrols against corrupted creatures.",
+      "required_items": {
+        "minecraft:arrow": 8,
+        "minecraft:iron_ingot": 3
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:book": 1,
+        "experience": 20
+      }
+    },
+    {
+      "task_id": "fe_banner_repair",
+      "name": "Evil-Slaying Banner Repair",
+      "description": "War banners at the gate are frayed. Bring redstone and coal to repaint the binding sigils.",
+      "required_items": {
+        "minecraft:redstone": 4,
+        "minecraft:coal": 3
+      },
+      "rewards": {
+        "minecraft:emerald": 4,
+        "experience": 15
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,106 @@
+{
+  "npc_id": "npc_fe_evil_slayer_guard_xu",
+  "name": "Evil-Slayer Guard Xu",
+  "nameCn": "镇邪卫兵徐",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Fighting Evil Sect",
+  "location": "fighting_evil_sect_main_plaza",
+  "cultivation": "CONDENSATION_LATE",
+  "personality": "battle-hardened, grimly humorous, treats combat as sacred duty",
+  "speech": "blunt, dark humor, quotes combat maxims",
+  "relationship_to_wanglin": "neutral — respects strength, tests visitors through conversation",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "010bae815daf40c8",
+  "initiation_lines": [
+    "Welcome to the plaza. Try not to step in the bloodstains. Some of them are fresh.",
+    "We do not cultivate for peace. We cultivate the strength to destroy it when it is false.",
+    "Last month a corrupted beast broke through the outer gate. It lasted eleven seconds.",
+    "If you are here to learn, go to the library. If you are here to fight, stay right here."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Dawn combat practice",
+      "location": "fighting_evil_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Plaza patrol",
+      "location": "fighting_evil_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Supervise disciple drills",
+      "location": "fighting_evil_sect_trial_grounds",
+      "duration": 150
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Weapon sharpening",
+      "location": "fighting_evil_sect_main_plaza",
+      "duration": 90
+    },
+    {
+      "time": "15:00",
+      "action": "Evil-slaying patrol",
+      "location": "fighting_evil_sect_outer_gate",
+      "duration": 180
+    },
+    {
+      "time": "19:00",
+      "action": "Report to inner sect",
+      "location": "fighting_evil_sect_inner_sect",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Night watch rotation",
+      "location": "fighting_evil_sect_main_plaza",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fe_bone_iron_collection",
+      "name": "Battle Remains Salvage",
+      "description": "The plaza needs iron and bone to forge new weapons and repair training dummies.",
+      "required_items": {
+        "minecraft:iron_ingot": 4,
+        "minecraft:bone": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "ergenverse:jade_slip": 1,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "fe_binding_materials",
+      "name": "Spirit Binding Materials",
+      "description": "Guard Xu needs string and redstone to reinforce the plaza's evil-detection array.",
+      "required_items": {
+        "minecraft:string": 5,
+        "minecraft:redstone": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

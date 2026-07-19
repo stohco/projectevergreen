@@ -1,0 +1,113 @@
+{
+  "npc_id": "npc_fe_core_elder_hong",
+  "name": "Core Elder Hong",
+  "nameCn": "阵法核心长老洪",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Fighting Evil Sect",
+  "location": "fighting_evil_sect_core_formation_hall",
+  "cultivation": "NASCENT_SOUL_PEAK",
+  "personality": "authoritative, strategic, views the entire sect as a weapon",
+  "speech": "commanding, precise, never wastes a word",
+  "relationship_to_wanglin": "neutral — evaluates whether visitors strengthen or weaken the sect",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "13a9999a2fd1e894",
+  "initiation_lines": [
+    "The core formation of this sect is a weapon. Every other sect's core is a well. Ours is a blade pointed at the darkness.",
+    "Soul Refining Sect's core arrays are chains. Ours are blades. Both cut. Chains bind. Blades end.",
+    "I have ordered the underground passages sealed three times. Each time, something unseals them.",
+    "Spirit stones and ender pearls. If you have them, you understand what is at stake. If you do not, leave."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Core formation inspection",
+      "location": "fighting_evil_sect_core_formation_hall",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Elder council meeting",
+      "location": "fighting_evil_sect_inner_sect",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Formation calibration",
+      "location": "fighting_evil_sect_core_formation_hall",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Meal with inner sect",
+      "location": "fighting_evil_sect_inner_sect",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Review sentinel reports",
+      "location": "fighting_evil_sect_underground_passage",
+      "duration": 90
+    },
+    {
+      "time": "15:00",
+      "action": "Strategic planning",
+      "location": "fighting_evil_sect_core_formation_hall",
+      "duration": 150
+    },
+    {
+      "time": "18:00",
+      "action": "Visit ancestor hall",
+      "location": "fighting_evil_sect_ancestor_hall",
+      "duration": 60
+    },
+    {
+      "time": "19:00",
+      "action": "Night formation monitoring",
+      "location": "fighting_evil_sect_core_formation_hall",
+      "duration": 300
+    },
+    {
+      "time": "23:00",
+      "action": "Rest",
+      "location": "fighting_evil_sect_inner_sect",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fe_core_formation_upgrade",
+      "name": "Core Formation Power Supply",
+      "description": "Elder Hong needs spirit stones and ender pearls to upgrade the sect's central combat formation.",
+      "required_items": {
+        "ergenverse:spirit_stone": 4,
+        "minecraft:ender_pearl": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 3,
+        "ergenverse:dao_fragment": 1,
+        "experience": 50
+      }
+    },
+    {
+      "task_id": "fe_elder_knowledge_exchange",
+      "name": "Elder Knowledge Exchange",
+      "description": "Elder Hong trades high-level cultivation knowledge for emeralds and enchanted books.",
+      "required_items": {
+        "minecraft:emerald": 12,
+        "minecraft:enchanted_book": 1
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 3,
+        "ergenverse:jade_slip": 2,
+        "experience": 40
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

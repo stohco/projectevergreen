@@ -1,0 +1,106 @@
+{
+  "npc_id": "npc_fe_tomb_keeper_mo",
+  "name": "Tomb Keeper Mo",
+  "nameCn": "剑冢守墓者莫",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Fighting Evil Sect",
+  "location": "fighting_evil_sect_sword_tomb",
+  "cultivation": "FOUNDATION_LATE",
+  "personality": "reverent, quiet, speaks to the dead swords as if alive",
+  "speech": "soft, formal, addresses swords by their former owners' names",
+  "relationship_to_wanglin": "neutral — judges visitors by how they treat the tomb",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "08c38f19a2017485",
+  "initiation_lines": [
+    "These swords remember. Touch one unprepared and it will show you what it killed.",
+    "Elder Shen's sword still vibrates at night. She died killing a Soul Formation corruption.",
+    "The Heavenly Fate Sect sent an elder to catalogue these swords. He left after counting three hundred. He said the rest made his stars go dark.",
+    "I record the history of every blade. Ink and paper, please. The dead deserve documentation."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Morning sword communion",
+      "location": "fighting_evil_sect_sword_tomb",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Clean and oil swords",
+      "location": "fighting_evil_sect_sword_tomb",
+      "duration": 150
+    },
+    {
+      "time": "10:30",
+      "action": "Record sword histories",
+      "location": "fighting_evil_sect_sword_tomb",
+      "duration": 120
+    },
+    {
+      "time": "12:30",
+      "action": "Meal",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 60
+    },
+    {
+      "time": "13:30",
+      "action": "Consult library archives",
+      "location": "fighting_evil_sect_library",
+      "duration": 90
+    },
+    {
+      "time": "15:00",
+      "action": "New sword internment",
+      "location": "fighting_evil_sect_sword_tomb",
+      "duration": 120
+    },
+    {
+      "time": "18:00",
+      "action": "Evening vigil",
+      "location": "fighting_evil_sect_sword_tomb",
+      "duration": 180
+    },
+    {
+      "time": "22:00",
+      "action": "Rest",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fe_sword_record_keeping",
+      "name": "Fallen Sword Documentation",
+      "description": "Keeper Mo needs ink and paper to record the histories of newly interned evil-slaying swords.",
+      "required_items": {
+        "minecraft:ink_sac": 4,
+        "minecraft:paper": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 7,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "fe_tomb_lamp_fuel",
+      "name": "Tomb Lamp Fuel",
+      "description": "Coal and redstone are needed to keep the eternal lamps burning in the sword tomb.",
+      "required_items": {
+        "minecraft:coal": 8,
+        "minecraft:redstone": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

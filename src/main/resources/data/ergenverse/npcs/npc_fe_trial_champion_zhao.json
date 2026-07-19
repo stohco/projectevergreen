@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fe_trial_champion_zhao",
+  "name": "Trial Champion Zhao",
+  "nameCn": "试炼冠军赵",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Fighting Evil Sect",
+  "location": "fighting_evil_sect_trial_grounds",
+  "cultivation": "NASCENT_SOUL_EARLY",
+  "personality": "intense, competitive, secretly fears the corruption he fights",
+  "speech": "challenging, provocative, speaks in combat metaphors",
+  "relationship_to_wanglin": "neutral — tests everyone who enters the trial grounds",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "a6ce67f82d5f5d63",
+  "initiation_lines": [
+    "The trials do not test your cultivation. They test whether you will walk into darkness.",
+    "I have killed seventeen corrupted beasts in the arena. Eighteen was the one that nearly killed me.",
+    "A Heng Yue disciple once attempted our trials. He lasted nine seconds. He was brave. Bravery is not enough.",
+    "Bring me iron and gunpowder. If your hands shake, you are not ready."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Solo combat meditation",
+      "location": "fighting_evil_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Oversee morning trials",
+      "location": "fighting_evil_sect_trial_grounds",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Weapon rest",
+      "location": "fighting_evil_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Afternoon trials",
+      "location": "fighting_evil_sect_trial_grounds",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Corrupted beast disposal",
+      "location": "fighting_evil_sect_spirit_beast_pens",
+      "duration": 90
+    },
+    {
+      "time": "18:00",
+      "action": "Evening training",
+      "location": "fighting_evil_sect_sword_peak",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Rest",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fe_trial_explosive_supply",
+      "name": "Trial Grounds Demolition Supply",
+      "description": "The trial grounds need iron and gunpowder to reset combat arenas after corrupted beast fights.",
+      "required_items": {
+        "minecraft:iron_ingot": 5,
+        "minecraft:gunpowder": 4
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:experience_bottle": 2,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "fe_trial_basic_supplies",
+      "name": "Trial Rations Supply",
+      "description": "Trial participants need bread and arrows for endurance tests.",
+      "required_items": {
+        "minecraft:bread": 6,
+        "minecraft:arrow": 12
+      },
+      "rewards": {
+        "minecraft:emerald": 6,
+        "ergenverse:jade_slip": 1,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

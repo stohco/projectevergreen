@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fe_passage_sentinel_lei",
+  "name": "Passage Sentinel Lei",
+  "nameCn": "地道哨兵雷",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Fighting Evil Sect",
+  "location": "fighting_evil_sect_underground_passage",
+  "cultivation": "NASCENT_SOUL_MID",
+  "personality": "vigilant, paranoid, has seen too much in the dark",
+  "speech": "quiet, urgent, checks over his shoulder while speaking",
+  "relationship_to_wanglin": "neutral — suspicious but desperate for reinforcement",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 2,
+  "derivation_type": "I",
+  "salt": "dd6556f864620da1",
+  "initiation_lines": [
+    "Something lives in the deep passages. We do not go there. We guard the way down.",
+    "Three sentinels have vanished this year. The sect says they transferred. The sect is wrong.",
+    "The Corpse Yin Sect sent an envoy once. He laughed when he saw our passages. Said his sect's tunnels were deeper.",
+    "Iron and obsidian — we need them to reinforce the barriers. Before they break through again."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Begin underground patrol",
+      "location": "fighting_evil_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Barrier inspection",
+      "location": "fighting_evil_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Surface report",
+      "location": "fighting_evil_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "10:00",
+      "action": "Resupply from treasury",
+      "location": "fighting_evil_sect_hidden_treasury",
+      "duration": 60
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "fighting_evil_sect_disciple_dormitories",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Deep passage patrol",
+      "location": "fighting_evil_sect_underground_passage",
+      "duration": 240
+    },
+    {
+      "time": "18:00",
+      "action": "Emergency barrier repair",
+      "location": "fighting_evil_sect_underground_passage",
+      "duration": 120
+    },
+    {
+      "time": "21:00",
+      "action": "Night vigil",
+      "location": "fighting_evil_sect_underground_passage",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fe_barrier_reinforcement",
+      "name": "Underground Barrier Reinforcement",
+      "description": "Sentinel Lei urgently needs iron and obsidian to reinforce barriers against whatever is beneath.",
+      "required_items": {
+        "minecraft:iron_ingot": 8,
+        "minecraft:obsidian": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:experience_bottle": 2,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "fe_demolition_supply",
+      "name": "Tunnel Demolition Supply",
+      "description": "Coal and gunpowder are needed for controlled demolitions of collapsed tunnel sections.",
+      "required_items": {
+        "minecraft:coal": 8,
+        "minecraft:gunpowder": 5
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "ergenverse:jade_slip": 1,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}
