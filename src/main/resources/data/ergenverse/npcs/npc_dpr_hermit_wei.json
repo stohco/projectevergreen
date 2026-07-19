@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_dpr_hermit_wei",
+  "name": "Hermit Wei",
+  "nameCn": "隐士魏",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "Daoist Peak Retreat",
+  "location": "daoist_peak_retreat",
+  "cultivation": "NASCENT_SOUL_MID",
+  "personality": "serene, philosophical, speaks in metaphors about the Dao, occasionally cryptic",
+  "speech": "measured, slow, frequently pauses mid-sentence to observe nature",
+  "relationship_to_wanglin": "neutral-respectful — recognizes potential in those who climb the peak",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "9c14e3563df67097",
+  "initiation_lines": [
+    "You climbed. Most do not. The Daoist Peak does not call to those who seek power. It calls to those who seek silence.",
+    "A Heng Yue elder visited once. He sat for three days, then left in frustration. He could not accept that the Dao has no curriculum.",
+    "I have been here for forty years. The peak has not changed. I have not changed. That is the teaching.",
+    "Ink and paper. If you wish to understand the Dao through words, I require these for my calligraphy."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn meditation",
+      "location": "daoist_peak_retreat",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Morning tea ceremony",
+      "location": "daoist_peak_retreat",
+      "duration": 90
+    },
+    {
+      "time": "08:30",
+      "action": "Calligraphy practice",
+      "location": "daoist_peak_retreat",
+      "duration": 120
+    },
+    {
+      "time": "10:30",
+      "action": "Herb garden tending",
+      "location": "daoist_peak_retreat",
+      "duration": 150
+    },
+    {
+      "time": "13:00",
+      "action": "Midday lecture to acolytes",
+      "location": "daoist_peak_retreat",
+      "duration": 120
+    },
+    {
+      "time": "15:00",
+      "action": "Meditation on the cliff edge",
+      "location": "daoist_peak_retreat",
+      "duration": 180
+    },
+    {
+      "time": "19:00",
+      "action": "Evening incense burning",
+      "location": "daoist_peak_retreat",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Night meditation",
+      "location": "daoist_peak_retreat",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "dpr_calligraphy_supplies",
+      "name": "Calligraphy Materials",
+      "description": "Hermit Wei needs ink and paper for his Daoist calligraphy practice.",
+      "required_items": {
+        "minecraft:ink_sac": 8,
+        "minecraft:paper": 16
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 8,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "dpr_incense_fuel",
+      "name": "Meditation Incense Fuel",
+      "description": "The meditation hall requires coal and glowstone to maintain its spiritual atmosphere.",
+      "required_items": {
+        "minecraft:coal": 12,
+        "minecraft:glowstone": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 30
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

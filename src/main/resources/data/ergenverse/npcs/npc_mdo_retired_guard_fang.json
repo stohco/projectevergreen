@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_mdo_retired_guard_fang",
+  "name": "Retired Guard Fang",
+  "nameCn": "退役卫兵方",
+  "canon_id": "",
+  "type": "mortal",
+  "faction": "Mortal Dust Outpost",
+  "location": "mortal_dust_outpost",
+  "cultivation": "MORTAL",
+  "personality": "grizzled, nostalgic, haunted by one battle he will not describe",
+  "speech": "slow, pauses often, references 'the old days' with a mixture of pride and regret",
+  "relationship_to_wanglin": "neutral-respectful — respects anyone who can fight",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "9d16e955d0760e02",
+  "initiation_lines": [
+    "I guarded the Great Wang Capital for thirty years. Now I guard a wooden wall at the edge of nowhere. The pay is worse. The quiet is better.",
+    "The Teng family's guard captain was a boy when I started. Now he commands three hundred men. I command a gate that nobody attacks.",
+    "Arrows and coal. If you have them, I will tell you what I know about the roads between here and the capital. The knowledge is worth more than the arrows.",
+    "A Fighting Evil Sect patrol came through once. They said there was corruption in the hills nearby. They burned something. I did not ask what."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Dawn watch",
+      "location": "mortal_dust_outpost",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Weapon maintenance",
+      "location": "mortal_dust_outpost",
+      "duration": 90
+    },
+    {
+      "time": "09:00",
+      "action": "Perimeter patrol",
+      "location": "mortal_dust_outpost",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "mortal_dust_outpost",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Train outpost militia",
+      "location": "mortal_dust_outpost",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Rest and tell stories",
+      "location": "mortal_dust_outpost",
+      "duration": 180
+    },
+    {
+      "time": "19:00",
+      "action": "Evening watch",
+      "location": "mortal_dust_outpost",
+      "duration": 180
+    },
+    {
+      "time": "22:00",
+      "action": "Sleep",
+      "location": "mortal_dust_outpost",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "mdo_guard_arrows",
+      "name": "Guard Arrow Supply",
+      "description": "Retired Guard Fang needs arrows and coal to maintain the outpost's defenses.",
+      "required_items": {
+        "minecraft:arrow": 32,
+        "minecraft:coal": 8
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:book": 1,
+        "experience": 15
+      }
+    },
+    {
+      "task_id": "mdo_road_knowledge",
+      "name": "Road Intelligence",
+      "description": "Fang will share knowledge of the surrounding roads in exchange for iron and books.",
+      "required_items": {
+        "minecraft:iron_ingot": 6,
+        "minecraft:book": 2
+      },
+      "rewards": {
+        "minecraft:emerald": 12,
+        "minecraft:experience_bottle": 1,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

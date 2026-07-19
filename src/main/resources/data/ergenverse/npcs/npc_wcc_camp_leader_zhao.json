@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_wcc_camp_leader_zhao",
+  "name": "Camp Leader Zhao",
+  "nameCn": "营地首领赵",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "Wandering Cultivator Camp",
+  "location": "wandering_cultivator_camp",
+  "cultivation": "FOUNDATION_MID",
+  "personality": "pragmatic, survivor mentality, protective of the camp, distrustful of sects",
+  "speech": "direct, no-nonsense, references survival frequently",
+  "relationship_to_wanglin": "neutral-wary — sect cultivators are not trusted",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "c43916419384eed1",
+  "initiation_lines": [
+    "This camp exists because the sects will not take us and the cities will not feed us. We are not failures. We are the unchosen.",
+    "A Heng Yue Sect recruiter came once. He offered outer disciple positions. We told him to leave. A dog does not beg for scraps from the table it was chased from.",
+    "We need bread, iron, and coal. Always. The cold does not care about cultivation bases.",
+    "The Corpse Yin Sect buys bones from wandering cultivators. We do not trade with them. Some camps do. Ours does not."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Camp perimeter check",
+      "location": "wandering_cultivator_camp",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "Morning assembly",
+      "location": "wandering_cultivator_camp",
+      "duration": 60
+    },
+    {
+      "time": "08:00",
+      "action": "Resource gathering",
+      "location": "wandering_cultivator_camp",
+      "duration": 240
+    },
+    {
+      "time": "12:00",
+      "action": "Meal distribution",
+      "location": "wandering_cultivator_camp",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Trade negotiations with travelers",
+      "location": "wandering_cultivator_camp",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Camp defense drills",
+      "location": "wandering_cultivator_camp",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Evening meal",
+      "location": "wandering_cultivator_camp",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Night watch rotation",
+      "location": "wandering_cultivator_camp",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "wcc_camp_food",
+      "name": "Camp Food Supplies",
+      "description": "The camp needs bread and wheat to feed its residents through the coming weeks.",
+      "required_items": {
+        "minecraft:bread": 12,
+        "minecraft:wheat": 16
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 6,
+        "experience": 20
+      }
+    },
+    {
+      "task_id": "wcc_camp_tools",
+      "name": "Camp Tool Repair",
+      "description": "Camp Leader Zhao needs iron and coal to repair the camp's worn tools and weapons.",
+      "required_items": {
+        "minecraft:iron_ingot": 8,
+        "minecraft:coal": 10
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 1,
+        "minecraft:emerald": 7,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_wcc_herb_gatherer_su",
+  "name": "Herb Gatherer Su",
+  "nameCn": "采药人苏",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "Wandering Cultivator Camp",
+  "location": "wandering_cultivator_camp",
+  "cultivation": "CONDENSATION_PEAK",
+  "personality": "knowledgeable about herbs, quiet, speaks only when she has something worth saying",
+  "speech": "soft-spoken, precise, often interrupts herself to correct herb names",
+  "relationship_to_wanglin": "neutral-interested — seeks knowledge exchange",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "8bea05cc35d35d26",
+  "initiation_lines": [
+    "I gather qi_gathering_grass. The sects use it for foundation pills. We use it for tea. The same herb, different purposes, same result.",
+    "A Soul Refining Sect disciple once tried to buy my entire stock. I refused. He said the sect always gets what it wants. I moved the camp. He did not follow.",
+    "Spirit stones and bones. I trade herbs for cultivation resources. The sects have gardens. We have the wild.",
+    "A monk from the Xuan Dao Sect taught me to identify thirty-seven herb species by root texture alone. He said the eyes deceive. The roots do not."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:30",
+      "action": "Pre-dawn herb foraging",
+      "location": "wandering_cultivator_camp",
+      "duration": 180
+    },
+    {
+      "time": "08:30",
+      "action": "Herb processing and drying",
+      "location": "wandering_cultivator_camp",
+      "duration": 120
+    },
+    {
+      "time": "10:30",
+      "action": "Herb classification",
+      "location": "wandering_cultivator_camp",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Trade with other wanderers",
+      "location": "wandering_cultivator_camp",
+      "duration": 120
+    },
+    {
+      "time": "15:00",
+      "action": "Cultivation with herbs",
+      "location": "wandering_cultivator_camp",
+      "duration": 180
+    },
+    {
+      "time": "18:30",
+      "action": "Prepare herbal medicine",
+      "location": "wandering_cultivator_camp",
+      "duration": 90
+    },
+    {
+      "time": "20:00",
+      "action": "Record herb observations",
+      "location": "wandering_cultivator_camp",
+      "duration": 120
+    },
+    {
+      "time": "22:00",
+      "action": "Sleep",
+      "location": "wandering_cultivator_camp",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "wcc_herbs_for_stones",
+      "name": "Herb to Spirit Stone Trade",
+      "description": "Herb Gatherer Su needs spirit stones and bones to maintain her cultivation while gathering.",
+      "required_items": {
+        "ergenverse:spirit_stone": 2,
+        "minecraft:bone": 6
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:experience_bottle": 2,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "wcc_herb_processing",
+      "name": "Herb Processing Supplies",
+      "description": "Su needs emeralds and books to trade for rare seeds and record her findings.",
+      "required_items": {
+        "minecraft:emerald": 10,
+        "minecraft:book": 3
+      },
+      "rewards": {
+        "ergenverse:qi_gathering_grass": 4,
+        "minecraft:emerald": 6,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

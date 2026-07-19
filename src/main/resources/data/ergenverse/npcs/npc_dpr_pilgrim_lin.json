@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_dpr_pilgrim_lin",
+  "name": "Pilgrim Lin",
+  "nameCn": "朝圣者林",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "None — traveling seeker",
+  "location": "daoist_peak_retreat",
+  "cultivation": "FOUNDATION_LATE",
+  "personality": "worldly, observant, contrasts the peak with everywhere else, slightly irreverent",
+  "speech": "animated, uses comparisons to other locations, asks direct questions the acolytes will not",
+  "relationship_to_wanglin": "neutral — sees a fellow traveler",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "49f79e6616dd2995",
+  "initiation_lines": [
+    "I have visited eleven peaks on this planet. This one is the quietest. The Cloud Sky Sect's peak has wind. This one has nothing. That is its value.",
+    "The Snow Country Capital has ice guards who would freeze you for staring. Here, Hermit Wei would not notice if you stole everything. He does not own anything.",
+    "I came from the Heavenly Fate Sect's observatory. They mapped my fate and told me to come here. I suspect they just wanted me off their mountain.",
+    "Books and experience. If you have traveled, I will trade. I collect perspectives, not spirit stones."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Morning walk around the peak",
+      "location": "daoist_peak_retreat",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Breakfast with acolytes",
+      "location": "daoist_peak_retreat",
+      "duration": 60
+    },
+    {
+      "time": "09:00",
+      "action": "Observe Hermit Wei's calligraphy",
+      "location": "daoist_peak_retreat",
+      "duration": 120
+    },
+    {
+      "time": "11:00",
+      "action": "Journal writing",
+      "location": "daoist_peak_retreat",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Attend lecture (as observer)",
+      "location": "daoist_peak_retreat",
+      "duration": 120
+    },
+    {
+      "time": "16:00",
+      "action": "Meditation (attempting peak style)",
+      "location": "daoist_peak_retreat",
+      "duration": 180
+    },
+    {
+      "time": "20:00",
+      "action": "Stargazing from cliff",
+      "location": "daoist_peak_retreat",
+      "duration": 180
+    },
+    {
+      "time": "23:00",
+      "action": "Sleep",
+      "location": "daoist_peak_retreat",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "dpr_travel_knowledge",
+      "name": "Travel Knowledge Exchange",
+      "description": "Pilgrim Lin seeks books and experience to record in his travel journal.",
+      "required_items": {
+        "minecraft:book": 4,
+        "minecraft:experience_bottle": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "dpr_spirit_light",
+      "name": "Spiritual Light for Meditation",
+      "description": "The peak's meditation chamber needs glowstone and emeralds to sustain its spiritual illumination.",
+      "required_items": {
+        "minecraft:glowstone": 6,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 1,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

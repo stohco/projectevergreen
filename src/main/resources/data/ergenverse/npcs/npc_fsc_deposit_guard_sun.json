@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fsc_deposit_guard_sun",
+  "name": "Deposit Guard Sun",
+  "nameCn": "矿场守卫孙",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "Independent mining collective",
+  "location": "foreign_soul_crystal_deposit",
+  "cultivation": "CONDENSATION_PEAK",
+  "personality": "alert, professional, treats the deposit as a military installation",
+  "speech": "military-style, gives orders, reports status concisely",
+  "relationship_to_wanglin": "neutral-assessing — classifies visitors by threat level",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "7a22df6ebb57fe45",
+  "initiation_lines": [
+    "Halt. This is a restricted mining zone. State your business or leave. The crystals attract things. Not all of them are friendly.",
+    "I trained under the Fighting Evil Sect for six years. They taught me to identify threats. This deposit has three: cave-ins, crystal guardians, and other miners.",
+    "Iron and obsidian. Guard equipment needs constant replacement. The crystal guardians are not aggressive, but they are persistent.",
+    "A Luo He Sect merchant tried to buy the deposit's mining rights. The miners refused. He said water always finds a way. We said crystal is harder than water."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn perimeter sweep",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 120
+    },
+    {
+      "time": "06:00",
+      "action": "Guard post duty",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 180
+    },
+    {
+      "time": "09:00",
+      "action": "Escort miners to deep tunnels",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Guard crystal processing area",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 240
+    },
+    {
+      "time": "17:00",
+      "action": "Evening perimeter check",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Night watch briefing",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Night patrol",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fsc_guard_equipment",
+      "name": "Guard Equipment Supply",
+      "description": "Guard Sun needs iron and obsidian to maintain guard equipment and tunnel defenses.",
+      "required_items": {
+        "minecraft:iron_ingot": 8,
+        "minecraft:obsidian": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 8,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "fsc_tunnel_security",
+      "name": "Tunnel Security Materials",
+      "description": "Sun needs coal and emeralds for tunnel lighting and security infrastructure.",
+      "required_items": {
+        "minecraft:coal": 12,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "minecraft:amethyst_shard": 6,
+        "minecraft:emerald": 6,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

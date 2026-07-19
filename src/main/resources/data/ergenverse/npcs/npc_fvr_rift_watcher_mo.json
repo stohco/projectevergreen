@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fvr_rift_watcher_mo",
+  "name": "Rift Watcher Mo",
+  "nameCn": "裂隙守望者莫",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "Immortal Court (assigned)",
+  "location": "foreign_void_rift",
+  "cultivation": "NASCENT_SOUL_LATE",
+  "personality": "haunted, speaks in spatial metaphors, has seen things through the rift that changed him",
+  "speech": "distant, sometimes pauses mid-sentence as if listening to something from the other side",
+  "relationship_to_wanglin": "neutral-wary — the rift shows him things about people he does not want to see",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "5936ae37e8c8fb3d",
+  "initiation_lines": [
+    "The Immortal Court assigned me to watch the rift. That was forty years ago. The rift does not close. I do not leave. This is the assignment.",
+    "The Karma Crystal Formation Observer came here once. He looked into the rift for ten seconds. He left without speaking. I have looked into it every day for forty years. I still cannot describe what I see.",
+    "Obsidian and ender pearls. The rift consumes both. If you bring them, I will explain what happens when something falls through.",
+    "The Soul Refining Sect offered to send a soul through. The Immortal Court refused. I think the Court was right. I think the Sect was right too. Both can be right when the question has no good answer."
+  ],
+  "daily_schedule": [
+    {
+      "time": "03:00",
+      "action": "Rift observation (pre-dawn is calmest)",
+      "location": "foreign_void_rift",
+      "duration": 240
+    },
+    {
+      "time": "07:00",
+      "action": "Record rift fluctuations",
+      "location": "foreign_void_rift",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Maintain containment arrays",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "foreign_void_rift",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Analyze rift edge samples",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Second observation period",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "20:00",
+      "action": "Night observation",
+      "location": "foreign_void_rift",
+      "duration": 300
+    },
+    {
+      "time": "01:00",
+      "action": "Brief rest",
+      "location": "foreign_void_rift",
+      "duration": 120
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fvr_containment_supplies",
+      "name": "Containment Array Fuel",
+      "description": "Watcher Mo needs obsidian and ender pearls to maintain the rift's containment arrays.",
+      "required_items": {
+        "minecraft:obsidian": 12,
+        "minecraft:ender_pearl": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "fvr_rift_analysis",
+      "name": "Rift Edge Analysis",
+      "description": "Mo needs emeralds and cobblestone to construct analysis equipment for rift samples.",
+      "required_items": {
+        "minecraft:emerald": 10,
+        "minecraft:cobblestone": 16
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:ender_pearl": 2,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,101 @@
+{
+  "npc_id": "npc_fvr_void_touched_girl_xiao",
+  "name": "Void-Touched Girl Xiao",
+  "nameCn": "虚空之女萧",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "None",
+  "location": "foreign_void_rift",
+  "cultivation": "FOUNDATION_MID",
+  "personality": "dreamy, partially detached from reality, sees things others cannot",
+  "speech": "soft, often describes things that are not there, occasionally terrifyingly lucid",
+  "relationship_to_wanglin": "neutral-fascinated — sees something in the player she cannot articulate",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "6a7a8a5c8e5a412f",
+  "initiation_lines": [
+    "I fell into the rift when I was seven. I was pulled out three days later. I was still seven. I am still seven inside. The rift does not let you age past the moment you enter.",
+    "The Heavenly Fate Sect tested me. They said my fate was 'undefined.' They asked me to leave. The Xuan Dao Sect tested me too. They said my Dao was 'fractured.' They asked me to stay. I chose the rift.",
+    "Coal and emeralds. The watcher says I need to eat. I do not feel hunger. But he insists. So I trade what the rift gives me for things I do not need.",
+    "There is a city on the other side. I have seen it. The buildings are made of light. The people have no faces. They wave at me. I do not wave back."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Sit near the rift edge",
+      "location": "foreign_void_rift",
+      "duration": 300
+    },
+    {
+      "time": "10:00",
+      "action": "Draw what she sees",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Eat (watcher insists)",
+      "location": "foreign_void_rift",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Collect rift residue",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "17:00",
+      "action": "Talk to the watcher",
+      "location": "foreign_void_rift",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Watch the rift darken",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "22:00",
+      "action": "Sleep near the rift",
+      "location": "foreign_void_rift",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fvr_rift_residue",
+      "name": "Rift Residue Collection",
+      "description": "Xiao collects materials that seep through the rift. She needs coal and emeralds for the watcher's insistence on meals.",
+      "required_items": {
+        "minecraft:coal": 8,
+        "minecraft:emerald": 6
+      },
+      "rewards": {
+        "minecraft:ender_pearl": 2,
+        "minecraft:book": 1,
+        "experience": 20
+      }
+    },
+    {
+      "task_id": "fvr_void_trade",
+      "name": "Void Material Trade",
+      "description": "Xiao trades obsidian and cobblestone for items she collects from the rift's edge.",
+      "required_items": {
+        "minecraft:obsidian": 8,
+        "minecraft:cobblestone": 12
+      },
+      "rewards": {
+        "minecraft:ender_pearl": 3,
+        "minecraft:emerald": 8,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

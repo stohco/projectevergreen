@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_mdo_traveling_merchant_he",
+  "name": "Traveling Merchant He",
+  "nameCn": "行商何",
+  "canon_id": "",
+  "type": "mortal",
+  "faction": "Nan Dou City Merchant Guild",
+  "location": "mortal_dust_outpost",
+  "cultivation": "MORTAL",
+  "personality": "opportunistic but fair, knows every trade route on the planet, enjoys gossip",
+  "speech": "fast-talking, friendly, always steering conversation toward trade",
+  "relationship_to_wanglin": "neutral-friendly — a customer is a customer",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "0a6e5e1a196485e8",
+  "initiation_lines": [
+    "Merchant He, at your service. I supply this outpost from Nan Dou City every month. The road is dangerous, the pay is mediocre, and the company is... sparse.",
+    "I have traded in every city on this planet. Tian Shui has the best fish. Qilin has the strongest beasts. This outpost has the most desperate buyers.",
+    "Iron and emeralds move fastest here. The outpost always needs tools, and they pay premium because they have no other choice.",
+    "A Soul Refining Sect envoy passed through last year. He bought all my coal. He did not say why. I did not ask."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Unload cargo",
+      "location": "mortal_dust_outpost",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Trade with outpost residents",
+      "location": "mortal_dust_outpost",
+      "duration": 240
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "mortal_dust_outpost",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Negotiate supply contracts",
+      "location": "mortal_dust_outpost",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Pack remaining goods",
+      "location": "mortal_dust_outpost",
+      "duration": 120
+    },
+    {
+      "time": "18:00",
+      "action": "Evening meal and gossip",
+      "location": "mortal_dust_outpost",
+      "duration": 90
+    },
+    {
+      "time": "20:00",
+      "action": "Inventory accounting",
+      "location": "mortal_dust_outpost",
+      "duration": 120
+    },
+    {
+      "time": "22:00",
+      "action": "Sleep",
+      "location": "mortal_dust_outpost",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "mdo_merchant_iron",
+      "name": "Merchant Iron Trade",
+      "description": "Merchant He needs iron and emeralds to trade with the outpost and other settlements.",
+      "required_items": {
+        "minecraft:iron_ingot": 8,
+        "minecraft:emerald": 10
+      },
+      "rewards": {
+        "minecraft:emerald": 14,
+        "minecraft:book": 2,
+        "experience": 15
+      }
+    },
+    {
+      "task_id": "mdo_exotic_goods",
+      "name": "Exotic Goods Acquisition",
+      "description": "He seeks coal and iron to fill his cargo for the return trip to Nan Dou City.",
+      "required_items": {
+        "minecraft:coal": 16,
+        "minecraft:iron_ingot": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 16,
+        "minecraft:experience_bottle": 2,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

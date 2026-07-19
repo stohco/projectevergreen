@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fsc_crystal_miner_pang",
+  "name": "Crystal Miner Pang",
+  "nameCn": "晶矿工庞",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "Independent mining collective",
+  "location": "foreign_soul_crystal_deposit",
+  "cultivation": "FOUNDATION_LATE",
+  "personality": "gruff, possessive of his mining claims, knows the deposit better than anyone",
+  "speech": "terse, uses mining terminology, suspicious of outsiders who want 'free crystals'",
+  "relationship_to_wanglin": "neutral-suspicious — another claim jumper until proven otherwise",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "3b8da6ef65bd47fc",
+  "initiation_lines": [
+    "This deposit was found thirty years ago by a Tian Shui City prospector. He died on the second day. The crystals are not dangerous. The things that guard them are.",
+    "Amethyst and quartz. That is what we mine. The Soul Refining Sect wants the crystals for soul work. The Xuan Dao Sect wants them for formations. I want emeralds. Everyone wants something.",
+    "Iron and coal. Mining tools wear out. If you have them, I will pay. If you do not, stay out of my tunnels.",
+    "A Corpse Yin Sect envoy offered to animate the dead miners. We refused. The dead stay dead here. That is the rule."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn mine inspection",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 90
+    },
+    {
+      "time": "06:00",
+      "action": "Mining operations",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 300
+    },
+    {
+      "time": "11:00",
+      "action": "Ore processing",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal and rest",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 90
+    },
+    {
+      "time": "14:30",
+      "action": "Trade with buyers",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 120
+    },
+    {
+      "time": "17:00",
+      "action": "Deep mine exploration",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 180
+    },
+    {
+      "time": "20:00",
+      "action": "Evening count and security",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 120
+    },
+    {
+      "time": "22:00",
+      "action": "Sleep",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fsc_mining_tools",
+      "name": "Mining Tool Supply",
+      "description": "Miner Pang needs iron and coal to replace worn mining equipment.",
+      "required_items": {
+        "minecraft:iron_ingot": 10,
+        "minecraft:coal": 12
+      },
+      "rewards": {
+        "minecraft:amethyst_shard": 8,
+        "minecraft:emerald": 6,
+        "experience": 20
+      }
+    },
+    {
+      "task_id": "fsc_crystal_trade",
+      "name": "Crystal Exchange",
+      "description": "Pang trades amethyst and quartz for emeralds and iron.",
+      "required_items": {
+        "minecraft:emerald": 10,
+        "minecraft:iron_ingot": 6
+      },
+      "rewards": {
+        "minecraft:amethyst_shard": 12,
+        "minecraft:quartz": 10,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

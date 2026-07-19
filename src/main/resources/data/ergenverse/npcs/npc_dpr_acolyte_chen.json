@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_dpr_acolyte_chen",
+  "name": "Acolyte Chen",
+  "nameCn": "道童陈",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Daoist Peak Retreat",
+  "location": "daoist_peak_retreat",
+  "cultivation": "CONDENSATION_LATE",
+  "personality": "earnest, slightly frustrated with the slow pace, questions whether solitude is the path",
+  "speech": "polite but with an undercurrent of doubt, asks indirect questions about the outside world",
+  "relationship_to_wanglin": "friendly-curious — seeks news of the world beyond the peak",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "79d5121e359ac802",
+  "initiation_lines": [
+    "A visitor! The last one was a wandering cultivator from the Luo He Sect. He said the rivers down there have spirit fish. I have never seen a river.",
+    "Hermit Wei says the Dao is found in stillness. I agree. But I also wonder if the Dao can be found in motion. He says I am not ready for that question.",
+    "We grow wheat for tea and spruce for repairs. If you bring supplies, I can trade. The peak is self-sufficient, but not by much.",
+    "A merchant from Tian Shui City used to come every month. He stopped three months ago. I do not know why."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Morning exercises",
+      "location": "daoist_peak_retreat",
+      "duration": 90
+    },
+    {
+      "time": "06:30",
+      "action": "Prepare tea ceremony",
+      "location": "daoist_peak_retreat",
+      "duration": 60
+    },
+    {
+      "time": "07:30",
+      "action": "Attend Hermit Wei's calligraphy",
+      "location": "daoist_peak_retreat",
+      "duration": 120
+    },
+    {
+      "time": "09:30",
+      "action": "Herb garden maintenance",
+      "location": "daoist_peak_retreat",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Attend midday lecture",
+      "location": "daoist_peak_retreat",
+      "duration": 120
+    },
+    {
+      "time": "15:00",
+      "action": "Gather spruce wood",
+      "location": "daoist_peak_retreat",
+      "duration": 150
+    },
+    {
+      "time": "18:00",
+      "action": "Cook evening meal",
+      "location": "daoist_peak_retreat",
+      "duration": 60
+    },
+    {
+      "time": "19:30",
+      "action": "Evening cultivation",
+      "location": "daoist_peak_retreat",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "dpr_tea_herbs",
+      "name": "Tea Herb Supplies",
+      "description": "Acolyte Chen needs wheat and coal to maintain the peak's tea ceremony tradition.",
+      "required_items": {
+        "minecraft:wheat": 16,
+        "minecraft:coal": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 6,
+        "experience": 20
+      }
+    },
+    {
+      "task_id": "dpr_wood_repair",
+      "name": "Retreat Wood Supplies",
+      "description": "The retreat buildings need constant repair from mountain weather. Spruce planks are essential.",
+      "required_items": {
+        "minecraft:spruce_planks": 20,
+        "minecraft:stick": 16
+      },
+      "rewards": {
+        "minecraft:emerald": 10,
+        "minecraft:experience_bottle": 2,
+        "experience": 15
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

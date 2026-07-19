@@ -1,0 +1,108 @@
+{
+  "npc_id": "npc_fsc_soul_researcher_yan",
+  "name": "Soul Researcher Yan",
+  "nameCn": "魂魄研究者燕",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "None — independent scholar",
+  "location": "foreign_soul_crystal_deposit",
+  "cultivation": "NASCENT_SOUL_EARLY",
+  "personality": "intense, speaks rapidly about soul-crystal resonance, loses track of time",
+  "speech": "academic, fills silence with theories, rarely waits for responses",
+  "relationship_to_wanglin": "neutral-intrigued — seeks test subjects for resonance experiments",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": true,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "968d0274b7bf32d3",
+  "initiation_lines": [
+    "Soul crystals are not ordinary crystals. They resonate at the frequency of spiritual consciousness. The Soul Refining Sect knows this. They mine them in bulk. They are wrong. Bulk mining destroys the resonance pattern.",
+    "I was expelled from the Xuan Dao Sect for proposing that soul crystals predate the formation. They said I lacked evidence. I said they lacked imagination.",
+    "Amethyst, quartz, and glowstone. These are what I need for my experiments. If you bring them, I will share what the resonance patterns reveal.",
+    "The Heavenly Fate Sect predicts the future with stars. I predict it with crystals. Both are imprecise. Crystals are faster."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Crystal resonance measurement",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 180
+    },
+    {
+      "time": "08:00",
+      "action": "Experiment documentation",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 120
+    },
+    {
+      "time": "10:00",
+      "action": "Field sampling",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Meal (often skipped)",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 30
+    },
+    {
+      "time": "13:30",
+      "action": "Resonance experiments",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 240
+    },
+    {
+      "time": "18:00",
+      "action": "Compare findings with prior data",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Evening meditation with crystals",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 180
+    },
+    {
+      "time": "23:00",
+      "action": "Sleep",
+      "location": "foreign_soul_crystal_deposit",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fsc_resonance_materials",
+      "name": "Resonance Experiment Materials",
+      "description": "Researcher Yan needs amethyst, quartz, and glowstone for soul crystal resonance experiments.",
+      "required_items": {
+        "minecraft:amethyst_shard": 10,
+        "minecraft:quartz": 8,
+        "minecraft:glowstone": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:soul_fragment": 1,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "fsc_theory_trade",
+      "name": "Crystal Theory Exchange",
+      "description": "Yan trades knowledge for emeralds and books needed for further research.",
+      "required_items": {
+        "minecraft:emerald": 10,
+        "minecraft:book": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

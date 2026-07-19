@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fwm_battle_scholar_yun",
+  "name": "Battle Scholar Yun",
+  "nameCn": "战史学者云",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "Vermilion Bird Academy (visiting)",
+  "location": "foreign_war_monument",
+  "cultivation": "FOUNDATION_PEAK",
+  "personality": "academic, obsessive about military history, treats war as a puzzle to solve",
+  "speech": "analytical, quotes casualty figures, draws battle diagrams in the dirt",
+  "relationship_to_wanglin": "neutral-curious — interested in any firsthand combat experience",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "6c126d5f1bbb40a1",
+  "initiation_lines": [
+    "The Foreign War. Forty-seven years. Twenty-three nations. One million confirmed dead. The numbers are debated. The dead are not.",
+    "I was sent by the Vermilion Bird Academy to study this monument. Specifically, to determine why the Heavenly Fate Sect's predictions failed to foresee the invasion.",
+    "Books and emeralds. I need materials for my research. In return, I can teach you what the monument's inscriptions reveal about ancient formations.",
+    "A Fighting Evil Sect historian comes every year. He studies the weapons. He says the war was won by iron, not cultivation. I say it was won by those who had no cultivation left to lose."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Morning study of inscriptions",
+      "location": "foreign_war_monument",
+      "duration": 180
+    },
+    {
+      "time": "09:00",
+      "action": "Transcribe monument text",
+      "location": "foreign_war_monument",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Meal and analysis",
+      "location": "foreign_war_monument",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Cross-reference with archives",
+      "location": "foreign_war_monument",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Interview Keeper Sen",
+      "location": "foreign_war_monument",
+      "duration": 120
+    },
+    {
+      "time": "18:00",
+      "action": "Draw battle diagrams",
+      "location": "foreign_war_monument",
+      "duration": 120
+    },
+    {
+      "time": "20:00",
+      "action": "Evening reading",
+      "location": "foreign_war_monument",
+      "duration": 180
+    },
+    {
+      "time": "23:00",
+      "action": "Sleep",
+      "location": "foreign_war_monument",
+      "duration": 420
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fwm_research_materials",
+      "name": "Battle Research Materials",
+      "description": "Scholar Yun needs books and emeralds to continue his research on the Foreign War.",
+      "required_items": {
+        "minecraft:book": 6,
+        "minecraft:emerald": 12
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "fwm_formation_study",
+      "name": "Ancient Formation Analysis",
+      "description": "Yun needs emeralds and experience bottles to test formation theories derived from the monument.",
+      "required_items": {
+        "minecraft:emerald": 10,
+        "minecraft:experience_bottle": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 8,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

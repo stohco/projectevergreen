@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_wcc_craftsman_liu",
+  "name": "Craftsman Liu",
+  "nameCn": "工匠刘",
+  "canon_id": "",
+  "type": "mortal",
+  "faction": "Wandering Cultivator Camp",
+  "location": "wandering_cultivator_camp",
+  "cultivation": "MORTAL",
+  "personality": "practical, unimpressed by cultivation, takes pride in mundane skills",
+  "speech": "blunt, uses metaphors from blacksmithing and woodworking",
+  "relationship_to_wanglin": "neutral-friendly — judges by actions, not cultivation level",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "1c16bd63cbb1f835",
+  "initiation_lines": [
+    "I am mortal. I forge tools. The cultivators here need storage pouches, iron tools, and repair work. I provide. They pay in emeralds and spirit stones I cannot use.",
+    "A merchant from Great Wang Capital once visited. He looked at my work and said it was 'adequate for a mortal.' I charged him double.",
+    "Iron and emeralds. If you have them, I can repair anything. If you do not, go find a cultivator. They can break things but not fix them.",
+    "The Wang Family Village had a blacksmith better than me. I trained him. He left for the city. Cities take everything good."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Forge setup",
+      "location": "wandering_cultivator_camp",
+      "duration": 60
+    },
+    {
+      "time": "07:00",
+      "action": "Tool forging and repair",
+      "location": "wandering_cultivator_camp",
+      "duration": 240
+    },
+    {
+      "time": "11:00",
+      "action": "Breakfast",
+      "location": "wandering_cultivator_camp",
+      "duration": 60
+    },
+    {
+      "time": "12:00",
+      "action": "Repair camp equipment",
+      "location": "wandering_cultivator_camp",
+      "duration": 180
+    },
+    {
+      "time": "15:00",
+      "action": "Trade finished goods",
+      "location": "wandering_cultivator_camp",
+      "duration": 120
+    },
+    {
+      "time": "17:00",
+      "action": "Gather materials",
+      "location": "wandering_cultivator_camp",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Evening meal",
+      "location": "wandering_cultivator_camp",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Sleep",
+      "location": "wandering_cultivator_camp",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "wcc_forge_supplies",
+      "name": "Forge Material Supply",
+      "description": "Craftsman Liu needs iron and emeralds to keep the camp's forge running.",
+      "required_items": {
+        "minecraft:iron_ingot": 10,
+        "minecraft:emerald": 12
+      },
+      "rewards": {
+        "ergenverse:storage_pouch": 1,
+        "minecraft:emerald": 8,
+        "experience": 15
+      }
+    },
+    {
+      "task_id": "wcc_tool_trade",
+      "name": "Tool Manufacturing Trade",
+      "description": "Liu can craft tools in exchange for experience bottles and storage pouches.",
+      "required_items": {
+        "minecraft:experience_bottle": 3,
+        "ergenverse:storage_pouch": 1
+      },
+      "rewards": {
+        "minecraft:iron_ingot": 8,
+        "minecraft:emerald": 10,
+        "experience": 20
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fwm_monument_keeper_sen",
+  "name": "Monument Keeper Sen",
+  "nameCn": "纪念碑守卫森",
+  "canon_id": "",
+  "type": "rogue_cultivator",
+  "faction": "None — self-appointed guardian",
+  "location": "foreign_war_monument",
+  "cultivation": "NASCENT_SOUL_EARLY",
+  "personality": "solemn, obsessive about preservation, treats the monument as a living thing",
+  "speech": "formal, ceremonial, speaks as though reciting a liturgy",
+  "relationship_to_wanglin": "neutral-assessing — evaluates whether the visitor is worthy of the monument",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "b90b19bcd313bdee",
+  "initiation_lines": [
+    "You stand before the Monument of the Foreign War. One million cultivators died here. The monument remembers them. I remember the monument.",
+    "The Immortal Court Palace registered this site as a memorial. They sent one envoy. He left a plaque. He did not stay. The dead do not pay taxes.",
+    "Bones and iron. These are what remain. If you bring bones, I will inter them properly. If you bring iron, I will repair the monument.",
+    "A Vermilion Bird Capital historian visited once. She counted the names on the monument for three days. On the fourth day, she wept. She said she could not read the last ten thousand names. They had been worn away by time."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Pre-dawn monument inspection",
+      "location": "foreign_war_monument",
+      "duration": 120
+    },
+    {
+      "time": "06:00",
+      "action": "Clean monument surfaces",
+      "location": "foreign_war_monument",
+      "duration": 180
+    },
+    {
+      "time": "09:00",
+      "action": "Collect scattered bones",
+      "location": "foreign_war_monument",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Proper burial ceremony",
+      "location": "foreign_war_monument",
+      "duration": 120
+    },
+    {
+      "time": "14:00",
+      "action": "Repair monument structure",
+      "location": "foreign_war_monument",
+      "duration": 180
+    },
+    {
+      "time": "17:00",
+      "action": "Record weathering damage",
+      "location": "foreign_war_monument",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Evening vigil",
+      "location": "foreign_war_monument",
+      "duration": 180
+    },
+    {
+      "time": "22:00",
+      "action": "Night meditation among the dead",
+      "location": "foreign_war_monument",
+      "duration": 360
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fwm_bone_burial",
+      "name": "Bone Interment",
+      "description": "Keeper Sen needs bones and cobblestone to properly inter remains found near the monument.",
+      "required_items": {
+        "minecraft:bone": 16,
+        "minecraft:cobblestone": 20
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:emerald": 8,
+        "experience": 25
+      }
+    },
+    {
+      "task_id": "fwm_monument_repair",
+      "name": "Monument Restoration",
+      "description": "The monument needs iron and coal to repair damage from centuries of weathering.",
+      "required_items": {
+        "minecraft:iron_ingot": 10,
+        "minecraft:coal": 12
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 1,
+        "experience": 30
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

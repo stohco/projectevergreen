@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fwm_scavenger_gai",
+  "name": "Scavenger Gai",
+  "nameCn": "拾荒者盖",
+  "canon_id": "",
+  "type": "mortal",
+  "faction": "None — independent",
+  "location": "foreign_war_monument",
+  "cultivation": "MORTAL",
+  "personality": "superficially cheerful, deeply superstitious, treats the battlefield as a workplace",
+  "speech": "casual, uses dark humor, whistles to keep spirits up",
+  "relationship_to_wanglin": "neutral-friendly — anyone who is not dead is good company",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "08a7e727488d60e0",
+  "initiation_lines": [
+    "Do not tell the keeper, but I salvage from the monument. Not the monument itself. The ground around it. Swords, armor, arrowheads. The war left plenty.",
+    "The Ancient God Cave is three days north. Scavengers who go there do not come back. This is safer. The dead here are already dead.",
+    "Iron and arrows. If you find any, I will buy them. The keeper buries bones. I sell iron. We have an understanding.",
+    "A Corpse Yin Sect merchant visited once. He wanted to buy bones. The keeper refused. The merchant offered me triple rate. I refused too. Some money is not worth touching."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Breakfast and prepare tools",
+      "location": "foreign_war_monument",
+      "duration": 60
+    },
+    {
+      "time": "07:00",
+      "action": "Scavenge battlefield perimeter",
+      "location": "foreign_war_monument",
+      "duration": 240
+    },
+    {
+      "time": "11:00",
+      "action": "Sort and clean finds",
+      "location": "foreign_war_monument",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal",
+      "location": "foreign_war_monument",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Trade with passing travelers",
+      "location": "foreign_war_monument",
+      "duration": 120
+    },
+    {
+      "time": "16:00",
+      "action": "Deep scavenging (careful zones)",
+      "location": "foreign_war_monument",
+      "duration": 180
+    },
+    {
+      "time": "19:00",
+      "action": "Evening count and inventory",
+      "location": "foreign_war_monument",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Sleep",
+      "location": "foreign_war_monument",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fwm_salvage_trade",
+      "name": "Salvage Trade",
+      "description": "Gai trades salvaged iron for emeralds and coal. Bring iron ingots and arrows.",
+      "required_items": {
+        "minecraft:iron_ingot": 6,
+        "minecraft:arrow": 24
+      },
+      "rewards": {
+        "minecraft:emerald": 12,
+        "minecraft:coal": 8,
+        "experience": 15
+      }
+    },
+    {
+      "task_id": "fwm_safe_scavenging",
+      "name": "Safe Zone Scavenging Supplies",
+      "description": "Gai needs coal and cobblestone to safely excavate items from deeper zones.",
+      "required_items": {
+        "minecraft:coal": 10,
+        "minecraft:cobblestone": 16
+      },
+      "rewards": {
+        "minecraft:iron_ingot": 6,
+        "minecraft:emerald": 8,
+        "experience": 15
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

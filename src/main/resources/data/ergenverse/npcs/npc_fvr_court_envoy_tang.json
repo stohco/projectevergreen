@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_fvr_court_envoy_tang",
+  "name": "Court Envoy Tang",
+  "nameCn": "仙廷使臣唐",
+  "canon_id": "",
+  "type": "sect_disciple",
+  "faction": "Immortal Court",
+  "location": "foreign_void_rift",
+  "cultivation": "SOUL_TRANSFORMATION_EARLY",
+  "personality": "bureaucratic, views the rift as a security problem, uncomfortable with the watcher's attachment",
+  "speech": "precise, uses legal and administrative language, avoids emotional topics",
+  "relationship_to_wanglin": "neutral-official — registers all visitors per Immortal Court protocol",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "52bcf76876f12487",
+  "initiation_lines": [
+    "Immortal Court Envoy Tang. This rift is classified as a Tier-3 spatial hazard. You are within the exclusion zone. Your presence is noted.",
+    "The Vermilion Bird Capital ordered this rift sealed fourteen hundred years ago. The seal fails every century. We replace it. The rift does not care about seals.",
+    "I need obsidian and iron for the next seal reinforcement. The Court provides funds. The watcher provides knowledge. You can provide labor.",
+    "A Snow Country military unit attempted to use the rift as a weapon. They sent soldiers through. None returned. The Snow Country does not attempt that anymore."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Inspect seal integrity",
+      "location": "foreign_void_rift",
+      "duration": 120
+    },
+    {
+      "time": "08:00",
+      "action": "Administrative reports",
+      "location": "foreign_void_rift",
+      "duration": 120
+    },
+    {
+      "time": "10:00",
+      "action": "Supervise seal maintenance",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Meal",
+      "location": "foreign_void_rift",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Interview the watcher",
+      "location": "foreign_void_rift",
+      "duration": 120
+    },
+    {
+      "time": "16:00",
+      "action": "Prepare seal materials",
+      "location": "foreign_void_rift",
+      "duration": 180
+    },
+    {
+      "time": "19:00",
+      "action": "Evening inspection",
+      "location": "foreign_void_rift",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Cultivation",
+      "location": "foreign_void_rift",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "fvr_seal_materials",
+      "name": "Seal Reinforcement Materials",
+      "description": "Envoy Tang needs obsidian and iron for the next century's seal reinforcement cycle.",
+      "required_items": {
+        "minecraft:obsidian": 16,
+        "minecraft:iron_ingot": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "fvr_court_reports",
+      "name": "Court Documentation",
+      "description": "Tang needs books and emeralds to prepare the annual Immortal Court report on rift status.",
+      "required_items": {
+        "minecraft:book": 4,
+        "minecraft:emerald": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 25
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

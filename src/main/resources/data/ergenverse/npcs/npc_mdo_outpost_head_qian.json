@@ -1,0 +1,107 @@
+{
+  "npc_id": "npc_mdo_outpost_head_qian",
+  "name": "Outpost Head Qian",
+  "nameCn": "哨所所长钱",
+  "canon_id": "",
+  "type": "mortal",
+  "faction": "Mortal Dust Outpost",
+  "location": "mortal_dust_outpost",
+  "cultivation": "MORTAL",
+  "personality": "exhausted, duty-bound, sees the outpost as both refuge and prison",
+  "speech": "tired, matter-of-fact, occasionally bitter about the outpost's isolation",
+  "relationship_to_wanglin": "neutral-hopeful — any cultivator who arrives might bring news",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 1,
+  "derivation_type": "I",
+  "salt": "b6ad5056ecb65937",
+  "initiation_lines": [
+    "Welcome to the Mortal Dust Outpost. The name is accurate. We are at the edge of everything. Cultivators pass through. Mortals stay.",
+    "A Nan Dou City merchant brings supplies once a month. If he is late, we eat less. Last month he was late. We ate less.",
+    "Bread, coal, iron. The outpost survives on these three things. If you have them, you are useful. If you do not, you are another mouth.",
+    "The Teng family collects taxes from us. Cultivators do not pay taxes. We pay for them."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Dawn inspection",
+      "location": "mortal_dust_outpost",
+      "duration": 90
+    },
+    {
+      "time": "06:30",
+      "action": "Supply inventory",
+      "location": "mortal_dust_outpost",
+      "duration": 60
+    },
+    {
+      "time": "08:00",
+      "action": "Supervise outpost repairs",
+      "location": "mortal_dust_outpost",
+      "duration": 180
+    },
+    {
+      "time": "11:00",
+      "action": "Meet with travelers",
+      "location": "mortal_dust_outpost",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Meal and rest",
+      "location": "mortal_dust_outpost",
+      "duration": 90
+    },
+    {
+      "time": "15:00",
+      "action": "Patrol perimeter",
+      "location": "mortal_dust_outpost",
+      "duration": 120
+    },
+    {
+      "time": "18:00",
+      "action": "Evening report",
+      "location": "mortal_dust_outpost",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Sleep",
+      "location": "mortal_dust_outpost",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "mdo_food_supply",
+      "name": "Outpost Food Reserves",
+      "description": "Outpost Head Qian needs bread and wheat to sustain the outpost through the next supply cycle.",
+      "required_items": {
+        "minecraft:bread": 16,
+        "minecraft:wheat": 20
+      },
+      "rewards": {
+        "minecraft:emerald": 10,
+        "minecraft:book": 1,
+        "experience": 15
+      }
+    },
+    {
+      "task_id": "mdo_repair_materials",
+      "name": "Outpost Structure Repair",
+      "description": "The outpost walls and buildings need constant repair. Planks and sticks are essential.",
+      "required_items": {
+        "minecraft:oak_planks": 24,
+        "minecraft:stick": 20
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:experience_bottle": 1,
+        "experience": 10
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}
