@@ -1,0 +1,106 @@
+{
+  "_comment": "NPC: Beast Handler Lei (\u517d\u680f\u7ba1\u4e8b\u96f7). INFERRED. Soul Refining Sect. Location: soul_refining_sect_spirit_beast_pens.",
+  "npc_id": "npc_sr_beast_handler_lei",
+  "name": "Beast Handler Lei",
+  "nameCn": "\u517d\u680f\u7ba1\u4e8b\u96f7",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_spirit_beast_pens",
+  "cultivation": "FAITH mid",
+  "personality": "gruff, practical, secretly sympathetic to the beasts",
+  "speech": "blunt, short sentences",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370104,
+  "initiation_lines": [
+    "Don't get too close to the pens. Some of these beasts still have their original souls.",
+    "I need bones and leather for the feeding stock. The stronger beasts require iron supplements.",
+    "The Qilin City merchants sell live beasts. Our sect buys in bulk. Most don't survive the journey.",
+    "Elder Mo wants me to prepare a beast for the refinement furnace. I delay as long as I can."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "feed_beasts",
+      "location": "soul_refining_sect_spirit_beast_pens",
+      "duration": 120
+    },
+    {
+      "time": "0700",
+      "action": "patrol_pens",
+      "location": "soul_refining_sect_spirit_beast_pens",
+      "duration": 180
+    },
+    {
+      "time": "1000",
+      "action": "train",
+      "location": "soul_refining_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "soul_refining_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "feed_beasts",
+      "location": "soul_refining_sect_spirit_beast_pens",
+      "duration": 120
+    },
+    {
+      "time": "1500",
+      "action": "procure",
+      "location": "soul_refining_sect_outer_gate",
+      "duration": 60
+    },
+    {
+      "time": "1600",
+      "action": "patrol_pens",
+      "location": "soul_refining_sect_spirit_beast_pens",
+      "duration": 180
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "soul_refining_sect_disciple_dormitories",
+      "duration": 660
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "beast_feeding_supplies",
+      "name": "Beast Feeding Supplies",
+      "description": "The spirit beasts need bones and leather for sustenance. Handler Lei is running low.",
+      "required_items": {
+        "minecraft:bone": 12,
+        "minecraft:leather": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 7,
+        "minecraft:arrow": 8
+      }
+    },
+    {
+      "task_id": "pen_reinforcement",
+      "name": "Pen Reinforcement Materials",
+      "description": "The beast pens need iron and lead to reinforce the enclosures. Some beasts are breaking free.",
+      "required_items": {
+        "minecraft:iron_ingot": 6,
+        "minecraft:lead": 4
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 2,
+        "minecraft:emerald": 5
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

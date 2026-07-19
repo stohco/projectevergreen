@@ -1,0 +1,88 @@
+{
+  "_comment": "NPC: Sword Tomb Keeper (\u5251\u51a2\u5b88\u536b). INFERRED. Soul Refining Sect. Location: soul_refining_sect_sword_tomb.",
+  "npc_id": "npc_sr_sword_tomb_keeper",
+  "name": "Sword Tomb Keeper",
+  "nameCn": "\u5251\u51a2\u5b88\u536b",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_sword_tomb",
+  "cultivation": "NASCENT_SOUL early",
+  "personality": "ancient, weary, has guarded the tomb for centuries",
+  "speech": "echoing, slow",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370111,
+  "initiation_lines": [
+    "These swords once belonged to cultivators. Their spirits remain. Approach with respect.",
+    "The ancestor forged his first soul banner from the spirit of a sword that refused to die.",
+    "Iron and bone maintain the tomb's seals. If the seals break, the sword spirits will roam free.",
+    "I have guarded this tomb for three hundred years. My own sword lies among them now. I simply forgot which one."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0400",
+      "action": "meditate",
+      "location": "soul_refining_sect_sword_tomb",
+      "duration": 240
+    },
+    {
+      "time": "0800",
+      "action": "inspect_seals",
+      "location": "soul_refining_sect_sword_tomb",
+      "duration": 300
+    },
+    {
+      "time": "1300",
+      "action": "walk",
+      "location": "soul_refining_sect_sword_peak",
+      "duration": 120
+    },
+    {
+      "time": "1500",
+      "action": "inspect_seals",
+      "location": "soul_refining_sect_sword_tomb",
+      "duration": 240
+    },
+    {
+      "time": "1900",
+      "action": "meditate",
+      "location": "soul_refining_sect_sword_tomb",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "tomb_seal_maintenance",
+      "name": "Tomb Seal Maintenance",
+      "description": "The sword tomb seals need iron and bone to prevent sword spirits from escaping.",
+      "required_items": {
+        "minecraft:iron_ingot": 10,
+        "minecraft:bone": 16
+      },
+      "rewards": {
+        "ergenverse:spirit_stone_mid": 2,
+        "ergenverse:soul_refining_flag": 1
+      }
+    },
+    {
+      "task_id": "sword_spirit_tribute",
+      "name": "Sword Spirit Tribute",
+      "description": "Offer emeralds and obsidian to calm the restless sword spirits.",
+      "required_items": {
+        "minecraft:emerald": 8,
+        "minecraft:obsidian": 6
+      },
+      "rewards": {
+        "ergenverse:soul_lasher": 1,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

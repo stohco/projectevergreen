@@ -1,0 +1,100 @@
+{
+  "_comment": "NPC: Inner Elder Yun (\u5185\u95e8\u957f\u8001\u4e91). INFERRED. Soul Refining Sect. Location: soul_refining_sect_inner_sect.",
+  "npc_id": "npc_sr_inner_elder_yun",
+  "name": "Inner Elder Yun",
+  "nameCn": "\u5185\u95e8\u957f\u8001\u4e91",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_inner_sect",
+  "cultivation": "NASCENT_SOUL mid",
+  "personality": "ambitious, watches everyone, plots against rivals",
+  "speech": "smooth, flattering, dangerous",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370112,
+  "initiation_lines": [
+    "Welcome to the Inner Sect. Not many outer disciples earn the right to stand here.",
+    "I require spirit stones and soul fragments for my research. Reward you ask? Knowledge is its own reward.",
+    "Elder Mo is too cautious. The ancestor's techniques should be used, not locked away.",
+    "The Heavenly Fate Sect and the Soul Refining Sect were once allies. Now they watch each other. Suspicion is the currency of power."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "cultivate",
+      "location": "soul_refining_sect_spirit_spring",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "manage",
+      "location": "soul_refining_sect_inner_sect",
+      "duration": 240
+    },
+    {
+      "time": "1200",
+      "action": "meet",
+      "location": "soul_refining_sect_ancestor_hall",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "soul_refining_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "research",
+      "location": "soul_refining_sect_secret_pavilion",
+      "duration": 180
+    },
+    {
+      "time": "1700",
+      "action": "manage",
+      "location": "soul_refining_sect_inner_sect",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "cultivate",
+      "location": "soul_refining_sect_mountain_cave",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "inner_research_funding",
+      "name": "Inner Sect Research Funding",
+      "description": "Elder Yun needs spirit stones and emeralds to fund his restriction research.",
+      "required_items": {
+        "ergenverse:spirit_stone": 5,
+        "minecraft:emerald": 10
+      },
+      "rewards": {
+        "ergenverse:spirit_stone_mid": 3,
+        "minecraft:enchanted_book": 2
+      }
+    },
+    {
+      "task_id": "spirit_spring_water",
+      "name": "Spirit Spring Water Collection",
+      "description": "Collect glass bottles filled with spirit spring water for Elder Yun's cultivation.",
+      "required_items": {
+        "minecraft:glass_bottle": 8,
+        "minecraft:emerald": 4
+      },
+      "rewards": {
+        "ergenverse:soul_nourishing_lotus": 2,
+        "ergenverse:spirit_stone": 5
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

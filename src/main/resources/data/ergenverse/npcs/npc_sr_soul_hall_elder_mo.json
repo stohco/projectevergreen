@@ -1,0 +1,100 @@
+{
+  "_comment": "NPC: Elder Mo (\u9b42\u6bbf\u957f\u8001\u58a8). INFERRED. Soul Refining Sect. Location: soul_refining_sect_core_formation_hall.",
+  "npc_id": "npc_sr_soul_hall_elder_mo",
+  "name": "Elder Mo",
+  "nameCn": "\u9b42\u6bbf\u957f\u8001\u58a8",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_core_formation_hall",
+  "cultivation": "FAITH late",
+  "personality": "cold, calculating, obsessed with perfecting soul refinement",
+  "speech": "measured, unsettling pauses",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370102,
+  "initiation_lines": [
+    "The soul is the true treasure. Flesh decays. The soul, refined, endures.",
+    "Bring me soul fragments and I will teach you the first principle of refinement: separation.",
+    "The ancestor refined ten thousand souls into a single banner. We seek to surpass even that.",
+    "The underground passages contain... experiments. Do not venture there without permission."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "meditate",
+      "location": "soul_refining_sect_core_formation_hall",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "supervise",
+      "location": "soul_refining_sect_core_formation_hall",
+      "duration": 240
+    },
+    {
+      "time": "1200",
+      "action": "inspect",
+      "location": "soul_refining_sect_puppet_workshop",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "lecture",
+      "location": "soul_refining_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "1500",
+      "action": "supervise",
+      "location": "soul_refining_sect_core_formation_hall",
+      "duration": 180
+    },
+    {
+      "time": "1800",
+      "action": "ritual",
+      "location": "soul_refining_sect_ancestor_hall",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "meditate",
+      "location": "soul_refining_sect_core_formation_hall",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "soul_fragment_collection",
+      "name": "Soul Fragment Collection",
+      "description": "Elder Mo needs soul fragments for the refinement furnace. Bring them from the beast pens or sword tomb.",
+      "required_items": {
+        "ergenverse:soul_fragment": 3,
+        "minecraft:bone": 10
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 4,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "furnace_fuel",
+      "name": "Refinement Furnace Fuel",
+      "description": "The soul refinement furnace requires soul sand and coal to maintain its fires.",
+      "required_items": {
+        "minecraft:soul_sand": 8,
+        "minecraft:coal": 10
+      },
+      "rewards": {
+        "ergenverse:spirit_stone_mid": 2,
+        "minecraft:experience_bottle": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

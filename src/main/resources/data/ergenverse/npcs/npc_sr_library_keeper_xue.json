@@ -1,0 +1,100 @@
+{
+  "_comment": "NPC: Library Keeper Xue (\u85cf\u4e66\u9601\u859b). INFERRED. Soul Refining Sect. Location: soul_refining_sect_library.",
+  "npc_id": "npc_sr_library_keeper_xue",
+  "name": "Library Keeper Xue",
+  "nameCn": "\u85cf\u4e66\u9601\u859b",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_library",
+  "cultivation": "FAITH late",
+  "personality": "scholarly, secretive, knows more than she reveals",
+  "speech": "quiet, precise",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370103,
+  "initiation_lines": [
+    "The library holds three thousand scrolls on soul refinement. Most are forbidden to outer disciples.",
+    "Bring me paper and ink. I am copying a restricted technique for Elder Mo. Do not read over my shoulder.",
+    "A visitor from the Heng Yue Sect came here once, seeking information on soul-binding. He left quickly.",
+    "The Secret Pavilion contains techniques that even elders fear. I have never been inside."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "organize",
+      "location": "soul_refining_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "0900",
+      "action": "copy_scrolls",
+      "location": "soul_refining_sect_library",
+      "duration": 240
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "soul_refining_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "research",
+      "location": "soul_refining_sect_library",
+      "duration": 180
+    },
+    {
+      "time": "1700",
+      "action": "deliver",
+      "location": "soul_refining_sect_inner_sect",
+      "duration": 60
+    },
+    {
+      "time": "1800",
+      "action": "organize",
+      "location": "soul_refining_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "soul_refining_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "scroll_copying",
+      "name": "Scroll Copying Materials",
+      "description": "Keeper Xue needs paper and ink to copy forbidden techniques for the elders.",
+      "required_items": {
+        "minecraft:paper": 8,
+        "minecraft:ink_sac": 4
+      },
+      "rewards": {
+        "minecraft:book": 2,
+        "minecraft:emerald": 5
+      }
+    },
+    {
+      "task_id": "library_restock",
+      "name": "Library Restocking",
+      "description": "The library needs books and experience bottles for advanced disciples' studies.",
+      "required_items": {
+        "minecraft:book": 3,
+        "minecraft:experience_bottle": 2
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "ergenverse:soul_fragment": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

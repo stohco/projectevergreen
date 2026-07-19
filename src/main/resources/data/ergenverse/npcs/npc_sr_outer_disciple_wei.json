@@ -1,0 +1,100 @@
+{
+  "_comment": "NPC: Outer Disciple Wei (\u5916\u95e8\u5f1f\u5b50\u9b4f). INFERRED. Soul Refining Sect. Location: soul_refining_sect_outer_gate.",
+  "npc_id": "npc_sr_outer_disciple_wei",
+  "name": "Outer Disciple Wei",
+  "nameCn": "\u5916\u95e8\u5f1f\u5b50\u9b4f",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_outer_gate",
+  "cultivation": "FAITH early",
+  "personality": "dutiful, suspicious of outsiders, eager to prove himself",
+  "speech": "clipped, questioning",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370101,
+  "initiation_lines": [
+    "Halt. State your business at the Soul Refining Sect. Outsiders are not welcome without cause.",
+    "The ancestors watch all who enter. If you seek cultivation, speak to Elder Mo in the Core Hall.",
+    "Beasts roar from the pens at night. Some say they remember their lives before capture.",
+    "The trial grounds are closed today. A disciple failed the soul-binding test. Again."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "patrol",
+      "location": "soul_refining_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "0800",
+      "action": "stand_guard",
+      "location": "soul_refining_sect_outer_gate",
+      "duration": 240
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "soul_refining_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "patrol",
+      "location": "soul_refining_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1500",
+      "action": "train",
+      "location": "soul_refining_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "1700",
+      "action": "stand_guard",
+      "location": "soul_refining_sect_outer_gate",
+      "duration": 180
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "soul_refining_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "gate_patrol_supplies",
+      "name": "Gate Patrol Supplies",
+      "description": "The outer gate needs arrows and leather for patrol shifts. Bring them to Disciple Wei.",
+      "required_items": {
+        "minecraft:arrow": 8,
+        "minecraft:leather": 3
+      },
+      "rewards": {
+        "minecraft:emerald": 5,
+        "minecraft:book": 1
+      }
+    },
+    {
+      "task_id": "visitor_registration",
+      "name": "Visitor Registration Log",
+      "description": "Record all visitors at the gate. Bring paper and ink for the registration book.",
+      "required_items": {
+        "minecraft:paper": 5,
+        "minecraft:ink_sac": 2
+      },
+      "rewards": {
+        "minecraft:emerald": 4,
+        "minecraft:experience_bottle": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

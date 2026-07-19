@@ -1,0 +1,100 @@
+{
+  "_comment": "NPC: Array Master Feng (\u9635\u6cd5\u5927\u5e08\u51af). INFERRED. Soul Refining Sect. Location: soul_refining_sect_array_hall.",
+  "npc_id": "npc_sr_array_master_feng",
+  "name": "Array Master Feng",
+  "nameCn": "\u9635\u6cd5\u5927\u5e08\u51af",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_array_hall",
+  "cultivation": "FAITH late",
+  "personality": "arrogant, perfectionist, proud of his formations",
+  "speech": "lecturing, condescending",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370106,
+  "initiation_lines": [
+    "These arrays have protected the Soul Refining Sect for a thousand years. Do not touch the redstone.",
+    "I need obsidian and ender pearls for the grand array repair. The outer wards are weakening.",
+    "The restriction arrays in the Secret Pavilion are my masterpiece. Even the ancestor praised them.",
+    "A cultivator from the Corpse Yin Sect came to study arrays. I turned him away. Our techniques are not shared."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "inspect_arrays",
+      "location": "soul_refining_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "repair",
+      "location": "soul_refining_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "1000",
+      "action": "teach",
+      "location": "soul_refining_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "soul_refining_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "repair",
+      "location": "soul_refining_sect_hidden_treasury",
+      "duration": 120
+    },
+    {
+      "time": "1600",
+      "action": "research",
+      "location": "soul_refining_sect_array_hall",
+      "duration": 180
+    },
+    {
+      "time": "1900",
+      "action": "meditate",
+      "location": "soul_refining_sect_mountain_cave",
+      "duration": 540
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "array_repair_materials",
+      "name": "Array Repair Materials",
+      "description": "Array Master Feng needs obsidian and ender pearls to repair the outer ward arrays.",
+      "required_items": {
+        "minecraft:obsidian": 8,
+        "minecraft:ender_pearl": 3
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 3,
+        "minecraft:enchanted_book": 1
+      }
+    },
+    {
+      "task_id": "formation_components",
+      "name": "Formation Components",
+      "description": "Redstone and iron needed for the inner formation nodes. The sect's defenses must hold.",
+      "required_items": {
+        "minecraft:redstone": 16,
+        "minecraft:iron_ingot": 6
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 2,
+        "minecraft:emerald": 8
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

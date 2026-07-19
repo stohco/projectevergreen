@@ -1,0 +1,100 @@
+{
+  "_comment": "NPC: Alchemist Han (\u70bc\u4e39\u5f1f\u5b50\u97e9). INFERRED. Soul Refining Sect. Location: soul_refining_sect_alchemy_courtyard.",
+  "npc_id": "npc_sr_alchemist_han",
+  "name": "Alchemist Han",
+  "nameCn": "\u70bc\u4e39\u5f1f\u5b50\u97e9",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_alchemy_courtyard",
+  "cultivation": "FAITH mid",
+  "personality": "nervous, meticulous, afraid of making mistakes",
+  "speech": "hesitant, technical",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370105,
+  "initiation_lines": [
+    "I-I need glass bottles and coal for the refining fires. One wrong temperature and the whole batch is ruined.",
+    "Soul Nourishing Lotuses grow in the herb garden, but only Elder Mo may harvest them.",
+    "A pill that strengthens the soul requires ghast tears. Do you know how hard those are to obtain?",
+    "The last alchemist who failed Elder Mo's order was sent to the underground passages. He never returned."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "gather_herbs",
+      "location": "soul_refining_sect_spirit_herb_garden",
+      "duration": 120
+    },
+    {
+      "time": "0800",
+      "action": "refine",
+      "location": "soul_refining_sect_alchemy_courtyard",
+      "duration": 240
+    },
+    {
+      "time": "1200",
+      "action": "eat",
+      "location": "soul_refining_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1300",
+      "action": "refine",
+      "location": "soul_refining_sect_alchemy_courtyard",
+      "duration": 180
+    },
+    {
+      "time": "1600",
+      "action": "deliver_pills",
+      "location": "soul_refining_sect_inner_sect",
+      "duration": 60
+    },
+    {
+      "time": "1700",
+      "action": "clean",
+      "location": "soul_refining_sect_alchemy_courtyard",
+      "duration": 120
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "soul_refining_sect_disciple_dormitories",
+      "duration": 660
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "alchemy_reagents",
+      "name": "Alchemy Reagent Supply",
+      "description": "Alchemist Han needs glass bottles and coal for the soul-strengthening pill furnace.",
+      "required_items": {
+        "minecraft:glass_bottle": 8,
+        "minecraft:coal": 10
+      },
+      "rewards": {
+        "minecraft:experience_bottle": 2,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "soul_pill_ingredients",
+      "name": "Soul Pill Ingredients",
+      "description": "Rare ingredients needed: soul nourishing lotus and blaze powder for the soul pill.",
+      "required_items": {
+        "ergenverse:soul_nourishing_lotus": 2,
+        "minecraft:blaze_powder": 3
+      },
+      "rewards": {
+        "ergenverse:spirit_stone": 3,
+        "minecraft:enchanted_book": 1
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

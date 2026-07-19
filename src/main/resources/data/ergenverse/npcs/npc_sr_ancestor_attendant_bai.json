@@ -1,0 +1,101 @@
+{
+  "_comment": "NPC: Ancestor Attendant Bai (\u7956\u6bbf\u4f8d\u8005\u767d). INFERRED. Soul Refining Sect. Location: soul_refining_sect_ancestor_hall.",
+  "npc_id": "npc_sr_ancestor_attendant_bai",
+  "name": "Ancestor Attendant Bai",
+  "nameCn": "\u7956\u6bbf\u4f8d\u8005\u767d",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_ancestor_hall",
+  "cultivation": "FAITH late",
+  "personality": "reverent, cryptic, speaks as if the ancestor listens",
+  "speech": "whispering, formal",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370109,
+  "initiation_lines": [
+    "The ancestor's will permeates this hall. Speak softly. He may still be listening.",
+    "I require obsidian and gold for the incense altar. The ancestor's spirit prefers precious offerings.",
+    "The ancestral ground in the Sea of Devils is sealed. Only the sect leader may open it. Something sleeps there.",
+    "Wang Lin... the name is written in the ancestor's journals. He inherited something from this sect."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0400",
+      "action": "ritual",
+      "location": "soul_refining_sect_ancestor_hall",
+      "duration": 180
+    },
+    {
+      "time": "0700",
+      "action": "clean_hall",
+      "location": "soul_refining_sect_ancestor_hall",
+      "duration": 120
+    },
+    {
+      "time": "0900",
+      "action": "offer_incense",
+      "location": "soul_refining_sect_ancestor_hall",
+      "duration": 60
+    },
+    {
+      "time": "1000",
+      "action": "stand_vigil",
+      "location": "soul_refining_sect_ancestor_hall",
+      "duration": 360
+    },
+    {
+      "time": "1600",
+      "action": "read_journals",
+      "location": "soul_refining_sect_library",
+      "duration": 120
+    },
+    {
+      "time": "1800",
+      "action": "ritual",
+      "location": "soul_refining_sect_ancestor_hall",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "stand_vigil",
+      "location": "soul_refining_sect_ancestor_hall",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "ancestor_incense",
+      "name": "Ancestor Incense Materials",
+      "description": "The ancestor hall requires obsidian and gold for the sacred incense altar.",
+      "required_items": {
+        "minecraft:obsidian": 6,
+        "minecraft:gold_ingot": 4
+      },
+      "rewards": {
+        "ergenverse:spirit_stone_mid": 2,
+        "minecraft:emerald": 6
+      }
+    },
+    {
+      "task_id": "ancestor_journal_repair",
+      "name": "Ancestor Journal Repair",
+      "description": "Ancient journals need books and ink for preservation. They contain the ancestor's techniques.",
+      "required_items": {
+        "minecraft:book": 4,
+        "minecraft:ink_sac": 4,
+        "minecraft:paper": 6
+      },
+      "rewards": {
+        "ergenverse:soul_refining_flag": 1,
+        "ergenverse:spirit_stone": 4
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

@@ -1,0 +1,100 @@
+{
+  "_comment": "NPC: Trial Proctor Zhao (\u8bd5\u70bc\u6267\u6cd5\u8d75). INFERRED. Soul Refining Sect. Location: soul_refining_sect_trial_grounds.",
+  "npc_id": "npc_sr_trial_proctor_zhao",
+  "name": "Trial Proctor Zhao",
+  "nameCn": "\u8bd5\u70bc\u6267\u6cd5\u8d75",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_trial_grounds",
+  "cultivation": "FAITH late",
+  "personality": "stern, unforgiving, tests disciples harshly",
+  "speech": "commanding, loud",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370108,
+  "initiation_lines": [
+    "The trial grounds test your soul's resilience. If you cannot endure, the sect has no use for you.",
+    "I need arrows and iron for the combat trials. Disciples must face real weapons, not practice dummies.",
+    "Three disciples failed the soul-binding trial this month. Their souls are... repurposed.",
+    "Only those who pass the trials may enter the Inner Sect. The weak are culled. This is the ancestor's law."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0600",
+      "action": "prepare_trials",
+      "location": "soul_refining_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "0800",
+      "action": "proctor_trials",
+      "location": "soul_refining_sect_trial_grounds",
+      "duration": 300
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "soul_refining_sect_main_plaza",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "judge",
+      "location": "soul_refining_sect_trial_grounds",
+      "duration": 180
+    },
+    {
+      "time": "1700",
+      "action": "report",
+      "location": "soul_refining_sect_inner_sect",
+      "duration": 60
+    },
+    {
+      "time": "1800",
+      "action": "patrol",
+      "location": "soul_refining_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "soul_refining_sect_disciple_dormitories",
+      "duration": 600
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "trial_supplies",
+      "name": "Trial Ground Supplies",
+      "description": "Proctor Zhao needs arrows and iron for the combat trials. Disciples must face real weapons.",
+      "required_items": {
+        "minecraft:arrow": 16,
+        "minecraft:iron_ingot": 6
+      },
+      "rewards": {
+        "minecraft:emerald": 8,
+        "minecraft:experience_bottle": 2
+      }
+    },
+    {
+      "task_id": "trial_recovery",
+      "name": "Trial Recovery Materials",
+      "description": "After trials, the grounds need leather and bread for injured disciples.",
+      "required_items": {
+        "minecraft:leather": 8,
+        "minecraft:bread": 10
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 1,
+        "minecraft:emerald": 5
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

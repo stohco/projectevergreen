@@ -1,0 +1,96 @@
+{
+  "_comment": "NPC: Puppet Artisan Gu (\u5080\u5121\u5e08\u987e). INFERRED. Soul Refining Sect. Location: soul_refining_sect_puppet_workshop.",
+  "npc_id": "npc_sr_puppet_artisan_gu",
+  "name": "Puppet Artisan Gu",
+  "nameCn": "\u5080\u5121\u5e08\u987e",
+  "canon_id": null,
+  "type": "sect_elder",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_puppet_workshop",
+  "cultivation": "FAITH late",
+  "personality": "obsessive, rarely speaks, focused on his creations",
+  "speech": "muttering, distracted",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370107,
+  "initiation_lines": [
+    "The puppet needs more bone. And redstone for the binding joints. And soul fragments for the core.",
+    "I am creating a puppet that can fight on its own. The ancestor will be pleased.",
+    "Do you hear them? The souls inside the puppets. They are quiet now. Most of them.",
+    "Bring me materials and I may show you how to bind a soul to a construct. It is not for the faint-hearted."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0400",
+      "action": "craft",
+      "location": "soul_refining_sect_puppet_workshop",
+      "duration": 300
+    },
+    {
+      "time": "0900",
+      "action": "gather",
+      "location": "soul_refining_sect_spirit_beast_pens",
+      "duration": 60
+    },
+    {
+      "time": "1000",
+      "action": "craft",
+      "location": "soul_refining_sect_puppet_workshop",
+      "duration": 240
+    },
+    {
+      "time": "1400",
+      "action": "test",
+      "location": "soul_refining_sect_trial_grounds",
+      "duration": 120
+    },
+    {
+      "time": "1600",
+      "action": "craft",
+      "location": "soul_refining_sect_puppet_workshop",
+      "duration": 240
+    },
+    {
+      "time": "2000",
+      "action": "rest",
+      "location": "soul_refining_sect_disciple_dormitories",
+      "duration": 480
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "puppet_materials",
+      "name": "Puppet Construction Materials",
+      "description": "Artisan Gu needs bones, redstone, and iron for his soul puppet construction.",
+      "required_items": {
+        "minecraft:bone": 16,
+        "minecraft:redstone": 8,
+        "minecraft:iron_ingot": 4
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 2,
+        "ergenverse:spirit_stone": 3
+      }
+    },
+    {
+      "task_id": "soul_binding_components",
+      "name": "Soul Binding Components",
+      "description": "Soul fragments and leather needed to bind souls into puppet constructs.",
+      "required_items": {
+        "ergenverse:soul_fragment": 3,
+        "minecraft:leather": 8,
+        "minecraft:string": 6
+      },
+      "rewards": {
+        "ergenverse:spirit_stone_mid": 2,
+        "minecraft:experience_bottle": 2
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}

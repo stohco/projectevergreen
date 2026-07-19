@@ -1,0 +1,106 @@
+{
+  "_comment": "NPC: Shadow Guide Wu (\u6697\u9053\u5411\u5bfc\u5434). INFERRED. Soul Refining Sect. Location: soul_refining_sect_underground_passage.",
+  "npc_id": "npc_sr_shadow_guide_wu",
+  "name": "Shadow Guide Wu",
+  "nameCn": "\u6697\u9053\u5411\u5bfc\u5434",
+  "canon_id": null,
+  "type": "sect_disciple",
+  "faction": "soul_refining_sect",
+  "location": "soul_refining_sect_underground_passage",
+  "cultivation": "FAITH late",
+  "personality": "cunning, secretive, sells information",
+  "speech": "low voice, pauses to listen",
+  "relationship_to_wanglin": "neutral",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": true,
+  "teaching_available": false,
+  "canon_confidence": 0,
+  "derivation_type": "I",
+  "salt": 370110,
+  "initiation_lines": [
+    "You found the passage. Interesting. Most disciples don't know this entrance exists.",
+    "I can guide you through the underground tunnels. But information has a price.",
+    "The treasury is not as well-guarded as Elder Mo believes. I know a way. For the right payment.",
+    "Bones line these tunnels. Not all of them are from beasts. Remember that."
+  ],
+  "daily_schedule": [
+    {
+      "time": "0500",
+      "action": "patrol",
+      "location": "soul_refining_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "0800",
+      "action": "lurk",
+      "location": "soul_refining_sect_main_plaza",
+      "duration": 120
+    },
+    {
+      "time": "1000",
+      "action": "scout",
+      "location": "soul_refining_sect_hidden_treasury",
+      "duration": 60
+    },
+    {
+      "time": "1100",
+      "action": "lurk",
+      "location": "soul_refining_sect_outer_gate",
+      "duration": 120
+    },
+    {
+      "time": "1300",
+      "action": "eat",
+      "location": "soul_refining_sect_tavern_district",
+      "duration": 60
+    },
+    {
+      "time": "1400",
+      "action": "patrol",
+      "location": "soul_refining_sect_underground_passage",
+      "duration": 180
+    },
+    {
+      "time": "1700",
+      "action": "gather_intel",
+      "location": "soul_refining_sect_inner_sect",
+      "duration": 120
+    },
+    {
+      "time": "1900",
+      "action": "rest",
+      "location": "soul_refining_sect_underground_passage",
+      "duration": 660
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "tunnel_mapping",
+      "name": "Tunnel Mapping Supplies",
+      "description": "Shadow Guide Wu needs ink and paper to map the ever-changing underground passages.",
+      "required_items": {
+        "minecraft:ink_sac": 4,
+        "minecraft:paper": 8
+      },
+      "rewards": {
+        "ergenverse:soul_fragment": 2,
+        "minecraft:emerald": 7
+      }
+    },
+    {
+      "task_id": "underground_contraband",
+      "name": "Underground Contraband",
+      "description": "Smuggle gold and emeralds through the tunnels. Wu pays well for discretion.",
+      "required_items": {
+        "minecraft:gold_ingot": 4,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "ergenverse:soul_lasher": 1,
+        "ergenverse:spirit_stone_mid": 3
+      }
+    }
+  ],
+  "_xianxia_schema": 1
+}
