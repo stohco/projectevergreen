@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Tavern Keeper Si (\u5ba2\u6808\u53f8). INFERRED: Ancient Demon City. Derivation: I = INFERRED.",
+  "npc_id": "npc_ancient_demon_tavern",
+  "name": "Tavern Keeper Si",
+  "nameCn": "\u5ba2\u6808\u53f8",
+  "canon_id": "I-npc_ancient_demon_tavern",
+  "type": "service",
+  "faction": "none",
+  "location": "ancient_demon_city",
+  "cultivation": "none",
+  "personality": "nervous, overhears dark secrets, survives by being invisible",
+  "speech": "quiet, careful",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A service of Ancient Demon City",
+    "qi_condensation": "Tavern Keeper Si, Ancient Demon service"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Ancient Demon City service. nervous, overhears dark secrets, survives by being invisible.",
+  "derivation_type": "I",
+  "salt": 6789012345,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Sit in the back. Do not draw attention. The cultivators here are not the friendly type.",
+    "A man from the Soul Refining Sect came in last month. He asked about the temple's soul techniques. I pretended not to hear. I value my life.",
+    "If you need food or rumors, bring wheat and coal. I keep my head down and my ears open. It has kept me alive in this city.",
+    "The governor and the temple priest argue constantly. The priest wants to perform a Grand Ritual. The governor says it will attract attention from the Teng family. I say both of them are right."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 4
+    },
+    {
+      "t0": 3000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 10000,
+      "t1": 11000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 11000,
+      "t1": 13000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 13000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "quiet_rumors",
+      "description": "Si whispers: 'Bring wheat and coal. I will tell you what I heard about the governor's dispute with the temple  -  and what the Soul Refining Sect man wanted.'",
+      "requires": [
+        {
+          "item": "minecraft:wheat",
+          "count": 12
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "written_intel",
+      "description": "Si: 'Paper and ink. I will write down the temple priest's ritual schedule and guard patrol routes. Dangerous knowledge in this city.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 4
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 2
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    }
+  ]
+}

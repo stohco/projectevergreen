@@ -1,0 +1,123 @@
+{
+  "_comment": "NPC: Bone Hunter You (\u730e\u9aa8\u8005\u5c24). INFERRED: Ancient Demon City. Derivation: I = INFERRED.",
+  "npc_id": "npc_ancient_demon_hunter",
+  "name": "Bone Hunter You",
+  "nameCn": "\u730e\u9aa8\u8005\u5c24",
+  "canon_id": "I-npc_ancient_demon_hunter",
+  "type": "mortal",
+  "faction": "none",
+  "location": "ancient_demon_city",
+  "cultivation": "none",
+  "personality": "brave, hunts bone creatures in the wild, knows the surrounding terrain",
+  "speech": "direct, practical",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A mortal of Ancient Demon City",
+    "qi_condensation": "Bone Hunter You, Ancient Demon mortal"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Ancient Demon City mortal. brave, hunts bone creatures in the wild, knows the surrounding terrain.",
+  "derivation_type": "I",
+  "salt": 8901234567,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "I hunt bone creatures  -  skeletal beasts that roam the hills near the city. Their bones sell for good prices to the bone merchant.",
+    "The bone creatures appeared about ten years ago. Before that, this was just a poor city with a dark reputation. Now it has a dark reality to match.",
+    "If you need supplies for the wild, bring me sticks and coal. I always need fire and shelter materials.",
+    "The smuggler tunnels connect to a cave system outside the city. I have seen cultivators entering at night with green light around their hands. The cave system goes deep  -  much deeper than the mortal quarter."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 6000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 6
+    },
+    {
+      "t0": 12000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 8
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "hunting_supplies",
+      "description": "You: 'I need sticks for traps and coal for my campfire. The bone creatures are more active at night.'",
+      "requires": [
+        {
+          "item": "minecraft:stick",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "cave_intel",
+      "description": "You: 'The cave system outside the city connects to the tunnels. I have mapped part of it. Bring me bones for arrowheads and I will show you the entrance.'",
+      "requires": [
+        {
+          "item": "minecraft:bone",
+          "count": 12
+        },
+        {
+          "item": "minecraft:arrow",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ]
+}

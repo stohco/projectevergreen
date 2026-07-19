@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Demon Priest Mo (\u9b54\u796d\u53f8\u83ab). INFERRED: Ancient Demon City. Derivation: I = INFERRED.",
+  "npc_id": "npc_ancient_demon_priest",
+  "name": "Demon Priest Mo",
+  "nameCn": "\u9b54\u796d\u53f8\u83ab",
+  "canon_id": "I-npc_ancient_demon_priest",
+  "type": "cultivator",
+  "faction": "Ancient Demon Temple",
+  "location": "ancient_demon_city",
+  "cultivation": "Foundation Establishment late stage",
+  "personality": "fanatical, believes dark cultivation is misunderstood",
+  "speech": "zealous, lecturing",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator of Ancient Demon City",
+    "qi_condensation": "Demon Priest Mo, Ancient Demon cultivator"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Ancient Demon City cultivator. fanatical, believes dark cultivation is misunderstood.",
+  "derivation_type": "I",
+  "salt": 3456789012,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The temple of the Ancient Demon is older than Zhao Country itself. Before the governor, before the sects  -  this temple stood. It remembers what others have forgotten.",
+    "Other cities worship ancestors or stars. We worship power. Not evil  -  power. There is a difference the Heng Yue Sect refuses to understand.",
+    "I need bones for the temple furnaces and ink for the ritual scrolls. Bring me supplies and I will share knowledge they forbid in other sects.",
+    "Taga dwells in the governor's mansion. He is the strongest cultivator in the city. Even he comes to the temple on dark moons."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 4000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 11000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "temple_rituals",
+      "description": "Mo: 'The temple furnaces burn bone and coal. Bring me materials and I will teach you a technique the orthodox sects suppress.'",
+      "requires": [
+        {
+          "item": "minecraft:bone",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 12
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 2
+    },
+    {
+      "id": "ritual_scrolls",
+      "description": "Mo: 'I record forbidden techniques. Paper and ink  -  bring them and I will share what I know about the Ancient Demon's original cultivation path.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 8
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ]
+}

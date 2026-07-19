@@ -1,0 +1,124 @@
+{
+  "_comment": "NPC: Shadow Smuggler Ye (\u5f71\u8d70\u79c1\u8005\u53f6). INFERRED: Ancient Demon City. Derivation: I = INFERRED.",
+  "npc_id": "npc_ancient_demon_smuggler",
+  "name": "Shadow Smuggler Ye",
+  "nameCn": "\u5f71\u8d70\u79c1\u8005\u53f6",
+  "canon_id": "I-npc_ancient_demon_smuggler",
+  "type": "rogue",
+  "faction": "none",
+  "location": "ancient_demon_city",
+  "cultivation": "Foundation Establishment mid stage",
+  "personality": "paranoid, moves artifacts through tunnels, trusts no one",
+  "speech": "barely audible",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A rogue of Ancient Demon City",
+    "qi_condensation": "Shadow Smuggler Ye, Ancient Demon rogue"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Ancient Demon City rogue. paranoid, moves artifacts through tunnels, trusts no one.",
+  "derivation_type": "I",
+  "salt": 2345678901,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You found me. That means the tavern keeper talked, or the hunter saw you following my trail. Neither would surprise me.",
+    "I move things the governor does not want traced. Artifacts, texts, bones with residual soul essence. The temple priest pays well for certain... materials.",
+    "Gold and emeralds  -  I can convert them through the tunnels to buyers in Nan Dou and Qilin. The profit is worth the risk. Mostly.",
+    "The dark cultivator Yan knows too much. He explores the underground chamber. If he finds what I think is down there, the priest and I will have a problem."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 6000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 12
+    },
+    {
+      "t0": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 6
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "artifact_smuggling",
+      "description": "Ye: 'Gold and emeralds. I move them through the tunnels to external buyers. Bring materials.'",
+      "requires": [
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:emerald",
+          "count": 6
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 14
+    },
+    {
+      "id": "tunnel_reinforcement",
+      "description": "Ye: 'The tunnels are collapsing near the temple. Iron and cobblestone  -  if they fall, the artifacts are lost forever.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 6
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 32
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 9
+    }
+  ]
+}

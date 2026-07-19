@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Bone Merchant Gui (\u9aa8\u5546\u9b3c). INFERRED: Ancient Demon City. Derivation: I = INFERRED.",
+  "npc_id": "npc_ancient_demon_merchant",
+  "name": "Bone Merchant Gui",
+  "nameCn": "\u9aa8\u5546\u9b3c",
+  "canon_id": "I-npc_ancient_demon_merchant",
+  "type": "merchant",
+  "faction": "none",
+  "location": "ancient_demon_city",
+  "cultivation": "Qi Condensation 9th Layer",
+  "personality": "sinister, trades in bone tools and dark materials",
+  "speech": "whispered, transactional",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A merchant of Ancient Demon City",
+    "qi_condensation": "Bone Merchant Gui, Ancient Demon merchant"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Ancient Demon City merchant. sinister, trades in bone tools and dark materials.",
+  "derivation_type": "I",
+  "salt": 4567890123,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Welcome to the only market in Zhao where bones are worth more than gold. Spirit beast bones, ancient creature remains  -  I deal in them all.",
+    "The merchants in Qilin City sell live beasts. I sell what remains after. There is more profit in death than life, sadly.",
+    "Obsidian, ink, bones  -  bring me dark materials and I will pay fairly. The temple always needs supplies for their... rituals.",
+    "A cultivator from the Corpse Yin Sect visited last month. Bought twelve bags of bone powder. I did not ask what it was for."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "north",
+      "dest": 10
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "bone_trade",
+      "description": "Gui: 'I process bones into tools and powder. Bring me raw bones and ink  -  the temple pays well for bone powder.'",
+      "requires": [
+        {
+          "item": "minecraft:bone",
+          "count": 16
+        },
+        {
+          "item": "minecraft:ink_sac",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    },
+    {
+      "id": "dark_materials",
+      "description": "Gui: 'Obsidian is rare and valuable. If you find any in the wild, bring it to me. Coal for the forge too.'",
+      "requires": [
+        {
+          "item": "minecraft:obsidian",
+          "count": 4
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 7
+    }
+  ]
+}

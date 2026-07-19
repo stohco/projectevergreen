@@ -1,0 +1,119 @@
+{
+  "_comment": "NPC: Dock Master Leng (\u7801\u5934\u51b7). INFERRED: Ancient Demon City. Derivation: I = INFERRED.",
+  "npc_id": "npc_ancient_demon_dock",
+  "name": "Dock Master Leng",
+  "nameCn": "\u7801\u5934\u51b7",
+  "canon_id": "I-npc_ancient_demon_dock",
+  "type": "laborer",
+  "faction": "none",
+  "location": "ancient_demon_city",
+  "cultivation": "none",
+  "personality": "cold, efficient, has seen too much",
+  "speech": "flat, emotionless",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A laborer of Ancient Demon City",
+    "qi_condensation": "Dock Master Leng, Ancient Demon laborer"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Ancient Demon City laborer. cold, efficient, has seen too much.",
+  "derivation_type": "I",
+  "salt": 7890123456,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Ships arrive. Ships leave. The cargo is always the same  -  bones, obsidian, coal, and things I do not catalogue.",
+    "Unlike Qilin City where ships carry live beasts, our ships carry dead ones. The governor exports bone meal to the Teng family. Profitable but grim.",
+    "I need planks and coal. The bone shipments are heavy and the dock cranes break constantly.",
+    "A ship arrived from Nan Dou City last week. The captain refused to dock overnight. Said the city 'felt wrong.' He left at dawn."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 6
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "dock_repairs",
+      "description": "Leng: 'Planks and coal. The bone shipments warp the docks. Bring materials and I will pay.'",
+      "requires": [
+        {
+          "item": "minecraft:planks",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "unmarked_cargo",
+      "description": "Leng: 'Sometimes crates arrive with no manifest. The warehouse boss stores them. If you find anything unusual near the warehouse, I want to know.'",
+      "requires": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    }
+  ]
+}

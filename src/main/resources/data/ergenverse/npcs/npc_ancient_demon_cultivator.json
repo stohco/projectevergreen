@@ -1,0 +1,123 @@
+{
+  "_comment": "NPC: Dark Cultivator Yan (\u6697\u4fee\u58eb\u71d5). INFERRED: Ancient Demon City. Derivation: I = INFERRED.",
+  "npc_id": "npc_ancient_demon_cultivator",
+  "name": "Dark Cultivator Yan",
+  "nameCn": "\u6697\u4fee\u58eb\u71d5",
+  "canon_id": "I-npc_ancient_demon_cultivator",
+  "type": "cultivator",
+  "faction": "Rogue Cultivator",
+  "location": "ancient_demon_city",
+  "cultivation": "Foundation Establishment peak",
+  "personality": "obsessed with power, experiments with bone refinement",
+  "speech": "intense, single-minded",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A cultivator of Ancient Demon City",
+    "qi_condensation": "Dark Cultivator Yan, Ancient Demon cultivator"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Ancient Demon City cultivator. obsessed with power, experiments with bone refinement.",
+  "derivation_type": "I",
+  "salt": 9012345678,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The temple teaches bone refinement  -  a forbidden technique. I have been practicing it for six years. My progress is... visible.",
+    "Do not confuse bone refinement with the Corpse Yin Sect's corpse techniques. Bone refinement uses the essence left in bones, not the corpses themselves. There is a moral difference. A thin one.",
+    "If you bring me bones and coal, I will trade cultivation knowledge. My methods are unorthodox but effective. The Heng Yue Sect would expel me. I do not care.",
+    "The smuggler tunnels connect to an underground chamber beneath the temple. The priest does not know I have been exploring it. There are... things down there."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 4000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 8
+    },
+    {
+      "t0": 4000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 10
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 11000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "bone_refinement",
+      "description": "Yan: 'I need bones and coal for my refinement experiments. Bring me materials and I will share what I have learned about bone essence extraction.'",
+      "requires": [
+        {
+          "item": "minecraft:bone",
+          "count": 20
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 12
+        }
+      ],
+      "reward_item": "minecraft:book",
+      "reward_count": 2
+    },
+    {
+      "id": "underground_chamber",
+      "description": "Yan: 'The chamber beneath the temple has strange inscriptions. Bring me ink and paper and glass bottles  -  I need to document them before the priest finds out.'",
+      "requires": [
+        {
+          "item": "minecraft:ink_sac",
+          "count": 4
+        },
+        {
+          "item": "minecraft:paper",
+          "count": 4
+        },
+        {
+          "item": "minecraft:glass_bottle",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 8
+    }
+  ]
+}

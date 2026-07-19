@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Warehouse Keeper An (\u5e93\u623f\u5b89). INFERRED: Ancient Demon City. Derivation: I = INFERRED.",
+  "npc_id": "npc_ancient_demon_warehouse",
+  "name": "Warehouse Keeper An",
+  "nameCn": "\u5e93\u623f\u5b89",
+  "canon_id": "I-npc_ancient_demon_warehouse",
+  "type": "service",
+  "faction": "Ancient Demon City Government",
+  "location": "ancient_demon_city",
+  "cultivation": "none",
+  "personality": "fearful, processes bones all day, has seen things",
+  "speech": "hushed, anxious",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A service of Ancient Demon City",
+    "qi_condensation": "Warehouse Keeper An, Ancient Demon service"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Ancient Demon City service. fearful, processes bones all day, has seen things.",
+  "derivation_type": "I",
+  "salt": 5678901234,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The warehouse stores bones. Hundreds of crates of bones. The smell... you get used to it. Eventually.",
+    "The governor exports bone meal to the Teng family. Officially it is 'fertilizer.' Unofficially I do not want to know what it fertilizes.",
+    "If you need supplies, bring paper and planks. Storage space is cheap here  -  no one wants to rent near the bone piles.",
+    "The smuggler uses the tunnels to move things the governor does not want catalogued. I see the crates going in and out. I say nothing. Survival in this city means silence."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 8000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 8
+    },
+    {
+      "t0": 8000,
+      "t1": 9000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 9000,
+      "t1": 11000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 6
+    },
+    {
+      "t0": 11000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 4
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "warehouse_supplies",
+      "description": "An: 'Paper for manifests, planks for bone crates. The next shipment to the Teng family is due.'",
+      "requires": [
+        {
+          "item": "minecraft:paper",
+          "count": 6
+        },
+        {
+          "item": "minecraft:planks",
+          "count": 12
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "bone_inventory",
+      "description": "An: 'Bone inventory is... inconsistent. Some crates are lighter than they should be. If you find bone fragments or coal near the tunnels, bring them  -  I need to balance the books.'",
+      "requires": [
+        {
+          "item": "minecraft:bone",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 4
+    }
+  ]
+}

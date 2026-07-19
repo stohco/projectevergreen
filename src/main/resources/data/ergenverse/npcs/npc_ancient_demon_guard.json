@@ -1,0 +1,126 @@
+{
+  "_comment": "NPC: Guard Captain Hei (\u9ed1\u5b88\u536b\u957f). INFERRED: Ancient Demon City. Derivation: I = INFERRED.",
+  "npc_id": "npc_ancient_demon_guard",
+  "name": "Guard Captain Hei",
+  "nameCn": "\u9ed1\u5b88\u536b\u957f",
+  "canon_id": "I-npc_ancient_demon_guard",
+  "type": "guard",
+  "faction": "Ancient Demon City Watch",
+  "location": "ancient_demon_city",
+  "cultivation": "Foundation Establishment early stage",
+  "personality": "silent, intimidating, cultivates dark techniques",
+  "speech": "barely speaks, menacing",
+  "relationship_to_wanglin": "INFERRED",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": false,
+  "perception_tiers": {
+    "mortal": "A guard of Ancient Demon City",
+    "qi_condensation": "Guard Captain Hei, Ancient Demon guard"
+  },
+  "canon_confidence": 1,
+  "note": "INFERRED: Ancient Demon City guard. silent, intimidating, cultivates dark techniques.",
+  "derivation_type": "I",
+  "salt": 8234567890,
+  "dao_heart": {
+    "stability": 50,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Few people enter Ancient Demon City by choice. Those who do either seek power or have nowhere else to go.",
+    "The governor does not care who enters. The city feeds on the desperate. I keep the desperate from killing each other.",
+    "If you are here to trade, the market is east. If you are here to cultivate, the temple has... methods. If you are here to cause trouble, leave.",
+    "Other cities call us demon worshippers. They are not entirely wrong. The temple's practices are... effective, if distasteful."
+  ],
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 2000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 2000,
+      "t1": 3000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 5
+    },
+    {
+      "t0": 3000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 12
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0
+    },
+    {
+      "t0": 7000,
+      "t1": 10000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 10
+    },
+    {
+      "t0": 10000,
+      "t1": 12000,
+      "act": "wandering",
+      "dir": "west",
+      "dist": 8
+    },
+    {
+      "t0": 12000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0
+    }
+  ],
+  "sect_tasks": [
+    {
+      "id": "watch_supplies",
+      "description": "Hei: 'The watch needs arrows and coal for the signal fires. The bone piles near the gate attract creatures at night.'",
+      "requires": [
+        {
+          "item": "minecraft:arrow",
+          "count": 16
+        },
+        {
+          "item": "minecraft:coal",
+          "count": 8
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 5
+    },
+    {
+      "id": "tunnel_activity",
+      "description": "Hei: 'Something moves in the tunnels. Not beasts  -  cultivators. Bring me bones and iron and I will investigate.'",
+      "requires": [
+        {
+          "item": "minecraft:bone",
+          "count": 16
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 4
+        }
+      ],
+      "reward_item": "minecraft:emerald",
+      "reward_count": 6
+    }
+  ]
+}
