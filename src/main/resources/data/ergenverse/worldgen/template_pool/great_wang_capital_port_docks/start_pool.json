@@ -4,7 +4,7 @@
   "elements": [
     {
       "element_type": "minecraft:single_pool_element",
-      "location": "minecraft:village/plains/houses/plains_masons_house_1",
+      "location": "ergenverse:great_wang_capital/port_docks",
       "projection": "rigid",
       "processors": "minecraft:empty",
       "weight": 1

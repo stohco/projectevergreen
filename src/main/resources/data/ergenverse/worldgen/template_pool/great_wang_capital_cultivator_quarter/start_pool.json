@@ -4,7 +4,7 @@
   "elements": [
     {
       "element_type": "minecraft:single_pool_element",
-      "location": "minecraft:village/plains/houses/plains_butcher_shop_1",
+      "location": "ergenverse:great_wang_capital/cultivator_quarter",
       "projection": "rigid",
       "processors": "minecraft:empty",
       "weight": 1

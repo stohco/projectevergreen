@@ -4,7 +4,7 @@
   "elements": [
     {
       "element_type": "minecraft:single_pool_element",
-      "location": "minecraft:village/plains/houses/plains_medium_house_1",
+      "location": "ergenverse:great_wang_capital/market_district",
       "projection": "rigid",
       "processors": "minecraft:empty",
       "weight": 1
