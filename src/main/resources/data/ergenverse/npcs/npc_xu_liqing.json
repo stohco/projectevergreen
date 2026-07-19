@@ -33,5 +33,92 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Desire is not weakness. It is the most fundamental force in cultivation. The Six Desires — sight, sound, smell, taste, touch, thought — each is a door. I have walked through all six.",
+    "The Soul Refining Sect thinks it controls me. They use my techniques. They fear my methods. Control and fear are two sides of the same coin, and I am the coin itself.",
+    "Wang Lin resisted my Six Desires technique once. Only once. Most cultivators surrender to their own cravings before I even activate the array. He stared into the heart of his deepest desire and chose to walk away. That makes him dangerous.",
+    "Redstone and amethyst. These channel desire energy. Bring them and I will show you the first Desire Door. What lies beyond it depends entirely on what you want most."
+  ],
+  "daily_schedule": [
+    {
+      "time": "03:00",
+      "action": "Six Desires deep meditation",
+      "location": "soul_refining_sect",
+      "duration": 240
+    },
+    {
+      "time": "07:00",
+      "action": "Test desire arrays on captured souls",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Refine desire-channeling materials",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Observe outer sect disciples for desire weaknesses",
+      "location": "soul_refining_sect",
+      "duration": 120
+    },
+    {
+      "time": "15:00",
+      "action": "Lecture on desire manipulation theory",
+      "location": "soul_refining_sect",
+      "duration": 120
+    },
+    {
+      "time": "17:00",
+      "action": "Cultivation at Soul Transformation stage",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "20:00",
+      "action": "Secret meetings with faction allies",
+      "location": "soul_refining_sect",
+      "duration": 150
+    },
+    {
+      "time": "23:00",
+      "action": "Rest in desire-saturated chamber",
+      "location": "soul_refining_sect",
+      "duration": 240
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "xlq_desire_materials",
+      "name": "Desire Channeling Components",
+      "description": "Xu Liqing needs redstone and amethyst to construct desire-channeling arrays for his Six Desires technique research.",
+      "required_items": {
+        "minecraft:redstone": 24,
+        "minecraft:amethyst_shard": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:soul_fragment": 1,
+        "experience": 45
+      }
+    },
+    {
+      "task_id": "xlq_soul_observation",
+      "name": "Soul Desire Analysis",
+      "description": "Xu Liqing seeks soul fragments to study how desire persists after death. Trade soul fragments for forbidden knowledge.",
+      "required_items": {
+        "ergenverse:soul_fragment": 6,
+        "ergenverse:spirit_stone": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:experience_bottle": 4,
+        "experience": 50
+      }
+    }
+  ]
 }

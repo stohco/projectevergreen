@@ -33,5 +33,93 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "The 14th Generation speaks. You listen. That is the natural order. The Vermilion Bird Divine Sect did not survive fourteen generations by entertaining democratic discourse.",
+    "My predecessor, the 13th Generation, was soft. Diplomatic. He believed the sect could coexist with the Heavenly Fate Sect and the Soul Refining Sect. I believe the sect can consume them.",
+    "Wang Lin's connection to the Vermilion Bird flame is an asset. When the time comes, that asset will be claimed. The flame does not choose its bearer. The bearer is chosen.",
+    "Iron and blaze powder. The 14th Generation's military forge runs continuously. If you can supply materials, you will earn the right to train in the inner flame chambers."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Military strategy meditation",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "07:00",
+      "action": "War council with generals",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Inspect military forge operations",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Combat training with elite disciples",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Review expansion plans for sect territory",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "18:00",
+      "action": "Cultivation at 14th Generation power level",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 240
+    },
+    {
+      "time": "22:00",
+      "action": "Patrol sect borders personally",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "01:00",
+      "action": "Rest in war chamber",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 240
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "v14_military_forge",
+      "name": "Military Forge Supplies",
+      "description": "The 14th Generation needs iron and blaze powder for the military forge that equips the sect's expansion forces.",
+      "required_items": {
+        "minecraft:iron_ingot": 24,
+        "minecraft:blaze_powder": 12
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 40
+      }
+    },
+    {
+      "task_id": "v14_intel_gathering",
+      "name": "Rival Sect Intelligence",
+      "description": "The 14th Generation seeks intelligence on rival sect military capabilities. Bring jade slips with tactical information.",
+      "required_items": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 12
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:experience_bottle": 3,
+        "ergenverse:spirit_stone": 3,
+        "experience": 45
+      }
+    }
+  ]
 }

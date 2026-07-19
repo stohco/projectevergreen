@@ -34,5 +34,93 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "I was the first. Before the Heavenly Fate Sect mapped the stars, before the Soul Refining Sect learned to harvest souls, before the Heng Yue Sect raised its first sword — I held the Vermilion Bird flame. That was eons ago.",
+    "Sorrow is not weakness for one who has lived as long as I have. It is the only honest emotion. Joy fades. Anger burns out. Ambition collapses. Sorrow remains because loss is the one thing time never reverses.",
+    "Wang Lin reminds me of the second generation. Same quiet determination. Same refusal to accept that the world dictates his path. I have seen many like him. Most died. Some transcended. He will do one or the other.",
+    "Nether stars and ancient tomes. I study what was before the Vermilion Bird sect. If you find artifacts from the ancient era, bring them. I will trade knowledge that no living cultivator possesses."
+  ],
+  "daily_schedule": [
+    {
+      "time": "02:00",
+      "action": "Ancient era recollection meditation",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 300
+    },
+    {
+      "time": "07:00",
+      "action": "Walk the ancestral flame corridors",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Study pre-sect cultivation records",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Silent meal alone",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Advise current Divine Emperor when asked",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "15:00",
+      "action": "Cultivation at First Generation level",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 300
+    },
+    {
+      "time": "20:30",
+      "action": "Observe night sky for celestial changes",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "00:00",
+      "action": "Rest in ancestral crypt",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "yw_ancient_artifacts",
+      "name": "Ancient Era Artifacts",
+      "description": "Ye Wuyou seeks nether stars and ancient tomes from before the Vermilion Bird sect's founding. He trades unique knowledge in return.",
+      "required_items": {
+        "minecraft:nether_star": 1,
+        "minecraft:book": 5
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 2,
+        "ergenverse:dao_fragment": 1,
+        "experience": 60
+      }
+    },
+    {
+      "task_id": "yw_ancestral_memories",
+      "name": "Ancestral Flame Communion",
+      "description": "Ye Wuyou needs spirit stones to power the ancestral flame communion ritual, which reveals fragments of ancient history.",
+      "required_items": {
+        "ergenverse:spirit_stone": 5,
+        "ergenverse:jade_slip": 1
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 50
+      }
+    }
+  ]
 }

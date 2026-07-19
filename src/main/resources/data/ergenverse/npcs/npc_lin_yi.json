@@ -6,7 +6,7 @@
   "canon_id": "N89",
   "type": "antagonist",
   "faction": "independent",
-  "location": "unknown",
+  "location": "soul_refining_sect",
   "cultivation": "unknown",
   "personality": "antagonist",
   "speech": "cold",
@@ -31,5 +31,93 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "I do not engage in small talk. The Soul Refining Sect does not reward sociability. It rewards results. If you have results, speak. Otherwise, leave.",
+    "Wang Lin was an anomaly. The Soul Refining Sect produces tools. He became something else. I study anomalies. Not because I admire them, but because they represent failure in our system.",
+    "The inner sect has been watching you. Your cultivation path is... unconventional. Unconventional paths either produce brilliance or destruction. The Soul Refining Sect accommodates both.",
+    "Bones. Soul fragments. Glowstone for the refinement arrays. If you can procure these without drawing attention from the outer sect elders, I will compensate you discreetly."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Soul analysis meditation",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "08:00",
+      "action": "Monitor inner sect disciples",
+      "location": "soul_refining_sect",
+      "duration": 120
+    },
+    {
+      "time": "10:00",
+      "action": "Study anomaly cultivation paths",
+      "location": "soul_refining_sect",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Meal in silent chamber",
+      "location": "soul_refining_sect",
+      "duration": 60
+    },
+    {
+      "time": "14:00",
+      "action": "Report findings to Duanmu Ji",
+      "location": "soul_refining_sect",
+      "duration": 120
+    },
+    {
+      "time": "16:00",
+      "action": "Refinement array maintenance",
+      "location": "soul_refining_sect",
+      "duration": 150
+    },
+    {
+      "time": "18:30",
+      "action": "Evening cultivation",
+      "location": "soul_refining_sect",
+      "duration": 240
+    },
+    {
+      "time": "23:00",
+      "action": "Rest",
+      "location": "soul_refining_sect",
+      "duration": 300
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "ly_refinement_supplies",
+      "name": "Discreet Refinement Materials",
+      "description": "Lin Yi needs bones, soul fragments, and glowstone for refinement arrays. She prefers discretion over volume.",
+      "required_items": {
+        "minecraft:bone": 12,
+        "ergenverse:soul_fragment": 3,
+        "minecraft:glowstone": 8
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:experience_bottle": 2,
+        "ergenverse:spirit_stone": 1,
+        "experience": 30
+      }
+    },
+    {
+      "task_id": "ly_anomaly_report",
+      "name": "Anomaly Observation Report",
+      "description": "Lin Yi collects information on unusual cultivation phenomena. Bring jade slips and books documenting strange encounters.",
+      "required_items": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:book": 3
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "experience": 25
+      }
+    }
+  ]
 }

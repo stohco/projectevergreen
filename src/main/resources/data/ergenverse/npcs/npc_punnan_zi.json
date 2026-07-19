@@ -6,7 +6,7 @@
   "canon_id": "N88",
   "type": "antagonist",
   "faction": "independent",
-  "location": "unknown",
+  "location": "sea_of_devils",
   "cultivation": "peak Third Step",
   "personality": "ancient, vengeful antagonist",
   "speech": "ancient, grating",
@@ -33,5 +33,93 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You are bold to enter my domain. The Sea of Devils has consumed cultivators far stronger than you. I am Punnan Zi. Remember that name. It will be the last thing you learn.",
+    "Lou Hou. That is what the ancients called me. Punnan Zi is what I call myself now. The difference between those two names is the difference between who I was and what the Sea of Devils made me.",
+    "Wang Lin. Yes, I know him. He passed through these waters once. He left pieces of himself behind — not intentionally. The Sea of Devils takes tolls from everyone. Even him.",
+    "If you seek the Heart Devil Flower that grows in the deepest currents, you will need guidance. I have guided many cultivators to it. None have returned. Bring me soul fragments and I will consider adding you to that count."
+  ],
+  "daily_schedule": [
+    {
+      "time": "03:00",
+      "action": "Ancient meditation on Sea of Devils currents",
+      "location": "sea_of_devils",
+      "duration": 240
+    },
+    {
+      "time": "07:00",
+      "action": "Survey chaotic current boundaries",
+      "location": "sea_of_devils",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Collect Heart Devil Flowers from deep currents",
+      "location": "sea_of_devils",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Consume spiritual energy from sea currents",
+      "location": "sea_of_devils",
+      "duration": 90
+    },
+    {
+      "time": "14:30",
+      "action": "Test intruders who enter domain",
+      "location": "sea_of_devils",
+      "duration": 150
+    },
+    {
+      "time": "17:00",
+      "action": "Cultivation at peak Third Step",
+      "location": "sea_of_devils",
+      "duration": 240
+    },
+    {
+      "time": "21:00",
+      "action": "Patrol outer ring perimeter",
+      "location": "sea_of_devils",
+      "duration": 180
+    },
+    {
+      "time": "00:00",
+      "action": "Rest in deep sea hollow",
+      "location": "sea_of_devils",
+      "duration": 180
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "pz_heart_devil_flower",
+      "name": "Heart Devil Flower Retrieval",
+      "description": "Punnan Zi sends cultivators to retrieve Heart Devil Flowers from the chaotic currents of the Sea of Devils. Few return.",
+      "required_items": {
+        "ergenverse:soul_fragment": 5,
+        "minecraft:blaze_rod": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 3,
+        "minecraft:experience_bottle": 4,
+        "experience": 50
+      }
+    },
+    {
+      "task_id": "pz_sea_knowledge",
+      "name": "Sea of Devils Navigation Lore",
+      "description": "Punnan Zi trades knowledge of safe paths through the Sea of Devils in exchange for jade slips documenting other regions.",
+      "required_items": {
+        "ergenverse:jade_slip": 3,
+        "ergenverse:spirit_stone": 2
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:soul_fragment": 2,
+        "experience": 45
+      }
+    }
+  ]
 }

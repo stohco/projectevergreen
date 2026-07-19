@@ -33,5 +33,92 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Hehehe! Another one wanders into my waters! The Ji Mo Sect has ruled these currents for three hundred years. You think you can challenge that? Amusing. Very amusing.",
+    "Wang Lin destroyed my avatar once. Just an avatar, mind you. My true body slumbers deeper than any cultivator has ever reached. When I wake, the Sea of Devils will tremble.",
+    "The demonic path is not evil. It is efficient. Good cultivators waste centuries on morality. I spent those centuries becoming powerful. Tell me which approach the world rewards.",
+    "Spirit stones and netherwart. The Ji Mo Sect refines them into demonic pills. Bring materials and I may let you watch. Watching is all you will do unless you prove yourself useful."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Demonic cultivation in underwater cavern",
+      "location": "sea_of_devils",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Inspect Ji Mo Sect disciples",
+      "location": "sea_of_devils",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Refine demonic pills",
+      "location": "sea_of_devils",
+      "duration": 240
+    },
+    {
+      "time": "13:00",
+      "action": "Consume pills and cultivate",
+      "location": "sea_of_devils",
+      "duration": 120
+    },
+    {
+      "time": "15:00",
+      "action": "Send disciples to raid passing cultivators",
+      "location": "sea_of_devils",
+      "duration": 180
+    },
+    {
+      "time": "18:00",
+      "action": "Study soul refinement techniques stolen from Soul Refining Sect",
+      "location": "sea_of_devils",
+      "duration": 150
+    },
+    {
+      "time": "20:30",
+      "action": "Patrol sea of devils inner ring",
+      "location": "sea_of_devils",
+      "duration": 180
+    },
+    {
+      "time": "23:30",
+      "action": "Rest in avatar chamber",
+      "location": "sea_of_devils",
+      "duration": 270
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "jm_demonic_pill_materials",
+      "name": "Demonic Pill Reagents",
+      "description": "Old Man Ji Mo needs netherwart and spirit stones to refine his signature demonic cultivation pills.",
+      "required_items": {
+        "minecraft:nether_wart": 16,
+        "ergenverse:spirit_stone": 4
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:experience_bottle": 3,
+        "ergenverse:soul_fragment": 1,
+        "experience": 35
+      }
+    },
+    {
+      "task_id": "jm_raiding_intelligence",
+      "name": "Cultivator Movement Reports",
+      "description": "Ji Mo Sect needs intelligence on cultivator movements through the Sea of Devils. Bring jade slips with navigational data.",
+      "required_items": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 8
+      },
+      "rewards": {
+        "minecraft:enchanted_book": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 30
+      }
+    }
+  ]
 }

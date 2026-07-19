@@ -33,5 +33,93 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "Three generations after the founding, the Vermilion Bird sect faced its first true crisis. I led us through it. The current generation has forgotten that crisis. I have not.",
+    "Ye Wuyou founded this sect on fire and sorrow. I shaped it into a weapon. The generations between us softened it. I do not intend to let that happen again.",
+    "Wang Lin walks a path I recognize. It is the path of one who burns everything to reach the top. I walked that path. The top is lonelier than anyone describes.",
+    "Obsidian and redstone. The 3rd Generation's defense arrays still protect the sect's foundations. They require maintenance that only I understand. Help me, and I will teach you the Vermilion Bird's original defensive art."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Foundation array meditation",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Inspect ancient defense arrays",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "10:00",
+      "action": "Repair structural damage to sect foundations",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "13:00",
+      "action": "Advise on historical precedent",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "15:00",
+      "action": "Teach original Vermilion Bird arts to worthy disciples",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "18:00",
+      "action": "Cultivation at 3rd Generation power",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 240
+    },
+    {
+      "time": "22:00",
+      "action": "Night patrol of foundation perimeter",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "01:00",
+      "action": "Rest in foundation chamber",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "v3_foundation_maintenance",
+      "name": "Foundation Array Repair",
+      "description": "The 3rd Generation Vermilion Bird Master needs obsidian and redstone to maintain the sect's ancient defense arrays.",
+      "required_items": {
+        "minecraft:obsidian": 16,
+        "minecraft:redstone": 20
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:spirit_stone": 2,
+        "experience": 45
+      }
+    },
+    {
+      "task_id": "v3_historical_research",
+      "name": "Sect Historical Records",
+      "description": "The 3rd Generation collects historical records and books to preserve the sect's early history. Trade knowledge for ancient arts.",
+      "required_items": {
+        "minecraft:book": 4,
+        "ergenverse:jade_slip": 1
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "minecraft:enchanted_book": 1,
+        "ergenverse:dao_fragment": 1,
+        "experience": 40
+      }
+    }
+  ]
 }

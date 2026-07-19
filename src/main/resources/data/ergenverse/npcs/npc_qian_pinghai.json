@@ -33,5 +33,93 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "You stand before the 13th Generation Vermilion Bird Divine Emperor. Show proper respect. This sect has endured for generations because we understand order, duty, and the weight of fire.",
+    "The Heavenly Fate Sect reads stars. The Soul Refining Sect refines souls. The Corpse Yin Sect animates corpses. We burn. It is simpler. It is older. It is more effective than any of them care to admit.",
+    "Wang Lin carries the Vermilion Bird legacy in ways he does not yet understand. I chose my successor carefully. The 14th Generation carries my teachings. Whether they carry my wisdom remains to be seen.",
+    "Blaze rods and gold. The imperial forge requires these to maintain the sect's sacred flames. Contribute, and you will be remembered in the Vermilion Bird annals."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Imperial flame meditation",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "07:00",
+      "action": "Hold morning court with sect elders",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Inspect sacred flame vaults",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Formal meal with inner disciples",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 90
+    },
+    {
+      "time": "13:30",
+      "action": "Receive reports from Vermilion Bird outposts",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "15:30",
+      "action": "Cultivation at Divine Emperor level",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 240
+    },
+    {
+      "time": "20:00",
+      "action": "Audit sect defense formations",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 120
+    },
+    {
+      "time": "22:30",
+      "action": "Rest in imperial chamber",
+      "location": "vermilion_bird_divine_sect",
+      "duration": 330
+    }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "qp_sacred_flame_materials",
+      "name": "Sacred Flame Maintenance",
+      "description": "The 13th Generation Divine Emperor needs blaze rods and gold to maintain the Vermilion Bird sect's sacred flames.",
+      "required_items": {
+        "minecraft:blaze_rod": 8,
+        "minecraft:gold_ingot": 12
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 1,
+        "ergenverse:spirit_stone": 3,
+        "minecraft:enchanted_book": 1,
+        "experience": 45
+      }
+    },
+    {
+      "task_id": "qp_outpost_intelligence",
+      "name": "Continental Intelligence Report",
+      "description": "The Divine Emperor seeks jade slips containing intelligence from other sects and regions across Planet Suzaku.",
+      "required_items": {
+        "ergenverse:jade_slip": 2,
+        "minecraft:emerald": 10
+      },
+      "rewards": {
+        "ergenverse:jade_slip": 2,
+        "ergenverse:spirit_stone": 2,
+        "minecraft:experience_bottle": 2,
+        "experience": 40
+      }
+    }
+  ]
 }
