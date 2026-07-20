@@ -101,12 +101,12 @@ tasks.register('validateCanon', Exec) {
     outputs.upToDateWhen { false }  // always re-validate; it's fast and catches regressions
 }
 
-// validateCanon runs as a check task but does NOT block compilation.
-// The known check-04 NoneType bug is tracked; fix it when possible.
-// compileJava should succeed independently so Java wiring can proceed.
-// tasks.named('compileJava') {
-//     dependsOn 'validateCanon'
-// }
+// compileJava depends on validateCanon — a canon contradiction blocks the build.
+// The check-04 NoneType crash is now fixed (canon_validator.py guards None/non-string
+// entries in index pools). Validator passes: 175 checks, 0 errors.
+tasks.named('compileJava') {
+    dependsOn 'validateCanon'
+}
 
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [

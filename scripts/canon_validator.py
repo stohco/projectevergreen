@@ -227,6 +227,8 @@ def resolves(id_val, idx, category=None):
             return True
         # diacritic-insensitive match (Miēshēng == Miesheng)
         for item in pool:
+            if not item or not isinstance(item, str):
+                continue  # skip None/non-string entries in index pools
             if strip_diacritics(item.lower()) == lv_norm:
                 return True
     return False
@@ -243,7 +245,7 @@ def prose_contains_known_entity(prose, idx):
     candidates = []
     for pool in (idx["character_names"], idx["npcs"], idx["npc_ids"], idx["factions"], idx["civilizations"]):
         for name in pool:
-            if name and len(name) > 2:  # skip tiny tokens
+            if name and isinstance(name, str) and len(name) > 2:  # skip None/non-string/tiny tokens
                 candidates.append(strip_diacritics(name.lower()))
     candidates.sort(key=len, reverse=True)
     for c in candidates:
