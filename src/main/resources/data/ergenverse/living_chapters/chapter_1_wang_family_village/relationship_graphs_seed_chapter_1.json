@@ -1,8 +1,8 @@
 {
-  "_comment": "Relationship graph seeds for Wang Family Village NPCs at game-start (Day 1). Per Article XXXIV + XXXV.3: 10 dimensions, independently variable. Only non-trivial relationships seeded; remaining pairs start at baseline (trust 30, respect 30, understanding 15, relevance 10).",
+  "_comment": "Relationship graph seeds for Wang Family Village NPCs at game-start (Day 1). Per Article XXXIV + XXXV.3 + XLI §4: 10 dimensions, independently variable. Only non-trivial relationships seeded; remaining pairs start at baseline (trust 30, respect 30, understanding 15, relevance 10).",
   "_schema": "relationship_graph_seed",
-  "_schema_version": 2,
-  "_article": "XXXIV + XXXV.3",
+  "_schema_version": 3,
+  "_article": "XXXIV + XXXV.3 + XLI §4",
   "_baseline": {
     "trust": 30,
     "respect": 30,
@@ -13,7 +13,8 @@
     "known_skills": [],
     "known_personality": [],
     "understanding": 15,
-    "relevance": 10
+    "relevance": 10,
+    "familiarity": 5
   },
   "graphs": [
     {
@@ -38,9 +39,10 @@
           "kind"
         ],
         "understanding": 60,
-        "relevance": 50
+        "relevance": 50,
+        "familiarity": 75
       },
-      "reason": "Watched Wang Ping grow up. High trust. Understanding from decades of observation."
+      "reason": "Watched Wang Ping grow up. High trust. Understanding from decades of observation. Familiarity 75 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_tianshui",
@@ -65,9 +67,10 @@
           "loyal"
         ],
         "understanding": 50,
-        "relevance": 35
+        "relevance": 35,
+        "familiarity": 80
       },
-      "reason": "Useful and reliable. Strong but not clever."
+      "reason": "Useful and reliable. Strong but not clever. Familiarity 80 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_tianshui",
@@ -93,9 +96,10 @@
           "slightly_paranoid"
         ],
         "understanding": 55,
-        "relevance": 45
+        "relevance": 45,
+        "familiarity": 72
       },
-      "reason": "Zhou Rui feeds the village. Elder owes him for the winter deer incident (debt +1)."
+      "reason": "Zhou Rui feeds the village. Elder owes him for the winter deer incident (debt +1). Familiarity 72 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_tianshui",
@@ -121,9 +125,10 @@
           "gentle"
         ],
         "understanding": 65,
-        "relevance": 55
+        "relevance": 55,
+        "familiarity": 74
       },
-      "reason": "Indispensable. Treated the elder for cultivation-related aches. High understanding from decades of collaboration."
+      "reason": "Indispensable. Treated the elder for cultivation-related aches. High understanding from decades of collaboration. Familiarity 74 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_tianshui",
@@ -147,9 +152,10 @@
           "occasionally_insightful"
         ],
         "understanding": 30,
-        "relevance": 10
+        "relevance": 10,
+        "familiarity": 70
       },
-      "reason": "Pities but does not trust. Minor grievance from disruption while drunk. Suspects Zhang Tian knows more than he lets on."
+      "reason": "Pities but does not trust. Minor grievance from disruption while drunk. Suspects Zhang Tian knows more than he lets on. Familiarity 70 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_tianshui",
@@ -172,9 +178,10 @@
           "stubborn"
         ],
         "understanding": 55,
-        "relevance": 30
+        "relevance": 30,
+        "familiarity": 70
       },
-      "reason": "Family. Loyal but limited."
+      "reason": "Family. Loyal but limited. Familiarity 70 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_tianshui",
@@ -198,9 +205,10 @@
           "knows_everyone_s_business"
         ],
         "understanding": 45,
-        "relevance": 40
+        "relevance": 40,
+        "familiarity": 74
       },
-      "reason": "Relies on her for trade. Slightly wary of her information-gathering."
+      "reason": "Relies on her for trade. Slightly wary of her information-gathering. Familiarity 74 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_tianshui",
@@ -216,9 +224,10 @@
         "known_skills": [],
         "known_personality": [],
         "understanding": 5,
-        "relevance": 8
+        "relevance": 8,
+        "familiarity": 3
       },
-      "reason": "A stranger. Politely cautious. Relevance 8 — unknown, below engagement threshold."
+      "reason": "A stranger. Politely cautious. Relevance 8 — unknown, below engagement threshold. Familiarity 3 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_wang_ping",
@@ -243,9 +252,10 @@
           "would_fight_for_me"
         ],
         "understanding": 70,
-        "relevance": 60
+        "relevance": 60,
+        "familiarity": 80
       },
-      "reason": "Best friends. Would trust with his life."
+      "reason": "Best friends. Would trust with his life. Familiarity 80 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_ping",
@@ -268,9 +278,10 @@
           "worried"
         ],
         "understanding": 55,
-        "relevance": 55
+        "relevance": 55,
+        "familiarity": 75
       },
-      "reason": "Paternal figure. Slight fear (cultivator vs mortal)."
+      "reason": "Paternal figure. Slight fear (cultivator vs mortal). Familiarity 75 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_ping",
@@ -286,9 +297,10 @@
         "known_skills": [],
         "known_personality": [],
         "understanding": 5,
-        "relevance": 5
+        "relevance": 5,
+        "familiarity": 3
       },
-      "reason": "A stranger. Young and open — will warm up quickly if kind."
+      "reason": "A stranger. Young and open — will warm up quickly if kind. Familiarity 3 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_da_niu",
@@ -312,9 +324,10 @@
           "needs_protecting"
         ],
         "understanding": 68,
-        "relevance": 65
+        "relevance": 65,
+        "familiarity": 80
       },
-      "reason": "Brothers in all but blood. Would die for Wang Ping."
+      "reason": "Brothers in all but blood. Would die for Wang Ping. Familiarity 80 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_da_niu",
@@ -332,9 +345,10 @@
         ],
         "known_personality": [],
         "understanding": 5,
-        "relevance": 95
+        "relevance": 95,
+        "familiarity": 5
       },
-      "reason": "His entire future hinges on this person. Respect 85 (cultivator). Relevance 95 (most important person right now). Trust only 30."
+      "reason": "His entire future hinges on this person. Respect 85 (cultivator). Relevance 95 (most important person right now). Trust only 30. Familiarity 5 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_zhou_rui",
@@ -356,9 +370,10 @@
           "overworked"
         ],
         "understanding": 50,
-        "relevance": 40
+        "relevance": 40,
+        "familiarity": 72
       },
-      "reason": "Respects the elder. Debt -1 (owes elder for winter deer compensation)."
+      "reason": "Respects the elder. Debt -1 (owes elder for winter deer compensation). Familiarity 72 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_zhou_rui",
@@ -374,9 +389,10 @@
         "known_skills": [],
         "known_personality": [],
         "understanding": 3,
-        "relevance": 5
+        "relevance": 5,
+        "familiarity": 3
       },
-      "reason": "Suspicious by nature. Will watch before trusting."
+      "reason": "Suspicious by nature. Will watch before trusting. Familiarity 3 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_zhang_tian",
@@ -395,9 +411,10 @@
           "everything_i_failed_to_be"
         ],
         "understanding": 30,
-        "relevance": 5
+        "relevance": 5,
+        "familiarity": 5
       },
-      "reason": "Projected relationship. Fear 75 (successful cultivator triggers trauma). Grievance 45 (sect expelled him). Understanding 30 (he used to be that person)."
+      "reason": "Projected relationship. Fear 75 (successful cultivator triggers trauma). Grievance 45 (sect expelled him). Understanding 30 (he used to be that person). Familiarity 5 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_zhang_tian",
@@ -420,9 +437,10 @@
           "too_eager"
         ],
         "understanding": 45,
-        "relevance": 15
+        "relevance": 15,
+        "familiarity": 16
       },
-      "reason": "Sees himself in Da Niu. Understanding 45 — knows what Da Niu is feeling because he felt it."
+      "reason": "Sees himself in Da Niu. Understanding 45 — knows what Da Niu is feeling because he felt it. Familiarity 16 (Art XLI §4 — beginning to recognize)."
     },
     {
       "npc_id": "npc_zhang_tian",
@@ -438,9 +456,10 @@
         "known_skills": [],
         "known_personality": [],
         "understanding": 2,
-        "relevance": 3
+        "relevance": 3,
+        "familiarity": 3
       },
-      "reason": "Does not care. Unless player asks about cultivation."
+      "reason": "Does not care. Unless player asks about cultivation. Familiarity 3 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_wang_qingyue",
@@ -462,9 +481,10 @@
           "hiding_grain_from_teng"
         ],
         "understanding": 40,
-        "relevance": 45
+        "relevance": 45,
+        "familiarity": 74
       },
-      "reason": "Works with elder on trade. Suspects he hides grain but has not confirmed."
+      "reason": "Works with elder on trade. Suspects he hides grain but has not confirmed. Familiarity 74 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_qingyue",
@@ -480,9 +500,10 @@
         "known_skills": [],
         "known_personality": [],
         "understanding": 3,
-        "relevance": 8
+        "relevance": 8,
+        "familiarity": 3
       },
-      "reason": "Assessing value as trading partner or information source."
+      "reason": "Assessing value as trading partner or information source. Familiarity 3 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_wang_tianshan",
@@ -505,9 +526,10 @@
           "my_elder"
         ],
         "understanding": 60,
-        "relevance": 50
+        "relevance": 50,
+        "familiarity": 70
       },
-      "reason": "Idolizes elder cousin. Complete loyalty."
+      "reason": "Idolizes elder cousin. Complete loyalty. Familiarity 70 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_wang_tianshan",
@@ -525,9 +547,10 @@
           "stranger_until_proven_otherwise"
         ],
         "understanding": 2,
-        "relevance": 5
+        "relevance": 5,
+        "familiarity": 3
       },
-      "reason": "Default is suspicion."
+      "reason": "Default is suspicion. Familiarity 3 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_zhou_tingsu",
@@ -550,9 +573,10 @@
           "worried"
         ],
         "understanding": 62,
-        "relevance": 50
+        "relevance": 50,
+        "familiarity": 74
       },
-      "reason": "Decades of working together. High trust and understanding."
+      "reason": "Decades of working together. High trust and understanding. Familiarity 74 (Art XLI §4 — deeply familiar)."
     },
     {
       "npc_id": "npc_zhou_tingsu",
@@ -568,9 +592,10 @@
         "known_skills": [],
         "known_personality": [],
         "understanding": 5,
-        "relevance": 8
+        "relevance": 8,
+        "familiarity": 3
       },
-      "reason": "Welcoming by nature but cautious. Will warm up quickly if player brings herbs."
+      "reason": "Welcoming by nature but cautious. Will warm up quickly if player brings herbs. Familiarity 3 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_heng_yue_recruiter",
@@ -591,9 +616,10 @@
           "cautious"
         ],
         "understanding": 10,
-        "relevance": 30
+        "relevance": 30,
+        "familiarity": 5
       },
-      "reason": "Needs elder's cooperation to test youth."
+      "reason": "Needs elder's cooperation to test youth. Familiarity 5 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_heng_yue_recruiter",
@@ -609,9 +635,10 @@
         "known_skills": [],
         "known_personality": [],
         "understanding": 2,
-        "relevance": 15
+        "relevance": 15,
+        "familiarity": 3
       },
-      "reason": "If player is a youth of right age, test them. Otherwise irrelevant."
+      "reason": "If player is a youth of right age, test them. Otherwise irrelevant. Familiarity 3 (Art XLI §4 — barely recognized)."
     },
     {
       "npc_id": "npc_wang_lin",
@@ -634,9 +661,10 @@
           "well_intentioned"
         ],
         "understanding": 45,
-        "relevance": 25
+        "relevance": 25,
+        "familiarity": 10
       },
-      "reason": "Observes from afar. Respects dedication but knows cultivation is negligible."
+      "reason": "Observes from afar. Respects dedication but knows cultivation is negligible. Familiarity 10 (Art XLI §4 — beginning to recognize)."
     },
     {
       "npc_id": "npc_wang_lin",
@@ -661,9 +689,10 @@
           "needs_protection"
         ],
         "understanding": 80,
-        "relevance": 55
+        "relevance": 55,
+        "familiarity": 16
       },
-      "reason": "Wang Lin's brother. Trust 90. Understanding 80. Relevance 55 (protect-family motivation)."
+      "reason": "Wang Lin's brother. Trust 90. Understanding 80. Relevance 55 (protect-family motivation). Familiarity 16 (Art XLI §4 — beginning to recognize)."
     },
     {
       "npc_id": "npc_wang_lin",
@@ -679,9 +708,10 @@
         "known_skills": [],
         "known_personality": [],
         "understanding": 3,
-        "relevance": 3
+        "relevance": 3,
+        "familiarity": 8
       },
-      "reason": "Early game canonical state (Article XXXIII.2). Player is irrelevant to Wang Lin's life."
+      "reason": "Early game canonical state (Article XXXIII.2). Player is irrelevant to Wang Lin's life. Familiarity 8 (Art XLI §4 — barely recognized)."
     }
   ],
   "_notes": {
