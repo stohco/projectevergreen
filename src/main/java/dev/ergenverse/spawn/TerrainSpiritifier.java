@@ -3,12 +3,15 @@ package dev.ergenverse.spawn;
 import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.core.Ergenverse;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
-import net.minecraftforge.event.level.ChunkEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -16,38 +19,36 @@ import java.util.Map;
 
 /**
  * TerrainSpiritifier — converts ALL vanilla terrain blocks to Ergenverse
- * custom blocks when a chunk loads.
+ * custom blocks near each online player, on the server tick.
+ *
+ * <p><b>CRASH-SAFE DESIGN:</b> The previous version used ChunkEvent.Load,
+ * which crashed during world generation because setBlock() during chunk
+ * load triggers recursive chunk loads. This version uses ServerTickEvent
+ * (the main server thread, safe for setBlock) and converts chunks in a
+ * radius around each player. Chunks are already loaded (the player is in
+ * them), so there is no recursion risk.
  *
  * <p>Per the user's directive: "there should be 0 vanilla minecraft blocks."
- * This handler walks every block position in each newly-loaded overworld
- * chunk and replaces vanilla terrain (grass, dirt, stone, sand, sandstone,
- * gravel, all log/leaf types, all common ores) with their spirit-world
- * equivalents.
+ *
+ * <p>Conversion strategy:
+ * <ul>
+ *   <li>Every 10 ticks (0.5 sec), for each online player, convert ONE
+ *       unconverted chunk within a 3-chunk radius of the player.</li>
+ *   <li>Prioritize the player's own chunk, then nearest neighbors.</li>
+ *   <li>A static converted-chunk set prevents re-conversion.</li>
+ *   <li>Within a chunk, iterate by section, skipping empty sections.</li>
+ * </ul>
  *
  * <p>Mapping (vanilla → custom):
  * <ul>
- *   <li>grass_block, podzol, mycelium, dirt_path, coarse_dirt, rooted_dirt, moss_block → SPIRIT_GRASS</li>
+ *   <li>grass_block, podzol, mycelium, dirt_path, coarse_dirt, rooted_dirt, moss → SPIRIT_GRASS</li>
  *   <li>dirt, farmland → SPIRIT_DIRT</li>
- *   <li>stone, cobblestone, deepslate, deepslate_cobblestone, andesite, diorite, granite, tuff, calcite, dripstone → SPIRIT_STONE_BLOCK</li>
- *   <li>sand, red_sand, gravel, Suspicious sand → SPIRIT_SAND</li>
- *   <li>sandstone, red_sandstone, cut_sandstone → SPIRIT_SANDSTONE</li>
- *   <li>all log types (oak, birch, spruce, jungle, acacia, dark_oak, cherry, mangrove) → SPIRIT_WOOD_LOG</li>
- *   <li>all leaf types → SPIRIT_WOOD_LEAVES</li>
- *   <li>coal_ore, deepslate_coal_ore → SPIRIT_STONE_BLOCK</li>
- *   <li>iron_ore, deepslate_iron_ore, raw_iron_block → SPIRIT_IRON_ORE</li>
- *   <li>gold_ore, deepslate_gold_ore, copper_ore, deepslate_copper_ore → COLD_IRON_ORE</li>
- *   <li>diamond_ore, deepslate_diamond_ore, emerald_ore, deepslate_emerald_ore → SPIRIT_STONE_ORE</li>
- *   <li>redstone_ore, deepslate_redstone_ore, lapis_ore, deepslate_lapis_ore → SPIRIT_STONE_BLOCK</li>
+ *   <li>stone, cobblestone, deepslate, cobbled_deepslate, andesite, diorite, granite, tuff, calcite, dripstone, basalt → SPIRIT_STONE_BLOCK</li>
+ *   <li>sand, red_sand, gravel → SPIRIT_SAND</li>
+ *   <li>sandstone, red_sandstone → SPIRIT_SANDSTONE</li>
+ *   <li>all logs → SPIRIT_WOOD_LOG; all leaves → SPIRIT_WOOD_LEAVES</li>
+ *   <li>iron ore → SPIRIT_IRON_ORE; gold/copper ore → COLD_IRON_ORE; diamond/emerald ore → SPIRIT_STONE_ORE</li>
  * </ul>
- *
- * <p>Kept as-is: air, water, lava, bedrock, obsidian, Nether/End blocks (we
- * only convert overworld chunks). Player-placed blocks are naturally safe
- * because they are not in the vanilla→custom map (the map only contains
- * natural terrain types).
- *
- * <p>Idempotent: re-running on an already-converted chunk is a no-op because
- * the custom blocks are not in the map. A static converted-chunk set avoids
- * the iteration cost on subsequent loads of the same chunk within a session.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17 APIs only.
  */
@@ -56,14 +57,20 @@ public final class TerrainSpiritifier {
 
     private TerrainSpiritifier() {}
 
-    /** Tracks chunks already converted this session (avoids re-iteration). */
+    /** Chunks already converted this session. Key = ChunkPos.asLong(). */
     private static final java.util.Set<Long> convertedChunks = java.util.Collections.synchronizedSet(new java.util.HashSet<>());
 
-    /** Vanilla block → custom block state mapping. Built once at class init. */
-    private static final Map<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> CONVERSION_MAP = buildMap();
+    /** Tick interval — convert every 10 ticks (0.5 sec). */
+    private static final int TICK_INTERVAL = 10;
 
-    private static Map<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> buildMap() {
-        Map<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> m = new java.util.HashMap<>();
+    /** Radius (in chunks) around the player to convert. 3 = 7x7 chunk area. */
+    private static final int CHUNK_RADIUS = 3;
+
+    /** Vanilla → custom block mapping. */
+    private static final Map<Block, Block> CONVERSION_MAP = buildMap();
+
+    private static Map<Block, Block> buildMap() {
+        Map<Block, Block> m = new java.util.HashMap<>();
         // Grass-like surfaces
         m.put(Blocks.GRASS_BLOCK, ErgenverseBlocks.SPIRIT_GRASS.get());
         m.put(Blocks.PODZOL, ErgenverseBlocks.SPIRIT_GRASS.get());
@@ -88,7 +95,6 @@ public final class TerrainSpiritifier {
         m.put(Blocks.DRIPSTONE_BLOCK, ErgenverseBlocks.SPIRIT_STONE_BLOCK.get());
         m.put(Blocks.BASALT, ErgenverseBlocks.SPIRIT_STONE_BLOCK.get());
         m.put(Blocks.SMOOTH_BASALT, ErgenverseBlocks.SPIRIT_STONE_BLOCK.get());
-        m.put(Blocks.BEDROCK, null); // keep — never convert bedrock
         // Sand
         m.put(Blocks.SAND, ErgenverseBlocks.SPIRIT_SAND.get());
         m.put(Blocks.RED_SAND, ErgenverseBlocks.SPIRIT_SAND.get());
@@ -103,7 +109,7 @@ public final class TerrainSpiritifier {
         m.put(Blocks.CHISELED_SANDSTONE, ErgenverseBlocks.SPIRIT_SANDSTONE.get());
         m.put(Blocks.SMOOTH_SANDSTONE, ErgenverseBlocks.SPIRIT_SANDSTONE.get());
         m.put(Blocks.SMOOTH_RED_SANDSTONE, ErgenverseBlocks.SPIRIT_SANDSTONE.get());
-        // Logs — all vanilla tree types
+        // Logs
         m.put(Blocks.OAK_LOG, ErgenverseBlocks.SPIRIT_WOOD_LOG.get());
         m.put(Blocks.BIRCH_LOG, ErgenverseBlocks.SPIRIT_WOOD_LOG.get());
         m.put(Blocks.SPRUCE_LOG, ErgenverseBlocks.SPIRIT_WOOD_LOG.get());
@@ -149,7 +155,7 @@ public final class TerrainSpiritifier {
         m.put(Blocks.DEEPSLATE_REDSTONE_ORE, ErgenverseBlocks.SPIRIT_STONE_BLOCK.get());
         m.put(Blocks.LAPIS_ORE, ErgenverseBlocks.SPIRIT_STONE_BLOCK.get());
         m.put(Blocks.DEEPSLATE_LAPIS_ORE, ErgenverseBlocks.SPIRIT_STONE_BLOCK.get());
-        // Clay, snow, ice
+        // Clay, mud
         m.put(Blocks.CLAY, ErgenverseBlocks.SPIRIT_DIRT.get());
         m.put(Blocks.PACKED_MUD, ErgenverseBlocks.SPIRIT_STONE_BLOCK.get());
         m.put(Blocks.MUD_BRICKS, ErgenverseBlocks.SPIRIT_STONE_BLOCK.get());
@@ -157,20 +163,54 @@ public final class TerrainSpiritifier {
     }
 
     @SubscribeEvent
-    public static void onChunkLoad(ChunkEvent.Load event) {
-        // Only convert overworld chunks.
-        if (!(event.getLevel() instanceof Level level)) return;
-        if (level.dimension() != Level.OVERWORLD) return;
-        if (!(event.getChunk() instanceof LevelChunk chunk)) return;
-        // Only process on the server side.
-        if (level.isClientSide()) return;
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
 
-        long chunkKey = net.minecraft.world.level.ChunkPos.asLong(chunk.getPos().x, chunk.getPos().z);
-        if (convertedChunks.contains(chunkKey)) return;
+        // Throttle: only run every TICK_INTERVAL ticks.
+        long ticks = event.getServer().overworld().getGameTime();
+        if (ticks % TICK_INTERVAL != 0) return;
 
-        int converted = 0;
+        // For each online player, convert the nearest unconverted chunk
+        // within CHUNK_RADIUS of the player.
+        for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
+            if (player.level().dimension() != Level.OVERWORLD) continue;
+            ServerLevel level = (ServerLevel) player.level();
+            int playerChunkX = player.chunkPosition().x;
+            int playerChunkZ = player.chunkPosition().z;
+
+            // Spiral outward from the player's chunk to find the nearest
+            // unconverted chunk within CHUNK_RADIUS.
+            chunkFound:
+            for (int r = 0; r <= CHUNK_RADIUS; r++) {
+                for (int dx = -r; dx <= r; dx++) {
+                    for (int dz = -r; dz <= r; dz++) {
+                        if (Math.max(Math.abs(dx), Math.abs(dz)) != r) continue; // ring only
+                        int cx = playerChunkX + dx;
+                        int cz = playerChunkZ + dz;
+                        long key = net.minecraft.world.level.ChunkPos.asLong(cx, cz);
+                        if (convertedChunks.contains(key)) continue;
+
+                        // Convert this chunk.
+                        convertChunk(level, cx, cz);
+                        convertedChunks.add(key);
+                        break chunkFound; // one chunk per player per tick
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Convert all vanilla terrain blocks in a single chunk to spirit variants.
+     */
+    private static void convertChunk(ServerLevel level, int chunkX, int chunkZ) {
+        // Ensure the chunk is loaded.
+        LevelChunk chunk = level.getChunk(chunkX, chunkZ);
+        if (chunk == null) return;
+
         int minSection = chunk.getMinSection();
         LevelChunkSection[] sections = chunk.getSections();
+        int converted = 0;
 
         for (int i = 0; i < sections.length; i++) {
             LevelChunkSection section = sections[i];
@@ -182,27 +222,24 @@ public final class TerrainSpiritifier {
                 for (int y = 0; y < 16; y++) {
                     for (int z = 0; z < 16; z++) {
                         BlockState state = section.getBlockState(x, y, z);
-                        net.minecraft.world.level.block.Block target = CONVERSION_MAP.get(state.getBlock());
-                        if (target == null) continue; // not a convertible block
-                        // null in the map means "keep" (e.g. bedrock)
-                        // (handled by the `continue` above since get() returns null for unmapped)
+                        Block target = CONVERSION_MAP.get(state.getBlock());
+                        if (target == null) continue;
                         BlockPos pos = new BlockPos(
                                 chunk.getPos().getMinBlockX() + x,
                                 baseY + y,
                                 chunk.getPos().getMinBlockZ() + z);
                         BlockState newState = target.defaultBlockState();
-                        // Flag 2 = UPDATE_CLIENTS (sync to client, no neighbor cascade)
-                        level.setBlock(pos, newState, net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+                        // Flag 2 = UPDATE_CLIENTS (sync, no neighbor cascade)
+                        level.setBlock(pos, newState, Block.UPDATE_CLIENTS);
                         converted++;
                     }
                 }
             }
         }
 
-        convertedChunks.add(chunkKey);
         if (converted > 0) {
             Ergenverse.LOGGER.debug("[Ergenverse] Spiritified chunk ({}, {}): {} blocks converted.",
-                    chunk.getPos().x, chunk.getPos().z, converted);
+                    chunkX, chunkZ, converted);
         }
     }
 

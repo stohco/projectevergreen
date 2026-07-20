@@ -51,15 +51,17 @@ public final class VanillaEntitySuppressor {
         if (entity instanceof Player) return;
 
         // Only cancel LIVING vanilla entities (mobs, animals, monsters).
-        // This leaves item frames, paintings, boats, minecarts, experience
-        // orbs, falling blocks, etc. intact.
         if (!(entity instanceof LivingEntity)) return;
+
+        // Skip if the entity is being loaded from storage (persistent data)
+        // rather than freshly spawned — cancelling loaded entities can
+        // corrupt saves. Only cancel freshly-spawned entities.
+        if (event.loadedFromDisk()) return;
 
         ResourceLocation typeId = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
         if (typeId == null) return;
 
         // Only cancel entities from the "minecraft" namespace.
-        // Mod entities (ergenverse:*) are allowed.
         if (!"minecraft".equals(typeId.getNamespace())) return;
 
         // Cancel the join — the entity is removed before it enters the world.
