@@ -75,6 +75,9 @@ public final class WangLinItems {
     /** Whether the manifest has been loaded and items registered. */
     private static boolean registered = false;
 
+    /** Tracks which registry names have already been registered, to skip duplicates. */
+    private static final java.util.Set<String> REGISTERED_NAMES = new java.util.HashSet<>();
+
     /**
      * Manifest bare-id -> canonical registry entry id.
      *
@@ -479,6 +482,15 @@ public final class WangLinItems {
     private static void registerArsenalItem(ManifestEntry me) {
         String registryName = me.registryName();
         String manifestCanonId = me.canonId();
+
+        // Skip duplicate entries — the manifest has 6 duplicate registry names.
+        // Without this check, DeferredRegister.register() throws IllegalArgumentException
+        // on the 2nd occurrence, aborting the loop and leaving all subsequent items unregistered.
+        if (!REGISTERED_NAMES.add(registryName)) {
+            Ergenverse.LOGGER.warn("[WangLin] Skipping duplicate arsenal item: {}", registryName);
+            return;
+        }
+
         // Look up the actual canonical registry entry id from the manifest->registry map.
         // If no confident match, leave canonId null (tooltip enrichment silently skipped).
         String registryCanonId = MANIFEST_TO_REGISTRY.get(registryName);

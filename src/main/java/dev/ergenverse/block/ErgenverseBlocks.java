@@ -331,18 +331,12 @@ public final class ErgenverseBlocks {
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
-        // Register formation platform block entity
-        dev.ergenverse.block.entity.FormationPlatformBlockEntity.TYPE =
-                net.minecraftforge.registries.DeferredRegister.create(net.minecraft.core.registries.Registries.BLOCK_ENTITY_TYPE, dev.ergenverse.core.Ergenverse.MOD_ID)
-                .register("formation_platform", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
-                        .of(dev.ergenverse.block.entity.FormationPlatformBlockEntity::new, FORMATION_PLATFORM.get())
-                        .build(null));
-        // Register talisman desk block entity
-        dev.ergenverse.block.entity.TalismanDeskBlockEntity.TYPE =
-                net.minecraftforge.registries.DeferredRegister.create(net.minecraft.core.registries.Registries.BLOCK_ENTITY_TYPE, dev.ergenverse.core.Ergenverse.MOD_ID)
-                .register("talisman_desk", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
-                        .of(dev.ergenverse.block.entity.TalismanDeskBlockEntity::new, TALISMAN_DESK.get())
-                        .build(null));
+        // NOTE: FormationPlatformBlockEntity.TYPE and TalismanDeskBlockEntity.TYPE
+        // are already registered via BLOCK_ENTITIES above (FORMATION_PLATFORM_ENTITY
+        // at line 326 with name "formation_platform_craft", and TALISMAN_DESK_ENTITY
+        // at line 285 with name "talisman_desk_craft"). The previous inline
+        // DeferredRegister.create() calls here were NEVER wired to the modEventBus,
+        // so those RegistryObjects would never resolve. Removed to avoid confusion.
         BLOCK_ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
         ERGENVERSE_BLOCKS_TAB = CREATIVE_TABS.register("ergenverse_blocks", () ->
