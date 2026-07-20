@@ -212,6 +212,10 @@ public final class Ergenverse {
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.LocationLayersCommand.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.EcologyCommand.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ActorCommand.class);
+        // ── Spawn system: village builder + tutorial book + diagnostic command.
+        //    The SpawnEventHandler is @Mod.EventBusSubscriber (auto-registered),
+        //    but the command needs explicit registration on the FORGE bus.
+        MinecraftForge.EVENT_BUS.register(dev.ergenverse.spawn.ErgenverseCommand.class);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ErgenConfig.SPEC);
         LOGGER.info("[Ergenverse] The world has existed for ten thousand years before you arrived.");

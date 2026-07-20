@@ -47,6 +47,9 @@ public final class SpawnEventHandler {
         ServerLevel level = sp.server.overworld();
         boolean firstJoin = !sp.getPersistentData().getBoolean(NBT_TUTORIAL_GIVEN);
 
+        Ergenverse.LOGGER.info("[Ergenverse] PlayerLoggedInEvent fired for {} (firstJoin={})",
+                sp.getName().getString(), firstJoin);
+
         if (!firstJoin) return; // returning player — nothing to do here
 
         // Mark the tutorial as given immediately so a re-login during the
@@ -57,10 +60,15 @@ public final class SpawnEventHandler {
         //    has fully loaded into the world before we move them.
         sp.server.tell(new TickTask(sp.server.getTickCount() + 40, () -> {
             try {
+                Ergenverse.LOGGER.info("[Ergenverse] First-spawn task executing for {}.",
+                        sp.getName().getString());
+
                 // 1. Build the village if not yet built (world-scoped).
                 if (!WangFamilyVillageBuilder.isAlreadyBuilt(level)) {
-                    Ergenverse.LOGGER.info("[Ergenverse] First player join — building Wang Family Village.");
+                    Ergenverse.LOGGER.info("[Ergenverse] First player join — building Wang Family Village at spawn.");
                     WangFamilyVillageBuilder.build(level);
+                } else {
+                    Ergenverse.LOGGER.info("[Ergenverse] Village already built — skipping build.");
                 }
 
                 // 2. Teleport the player to a clear spot on the plaza (3
@@ -73,12 +81,17 @@ public final class SpawnEventHandler {
                         0.0F, 180.0F);
                 // Ensure the chunk stays loaded so the player doesn't fall through.
                 level.getChunkAt(center);
+                Ergenverse.LOGGER.info("[Ergenverse] Teleported {} to village plaza at ({}, {}, {}).",
+                        sp.getName().getString(), landing.getX(), center.getY() + 1, landing.getZ());
 
                 // 3. Give the tutorial book.
                 ItemStack book = TutorialBookFactory.create();
                 if (!sp.getInventory().add(book)) {
                     // inventory full — drop at feet
                     sp.drop(book, false);
+                    Ergenverse.LOGGER.info("[Ergenverse] Inventory full — dropped tutorial book at feet.");
+                } else {
+                    Ergenverse.LOGGER.info("[Ergenverse] Tutorial book added to inventory.");
                 }
 
                 // 4. Welcome messages.
@@ -95,6 +108,13 @@ public final class SpawnEventHandler {
                 sp.sendSystemMessage(Component.literal("")
                         .append(Component.literal("The Wang Family Village surrounds you. The spirit vein glows at the plaza center.")
                                 .withStyle(ChatFormatting.YELLOW)));
+                sp.sendSystemMessage(Component.literal("")
+                        .append(Component.literal("Tip: type ")
+                                .withStyle(ChatFormatting.DARK_GRAY))
+                        .append(Component.literal("/ergenverse status")
+                                .withStyle(ChatFormatting.AQUA))
+                        .append(Component.literal(" to check mod status.")
+                                .withStyle(ChatFormatting.DARK_GRAY)));
             } catch (Exception e) {
                 Ergenverse.LOGGER.error("[Ergenverse] Failed to set up first-spawn for {}: {}",
                         sp.getName().getString(), e.getMessage(), e);
