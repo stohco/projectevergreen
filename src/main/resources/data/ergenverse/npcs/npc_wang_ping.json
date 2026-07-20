@@ -139,14 +139,50 @@
   ],
   "desires": [
     {
+      "id": "firewood_winter_worry",
+      "what": "Ask someone to help gather firewood before winter",
+      "target": "any_family_member",
+      "why": "Per Wang Ping's initiation_lines and sect_tasks: 'Winter will be hard this year. Father says we need more firewood.' This is survival for a mortal family, not a quest.",
+      "social_engine": "request",
+      "urgency": 0.55,
+      "cooldown_ticks": 36000,
+      "source": "EXPLICIT: Derived from Wang Ping's sect_tasks 'chop_firewood' and initiation_lines. The firewood worry is canonical village life.",
+      "line": "The woodpile is low again. If you are heading to the eastern woods, bring back oak logs. I will help you split them and we can share the coal.",
+      "mode": "line"
+    },
+    {
+      "id": "complain_teng_tax",
+      "what": "Vent frustration about the Teng family's latest tax collection",
+      "target": "any_family_member",
+      "why": "Per Wang Ping's initiation_lines: 'Father has been quiet lately. The Teng family's tax collectors came again yesterday. We gave them half our rice.' The eldest son internalizes the family's burden.",
+      "social_engine": "rumor",
+      "urgency": 0.5,
+      "cooldown_ticks": 24000,
+      "source": "EXPLICIT: Wang Ping's own initiation_lines reference the Teng tax. His personality_traits show loyalty: 0.95 — he would be angry on his family's behalf.",
+      "line": "They took half our rice again. Father did not say a word at dinner. He just stared at the table. I hate them.",
+      "mode": "line"
+    },
+    {
+      "id": "invite_fishing_trip",
+      "what": "Invite someone to fish at the south bend with Da Niu",
+      "target": "any_family_member",
+      "why": "Per Wang Ping's initiation_lines and sect_tasks 'fishing_south_bend': 'Da Niu and I were going to fish at the south bend.' Fishing is a normal village activity. The south bend is also where wolf attacks happen (living_events), making it simultaneously normal and dangerous.",
+      "social_engine": "offer",
+      "urgency": 0.35,
+      "cooldown_ticks": 48000,
+      "source": "EXPLICIT: Wang Ping's initiation_lines: 'Da Niu wants to go fishing at the south bend.' His sect_tasks offer fishing.",
+      "line": "Da Niu and I are heading to the south bend to fish. Come with us — we could use the extra food, and it is safer in numbers.",
+      "mode": "approach"
+    },
+    {
       "id": "follow_older_brother",
       "what": "Follow Wang Lin to the hills to watch him practice",
-      "target": "npc_wang_lin_manifestation",
-      "why": "Wang Ping is the youngest and curious. He idolizes his older brother.",
+      "target": "player",
+      "why": "Wang Ping is the youngest and curious. He idolizes his older brother. If the player is known to be heading toward the hills, he asks to come along.",
       "social_engine": "request",
       "urgency": 0.35,
       "cooldown_ticks": 48000,
-      "source": "INFERRED: RI Ch.1. Wang Ping is the youngest brother. Younger siblings follow older ones. No specific canon line, but universally human.",
+      "source": "INFERRED: RI Ch.1. Wang Ping is the youngest brother. Younger siblings follow older ones.",
       "line": "Wait for me! I want to come too!",
       "mode": "approach"
     }

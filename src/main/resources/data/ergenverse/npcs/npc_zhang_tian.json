@@ -31,6 +31,32 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
+  "desires": [
+    {
+      "id": "comment_on_candidates",
+      "what": "Mutters about the low quality of this year's candidates",
+      "target": "npc_heng_yue_recruiter",
+      "why": "Zhang Tian is a higher-realm elder overseeing the recruitment drive. He has seen thousands of candidates. Per his personality: 'weary from years of recruitment.' He would comment to the lower recruiter.",
+      "social_engine": "rumor",
+      "urgency": 0.5,
+      "cooldown_ticks": 30000,
+      "source": "INFERRED: Zhang Tian's personality says 'impassive, dutiful, slightly weary.' An elder overseeing recruitment would comment to subordinates.",
+      "line": "Three villages so far. One candidate with potential. The rest are farmers who will forget they ever saw a testing stone.",
+      "mode": "line"
+    },
+    {
+      "id": "warn_northern_restrictions",
+      "what": "Warn anyone near the village about the ancient restriction arrays to the north",
+      "target": "nearby_cultivator",
+      "why": "Per Zhang Tian's initiation_lines: 'The restriction arrays along the northern border are ancient. Do not test them.' He is a Foundation Establishment elder who knows the dangers. This is him acting on his duty to warn.",
+      "social_engine": "teaching",
+      "urgency": 0.55,
+      "cooldown_ticks": 60000,
+      "source": "EXPLICIT: Zhang Tian's own initiation_lines mention the northern restriction arrays and warn about them.",
+      "line": "The restriction arrays along the northern border are ancient. Do not test them. They will not warn you twice.",
+      "mode": "line"
+    }
+  ],
   "_xianxia_schema": 1,
   "initiation_lines": [
     "I have seen thousands of candidates pass through Heng Yue's gates. Few have what it takes to endure.",

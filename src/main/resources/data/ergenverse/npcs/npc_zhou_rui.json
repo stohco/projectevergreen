@@ -95,6 +95,44 @@
       "dist": 0
     }
   ],
+  "desires": [
+    {
+      "id": "complain_teng_tax_burden",
+      "what": "Complain about the Teng family taking half the harvest again",
+      "target": "any_family_member",
+      "why": "The Teng family's tax has been crushing the village for years. Zhou Rui feels the weight of it every autumn. Per RI Ch.1-3: the Teng family oppresses the Wang family and by extension the whole village.",
+      "social_engine": "rumor",
+      "urgency": 0.55,
+      "cooldown_ticks": 36000,
+      "source": "INFERRED: RI Ch.1-3 Teng oppression is canonical. Zhou Rui as a village neighbor would share the burden.",
+      "line": "The Teng collectors came at dawn. Half our wheat, gone. If next autumn is the same, I do not know how my family eats.",
+      "mode": "line"
+    },
+    {
+      "id": "offer_mending_supplies",
+      "what": "Offer spare thread and needles to anyone who needs mending",
+      "target": "any_family_member",
+      "why": "Zhou Rui has spare supplies and a generous nature. Per her initiation_lines, she explicitly offers these. This is how village mutual aid works — no quest, just a neighbor helping.",
+      "social_engine": "offer",
+      "urgency": 0.35,
+      "cooldown_ticks": 48000,
+      "source": "INFERRED: Derived from npc_zhou_rui initiation_lines. Village mutual aid is universal mortal behavior.",
+      "line": "I have some spare thread and needles. If anyone needs mending done, send word to my house.",
+      "mode": "line"
+    },
+    {
+      "id": "gossip_about_stranger",
+      "what": "Share rumors about a stranger seen near the village hills",
+      "target": "any_family_member",
+      "why": "A wanderer near the village is unusual and noteworthy. Per RI Ch.1, the wandering cultivator's arrival precedes the Heng Yue recruiter. Villagers would talk about it.",
+      "social_engine": "rumor",
+      "urgency": 0.45,
+      "cooldown_ticks": 24000,
+      "source": "INFERRED: RI Ch.1 — the wandering cultivator's visit is a key plot event. Villagers would gossip about strangers.",
+      "line": "Did anyone else see that man in strange robes near the eastern hills yesterday? He was not from the Teng lands. He stood there a long time, watching the village.",
+      "mode": "line"
+    }
+  ],
   "sect_tasks": [
     {
       "id": "harvest_help",

@@ -54,6 +54,44 @@
     "issue_outer_disciple_token": true,
     "depart_after_ceremony": true
   },
+  "desires": [
+    {
+      "id": "summon_children_for_test",
+      "what": "Order someone to gather village children for the aptitude test",
+      "target": "any_family_member",
+      "why": "The recruiter has a duty to test every eligible child. Per his NPC description and sect_tasks, he actively gathers children. This is not a quest — it is a cultivator issuing an order to mortals who must obey.",
+      "social_engine": "request",
+      "urgency": 0.7,
+      "cooldown_ticks": 12000,
+      "source": "EXPLICIT: Derived from npc_heng_yue_recruiter sect_tasks 'gather_village_children'. The recruiter needs every child tested.",
+      "line": "I need every child between twelve and sixteen brought to the village square. The test will not wait. Tell the Wang, Zhou, and Zhang families.",
+      "mode": "line"
+    },
+    {
+      "id": "dismiss_no_talent",
+      "what": "Curtly dismiss someone who failed the aptitude test or is too young",
+      "target": "any_family_member",
+      "why": "Most mortals have no spiritual root. The recruiter has seen this hundreds of times. He is indifferent (per personality) — not cruel, but not encouraging either. This is how the world works: most people cannot cultivate.",
+      "social_engine": "rumor",
+      "urgency": 0.4,
+      "cooldown_ticks": 18000,
+      "source": "INFERRED: RI Ch.1 — the aptitude test is a pivotal moment. The recruiter's indifference is canonical. He does not give hope where there is none.",
+      "line": "No spiritual root. You will live a mortal life. That is not a curse — it is the natural state of most people. Go home.",
+      "mode": "line"
+    },
+    {
+      "id": "ask_elder_about_youth",
+      "what": "Ask the village elder which children are of testing age this year",
+      "target": "npc_wang_tianshui",
+      "why": "A dutiful recruiter checks with the local authority before testing. This is NPC→NPC initiation. The recruiter needs to know how many candidates to expect.",
+      "social_engine": "request",
+      "urgency": 0.6,
+      "cooldown_ticks": 24000,
+      "source": "INFERRED: A sect recruiter would coordinate with village leadership. This is standard operational behavior.",
+      "line": "How many children between twelve and sixteen in the village this year? I need names before I begin testing.",
+      "mode": "approach"
+    }
+  ],
   "_xianxia_schema": 1,
   "daily_schedule": [
     {
