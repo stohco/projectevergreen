@@ -87,7 +87,8 @@ public final class Ergenverse {
     public static final String MOD_ID = "ergenverse";
     public static final Logger LOGGER = LoggerFactory.getLogger("Ergenverse");
 
-    public Ergenverse(IEventBus modEventBus) {
+    public Ergenverse() {
+        IEventBus modEventBus = net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus();
         LOGGER.info("[Ergenverse] Booting the Living Mortal World...");
         LOGGER.info("[Ergenverse] Prime Directive: {}", WorldPhilosophy.PRIME_DIRECTIVE);
 
