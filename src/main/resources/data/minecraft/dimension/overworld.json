@@ -1,0 +1,167 @@
+{
+  "_comment": "OVERRIDE of vanilla minecraft:overworld dimension. Forces the overworld to generate using ergenverse:suzaku noise_settings (spirit stone/grass/dirt/sand terrain) and ergenverse biomes (Zhao, Chu, Fire Burn, etc.). This is the bulletproof path: the player spawns into the overworld, which IS the spirit-block world. No teleport dependency, no dimension-load failure mode. The vanilla overworld dimension type (minecraft:overworld) is retained so that spawn/respawn/weather/skylight all behave normally.",
+  "type": "minecraft:overworld",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "ergenverse:zhao_plains",
+          "parameters": {
+            "temperature": [-0.2, 0.5, 0.0, 0.0],
+            "continents": [0.1, 0.7, 0.0, 0.0],
+            "erosion": [-0.1, 0.6, 0.0, 0.0],
+            "depth": [-0.6, 0.2, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:zhao_mountains",
+          "parameters": {
+            "temperature": [-0.3, 0.4, 0.0, 0.0],
+            "continents": [0.1, 0.7, 0.0, 0.0],
+            "erosion": [-0.7, -0.1, 0.0, 0.0],
+            "depth": [0.2, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:chu_country",
+          "parameters": {
+            "temperature": [0.0, 0.5, 0.0, 0.0],
+            "continents": [0.6, 1.0, 0.0, 0.0],
+            "erosion": [-0.4, 0.4, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:vermilion_bird_country",
+          "parameters": {
+            "temperature": [0.1, 0.6, 0.0, 0.0],
+            "continents": [0.4, 1.0, 0.0, 0.0],
+            "erosion": [-0.5, 0.5, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:pilu_kingdom",
+          "parameters": {
+            "temperature": [0.3, 0.9, 0.0, 0.0],
+            "continents": [-0.7, -0.1, 0.0, 0.0],
+            "erosion": [-0.5, 0.3, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:fire_burn_country",
+          "parameters": {
+            "temperature": [0.6, 1.0, 0.0, 0.0],
+            "continents": [-0.2, 0.5, 0.0, 0.0],
+            "erosion": [-0.6, 0.2, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:snow_domain_country",
+          "parameters": {
+            "temperature": [-1.0, -0.6, 0.0, 0.0],
+            "continents": [-0.2, 0.8, 0.0, 0.0],
+            "erosion": [-0.5, 0.5, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:xuan_wu_country",
+          "parameters": {
+            "temperature": [-0.6, -0.2, 0.0, 0.0],
+            "continents": [-0.5, 0.3, 0.0, 0.0],
+            "erosion": [-0.5, 0.5, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:sky_demon_country",
+          "parameters": {
+            "temperature": [0.4, 0.9, 0.0, 0.0],
+            "continents": [0.5, 1.0, 0.0, 0.0],
+            "erosion": [-0.7, -0.1, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:fire_demon_country",
+          "parameters": {
+            "temperature": [0.7, 1.0, 0.0, 0.0],
+            "continents": [0.5, 1.0, 0.0, 0.0],
+            "erosion": [-0.7, -0.1, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.6,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:sea_of_devils",
+          "parameters": {
+            "temperature": [0.2, 1.0, 0.0, 0.0],
+            "continents": [-1.0, 0.0, 0.0, 0.0],
+            "erosion": [-0.5, 0.5, 0.0, 0.0],
+            "depth": [-1.0, -0.2, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:forest_of_distorted_sense",
+          "parameters": {
+            "temperature": [-0.1, 0.3, 0.0, 0.0],
+            "continents": [0.2, 0.6, 0.0, 0.0],
+            "erosion": [0.3, 0.9, 0.0, 0.0],
+            "depth": [-0.3, 0.4, 0.0, 0.0],
+            "weirdness": 0.6,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:jue_ming_valley",
+          "parameters": {
+            "temperature": [-0.3, 0.3, 0.0, 0.0],
+            "continents": [0.0, 0.5, 0.0, 0.0],
+            "erosion": [0.6, 1.0, 0.0, 0.0],
+            "depth": [-0.8, -0.2, 0.0, 0.0],
+            "weirdness": -0.7,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:qing_shui_ruin",
+          "parameters": {
+            "temperature": [-0.4, 0.0, 0.0, 0.0],
+            "continents": [-0.6, -0.1, 0.0, 0.0],
+            "erosion": [0.3, 1.0, 0.0, 0.0],
+            "depth": [-1.0, 1.0, 0.0, 0.0],
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        }
+      ]
+    },
+    "settings": "ergenverse:suzaku"
+  }
+}
