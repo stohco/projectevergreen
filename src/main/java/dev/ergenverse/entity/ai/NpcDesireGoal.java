@@ -39,10 +39,18 @@ import java.util.UUID;
  * <h2>Target resolution</h2>
  * <ul>
  *   <li>"player" — nearest ServerPlayer</li>
- *   <li>"any_family_member" — nearest ServerPlayer (the player is part of the village)</li>
+ *   <li>"any_family_member" — nearest EntityCultivator first, then player
+ *       (Art V: the family exists without the player)</li>
  *   <li>"nearby_cultivator" — nearest EntityCultivator</li>
- *   <li>Other/unrecognized — falls back to nearest player</li>
+ *   <li>"npc_X" — specific NPC by character ID (no fallback)</li>
+ *   <li>Other/unrecognized — null (desire does not fire)</li>
  * </ul>
+ *
+ * <h2>Article V compliance</h2>
+ * <p>NPC→NPC desires fire without any player present. The Recruiter
+ * asks the elder about candidates. Wang Zhou asks his father about
+ * the test. Wang Yiyi helps her mother. These happen because the
+ * NPCs want them to, not because a player triggered them.</p>
  *
  * <h2>Article XXVI compliance</h2>
  * <p>NO new Engine/Subscriber/Bus. This is a single Minecraft Goal class
@@ -166,9 +174,6 @@ public class NpcDesireGoal extends Goal {
             target = resolved;
             return true;
         }
-
-        // For "approach" mode: target must be in detection range
-        if (resolved.distanceTo(cultivator) > APPROACH_DETECT_RANGE) return false;
 
         // For "approach" mode: target must be in detection range
         if (resolved.distanceTo(cultivator) > APPROACH_DETECT_RANGE) return false;
@@ -302,33 +307,59 @@ public class NpcDesireGoal extends Goal {
                 target.getX(), target.getY(), target.getZ(), APPROACH_SPEED);
     }
 
-    /** Deliver the desire's spoken line to the target. */
+    /**
+     * Deliver the desire's spoken line to the target.
+     * Player targets receive it directly. NPC targets broadcast to
+     * nearby players (the world happens around you — Art XXXI).
+     */
     private void deliverLine() {
         if (activeDesire == null || target == null) return;
 
         String line = activeDesire.line();
         String displayName = cultivator.getDisplayNameCn();
         String prefix = "\u00A77<" + displayName + "> "; // gray NPC name
+        String fullMessage = prefix + line + "\u00A7r";
 
         if (target instanceof ServerPlayer player) {
-            // Player target: send as action bar message (same channel as
-            // NpcInitiationGoal and NpcDialogueTickHandler)
-            player.sendSystemMessage(
-                    Component.literal(prefix + line + "\u00A7r"), true);
+            // Player target: send as action bar message
+            player.sendSystemMessage(Component.literal(fullMessage), true);
+        } else {
+            // NPC→NPC desire: broadcast to nearby players so they can
+            // OBSERVE the world happening (Art XXXI, Art XL §3).
+            // The player sees: "<Wang Zhou> Father, will the sect elder really come?"
+            // No quest marker. Just the world being alive.
+            broadcastToNearbyPlayers(fullMessage, OBSERVE_RANGE);
         }
-        // NPC targets: future cycle can add NPC→NPC dialogue bubble
-        // or overhead display. For now, log it so the NPC→NPC chain
-        // is architecturally ready even if not yet player-visible.
 
         deliveredTick = cultivator.level().getGameTime();
 
+        String targetName = target instanceof ServerPlayer p
+                ? p.getName().getString()
+                : (target instanceof EntityCultivator ec ? ec.getCharacterId() : target.getUUID().toString());
         Ergenverse.LOGGER.info("[NpcDesire] {} -> {} [{}]: \"{}\"",
-                cultivator.getCharacterId(),
-                target instanceof ServerPlayer p ? p.getName().getString() : target.getUUID(),
+                cultivator.getCharacterId(), targetName,
                 activeDesire.socialEngine(), line);
 
         // Stop navigation after delivery — the NPC stays and looks
         cultivator.getNavigation().stop();
+    }
+
+    /** Range at which players can observe NPC→NPC desire dialogue. */
+    private static final double OBSERVE_RANGE = 16.0;
+
+    /**
+     * Broadcast a message to all players within OBSERVE_RANGE of this NPC.
+     * This lets players OBSERVE NPC→NPC desires without being the target.
+     * Art XXXI: the world happens around you. Art XL §3: observable experience.
+     */
+    private void broadcastToNearbyPlayers(String message, double range) {
+        if (!(cultivator.level() instanceof ServerLevel serverLevel)) return;
+        List<ServerPlayer> nearby = serverLevel.getEntitiesOfClass(
+                ServerPlayer.class,
+                cultivator.getBoundingBox().inflate(range));
+        for (ServerPlayer p : nearby) {
+            p.sendSystemMessage(Component.literal(message), true);
+        }
     }
 
     // ════════════════════════════════════════════════════════════════════════════════
@@ -337,25 +368,35 @@ public class NpcDesireGoal extends Goal {
 
     /**
      * Resolve a desire's target string to a LivingEntity.
+     * Per Article V: the world works without the player.
      * Per Article XLI: generic, not character-specific.
+     *
+     * <p>Resolution order for each target type:</p>
+     * <ul>
+     *   <li>"player" — nearest player within DETECT range</li>
+     *   <li>"any_family_member" — nearest EntityCultivator, then player
+     *       (family exists without the player)</li>
+     *   <li>"nearby_cultivator" — nearest EntityCultivator</li>
+     *   <li>"npc_X" — specific NPC by character ID (null if absent)</li>
+     * </ul>
      */
     private LivingEntity resolveTarget(String targetStr, long now) {
         if (targetStr == null || targetStr.isEmpty()) {
-            return findNearestPlayer();
+            return findNearestEntity();
         }
 
         return switch (targetStr) {
             case "player" -> findNearestPlayer();
-            case "any_family_member" -> findNearestPlayer(); // player is part of the village
+            case "any_family_member" -> findNearestEntity();
             case "nearby_cultivator" -> findNearestCultivator();
             default -> {
-                // "npc_X" pattern: find specific NPC
+                // "npc_X" pattern: find specific NPC — NO fallback to player.
+                // If the specific target isn't nearby, the desire waits.
                 if (targetStr.startsWith("npc_")) {
-                    LivingEntity specific = findSpecificNpc(targetStr);
-                    yield specific != null ? specific : findNearestPlayer();
+                    yield findSpecificNpc(targetStr);
                 }
-                // Fallback: try nearest player
-                yield findNearestPlayer();
+                // Unrecognized target: desire does not fire.
+                yield null;
             }
         };
     }
@@ -364,7 +405,7 @@ public class NpcDesireGoal extends Goal {
     private ServerPlayer findNearestPlayer() {
         List<ServerPlayer> players = cultivator.level().getEntitiesOfClass(
                 ServerPlayer.class,
-                cultivator.getBoundingBox().inflate(LINE_RANGE));
+                cultivator.getBoundingBox().inflate(APPROACH_DETECT_RANGE));
         if (players.isEmpty()) return null;
         // Return the closest player
         ServerPlayer nearest = null;
@@ -377,6 +418,20 @@ public class NpcDesireGoal extends Goal {
             }
         }
         return nearest;
+    }
+
+    /**
+     * Find the nearest living entity — NPC first, then player.
+     * Art V: the family exists without the player. An NPC's desire to
+     * talk to "any family member" should find another NPC, not require
+     * a player to be present.
+     */
+    private LivingEntity findNearestEntity() {
+        // Try NPC first (Art V: world works without player)
+        EntityCultivator npc = findNearestCultivator();
+        if (npc != null) return npc;
+        // Fall back to player
+        return findNearestPlayer();
     }
 
     /** Find the nearest EntityCultivator (for NPC→NPC desires). */

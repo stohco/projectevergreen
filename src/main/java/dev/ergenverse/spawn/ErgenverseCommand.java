@@ -62,8 +62,10 @@ public final class ErgenverseCommand {
                 .executes(ctx -> desireList(ctx.getSource())))
             .then(Commands.literal("desire_fire")
                 .executes(ctx -> desireFire(ctx.getSource())))
+            .then(Commands.literal("desire_targets")
+                .executes(ctx -> desireTargets(ctx.getSource())))
         );
-        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset|geography|desire_list|desire_fire).");
+        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset|geography|desire_list|desire_fire|desire_targets).");
     }
 
     /** /ergenverse status — print mod load + village + player state. */
@@ -294,9 +296,10 @@ public final class ErgenverseCommand {
      * 10-second settle timer so the player sees the desire system work
      * IMMEDIATELY. This is the Five Minute Rule demonstration.
      *
-     * <p>What the player sees: the NPC's desire line appears in chat, exactly
-     * as NpcDesireGoal.deliverLine() would produce it. Proves the full
-     * pipeline: JSON → ActorEntityLink → DesireState → observable text.</p>
+     * <p>Now includes NPC→NPC desires: if the best desire targets an NPC,
+     * the player sees it as an overheard conversation (same as
+     * NpcDesireGoal.broadcastToNearbyPlayers). This proves Art V:
+     * the world fires desires at each other, not just at the player.</p>
      */
     private static int desireFire(CommandSourceStack src) {
         ServerPlayer player = src.getPlayer();
@@ -352,18 +355,123 @@ public final class ErgenverseCommand {
         final String firedName = bestName;
         final String firedEngine = bestDesire.socialEngine();
         final String firedId = bestDesire.id();
+        final String firedTarget = bestDesire.target();
         final double firedUrgency = bestDesire.urgency();
         String prefix = "\u00A77<" + firedName + "> "; // gray NPC name
+
+        // Show target info — proves Art V (NPC→NPC or NPC→Player)
+        boolean isNpcTarget = firedTarget != null && !firedTarget.equals("player");
+        String targetLabel = isNpcTarget
+                ? ("NPC target: \u00A7b" + firedTarget + "\u00A7r (you overhear this)")
+                : "\u00A7aTarget: you\u00A7r";
+
         player.sendSystemMessage(
                 net.minecraft.network.chat.Component.literal(prefix + line + "\u00A7r"), true);
-
         src.sendSuccess(() -> Component.literal("[DESIRE FIRED] " + firedName + " ["
                 + firedEngine + "] " + firedId
                 + " (urgency=" + String.format("%.2f", firedUrgency) + ")")
                 .withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD), false);
+        src.sendSuccess(() -> Component.literal(targetLabel), false);
 
-        Ergenverse.LOGGER.info("[DesireFire] {} -> player [{}]: \"{}\"",
-                bestNpc.getCharacterId(), firedEngine, line);
+        Ergenverse.LOGGER.info("[DesireFire] {} -> {} [{}]: \"{}\"",
+                bestNpc.getCharacterId(), firedTarget != null ? firedTarget : "player",
+                firedEngine, line);
+
+        return 1;
+    }
+
+    /**
+     * /ergenverse desire_targets — Art V verification. Shows what each
+     * nearby NPC's desires would resolve to. Proves that NPC→NPC desires
+     * exist and would fire without a player.
+     *
+     * <p>For each NPC, shows its desires with target type classification:</p>
+     * <ul>
+     *   <li>\u00A7aPLAYER\u00A7r — targets player only</li>
+     *   <li>\u00A7bFAMILY\u00A7r — targets any_family_member (NPC→NPC preferred)</li>
+     *   <li>\u00A7eCULTIVATOR\u00A7r — targets nearby_cultivator (NPC→NPC)</li>
+     *   <li>\u00A75SPECIFIC\u00A7r — targets a specific NPC by ID</li>
+     * </ul>
+     */
+    private static int desireTargets(CommandSourceStack src) {
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            src.sendFailure(Component.literal("Run as a player."));
+            return 0;
+        }
+
+        var cultivators = player.level().getEntitiesOfClass(
+                dev.ergenverse.entity.EntityCultivator.class,
+                player.getBoundingBox().inflate(32));
+
+        if (cultivators.isEmpty()) {
+            src.sendFailure(Component.literal("No EntityCultivators within 32 blocks."));
+            return 0;
+        }
+
+        src.sendSuccess(() -> Component.literal("=== Desire Target Resolution (Art V) ===")
+                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
+        src.sendSuccess(() -> Component.literal("Green=player-only  Blue=NPC-preferring  Yellow=cultivator  Purple=specific NPC")
+                .withStyle(ChatFormatting.GRAY), false);
+
+        long now = player.level().getGameTime();
+        int npcTargetDesires = 0;
+        int playerTargetDesires = 0;
+
+        for (dev.ergenverse.entity.EntityCultivator npc : cultivators) {
+            String actorId = dev.ergenverse.simulation.intent.ActorEntityLink.getActorId(npc.getUUID());
+            if (actorId == null) continue;
+            dev.ergenverse.simulation.actor.Actor actor =
+                    dev.ergenverse.simulation.actor.ActorRegistry.get(actorId);
+            if (actor == null) continue;
+            if (actor.cognition.desires.isEmpty()) continue;
+
+            String name = npc.getDisplayNameCn();
+            src.sendSuccess(() -> Component.literal("--- " + name + " (" + npc.getCharacterId() + ") ---")
+                    .withStyle(ChatFormatting.WHITE), false);
+
+            for (dev.ergenverse.simulation.cognition.DesireState d : actor.cognition.desires) {
+                String t = d.target();
+                String targetClass;
+                if (t == null || t.isEmpty()) {
+                    targetClass = "\u00A7bFAMILY\u00A7r";
+                    npcTargetDesires++;
+                } else if (t.equals("player")) {
+                    targetClass = "\u00A7aPLAYER\u00A7r";
+                    playerTargetDesires++;
+                } else if (t.equals("any_family_member")) {
+                    targetClass = "\u00A7bFAMILY\u00A7r";
+                    npcTargetDesires++;
+                } else if (t.equals("nearby_cultivator")) {
+                    targetClass = "\u00A7eCULTIVATOR\u00A7r";
+                    npcTargetDesires++;
+                } else if (t.startsWith("npc_")) {
+                    targetClass = "\u00A75SPECIFIC(" + t + ")\u00A7r";
+                    npcTargetDesires++;
+                } else {
+                    targetClass = "\u00A77" + t + "\u00A7r";
+                    playerTargetDesires++;
+                }
+                boolean active = d.isActive(now);
+                String status = active ? "\u00A7aACT\u00A7r" : "\u00A78dorm\u00A7r";
+                src.sendSuccess(() -> Component.literal(
+                        "  " + status + " " + d.id()
+                        + " [" + targetClass + "]"
+                        + " u=" + String.format("%.2f", d.urgency())), false);
+            }
+        }
+
+        src.sendSuccess(() -> Component.literal("") , false);
+        final int fnpc = npcTargetDesires;
+        final int fplayer = playerTargetDesires;
+        src.sendSuccess(() -> Component.literal("Art V: " + fnpc + " desires target NPCs, "
+                + fplayer + " target player-only")
+                .withStyle(fnpc > fplayer
+                        ? ChatFormatting.GREEN : ChatFormatting.YELLOW), false);
+        if (fnpc > fplayer) {
+            src.sendSuccess(() -> Component.literal("The majority of desires work without a player.")
+                    .withStyle(ChatFormatting.GREEN), false);
+        }
 
         return 1;
     }
