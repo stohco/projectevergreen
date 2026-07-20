@@ -1,0 +1,19 @@
+{
+  "minecraft": {
+    "version": "1.20.1",
+    "modLoaders": [
+      {
+        "id": "forge-47.4.0",
+        "primary": true
+      }
+    ]
+  },
+  "manifestType": "minecraftModpack",
+  "manifestVersion": 1,
+  "name": "Ergenverse",
+  "version": "0.1.0-alpha",
+  "author": "stohco",
+  "projectID": -1,
+  "overrides": "overrides",
+  "files": []
+}

@@ -1,0 +1,48 @@
+{
+  "name": "Ergenverse",
+  "customAuthor": "stohco",
+  "version": "0.1.0-alpha",
+  "addons": [
+    {
+      "name": "Minecraft Forge",
+      "version": "47.4.0",
+      "modLoaders": [
+        {
+          "id": "forge-47.4.0",
+          "primary": true
+        }
+      ]
+    }
+  ],
+  "targets": [
+    {
+      "name": "minecraft",
+      "version": "1.20.1"
+    },
+    {
+      "name": "forge",
+      "version": "47.4.0"
+    }
+  ],
+  "javaArguments": {
+    "version": "17"
+  },
+  "installedMods": [],
+  "isVanilla": false,
+  "profileImageInfo": {
+    "url": "",
+    "unsplashDownloadLocation": null
+  },
+  "gameVersion": "1.20.1",
+  "latestVersion": "0.1.0-alpha",
+  "lastLaunched": "",
+  "lastUpdated": "",
+  "totalPlayTime": 0,
+  "installPath": "Ergenverse",
+  "modpackSource": {
+    "name": "Ergenverse",
+    "projectID": -1,
+    "fileID": -1,
+    "type": "local"
+  }
+}

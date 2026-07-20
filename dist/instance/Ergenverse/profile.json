@@ -1,0 +1,33 @@
+{
+  "profile": {
+    "name": "Ergenverse",
+    "gameVersion": "1.20.1",
+    "modloader": {
+      "type": "Forge",
+      "version": "47.4.0",
+      "minecraftVersion": "1.20.1"
+    },
+    "javaVersion": 17,
+    "icon": "",
+    "created": "2026-07-20T01:55:00Z",
+    "lastUsed": "",
+    "playTime": 0,
+    "description": "Renegade Immortal (仙逆) — Forge mod. Alpha 0.1.0.",
+    "author": "stohco",
+    "version": "0.1.0-alpha"
+  },
+  "files": [
+    {
+      "path": "minecraft/mods/ergenverse-0.1.0-alpha.jar",
+      "type": "mod",
+      "name": "Ergenverse",
+      "version": "0.1.0-alpha",
+      "source": "local"
+    }
+  ],
+  "requirements": {
+    "minecraft": "1.20.1",
+    "forge": "47.4.0",
+    "java": "17"
+  }
+}
