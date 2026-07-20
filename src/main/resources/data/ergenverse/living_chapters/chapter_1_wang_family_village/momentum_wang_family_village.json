@@ -1,388 +1,246 @@
 {
-  "_schema": "momentum_registry_chapter_1",
+  "_comment": "Momentum trajectories for Wang Family Village (Art XXXIX). Each trajectory defines: current state, rate of change, drivers, thresholds, consequences. The world is mid-sentence when the player arrives. These trajectories advance every simulation tick regardless of player presence (Art V). When Java wires this data into the WorldStateEngine or ActorTickLoop, the world gains Evolution (Gold-Standard dim 10) and passes the Momentum Test (Art XXXIX.5: 3+ systems visibly mid-trajectory at player arrival).",
+  "_schema": "momentum",
   "_schema_version": 1,
-  "_description": "The Chapter 1 momentum registry — the flat list of all live trajectories the MomentumAdvancer ticks every simulation tick. This file is what the World Compiler would produce from wang_family_village.blueprint.json (see worldgen/blueprint/v2/compiled_world_state/momentum_registry.schema.json). The simulation NEVER queries the blueprint at runtime. It ticks THIS file. Each entry carries its schema_ref so the advancer knows how to advance it (GDC-L1-SYS-0004: feedback loop polarity). Per Art XXXIX, these trajectories were in motion before the player existed and would continue if the player never existed. Per Art XL, every trajectory listed here must produce at least one SPEC status Living Moment (see living_moments_ledger.json) within three cycles — or it is architecture before experience.",
-  "_article": "XXXIX (Reality Has Momentum) + XL (Prove The Experience Before The Architecture)",
-  "_source_blueprint": "ergenverse:worldgen/blueprint/v2/wang_family_village.blueprint.json",
-  "_gdc_ref": "GDC-L1-SYS-0004 (feedback loop polarity — each trajectory is a named feedback loop: positive/reinforcing or negative/balancing, with drivers, thresholds, and interruptibility)",
-  "chapter": "chapter_1_wang_family_village",
-  "tick_zero_note": "The simulation_seed determines initial variance: which herb is ripest, which rumor has spread furthest, whether the patriarch is closer or farther from breakthrough, exactly where the wolf pack's territory edge sits. The STAGE is fixed (canon_seed). The ACTORS are mid-motion at varying points (simulation_seed).",
-
+  "_article": "XXXIX",
+  "_location": "wang_family_village",
+  "_design_notes": {
+    "no_player_dependency": "All drivers advance independently. The player may observe consequences but does not cause them.",
+    "observable_at_arrival": "When the player enters zhao_plains, all three trajectories are at mid-point. The player sees the effects (NPC dialogue about declining harvests, wolf tracks closer to village, Teng servants demanding more) without any script firing.",
+    "threshold_consequences": "When a threshold is crossed, the consequence changes the world state permanently. This is not reset. Crossing 'wolf_attack' threshold spawns wolves that kill the dog. The dog stays dead. This is the Memory Metric (Art XXXI.5).",
+    "consumption_by_existing_systems": "Java should read this file from WorldStateDataLoader (existing) or a new lightweight reader. The trajectories feed into: (1) NPC desire urgency modulation (spirit vein decline raises Wang Tianshan's warn desires), (2) VillageBeastActivity intensity scaling (wolf pressure increases event frequency), (3) NPC dialogue topic injection (Teng pressure generates rumor desires). No new Engine required (Art XXVI)."
+  },
   "trajectories": [
     {
-      "trajectory_id": "T001_spirit_vein_thinning",
-      "entity_id": "spirit_vein_wang_village",
-      "system": "spirit_vein",
-      "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/spirit_vein_momentum.schema.json",
-      "loop_polarity": "negative_balancing",
-      "loop_description": "Extraction exceeds recharge. The vein is slowly draining. A formation could restore it; none exists. This is a slowly-spiraling negative loop — the weaker the vein, the fewer herbs, the less to trade, the more the village declines, the more cultivators leave, the more extraction concentrates on fewer people... until the village cannot sustain cultivation at all.",
+      "trajectory_id": "spirit_vein_decline",
+      "name": "Wang Family Village Spirit Vein Thinning",
+      "description": "The village sits on a minor spirit vein that has been degrading for decades. This is the root cause of the village's decline: poorer harvests, weaker villagers, less resistance to the Teng family. In canon, the village's poverty is the backdrop to Wang Lin's entire early life. The elder knows but cannot fix it. A cultivator might — but none will waste effort on a dying vein in a mortal village. EXPLICIT: village poverty is central to RI Ch.1-3.",
+      "canon_fidelity": "EXPLICIT — Wang Family Village is poor. The spirit vein's decline explains why. Elder Wang Tianshui's worry about the family's future is rooted in this ecological reality, not abstract concern.",
       "current_state": {
-        "qi_density": 0.41,
-        "integrity": 0.58,
-        "extraction_load": 0.38,
-        "fluctuation_phase": 0.34,
-        "fluctuation_period_ticks": 24000
-      },
-      "rate_of_change": {
-        "qi_density_per_tick": -0.00018,
-        "natural_recharge": 0.00012,
-        "extraction_drain": 0.00030
-      },
-      "drivers": [
-        "village cultivation draws 0.00030/tick",
-        "no recharge formation in place",
-        "seasonal oscillation +/-0.04 over 24000 ticks"
-      ],
-      "thresholds": [
-        {"id": "depletion", "threshold": 0.30, "current": 0.58, "eta_ticks_if_unchanged": 460000, "consequence": "cultivation becomes impractical; village enters terminal decline"},
-        {"id": "surge", "next_window_eta": 8000, "consequence": "a cultivator could harvest at elevated qi"},
-        {"id": "over_extraction", "threshold": 0.85, "current": 0.38, "consequence": "accelerated degradation"}
-      ],
-      "perceivable_without_notification": "Shrine spirit lamp flickers weakly. Cultivators meditate longer for less gain. Common spirit herbs are scarce within a day's foraging. Old villagers remark the qi used to be thicker.",
-      "perceivable_at_arrival": true,
-      "compiled_into": ["spirit_graph", "settlement_graph", "herb_momentum"],
-      "cascades_to": ["T009_village_decline", "T006_herb_maturation", "T010_wang_lin_study"],
-      "living_moment_spec": "LM001_flickering_shrine_lamp"
-    },
-
-    {
-      "trajectory_id": "T002_wolf_territorial_expansion",
-      "entity_id": "north_wolf_pack",
-      "system": "wolf_pack",
-      "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/wolf_pack_momentum.schema.json",
-      "loop_polarity": "positive_reinforcing",
-      "loop_description": "Prey density is falling. The pack expands territory to compensate. Expansion depletes prey further in the new zone. The pack grows bolder, pushes closer to the village. Livestock pressure rises. This is a positive reinforcing loop that, unchecked, ends in a raid or a cull — the canonical Memory Metric driver (Art XXXI.5).",
-      "current_state": {
-        "headcount": 9,
-        "prey_density": 0.28,
-        "aggression_class": "bold",
-        "livestock_pressure": 0.34,
-        "distance_to_settlement_blocks": 240,
-        "seasonal_modifier": "autumn_trending_winter"
-      },
-      "rate_of_change": {
-        "territory_size_per_tick": 0.0000020,
-        "prey_density_per_tick": -0.0000040,
-        "distance_to_settlement_per_tick": -0.00018,
-        "aggression_per_tick": 0.0000015
-      },
-      "drivers": [
-        "prey_density 0.28, declining — over-hunted the north forest",
-        "autumn trending winter — seasonal pressure rising",
-        "livestock_pressure 0.34 — two goats taken this season (memory_ledger event at tick -6000)",
-        "distance 240 blocks and closing (was 600 last season)"
-      ],
-      "thresholds": [
-        {"id": "livestock_raiding", "crossed": true, "crossed_at_tick": 38000},
-        {"id": "pet_or_villager_attack", "threshold": null, "eta_ticks_if_unchanged": 12000, "consequence": "Old Chen's dog dies. The canonical Memory Metric event (Art XXXI.5). NOT scripted — emerges from this trajectory crossing its threshold."},
-        {"id": "territory_expansion_into_settlement", "eta_ticks_if_unchanged": 24000, "consequence": "village enters fear trajectory; patrols may be organized"}
-      ],
-      "perceivable_without_notification": "Howls closer than last moon. Old Chen's gate has no dog. Goat skeleton in the south pasture. Tracks at the village edge in snow. A child tells a story about a goat that died — with the details wrong (seven wolves, not five).",
-      "perceivable_at_arrival": true,
-      "compiled_into": ["settlement_graph", "memory_ledger", "rumor_momentum"],
-      "cascades_to": ["T009_village_decline", "T008_rumor_recruiter_visit"],
-      "living_moment_spec": "LM002_child_retells_wolf_story"
-    },
-
-    {
-      "trajectory_id": "T003_bridge_failure_approach",
-      "entity_id": "zhao_river",
-      "system": "river_erosion",
-      "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/river_erosion_momentum.schema.json",
-      "loop_polarity": "negative_balancing",
-      "loop_description": "The south bank was deforested two generations ago. Erosion concentrated there. The bridge abutment is cracking. When it fails, trade drops, the village's decline steepens, and the village has even fewer resources to repair it — a negative spiral. This is the canonical history-vs-momentum example (Art XXXIX.1): the bridge collapse is history; the village dying because trade never recovered is momentum.",
-      "current_state": {
-        "course_class": "shifting",
-        "bank_erosion_rate": 0.04,
-        "flood_risk_class": "high",
-        "bridge_integrity": 0.38,
-        "bridge_failure_eta_ticks": 6000
-      },
-      "rate_of_change": {
-        "chokepoint_integrity_per_tick": -0.0000060,
-        "bank_erosion_per_tick": 0.0000020
-      },
-      "drivers": [
-        "south bank deforested two generations ago — erosion concentrated",
-        "autumn rains raising flow_force — flood risk high (1.6x seasonal multiplier)",
-        "no repair action taken — the village cannot agree on the cost"
-      ],
-      "thresholds": [
-        {"id": "chokepoint_failure", "target": "zhao_river_bridge", "threshold": 0.20, "current": 0.38, "eta_ticks_if_unchanged": 6000, "consequence": "bridge collapses. Caravans detour. Trade visits drop. Village decline steepens. IRREVERSIBLE without rebuild."},
-        {"id": "spirit_mineral_bloom", "current": true, "site": "west_bend", "consequence": "cultivator can forage spirit minerals from riverbed"}
-      ],
-      "perceivable_without_notification": "Bridge south abutment cracked through, moss in the fissures. The river gives underfoot when crossing. Old marker post stands in water now. At the west bend, something glitters in the shallows. Innkeeper says the bridge has needed repair for two years.",
-      "perceivable_at_arrival": true,
-      "compiled_into": ["hydrology_graph", "travel_graph", "settlement_graph", "economy_momentum"],
-      "cascades_to": ["T009_village_decline", "T005_caravan_arrival"],
-      "living_moment_spec": "LM003_bridge_gives_underfoot"
-    },
-
-    {
-      "trajectory_id": "T005_caravan_approach",
-      "entity_id": "heng_yue_recruiter_caravan",
-      "system": "caravan",
-      "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/caravan_momentum.schema.json",
-      "loop_polarity": "neutral_transit",
-      "loop_description": "The recruiter is already en route when the player arrives. This is not a loop — it is a one-shot transit with a terminus (arrival at the village). But it feeds multiple other loops: the village's hope/fear for their children, the rumor's confirmation/disproof, the economy's supply event. The transit itself is perceivable (tracks, merchant's mention) before the recruiter arrives.",
-      "current_state": {
-        "position_along_route": 0.62,
-        "current_segment": "seg_crossroads_to_pass",
-        "supplies_remaining": 0.81,
-        "morale": 0.70,
-        "threat_exposure": 0.18,
-        "eta_ticks": 9000,
-        "direction": "outbound"
-      },
-      "rate_of_change": {
-        "position_per_tick": 0.000068,
-        "supplies_per_tick": -0.0000035
-      },
-      "drivers": [
-        "Heng Yue recruitment_status = active (the sect needs disciples)",
-        "route: seg_crossroads_to_pass, 1400 blocks, 9000 ticks ETA",
-        "supplies adequate, morale good, threat low"
-      ],
-      "thresholds": [
-        {"id": "arrival", "eta_ticks": 9000, "consequence": "recruiter arrives; tests children for spirit roots; may recruit one (canon event). Economy supply event. Rumor confirmed. Village hope/fear peaks."},
-        {"id": "ambush", "risk": "low on current segment; rises on seg_wang_to_crossroads if bandit_group_south enters raid_blitz"}
-      ],
-      "perceivable_without_notification": "Fresh footprints on the road from Zhao crossroads, heading toward the village. A merchant mentions a young man in Heng Yue robes heading northeast. The village head says 'perhaps within the month' — but the tracks suggest sooner.",
-      "perceivable_at_arrival": true,
-      "compiled_into": ["travel_graph", "economy_momentum", "rumor_momentum"],
-      "cascades_to": ["T008_rumor_recruiter_visit", "T009_village_decline"],
-      "living_moment_spec": "LM004_tracks_on_the_road"
-    },
-
-    {
-      "trajectory_id": "T006_herb_maturation",
-      "entity_id": "crimson_root_patch_west",
-      "system": "herb",
-      "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/herb_momentum.schema.json",
-      "loop_polarity": "neutral_growth",
-      "loop_description": "The crimson root patch is growing toward peak maturity. Wang Lin has already half-harvested it. The patch sits over a node of the spirit vein — its growth rate depends on qi_density. This is the resource tension: Wang Lin needs the herbs for his restriction study, the patch is days from peak, and the vein is thinning (which will slow future growth). A cultivator who finds it faces a choice: take now (weak), wait (risk losing it), guard it (reveal presence).",
-      "current_state": {
-        "species_id": "ergenverse:crimson_root",
-        "plant_count": 12,
-        "ripeness": 0.62,
-        "potency": 0.55,
-        "maturation_eta_ticks": 8000,
-        "decay_eta_ticks": 16000,
-        "mutation_state": "stable"
-      },
-      "rate_of_change": {
-        "ripeness_per_tick": 0.0000048,
-        "potency_per_tick": 0.0000040
-      },
-      "drivers": [
-        "spirit_vein_wang_village qi_density 0.41 — adequate (patch is over a vein node)",
-        "autumn — growth moderate",
-        "last harvested 6000 ticks ago by npc_wang_lin (took 4 of 16 — the half-harvested cue)"
-      ],
-      "thresholds": [
-        {"id": "peak_maturity", "eta_ticks": 8000, "consequence": "max potency; if unharvested, decay countdown begins"},
-        {"id": "depletion", "plant_count": 12, "sustainability_floor": 4, "consequence": "if over-harvested, patch dies"}
-      ],
-      "perceivable_without_notification": "A cluster of crimson root in the west wood, half-picked — four stalks cut cleanly, eight still growing, the cut marks less than three days old. Someone was here and will return. The roots are budding but not yet flowered — a cultivator knows they are days from peak.",
-      "perceivable_at_arrival": true,
-      "compiled_into": ["settlement_graph", "economy_momentum", "spirit_graph"],
-      "cascades_to": ["T010_wang_lin_study"],
-      "living_moment_spec": "LM005_half_harvested_patch"
-    },
-
-    {
-      "trajectory_id": "T007_bandit_desperation",
-      "entity_id": "bandit_group_south",
-      "system": "bandit",
-      "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/bandit_momentum.schema.json",
-      "loop_polarity": "positive_reinforcing",
-      "loop_description": "Supplies are falling. Desperation is rising. When desperation crosses 0.7, the bandits enter raid_blitz — multiple rapid attacks on the southern road. This endangers caravans (including the recruiter), raises trade costs, and may trigger a patrol response from Heng Yue. It is a positive reinforcing loop: raids deplete supplies of the raided, raising regional scarcity, making more targets desperate, creating more bandits. The current trajectory is approaching the blitz threshold.",
-      "current_state": {
-        "headcount": 14,
-        "supplies": 0.31,
-        "desperation": 0.68,
-        "raid_cadence_ticks": 9000,
-        "last_raid_tick": 4000,
-        "morale": 0.55
-      },
-      "rate_of_change": {
-        "supplies_per_tick": -0.0000028,
-        "desperation_per_tick": 0.0000020
-      },
-      "drivers": [
-        "supplies 0.31 and falling — consuming faster than raids replenish",
-        "desperation 0.68, approaching raid_blitz threshold (0.7)",
-        "south hills picked clean — no forage income",
-        "last raid 4000 ticks ago — a caravan on the southern road; perceivable as a burnt wagon"
-      ],
-      "thresholds": [
-        {"id": "raid_blitz", "threshold": 0.70, "current": 0.68, "eta_ticks_if_unchanged": 10000, "consequence": "southern road becomes actively dangerous; multiple caravans hit; recruiter at risk"},
-        {"id": "starvation_crisis", "threshold": 0.15, "eta_ticks_if_unchanged": 57000, "consequence": "bandits disperse or die"}
-      ],
-      "perceivable_without_notification": "A burnt wagon on the southern road, the cargo scattered and picked over, less than a week old. The innkeeper warns travelers not to go south after dark. Smoke rises from the south hills in the evening — a campfire, but whose? A merchant at the crossroads mentions two caravans were hit this season where there used to be none.",
-      "perceivable_at_arrival": true,
-      "compiled_into": ["travel_graph", "economy_momentum", "influence_map"],
-      "cascades_to": ["T005_caravan_approach", "T009_village_decline"],
-      "living_moment_spec": "LM006_burnt_wagon_on_the_road"
-    },
-
-    {
-      "trajectory_id": "T008_rumor_recruiter_visit",
-      "entity_id": "rumor_heng_yue_recruiter_visit",
-      "system": "rumor",
-      "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/rumor_momentum.schema.json",
-      "loop_polarity": "neutral_decay",
-      "loop_description": "The rumor that Heng Yue is sending a recruiter is two weeks old. It has spread to two neighboring settlements and already forked (east hamlet thinks next month, zhao_market thinks testing for a specific spirit root). Belief is slowly decaying. If the recruiter arrives within the decay window, the rumor is confirmed and transforms into a remembered fact (memory_ledger entry). If not, it fades. The rumor demonstrates that information in this world has its own momentum — it spreads, distorts, decays, and is remembered or forgotten independently of the player.",
-      "current_state": {
-        "belief_intensity": 0.72,
-        "disagreement_level": 0.42,
-        "distortion_rate_per_retelling": 0.04,
-        "decay_rate_per_tick": 0.0000020,
-        "spread_vector": [
-          {"settlement": "wang_family_village", "belief": 0.78, "distortion": 0.05, "first_heard_tick": 42000},
-          {"settlement": "east_hamlet", "belief": 0.61, "distortion": 0.18, "first_heard_tick": 46000},
-          {"settlement": "zhao_market", "belief": 0.44, "distortion": 0.22, "first_heard_tick": 50000}
+        "qi_density": 0.35,
+        "qi_density_max": 0.7,
+        "decay_rate_per_day": 0.0003,
+        "fluctuation_period_days": 14,
+        "fluctuation_amplitude": 0.02,
+        "days_elapsed_since_measurement": 3650,
+        "thresholds": [
+          {
+            "id": "crop_failure",
+            "qi_below": 0.25,
+            "consequence": "village harvest yield drops 40%. Wang Tianshui's spirit_vein_warning desire urgency increases to 0.8. NPC dialogue shifts to 'the crops are failing again.' Memory: crop_failure_year_N.",
+            "fired": false,
+            "times_fired": 0
+          },
+          {
+            "id": "vein_collapse",
+            "qi_below": 0.10,
+            "consequence": "The vein collapses. No more spiritual energy. The village becomes completely mortal. EcosystemManager flora population drops to 0. This is irreversible without external intervention (a formation expert). Permanently changes the Ecology dimension. Memory: spirit_vein_collapsed.",
+            "fired": false,
+            "times_fired": 0
+          }
         ]
       },
-      "rate_of_change": {
-        "belief_intensity_per_tick": -0.0000020,
-        "spread_per_tick": 0.0000010,
-        "distortion_per_tick": 0.0000004
-      },
       "drivers": [
-        "origin: a villager saw recruiter robes at the crossroads two weeks ago",
-        "spread: peddler to zhao_market, farmer to east_hamlet",
-        "distortion: east hamlet thinks next month; zhao market thinks testing for specific root"
+        {
+          "name": "natural_decay",
+          "description": "The vein is old. Natural qi dissipation exceeds natural recharge. This is the primary driver.",
+          "delta_per_day": -0.0003
+        },
+        {
+          "name": "cultivator_drain",
+          "description": "NPC cultivators (Daoist Water, Qing Shui) draw qi for their own cultivation. Minor but cumulative.",
+          "delta_per_day": -0.0001,
+          "condition": "nearby_cultivator_count > 0"
+        },
+        {
+          "name": "formation_stabilization",
+          "description": "If a player or NPC repairs the village shrine's formation fragment, the decay rate halves. This is a concrete player action with lasting consequence.",
+          "delta_per_day": 0.00015,
+          "condition": "world_state:shrine_formation_repaired=true"
+        }
       ],
-      "thresholds": [
-        {"id": "confirmed", "eta_ticks": 9000, "consequence": "recruiter arrives; belief spikes; rumor transforms to memory_ledger fact"},
-        {"id": "distortion_fork", "threshold": 0.60, "current": 0.42, "consequence": "rumor splits into incompatible versions"}
+      "observable_effects": [
+        "Wang Tianshui's 'spirit_vein_warning' desire urgency scales with vein decline: 0.60 at current 0.35, 0.80 at crop_failure threshold.",
+        "Wang Tianshan's 'village_decline' rumor desire activates when qi < 0.30.",
+        "EcosystemManager flora population coefficient scales linearly with qi_density/0.7.",
+        "PerceptionTier >= qi_condensation: player can see qi fluctuation colors in the village well.",
+        "NPCs with memory access may say 'The well doesn't sparkle like it used to.' (memory-driven dialogue, 076)."
       ],
-      "perceivable_without_notification": "Two villagers at the well disagree about whether the recruiter comes this month or next. A merchant from the east hamlet adds that the sect is looking for a specific spirit root (it isn't — that's distortion). A child says 'my cousin says maybe, but grandmother says not this year.' The rumor has age, detail, and disagreement.",
-      "perceivable_at_arrival": true,
-      "compiled_into": ["belief_registry", "motivation_state"],
-      "cascades_to": ["T009_village_decline"],
-      "living_moment_spec": "LM007_villagers_disagree_at_the_well"
+      "momentum_test_role": "VISIBLE AT ARRIVAL. The player enters the village and hears NPCs mention poor harvests (desire system) and sees the spirit vein effects if they have cultivation perception. No script needed — the desire system and memory system already reference the vein."
     },
-
     {
-      "trajectory_id": "T009_village_decline",
-      "entity_id": "wang_family_village",
-      "system": "settlement_decline",
-      "schema_ref": "derived from settlement_graph viability queries (implicit momentum)",
-      "loop_polarity": "negative_balancing",
-      "loop_description": "The village is slowly dying. Not catastrophically — quietly. Two families have left in the last generation. The spirit-rooted young are taken by Heng Yue and do not return. The vein is thinning. The bridge is failing. The wolves are closing. Trade is dropping. Each driver reinforces the others: fewer people means less capacity to repair the bridge, which means less trade, which means fewer resources, which means more people leave. This is the master negative loop of Chapter 1 — the stage the player arrives into.",
+      "trajectory_id": "wolf_pressure_escalation",
+      "name": "Wolf Pack Pressure on Wang Family Village",
+      "description": "Spirit wolves from the surrounding hills have been encroaching on village territory for years. As their natural prey (spirit rabbits) decline (linked to spirit vein thinning), they push closer to the village. This creates the canonical danger backdrop: Da Niu spots tracks (his desire), Wang Qingyue warns children (her desire), the dog may die defending the village. INFERRED: wolves are mentioned throughout RI Ch.1-5 as a constant background threat in the Zhao Country wilderness.",
+      "canon_fidelity": "INFERRED — RI Ch.1-5 establishes the wilderness around Zhao Country as dangerous. Wang Lin encounters beasts repeatedly. The wolf threat to the village is a reasonable inference from the ecology. Da Niu's 'wolf_sighting' desire (081) is directly canon-grounded.",
       "current_state": {
-        "population_trend": "declining (-2 families over 20 years)",
-        "spirit_root_births_per_decade": 1.2,
-        "trade_visits_per_year": 8,
-        "village_morale": 0.42
-      },
-      "rate_of_change": {
-        "description": "slow, compounding — each sub-trajectory's threshold crossing steepens the decline"
+        "pressure_level": 0.4,
+        "pressure_max": 1.0,
+        "escalation_rate_per_day": 0.001,
+        "linked_to": "spirit_vein_decline",
+        "link_mechanism": "pressure_escalation += 0.0005 * (1 - spirit_vein.qi_density / spirit_vein.qi_density_max). As prey declines, wolves push closer.",
+        "thresholds": [
+          {
+            "id": "tracks_near_village",
+            "pressure_above": 0.5,
+            "consequence": "Wolf tracks appear within 32 blocks of village center. Da Niu's 'wolf_sighting' desire activates. VillageBeastActivity event frequency increases by 50%. NPCs with memory access mention 'strange tracks near the fields.' Memory: wolves_near_village.",
+            "fired": false,
+            "times_fired": 0
+          },
+          {
+            "id": "wolf_attack_south_bend",
+            "pressure_above": 0.7,
+            "consequence": "A wolf pack attacks the south bend. If the hunting dog is there, it fights and may die (50% chance). This is the canonical Art XXXI.5 Memory Metric event: Old Chen's dog dies. Triggers memory chain: grief → retelling → 'Used to have one.' Memory: dog_died_wolf_attack.",
+            "fired": false,
+            "times_fired": 0
+          },
+          {
+            "id": "village_siege",
+            "pressure_above": 0.95,
+            "consequence": "Wolves are brazen enough to enter the village at night. NPC safety desires spike. Wang Tianshui considers requesting Heng Yue Sect aid. This is a late-game event that signals the village is becoming uninhabitable — canonically, Wang Lin leaves before this point.",
+            "fired": false,
+            "times_fired": 0
+          }
+        ]
       },
       "drivers": [
-        "spirit_vein qi_density declining (T001)",
-        "bridge integrity declining (T003)",
-        "wolf territory closing (T002)",
-        "Heng Yue recruiter takes spirit-rooted young (T005)"
+        {
+          "name": "prey_decline",
+          "description": "As spirit vein thins, spirit rabbit population drops (linked via ecosystem). Wolves seek alternative food sources — village livestock, the dog, eventually people.",
+          "delta_per_day": 0.0005,
+          "linked_to": "spirit_vein_decline"
+        },
+        {
+          "name": "winter_hunger",
+          "description": "In winter (days 80-120 of MC year), food scarcity pushes wolf pressure up by 50% temporarily.",
+          "delta_per_day": 0.002,
+          "condition": "season:winter"
+        },
+        {
+          "name": "player_hunting",
+          "description": "If the player kills wolves near the village, pressure drops. The world reacts: fewer wolves, safer village, but the pack may retaliate or move to a different territory.",
+          "delta_per_day": -0.005,
+          "condition": "world_state:wolves_killed_by_player > 0"
+        }
       ],
-      "thresholds": [
-        {"id": "terminal_decline", "description": "when enough sub-trajectories cross their thresholds simultaneously, the village enters a death spiral from which it cannot recover without external intervention"}
+      "observable_effects": [
+        "VillageBeastActivity event interval scales inversely with pressure: at 0.4, every 6000 ticks; at 0.7, every 3000 ticks; at 0.9, every 1500 ticks.",
+        "Da Niu's 'wolf_sighting' desire urgency = pressure_level. At 0.5, he says 'I saw tracks near the south bend!' (already fires via 083 NPC→NPC).",
+        "Wang Qingyue's 'warn_about_spirit_beasts' desire urgency scales with pressure. At 0.6, she approaches children and warns them.",
+        "When 'wolf_attack_south_bend' fires: WorldEventBus publishes catastrophe event. MemoryEventSubscriber records memories. Rumor chain begins. NPCs reference it for weeks.",
+        "The dog's death is PERMANENT. It does not respawn. This is the Memory Metric test (Art XXXI.5). The world remembers."
       ],
-      "perceivable_without_notification": "Abandoned house-sites at the village edge, roofs caved in. Shrine incense is thin. The elder pauses before answering how the village fares. A child mentions her friend's family left last winter.",
-      "perceivable_at_arrival": true,
-      "compiled_into": ["settlement_graph"],
-      "cascades_to": [],
-      "living_moment_spec": "LM008_abandoned_houses_at_the_edge"
+      "momentum_test_role": "VISIBLE AT ARRIVAL. At pressure 0.4, the player sees occasional wolf tracks (Da Niu mentions them). At 0.5+, VillageBeastActivity fires more often. The player HEARS wolves howling. No script — the beast activity system produces this."
     },
-
     {
-      "trajectory_id": "T010_wang_lin_study",
-      "entity_id": "wang_lin_restriction_study",
-      "system": "elder_breakthrough (knowledge variant)",
-      "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/elder_breakthrough_momentum.schema.json (adapted: progress = decipherment)",
-      "loop_polarity": "neutral_accumulation",
-      "loop_description": "Wang Lin is stuck on the third layer of the cave restriction. His crimson root supplements are running low (the west patch is his source, 8000 ticks from peak). His progress is slow because the vein is thin. If he exhausts his supplements before the patch matures, his progress stalls — a timing tension. The player who demonstrates restriction skill becomes relevant (Art XXXI.2: Wang Lin evaluates understanding/harm/motive/judgment/timing, then may accept aid). This is the bidirectional-Wang-Lin opportunity.",
+      "trajectory_id": "teng_tribute_escalation",
+      "name": "Teng Family Tribute Pressure on Wang Family Village",
+      "description": "The Teng family extracts tribute (grain, labor, timber) from surrounding villages. As Wang Family Village weakens (spirit vein decline, poorer harvests), the Teng family demands proportionally more to compensate. This creates an escalating oppression spiral: village weakens → Teng demands more → village weakens further. INFERRED: Teng family oppression is central to RI Ch.1-3. Wang Tianshui's desire about Teng grain purchases (083) confirms this dynamic.",
+      "canon_fidelity": "INFERRED — Teng family controls the region. Multiple NPC desires reference Teng oppression (Wang Tianshui warn_about_teng, Wang Zhou avoid_teng_servants, Wang Ping complain_teng_tax). The escalation spiral is a reasonable inference from the economic dynamics.",
       "current_state": {
-        "target": "restriction_decipherment_layer_3",
-        "progress": 0.58,
-        "backlash_risk": 0.22,
-        "accumulation_rate_per_tick": 0.0000012,
-        "supplements_remaining": 0.30
-      },
-      "rate_of_change": {
-        "progress_per_tick": 0.0000012,
-        "backlash_risk_per_tick": 0.0000004
+        "tribute_level": 0.5,
+        "tribute_max": 1.0,
+        "base_grain_demand_pct": 0.15,
+        "escalation_rate_per_day": 0.0008,
+        "linked_to": "spirit_vein_decline",
+        "link_mechanism": "As harvests decline (qi_density < 0.3), Teng increases demand percentage. tribute_level += 0.001 * (1 - qi_density/qi_density_max). The weaker the village, the more they take.",
+        "thresholds": [
+          {
+            "id": "servants_daily",
+            "tribute_above": 0.4,
+            "consequence": "Teng servants visit the village market daily (already in canon). Teng Huayuan's 'tribute_demand' desire is always active. Wang Zhou's 'avoid_teng_servants' desire activates. Memory: teng_servants_at_market.",
+            "fired": true,
+            "times_fired": 1
+          },
+          {
+            "id": "excessive_tribute",
+            "tribute_above": 0.65,
+            "consequence": "Teng demands exceed 25% of harvest. Wang Tianshui's 'village_decline' rumor urgency increases. Multiple NPCs independently complain about Teng oppression. The circulating desire ecosystem makes the oppression FEEL systemic, not scripted.",
+            "fired": false,
+            "times_fired": 0
+          },
+          {
+            "id": "village_ruin",
+            "tribute_above": 0.9,
+            "consequence": "Teng takes everything. Families begin leaving. This is the point of no return for the village — canonically, Wang Lin has already left for Heng Yue by this point. Memory: village_abandoned.",
+            "fired": false,
+            "times_fired": 0
+          }
+        ]
       },
       "drivers": [
-        "stuck on the third layer — cannot decipher alone",
-        "crimson root supplements at 0.30 — depleting",
-        "qi from spirit_vein_wang_village is thin — slowing accumulation"
+        {
+          "name": "village_weakness",
+          "description": "As the village weakens (linked to spirit vein), Teng increases demands. This is the escalation spiral.",
+          "delta_per_day": 0.0008,
+          "linked_to": "spirit_vein_decline"
+        },
+        {
+          "name": "teng_ambition",
+          "description": "Teng Huayuan's personal ambition drives faster escalation. If he is present near the village, rate doubles.",
+          "delta_per_day": 0.0008,
+          "condition": "nearby:npc_teng_huayuan<64"
+        },
+        {
+          "name": "player_resistance",
+          "description": "If the player disrupts Teng operations (kills servants, steals tribute, confronts Teng Huayuan), tribute pressure drops. The world reacts: fewer servant visits, but Teng may send enforcers.",
+          "delta_per_day": -0.003,
+          "condition": "world_state:teng_disrupted=true"
+        }
       ],
-      "thresholds": [
-        {"id": "supplement_exhaustion", "eta_ticks": 20000, "consequence": "progress stalls; Wang Lin must harvest more crimson root (west patch 8000 ticks from peak — timing tension)"},
-        {"id": "breakthrough_success", "eta_ticks_if_uninterrupted": 84000, "consequence": "Wang Lin deciphers layer 3; capability_score rises; new opportunity for player"}
+      "observable_effects": [
+        "Teng Huayuan's 'tribute_demand' desire urgency scales with tribute_level. At 0.5, moderate; at 0.7, he is aggressive.",
+        "Wang Ping's 'complain_teng_tax' desire urgency scales with tribute_level. At 0.6, he actively seeks help.",
+        "Zhou Rui's 'complain_teng_tax_burden' desire activates at tribute_level 0.55.",
+        "The number of Teng servant entities spawned near the village scales with tribute_level (future Java wiring).",
+        "Wang Tianshui's 'warn_about_teng' desire urgency = max(0.55, tribute_level). The elder warns more urgently as pressure grows."
       ],
-      "perceivable_without_notification": "Wang Lin is often absent from the village — at the cave above, studying. A villager mentions it offhand. The cave entrance shows worn path, old incense stubs. Wang Lin, when present, is distracted and irritable. His hands smell of crimson root. None of this is a quest.",
-      "perceivable_at_arrival": true,
-      "compiled_into": ["npc_wang_lin motivation_state", "crimson_root_patch_west dependency"],
-      "cascades_to": ["T006_herb_maturation"],
-      "living_moment_spec": "LM009_wang_lin_absent_irritable"
-    },
-
-    {
-      "trajectory_id": "T011_grudge_festering",
-      "entity_id": "grudge_wang_village_vs_teng_ally_merchant",
-      "system": "faction_grudge",
-      "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/faction_grudge_momentum.schema.json",
-      "loop_polarity": "positive_reinforcing",
-      "loop_description": "The village's grudge against the Teng-ally merchant is festering. It started over a trade dispute twelve thousand ticks ago. The grudge affects trade terms (the merchant overcharges), which worsens the village's economy, which deepens the grievance. If it reaches flashpoint, it produces an open confrontation — the elder may ban the merchant, cutting off a trade lifeline, or the merchant may retaliate. The grudge is a slow-burn positive loop.",
-      "current_state": {
-        "severity": 0.62,
-        "festering_rate": 0.0000008,
-        "flashpoint_proximity": 0.20,
-        "current_phase": "simmering"
-      },
-      "rate_of_change": {
-        "severity_per_tick": 0.0000008
-      },
-      "drivers": [
-        "trade dispute origin — overcharging on rice after the bridge damage raised costs",
-        "the merchant's ally (Teng family) is the village's overlord — power asymmetry suppresses open conflict",
-        "no resolution mechanism — the elder is too weak to challenge the Teng family directly"
-      ],
-      "thresholds": [
-        {"id": "flashpoint", "threshold": 0.80, "eta_ticks_if_unchanged": 225000, "consequence": "open confrontation; elder may ban the merchant; Teng family may retaliate"},
-        {"id": "decay", "conditions": "if trade normalizes (bridge repaired, new merchant) the grudge could decay — but the bridge is failing, not being repaired"}
-      ],
-      "perceivable_without_notification": "The Teng-ally merchant's prices are visibly higher than a traveler would expect. The elder goes silent when the merchant is mentioned. Trade at the market stall is cold and brief — no pleasantries. A village woman mutters that the rice was better last year when the other merchant still came.",
-      "perceivable_at_arrival": true,
-      "compiled_into": ["settlement_graph", "economy_momentum", "relationship_graph"],
-      "cascades_to": ["T009_village_decline"],
-      "living_moment_spec": "LM010_elder_goes_silent"
+      "momentum_test_role": "VISIBLE AT ARRIVAL. At tribute 0.5, the player sees Teng servants at the market (Teng Huayuan's desire fires on proximity). NPCs mention Teng grain purchases. The oppression is ambient, not quest-triggered."
     }
   ],
-
-  "cascade_map": {
-    "_description": "Which trajectories feed into which others. When T001 (spirit vein) crosses a threshold, it cascades to T009 (village decline) and T006 (herb maturation) and T010 (Wang Lin's study). This map tells the MomentumAdvancer which trajectories to re-evaluate when a threshold fires.",
-    "T001_spirit_vein_thinning": ["T009_village_decline", "T006_herb_maturation", "T010_wang_lin_study"],
-    "T002_wolf_territorial_expansion": ["T009_village_decline", "T008_rumor_recruiter_visit"],
-    "T003_bridge_failure_approach": ["T009_village_decline", "T005_caravan_approach"],
-    "T005_caravan_approach": ["T008_rumor_recruiter_visit"],
-    "T006_herb_maturation": ["T010_wang_lin_study"],
-    "T007_bandit_desperation": ["T005_caravan_approach", "T009_village_decline"],
-    "T009_village_decline": [],
-    "T010_wang_lin_study": ["T006_herb_maturation"],
-    "T011_grudge_festering": ["T009_village_decline"]
+  "cross_trajectory_links": [
+    {
+      "description": "Spirit vein decline is the ROOT CAUSE. It drives both wolf pressure (prey decline) and Teng tribute (harvest decline). Fixing the vein (formation repair) slows ALL three trajectories. This makes the shrine formation repair (affordance: structure:wang_lin_childhood_home → examine_family_mark → repair) the single most impactful player action in Chapter 1.",
+      "from": "spirit_vein_decline",
+      "affects": ["wolf_pressure_escalation", "teng_tribute_escalation"],
+      "mechanism": "qi_density affects prey populations (ecosystem) and harvest yields (economy)"
+    },
+    {
+      "description": "Wolf attacks create fear, which reduces NPC willingness to work fields, which reduces harvests, which increases Teng tribute pressure. A positive feedback loop of decline.",
+      "from": "wolf_pressure_escalation",
+      "threshold": "wolf_attack_south_bend",
+      "affects": ["teng_tribute_escalation"],
+      "mechanism": "Fear reduces labor efficiency → lower harvest → higher tribute demand"
+    },
+    {
+      "description": "When all three trajectories cross their danger thresholds simultaneously, the village enters a crisis state. Multiple NPCs activate emergency desires. The player observes a village in freefall — which is exactly the atmosphere of Wang Lin's early life.",
+      "from": ["spirit_vein_decline", "wolf_pressure_escalation", "teng_tribute_escalation"],
+      "condition": "spirit_vein.qi_density < 0.30 AND wolf_pressure.pressure > 0.6 AND teng_tribute.tribute_level > 0.6",
+      "consequence": "Wang Tianshui's 'village_decline' urgency maxes at 0.9. Multiple NPC warning desires fire in sequence. The player sees a village being squeezed from three sides simultaneously. This IS the experience of Renegade Immortal Chapter 1-3 — not because a script says so, but because three independent systems are all declining at once."
+    }
+  ],
+  "art_xxxix_5_momentum_test": {
+    "description": "Art XXXIX.5: 3+ systems visibly mid-trajectory at player arrival. When Java wires this data, ALL THREE trajectories are mid-point when the player enters. The player observes: (1) NPC dialogue about declining harvests (spirit vein), (2) wolf howls in the distance (wolf pressure), (3) Teng servants at the market (Teng tribute). No scripts fire. The world is in motion.",
+    "systems_at_arrival": 3,
+    "perceivable_without_notification": [
+      "Player hears wolves howling (VillageBeastActivity, already exists).",
+      "Player sees Teng servants near market (Teng Huayuan desire fires on proximity, already exists).",
+      "Player overhears NPC→NPC desire: Wang Tianshui warns about the spirit vein (083 NPC→NPC broadcast, already exists)."
+    ]
   },
-
-  "tick_protocol": {
-    "_description": "The five operations the MomentumAdvancer performs each tick, per momentum_registry.schema.json.",
-    "1_advance": "For each trajectory, apply rate_of_change to current_state for one tick.",
-    "2_check_thresholds": "For each trajectory, compare current_state against threshold values. If a threshold is crossed, fire the consequence and log to memory_ledger.",
-    "3_propagate_cascades": "If a threshold fired, re-evaluate all trajectories in cascade_map[fired_trajectory].",
-    "4_update_perceivability": "Recompute perceivable_without_notification based on new current_state. Update spatial_index if entity positions changed.",
-    "5_log": "Append tick delta to trajectory history (for debugging and for the Memory Metric — the world remembers because trajectories leave traces)."
+  "art_xxxi_3_stronger_metric": {
+    "description": "Art XXXI.3: Could somebody who never read RI accidentally recreate Wang Lin's early life? The three trajectories produce: declining village (economy), wolf threat (danger), Teng oppression (conflict). The player who chops wood, fishes at the south bend, witnesses wolf tracks, and hears the elder worry is recreating Wang Lin's experience — through simulation, not scripting.",
+    "recreated_beats": [
+      "Wandering cultivator arrival (living_events, staged)",
+      "Rumors about declining harvests (spirit vein → Teng tribute linkage)",
+      "Wolf sightings at south bend (wolf pressure → Da Niu desire)",
+      "Teng servants demanding grain (Teng tribute → multiple NPC desires)",
+      "Heng Yue recruiter testing youth (living_events, staged after wanderer)",
+      "The dog's death and village grief (wolf attack threshold → Memory Metric)"
+    ]
+  },
+  "art_v_compliance": {
+    "description": "All three trajectories advance without the player. The spirit vein decays on its own. Wolves escalate on their own. Teng demands grow on their own. The player can INTERVENE (repair formation, kill wolves, fight Teng) which redirects trajectories (Art XXXIX.6). But if the player never exists, the village still declines.",
+    "player_independent": true
   }
 }
