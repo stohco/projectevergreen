@@ -83,37 +83,20 @@ public final class BridgingPolicy {
      */
     public enum Classification {
         /** Type A, confidence 5. Explicitly attested in canon. Immutable. */
-        CANON_CONCRETE,
+        CANON_CONCRETE("Type A, conf 5. Explicitly attested in canon with chapter citation. Cannot be modified."),
         /** Type B, confidence 4. Strongly implied; generation fills specifics. */
-        CANON_IMPLIED,
+        CANON_IMPLIED("Type B, conf 4. Strongly implied by canon but not detailed. Generation may fill specifics."),
         /** Type C, confidence 3. Logically necessary; generation may create. */
-        REASONABLE_RECONSTRUCTION,
+        REASONABLE_RECONSTRUCTION("Type C, conf 3. Canon is silent; existence is logically necessary. Generation may create."),
         /** Type D, confidence 1-2. Only when needed; never overwrites canon. */
-        SPECULATION,
+        SPECULATION("Type D, conf 1-2. Only when needed; never overwrites canon. Must be derived from established canon."),
         /** Forbidden. Canon or user corrections explicitly exclude this. */
-        FORBIDDEN;
+        FORBIDDEN("Canon explicitly does not have this, or user corrections forbid it.");
 
         public final String description;
 
-        Classification() {
-            this.description = descriptionFor(this);
-        }
-
-        private static String descriptionFor(Classification c) {
-            switch (c) {
-                case CANON_CONCRETE:
-                    return "Type A, conf 5. Explicitly attested in canon with chapter citation. Cannot be modified.";
-                case CANON_IMPLIED:
-                    return "Type B, conf 4. Strongly implied by canon but not detailed. Generation may fill specifics.";
-                case REASONABLE_RECONSTRUCTION:
-                    return "Type C, conf 3. Canon is silent; existence is logically necessary. Generation may create.";
-                case SPECULATION:
-                    return "Type D, conf 1-2. Only when needed; never overwrites canon. Must be derived from established canon.";
-                case FORBIDDEN:
-                    return "Canon explicitly does not have this, or user corrections forbid it.";
-                default:
-                    return "Unknown";
-            }
+        Classification(String description) {
+            this.description = description;
         }
     }
 
