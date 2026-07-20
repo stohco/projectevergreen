@@ -1,6 +1,7 @@
 package dev.ergenverse.simulation.actor;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.simulation.cognition.ActivityProcess;
 import dev.ergenverse.simulation.cognition.CognitionGoal;
 import dev.ergenverse.simulation.cognition.DecisionEngine;
 import dev.ergenverse.simulation.los.SimulationLevel;
@@ -112,10 +113,14 @@ public final class ActorTickLoop {
                 break;
             }
         }
+        // Tick the actor's current activity process.
+        tickActivity(a, tick);
     }
 
     private static void tickFullCognition(Actor a, long tick) {
         if (a.cognition == null) return;
+        // Tick the actor's current activity process.
+        tickActivity(a, tick);
         // Run the full DecisionEngine pipeline.
         var needs = a.cognition.computeNeedIntensities();
         var decision = DecisionEngine.decide(
@@ -156,6 +161,68 @@ public final class ActorTickLoop {
         }
         Ergenverse.LOGGER.debug("[Ergenverse] ActorTick[cognition] {} decision: {}",
                 a.id, decision);
+    }
+
+    /**
+     * Tick the actor's current ActivityProcess.
+     *
+     * <p>Per Article XLI: activity is a process, not a state.
+     * This method advances the process through its lifecycle:
+     *   IN_PROGRESS → advance progress
+     *   REACTING → count down reaction timer, then begin RESUMING
+     *   RESUMING → restore progress, transition to IN_PROGRESS
+     *
+     * <p>INTERRUPTED state is set by {@link dev.ergenverse.simulation.event.ActivityInterruptionSubscriber}
+     * when a WorldEventBus event matches an activity's interruption conditions.
+     */
+    private static void tickActivity(Actor a, long tick) {
+        ActivityProcess ap = a.currentActivity;
+        if (ap == null) return;
+
+        switch (ap.state) {
+            case ActivityProcess.STATE_IN_PROGRESS:
+                // Advance progress. Rate is ~1% per 20 ticks (6.7 seconds at 20 tps).
+                // A full meditation session takes ~2000 ticks (~100 seconds).
+                ap.progress = Math.min(1.0f, ap.progress + 0.0005f);
+                if (ap.progress >= 1.0f) {
+                    ap.complete();
+                    Ergenverse.LOGGER.debug("[Ergenverse] Activity complete: {} for {}",
+                            ap.activityType, a.id);
+                }
+                break;
+
+            case ActivityProcess.STATE_INTERRUPTED:
+                // Transitions to REACTING immediately (the subscriber set the reaction).
+                ap.beginReaction(tick);
+                break;
+
+            case ActivityProcess.STATE_REACTING:
+                ap.reactionTicksRemaining--;
+                if (ap.reactionTicksRemaining <= 0) {
+                    // Reaction over. For now, always resume. A more sophisticated
+                    // version would check the InterruptionCondition.resumeAfter flag.
+                    ap.beginResume(tick);
+                }
+                break;
+
+            case ActivityProcess.STATE_RESUMING:
+                // Restore progress and return to IN_PROGRESS.
+                ap.progress = ap.progressAtInterruption;
+                ap.state = ActivityProcess.STATE_IN_PROGRESS;
+                Ergenverse.LOGGER.debug("[Ergenverse] Activity resumed: {} for {} at progress {}",
+                        ap.activityType, a.id, ap.progress);
+                break;
+
+            case ActivityProcess.STATE_COMPLETED:
+            case ActivityProcess.STATE_ABANDONED:
+                // Activity is done. Clear it so the DecisionEngine can assign a new one.
+                a.currentActivity = null;
+                break;
+
+            default:
+                // NOT_STARTED, STARTING — no action needed. The entity AI handles start.
+                break;
+        }
     }
 
     /** Mark an actor dirty for event-driven re-tick this pass. */

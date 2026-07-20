@@ -4,6 +4,7 @@ import dev.ergenverse.simulation.cognition.DaoIdentity;
 import dev.ergenverse.simulation.cognition.Ontology;
 import dev.ergenverse.simulation.los.SimulationImportanceScore;
 import dev.ergenverse.simulation.los.SimulationLevel;
+import dev.ergenverse.simulation.cognition.ActivityProcess;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -57,6 +58,9 @@ public final class Actor {
 
     /** Last-simulated tick (for the {@link ActorTickLoop} scheduler). */
     public long lastSimulatedTick = 0;
+
+    /** Current activity process (null when idle). Populated by DecisionEngine wiring. */
+    public ActivityProcess currentActivity = null;
 
     /** Block position (used for distance-to-player importance calc). */
     public int blockX, blockY, blockZ;
