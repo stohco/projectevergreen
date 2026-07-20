@@ -1,5 +1,5 @@
 {
-  "_comment": "Underground Spirit River — a subterranean river infused with spirit energy. The water glows faintly. Spirit fish live here. Cultivators harvest the water for alchemy. Prime Directive: the river is an objective geological feature — its spirit energy comes from the spirit vein it flows through.",
+  "_comment": "Underground Spirit River \u2014 a subterranean river infused with spirit energy. The water glows faintly. Spirit fish live here. Cultivators harvest the water for alchemy. Prime Directive: the river is an objective geological feature \u2014 its spirit energy comes from the spirit vein it flows through.",
   "temperature": 0.35,
   "downfall": 0.5,
   "has_precipitation": false,
@@ -11,57 +11,11 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:bat",
-        "weight": 15,
-        "minCount": 4,
-        "maxCount": 8
-      },
-      {
-        "type": "minecraft:glow_squid",
-        "weight": 20,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:axolotl",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 2
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:drowned",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
-    "underground_water_creature": [
-      {
-        "type": "minecraft:glow_squid",
-        "weight": 10,
-        "minCount": 3,
-        "maxCount": 5
-      }
-    ],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []
   },

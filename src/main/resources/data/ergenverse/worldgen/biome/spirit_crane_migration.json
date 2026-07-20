@@ -1,5 +1,5 @@
 {
-  "_comment": "Spirit Crane Migration Route — a sky corridor used by spirit cranes during seasonal migration. The cranes leave spirit energy trails that condense into rare cloud-deposits. Prime Directive: the migration route is objective ecological behavior.",
+  "_comment": "Spirit Crane Migration Route \u2014 a sky corridor used by spirit cranes during seasonal migration. The cranes leave spirit energy trails that condense into rare cloud-deposits. Prime Directive: the migration route is objective ecological behavior.",
   "temperature": 0.4,
   "downfall": 0.5,
   "has_precipitation": true,
@@ -11,37 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:parrot",
-        "weight": 25,
-        "minCount": 2,
-        "maxCount": 5
-      },
-      {
-        "type": "minecraft:allay",
-        "weight": 8,
-        "minCount": 1,
-        "maxCount": 2
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:phantom",
-        "weight": 5,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

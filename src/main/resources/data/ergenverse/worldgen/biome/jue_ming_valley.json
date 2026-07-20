@@ -1,5 +1,5 @@
 {
-  "_comment": "Jue Ming Valley / Jueming Valley (绝命谷) — a valley on Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L46): the Jue Ming Valley tokens grant access to the Foreign Battleground / Extraterrestrial Battlefield (域外战场), a sealed battlefield outside normal Suzaku geography. The valley is a gateway region — its geography is defined by the ancient tokens and the sealed rift to the Foreign Battleground. World-law tier: low (Core Formation ceiling) at the surface, but the rift to the Foreign Battleground exposes higher-tier Qi in pockets. Prime Directive: the valley's geography exists independently of the rift; the rift exists independently of the tokens. The tokens are the only safe way through; without one, a cultivator who enters the rift is lost.",
+  "_comment": "Jue Ming Valley / Jueming Valley (\u7edd\u547d\u8c37) \u2014 a valley on Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L46): the Jue Ming Valley tokens grant access to the Foreign Battleground / Extraterrestrial Battlefield (\u57df\u5916\u6218\u573a), a sealed battlefield outside normal Suzaku geography. The valley is a gateway region \u2014 its geography is defined by the ancient tokens and the sealed rift to the Foreign Battleground. World-law tier: low (Core Formation ceiling) at the surface, but the rift to the Foreign Battleground exposes higher-tier Qi in pockets. Prime Directive: the valley's geography exists independently of the rift; the rift exists independently of the tokens. The tokens are the only safe way through; without one, a cultivator who enters the rift is lost.",
   "temperature": 0.1,
   "downfall": 0.3,
   "has_precipitation": true,
@@ -12,48 +12,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 8,
-        "minCount": 4,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:skeleton",
-        "weight": 50,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:wither_skeleton",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:enderman",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:cave_spider",
-        "weight": 40,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:witch",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

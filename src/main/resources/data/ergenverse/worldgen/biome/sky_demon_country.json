@@ -1,5 +1,5 @@
 {
-  "_comment": "Sky Demon Country (天魔国) — a demonic country on Planet Suzaku, likely in the East Demon Spirit Sea region. Canon (CANON_RI_COMPLETE_WORLD.md L26): the Ancient Demon City / Demon Capital is the capital; site of the Demonic Drum tournament. Demonic-aspect spirit veins. Demon-Corpse Mushroom grows on battlefields (derived flora). Demon-Mist Serpent (Nascent Soul tier ambush predator, derived fauna). World-law tier: low-medium (Nascent Soul ceiling). Prime Directive: the demonic Qi is objective — it is the reason demonic cultivators thrive here, not their presence that creates it.",
+  "_comment": "Sky Demon Country (\u5929\u9b54\u56fd) \u2014 a demonic country on Planet Suzaku, likely in the East Demon Spirit Sea region. Canon (CANON_RI_COMPLETE_WORLD.md L26): the Ancient Demon City / Demon Capital is the capital; site of the Demonic Drum tournament. Demonic-aspect spirit veins. Demon-Corpse Mushroom grows on battlefields (derived flora). Demon-Mist Serpent (Nascent Soul tier ambush predator, derived fauna). World-law tier: low-medium (Nascent Soul ceiling). Prime Directive: the demonic Qi is objective \u2014 it is the reason demonic cultivators thrive here, not their presence that creates it.",
   "temperature": 0.7,
   "downfall": 0.3,
   "has_precipitation": false,
@@ -15,38 +15,7 @@
     "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:hoglin",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:piglin",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:zombified_piglin",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:ghast",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:magma_cube",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 2
-      }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

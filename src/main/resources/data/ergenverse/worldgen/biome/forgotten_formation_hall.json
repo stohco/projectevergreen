@@ -1,5 +1,5 @@
 {
-  "_comment": "Forgotten Formation Hall — underground chamber with an ancient formation array still active after millennia. The formation emits residual energy. Cultivators study it to learn ancient formation arts. Prime Directive: the formation is objective technology — it was built by ancient cultivators and still functions.",
+  "_comment": "Forgotten Formation Hall \u2014 underground chamber with an ancient formation array still active after millennia. The formation emits residual energy. Cultivators study it to learn ancient formation arts. Prime Directive: the formation is objective technology \u2014 it was built by ancient cultivators and still functions.",
   "temperature": 0.25,
   "downfall": 0.0,
   "has_precipitation": false,
@@ -11,43 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:bat",
-        "weight": 15,
-        "minCount": 4,
-        "maxCount": 8
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:vex",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:witch",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

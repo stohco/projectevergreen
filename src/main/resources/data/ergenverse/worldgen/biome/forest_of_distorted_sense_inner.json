@@ -1,5 +1,5 @@
 {
-  "_comment": "Forest of Distorted Divine Sense — Inner (幻觉森林内部) — the inner forest where divine sense is severely scrambled (50% reduction). Canon: Wang Lin survived here by relying on his Heaven-Defying Bead's perception rather than divine sense. The trees are ancient and seemingly sentient. Illusions manifest without warning. Prime Directive: the distortion is objective — no cultivator can bypass it, only adapt.",
+  "_comment": "Forest of Distorted Divine Sense \u2014 Inner (\u5e7b\u89c9\u68ee\u6797\u5185\u90e8) \u2014 the inner forest where divine sense is severely scrambled (50% reduction). Canon: Wang Lin survived here by relying on his Heaven-Defying Bead's perception rather than divine sense. The trees are ancient and seemingly sentient. Illusions manifest without warning. Prime Directive: the distortion is objective \u2014 no cultivator can bypass it, only adapt.",
   "temperature": 0.5,
   "downfall": 0.6,
   "has_precipitation": true,
@@ -11,40 +11,8 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "monster": [
-      {
-        "type": "minecraft:witch",
-        "weight": 35,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:enderman",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:spider",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:illusioner",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
-    "creature": [
-      {
-        "type": "minecraft:fox",
-        "weight": 5,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
+    "creature": [],
     "ambient": [],
     "underground_water_creature": [],
     "water_ambient": [],

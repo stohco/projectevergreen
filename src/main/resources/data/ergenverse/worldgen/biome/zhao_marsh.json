@@ -1,5 +1,5 @@
 {
-  "_comment": "Country of Zhao — Marsh. Auto-generated sub-region from canon location L23 (赵国). Parent world-law tier: fragile. Spirit veins: Third-tier cultivation country; Qi Condensation ceiling; weak spiritual veins. Prime Directive: this region exists objectively as part of Country of Zhao; cultivation determines perception, not existence.",
+  "_comment": "Country of Zhao \u2014 Marsh. Auto-generated sub-region from canon location L23 (\u8d75\u56fd). Parent world-law tier: fragile. Spirit veins: Third-tier cultivation country; Qi Condensation ceiling; weak spiritual veins. Prime Directive: this region exists objectively as part of Country of Zhao; cultivation determines perception, not existence.",
   "temperature": 0.5,
   "downfall": 0.7,
   "has_precipitation": true,
@@ -11,36 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:slime",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:witch",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:spider",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 2
-      }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

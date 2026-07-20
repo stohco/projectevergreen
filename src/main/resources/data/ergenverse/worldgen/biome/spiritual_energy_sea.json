@@ -1,5 +1,5 @@
 {
-  "_comment": "Spiritual Energy Sea (灵气之海) — regions of pure condensed spiritual energy forming a luminous sea within the Cave World. Canon: between cultivation planets, spiritual energy condenses into vast luminous oceans. Cultivators can absorb energy from these seas (similar to meditation near spirit veins). The 'water' is actually liquid spiritual energy — glowing cyan-white. The ground beneath is smooth, polished stone (formation-created). Temperature is mild. Features: sea_pickle stand-ins for luminous energy clusters on the 'seabed'. No structures — this is raw energy, not settled territory.",
+  "_comment": "Spiritual Energy Sea (\u7075\u6c14\u4e4b\u6d77) \u2014 regions of pure condensed spiritual energy forming a luminous sea within the Cave World. Canon: between cultivation planets, spiritual energy condenses into vast luminous oceans. Cultivators can absorb energy from these seas (similar to meditation near spirit veins). The 'water' is actually liquid spiritual energy \u2014 glowing cyan-white. The ground beneath is smooth, polished stone (formation-created). Temperature is mild. Features: sea_pickle stand-ins for luminous energy clusters on the 'seabed'. No structures \u2014 this is raw energy, not settled territory.",
   "temperature": 0.4,
   "downfall": 0.0,
   "has_precipitation": false,
@@ -18,9 +18,7 @@
   "spawners": {
     "monster": [],
     "creature": [],
-    "ambient": [
-      { "type": "minecraft:bat", "weight": 10, "minCount": 8, "maxCount": 8 }
-    ],
+    "ambient": [],
     "axolotls": [],
     "underground_water_creature": [],
     "water_creature": [],

@@ -1,5 +1,5 @@
 {
-  "_comment": "Xuan Wu — Marsh. Auto-generated sub-region from canon location L29 (玄武国). Parent world-law tier: fragile. Spirit veins: Fragile-tier spiritual veins. Prime Directive: this region exists objectively as part of Xuan Wu; cultivation determines perception, not existence.",
+  "_comment": "Xuan Wu \u2014 Marsh. Auto-generated sub-region from canon location L29 (\u7384\u6b66\u56fd). Parent world-law tier: fragile. Spirit veins: Fragile-tier spiritual veins. Prime Directive: this region exists objectively as part of Xuan Wu; cultivation determines perception, not existence.",
   "temperature": 0.4,
   "downfall": 0.8999999999999999,
   "has_precipitation": true,
@@ -11,36 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:slime",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:witch",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:spider",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 2
-      }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

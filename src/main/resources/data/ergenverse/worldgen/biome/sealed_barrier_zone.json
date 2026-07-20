@@ -1,5 +1,5 @@
 {
-  "_comment": "Sealed Barrier Zone (封印屏障区) — the edge of the Cave World where the Realm-Sealing Grand Array manifests as visible energy barriers. Canon: the seal is a vast formation that encloses the entire Cave World. Near the edges, the seal is visible as shimmering barriers of golden-purple light. The ground is cracked obsidian-like stone (the formation's anchor points). Dangerous — standing near the barrier damages lower-realm cultivators (enforced by gameplay code, not by the biome itself per the Prime Directive). Temperature is hot (barrier energy), no precipitation. Features: none (barren zone). This biome generates at the outermost continent noise values.",
+  "_comment": "Sealed Barrier Zone (\u5c01\u5370\u5c4f\u969c\u533a) \u2014 the edge of the Cave World where the Realm-Sealing Grand Array manifests as visible energy barriers. Canon: the seal is a vast formation that encloses the entire Cave World. Near the edges, the seal is visible as shimmering barriers of golden-purple light. The ground is cracked obsidian-like stone (the formation's anchor points). Dangerous \u2014 standing near the barrier damages lower-realm cultivators (enforced by gameplay code, not by the biome itself per the Prime Directive). Temperature is hot (barrier energy), no precipitation. Features: none (barren zone). This biome generates at the outermost continent noise values.",
   "temperature": 0.8,
   "downfall": 0.0,
   "has_precipitation": false,
@@ -16,9 +16,7 @@
     }
   },
   "spawners": {
-    "monster": [
-      { "type": "minecraft:enderman", "weight": 15, "minCount": 1, "maxCount": 4 }
-    ],
+    "monster": [],
     "creature": [],
     "ambient": [],
     "axolotls": [],

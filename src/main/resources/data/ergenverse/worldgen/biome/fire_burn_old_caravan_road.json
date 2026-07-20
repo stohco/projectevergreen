@@ -1,5 +1,5 @@
 {
-  "_comment": "Fire Burn Country — Old Caravan Road. Auto-generated sub-region from canon location L25 (火焚国). Parent world-law tier: fragile. Spirit veins: Fire-element dominant; fragile-tier spiritual veins; Fire Beasts roam. Prime Directive: this region exists objectively as part of Fire Burn Country; cultivation determines perception, not existence.",
+  "_comment": "Fire Burn Country \u2014 Old Caravan Road. Auto-generated sub-region from canon location L25 (\u706b\u711a\u56fd). Parent world-law tier: fragile. Spirit veins: Fire-element dominant; fragile-tier spiritual veins; Fire Beasts roam. Prime Directive: this region exists objectively as part of Fire Burn Country; cultivation determines perception, not existence.",
   "temperature": 0.9,
   "downfall": 0.05,
   "has_precipitation": false,
@@ -13,52 +13,8 @@
   "spawners": {
     "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:sheep",
-        "weight": 12,
-        "minCount": 4,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:cow",
-        "weight": 10,
-        "minCount": 4,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:pig",
-        "weight": 10,
-        "minCount": 4,
-        "maxCount": 4
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:spider",
-        "weight": 40,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:zombie",
-        "weight": 30,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

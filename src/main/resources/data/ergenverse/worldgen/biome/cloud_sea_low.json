@@ -1,5 +1,5 @@
 {
-  "_comment": "Low Cloud Sea — the layer of clouds just above normal terrain. Spirit cranes nest here. Sword cultivators practice flying sword arts through the clouds. Prime Directive: the cloud layer is an objective atmospheric phenomenon.",
+  "_comment": "Low Cloud Sea \u2014 the layer of clouds just above normal terrain. Spirit cranes nest here. Sword cultivators practice flying sword arts through the clouds. Prime Directive: the cloud layer is an objective atmospheric phenomenon.",
   "temperature": 0.3,
   "downfall": 0.8,
   "has_precipitation": true,
@@ -11,43 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:parrot",
-        "weight": 10,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:allay",
-        "weight": 5,
-        "minCount": 1,
-        "maxCount": 2
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:phantom",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:bat",
-        "weight": 20,
-        "minCount": 4,
-        "maxCount": 8
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

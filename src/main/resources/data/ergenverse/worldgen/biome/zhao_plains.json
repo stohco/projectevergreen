@@ -1,5 +1,5 @@
 {
-  "_comment": "Zhao Country Plains — the cultivated lowlands of Zhao Country where mortal villages and Tian Shui City exist. Canon: agricultural regions with scattered mortal settlements. Cultivators from nearby sects patrol for spirit beasts. The land is peaceful but under the implicit control of the Vermilion Bird Dynasty. Spirit energy is thin here — suitable for Qi Condensation cultivators but insufficient for deeper breakthroughs. Prime Directive: the thin spiritual energy is an objective property of the land, not a perception effect.",
+  "_comment": "Zhao Country Plains \u2014 the cultivated lowlands of Zhao Country where mortal villages and Tian Shui City exist. Canon: agricultural regions with scattered mortal settlements. Cultivators from nearby sects patrol for spirit beasts. The land is peaceful but under the implicit control of the Vermilion Bird Dynasty. Spirit energy is thin here \u2014 suitable for Qi Condensation cultivators but insufficient for deeper breakthroughs. Prime Directive: the thin spiritual energy is an objective property of the land, not a perception effect.",
   "temperature": 0.5,
   "downfall": 0.4,
   "has_precipitation": true,
@@ -11,73 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:sheep",
-        "weight": 12,
-        "minCount": 4,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:pig",
-        "weight": 10,
-        "minCount": 4,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:chicken",
-        "weight": 10,
-        "minCount": 4,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:cow",
-        "weight": 8,
-        "minCount": 4,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:wolf",
-        "weight": 5,
-        "minCount": 4,
-        "maxCount": 4
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:spider",
-        "weight": 50,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:zombie",
-        "weight": 40,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

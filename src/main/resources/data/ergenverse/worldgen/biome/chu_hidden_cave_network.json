@@ -1,5 +1,5 @@
 {
-  "_comment": "Chu Country — Hidden Cave Network. Auto-generated sub-region from canon location L24 (楚国). Parent world-law tier: fragile. Spirit veins: Neighboring country to Zhao; fragile-to-low tier spiritual veins. Prime Directive: this region exists objectively as part of Chu Country; cultivation determines perception, not existence.",
+  "_comment": "Chu Country \u2014 Hidden Cave Network. Auto-generated sub-region from canon location L24 (\u695a\u56fd). Parent world-law tier: fragile. Spirit veins: Neighboring country to Zhao; fragile-to-low tier spiritual veins. Prime Directive: this region exists objectively as part of Chu Country; cultivation determines perception, not existence.",
   "temperature": 0.4,
   "downfall": 0.5,
   "has_precipitation": true,
@@ -11,42 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:spider",
-        "weight": 40,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:zombie",
-        "weight": 30,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

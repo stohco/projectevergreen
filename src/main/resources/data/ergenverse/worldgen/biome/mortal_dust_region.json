@@ -1,5 +1,5 @@
 {
-  "_comment": "Mortal Dust Region (凡尘域) — humble frontier of the Immortal Astral Continent where newly-ascended cultivators first arrive from the Cave World. Wind-swept, dusty, sparse vegetation. Spirit energy is dense (like the rest of the Continent) but the land is humble — its name refers to cultivators leaving behind 'mortal dust' to ascend. Stand-in spawns: husk=lost mortals who failed to ascend properly, spider/zombie=frontier hazards, donkey=pack animals of arriving cultivators. Desert village structures stand in for frontier outposts. Prime Directive: the dusty wind and humble landscape exist objectively; they are not illusions. New arrivals must build their foundation here before venturing inward.",
+  "_comment": "Mortal Dust Region (\u51e1\u5c18\u57df) \u2014 humble frontier of the Immortal Astral Continent where newly-ascended cultivators first arrive from the Cave World. Wind-swept, dusty, sparse vegetation. Spirit energy is dense (like the rest of the Continent) but the land is humble \u2014 its name refers to cultivators leaving behind 'mortal dust' to ascend. Stand-in spawns: husk=lost mortals who failed to ascend properly, spider/zombie=frontier hazards, donkey=pack animals of arriving cultivators. Desert village structures stand in for frontier outposts. Prime Directive: the dusty wind and humble landscape exist objectively; they are not illusions. New arrivals must build their foundation here before venturing inward.",
   "temperature": 0.7,
   "downfall": 0.1,
   "has_precipitation": false,
@@ -11,43 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:donkey",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 3
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:spider",
-        "weight": 40,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:husk",
-        "weight": 30,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:zombie",
-        "weight": 20,
-        "minCount": 2,
-        "maxCount": 4
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

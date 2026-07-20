@@ -1,5 +1,5 @@
 {
-  "_comment": "Ancient Ruin Chamber — forgotten cultivation chambers from before the Sealed Realm was sealed. Contains broken formations and decayed treasure. Prime Directive: the ruins are objective historical sites — they were built by cultivators who lived before the current era.",
+  "_comment": "Ancient Ruin Chamber \u2014 forgotten cultivation chambers from before the Sealed Realm was sealed. Contains broken formations and decayed treasure. Prime Directive: the ruins are objective historical sites \u2014 they were built by cultivators who lived before the current era.",
   "temperature": 0.15,
   "downfall": 0.0,
   "has_precipitation": false,
@@ -11,49 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:bat",
-        "weight": 20,
-        "minCount": 4,
-        "maxCount": 8
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:skeleton",
-        "weight": 35,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:zombie",
-        "weight": 25,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:witch",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

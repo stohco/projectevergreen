@@ -1,5 +1,5 @@
 {
-  "_comment": "Jue Ming Valley Entrance (绝命谷入口) — the outer valley where cultivators begin their descent. Canon: Jue Ming Valley tokens are required to access the deeper regions and the Foreign Battleground. The entrance is relatively safe but foreboding. Mortals avoid this place out of instinct. Prime Directive: the valley's death-qi is objective and increases with depth.",
+  "_comment": "Jue Ming Valley Entrance (\u7edd\u547d\u8c37\u5165\u53e3) \u2014 the outer valley where cultivators begin their descent. Canon: Jue Ming Valley tokens are required to access the deeper regions and the Foreign Battleground. The entrance is relatively safe but foreboding. Mortals avoid this place out of instinct. Prime Directive: the valley's death-qi is objective and increases with depth.",
   "temperature": 0.3,
   "downfall": 0.2,
   "has_precipitation": true,
@@ -11,41 +11,9 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "monster": [
-      {
-        "type": "minecraft:skeleton",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:zombie",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:spider",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
     "creature": [],
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 4
-      }
-    ],
+    "ambient": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": [],

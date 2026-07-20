@@ -1,5 +1,5 @@
 {
-  "_comment": "Thunderstorm Sea (雷暴海) — vast sea of crackling thunder clouds where lightning beasts roam. Canon: a sub-region of the Ancient Thunder Realm (古雷界), the source dimension of thunder-attribute spiritual energy. The sea is a perpetual storm-wreathed ocean of thunder clouds — lightning strikes constantly. Ghasts and phantoms roam here as thunder-spirit manifestations. Non-thunder cultivators are damaged by merely being present. Wang Lin enters the Ancient Thunder Realm to cultivate his thunder essence and Ji Realm (a thunder-based killing technique); the thunder here can be 'stored' into special containers (Store-All Ji Thunder). Prime Directive: the perpetual storm, lightning beasts, and cloud-sea are objective properties of the realm — they exist because thunder-aspect Qi saturates this pocket dimension, not because anyone perceives them.",
+  "_comment": "Thunderstorm Sea (\u96f7\u66b4\u6d77) \u2014 vast sea of crackling thunder clouds where lightning beasts roam. Canon: a sub-region of the Ancient Thunder Realm (\u53e4\u96f7\u754c), the source dimension of thunder-attribute spiritual energy. The sea is a perpetual storm-wreathed ocean of thunder clouds \u2014 lightning strikes constantly. Ghasts and phantoms roam here as thunder-spirit manifestations. Non-thunder cultivators are damaged by merely being present. Wang Lin enters the Ancient Thunder Realm to cultivate his thunder essence and Ji Realm (a thunder-based killing technique); the thunder here can be 'stored' into special containers (Store-All Ji Thunder). Prime Directive: the perpetual storm, lightning beasts, and cloud-sea are objective properties of the realm \u2014 they exist because thunder-aspect Qi saturates this pocket dimension, not because anyone perceives them.",
   "precipitation": "none",
   "effects": {
     "sky_color": 2039583,
@@ -13,11 +13,7 @@
     "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      { "type": "minecraft:ghast", "weight": 20, "minCount": 1, "maxCount": 1 },
-      { "type": "minecraft:phantom", "weight": 30, "minCount": 1, "maxCount": 2 },
-      { "type": "minecraft:vex", "weight": 10, "minCount": 1, "maxCount": 2 }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

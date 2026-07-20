@@ -1,5 +1,5 @@
 {
-  "_comment": "Country of Zhao — Collapsed Spirit Mine. Auto-generated sub-region from canon location L23 (赵国). Parent world-law tier: fragile. Spirit veins: Third-tier cultivation country; Qi Condensation ceiling; weak spiritual veins. Prime Directive: this region exists objectively as part of Country of Zhao; cultivation determines perception, not existence.",
+  "_comment": "Country of Zhao \u2014 Collapsed Spirit Mine. Auto-generated sub-region from canon location L23 (\u8d75\u56fd). Parent world-law tier: fragile. Spirit veins: Third-tier cultivation country; Qi Condensation ceiling; weak spiritual veins. Prime Directive: this region exists objectively as part of Country of Zhao; cultivation determines perception, not existence.",
   "temperature": 0.4,
   "downfall": 0.30000000000000004,
   "has_precipitation": true,
@@ -11,36 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:skeleton",
-        "weight": 40,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:zombie",
-        "weight": 30,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

@@ -1,5 +1,5 @@
 {
-  "_comment": "Sea of Devils Outer Ring (魔海外围) — the borderlands of the corrupted sea. Canon: rogue cultivators and minor demonic factions operate here. Less corrupted than the inner regions. Mortals can survive briefly but feel unease. Spirit veins are unstable but harvestable. The Fighting Evil Sect patrols this region. Prime Directive: the corruption gradient is objective — it decreases toward the outer ring.",
+  "_comment": "Sea of Devils Outer Ring (\u9b54\u6d77\u5916\u56f4) \u2014 the borderlands of the corrupted sea. Canon: rogue cultivators and minor demonic factions operate here. Less corrupted than the inner regions. Mortals can survive briefly but feel unease. Spirit veins are unstable but harvestable. The Fighting Evil Sect patrols this region. Prime Directive: the corruption gradient is objective \u2014 it decreases toward the outer ring.",
   "temperature": 0.8,
   "downfall": 0.0,
   "has_precipitation": false,
@@ -12,38 +12,7 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "monster": [
-      {
-        "type": "minecraft:wither_skeleton",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:magma_cube",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:enderman",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:witch",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
     "creature": [],
     "ambient": [],
     "underground_water_creature": [],

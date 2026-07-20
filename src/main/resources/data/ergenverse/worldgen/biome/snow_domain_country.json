@@ -1,5 +1,5 @@
 {
-  "_comment": "Snow Domain Country (雪域国) — the cold-region country on Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L28): a country in a cold region of Planet Suzaku. Ice-aspect spirit veins. Frost-Tusk Mammoth herds (derived fauna, CANON_RI_ECOLOGY.md 2.4). Snow-Heart Herb grows here (derived flora). World-law tier: low (Qi Condensation ceiling is the practical cap for most cultivators; Nascent Soul possible only at the country's single spirit vein peak). Prime Directive: the cold and ice are objective — mortals here have adapted to it over generations; cultivators do not 'create' the cold, they perceive the ice-aspect Qi that was always there.",
+  "_comment": "Snow Domain Country (\u96ea\u57df\u56fd) \u2014 the cold-region country on Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L28): a country in a cold region of Planet Suzaku. Ice-aspect spirit veins. Frost-Tusk Mammoth herds (derived fauna, CANON_RI_ECOLOGY.md 2.4). Snow-Heart Herb grows here (derived flora). World-law tier: low (Qi Condensation ceiling is the practical cap for most cultivators; Nascent Soul possible only at the country's single spirit vein peak). Prime Directive: the cold and ice are objective \u2014 mortals here have adapted to it over generations; cultivators do not 'create' the cold, they perceive the ice-aspect Qi that was always there.",
   "temperature": -0.8,
   "downfall": 0.9,
   "has_precipitation": true,
@@ -15,34 +15,8 @@
   "spawners": {
     "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:polar_bear",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 2
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:stray",
-        "weight": 60,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

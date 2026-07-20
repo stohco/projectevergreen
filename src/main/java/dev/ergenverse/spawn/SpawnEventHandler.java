@@ -4,10 +4,13 @@ import dev.ergenverse.core.Ergenverse;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.core.registries.Registries;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -56,40 +59,55 @@ public final class SpawnEventHandler {
         // delayed task doesn't double-give.
         sp.getPersistentData().putBoolean(NBT_TUTORIAL_GIVEN, true);
 
-        // ── Delay the build/teleport/book by 40 ticks (2s) so the player
+        // ── Delay the teleport/book by 40 ticks (2s) so the player
         //    has fully loaded into the world before we move them.
         sp.server.tell(new TickTask(sp.server.getTickCount() + 40, () -> {
             try {
                 Ergenverse.LOGGER.info("[Ergenverse] First-spawn task executing for {}.",
                         sp.getName().getString());
 
-                // 1. Build the village if not yet built (world-scoped).
-                if (!WangFamilyVillageBuilder.isAlreadyBuilt(level)) {
-                    Ergenverse.LOGGER.info("[Ergenverse] First player join — building Wang Family Village at spawn.");
-                    WangFamilyVillageBuilder.build(level);
+                // 1. Get the Planet Suzaku dimension.
+                ResourceKey<Level> suzakuKey = ResourceKey.create(Registries.DIMENSION,
+                        new net.minecraft.resources.ResourceLocation(Ergenverse.MOD_ID, "planet_suzaku"));
+                ServerLevel suzakuLevel = sp.server.getLevel(suzakuKey);
+
+                if (suzakuLevel != null) {
+                    // 2. Teleport the player to Planet Suzaku.
+                    BlockPos spawn = suzakuLevel.getSharedSpawnPos();
+                    if (spawn == BlockPos.ZERO) {
+                        spawn = suzakuLevel.getHeightmapPos(
+                                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                                new BlockPos(0, 0, 0));
+                    }
+                    suzakuLevel.getChunkAt(spawn); // ensure loaded
+                    sp.teleportTo(suzakuLevel, spawn.getX() + 0.5, spawn.getY() + 1.0,
+                            spawn.getZ() + 0.5, 0.0F, 0.0F);
+                    Ergenverse.LOGGER.info("[Ergenverse] Teleported {} to Planet Suzaku at ({}, {}, {}).",
+                            sp.getName().getString(), spawn.getX(), spawn.getY(), spawn.getZ());
+
+                    // 3. Build the Wang Family Village at the spawn point.
+                    if (!WangFamilyVillageBuilder.isAlreadyBuilt(suzakuLevel)) {
+                        WangFamilyVillageBuilder.build(suzakuLevel);
+                        Ergenverse.LOGGER.info("[Ergenverse] Wang Family Village built on Planet Suzaku.");
+                    }
                 } else {
-                    Ergenverse.LOGGER.info("[Ergenverse] Village already built — skipping build.");
+                    Ergenverse.LOGGER.error("[Ergenverse] Planet Suzaku dimension not found! Falling back to overworld village.");
+                    // Fallback: build village in overworld.
+                    if (!WangFamilyVillageBuilder.isAlreadyBuilt(level)) {
+                        WangFamilyVillageBuilder.build(level);
+                    }
+                    BlockPos center = WangFamilyVillageBuilder.getVillageCenter(level);
+                    BlockPos landing = center.north(3);
+                    sp.moveTo(landing.getX() + 0.5, center.getY() + 1.0, landing.getZ() + 0.5,
+                            0.0F, 180.0F);
+                    level.getChunkAt(center);
                 }
 
-                // 2. Teleport the player to a clear spot on the plaza (3
-                //    blocks north of center, standing on the spirit stone
-                //    plaza, facing south toward the spirit vein). This avoids
-                //    spawning them inside the spirit vein stone centerpiece.
-                BlockPos center = WangFamilyVillageBuilder.getVillageCenter(level);
-                BlockPos landing = center.north(3);
-                sp.moveTo(landing.getX() + 0.5, center.getY() + 1.0, landing.getZ() + 0.5,
-                        0.0F, 180.0F);
-                // Ensure the chunk stays loaded so the player doesn't fall through.
-                level.getChunkAt(center);
-                Ergenverse.LOGGER.info("[Ergenverse] Teleported {} to village plaza at ({}, {}, {}).",
-                        sp.getName().getString(), landing.getX(), center.getY() + 1, landing.getZ());
-
-                // 3. Give the tutorial book + starter gear (no vanilla chest).
+                // 4. Give the tutorial book + starter gear (no vanilla chest).
                 ItemStack book = TutorialBookFactory.create();
                 if (!sp.getInventory().add(book)) {
                     sp.drop(book, false);
                 }
-                // Starter gear (formerly in the SW storage chest):
                 giveItem(sp, dev.ergenverse.item.ErgenverseItems.SPIRIT_STONE.get(), 8);
                 giveItem(sp, dev.ergenverse.item.ErgenverseItems.JADE_SLIP.get(), 1);
                 giveItem(sp, dev.ergenverse.item.ErgenverseItems.QI_GATHERING_PILL.get(), 4);
@@ -99,9 +117,9 @@ public final class SpawnEventHandler {
                 giveItem(sp, dev.ergenverse.item.ErgenverseItems.TALISMAN_PAPER_BLANK.get(), 4);
                 Ergenverse.LOGGER.info("[Ergenverse] Tutorial book + starter gear given to {}.", sp.getName().getString());
 
-                // 4. Welcome messages.
+                // 5. Welcome messages.
                 sp.sendSystemMessage(Component.literal("")
-                        .append(Component.literal("Welcome to the Ergenverse.")
+                        .append(Component.literal("Welcome to Planet Suzaku.")
                                 .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)));
                 sp.sendSystemMessage(Component.literal("")
                         .append(Component.literal("You have been given a ")

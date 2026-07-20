@@ -1,5 +1,5 @@
 {
-  "_comment": "Crystal Forest Cavern — vast underground cavern filled with glowing crystal formations. The crystals are fossilized spirit energy from ancient eras. Light sources are the crystals themselves. Prime Directive: the crystal forest is a natural geological formation infused with ancient Qi.",
+  "_comment": "Crystal Forest Cavern \u2014 vast underground cavern filled with glowing crystal formations. The crystals are fossilized spirit energy from ancient eras. Light sources are the crystals themselves. Prime Directive: the crystal forest is a natural geological formation infused with ancient Qi.",
   "temperature": 0.3,
   "downfall": 0.2,
   "has_precipitation": false,
@@ -11,57 +11,11 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:bat",
-        "weight": 15,
-        "minCount": 4,
-        "maxCount": 8
-      },
-      {
-        "type": "minecraft:glow_squid",
-        "weight": 10,
-        "minCount": 2,
-        "maxCount": 4
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:skeleton",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:witch",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
-    "underground_water_creature": [
-      {
-        "type": "minecraft:glow_squid",
-        "weight": 10,
-        "minCount": 3,
-        "maxCount": 5
-      }
-    ],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []
   },

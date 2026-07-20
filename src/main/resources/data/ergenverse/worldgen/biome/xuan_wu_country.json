@@ -1,5 +1,5 @@
 {
-  "_comment": "Xuan Wu / Xuan Country (玄武国) — a country Wang Lin fled to while being chased by Duanmu Ji from the Sea of Devils. Canon (CANON_RI_COMPLETE_WORLD.md L29): mentioned as a destination during the Duanmu Ji arc. Cooler temperate climate, mountainous terrain. World-law tier: low. Prime Directive: the geography exists independently of the chase narrative — Duanmu Ji chased Wang Lin here because the mountains provided cover, not because the country was created for the chase.",
+  "_comment": "Xuan Wu / Xuan Country (\u7384\u6b66\u56fd) \u2014 a country Wang Lin fled to while being chased by Duanmu Ji from the Sea of Devils. Canon (CANON_RI_COMPLETE_WORLD.md L29): mentioned as a destination during the Duanmu Ji arc. Cooler temperate climate, mountainous terrain. World-law tier: low. Prime Directive: the geography exists independently of the chase narrative \u2014 Duanmu Ji chased Wang Lin here because the mountains provided cover, not because the country was created for the chase.",
   "temperature": -0.3,
   "downfall": 0.6,
   "has_precipitation": true,
@@ -11,61 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:sheep",
-        "weight": 8,
-        "minCount": 3,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:cow",
-        "weight": 6,
-        "minCount": 3,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:wolf",
-        "weight": 8,
-        "minCount": 3,
-        "maxCount": 5
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:spider",
-        "weight": 50,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 35,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:witch",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

@@ -1,5 +1,5 @@
 {
-  "_comment": "Vermilion Bird Country (朱雀国) — the ruling cultivation nation of Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L31): level-6 cultivation country (raised by Situ Nan). The Vermilion Bird Master / Vermilion Bird Child is a renewable office. Situ Nan was 2nd-Gen; Ye Wuyou was 1st; the 3rd betrayed Situ Nan; the 13th was Qian Pinghai; the 14th severed Situ Nan's arm; the 15th was Zhou Wutai; the 16th was Wang Lin. The Vermilion Bird Divine Sect headquarters is here (fire arts, Vermilion Bird bloodline, 'Vermilion Bird Nine Mysterious Transformations'). Highest-tier ecology on the planet. Derived fauna: Vermilion-Feather Hawk (Soul Transformation tier aerial predator). Derived flora: Vermilion-Blood Ginseng. World-law tier: medium (Soul Transformation ceiling). Prime Directive: the elevated Qi density is objective — it is the reason the country can sustain Soul Transformation cultivators and beasts, not the other way around.",
+  "_comment": "Vermilion Bird Country (\u6731\u96c0\u56fd) \u2014 the ruling cultivation nation of Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L31): level-6 cultivation country (raised by Situ Nan). The Vermilion Bird Master / Vermilion Bird Child is a renewable office. Situ Nan was 2nd-Gen; Ye Wuyou was 1st; the 3rd betrayed Situ Nan; the 13th was Qian Pinghai; the 14th severed Situ Nan's arm; the 15th was Zhou Wutai; the 16th was Wang Lin. The Vermilion Bird Divine Sect headquarters is here (fire arts, Vermilion Bird bloodline, 'Vermilion Bird Nine Mysterious Transformations'). Highest-tier ecology on the planet. Derived fauna: Vermilion-Feather Hawk (Soul Transformation tier aerial predator). Derived flora: Vermilion-Blood Ginseng. World-law tier: medium (Soul Transformation ceiling). Prime Directive: the elevated Qi density is objective \u2014 it is the reason the country can sustain Soul Transformation cultivators and beasts, not the other way around.",
   "temperature": 0.7,
   "downfall": 0.2,
   "has_precipitation": false,
@@ -12,61 +12,10 @@
     "grass_color_modifier": "dark_forest"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:horse",
-        "weight": 8,
-        "minCount": 3,
-        "maxCount": 5
-      },
-      {
-        "type": "minecraft:donkey",
-        "weight": 3,
-        "minCount": 1,
-        "maxCount": 2
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:blaze",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:husk",
-        "weight": 30,
-        "minCount": 2,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:witch",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:vindicator",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

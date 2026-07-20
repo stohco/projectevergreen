@@ -1,5 +1,5 @@
 {
-  "_comment": "Meteor Field (陨石带) — asteroid cluster biome of the Starry Sky dimension. Canon: cultivators fly through dense meteor fields between planets — sometimes harvesting iron meteorites for crafting, sometimes ambushed by void beasts lurking among the asteroids. Slightly more terrain than Starlight Void (denser floating islands). Sky is dark but with dim reddish fog from meteor dust. Features: dense end_stone asteroids (minecraft:end_island generates floating islands, matching asteroid clusters), occasional end_gateway rifts. Mobs: empty (handled by simulation).",
+  "_comment": "Meteor Field (\u9668\u77f3\u5e26) \u2014 asteroid cluster biome of the Starry Sky dimension. Canon: cultivators fly through dense meteor fields between planets \u2014 sometimes harvesting iron meteorites for crafting, sometimes ambushed by void beasts lurking among the asteroids. Slightly more terrain than Starlight Void (denser floating islands). Sky is dark but with dim reddish fog from meteor dust. Features: dense end_stone asteroids (minecraft:end_island generates floating islands, matching asteroid clusters), occasional end_gateway rifts. Mobs: empty (handled by simulation).",
   "temperature": 0.3,
   "downfall": 0.0,
   "has_precipitation": false,

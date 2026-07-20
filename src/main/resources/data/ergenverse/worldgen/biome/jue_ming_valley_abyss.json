@@ -1,5 +1,5 @@
 {
-  "_comment": "Jue Ming Valley Abyss (绝命谷深渊) — the deepest layer, gateway to the Foreign Battleground. Canon: the Jue Ming Valley tokens activate here, opening the rift to the Extraterrestrial Battleground. Ancient corpses and ruined formations from countless battles. Death-qi is so thick that Nascent Soul cultivators feel pressure. Prime Directive: the abyss is objectively the most dangerous non-Cave-World location on Planet Suzaku.",
+  "_comment": "Jue Ming Valley Abyss (\u7edd\u547d\u8c37\u6df1\u6e0a) \u2014 the deepest layer, gateway to the Foreign Battleground. Canon: the Jue Ming Valley tokens activate here, opening the rift to the Extraterrestrial Battleground. Ancient corpses and ruined formations from countless battles. Death-qi is so thick that Nascent Soul cultivators feel pressure. Prime Directive: the abyss is objectively the most dangerous non-Cave-World location on Planet Suzaku.",
   "temperature": -0.5,
   "downfall": 0.0,
   "has_precipitation": false,
@@ -11,32 +11,7 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "monster": [
-      {
-        "type": "minecraft:wither_skeleton",
-        "weight": 40,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 30,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:enderman",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:warden",
-        "weight": 2,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
     "creature": [],
     "ambient": [],
     "underground_water_creature": [],

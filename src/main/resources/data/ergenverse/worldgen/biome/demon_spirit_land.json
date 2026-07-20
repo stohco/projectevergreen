@@ -1,5 +1,5 @@
 {
-  "_comment": "Demon Spirit Land / East Demon Spirit Sea (魔灵地 / 东海魔灵海) — a vast corrupted spirit-demon coastal region on Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L57; CANON_RI_TIMELINE.md E23; CANON_RI_ECOLOGY.md Region 5): Site of Wang Lin's adoption of Thirteen as 1st disciple; Yao Xixue's first appearance (Ch. 491); All-Seer / Ling Tianhou / Blood Ancestor convergence; entrance to the Immortal Monarch's Cave Mansion (L64). The Mountain Valley Tribe (soul-refining bloodline offshoot) and Ancient Demon City sit at its heart. Yao Xixue / Blood Ancestor / Feng Mo arc takes place here. The environment is hostile: salt-blighted mist dampens divine sense, demonic-spirit energy interferes with techniques, and the coast is littered with broken restriction pillars. Spirit veins are twisted and cold. Prime Directive: the corruption and spirit-demon saturation are objective properties of this land — they exist because the region was the ancient battleground of soul-refining cultivators and demon spirits, not because anyone perceives them.",
+  "_comment": "Demon Spirit Land / East Demon Spirit Sea (\u9b54\u7075\u5730 / \u4e1c\u6d77\u9b54\u7075\u6d77) \u2014 a vast corrupted spirit-demon coastal region on Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L57; CANON_RI_TIMELINE.md E23; CANON_RI_ECOLOGY.md Region 5): Site of Wang Lin's adoption of Thirteen as 1st disciple; Yao Xixue's first appearance (Ch. 491); All-Seer / Ling Tianhou / Blood Ancestor convergence; entrance to the Immortal Monarch's Cave Mansion (L64). The Mountain Valley Tribe (soul-refining bloodline offshoot) and Ancient Demon City sit at its heart. Yao Xixue / Blood Ancestor / Feng Mo arc takes place here. The environment is hostile: salt-blighted mist dampens divine sense, demonic-spirit energy interferes with techniques, and the coast is littered with broken restriction pillars. Spirit veins are twisted and cold. Prime Directive: the corruption and spirit-demon saturation are objective properties of this land \u2014 they exist because the region was the ancient battleground of soul-refining cultivators and demon spirits, not because anyone perceives them.",
   "temperature": 0.7,
   "downfall": 0.3,
   "has_precipitation": true,
@@ -15,50 +15,7 @@
     "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:blaze",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:magma_cube",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:ghast",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 1
-      },
-      {
-        "type": "minecraft:wither_skeleton",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:enderman",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:drowned",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 2
-      }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

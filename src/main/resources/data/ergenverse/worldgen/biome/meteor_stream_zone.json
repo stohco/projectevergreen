@@ -1,5 +1,5 @@
 {
-  "_comment": "Meteor Stream Zone — a sky region where meteor streams pass through periodically. Meteorites carry rare ores from other star systems. Cultivators harvest meteoric iron here. Prime Directive: the meteor stream is an objective astronomical phenomenon.",
+  "_comment": "Meteor Stream Zone \u2014 a sky region where meteor streams pass through periodically. Meteorites carry rare ores from other star systems. Cultivators harvest meteoric iron here. Prime Directive: the meteor stream is an objective astronomical phenomenon.",
   "temperature": 0.1,
   "downfall": 0.0,
   "has_precipitation": false,
@@ -14,20 +14,7 @@
     "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:enderman",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:phantom",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

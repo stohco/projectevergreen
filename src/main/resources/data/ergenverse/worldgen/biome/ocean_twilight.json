@@ -1,5 +1,5 @@
 {
-  "_comment": "Twilight zone — dim, bioluminescent creatures. Auto-generated ocean layer. Prime Directive: the ocean layers exist objectively — the beasts that live in the deep are real, not spawned for the player.",
+  "_comment": "Twilight zone \u2014 dim, bioluminescent creatures. Auto-generated ocean layer. Prime Directive: the ocean layers exist objectively \u2014 the beasts that live in the deep are real, not spawned for the player.",
   "temperature": 0.2,
   "downfall": 0.5,
   "has_precipitation": true,
@@ -11,38 +11,11 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:guardian",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:glow_squid",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 2
-      }
-    ],
-    "underground_water_creature": [
-      {
-        "type": "minecraft:glow_squid",
-        "weight": 10,
-        "minCount": 3,
-        "maxCount": 5
-      }
-    ],
+    "monster": [],
+    "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []
   },

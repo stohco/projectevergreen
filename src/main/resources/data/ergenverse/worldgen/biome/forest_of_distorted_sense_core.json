@@ -1,5 +1,5 @@
 {
-  "_comment": "Forest of Distorted Divine Sense — Core (幻觉森林核心) — the heart of the forest where divine sense is completely non-functional (90% reduction). Canon: only the Heaven-Defying Bead or equivalent perception-artifact can function here. The trees are sentient and hostile. Ancient restrictions linger from a forgotten era. Soul Formation cultivators have perished here. Prime Directive: this is objectively the most perception-hostile region on Planet Suzaku.",
+  "_comment": "Forest of Distorted Divine Sense \u2014 Core (\u5e7b\u89c9\u68ee\u6797\u6838\u5fc3) \u2014 the heart of the forest where divine sense is completely non-functional (90% reduction). Canon: only the Heaven-Defying Bead or equivalent perception-artifact can function here. The trees are sentient and hostile. Ancient restrictions linger from a forgotten era. Soul Formation cultivators have perished here. Prime Directive: this is objectively the most perception-hostile region on Planet Suzaku.",
   "temperature": 0.4,
   "downfall": 0.7,
   "has_precipitation": true,
@@ -11,32 +11,7 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "monster": [
-      {
-        "type": "minecraft:illusioner",
-        "weight": 40,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:witch",
-        "weight": 35,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:enderman",
-        "weight": 30,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:evoker",
-        "weight": 10,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
     "creature": [],
     "ambient": [],
     "underground_water_creature": [],

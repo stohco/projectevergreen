@@ -1,5 +1,5 @@
 {
-  "_comment": "Dead Beast Crypt — underground crypt containing the skeleton of a massive spirit beast that died here millennia ago. The bones still radiate residual beast Qi. Scavenger beasts feed on the remaining energy. Prime Directive: the skeleton is objective biological remains — the beast lived and died here.",
+  "_comment": "Dead Beast Crypt \u2014 underground crypt containing the skeleton of a massive spirit beast that died here millennia ago. The bones still radiate residual beast Qi. Scavenger beasts feed on the remaining energy. Prime Directive: the skeleton is objective biological remains \u2014 the beast lived and died here.",
   "temperature": 0.1,
   "downfall": 0.0,
   "has_precipitation": false,
@@ -11,43 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
-    "creature": [
-      {
-        "type": "minecraft:bat",
-        "weight": 20,
-        "minCount": 4,
-        "maxCount": 8
-      }
-    ],
-    "monster": [
-      {
-        "type": "minecraft:skeleton",
-        "weight": 30,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:cave_spider",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:zombie",
-        "weight": 15,
-        "minCount": 2,
-        "maxCount": 3
-      }
-    ],
+    "creature": [],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

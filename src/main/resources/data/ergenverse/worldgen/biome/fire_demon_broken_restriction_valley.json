@@ -1,5 +1,5 @@
 {
-  "_comment": "Fire Demon Country — Broken Restriction Valley. Auto-generated sub-region from canon location L30 (火魔国). Parent world-law tier: low. Spirit veins: Fire/demonic spiritual energy; a fragmented ancient demon sealed beneath. Prime Directive: this region exists objectively as part of Fire Demon Country; cultivation determines perception, not existence.",
+  "_comment": "Fire Demon Country \u2014 Broken Restriction Valley. Auto-generated sub-region from canon location L30 (\u706b\u9b54\u56fd). Parent world-law tier: low. Spirit veins: Fire/demonic spiritual energy; a fragmented ancient demon sealed beneath. Prime Directive: this region exists objectively as part of Fire Demon Country; cultivation determines perception, not existence.",
   "temperature": 0.9,
   "downfall": 0.0,
   "has_precipitation": false,
@@ -14,32 +14,7 @@
     "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:spider",
-        "weight": 40,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:zombie",
-        "weight": 30,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:skeleton",
-        "weight": 25,
-        "minCount": 1,
-        "maxCount": 2
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []

@@ -1,5 +1,5 @@
 {
-  "_comment": "Great Wang Dynasty — Abandoned Battlefield. Auto-generated sub-region from canon location L32 (大王朝). Parent world-law tier: medium. Spirit veins: Medium-tier; Wang Lin's eponymous dynasty. Prime Directive: this region exists objectively as part of Great Wang Dynasty; cultivation determines perception, not existence.",
+  "_comment": "Great Wang Dynasty \u2014 Abandoned Battlefield. Auto-generated sub-region from canon location L32 (\u5927\u738b\u671d). Parent world-law tier: medium. Spirit veins: Medium-tier; Wang Lin's eponymous dynasty. Prime Directive: this region exists objectively as part of Great Wang Dynasty; cultivation determines perception, not existence.",
   "temperature": 0.65,
   "downfall": 0.30000000000000004,
   "has_precipitation": true,
@@ -11,36 +11,10 @@
     "grass_color_modifier": "none"
   },
   "spawners": {
-    "ambient": [
-      {
-        "type": "minecraft:bat",
-        "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
-      }
-    ],
+    "ambient": [],
     "axolotls": [],
     "creature": [],
-    "monster": [
-      {
-        "type": "minecraft:skeleton",
-        "weight": 40,
-        "minCount": 1,
-        "maxCount": 3
-      },
-      {
-        "type": "minecraft:zombie",
-        "weight": 30,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:creeper",
-        "weight": 20,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ],
+    "monster": [],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []
