@@ -19,7 +19,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -88,7 +87,7 @@ public final class Ergenverse {
     public static final String MOD_ID = "ergenverse";
     public static final Logger LOGGER = LoggerFactory.getLogger("Ergenverse");
 
-    public Ergenverse(ModContainer modContainer, IEventBus modEventBus) {
+    public Ergenverse(IEventBus modEventBus) {
         LOGGER.info("[Ergenverse] Booting the Living Mortal World...");
         LOGGER.info("[Ergenverse] Prime Directive: {}", WorldPhilosophy.PRIME_DIRECTIVE);
 
