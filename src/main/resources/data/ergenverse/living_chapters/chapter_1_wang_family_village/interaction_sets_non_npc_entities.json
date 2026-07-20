@@ -1,0 +1,328 @@
+{
+  "_comment": "Universal Interaction sets for non-NPC Wang Family Village entities (Article XXXVI). These entities — locations, structures, beasts, items — are interactable. The player (and NPCs) discover their interactions through the affordance system. The interaction_set format mirrors the NPC interaction_sets but for non-sentient entities. Each entity exposes verbs from the universal Interaction catalog (Article XXXVI.2), gated by perception, conditions, or state. DATA, not Java (Article XXVI).",
+  "_schema": "interaction_sets",
+  "_schema_version": 1,
+  "_article": "XXXVI.2",
+  "_reference": "interaction_sets_chapter_1.json (NPC format, same schema structure adapted for entities)",
+  "entities": {
+    "location:ancestral_hall": {
+      "name": "Wang Family Village Ancestral Hall",
+      "description": "The village ancestral hall. Holds the Wang family genealogy, ancestral tablets, and — hidden among the records — the strange jade. Quiet, old, spiritually thick air. The village elder tends it each morning (mortal devotion). Wang Lin's family mark on the wall is a degraded formation fragment — evidence the Wang family once had a cultivator ancestor.",
+      "exposed_interactions": [
+        {
+          "verb": "enter",
+          "gating": "always",
+          "note": "The hall is a public village space. Anyone may enter during the day. At night, the door is closed but not locked (mortal village — no security).",
+          "outcomes": {
+            "mortal_player": "A quiet hall. Genealogy tablets. Dust motes. Nothing remarkable.",
+            "qi_condensation_player": "The air feels thick. Faint spiritual fluctuation. The player may notice the strange jade among the records (30% chance without the elder's gift).",
+            "foundation_establishment_player": "Clear spiritual residue coming from the jade's direction. The player can identify the jade's location without searching. If perception is very high, may sense the Heaven Defying Bead's resonance."
+          }
+        },
+        {
+          "verb": "examine",
+          "gating": "always",
+          "note": "Examining objects in the hall reveals information through the Knowledge System. No special gate.",
+          "outcomes": {
+            "genealogy_tablets": "Wang family history. Names, dates, a faded note about 'great-grandfather who could move things with his mind' (formation fragment hint). Knowledge += wang_family_history_fragment.",
+            "family_mark": "Perception >= qi_condensation reveals it is a degraded formation fragment, not merely decorative. Knowledge += formation_fragment_hint."
+          }
+        },
+        {
+          "verb": "search_records",
+          "gating": "perception: qi_condensation",
+          "note": "Systematic search is perception-gated. Without Qi Condensation, the player sees only old paper.",
+          "conditions": ["location:inside_ancestral_hall", "time_spent >= 2000 ticks"],
+          "outcomes": {
+            "success": "Find cultivator ancestor reference (30% chance). Knowledge += wang_family_cultivator_ancestor. May independently notice jade (30%).",
+            "failure": "Nothing useful found. Time wasted."
+          }
+        },
+        {
+          "verb": "take",
+          "gating": "always",
+          "gating_note": "Taking is ALWAYS possible. But taking the jade has consequences (see 'receive' for the earned path).",
+          "note": "This is the THEFT. The village will know. The elder's trust breaks. Wang Lin's judgment: negative motive, unworthy.",
+          "target_object": "strange_jade",
+          "conditions": ["strange_jade.present=true"],
+          "outcomes": {
+            "unobserved_theft": "Obtained jade. Discovery days later. Rumor: 'someone stole from the ancestral hall.' Village elder trust -= 10. Wang Lin mentorship possibility BLOCKED (Article XXXI.2: 'motive' fails). Memory: stole_the_jade.",
+            "observed_theft": "Wang Tianshui witnesses. Confrontation. Reputation -= 5 village-wide. May escalate to violence (he is Qi Condensation if cultivator-elder, mortal father if not). Grievance += 40 toward player.",
+            "post_discovery": "Even if unobserved, the player carrying a spiritual item attracts cultivator attention. Risk increases."
+          }
+        },
+        {
+          "verb": "receive",
+          "gating": "favor:npc_wang_tianshui >= 5 AND npc_wang_tianshui.desire:gift_strange_jade_active",
+          "gating_note": "The EARNED path. Wang Tianshui gifts the jade after the player has demonstrated trust through village help (favor >= 5) AND he judges the moment right (his desire activates, which checks trust >= 50 AND helped_village >= 3). This is Article XXXI.2 gift behavior — no explanation, no quest, just a gift.",
+          "target_object": "strange_jade",
+          "conditions": ["strange_jade.present=true", "favor:npc_wang_tianshui >= 5"],
+          "outcomes": {
+            "received": "Wang Tianshui says: 'Take this. It has been here longer than I have.' No explanation. The plot begins quietly. Memory: received_the_jade_from_elder. Favor += 1. The player now carries a spiritual item that Wang Lin (when encountered) may sense — and judge the player's worthiness based on how they obtained it."
+          }
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "note": "The ancestral hall is observable. Observation at different times of day reveals different NPC behaviors (Wang Tianshui's morning prayer, other villagers paying respects).",
+          "outcomes": {
+            "morning": "You see Wang Tianshui lighting incense at the family shrine. He whispers something to the tablets. If he notices you watching, he nods and continues. Memory: observed_elder_morning_ritual.",
+            "evening": "The hall is empty. Candles flicker. The jade sits among the records, waiting."
+          }
+        }
+      ]
+    },
+    "location:south_bend": {
+      "name": "The South Bend (fishing spot, wolf territory edge)",
+      "description": "A wide bend in the river south of the village. Good fishing (cod). Beautiful at dawn. Dangerous at night. The village's primary interaction point with the forest — and with the wolf packs that live in it. This is where Da Niu takes Wang Ping fishing. This is where the hunting dog may die. This is where the Article XXXI.5 memory test event chain begins.",
+      "exposed_interactions": [
+        {
+          "verb": "fish",
+          "gating": "item_in_hand:fishing_rod OR item_in_inventory:string",
+          "note": "Fishing is available to anyone with a rod. The south bend has its own economy of fish — not part of the village economy_schema, but player-traded.",
+          "conditions": ["item_in_hand:fishing_rod OR item_in_inventory:fishing_rod"],
+          "outcomes": {
+            "peaceful": "Catch 1-3 cod. +morale. Takes 2000 ticks. Memory: fished_south_bend.",
+            "wolf_encounter_5pct": "5% chance of wolf encounter during daytime fishing. 25% at night. If the dog is present and following, it defends — may die.",
+            "wolf_encounter_25pct_night": "Much higher risk at night. If the player is with Da Niu and Wang Ping: they fight together. If alone: flee or fight."
+          }
+        },
+        {
+          "verb": "investigate",
+          "gating": "perception: qi_condensation",
+          "note": "Qi Condensation perception reveals wolf tracks that are invisible to mortals.",
+          "target_object": "wolf_tracks",
+          "conditions": ["wolf_tracks.nearby", "weather:!rain"],
+          "outcomes": {
+            "tracks_found": "Knowledge += south_bend_wolf_activity. You can warn the village (triggers rumor engine). If you warn Zhou Rui or Wang Tianshui BEFORE the attack, the dog may not be at the south bend when the wolves come. The memory test event is PREVENTABLE — but only if the player acts on the information.",
+            "no_tracks": "Nothing found. Tracks may be older or washed away."
+          }
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "note": "Observing the south bend at different times reveals ecological information.",
+          "outcomes": {
+            "dawn": "Mist on the water. Fish jumping. Beautiful. Calm. If Da Niu and Wang Ping are here, they are fishing.",
+            "midday": "Wolf tracks visible in mud (if perception sufficient). Evidence of pack activity.",
+            "night": "Dangerous. Howling from the forest. This is when wolf attacks trigger. The player should not be here without reason."
+          }
+        },
+        {
+          "verb": "harvest",
+          "gating": "perception: qi_condensation_2",
+          "note": "Spirit herbs grow near the south bend (the forest edge). A cultivator can sense them; a mortal sees weeds.",
+          "target_object": "spirit_herbs",
+          "conditions": ["season:spring OR season:summer", "perception: qi_condensation_2"],
+          "outcomes": {
+            "found": "Harvest crimson_root or spirit moss. Satisfies part of Zhou Tingsu's m_request_herb_gathering if the player brings them back.",
+            "not_found": "Nothing harvestable. The herbs are deeper in the forest (past the safe zone)."
+          }
+        },
+        {
+          "verb": "explore_together",
+          "gating": "target:npc present AND trust >= 20",
+          "note": "If the player is with an NPC at the south bend, 'explore' becomes available — they can investigate the forest edge together.",
+          "conditions": ["nearby:npc_wang_ping OR npc_da_niu", "trust >= 20"],
+          "outcomes": {
+            "forest_edge": "Discover the forest edge ecology. May find wolf den entrance (dangerous), herb patches, or the old restriction cave mentioned in Wang Lin's motivation_state.",
+            "wolf_den": "Extremely dangerous. May trigger combat. The NPC will flee if outmatched. Memory: discovered_wolf_den."
+          }
+        }
+      ]
+    },
+    "structure:wang_lin_childhood_home": {
+      "name": "Wang Lin's Childhood Home",
+      "description": "A modest wooden house in the village. Wang Lin grew up here before joining Heng Yue. Now his parents (Wang Tianshui and Zhou Tingsu) live here. Inside: a wooden table, straw mats, a faded family mark on the wall. Outside: a small garden with mundane vegetables. Nothing valuable to a cultivator — except the faint spiritual residue of the Heaven Defying Bead's long-ago proximity (via the ancestral hall next door).",
+      "exposed_interactions": [
+        {
+          "verb": "enter",
+          "gating": "always",
+          "note": "The childhood home is a residence, not a public building. Entering without invitation is possible but rude — and Zhou Tingsu may react.",
+          "conditions": [],
+          "outcomes": {
+            "uninvited": "Zhou Tingsu: 'Can I help you?' (polite cold). Favor -1 if you snoop. Memory: entered_childhood_home_uninvited.",
+            "invited": "Wang Ping or Zhou Tingsu invites the player in. Warm. Tea offered. +favor.",
+            "empty": "No one home. You can look around. See the marks, the table, the garden."
+          }
+        },
+        {
+          "verb": "examine",
+          "gating": "always",
+          "note": "Examining the family mark and interior reveals Wang Lin's origins without anyone telling the player about them. Discovery, not instruction.",
+          "target_object": "family_mark",
+          "outcomes": {
+            "mortal": "A faded mark. 'The Wang family has been here for generations.' History +wang_family_history_generic.",
+            "qi_condensation": "The mark is a degraded formation fragment. It was once active. Someone in this family could manipulate formations. Knowledge += formation_fragment_hint. This is the first clue that the Wang family has cultivation heritage — but the player must be perceptive enough to see it."
+          }
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "note": "Observing the home at different times of day reveals the family's routine.",
+          "outcomes": {
+            "morning": "Zhou Tingsu cooks. Wang Tianshui has already left for the fields or the ancestral hall. The garden is being tended.",
+            "evening": "Wang Tianshui returns. Zhou Tingsu sets the table. Wang Ping does homework by candlelight. A mundane, warm scene — the life Wang Lin left behind.",
+            "night": "Empty. Dark. If the player is inside (uninvited), the intimacy is uncomfortable."
+          }
+        },
+        {
+          "verb": "investigate",
+          "gating": "perception: foundation_establishment",
+          "note": "At Foundation Establishment perception, the player may detect spiritual residue from the Heaven Defying Bead that was once nearby (kept in the ancestral hall). The residue leaks through the walls of both buildings.",
+          "conditions": ["perception: foundation_establishment", "nearby:ancestral_hall_jade_residue"],
+          "outcomes": {
+            "residue_detected": "Knowledge += spiritual_residue_childhood_home. The player realizes the jade was stored very close to this home — possibly IN this home before being moved to the hall. This changes the jade's narrative: it was a family keepsake, not just a hall artifact."
+          }
+        }
+      ]
+    },
+    "block:irrigation_ditch": {
+      "name": "Village Irrigation Ditch",
+      "description": "The primary irrigation infrastructure for Wang Family Village's rice fields. Runs from the north stream to the southern fields. Cracked in several places after years of neglect and Teng family exploitation (they take resources but don't invest in maintenance). When damaged, crop yield drops — which makes the Teng tax even more devastating. Wang Tianshui's m_ensure_winter_ready motivation fires when the ditch needs repair. This is infrastructure as gameplay — not a quest, but a real system the player can affect.",
+      "exposed_interactions": [
+        {
+          "verb": "inspect",
+          "gating": "always",
+          "note": "Anyone can look at the ditch. The damage (or lack thereof) is visible.",
+          "outcomes": {
+            "intact": "Water flows normally. Fields are irrigated. Nothing needs doing.",
+            "damaged": "Cracks visible. Water seeping out in places. Crop yield will be reduced next harvest. This is the trigger for Wang Tianshui's repair motivation."
+          }
+        },
+        {
+          "verb": "repair",
+          "gating": "world_state:irrigation_damaged=true AND (item_in_inventory:cobblestone>=16 OR item_in_inventory:clay>=8)",
+          "note": "Repair requires materials. The player (or an NPC) must provide cobblestone or clay. This is not a quest reward — it is the world-state changing based on player/NPC action. Favor and debt consequences are the reward.",
+          "conditions": ["world_state:irrigation_damaged=true"],
+          "outcomes": {
+            "repaired": "Irrigation restored. Village crop yield += 1.0 (substantial). Wang Tianshui favor +3, debt +1 (he may call it in later per favor_debt_ledger). Memory: repaired_irrigation. If Wang Ping's offer_labor fires concurrently, the time cost halves.",
+            "insufficient_materials": "Cannot repair. Need 16 cobblestone or 8 clay. The ditch stays damaged. Yield penalty persists."
+          }
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "note": "Observing the irrigation ditch at different seasons reveals the village's economic health.",
+          "outcomes": {
+            "spring": "Water flows after spring thaw. Da Niu cleans debris. Activity suggests the village is preparing for planting.",
+            "summer": "Full flow. Crops growing. The village looks alive.",
+            "autumn": "Peak flow before harvest. Then the Teng family takes half the grain. The ditch will receive no maintenance this season.",
+            "winter": "Frozen or dry. Irrelevant until spring. If damaged in autumn and not repaired, the winter is harder."
+          }
+        }
+      ]
+    },
+    "item:strange_jade": {
+      "name": "The Strange Jade",
+      "description": "A spiritual artifact stored in the Wang Family Village ancestral hall. In Renegade Immortal, this is or contains a fragment of the Heaven Defying Bead. It is the plot's first seed — the thing that starts Wang Lin's cultivation journey. In the mod, the jade can be obtained through two paths: theft (dishonorable, breaks trust, blocks mentorship) or gift (earned through village help, honorable, opens mentorship possibility). The jade is NOT a quest reward — it is a WORLD OBJECT that the player discovers, earns, or steals. Per Article II: it exists because it exists (the ancestral hall has always held it), not because the player needs it.",
+      "canon_fidelity": "EXPLICIT — the Heaven Defying Bead / strange jade is central to Renegade Immortal.",
+      "exposed_interactions": [
+        {
+          "verb": "examine",
+          "gating": "perception: foundation_establishment",
+          "note": "Examining the jade at close range with Foundation Establishment perception reveals its true nature. Below that, it is just an old jade piece.",
+          "conditions": ["jade in inventory OR jade in world and nearby"],
+          "outcomes": {
+            "mortal": "An old jade piece. Warm to the touch (you imagine). No visible inscriptions. Knowledge += strange_jade_seen.",
+            "qi_condensation": "Faint spiritual patterns on the surface. The jade is NOT inert. It has internal structure. Knowledge += jade_has_patterns.",
+            "foundation_establishment": "The patterns are active. The jade resonates slightly with your cultivation base. Knowledge += jade_resonates_with_cultivation. This jade is a cultivation resource — but you cannot yet use it.",
+            "nascent_soul_plus": "Clear resonance with the Nascent Soul frequency. The jade could accelerate breakthrough preparation. Knowledge += jade_breakthrough_potential."
+          }
+        },
+        {
+          "verb": "consume",
+          "gating": "cultivation >= nascent_soul AND jade.resonance >= 0.8",
+          "note": "Consuming (absorbing) the jade is the canonical activation. This is NOT a crafting recipe. The jade merges with the consumer's cultivation base. Per Article XXXVIII: the three gates (willingness, withstand, integrate) all apply — the jade would destroy a Qi Condensation cultivator's soul. This interaction is gated by cultivation realm AND the jade's resonance with the consumer.",
+          "conditions": ["jade in inventory", "cultivation >= nascent_soul"],
+          "outcomes": {
+            "absorbed": "The jade's spiritual energy integrates into the consumer. Cultivation base enhanced. The jade is destroyed as an independent object. This is the canonical activation path — but it happens mid-to-late game, not Chapter 1. Memory: jade_absorbed.",
+            "failed": "Soul damage. The consumer dies or is severely injured. The jade remains. This is the canon consequence of using a Heaven Defying Bead too early (Wang Lin would refuse: 'You wouldn't survive using it.')."
+          }
+        },
+        {
+          "verb": "gift",
+          "gating": "always",
+          "note": "The player can gift the jade to an NPC. The only NPC who would understand it is Wang Tianshui (if cultivator-elder) or Wang Lin (if present). Gifting to anyone else: 'Why are you giving me a rock?'",
+          "conditions": ["jade in inventory"],
+          "outcomes": {
+            "to_wang_lin": "Wang Lin examines the jade. He recognizes its nature. Depending on relationship and judgment: may accept (if he judges the player worthy), redirect (if not), or ignore (if irrelevant). Per Article XXXI.2: he evaluates understanding, harm, motive, judgment, timing.",
+            "to_wang_tianshui": "The elder recognizes it as the family heirloom. He takes it back. Favor +5 if the player gave it willingly (you returned what you stole), favor += 2 if you earned it (you gave back a gift). If the player stole it and then 'gift' it back: '...I know.' Favor -3 (he knows it was stolen, even if returned).",
+            "to_other": "The NPC does not understand the jade. May treat it as a decorative object. Favor 0. The jade is wasted in non-cultivator hands."
+          }
+        },
+        {
+          "verb": "trade",
+          "gating": "always",
+          "note": "The jade CAN be traded — but its true value is astronomical (it is a fragment of the Heaven Defying Bead). Wang Qingyue would price it at 2 iron. A traveling cultivator merchant might recognize it and offer 50-100 spirit stones. The disparity between mortal and cultivator valuation is deliberate — it shows the cultivation gap (conf_cultivation_gap).",
+          "conditions": ["jade in inventory", "nearby:npc_wang_qingyue OR traveling_merchant"],
+          "outcomes": {
+            "to_qingyue": "Price: 2 iron. She sells it to a merchant. The merchant eventually recognizes it. Wang Qingyue never knows what she gave away. The village loses its most valuable artifact. Memory: jade_traded_for_2_iron.",
+            "to_merchant": "Price: 50-100 spirit stones (if the merchant recognizes it). The player gains cultivation resources but loses the plot item. Wang Lin (if encountered later) may not even be able to find it. Memory: jade_sold_to_merchant."
+          }
+        }
+      ]
+    },
+    "species:wang_family_hunting_dog": {
+      "name": "Old Chen's Hunting Dog",
+      "description": "The Wang family's hunting dog. A loyal, unremarkable village dog that has been with Old Chen for years. Its role in the story is structural: the dog's death during a wolf attack at the south bend is the canonical Article XXXI.5 memory test event — the moment that proves the world has memory. When the dog dies, Old Chen says 'Used to have one.' Months later, a child retells the story. The player can prevent or fail to prevent the death by acting on information (wolf tracks, Zhou Rui's warning, not going to the south bend at night). The dog is the memory metric made flesh.",
+      "canon_fidelity": "INFERRED — the dog is an invented device to test the memory metric. The wolf attack is INFERRED. The memory test sequence is the user's directive (Article XXXI.5). The dog's death is a universal archetype, not a canon-specific event.",
+      "exposed_interactions": [
+        {
+          "verb": "pet",
+          "gating": "dog.alive=true",
+          "note": "Simple affection. No cost. The dog wags its tail. Building a bond with the dog increases the emotional impact if it dies (grief, guilt, responsibility).",
+          "conditions": ["dog.alive=true", "nearby:dog<3"],
+          "outcomes": {
+            "petted": "+morale (tiny). The dog remembers you (tracks following behavior). If you feed the dog, it follows you longer. If the dog dies while following you: the memory event attributes the death to YOUR presence, changing the grief narrative."
+          }
+        },
+        {
+          "verb": "feed",
+          "gating": "dog.alive=true AND item_in_inventory:meat>=1",
+          "note": "Feeding the dog makes it follow you for 6000 ticks. This extends the interaction window — if a wolf encounter happens during that time, the dog is with you.",
+          "conditions": ["dog.alive=true", "item_in_inventory:cod OR chicken OR beef"],
+          "outcomes": {
+            "fed": "Dog follows for 6000 ticks. During this time, if a wolf encounter triggers: the dog defends you — and may die. If the dog dies defending the player: the death is attributed to the player's presence (different memory narrative than if the dog died with Old Chen). Favor with Old Chen: +1 (fed his dog). Memory: fed_the_dog."
+          }
+        },
+        {
+          "verb": "observe",
+          "gating": "always",
+          "note": "Observing the dog's behavior reveals information about the environment.",
+          "outcomes": {
+            "normal": "The dog patrols the village edge, sniffs the irrigation ditch, sleeps near Old Chen's door. Normal village life.",
+            "restless": "The dog paces, whines, stares toward the forest. Wolf activity is increasing. This is an early warning system — the dog senses wolves before mortals do. If the player acts on this: the wolf attack may be prevented."
+          }
+        },
+        {
+          "verb": "command_hunt",
+          "gating": "perception: qi_condensation AND dog.alive=true",
+          "note": "A Qi Condensation cultivator can command the dog to hunt specific prey. The dog obeys (it has some sensitivity to spiritual commands). 70% success rate. 10% chance of encountering wolves.",
+          "conditions": ["dog.alive=true", "nearby:spirit_rabbit OR spirit_fox<30"],
+          "outcomes": {
+            "success": "Dog brings back prey (spirit rabbit/fox). +food. Memory: dog_hunt_success.",
+            "nothing": "Dog returns empty. 20% chance.",
+            "wolf_encounter": "10% chance of wolf encounter during hunt. If at the south bend: canonical attack sequence. If elsewhere: dog may escape."
+          }
+        },
+        {
+          "verb": "protect",
+          "gating": "dog.alive=true AND combat_imminent",
+          "note": "The player can choose to protect the dog during a wolf encounter. This is a moral choice, not a combat mechanic — the dog is fragile.",
+          "conditions": ["wolf_attack_active=true", "dog.nearby=true"],
+          "outcomes": {
+            "saved": "Dog survives. Player gains favor with Old Chen (+3) and the village (+1). Memory: protected_dog_during_attack.",
+            "failed": "Dog dies. The memory test event triggers. Old Chen's grief. Wang Ping's grief. The child's retelling. The world remembers."
+          }
+        }
+      ]
+    }
+  },
+  "_design_notes": {
+    "non_npc_interaction_difference": "NPC interaction_sets gate verbs by relationship, trust, and knowledge. Non-NPC interaction_sets gate by perception, physical conditions, and world state. A location does not need trust to be entered — it needs the player to be there. A beast does not need relationship score — it needs the player to be capable of the verb (Qi Condensation for command_hunt).",
+    "the_jade_is_central": "The strange jade's interaction_set is the richest because it IS the plot's central object. It can be examined (discovery), stolen (failure path), gifted (earned path), consumed (mid-game activation), traded (failure path), or gifted to NPCs (Wang Lin, Wang Tianshui). Each path has different consequences for the player's relationship graph, the memory ledger, and the cultivation gap conflict.",
+    "the_dog_is_central": "The dog's interaction_set is the simplest but most emotionally resonant. Every verb (pet, feed, observe, command_hunt, protect) serves the memory metric. The dog is not gameplay — the dog is the proof that the world remembers.",
+    "discovery_without_instruction": "Per Article XXXI.3, the player should be able to accidentally recreate Wang Lin's early life. The south bend, the childhood home, and the ancestral hall all have examine/observe interactions that reveal information WITHOUT any NPC explaining it. The family mark (formation fragment), the jade's spiritual residue, the wolf tracks, the irrigation damage — all discoverable through observation, not instruction. This is why the observation verb exists on every entity."
+  }
+}

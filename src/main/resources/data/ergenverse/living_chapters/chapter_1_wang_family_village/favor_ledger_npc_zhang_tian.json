@@ -1,0 +1,15 @@
+{
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "ledger_id": "favor_ledger_npc_zhang_tian",
+  "owner": "npc_zhang_tian",
+  "_comment": "Zhang Tian is the village drunkard. He has nothing to give, asks for nothing of substance, and his interactions are primarily observational (his drunk_truth mechanic causes him to accidentally reveal information when intoxicated). He is not a participant in the village's favor economy — he cannot grant favors (no resources, no influence, no reliability) and he does not incur debts (no one expects anything from him). His ledger is permanently empty unless the player does something extraordinary for him (e.g., saves his life, helps him sober up — both of which would be major events outside the normal chapter 1 flow).",
+  "favors": [],
+  "aggregates": {
+    "total_owed_to_player": 0,
+    "total_owed_by_player": 0,
+    "net_debt": 0,
+    "_comment": "Starts at zero and is likely to remain zero. Zhang Tian exists in the simulation as an information source (drunk_truth), not as a social agent who participates in the favor economy. If a favor ever forms here, it would signal a significant narrative event — the player went out of their way for someone the village has written off."
+  }
+}

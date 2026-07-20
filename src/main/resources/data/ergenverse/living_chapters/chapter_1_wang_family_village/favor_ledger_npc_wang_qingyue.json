@@ -1,0 +1,15 @@
+{
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "ledger_id": "favor_ledger_npc_wang_qingyue",
+  "owner": "npc_wang_qingyue",
+  "_comment": "Wang Qingyue is the village trader. Trading is fundamentally transactional — goods for currency, not favors. Her motivation system (m_seek_profitable_trade) operates on margins, not obligations. However, if the player brings rare items that enable an especially profitable trade deal, or shares a valuable market rumor, an informal minor obligation (owed_to_player) could form — the trader's version of 'I owe you one, next time you need something hard to find, I will look.' At chapter start: empty. All interactions are purely commercial.",
+  "favors": [],
+  "aggregates": {
+    "total_owed_to_player": 0,
+    "total_owed_by_player": 0,
+    "net_debt": 0,
+    "_comment": "Starts at zero. Wang Qingyue's favors, when they form, are uniquely practical: 'next time you come to trade, I will set aside the rare reagent you need before anyone else sees it.' They are minor in magnitude but highly useful. A trader's favor is access, not money."
+  }
+}

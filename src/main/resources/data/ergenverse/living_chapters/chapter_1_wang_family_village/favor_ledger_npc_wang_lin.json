@@ -1,0 +1,50 @@
+{
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "ledger_id": "favor_ledger_npc_wang_lin",
+  "owner": "npc_wang_lin",
+  "_comment": "Wang Lin starts with zero outstanding favors owed and two conditional favors owed to the player. The conditional favors are NOT yet incurred — they are staged, waiting for canon events (e.g., the player saving Wang Lin's family, which triggers m_protect_family_passive → life-saving favor creation). Wang Lin does not go into debt. He evaluates whether to grant requests based on reasoning, not obligation. His ledger is nearly empty because he is self-sufficient. The favors he creates for the player are REWARDS (jade slip, teaching) that create informal debt in the player's favor_ledger, not his own.",
+  "favors": [
+    {
+      "favor_id": "favor_wl_protect_family",
+      "direction": "owed_to_player",
+      "magnitude": "life_saving",
+      "reason": "Player protected Wang Lin's family (Wang Ping, Zhou Tingsu) from a life-threatening situation while Wang Lin was absent. Wang Lin would consider this the highest form of obligation — not transactional, but existential.",
+      "origin_event_memory_tag": "player_protected_wang_family",
+      "created_tick": null,
+      "expires": "never",
+      "callable": true,
+      "called": false,
+      "called_tick": null,
+      "called_context": null,
+      "honored": null,
+      "honored_tick": null,
+      "resolution_memory_tag": null,
+      "notes": "This favor is NOT yet incurred. It exists as a conditional template. When the player protects the family during a wolf attack, bandit raid, or Teng family violence event while Wang Lin is away, this favor is created with full details. Until then, Wang Lin's motivation_state does not reference this favor."
+    },
+    {
+      "favor_id": "favor_wl_jade_copy",
+      "direction": "owed_to_player",
+      "magnitude": "major",
+      "reason": "Wang Lin created a copy of a technique or artifact for the player at the player's request. This is the protagonist-copy mechanic (Article XXXI.2). Wang Lin evaluates: (1) does the player understand it? (2) will it harm them? (3) why do they want it? (4) have they demonstrated judgment? (5) is this the right time? If all pass: he creates a copy with his True Body and a clone delivers it. The favor is the imbalance between the copy's value and the request's triviality. If the player abuses a jade copy, Wang Lin never copies for them again.",
+      "origin_event_memory_tag": "wl_copied_technique_for_player",
+      "created_tick": null,
+      "expires": "never",
+      "callable": false,
+      "called": false,
+      "called_tick": null,
+      "called_context": null,
+      "honored": null,
+      "honored_tick": null,
+      "resolution_memory_tag": null,
+      "notes": "Conditional. Created when Wang Lin actually copies something for the player. The magnitude depends on what was copied (jade slip = major, lesser technique = moderate). This favor is the canonical basis for the player earning Wang Lin's mentorship — not reputation, not quests, not gifts."
+    }
+  ],
+  "aggregates": {
+    "total_owed_to_player": 0,
+    "total_owed_by_player": 0,
+    "net_debt": 0,
+    "_comment": "Starts at zero. Favors are created by Wang Lin's actions, not by the player owing Wang Lin. Wang Lin does not accumulate debts — he is a giver or a refuser, not a borrower."
+  }
+}

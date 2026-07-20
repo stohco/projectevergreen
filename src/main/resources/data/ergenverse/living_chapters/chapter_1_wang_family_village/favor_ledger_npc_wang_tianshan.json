@@ -1,0 +1,15 @@
+{
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "ledger_id": "favor_ledger_npc_wang_tianshan",
+  "owner": "npc_wang_tianshan",
+  "_comment": "Wang Tianshan is the village gate guard. He is watchful, suspicious of strangers, and takes his duty seriously. At chapter start, the player is a known presence in the village but not yet proven trustworthy in Tianshan's eyes. No favors have been exchanged. If the player helps repel a threat at the gate, reports suspicious activity honestly, or demonstrates reliability during a crisis, a minor favor could form (owed_to_player). Tianshan's favors are rare but meaningful — a guard who trusts you lets you pass without question and may warn you of danger others do not see.",
+  "favors": [],
+  "aggregates": {
+    "total_owed_to_player": 0,
+    "total_owed_by_player": 0,
+    "net_debt": 0,
+    "_comment": "Starts at zero. Wang Tianshan is difficult to earn favors from — his personality is guarded and his trust builds slowly. But once earned, his favors have outsized practical value: a guard who owes you will look the other way, give you advance warning, or vouch for you with the elder. Minor favors from Tianshan are worth more than they seem."
+  }
+}

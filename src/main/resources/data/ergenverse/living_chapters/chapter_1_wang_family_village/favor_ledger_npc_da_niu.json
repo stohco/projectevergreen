@@ -1,0 +1,15 @@
+{
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "ledger_id": "favor_ledger_npc_da_niu",
+  "owner": "npc_da_niu",
+  "_comment": "Da Niu is a young man who dreams of becoming a cultivator but has zero aptitude. He is friendly, eager, and socially active (fishing with Wang Ping, helping around the village). He has no resources to grant and no obligations to call in. If the player spars with him, helps him face the Heng Yue recruiter with dignity, or gives him honest advice about his cultivation prospects, a minor favor (owed_to_player) might form — but only because Da Niu's gratitude is sincere, not because he has anything of value to trade. At chapter start: empty.",
+  "favors": [],
+  "aggregates": {
+    "total_owed_to_player": 0,
+    "total_owed_by_player": 0,
+    "net_debt": 0,
+    "_comment": "Starts at zero. Da Niu's social nature means he is likely to accumulate minor favors owed_to_player quickly if the player is kind to him. However, calling those favors would yield very little (he has no resources, no influence, no cultivation). The value of his favors is purely emotional — he would remember the kindness, which could matter much later if he ever gains any standing."
+  }
+}

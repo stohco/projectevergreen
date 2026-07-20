@@ -1,0 +1,33 @@
+{
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "ledger_id": "favor_ledger_npc_wang_tianshui",
+  "owner": "npc_wang_tianshui",
+  "_comment": "Wang Tianshui starts with ONE pre-existing minor favor owed to the player. The relationship_graph shows debt=-1 toward the player, meaning the elder informally owes the player a small obligation. This backs his m_ensure_winter_ready motivation — the player has already helped the village with some practical task before the chapter begins (e.g., repaired irrigation channels, delivered firewood, helped patch a roof). The elder remembers. It is minor — he would not betray his principles over it, but he will grant a small request without hesitation. The favor decays after ~30 days if not called, reflecting the informal, small-scale nature of village reciprocity.",
+  "favors": [
+    {
+      "favor_id": "favor_001_player_helped_village",
+      "direction": "owed_to_player",
+      "magnitude": "minor",
+      "reason": "Player helped the village with a practical task prior to the chapter start (e.g., repaired irrigation channels, delivered firewood, assisted with winter preparations). The elder acknowledges this as a small but real obligation — the kind of informal debt that exists in a close-knit rural community where favors are tracked by memory, not ledger. Wang Tingshui will not forget, but he also will not elevate this to something grand. It is what neighbors do.",
+      "origin_event_memory_tag": "player_helped_village",
+      "created_tick": -6000,
+      "expires": "decays_after_30000_ticks",
+      "callable": true,
+      "called": false,
+      "called_tick": null,
+      "called_context": null,
+      "honored": null,
+      "honored_tick": null,
+      "resolution_memory_tag": null,
+      "notes": "This is the structural backing for the -1 debt in the relationship graph. Minor magnitude = weight 1. The negative created_tick (-6000) indicates the favor was incurred before the chapter began (about 5 minutes of game-time ago in the village's past). If the player asks Wang Tianshui for a small favor (e.g., extra rations, permission to use village resources, a word of recommendation), the elder's reasoning pipeline should check this favor and grant the request with minimal friction."
+    }
+  ],
+  "aggregates": {
+    "total_owed_to_player": 1,
+    "total_owed_by_player": 0,
+    "net_debt": 1,
+    "_comment": "net_debt=1 matches the relationship_graph debt=-1 toward the player (the graph uses inverse convention: NPC's perspective of player's debt. Here, the NPC OWES the player, so net_debt is positive from the player's perspective)."
+  }
+}

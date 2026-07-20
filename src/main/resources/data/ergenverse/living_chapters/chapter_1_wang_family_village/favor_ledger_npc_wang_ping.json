@@ -1,0 +1,15 @@
+{
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "ledger_id": "favor_ledger_npc_wang_ping",
+  "owner": "npc_wang_ping",
+  "_comment": "Wang Ping is a child. His interactions are social and observational (fishing with Da Niu, gathering firewood, following the player around). Children in this setting do not incur formal favors — their social currency is affection and trust, not obligation. If the player comforts Wang Ping after his dog dies, or helps him with winter prep, a minor favor (owed_to_player) could be CREATED during gameplay via the interaction system. But at chapter start: empty ledger. Wang Ping owes nothing, is owed nothing.",
+  "favors": [],
+  "aggregates": {
+    "total_owed_to_player": 0,
+    "total_owed_by_player": 0,
+    "net_debt": 0,
+    "_comment": "Starts at zero. Any favors would be created during gameplay — e.g., if the player helps Wang Ping cope after the dog dies (m_comfort_after_dog_loss), or assists with winter preparations. Child favors are always minor and decay quickly."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "ledger_id": "favor_ledger_npc_zhou_rui",
+  "owner": "npc_zhou_rui",
+  "_comment": "Zhou Rui is the village hunter. He is competent, pragmatic, and guards his knowledge (m_share_hunt_knowledge gates on trust >= 20). At chapter start he does not know the player well enough to share anything — and no favors have been exchanged. If the player hunts with him, shares wolf sighting information, or helps him track dangerous prey, a moderate favor could form (a hunter's knowledge is valuable survival information in this world). But until trust is built: empty ledger of incurred favors, with two conditional templates staged.",
+  "favors": [
+    {
+      "favor_id": "favor_zr_joint_hunt",
+      "direction": "owed_to_player",
+      "magnitude": "moderate",
+      "reason": "Player hunted alongside Zhou Rui and materially contributed to bringing down dangerous prey (wolf, wild boar, or a beast beyond a lone hunter's capability). A joint hunt in the southern forest is real obligation — the player risked their life and shared the kill. Zhou Rui would reciprocate with hunting knowledge, a share of pelts, or a warning the next time danger approaches the village.",
+      "origin_event_memory_tag": "player_joint_hunt_with_zhou_rui",
+      "created_tick": null,
+      "expires": "seasonal",
+      "callable": true,
+      "called": false,
+      "called_tick": null,
+      "called_context": null,
+      "honored": null,
+      "honored_tick": null,
+      "resolution_memory_tag": null,
+      "notes": "Conditional. NOT yet incurred. Created when the player actually joins a hunt AND lands a meaningful blow on the prey. A missed shot or passive observation does not create this favor — Zhou Rui respects competence, not presence. Magnitude is moderate (not life_saving) because hunting is his profession, not a sacrifice."
+    },
+    {
+      "favor_id": "favor_zr_wolf_intel",
+      "direction": "owed_by_player",
+      "magnitude": "minor",
+      "reason": "Zhou Rui shared wolf pack movement information with the player — which trails to avoid, which moon phases make them bold, where the den is. This is survival information with real value in the wang_family_village economy (where wolf_pelt is a trade resource and wolf_threat is an active conflict). The player owes Zhou Rui a small consideration: a future favor, a share of a future kill, or simply the discretion not to spread the den's location (which would draw incompetent hunters to their deaths).",
+      "origin_event_memory_tag": "zhou_rui_shared_wolf_intel",
+      "created_tick": null,
+      "expires": "seasonal",
+      "callable": true,
+      "called": false,
+      "called_tick": null,
+      "called_context": null,
+      "honored": null,
+      "honored_tick": null,
+      "resolution_memory_tag": null,
+      "notes": "Conditional. NOT yet incurred. Created when trust >= 20 AND Zhou Rui's m_share_hunt_knowledge fires AND the player asks about wolves specifically. The magnitude is minor because information, while valuable, is not irreplaceable. Callable: Zhou Rui may call this in by asking the player to warn the village, join a culling, or keep a secret."
+    }
+  ],
+  "aggregates": {
+    "total_owed_to_player": 0,
+    "total_owed_by_player": 0,
+    "net_debt": 0,
+    "_comment": "Starts at zero. Zhou Rui is the most likely NPC in the village to generate MODERATE favors — hunting alongside someone in a dangerous forest creates real obligation. But his trust gate (trust >= 20 for m_share_hunt_knowledge) means the player must invest time before any favor-generating interaction occurs. Once trust is established, a joint hunt could create a moderate favor owed_to_player (the player helped bring down dangerous prey), and the wolf intel could create a minor favor owed_by_player (the player now owes Zhou Rui discretion)."
+  }
+}

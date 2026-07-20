@@ -1,0 +1,15 @@
+{
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "ledger_id": "favor_ledger_npc_zhou_tingsu",
+  "owner": "npc_zhou_tingsu",
+  "_comment": "Zhou Tingsu is the village healer. Her primary motivation (m_treat_injured_villager) drives her to gather herbs and treat the wounded — but these are duties, not favors. She does not owe the player anything at chapter start, nor does the player owe her. If the player brings rare herbs, helps treat an injured villager, or assists during a medical emergency, her motivation system could create a minor favor (owed_to_player, magnitude=minor). Conversely, if the player is treated by her for a serious wound, the player might incur a minor debt. But at game start: clean slate.",
+  "favors": [],
+  "aggregates": {
+    "total_owed_to_player": 0,
+    "total_owed_by_player": 0,
+    "net_debt": 0,
+    "_comment": "Starts at zero. Healing interactions are the most likely source of future favors: player brings herbs → minor favor owed_to_player; player is healed → minor favor owed_by_player. Her ledger will likely see the first entry within the first day of gameplay."
+  }
+}

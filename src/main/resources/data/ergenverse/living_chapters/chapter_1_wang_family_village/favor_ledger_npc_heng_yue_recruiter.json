@@ -1,0 +1,15 @@
+{
+  "_schema": "favor_debt_ledger",
+  "_schema_version": 1,
+  "_article": "XXXIV.2",
+  "ledger_id": "favor_ledger_npc_heng_yue_recruiter",
+  "owner": "npc_heng_yue_recruiter",
+  "_comment": "The Heng Yue Sect recruiter is a temporary NPC present in the village for 2-3 in-game days. He tests village youth for cultivation aptitude and leaves. His interactions are purely evaluative and institutional — he represents the sect, not himself. No favors accumulate because: (1) he has no personal stake in the village, (2) his stay is too short for meaningful obligation to form, (3) his decisions are governed by sect policy (aptitude thresholds), not personal relationships. If the player impresses him, the reward is a sect recommendation — a structural outcome, not a favor. His ledger is empty and will remain empty unless the mod extends his stay or creates a special event.",
+  "favors": [],
+  "aggregates": {
+    "total_owed_to_player": 0,
+    "total_owed_by_player": 0,
+    "net_debt": 0,
+    "_comment": "Starts at zero and will almost certainly remain zero. The recruiter's temporary presence and institutional role make him incompatible with the favor system. If the mod later adds a scenario where the player helps the recruiter (e.g., bandits attack while he is testing youth, the player helps defend), a minor favor could be created — but it would be largely symbolic since the recruiter leaves the village shortly after."
+  }
+}
