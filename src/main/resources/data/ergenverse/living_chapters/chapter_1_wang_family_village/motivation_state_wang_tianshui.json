@@ -1,5 +1,5 @@
 {
-  "_comment": "Wang Tianshui — village elder, de facto leader, Qi Condensation 3rd layer. Holds the strange jade. 40 years of service. EXPLICIT (village elder) / INFERRED (name). Per Article XXXIII, he wakes up worrying about the harvest, not about the player.",
+  "_comment": "Wang Tianshui (王天水) — Wang Lin's father (per npc_wang_tianshui.json: relationship_to_wanglin=father, cultivation=mortal, type=family_head, canon_confidence=5, derivation_type=A). Mortal village patriarch / family_head, NOT a cultivator. Holds the strange jade as a family heirloom guarded for decades; he does not fully understand it. Driven to ruin by the Teng family (per NPC def note). Per Article XXXIII, he wakes up worrying about the harvest, not about the player. CANON TENSION (flagged AUTO-CANON-054 verification): an earlier project framing (memory_ledger_seed seed_002, conversation_affordances_per_npc) treated Tianshui as a Qi Condensation cultivator-elder; this file previously echoed that. Corrected here to match the authoritative NPC def (mortal father). The jade-recipient design tension (player-earnable per this file's m_gift_strange_jade vs. Wang Lin-by-birthright per relationship_graph_seeds.json AUTO-CANON-054-b) is UNRESOLVED and should be decided by the user or a dedicated reconciliation cycle.",
   "_schema": "motivation_state",
   "_schema_version": 2,
   "_article": "XXXIII + XXXV",
@@ -7,7 +7,7 @@
   "name": "Wang Tianshui",
   "nameCn": "王天水",
   "location": "wang_family_village",
-  "canon_fidelity": "EXPLICIT (village elder exists) / INFERRED (name, personality details)",
+  "canon_fidelity": "EXPLICIT: Wang Lin's father, mortal, family_head, village patriarch, oppressed by Teng family (npc_wang_tianshui.json, canon_confidence=5, derivation_type=A). INFERRED: the strange jade as a family heirloom he guards; the hidden-grain resistance (mortal-scale survival resistance, canon-plausible). NOT CANON: any Qi Condensation cultivation (removed — contradicts mortal NPC def).",
   "evaluation_cycle_ticks": 1000,
   "long_term_priorities": [
     "protect_the_village",
@@ -194,9 +194,10 @@
     }
   ],
   "passive_states": [
-    "meditating_morning",
+    "praying_at_ancestral_hall_morning (mortal — tends the family shrine where the jade is kept)",
     "inspecting_fields",
-    "resting_afternoon"
+    "resting_afternoon",
+    "watching_the_road (anxious for news of Wang Lin, who left for Heng Yue)"
   ],
   "cross_npc_triggers": [
     "wang_tianshui.m_ensure_winter_ready can satisfy npc_da_niu.m_prove_usefulness"

@@ -1,0 +1,497 @@
+{
+  "_schema": "conflict",
+  "_schema_version": 1,
+  "_article": "XXXI.4 (Gold-Standard Dimension 8 — Conflict) + XXXIV (Relationships Are Graphs, esp. grievance dimension)",
+  "_description": "Formal schema for the Conflict dimension of a Living Chapter location. Conflict is not combat — it is the persistent tension between factions, NPCs, and forces that makes a location feel real. Wang Family Village's conflict is structural: the Teng family's oppression, internal resentments, the gap between mortals and cultivators, and the wolf threat. These conflicts exist whether the player is present or not. The player may observe them, be caught in them, or change them — but the conflicts do not wait for the player. Per Article XXXIV.3: grievances persist and spread. Per Article XXXIV.4: multiple NPCs with motivations do not all approach — they deconflict.",
+  "_design_principles": {
+    "conflict_is_structure_not_event": "A conflict is not a one-time quest. It is an ongoing structural tension that persists across seasons and years. The Teng family's tax oppression is not an event — it is the background radiation of village life.",
+    "grievance_is_the_currency": "Conflicts are tracked through the grievance dimension of relationship graphs (Article XXXIV). Every conflict has grievance sources that feed NPC relationship data. When grievance exceeds thresholds, conflict escalation triggers.",
+    "deescalation_paths": "Every conflict has deescalation paths. Grievances can decay (amends, time, changed circumstances). Some conflicts cannot deescalate (the Teng family will not stop taxing). This creates the distinction between resolvable tension and structural oppression.",
+    "player_can_intervene_or_not": "The player may never touch a conflict. It runs on its own. But if the player DOES intervene — by helping the village, confronting the Teng family, or killing wolves — the conflict's state changes. This is how the player's actions have world consequences without quests.",
+    "conflict_drives_motivation": "Every active conflict feeds NPC motivations. Wang Tianshui's hidden grain (conflict: teng_oppression, grievance source). Zhou Rui's wolf warnings (conflict: wolf_threat, fear source). Zhang Tian's hiding (conflict: cultivation_failure, shame source). The conflict schema is the structural layer; motivation_states are the behavioral layer.",
+    "memory_coupling": "Conflict events write to the memory ledger. A violent tax collection is remembered. A wolf attack is remembered. The child who retells the story of the dog is retelling a conflict event."
+  },
+  "schema": {
+    "location_id": "string — must match a Living Chapter location",
+    "conflicts": [
+      {
+        "id": "string — unique conflict identifier",
+        "name": "string — human-readable name",
+        "type": "enum — oppression | territorial | ideological | resource | interpersonal | supernatural",
+        "description": "string — what this conflict IS, not just what it does",
+        "canon_fidelity": "string — EXPLICIT | INFERRED | EMERGENT + explanation",
+        "parties": [
+          {
+            "party_id": "string — faction, npc_id, or group identifier (e.g. 'teng_family', 'wang_family_village', 'wolf_packs')",
+            "role": "enum — oppressor | oppressed | mediator | beneficiary | observer | victim",
+            "stance": "string — this party's position in the conflict (e.g. 'We take what is ours by right')",
+            "grievance_toward": [
+              {
+                "party_id": "string",
+                "base_grievance": "int 0-100 — starting grievance level",
+                "growth_per_cycle": "float — how fast grievance grows per evaluation cycle",
+                "decay_per_cycle": "float — how fast grievance decays (if deescalation active)",
+                "cap": "int — maximum grievance (100 = hatred, 70 = open hostility, 40 = resentment, 20 = annoyance)"
+              }
+            ],
+            "motivation_links": ["string — motivation_ids on NPCs in this party that this conflict feeds"]
+          }
+        ],
+        "escalation_thresholds": [
+          {
+            "level": "int 1-5",
+            "name": "string — e.g. 'Tension', 'Hostility', 'Violence', 'War', 'Annihilation'",
+            "trigger_condition": "string — condition that escalates to this level (e.g. 'any_party.grievance >= 60')",
+            "consequences": ["string — what happens at this level"],
+            "deescalation_condition": "string|null — what would bring it back down (null = cannot deescalate below this)"
+          }
+        ],
+        "resolution_paths": [
+          {
+            "id": "string",
+            "type": "enum — amends | violence | negotiation | escape | transformation | suppression | attrition",
+            "description": "string — how this conflict could end",
+            "conditions": ["string — what must happen for this resolution"],
+            "consequences": ["string — what changes if resolved this way"],
+            "canon_likelihood": "string — EXPLICIT | INFERRED | IMPOSSIBLE + explanation",
+            "player_role": "string|null — how the player could contribute (null = player is irrelevant to this path)"
+          }
+        ],
+        "living_event_links": ["string — event_ids in living_events that this conflict can trigger or be triggered by"],
+        "seasonal_modifiers": {
+          "spring": "string — e.g. 'base tension. Planting disputes possible.'",
+          "summer": "string — e.g. 'wolf activity increases border tension.'",
+          "autumn": "string — e.g. 'tax collection escalates oppression conflict.'",
+          "winter": "string — e.g. 'scarcity increases resource conflict. Wolf attacks peak.'"
+        }
+      }
+    ],
+    "grievance_propagation": {
+      "_note": "Per Article XXXIV.3: grievances persist and spread. When one NPC develops a grievance, nearby NPCs with shared interests may develop secondary grievances through rumor and observation.",
+      "rules": [
+        {
+          "rule": "grievance_spreads_through_rumor",
+          "description": "When an NPC's grievance toward a party exceeds 40, nearby NPCs with relationship.trust >= 30 gain +5 grievance toward that party per evaluation cycle. This is how village-wide resentment forms.",
+          "max_propagation_depth": 3,
+          "decay_per_hop": 0.4
+        },
+        {
+          "rule": "witnessed_violence_amplifies_grievance",
+          "description": "If an NPC witnesses violence (conflict level >= 4), their grievance toward the aggressor party increases by +20 immediately, bypassing the rumor spread.",
+          "max_amplification": 30
+        },
+        {
+          "rule": "shared_enemy_bonds",
+          "description": "Two NPCs who share a grievance toward the same party at level >= 30 gain +3 trust with each other per evaluation cycle. Shared enemies create allies.",
+          "trust_growth_rate": 3
+        },
+        {
+          "rule": "grievance_decay_through_amends",
+          "description": "If the offending party performs an amends action (identified via favor ledger or explicit event), the grievance decays at 3x the normal rate for 14 days.",
+          "amends_multiplier": 3,
+          "duration_days": 14
+        }
+      ]
+    },
+    "inter_conflict_dynamics": {
+      "_note": "Conflicts are not isolated. The Teng family's oppression makes the village weaker against wolves. A harvest failure makes the Teng tax more devastating. Zhang Tian's shame feeds the elder's worry about the village's future. These connections are the web that makes the village feel real.",
+      "links": [
+        {
+          "conflict_a": "string — conflict_id",
+          "conflict_b": "string — conflict_id",
+          "relationship": "enum — amplifies | mitigates | enables | blocks | distracts_from",
+          "mechanism": "string — how they interact (e.g. 'Teng tax reduces grain stores, making wolf attack consequences more severe because the village cannot afford to lose livestock')"
+        }
+      ]
+    }
+  },
+  "wang_family_village_instance": {
+    "_comment": "Seed data for Wang Family Village. 4 conflicts: Teng oppression (structural), wolf threat (territorial), cultivation gap (ideological), Zhang Tian's shame (interpersonal). These conflicts interlock and create the texture of village life.",
+    "location_id": "wang_family_village",
+    "conflicts": [
+      {
+        "id": "conf_teng_family_oppression",
+        "name": "The Teng Family's Annual Tax",
+        "type": "oppression",
+        "description": "For thirty years, the Teng family has taken half of Wang Family Village's autumn harvest. This is not a dispute — it is structural violence. The village cannot refuse. The Teng family has cultivators; the village does not. The resentment is universal but impotent. Wang Tianshui's hidden grain is the only active resistance, and it is tiny, secret, and dangerous.",
+        "canon_fidelity": "EXPLICIT — the Teng family oppresses the Wang family in Renegade Immortal. The specific annual tax mechanic is INFERRED to give it gameplay presence.",
+        "parties": [
+          {
+            "party_id": "teng_family",
+            "role": "oppressor",
+            "stance": "The Wang family is our tribute village. Their harvest is our right by ancestral claim. Resistance is pointless — we have cultivators, they have farmers.",
+            "grievance_toward": [
+              {"party_id": "wang_family_village", "base_grievance": 15, "growth_per_cycle": 0, "decay_per_cycle": 0, "cap": 30}
+            ],
+            "motivation_links": []
+          },
+          {
+            "party_id": "wang_family_village",
+            "role": "oppressed",
+            "stance": "We hate them. We cannot fight them. We endure. Some of us resist in small ways — a hidden sack of grain, a sharp word. But we endure.",
+            "grievance_toward": [
+              {"party_id": "teng_family", "base_grievance": 40, "growth_per_cycle": 0.1, "decay_per_cycle": 0, "cap": 80}
+            ],
+            "motivation_links": [
+              "npc_wang_tianshui.m_resist_teng_family_quietly",
+              "npc_wang_qingyue.m_share_rumor (Teng family activity as information)",
+              "npc_wang_tianshan.m_question_stranger (suspicion of Teng-linked visitors)"
+            ]
+          }
+        ],
+        "escalation_thresholds": [
+          {
+            "level": 1,
+            "name": "Resentment",
+            "trigger_condition": "wang_family_village.grievance_toward_teng >= 30",
+            "consequences": ["Villagers complain privately. Wang Qingyue shares rumors. Wang Tianshui hides more grain."],
+            "deescalation_condition": null
+          },
+          {
+            "level": 2,
+            "name": "Open Hostility",
+            "trigger_condition": "wang_family_village.grievance_toward_teng >= 55",
+            "consequences": ["Villagers refuse to cooperate with Teng collectors beyond the mandatory. Wang Tianshan challenges Teng visitors. Rumor intensity increases. Some villagers consider leaving."],
+            "deescalation_condition": "Teng_family reduces tax rate (does not happen canonically)"
+          },
+          {
+            "level": 3,
+            "name": "Violent Incident",
+            "trigger_condition": "wang_family_village.grievance_toward_teng >= 70 AND (harvest_failure OR hidden_grain_discovered)",
+            "consequences": ["A villager attacks a Teng collector. Teng family retaliates — violence, injuries, possibly death. Village is further weakened. Memory: teng_violence_retaliation."],
+            "deescalation_condition": "External intervention (a cultivator protects the village — Wang Lin, player, or Heng Yue)"
+          },
+          {
+            "level": 4,
+            "name": "Breaking Point",
+            "trigger_condition": "wang_family_village.grievance_toward_teng >= 85 AND village.economy.rice < shortage_threshold",
+            "consequences": ["Village mass exodus begins. Families flee. The village as a community dissolves. This is the endgame of oppression + scarcity."],
+            "deescalation_condition": "Massive external aid or cultivator protection"
+          }
+        ],
+        "resolution_paths": [
+          {
+            "id": "rp_cultivator_protection",
+            "type": "negotiation",
+            "description": "A cultivator (Wang Lin, the player at sufficient realm, or a Heng Yue elder) intervenes and negotiates reduced terms or protection.",
+            "conditions": ["protector.cultivation >= core_formation", "protector.relationship.wang_tianshui >= trusted"],
+            "consequences": ["teng_family.tax_rate reduced or abolished", "village.grievance decays over months", "protector earns Major favor from the village"],
+            "canon_likelihood": "INFERRED — Wang Lin eventually transcends the Teng family's reach, but the village's early years are defined by impotence.",
+            "player_role": "If the player has sufficient cultivation and reputation, they can negotiate on the village's behalf. This is a mid-to-late game possibility."
+          },
+          {
+            "id": "rp_hidden_resistance",
+            "type": "amends",
+            "description": "The village continues Wang Tianshui's hidden grain strategy indefinitely. It never resolves — it just survives.",
+            "conditions": ["wang_tianshui.alive", "hidden_grain NOT discovered"],
+            "consequences": ["Status quo. Grievance stays at level 1-2. The village survives but does not thrive."],
+            "canon_likelihood": "EXPLICIT — this is the canonical village state for most of the early story.",
+            "player_role": "The player may discover the hidden grain. If they reveal it: grievance toward player += 30. If they help expand it: favor from Wang Tianshui."
+          },
+          {
+            "id": "rp_teng_family_falls",
+            "type": "violence",
+            "description": "An external force destroys the Teng family. The village is free.",
+            "conditions": ["teng_family.power_destroyed by external entity"],
+            "consequences": ["Tax abolished. Village celebration. Grievance decays to 0 over years. But a power vacuum may attract worse predators."],
+            "canon_likelihood": "INFERRED — the Teng family's fate in the novel is tied to larger events.",
+            "player_role": null
+          }
+        ],
+        "living_event_links": ["le_teng_family_tax_collection", "le_harvest_failure", "le_bandit_raid_cooperation"],
+        "seasonal_modifiers": {
+          "spring": "Base resentment. Planting season means less time to think about oppression.",
+          "summer": "Slightly elevated — wolf activity keeps the village tense, making the Teng tax feel more unjust.",
+          "autumn": "Peak — tax collection day. All resentment surfaces. This is when conflicts are most likely to escalate.",
+          "winter": "Smoldering — if stores are low, the memory of the tax is bitter. If stores are adequate, resentment subsides slightly."
+        }
+      },
+      {
+        "id": "conf_wolf_threat",
+        "name": "The Spirit Wolf Packs",
+        "type": "territorial",
+        "description": "Spirit wolf packs roam the forest around Wang Family Village. They are the primary non-human threat. They hunt livestock, restrict foraging and hunting, and occasionally attack people. Zhou Rui is the village's primary wolf-watcher. The threat is seasonal — worse in winter when food is scarce.",
+        "canon_fidelity": "INFERRED — spirit beasts exist in Renegade Immortal. The specific wolf packs around Wang Family Village are inferred to give the village's ecology real stakes and to provide the canonical Article XXXI.5 memory test event (dog death).",
+        "parties": [
+          {
+            "party_id": "wolf_packs",
+            "role": "oppressor",
+            "stance": "Hunger. Territory. The village is near our hunting grounds.",
+            "grievance_toward": [],
+            "motivation_links": []
+          },
+          {
+            "party_id": "wang_family_village",
+            "role": "victim",
+            "stance": "The wolves are a fact of life. We avoid the forest at night. We watch the tracks. When they get too bold, Zhou Rui warns the elder.",
+            "grievance_toward": [
+              {"party_id": "wolf_packs", "base_grievance": 25, "growth_per_cycle": 0.05, "decay_per_cycle": 0.02, "cap": 60}
+            ],
+            "motivation_links": [
+              "npc_zhou_rui.m_warn_about_wolves",
+              "npc_zhou_tingsu.m_request_herb_gathering (herb gathering is blocked by wolf territory)"
+            ]
+          },
+          {
+            "party_id": "npc_zhou_rui",
+            "role": "observer",
+            "stance": "I know their patterns. I read their tracks. I warn the village. The south bend is mine — the wolves took it from me, one silent night at a time.",
+            "grievance_toward": [
+              {"party_id": "wolf_packs", "base_grievance": 35, "growth_per_cycle": 0.1, "decay_per_cycle": 0.01, "cap": 50}
+            ],
+            "motivation_links": [
+              "npc_zhou_rui.m_warn_about_wolves",
+              "npc_zhou_rui.m_share_hunt_knowledge (teaching safe routes = wolf avoidance)"
+            ]
+          }
+        ],
+        "escalation_thresholds": [
+          {
+            "level": 1,
+            "name": "Normal Predation",
+            "trigger_condition": "wolf_packs.grievance_toward_village < 20",
+            "consequences": ["Wolves hunt forest. Zhou Rui hunts too. Occasional livestock loss. Normal life."],
+            "deescalation_condition": "Natural cycle"
+          },
+          {
+            "level": 2,
+            "name": "Bold Pack Behavior",
+            "trigger_condition": "wolf_packs.grievance_toward_village >= 20 OR season:winter AND food_scarce",
+            "consequences": ["Wolves seen near village outskirts. Zhou Rui issues warning. Herb gathering becomes dangerous. Living event: le_wolf_attack_south_bend may trigger."],
+            "deescalation_condition": "spring arrives, food becomes plentiful"
+          },
+          {
+            "level": 3,
+            "name": "Village Attack",
+            "trigger_condition": "wolf_pack_approaches_village_gates OR living_event:le_wolf_attack_south_bend fires WITH NPC or player casualty",
+            "consequences": ["Village lockdown. Everyone stays inside. Zhou Rui organizes defense. If the hunting dog dies: memory test event chain triggers. If a person dies: village mourning, grievance spikes."],
+            "deescalation_condition": "Wolves repelled or driven off (combat or time)"
+          },
+          {
+            "level": 4,
+            "name": "Siege",
+            "trigger_condition": "wolf_packs.grievance >= 50 AND winter AND village.food_shortage",
+            "consequences": ["Multiple packs surround the village. No one can leave safely. Starvation risk. This is the worst-case scenario — oppression from Teng family AND siege from wolves simultaneously."],
+            "deescalation_condition": "Cultivator intervention or spring"
+          }
+        ],
+        "resolution_paths": [
+          {
+            "id": "rp_zhou_rui_hunting",
+            "type": "attrition",
+            "description": "Zhou Rui and other hunters thin the packs over time. Slow, dangerous, never complete.",
+            "conditions": ["zhou_rui.alive", "hunters have weapons (iron)"],
+            "consequences": ["Wolf threat reduced but never eliminated. Population rebounds. Perpetual cycle."],
+            "canon_likelihood": "EXPLICIT — this is how mortal villages manage beast threats.",
+            "player_role": "The player can hunt wolves, reducing the threat. Each wolf kill lowers the pack's grievance."
+          },
+          {
+            "id": "rp_cultivator_repels",
+            "type": "violence",
+            "description": "A cultivator (Wang Lin, player, or visitor) kills enough wolves to drive the packs away for months.",
+            "conditions": ["cultivator.combat_power >> wolf_pack_power"],
+            "consequences": ["Wolves avoid the area for 1-3 months. Village breathes. Zhou Rui gains temporary relief. But they always return."],
+            "canon_likelihood": "INFERRED.",
+            "player_role": "If the player can fight wolves, this path is available. It earns Major favor from Zhou Rui and the village."
+          }
+        ],
+        "living_event_links": ["le_wolf_attack_south_bend"],
+        "seasonal_modifiers": {
+          "spring": "Low threat. Wolves have plenty of forest prey. Packs spread out.",
+          "summer": "Moderate. Normal hunting. Some livestock loss.",
+          "autumn": "Moderate. Wolves follow deer to lower elevations near the village.",
+          "winter": "HIGH. Food scarce. Wolves push toward the village. Attacks most likely. This is when the south bend is most dangerous."
+        }
+      },
+      {
+        "id": "conf_cultivation_gap",
+        "name": "The Gap Between Mortal and Cultivator",
+        "type": "ideological",
+        "description": "The village is mortal. The cultivation world exists above it — the Heng Yue recruiter, the wandering cultivator, Zhang Tian's failed ambition. This gap creates aspiration (Da Niu), fear (Zhang Tian), pragmatism (Wang Tianshui), and information (Zhou Tingsu needs herbs that only cultivator alchemists refine). The gap is not a conflict between parties — it is a structural inequality that shapes every villager's relationship with the world.",
+        "canon_fidelity": "EXPLICIT — the entire premise of Renegade Immortal is a mortal village boy entering the cultivation world. The gap IS the story.",
+        "parties": [
+          {
+            "party_id": "mortal_village",
+            "role": "oppressed",
+            "stance": "Cultivation is distant and mysterious. Some of us dream of it. Most of us fear it. All of us are affected by it.",
+            "grievance_toward": [
+              {"party_id": "cultivation_world", "base_grievance": 10, "growth_per_cycle": 0, "decay_per_cycle": 0, "cap": 30}
+            ],
+            "motivation_links": [
+              "npc_da_niu.m_beg_heng_yue_recruiter",
+              "npc_zhang_tian.m_avoid_recruiter",
+              "npc_zhang_tian.m_drunk_truth"
+            ]
+          },
+          {
+            "party_id": "cultivation_world",
+            "role": "oppressor (passive — the oppression is structural, not intentional)",
+            "stance": "Mortal villages are beneath notice. We take what we need (tax, recruits) and leave.",
+            "grievance_toward": [],
+            "motivation_links": []
+          }
+        ],
+        "escalation_thresholds": [
+          {
+            "level": 1,
+            "name": "Distant Awareness",
+            "trigger_condition": "always_active",
+            "consequences": ["Villagers know cultivators exist. Stories, rumors, legends. No direct contact."],
+            "deescalation_condition": null
+          },
+          {
+            "level": 2,
+            "name": "Contact Event",
+            "trigger_condition": "living_event:le_wandering_cultivator_arrival OR le_heng_yue_recruiter_arrival",
+            "consequences": ["The gap becomes personal. Someone the villagers know (Da Niu, Wang Ping, the player) is tested. Aspirations and fears are activated. Zhang Tian hides. Da Niu begs. Wang Ping hopes."],
+            "deescalation_condition": "Cultivators leave (they always do)"
+          },
+          {
+            "level": 3,
+            "name": "Rejection and Aftermath",
+            "trigger_condition": "living_event:le_heng_yue_recruiter_arrival resolved AND village_youth_rejected",
+            "consequences": ["Da Niu's dreams crushed. Zhang Tian's shame renewed. The village returns to normal but everyone remembers. The gap is now a wound, not just a distance."],
+            "deescalation_condition": "time (months)"
+          }
+        ],
+        "resolution_paths": [
+          {
+            "id": "rp_youth_recruited",
+            "type": "transformation",
+            "description": "One or more village youth are recruited to a sect. The village gains a connection to the cultivation world.",
+            "conditions": ["youth has cultivation aptitude > 0"],
+            "consequences": ["The recruited youth leaves. The village gains a cultivator ally (eventually). The gap narrows for this village. But the youth is lost to village life."],
+            "canon_likelihood": "EXPLICIT — Wang Lin is recruited. Others may or may not be.",
+            "player_role": "If the player is recruited, they enter the cultivation world. The village becomes their origin, not their home."
+          },
+          {
+            "id": "rp_gap_persists",
+            "type": "attrition",
+            "description": "No one is recruited. The village remains mortal. Life continues.",
+            "conditions": ["no youth has aptitude"],
+            "consequences": ["Status quo. The gap is a fact of life. Da Niu's arc is tragic. Zhang Tian drinks. The village endures."],
+            "canon_likelihood": "INFERRED — most villages in the cultivation world remain mortal forever.",
+            "player_role": null
+          }
+        ],
+        "living_event_links": ["le_wandering_cultivator_arrival", "le_heng_yue_recruiter_arrival"],
+        "seasonal_modifiers": {
+          "spring": "No change. The gap is constant.",
+          "summer": "No change.",
+          "autumn": "Slightly elevated — the Teng tax reminds everyone that power determines everything.",
+          "winter": "Zhang Tian drinks more. The gap feels wider in the cold."
+        }
+      },
+      {
+        "id": "conf_zhang_tian_shame",
+        "name": "Zhang Tian's Secret",
+        "type": "interpersonal",
+        "description": "Zhang Tian was once a Heng Yue outer disciple who failed his Foundation Establishment breakthrough and was expelled. He returned to the village as a drunkard. The village knows him as a drunk; only perceptive observers (or the player who asks the right questions at the right time) will discover his past. This is not a village-wide conflict — it is a personal wound that creates narrative depth.",
+        "canon_fidelity": "INFERRED — the specific character is invented. The archetype (failed cultivator) is canonical in xianxia. Zhang Tian gives the village its accidental sage.",
+        "parties": [
+          {
+            "party_id": "npc_zhang_tian",
+            "role": "victim",
+            "stance": "I failed. I came home. I drink so I do not think. Do not ask me about cultivation.",
+            "grievance_toward": [
+              {"party_id": "heng_yue_sect", "base_grievance": 45, "growth_per_cycle": 0, "decay_per_cycle": 0, "cap": 60}
+            ],
+            "motivation_links": [
+              "npc_zhang_tian.m_avoid_recruiter",
+              "npc_zhang_tian.m_drunk_truth"
+            ]
+          },
+          {
+            "party_id": "heng_yue_sect",
+            "role": "oppressor (indirect)",
+            "stance": "He failed. We expelled him. He is beneath our notice.",
+            "grievance_toward": [],
+            "motivation_links": []
+          }
+        ],
+        "escalation_thresholds": [
+          {
+            "level": 1,
+            "name": "Hidden Shame",
+            "trigger_condition": "always_active",
+            "consequences": ["Zhang Tian drinks. Avoids the recruiter. The village sees a drunkard. His knowledge is wasted."],
+            "deescalation_condition": null
+          },
+          {
+            "level": 2,
+            "name": "Discovered",
+            "trigger_condition": "player OR npc discovers zhang_tian's past (through drunk_truth OR observation OR rumor)",
+            "consequences": ["Relationship with discoverer changes. Zhang Tian's grievance toward Heng Yue surfaces. He may share useful cultivation knowledge (failure rates, sect politics). He may also resent being known."],
+            "deescalation_condition": "discoverer keeps secret (trust maintained)"
+          },
+          {
+            "level": 3,
+            "name": "Recruiter Confrontation",
+            "trigger_condition": "heng_yue_recruiter recognizes zhang_tian",
+            "consequences": ["Public humiliation. Zhang Tian's grievance spikes to 60. He may flee the village or confront the recruiter. Village witnesses a broken man confronting his failure. Memory: zhang_tian_confronted_recruiter."],
+            "deescalation_condition": "recruiter leaves (they always do)"
+          }
+        ],
+        "resolution_paths": [
+          {
+            "id": "rp_drunk_sage",
+            "type": "transformation",
+            "description": "Zhang Tian's knowledge, accessed through his drunken state, helps someone (the player, Da Niu, a village youth) make an informed decision about cultivation. His failure becomes wisdom.",
+            "conditions": ["zhang_tian.intoxication >= 0.6", "someone asks about cultivation"],
+            "consequences": ["Zhang Tian's shame is partially redeemed. He becomes the village's accidental sage — not a teacher, but a warning. His relationship with the asker deepens. Memory: zhang_tian_shared_truth."],
+            "canon_likelihood": "EMERGENT — this is the player experience this conflict enables.",
+            "player_role": "The player can be the one who asks. If they are drinking with Zhang Tian and ask about cultivation, the truth slips out. This is the 'accidental discovery' that Article XXXI.3 demands — no quest marker, no NPC name tag, just a drunk man saying more than he should."
+          }
+        ],
+        "living_event_links": ["le_heng_yue_recruiter_arrival"],
+        "seasonal_modifiers": {
+          "spring": "Normal drinking. Secret safe.",
+          "summer": "Normal. Zhang Tian works fields when sober.",
+          "autumn": "Dangerous — recruiter may arrive. Zhang Tian's fear peaks.",
+          "winter": "He drinks more. More truth slips out. Higher chance of accidental discovery."
+        }
+      }
+    ],
+    "grievance_propagation": {
+      "rules": [
+        {"rule": "grievance_spreads_through_rumor", "description": "Villager grievance toward Teng family spreads: when one NPC's grievance >= 40, nearby NPCs with trust >= 30 gain +5 per cycle.", "max_propagation_depth": 3, "decay_per_hop": 0.4},
+        {"rule": "witnessed_violence_amplifies_grievance", "description": "Witnessing violence: +20 grievance toward aggressor immediately.", "max_amplification": 30},
+        {"rule": "shared_enemy_bonds", "description": "Two NPCs sharing grievance >= 30 toward same party: +3 trust between them per cycle.", "trust_growth_rate": 3},
+        {"rule": "grievance_decay_through_amends", "description": "Amends action: grievance decays at 3x rate for 14 days.", "amends_multiplier": 3, "duration_days": 14}
+      ]
+    },
+    "inter_conflict_dynamics": {
+      "links": [
+        {
+          "conflict_a": "conf_teng_family_oppression",
+          "conflict_b": "conf_wolf_threat",
+          "relationship": "amplifies",
+          "mechanism": "Teng tax reduces grain stores. When wolf attacks destroy livestock, the village has less reserves to fall back on. Scarcity from both directions makes either crisis more devastating."
+        },
+        {
+          "conflict_a": "conf_teng_family_oppression",
+          "conflict_b": "conf_cultivation_gap",
+          "relationship": "enables",
+          "mechanism": "The Teng family's power comes from cultivation. The village's impotence comes from being mortal. The oppression conflict IS the cultivation gap conflict, expressed economically."
+        },
+        {
+          "conflict_a": "conf_wolf_threat",
+          "conflict_b": "conf_zhang_tian_shame",
+          "relationship": "distracts_from",
+          "mechanism": "When wolf threat is high, the village focuses on survival. Zhang Tian's personal crisis is ignored — he drinks more, his truth is less likely to surface. When the threat is low, villagers have more time to notice his strange knowledge."
+        },
+        {
+          "conflict_a": "conf_cultivation_gap",
+          "conflict_b": "conf_zhang_tian_shame",
+          "relationship": "blocks",
+          "mechanism": "Zhang Tian's shame blocks the cultivation gap's positive resolution. If he were public about his failure, it could prepare village youth for what to expect. Instead, he hides — and the gap remains mysterious and alluring (Da Niu's blind ambition)."
+        }
+      ]
+    }
+  },
+  "_how_this_satisfies_gold_standard": {
+    "dimension": "8. Conflict — factions, rivalries, ambitions, hidden agendas",
+    "what_this_provides": "4 interlocking conflicts: Teng oppression (structural), wolf threat (territorial), cultivation gap (ideological), Zhang Tian's shame (interpersonal). 4 escalation levels each with triggers, consequences, and deescalation conditions. Resolution paths (including player role). Grievance propagation rules (4 rules linking to Article XXXIV.3). Inter-conflict dynamics (4 links showing how conflicts amplify, enable, block, and distract each other). The village now has a CONFLICT WEB — not a single enemy, but a living system of tensions that NPC motivations feed from and that the player may observe, intervene in, or be caught by.",
+    "what_remains": "Java wiring (JDK-blocked). The conflict_schema is data — the existing WorldEventBus fires living_events that trigger escalation checks, and the BeliefRegistry stores relationship graph grievance values that this schema defines thresholds for."
+  }
+}

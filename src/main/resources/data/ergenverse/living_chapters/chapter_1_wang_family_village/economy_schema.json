@@ -1,0 +1,343 @@
+{
+  "_schema": "economy",
+  "_schema_version": 1,
+  "_article": "XXXI.4 (Gold-Standard Dimension 3 — Economy)",
+  "_description": "Formal schema for the Economy dimension of a Living Chapter location. Backs NPC motivation_states that involve production, trade, shortages, and prices. The village economy is NOT a shop interface — it is a living system that NPCs participate in independently of the player. Wang Qingyue's motivations (trade_with_merchant, share_rumor) are the social layer; this schema is the structural layer that determines WHAT is available, HOW MUCH it costs, WHY shortages exist, and WHAT happens when the economy shifts. Per Article II (Reality First): the economy exists because it exists, not because the player needs items.",
+  "_design_principles": {
+    "no_player_shop": "There is no 'village shop' UI. Items exist in the world. Wang Qingyue trades what she has. The player acquires things through interaction, not through a menu.",
+    "npc_participation": "NPCs are the primary economic actors. They produce, trade, hoard, and consume. The player is a secondary participant who may buy, sell, barter, or steal.",
+    "shortage_drives_motivation": "When a resource drops below threshold, NPC motivations activate (Zhou Tingsu needs herbs, Wang Tianshui needs firewood). This is how economy drives social simulation.",
+    "seasonal_cycles": "Production, consumption, and trade follow seasonal patterns. Autumn = harvest. Winter = scarcity. Spring = planting. Summer = growth.",
+    "teng_family_tax": "The Teng family's annual tax collection is the economy's primary stressor. It removes half the rice harvest, creating a permanent structural shortage that drives NPC behavior year-round.",
+    "memory_coupling": "Price changes, shortages, and trade deals write to the memory ledger. NPCs remember when the price of salt tripled or when the harvest failed."
+  },
+  "schema": {
+    "location_id": "string — must match a Living Chapter location",
+    "currency": {
+      "primary": "string — the main medium of exchange (wang_family_village: 'barter + rice')",
+      "secondary": ["string — secondary currencies (spirit_stones, salt, iron, wolf_pelts)"],
+      "exchange_rates": {
+        "_note": "Exchange rates are NOT fixed. They fluctuate based on supply, demand, season, and events.",
+        "base_rates": [
+          {
+            "from": "string — resource name",
+            "to": "string — resource name",
+            "base_ratio": "float — baseline exchange ratio (e.g. 1 wolf_pelt = 3 salt)",
+            "volatility": "float 0-1 — how much this rate fluctuates per season (0.1 = stable, 0.8 = volatile)"
+          }
+        ]
+      }
+    },
+    "resources": [
+      {
+        "id": "string — unique resource identifier (e.g. 'rice', 'salt', 'iron', 'spirit_stone', 'crimson_root', 'wolf_pelt', 'firewood', 'cloth')",
+        "type": "enum — food | material | medicine | tool | luxury | cultivation",
+        "production": {
+          "source": "string — where/how it is produced ('village_fields', 'forest_gathering', 'hunting', 'mining', 'trade_import', 'herb_garden')",
+          "rate_per_season": "float — base production per season (in abstract units)",
+          "seasonal_modifier": {
+            "spring": "float multiplier (e.g. 0.3 — planting, no harvest yet)",
+            "summer": "float multiplier (e.g. 0.8 — growth, some early harvest)",
+            "autumn": "float multiplier (e.g. 1.5 — main harvest)",
+            "winter": "float multiplier (e.g. 0.0 — nothing grows)"
+          },
+          "producers": ["string — npc_ids who produce this resource"],
+          "event_modifiers": [
+            {
+              "event_id": "string — links to living_events",
+              "effect": "string — e.g. 'rate *= 0.3' or 'production = 0'",
+              "duration_days": "int — how long the modifier lasts"
+            }
+          ]
+        },
+        "consumption": {
+          "base_rate_per_day": "float — how much the village consumes per day",
+          "consumers": ["string — npc_ids or 'all_villagers'"],
+          "seasonal_modifier": {
+            "spring": "float",
+            "summer": "float",
+            "autumn": "float",
+            "winter": "float (typically higher — more fuel needed, less activity)"
+          }
+        },
+        "stockpile": {
+          "current": "float — current amount in village stores",
+          "max_capacity": "float — storage limit (granary, cellar, etc.)",
+          "decay_rate": "float per day — spoilage (food) or degradation (medicine/herbs)",
+          "location": "string — where stored (e.g. 'village_granary', 'zhou_tingsu_herbs', 'wang_qingyue_cellar')"
+        },
+        "shortage_threshold": "float — when stockpile drops below this, shortage motivations activate on relevant NPCs",
+        "surplus_threshold": "float — when stockpile exceeds this, trade/sale motivations activate",
+        "trade_value": {
+          "base_price": "float — abstract value units",
+          "supply_demand_factor": "float — price adjusts: actual = base * (surplus_threshold / max(current, 0.1))",
+          "npc_markup": [
+            {
+              "npc_id": "string",
+              "markup_percent": "int — Wang Qingyue marks up 15%; the Teng family demands 30% below market"
+            }
+          ]
+        }
+      }
+    ],
+    "trade_routes": [
+      {
+        "id": "string",
+        "name": "string — e.g. 'South Road Merchant Caravan'",
+        "origin": "string — where goods come from",
+        "frequency": "string — e.g. 'every 14-21 days', 'seasonal_autumn'",
+        "goods_offered": [
+          {
+            "resource_id": "string",
+            "quantity_range": "int array [min, max]",
+            "price_range": "float array [min, max]"
+          }
+        ],
+        "goods_wanted": [
+          {
+            "resource_id": "string",
+            "quantity_range": "int array [min, max]",
+            "price_range": "float array [min, max]"
+          }
+        ],
+        "conditions": ["string — e.g. 'weather:!blizzard', 'road_clear=true'"],
+        "event_modifiers": [
+          {
+            "event_id": "string",
+            "effect": "string — e.g. 'frequency *= 0.5' (bandit activity on the road)",
+            "duration_days": "int"
+          }
+        ],
+        "npc_handler": "string — which NPC manages this trade route (wang_qingyue)",
+        "canon_fidelity": "string — EXPLICIT | INFERRED | EMERGENT"
+      }
+    ],
+    "taxation": {
+      "collector": "string — faction or NPC who collects (teng_family)",
+      "rate": "float — fraction of production taken (0.5 = half the harvest)",
+      "frequency": "string — when collected ('season:autumn, day:first')",
+      "resource_taxed": ["string — which resources (rice, iron, cloth)"],
+      "consequences": {
+        "on_collection": "string — e.g. 'village.economy.rice -= harvest * 0.5; village.resentment_teng_family += 1'",
+        "on_failure_to_pay": "string — e.g. 'teng_family.enforcement_action triggers; violence or forced labor'",
+        "on_hidden_stores_discovered": "string — e.g. 'wang_tianshui.grievance += 40; teng_family.punishment triggers'"
+      },
+      "hidden_economy": {
+        "_note": "Wang Tianshui hides 1/10 of the grain. This is his m_resist_teng_family_quietly motivation in data form.",
+        "hider": "string — npc_id (npc_wang_tianshui)",
+        "fraction_hidden": "float (0.1)",
+        "storage_location": "string — 'root_cellar'",
+        "discovery_probability_per_tax": "float — chance the Teng family finds it each collection (0.05 per year)",
+        "discovery_consequences": "string — 'teng_family.violence triggers; wang_tianshui.grievance += 40'"
+      }
+    },
+    "seasonal_cycle": {
+      "_note": "The economy follows a seasonal pattern that repeats every 4 seasons. Each season has distinct production, consumption, and trade characteristics.",
+      "seasons": [
+        {
+          "name": "spring",
+          "production_focus": ["rice (planting)", "herbs (early growth)"],
+          "consumption_modifier": 1.0,
+          "trade_activity": "low (winter stores still hold)",
+          "npc_motivation_shift": "Wang Tianshui: irrigation repair. Zhou Tingsu: herb garden planting. Da Niu: field preparation.",
+          "typical_events": ["irrigation_repair_request", "seed_trade"]
+        },
+        {
+          "name": "summer",
+          "production_focus": ["rice (growth)", "herbs (full harvest)", "wolf_pelts (hunting)"],
+          "consumption_modifier": 1.1,
+          "trade_activity": "medium",
+          "npc_motivation_shift": "Zhou Rui: active hunting. Zhou Tingsu: herb gathering (peak). Wang Qingyue: trade with passing caravans.",
+          "typical_events": ["herb_gathering_trip", "caravan_arrival", "wolf_activity_increases"]
+        },
+        {
+          "name": "autumn",
+          "production_focus": ["rice (harvest)", "firewood (gathering)"],
+          "consumption_modifier": 0.9,
+          "trade_activity": "high (harvest surplus to trade)",
+          "npc_motivation_shift": "ALL NPCs: harvest urgency. Wang Qingyue: negotiate for salt and iron. Wang Tianshui: Teng family tax preparation. Hidden grain storage.",
+          "typical_events": ["harvest", "teng_family_tax_collection", "trade_negotiation"]
+        },
+        {
+          "name": "winter",
+          "production_focus": ["nothing (snow)"],
+          "consumption_modifier": 1.3,
+          "trade_activity": "very low (road often blocked)",
+          "npc_motivation_shift": "Wang Tianshui: winter readiness (firewood, grain check). Zhou Rui: ice fishing. Zhang Tian: more drinking. Villagers: survival mode.",
+          "typical_events": ["wolf_attack_south_bend (more likely)", "illness_spread", "villager_departs"]
+        }
+      ]
+    },
+    "economic_events": {
+      "_note": "Economic events are events that directly affect the economy. They link to living_events via event_id.",
+      "events": [
+        {
+          "event_id": "string — links to living_events",
+          "effect_on_resources": [
+            {
+              "resource_id": "string",
+              "effect": "string — e.g. 'stockpile -= 200', 'production_rate *= 0.3'",
+              "duration_days": "int"
+            }
+          ],
+          "effect_on_prices": [
+            {
+              "resource_id": "string",
+              "price_change": "float — multiplier (e.g. 2.0 = price doubles)"
+            }
+          ],
+          "effect_on_trade_routes": [
+            {
+              "trade_route_id": "string",
+              "effect": "string — e.g. 'disabled', 'frequency /= 2'"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "wang_family_village_instance": {
+    "_comment": "Seed data for Wang Family Village. This is the canonical Gold-Standard Economy implementation. Other villages, sects, and cities will have their own instances.",
+    "location_id": "wang_family_village",
+    "currency": {
+      "primary": "barter (rice as unit of account)",
+      "secondary": ["salt", "iron", "wolf_pelt", "spirit_stone"],
+      "exchange_rates": {
+        "base_rates": [
+          {"from": "wolf_pelt", "to": "salt", "base_ratio": 3, "volatility": 0.2},
+          {"from": "wolf_pelt", "to": "iron", "base_ratio": 0.5, "volatility": 0.3},
+          {"from": "rice", "to": "salt", "base_ratio": 0.1, "volatility": 0.4},
+          {"from": "spirit_stone", "to": "rice", "base_ratio": 50, "volatility": 0.1},
+          {"from": "crimson_root", "to": "rice", "base_ratio": 2, "volatility": 0.5}
+        ]
+      }
+    },
+    "resources": [
+      {
+        "id": "rice",
+        "type": "food",
+        "production": {"source": "village_fields", "rate_per_season": 1000, "seasonal_modifier": {"spring": 0.3, "summer": 0.8, "autumn": 1.5, "winter": 0}, "producers": ["npc_wang_tianshui", "npc_wang_ping", "npc_da_niu", "villagers"]},
+        "consumption": {"base_rate_per_day": 2.5, "consumers": "all_villagers (~80 people)", "seasonal_modifier": {"spring": 1.0, "summer": 0.9, "autumn": 0.8, "winter": 1.3}},
+        "stockpile": {"current": 400, "max_capacity": 800, "decay_rate": 0.02, "location": "village_granary"},
+        "shortage_threshold": 150,
+        "surplus_threshold": 600,
+        "trade_value": {"base_price": 1, "npc_markup": [{"npc_id": "npc_wang_qingyue", "markup_percent": 10}]}
+      },
+      {
+        "id": "salt",
+        "type": "material",
+        "production": {"source": "trade_import", "rate_per_season": 50, "seasonal_modifier": {"spring": 0.8, "summer": 1.2, "autumn": 1.0, "winter": 0.3}, "producers": ["npc_wang_qingyue"]},
+        "consumption": {"base_rate_per_day": 0.3, "consumers": "all_villagers", "seasonal_modifier": {"spring": 1.0, "summer": 1.0, "autumn": 1.0, "winter": 1.0}},
+        "stockpile": {"current": 80, "max_capacity": 200, "decay_rate": 0, "location": "wang_qingyue_cellar"},
+        "shortage_threshold": 30,
+        "surplus_threshold": 120,
+        "trade_value": {"base_price": 5, "npc_markup": [{"npc_id": "npc_wang_qingyue", "markup_percent": 15}]}
+      },
+      {
+        "id": "iron",
+        "type": "tool",
+        "production": {"source": "trade_import", "rate_per_season": 20, "seasonal_modifier": {"spring": 0.5, "summer": 1.0, "autumn": 1.5, "winter": 0.2}, "producers": ["npc_wang_qingyue"]},
+        "consumption": {"base_rate_per_day": 0.05, "consumers": ["npc_wang_tianshan", "npc_da_niu", "npc_zhou_rui"], "seasonal_modifier": {"spring": 1.2, "summer": 1.0, "autumn": 0.8, "winter": 0.5}},
+        "stockpile": {"current": 15, "max_capacity": 60, "decay_rate": 0, "location": "village_tool_shed"},
+        "shortage_threshold": 5,
+        "surplus_threshold": 40,
+        "trade_value": {"base_price": 12, "npc_markup": [{"npc_id": "npc_wang_qingyue", "markup_percent": 10}]}
+      },
+      {
+        "id": "crimson_root",
+        "type": "medicine",
+        "production": {"source": "forest_gathering", "rate_per_season": 15, "seasonal_modifier": {"spring": 0.5, "summer": 1.5, "autumn": 1.0, "winter": 0.1}, "producers": ["npc_zhou_tingsu", "npc_zhou_rui (if requested)"]},
+        "consumption": {"base_rate_per_day": 0.08, "consumers": ["npc_zhou_tingsu (for treatments)"], "seasonal_modifier": {"spring": 0.8, "summer": 1.2, "autumn": 1.0, "winter": 1.5}},
+        "stockpile": {"current": 8, "max_capacity": 30, "decay_rate": 0.05, "location": "zhou_tingsu_herbs"},
+        "shortage_threshold": 4,
+        "surplus_threshold": 20,
+        "trade_value": {"base_price": 8, "npc_markup": []}
+      },
+      {
+        "id": "wolf_pelt",
+        "type": "material",
+        "production": {"source": "hunting", "rate_per_season": 25, "seasonal_modifier": {"spring": 0.8, "summer": 1.2, "autumn": 1.0, "winter": 1.5}, "producers": ["npc_zhou_rui"]},
+        "consumption": {"base_rate_per_day": 0.01, "consumers": ["npc_wang_qingyue (for trade)"], "seasonal_modifier": {"spring": 1.0, "summer": 1.0, "autumn": 1.0, "winter": 1.0}},
+        "stockpile": {"current": 12, "max_capacity": 50, "decay_rate": 0.01, "location": "zhou_rui_shed"},
+        "shortage_threshold": 3,
+        "surplus_threshold": 30,
+        "trade_value": {"base_price": 4, "npc_markup": [{"npc_id": "npc_wang_qingyue", "markup_percent": 15}]}
+      },
+      {
+        "id": "firewood",
+        "type": "material",
+        "production": {"source": "forest_gathering", "rate_per_season": 200, "seasonal_modifier": {"spring": 1.0, "summer": 0.8, "autumn": 1.5, "winter": 0.3}, "producers": ["npc_wang_ping", "npc_da_niu"]},
+        "consumption": {"base_rate_per_day": 1.5, "consumers": "all_villagers", "seasonal_modifier": {"spring": 0.8, "summer": 0.5, "autumn": 0.7, "winter": 2.0}},
+        "stockpile": {"current": 100, "max_capacity": 300, "decay_rate": 0, "location": "village_woodpile"},
+        "shortage_threshold": 40,
+        "surplus_threshold": 200,
+        "trade_value": {"base_price": 0.5, "npc_markup": []}
+      },
+      {
+        "id": "spirit_stone",
+        "type": "cultivation",
+        "production": {"source": "none (village produces zero)", "rate_per_season": 0, "seasonal_modifier": {"spring": 0, "summer": 0, "autumn": 0, "winter": 0}, "producers": []},
+        "consumption": {"base_rate_per_day": 0, "consumers": [], "seasonal_modifier": {"spring": 0, "summer": 0, "autumn": 0, "winter": 0}},
+        "stockpile": {"current": 0, "max_capacity": 10, "decay_rate": 0, "location": "none"},
+        "shortage_threshold": 0,
+        "surplus_threshold": 0,
+        "trade_value": {"base_price": 100, "npc_markup": []},
+        "_comment": "Spirit stones are not part of the village economy. They appear only when cultivators visit. The village has zero. This is intentional — it shows the gap between mortal and cultivator economies."
+      }
+    ],
+    "trade_routes": [
+      {
+        "id": "south_road_caravan",
+        "name": "South Road Merchant Caravan",
+        "origin": "Zhao Country interior",
+        "frequency": "every 14-21 days",
+        "goods_offered": [
+          {"resource_id": "salt", "quantity_range": [20, 40], "price_range": [4, 6]},
+          {"resource_id": "iron", "quantity_range": [5, 15], "price_range": [10, 14]},
+          {"resource_id": "cloth", "quantity_range": [10, 25], "price_range": [2, 4]}
+        ],
+        "goods_wanted": [
+          {"resource_id": "wolf_pelt", "quantity_range": [5, 15], "price_range": [3, 5]},
+          {"resource_id": "rice", "quantity_range": [20, 60], "price_range": [0.8, 1.2]}
+        ],
+        "conditions": ["weather:!blizzard", "road_clear=true"],
+        "event_modifiers": [
+          {"event_id": "le_bandit_raid_cooperation", "effect": "frequency /= 2", "duration_days": 30},
+          {"event_id": "le_harvest_failure", "effect": "goods_wanted[1].quantity_range *= 2 (more rice demanded)", "duration_days": 60}
+        ],
+        "npc_handler": "npc_wang_qingyue",
+        "canon_fidelity": "INFERRED — mortal villages trade with passing caravans; specific route is inferred."
+      }
+    ],
+    "taxation": {
+      "collector": "teng_family",
+      "rate": 0.5,
+      "frequency": "season:autumn, day:first",
+      "resource_taxed": ["rice"],
+      "consequences": {
+        "on_collection": "village.economy.rice.stockpile -= harvest * 0.5; village.resentment_teng_family += 1 (cumulative, never resets)",
+        "on_failure_to_pay": "teng_family.enforcement_action triggers; violence or forced labor",
+        "on_hidden_stores_discovered": "wang_tianshui.grievance += 40; teng_family.punishment triggers"
+      },
+      "hidden_economy": {
+        "hider": "npc_wang_tianshui",
+        "fraction_hidden": 0.1,
+        "storage_location": "root_cellar",
+        "discovery_probability_per_tax": 0.05,
+        "discovery_consequences": "teng_family.violence triggers; wang_tianshui.grievance += 40; village.tension += 10"
+      }
+    },
+    "economic_events": {
+      "events": [
+        {"event_id": "le_teng_family_tax_collection", "effect_on_resources": [{"resource_id": "rice", "effect": "stockpile -= stockpile * 0.5", "duration_days": 0}], "effect_on_prices": [{"resource_id": "rice", "price_change": 2.0}], "effect_on_trade_routes": []},
+        {"event_id": "le_harvest_failure", "effect_on_resources": [{"resource_id": "rice", "effect": "production_rate *= 0.3 for 1 season", "duration_days": 90}], "effect_on_prices": [{"resource_id": "rice", "price_change": 3.0}, {"resource_id": "salt", "price_change": 1.5}], "effect_on_trade_routes": [{"trade_route_id": "south_road_caravan", "effect": "goods_wanted[1].quantity_range *= 2"}]},
+        {"event_id": "le_wolf_attack_south_bend", "effect_on_resources": [{"resource_id": "wolf_pelt", "effect": "production_rate *= 0.5 (hunters avoid forest)", "duration_days": 14}], "effect_on_prices": [{"resource_id": "wolf_pelt", "price_change": 1.8}], "effect_on_trade_routes": []}
+      ]
+    }
+  },
+  "_how_this_satisfies_gold_standard": {
+    "dimension": "3. Economy — production, trade, shortages, prices",
+    "what_this_provides": "The formal data structure behind Wang Qingyue's trade motivation and Wang Tianshui's winter readiness motivation. Defines 7 resources with production/consumption/stockpile/shortage/surplus thresholds. 1 trade route. 1 taxation system with hidden economy. Seasonal cycle across all 4 seasons. 3 economic events linked to living_events. The village economy now has structure that NPC motivations reference and that Java will wire into WorldEventBus and IntentEngine.",
+    "what_remains": "Java wiring (JDK-blocked). The economy_schema is data — the IntentEngine already reads motivation_states and produces intents; this schema defines the WORLD STATE that those motivations evaluate against."
+  }
+}
