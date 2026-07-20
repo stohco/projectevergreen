@@ -146,7 +146,9 @@
       "social_engine": "request",
       "urgency": 0.35,
       "cooldown_ticks": 48000,
-      "source": "INFERRED: RI Ch.1. Wang Ping is the youngest brother. Younger siblings follow older ones. No specific canon line, but universally human."
+      "source": "INFERRED: RI Ch.1. Wang Ping is the youngest brother. Younger siblings follow older ones. No specific canon line, but universally human.",
+      "line": "Wait for me! I want to come too!",
+      "mode": "approach"
     }
   ]
 }

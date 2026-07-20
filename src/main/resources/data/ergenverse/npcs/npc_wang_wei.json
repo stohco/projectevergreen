@@ -57,7 +57,9 @@
       "social_engine": "request",
       "urgency": 0.4,
       "cooldown_ticks": 24000,
-      "source": "INFERRED: RI Ch.1. Wang family children anticipate the aptitude test. An energetic brother would want to train."
+      "source": "INFERRED: RI Ch.1. Wang family children anticipate the aptitude test. An energetic brother would want to train.",
+      "line": "Come on, let us practice! The test could be any day now.",
+      "mode": "approach"
     }
   ]
 }

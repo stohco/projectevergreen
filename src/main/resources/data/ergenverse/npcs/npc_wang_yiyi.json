@@ -57,7 +57,9 @@
       "social_engine": "favor",
       "urgency": 0.35,
       "cooldown_ticks": 24000,
-      "source": "INFERRED: RI Ch.1. Wang Yiyi is Wang Lin's sister. A daughter helping her mother cook is consistent with the rural setting."
+      "source": "INFERRED: RI Ch.1. Wang Yiyi is Wang Lin's sister. A daughter helping her mother cook is consistent with the rural setting.",
+      "line": "Mother, let me help with the cooking today.",
+      "mode": "approach"
     }
   ]
 }

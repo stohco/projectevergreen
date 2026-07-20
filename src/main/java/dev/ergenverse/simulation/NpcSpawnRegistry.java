@@ -37,9 +37,11 @@ import java.util.Map;
  * <p>{@link SpatialBiomeCacheIndex} resolves biome IDs to location IDs:
  * {@code ergenverse:zhao_mountains} → {@code zhao_mountains},
  * {@code ergenverse:zhao_plains} → {@code zhao_plains},
- * {@code ergenverse:wang_family_village} → {@code wang_family_village}, etc.
+ * {@code ergenverse:great_wang_dynasty} → {@code great_wang_dynasty}, etc.
  * NPCs are registered under the resolvable location ID where their biome
- * generates.
+ * generates. Note: Wang Family Village NPCs register under
+ * {@code zhao_plains} because the village jigsaw structure generates in
+ * that biome.
  *
  * <p><b>Provenance: INFERRED.</b> Spawn locations inferred from NPC data
  * files' "location" field, mapped to the nearest resolvable biome region.
@@ -101,17 +103,24 @@ public final class NpcSpawnRegistry {
         register("vermilion_bird_country", "npc_situ_nan");       // Divine Emperor
         register("vermilion_bird_country", "npc_daoist_water");   // Ancient cultivator
 
-        // ── Wang Family Village (ergenverse:wang_family_village biome) ──
-        // Per Article XLI: no character is special-cased. These NPCs
-        // spawn through the same general pipeline as every other location.
-        // Note: npc_wang_tiangui data file does not yet exist (data gap,
-        // not architecture gap). Other Wang family NPCs use existing data.
-        register("wang_family_village", "npc_wang_tianshui");
-        register("wang_family_village", "npc_wang_qingyue");
-        register("wang_family_village", "npc_wang_wei");
-        register("wang_family_village", "npc_wang_zhou");
-        register("wang_family_village", "npc_wang_ping");
-        register("wang_family_village", "npc_wang_yiyi");
+        // ── Wang Family Village (IN zhao_plains biome) ──────────────
+        // The wang_family_village jigsaw structure generates in
+        // ergenverse:zhao_plains (see structure/wang_family_village.json).
+        // Previously registered under "wang_family_village" which is NOT
+        // a resolvable biome — NPCs never spawned (078 cycle audit).
+        // Fixed: now registered under the correct biome location ID.
+        // Per Article XLI: no character is special-cased.
+        register("zhao_plains", "npc_wang_tianshui");
+        register("zhao_plains", "npc_wang_qingyue");
+        register("zhao_plains", "npc_wang_wei");
+        register("zhao_plains", "npc_wang_zhou");
+        register("zhao_plains", "npc_wang_ping");
+        register("zhao_plains", "npc_wang_yiyi");
+        // Additional village NPCs from ecology (no desires yet, but
+        // they inhabit the village and should be visible in the world).
+        register("zhao_plains", "npc_wang_tianshan");
+        register("zhao_plains", "npc_zhou_tingsu");
+        register("zhao_plains", "npc_da_niu");
 
         Ergenverse.LOGGER.info("[NpcSpawnRegistry] Registered {} NPCs across {} locations.",
                 totalCount(), SPAWNS_BY_LOCATION.size());

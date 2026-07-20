@@ -134,5 +134,43 @@
         "experience": 45
       }
     }
+  ],
+  "desires": [
+    {
+      "id": "boast_about_past_battle",
+      "what": "Share a story about a past battle with anyone nearby",
+      "target": "nearby_cultivator",
+      "why": "I have lived for thousands of years and fought battles that shook planets. Someone should hear about them. Besides, it is entertaining.",
+      "social_engine": "rumor",
+      "urgency": 0.55,
+      "cooldown_ticks": 30000,
+      "source": "NOVEL_STATEMENT: Situ Nan's personality is boisterous, he loves sharing battle stories. Initiation line: 'I will share stories of battles that shook the planet.'",
+      "line": "Ha! Let me tell you about the time I fought three Soul Transformation cultivators at once. Three! They thought they had me cornered in the Valley of Lost Souls. They were wrong. They were very, very wrong.",
+      "mode": "approach"
+    },
+    {
+      "id": "challenge_to_spar",
+      "what": "Challenge a nearby cultivator to a friendly spar",
+      "target": "nearby_cultivator",
+      "why": "A cultivator who does not fight rusts. I want to see what the younger generation can do.",
+      "social_engine": "challenge",
+      "urgency": 0.45,
+      "cooldown_ticks": 24000,
+      "source": "INFERRED: RI. Situ Nan is a combat-oriented Divine Emperor. Initiation line: 'You look like you can fight. Good. I like people who can fight.'",
+      "line": "You there! Yes, you. Come, show me what you can do. Do not worry — I will not kill you. Probably. Ha! I jest. Mostly.",
+      "mode": "approach"
+    },
+    {
+      "id": "offer_battle_knowledge",
+      "what": "Offer to share battle experience with a cultivator who showed skill",
+      "target": "nearby_cultivator",
+      "why": "A good fight deserves respect. If someone shows skill, I share what I know. It costs me nothing and might keep them alive.",
+      "social_engine": "teaching",
+      "urgency": 0.35,
+      "cooldown_ticks": 60000,
+      "source": "INFERRED: RI. Situ Nan's sect_task 'battle_stories' trades battle knowledge. A Divine Emperor would naturally share experience with those who interest him.",
+      "line": "Not bad. Not bad at all. You remind me of a cultivator I knew two thousand years ago. Same fire in the eyes. If you want, I can tell you what I told him. It might keep you alive longer.",
+      "mode": "line"
+    }
   ]
 }

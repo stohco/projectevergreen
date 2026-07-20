@@ -134,5 +134,43 @@
       "reward_item": "minecraft:gold_ingot",
       "reward_count": 3
     }
+  ],
+  "desires": [
+    {
+      "id": "demand_tribute_status",
+      "what": "Demand a status report on village tribute collection",
+      "target": "player",
+      "why": "The outer villages must pay on time. Late tribute is an insult to the Teng family name.",
+      "social_engine": "request",
+      "urgency": 0.50,
+      "cooldown_ticks": 36000,
+      "source": "INFERRED: RI Ch.1-3. Teng family oppresses surrounding villages through grain tribute. Wang Tianshui's desire 'warn_about_teng' confirms Teng servants buy up grain. This desire creates the oppressor's perspective.",
+      "line": "The grain tribute from this region is overdue. Tell whoever manages the storehouses that the Teng family does not wait. Another delay and I will send collectors who are far less patient than I am.",
+      "mode": "approach"
+    },
+    {
+      "id": "assess_nearby_strength",
+      "what": "Evaluate any nearby entity's strength and potential usefulness",
+      "target": "nearby_cultivator",
+      "why": "Useful cultivators can be recruited. Threats must be identified early. Knowing who is nearby is prudent.",
+      "social_engine": "challenge",
+      "urgency": 0.45,
+      "cooldown_ticks": 48000,
+      "source": "INFERRED: RI Ch.1-5. Teng Huayuan is ambitious and assesses threats/opportunities. A powerful patriarch evaluates everyone as asset or obstacle.",
+      "line": "You. What realm have you achieved? Do not lie. I can sense a cultivator's strength like a wolf senses blood. Speak honestly and perhaps we can find an arrangement.",
+      "mode": "line"
+    },
+    {
+      "id": "threaten_village_example",
+      "what": "Remind villagers of Teng family authority through implied threat",
+      "target": "player",
+      "why": "Fear is the Teng family's primary tool. An occasional demonstration of power keeps the villages obedient.",
+      "social_engine": "rumor",
+      "urgency": 0.60,
+      "cooldown_ticks": 96000,
+      "source": "NOVEL_STATEMENT: Teng Huayuan's initiation line: 'The villages send their tribute on time. If they do not... I make an example.' This is his canon personality.",
+      "line": "Three generations of Teng family rule. We did not achieve this through kindness. Remember that. The next village that forgets will serve as a lesson for all the others.",
+      "mode": "approach"
+    }
   ]
 }

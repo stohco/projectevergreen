@@ -55,7 +55,9 @@
       "social_engine": "request",
       "urgency": 0.4,
       "cooldown_ticks": 72000,
-      "source": "INFERRED: RI Ch.1. Wang Zhou is timid (caution 0.70). He would seek reassurance from his father about the sect test. No specific canon line, but consistent with personality."
+      "source": "INFERRED: RI Ch.1. Wang Zhou is timid (caution 0.70). He would seek reassurance from his father about the sect test. No specific canon line, but consistent with personality.",
+      "line": "Father... do you know when the elder from Heng Yue will come?",
+      "mode": "approach"
     },
     {
       "id": "avoid_teng_servants",

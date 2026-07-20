@@ -133,5 +133,43 @@
         "experience": 40
       }
     }
+  ],
+  "desires": [
+    {
+      "id": "share_water_philosophy",
+      "what": "Share an observation about water and cultivation philosophy",
+      "target": "nearby_cultivator",
+      "why": "Most cultivators chase power like fire. They do not understand that water shapes mountains. Occasionally, one of them might listen.",
+      "social_engine": "teaching",
+      "urgency": 0.40,
+      "cooldown_ticks": 60000,
+      "source": "INFERRED: RI. Daoist Water's initiation lines emphasize water philosophy: 'Water finds the lowest point. Power finds the highest.' A serene master shares wisdom from the natural flow of his Dao, not from duty.",
+      "line": "Watch the river. It does not fight the rock. It flows around it. Given enough time, the rock is gone and the river remains. Most cultivators fight. They are the rock.",
+      "mode": "line"
+    },
+    {
+      "id": "request_formation_materials",
+      "what": "Request materials needed for formation study from a nearby cultivator",
+      "target": "nearby_cultivator",
+      "why": "The Karma Crystal Formation requires specific components. Anyone who can provide them saves me time I would rather spend in meditation.",
+      "social_engine": "request",
+      "urgency": 0.50,
+      "cooldown_ticks": 72000,
+      "source": "INFERRED: RI. Daoist Water's sect_task 'formation_study' requires emeralds and ink. A cultivator focused on research would naturally request what he needs from those who travel.",
+      "line": "I am studying the Karma Crystal Formation. If you come across emeralds or ink sacs in your travels, bring them to me. I will teach you something in return. Water always repays what it borrows.",
+      "mode": "approach"
+    },
+    {
+      "id": "warn_about_impatience",
+      "what": "Criticize a cultivator's impatience or recklessness",
+      "target": "nearby_cultivator",
+      "why": "Young cultivators rush. Rushing kills more cultivators than enemies do. A warning costs nothing.",
+      "social_engine": "teaching",
+      "urgency": 0.35,
+      "cooldown_ticks": 84000,
+      "source": "INFERRED: RI. Daoist Water values patience (0.90) and caution (0.88). His initiation lines emphasize long-term perspective. He would criticize haste.",
+      "line": "You cultivate too fast. I can see it in your Qi. Slow down. The river did not carve the canyon in a day. It took ten thousand years of patient flow. Your Dao is the same.",
+      "mode": "line"
+    }
   ]
 }

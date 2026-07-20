@@ -133,5 +133,43 @@
         "experience": 40
       }
     }
+  ],
+  "desires": [
+    {
+      "id": "teach_water_dao_lesson",
+      "what": "Offer a brief Dao lesson to a nearby cultivator who shows potential",
+      "target": "nearby_cultivator",
+      "why": "Understanding grows when shared. If this cultivator has the right temperament, a small lesson may plant a seed.",
+      "social_engine": "teaching",
+      "urgency": 0.40,
+      "cooldown_ticks": 72000,
+      "source": "INFERRED: RI. Qing Shui is a mentor figure who gave Wang Lin the Slaughter Sword. His initiation lines emphasize teaching: 'The water does not resist. It does not fight. It simply flows.'",
+      "line": "The water does not resist. It does not fight. It simply flows around the obstacle and continues. This is the Dao I teach. Most disciples do not understand it for decades. Perhaps you will be different.",
+      "mode": "line"
+    },
+    {
+      "id": "request_spring_maintenance_help",
+      "what": "Ask a cultivator to help maintain the spirit spring",
+      "target": "nearby_cultivator",
+      "why": "The spirit spring's purity affects all cultivation here. It needs tending. A capable disciple could handle it.",
+      "social_engine": "request",
+      "urgency": 0.45,
+      "cooldown_ticks": 60000,
+      "source": "INFERRED: RI. Qing Shui's sect_task 'spirit_spring_tending' requires coal and glowstone. A mentor would delegate maintenance to promising disciples.",
+      "line": "The spirit spring needs tending. If you can bring coal and glowstone, I will show you something the other disciples have not yet earned. The spring rewards those who care for it.",
+      "mode": "approach"
+    },
+    {
+      "id": "observe_silent_judgment",
+      "what": "Silently observe a cultivator and offer a single cryptic comment",
+      "target": "nearby_cultivator",
+      "why": "I have given the Slaughter Sword to one cultivator in ten thousand years. I watch for the next. If they show understanding, I notice.",
+      "social_engine": "mentorship",
+      "urgency": 0.30,
+      "cooldown_ticks": 96000,
+      "source": "INFERRED: RI. Qing Shui gave Wang Lin the Slaughter Sword because 'he understood that strength and water are not opposites.' He would observe silently and speak only when he sees something rare.",
+      "line": "...",
+      "mode": "line"
+    }
   ]
 }

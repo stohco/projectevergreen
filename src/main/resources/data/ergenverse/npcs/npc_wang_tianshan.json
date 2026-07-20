@@ -120,5 +120,55 @@
       "reward_item": "minecraft:iron_ingot",
       "reward_count": 2
     }
+  ],
+  "desires": [
+    {
+      "id": "worry_about_village_decline",
+      "what": "Express concern about the village's decline to a family member",
+      "target": "any_family_member",
+      "why": "The Wang family has been weakening for years. As elder, it is my duty to remind the younger generation of what we are losing.",
+      "social_engine": "rumor",
+      "urgency": 0.50,
+      "cooldown_ticks": 60000,
+      "source": "INFERRED: RI Ch.1-3. The village is in visible decline under Teng family pressure. Canon basis: village poverty and Teng oppression are central to Wang Lin's early motivation. An elder who remembers better days would comment on this.",
+      "line": "Fifty years ago, this village had three hundred people. Now look at us. The Teng family takes our grain, our young men leave for the city, and the spirit vein... I do not know what is wrong with the spirit vein.",
+      "mode": "approach"
+    },
+    {
+      "id": "ask_about_strangers_nearby",
+      "what": "Ask if anyone has noticed strangers or bandits near the village",
+      "target": "any_family_member",
+      "why": "The northern road has had bandit sightings. The village watch needs information to prepare.",
+      "social_engine": "request",
+      "urgency": 0.40,
+      "cooldown_ticks": 48000,
+      "source": "INFERRED: RI Ch.1. Bandits are mentioned in the village context. The sect_task 'village_patrol_arrows' confirms a bandit threat. An elder responsible for safety would actively gather intelligence from anyone who travels outside the village.",
+      "line": "Have you seen anyone unfamiliar on the northern road? I have heard reports of bandits. The village must know before it is too late.",
+      "mode": "line"
+    },
+    {
+      "id": "urge_shrine_maintenance",
+      "what": "Remind family members to maintain the memorial shrine",
+      "target": "any_family_member",
+      "why": "The ancestors built this village. Neglecting the shrine weakens the family's spirit and invites misfortune.",
+      "social_engine": "request",
+      "urgency": 0.35,
+      "cooldown_ticks": 72000,
+      "source": "INFERRED: RI Ch.1. Chinese village culture emphasizes ancestor worship. The shrine exists in the village per the sect_task data. An elder would remind people to tend it — this is universal elder behavior in a traditional village.",
+      "line": "The shrine braziers are burning low again. Our ancestors watch over us. Someone bring coal before the evening ceremony. We cannot afford their displeasure on top of everything else.",
+      "mode": "approach"
+    },
+    {
+      "id": "warn_about_spirit_vein",
+      "what": "Mention that the village's spirit vein has been weakening",
+      "target": "any_family_member",
+      "why": "The crops have been poor for three seasons. The spirit vein feeds the land. If it fails, the village dies.",
+      "social_engine": "rumor",
+      "urgency": 0.60,
+      "cooldown_ticks": 96000,
+      "source": "INFERRED: RI Ch.1. Wang Family Village sits on a spirit vein (canon). Its weakening explains the village's decline and connects to the broader cultivation world. The elder would be the one to notice and speak of this. Per Art XXXI.4 Ecology/Gold-Standard dimension 1.",
+      "line": "The spirit vein beneath this village grows thinner each year. I can feel it. The herbs in the eastern field used to grow tall. Now they barely sprout. If this continues, we will have to abandon this place within a generation.",
+      "mode": "approach"
+    }
   ]
 }

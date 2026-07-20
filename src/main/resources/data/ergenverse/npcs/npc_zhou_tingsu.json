@@ -135,5 +135,55 @@
       "reward_item": "minecraft:bread",
       "reward_count": 8
     }
+  ],
+  "desires": [
+    {
+      "id": "offer_food_to_family",
+      "what": "Offer food to a family member who looks hungry",
+      "target": "any_family_member",
+      "why": "My children forget to eat when they are busy. A mother feeds her family. It is what I do.",
+      "social_engine": "offer",
+      "urgency": 0.55,
+      "cooldown_ticks": 30000,
+      "source": "INFERRED: RI Ch.1. Zhou Tingsu is described as a caring mother whose suffering drives Wang Lin's early cultivation. A mother offering food is universal maternal behavior, canon-supported by her initiation_lines.",
+      "line": "Here. Take this bread. You have been out all morning and I know you have not eaten. Do not argue with me.",
+      "mode": "approach"
+    },
+    {
+      "id": "warn_about_river",
+      "what": "Warn a family member about the river's danger",
+      "target": "any_family_member",
+      "why": "Old Zhou's boy nearly drowned last spring. The current is stronger than it looks. I will not lose another child to that river.",
+      "social_engine": "rumor",
+      "urgency": 0.45,
+      "cooldown_ticks": 48000,
+      "source": "INFERRED: RI Ch.1. Zhou Tingsu's initiation line mentions the river drowning. Mothers warn children about known dangers. This is canon-supported maternal behavior.",
+      "line": "Stay away from the river. Old Zhou's boy was lucky last spring. The current is stronger than it looks, and there are rocks beneath the surface you cannot see until it is too late.",
+      "mode": "line"
+    },
+    {
+      "id": "mention_cultivator_dream",
+      "what": "Share a recurring dream about cultivators descending from the sky",
+      "target": "any_family_member",
+      "why": "The dream felt real. Perhaps it means something. Perhaps the cultivators the elders speak of are truly coming.",
+      "social_engine": "rumor",
+      "urgency": 0.60,
+      "cooldown_ticks": 72000,
+      "source": "INFERRED: RI Ch.1. Zhou Tingsu's initiation line: 'I had a dream last night. A man in blue robes descended from the sky.' The Heng Yue elder's arrival for aptitude testing is a pivotal event. A mother's dream foreshadowing this is natural. Per Art XXXI.3: this is one of the beats that lets a player 'accidentally recreate Wang Lin's early life.'",
+      "line": "I had that dream again. A man in blue robes, standing on air above the village. He was looking down at us, studying us. Perhaps it means nothing. But the elders say cultivators will come soon to test the children... perhaps it is the same man.",
+      "mode": "approach"
+    },
+    {
+      "id": "worry_about_wang_lin",
+      "what": "Express worry about Wang Lin spending too much time alone in the hills",
+      "target": "any_family_member",
+      "why": "He goes to the hills every day and comes back quiet. Something is on his mind. A mother notices these things.",
+      "social_engine": "rumor",
+      "urgency": 0.50,
+      "cooldown_ticks": 54000,
+      "source": "INFERRED: RI Ch.1. Wang Lin spends time alone in the hills studying the cave (canon). His mother would worry about his isolation. This is the kind of background detail that makes the village feel alive per Art XXXI.3.",
+      "line": "Wang Lin has been going to the eastern hills again. He comes back with dirt on his clothes and will not say where he has been. I worry about that boy. He is too quiet, too serious for his age.",
+      "mode": "approach"
+    }
   ]
 }

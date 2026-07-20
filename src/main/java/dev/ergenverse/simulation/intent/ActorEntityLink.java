@@ -298,7 +298,10 @@ public final class ActorEntityLink {
                     jsonStr(d, "social_engine", "request"),
                     jsonDouble(d, "urgency", 0.5),
                     jsonLong(d, "cooldown_ticks", 24000),
-                    jsonStr(d, "source", "unknown")
+                    -1L, // lastFulfilledTick — starts unfulfilled
+                    jsonStr(d, "source", "unknown"),
+                    jsonStr(d, "line", ""),
+                    jsonStr(d, "mode", "line")
             ));
         }
         if (!desires.isEmpty()) {

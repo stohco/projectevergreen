@@ -146,7 +146,9 @@
       "social_engine": "rumor",
       "urgency": 0.55,
       "cooldown_ticks": 48000,
-      "source": "INFERRED: RI Ch.1-3. Wang Tianshui expresses worry about Teng oppression to Wang Lin. Canon line: 'The Teng family servants were in the market again, buying up grain.'"
+      "source": "INFERRED: RI Ch.1-3. Wang Tianshui expresses worry about Teng oppression to Wang Lin. Canon line: 'The Teng family servants were in the market again, buying up grain.'",
+      "line": "The Teng family servants were at the market again today. Buying up all the grain. If this keeps up, we will have nothing left by winter.",
+      "mode": "approach"
     },
     {
       "id": "ask_about_aptitude_test",
@@ -156,7 +158,9 @@
       "social_engine": "request",
       "urgency": 0.45,
       "cooldown_ticks": 72000,
-      "source": "INFERRED: RI Ch.1. The Heng Yue elder arrives to test village children. Canon line: 'I have heard the Heng Yue Sect elder will arrive soon for the aptitude test.'"
+      "source": "INFERRED: RI Ch.1. The Heng Yue elder arrives to test village children. Canon line: 'I have heard the Heng Yue Sect elder will arrive soon for the aptitude test.'",
+      "line": "Has anyone heard when the Heng Yue elder is arriving? The children should be ready.",
+      "mode": "line"
     },
     {
       "id": "ask_for_wood_help",
@@ -166,7 +170,9 @@
       "social_engine": "request",
       "urgency": 0.60,
       "cooldown_ticks": 24000,
-      "source": "INFERRED: RI Ch.1. Wang Tianshui is a carpenter with a commission. The sect_tasks data references oak planks and sticks."
+      "source": "INFERRED: RI Ch.1. Wang Tianshui is a carpenter with a commission. The sect_tasks data references oak planks and sticks.",
+      "line": "The governor's commission won't finish itself. I could use another pair of hands with the oak.",
+      "mode": "approach"
     }
   ]
 }

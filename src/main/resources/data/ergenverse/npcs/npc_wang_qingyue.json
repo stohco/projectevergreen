@@ -144,7 +144,9 @@
       "social_engine": "favor",
       "urgency": 0.50,
       "cooldown_ticks": 12000,
-      "source": "INFERRED: RI Ch.1. Wang Qingyue is Wang Lin's mother. Canon line: 'Lin'er, your mother prepared extra food today. Eat before you go wandering.' (Wang Tianshui's initiation_lines, but the sentiment is Qingyue's)"
+      "source": "INFERRED: RI Ch.1. Wang Qingyue is Wang Lin's mother. Canon line: 'Lin'er, your mother prepared extra food today. Eat before you go wandering.' (Wang Tianshui's initiation_lines, but the sentiment is Qingyue's)",
+      "line": "Eat something before you go. You will need your strength.",
+      "mode": "approach"
     },
     {
       "id": "warn_about_spirit_beasts",
@@ -154,7 +156,9 @@
       "social_engine": "warn",
       "urgency": 0.55,
       "cooldown_ticks": 48000,
-      "source": "INFERRED: RI Ch.2-3. Spirit beasts exist near Zhao. A village mother would warn children about predators. No specific canon line, but consistent with Wang Qingyue's protective nature."
+      "source": "INFERRED: RI Ch.2-3. Spirit beasts exist near Zhao. A village mother would warn children about predators. No specific canon line, but consistent with Wang Qingyue's protective nature.",
+      "line": "Do not go too far into the hills. There have been wolves near the stream lately.",
+      "mode": "approach"
     }
   ]
 }

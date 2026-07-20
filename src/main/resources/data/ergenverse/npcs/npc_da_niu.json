@@ -120,5 +120,55 @@
       "reward_item": "minecraft:wooden_axe",
       "reward_count": 1
     }
+  ],
+  "desires": [
+    {
+      "id": "suggest_mountain_exploration",
+      "what": "Suggest exploring the eastern mountains for spirit beasts",
+      "target": "any_family_member",
+      "why": "My grandfather saw a spirit beast there forty years ago. I want to see one too. An adventure would break the boredom.",
+      "social_engine": "request",
+      "urgency": 0.50,
+      "cooldown_ticks": 36000,
+      "source": "INFERRED: RI Ch.1. Da Niu's initiation line: 'I heard there are spirit beasts in the mountains east of here. My grandfather said he saw one forty years ago.' A curious, brave young man would want to explore.",
+      "line": "Come on! Let us go to the eastern mountains. My grandfather said there are spirit beasts there. What if we actually find one? It would be the greatest story ever told in this village!",
+      "mode": "approach"
+    },
+    {
+      "id": "brag_about_strength",
+      "what": "Boast about physical strength and challenge someone to a contest",
+      "target": "any_family_member",
+      "why": "I am the strongest in the village. It is simple fact. People should know this.",
+      "social_engine": "challenge",
+      "urgency": 0.40,
+      "cooldown_ticks": 24000,
+      "source": "INFERRED: RI Ch.1. Da Niu is 'simple, strong, loyal farmhand.' His initiation line: 'I am stronger.' A simple, strong young man would brag and challenge. Universal behavior for his archetype.",
+      "line": "I carried twelve logs yesterday. Twelve! No one else in this village can do that. I bet I could carry you and the logs at the same time. Come, try to lift this one. Go on!",
+      "mode": "line"
+    },
+    {
+      "id": "ask_about_aptitude_test",
+      "what": "Ask about the upcoming Heng Yue Sect aptitude test",
+      "target": "any_family_member",
+      "why": "Everyone is talking about it. I want to know what happens if they choose me. Would I have to leave? I do not want to leave... but I want to see what is out there.",
+      "social_engine": "request",
+      "urgency": 0.55,
+      "cooldown_ticks": 48000,
+      "source": "INFERRED: RI Ch.1. The Heng Yue aptitude test is the central event of early Wang Lin's life. Da Niu, as his friend, would be curious and nervous. Per Art XXXI.3: a player hearing this from a friend, not a quest giver, accidentally recreates the atmosphere.",
+      "line": "Do you think the Heng Yue elder will really come? What if they test me and I pass? Would I have to leave the village forever? I do not want to leave... but I also want to see what is beyond these fields.",
+      "mode": "approach"
+    },
+    {
+      "id": "report_wolf_sighting",
+      "what": "Report seeing wolves near the village outskirts",
+      "target": "any_family_member",
+      "why": "I saw tracks this morning near the eastern tree line. If wolves are coming closer, people should know.",
+      "social_engine": "rumor",
+      "urgency": 0.65,
+      "cooldown_ticks": 36000,
+      "source": "INFERRED: RI Ch.1. Wolves are a recurring threat to the village. Da Niu, who wanders the outskirts daily, would be the first to notice tracks. This creates the 'restless wolves' beat from Art XXXI.3.",
+      "line": "I saw wolf tracks this morning. Fresh ones, right by the eastern tree line. Three sets, maybe four. They are getting closer to the village. We should tell the elder.",
+      "mode": "approach"
+    }
   ]
 }

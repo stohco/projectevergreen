@@ -43,13 +43,23 @@ public record DesireState(
     /** Tick when this desire was last fulfilled. -1 if never. */
     long lastFulfilledTick,
     /** Canon source explaining why this desire exists (for audit trail). */
-    String source
+    String source,
+    /** The spoken line when this desire is expressed to the target.
+     *  If empty, the NPC will not speak (silent desire — internal motivation only).
+     *  Art XXXI: "Sometimes nobody. Sometimes another NPC. Sometimes the player." */
+    String line,
+    /** How the NPC initiates this desire:
+     *  "line"     — speak when target is nearby, no physical approach
+     *  "approach" — physically walk to the target, then speak
+     *  ""         — defaults to "line" (backward compatible) */
+    String mode
 ) {
-    /** Convenience constructor without lastFulfilledTick (defaults to -1). */
+    /** Convenience constructor without lastFulfilledTick (defaults to -1),
+     *  line (defaults to ""), mode (defaults to "line"). */
     public DesireState(String id, String what, String target, String why,
                         String socialEngine, double urgency, long cooldownTicks,
                         String source) {
-        this(id, what, target, why, socialEngine, urgency, cooldownTicks, -1, source);
+        this(id, what, target, why, socialEngine, urgency, cooldownTicks, -1, source, "", "line");
     }
 
     /** Whether this desire is currently active (not on cooldown). */
@@ -58,9 +68,19 @@ public record DesireState(
         return currentTick - lastFulfilledTick >= cooldownTicks;
     }
 
+    /** Whether this desire has a spoken line (can produce observable dialogue). */
+    public boolean hasLine() {
+        return line != null && !line.isEmpty();
+    }
+
+    /** Whether this desire requires physical approach before speaking. */
+    public boolean requiresApproach() {
+        return "approach".equals(mode);
+    }
+
     /** Mark this desire as fulfilled at the given tick. */
     public DesireState fulfilled(long tick) {
         return new DesireState(id, what, target, why, socialEngine,
-                urgency, cooldownTicks, tick, source);
+                urgency, cooldownTicks, tick, source, line, mode);
     }
 }
