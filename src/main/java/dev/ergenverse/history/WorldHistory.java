@@ -372,7 +372,7 @@ public final class WorldHistory {
         persist(level);
     }
 
-    /** Record a world event with topic and position, then persist (v2). */
+    /** Record a world event with topic, position, and a memory tag (v2+). */
     public static void recordGlobalWithTopic(ServerLevel level, long timestamp,
                                                String eventType, String regionId,
                                                String description, String canonSource,
@@ -380,6 +380,57 @@ public final class WorldHistory {
         WorldHistory wh = get(level);
         wh.recordWithTopic(timestamp, eventType, regionId, description, canonSource, topic, posX, posZ);
         persist(level);
+    }
+
+    /**
+     * Record a memory-tagged event for the memory ledger (Art XXXI.5).
+     * This is the bridge between the JSON memory_ledger_seed.json data and the
+     * runtime WorldHistory. When NPCs witness events, living events fire, or
+     * desires are fulfilled/ignored, this method writes a WorldEvent with the
+     * memory tag so NPCs can later query and retell.
+     *
+     * @param level the server level
+     * @param memoryTag the memory tag (e.g. "wolf_attack_south_bend", "teng_tax_visit")
+     * @param description what happened, in plain language
+     * @param topic a topic string that NPCs can match against (e.g. "dog", "wolves", "teng")
+     * @param significance 1-10 (how important this memory is — higher = resists decay)
+     * @param regionId the location (e.g. "wang_family_village")
+     */
+    public static void recordMemory(ServerLevel level, String memoryTag,
+                                 String description, String topic,
+                                 int significance, String regionId) {
+        long tick = level.getGameTime();
+        WorldHistory wh = get(level);
+        wh.events.add(new WorldEvent(
+                tick, "MEMORY", regionId,
+                "[" + memoryTag + "] " + description,
+                memoryTag, topic, WorldHistory.NO_POS, WorldHistory.NO_POS));
+        persist(level);
+        Ergenverse.LOGGER.info("[WorldHistory] Memory recorded: {} — {}",
+                memoryTag, description);
+    }
+
+    /**
+     * Query recent memories matching a topic keyword. Returns events whose topic
+     * contains the keyword, newest first. This is how NPCs retell memories —
+     * the KnowledgeEngine or NPC dialogue handler calls this with topics from
+     * the memory_ledger_seed.json trigger_topics.
+     *
+     * @param topicKeyword keyword to search for in event topics
+     * @param maxResults maximum results
+     * @return matching WorldEvents (newest first)
+     */
+    public static List<WorldEvent> recallByTopic(String topicKeyword, int maxResults) {
+        WorldHistory wh = instance;
+        if (wh == null) return List.of();
+        List<WorldEvent> result = new ArrayList<>();
+        for (int i = wh.events.size() - 1; i >= 0 && result.size() < maxResults; i--) {
+            WorldEvent e = wh.events.get(i);
+            if (e.hasTopic() && e.topic().contains(topicKeyword)) {
+                result.add(e);
+            }
+        }
+        return result;
     }
 
     /**

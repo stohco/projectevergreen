@@ -2,11 +2,13 @@ package dev.ergenverse.entity.ai;
 
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.EntityCultivator;
+import dev.ergenverse.history.WorldHistory;
 import dev.ergenverse.simulation.actor.Actor;
 import dev.ergenverse.simulation.actor.ActorRegistry;
 import dev.ergenverse.simulation.cognition.DesireState;
 import dev.ergenverse.simulation.intent.ActorEntityLink;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -32,15 +34,13 @@ import java.util.UUID;
  * family's grain purchases." This is directly from RI Ch.1-3. The elder
  * of the family is worried, and he acts on that worry. The player does
  * not ask. The NPC approaches unbidden. No marker. No quest log.
- * Everything simply happens.
+ * Everything simply happens.</p>
  *
  * <h2>Target resolution</h2>
  * <ul>
  *   <li>"player" — nearest ServerPlayer</li>
- *   <li>"any_family_member" — nearest ServerPlayer (the player is treated
- *       as part of the village social fabric)</li>
- *   <li>"npc_X" — nearest EntityCultivator whose characterId matches X</li>
- *   <li>"nearby_cultivator" — nearest EntityCultivator in range</li>
+ *   <li>"any_family_member" — nearest ServerPlayer (the player is part of the village)</li>
+ *   <li>"nearby_cultivator" — nearest EntityCultivator</li>
  *   <li>Other/unrecognized — falls back to nearest player</li>
  * </ul>
  *
@@ -48,23 +48,25 @@ import java.util.UUID;
  * <p>NO new Engine/Subscriber/Bus. This is a single Minecraft Goal class
  * that reads existing DesireState data from the Actor system and uses
  * the existing sendSystemMessage infrastructure. It bridges existing
- * systems (DesireState → Goal) without creating new ones.
+ * systems (DesireState → Goal) without creating new ones.</p>
  *
  * <h2>Article XLI compliance</h2>
  * <p>This goal is not special-cased to any character. Every EntityCultivator
  * whose Actor has active desires with lines will use this goal. Wang
  * Tianshui, Wang Qingyue, Wang Zhou, Wang Wei, Wang Yiyi, Wang Ping —
- * all treated identically by the same code.
+ * all treated identically by the same code.</p>
  *
  * <p><b>Provenance:</b> INFERRED from Article XXXI: "Every NPC every cycle
  * asks: 'Do I want something from someone else right now? Should I ask /
  * offer / teach / warn / recruit / betray / gift / request / reveal?'"
+ * No specific canon line describes this exact mechanism, but it is
+ * the system-level implementation of the Article.</p>
  */
 public class NpcDesireGoal extends Goal {
 
     // ═══════════════════════════════════════════════════════════════════
     //  Tunables
-    // ═══════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════
 
     /** Detection range for "line" mode (speak without moving). */
     private static final double LINE_RANGE = 10.0;
@@ -84,17 +86,15 @@ public class NpcDesireGoal extends Goal {
     /** Re-path interval (ticks). */
     private static final int REPATH_INTERVAL = 40;
 
-    /** How long to look at the target after delivering the line. */
-    private static final int POST_DELIVER_LOOK_TICKS = 60;
-
     /** Minimum urgency for a desire to be considered (dormant threshold). */
     private static final double MIN_URGENCY = 0.3;
 
-    // ═══════════════════════════════════════════════════════════════════
-    //  State
-    // ═══════════════════════════════════════════════════════════════════
+    /** How long the NPC looks at the target after delivering a line (ticks). */
+    private static final long POST_DELIVER_LOOK_TICKS = 60L; // 3 seconds
 
-    private final EntityCultivator cultivator;
+    // ════════════════════════════════════════════════════════════════
+    //  State
+    // ═════════════════════════════════════════════════════════════════════════
 
     /** The desire currently being acted on. */
     private DesireState activeDesire = null;
@@ -118,15 +118,18 @@ public class NpcDesireGoal extends Goal {
     private static final TargetingConditions NPC_TARGETING = TargetingConditions.forNonCombat()
             .range(APPROACH_DETECT_RANGE);
 
+    /** The NPC entity this goal controls. */
+    private final EntityCultivator cultivator;
+
     public NpcDesireGoal(EntityCultivator cultivator) {
         this.cultivator = cultivator;
         // MOVE + LOOK: approach mode controls both movement and look direction
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
-    // ═══════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════════════
     //  Goal lifecycle
-    // ═══════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════════════
 
     @Override
     public boolean canUse() {
@@ -163,6 +166,9 @@ public class NpcDesireGoal extends Goal {
             target = resolved;
             return true;
         }
+
+        // For "approach" mode: target must be in detection range
+        if (resolved.distanceTo(cultivator) > APPROACH_DETECT_RANGE) return false;
 
         // For "approach" mode: target must be in detection range
         if (resolved.distanceTo(cultivator) > APPROACH_DETECT_RANGE) return false;
@@ -246,6 +252,21 @@ public class NpcDesireGoal extends Goal {
         cultivator.getNavigation().stop();
         long now = cultivator.level().getGameTime();
 
+        // Record the memory in WorldHistory when the desire fires (Art XXXI.5)
+        String memoryTag = activeDesire.id();
+        ServerLevel serverLevel = (ServerLevel) cultivator.level();
+        try {
+            dev.ergenverse.history.WorldHistory.recordMemory(
+                    serverLevel, memoryTag,
+                    cultivator.getCharacterId() + " expressed: " + activeDesire.line(),
+                    activeDesire.socialEngine(), 7,
+                    "wang_family_village");
+        } catch (Exception ex) {
+            // Memory recording is best-effort — never blocks desire delivery
+            Ergenverse.LOGGER.debug("[NpcDesire] Memory recording failed for {}: {}",
+                    memoryTag, ex.getMessage());
+        }
+
         // Record cooldown if the line was delivered
         if (deliveredTick > 0 && activeDesire != null) {
             desireCooldowns.put(activeDesire.id(), now);
@@ -266,13 +287,13 @@ public class NpcDesireGoal extends Goal {
         activeDesire = null;
         target = null;
         targetFirstSeenTick = 0L;
-        deliveredTick = 0L;
+        deliveredTick = 0;
         pathTimer = 0;
     }
 
-    // ═══════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════════════════
     //  Internal: approach & delivery
-    // ═══════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════
 
     /** Start or re-start navigation toward the target. */
     private void startApproach() {
@@ -310,9 +331,9 @@ public class NpcDesireGoal extends Goal {
         cultivator.getNavigation().stop();
     }
 
-    // ═══════════════════════════════════════════════════════════════════
+    // ════════════════════════════════════════════════════════════════════════════════
     //  Internal: target resolution
-    // ═══════════════════════════════════════════════════════════════════
+    // ═════════════════════════════════════════════════════════════════════════
 
     /**
      * Resolve a desire's target string to a LivingEntity.
@@ -343,7 +364,7 @@ public class NpcDesireGoal extends Goal {
     private ServerPlayer findNearestPlayer() {
         List<ServerPlayer> players = cultivator.level().getEntitiesOfClass(
                 ServerPlayer.class,
-                cultivator.getBoundingBox().inflate(APPROACH_DETECT_RANGE));
+                cultivator.getBoundingBox().inflate(LINE_RANGE));
         if (players.isEmpty()) return null;
         // Return the closest player
         ServerPlayer nearest = null;

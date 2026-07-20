@@ -58,8 +58,12 @@ public final class ErgenverseCommand {
                 .executes(ctx -> resetFlag(ctx.getSource())))
             .then(Commands.literal("geography")
                 .executes(ctx -> geography(ctx.getSource())))
+            .then(Commands.literal("desire_list")
+                .executes(ctx -> desireList(ctx.getSource())))
+            .then(Commands.literal("desire_fire")
+                .executes(ctx -> desireFire(ctx.getSource())))
         );
-        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset|geography).");
+        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset|geography|desire_list|desire_fire).");
     }
 
     /** /ergenverse status — print mod load + village + player state. */
@@ -102,7 +106,7 @@ public final class ErgenverseCommand {
                     .withStyle(ChatFormatting.AQUA), false);
         }
 
-        src.sendSuccess(() -> Component.literal("Commands: /ergenverse <status|village|book|gear|reset>")
+        src.sendSuccess(() -> Component.literal("Commands: /ergenverse <status|village|book|gear|reset|desire_list|desire_fire>")
                 .withStyle(ChatFormatting.AQUA), false);
         return 1;
     }
@@ -189,6 +193,178 @@ public final class ErgenverseCommand {
         player.getPersistentData().putBoolean(NBT_SUZAKU_TELEPORTED, false);
         src.sendSuccess(() -> Component.literal("Tutorial flag cleared. Re-log or run /ergenverse village + /ergenverse book.")
                 .withStyle(ChatFormatting.AQUA), false);
+        return 1;
+    }
+
+    /**
+     * /ergenverse desire_list — Art XL proof path. Lists all EntityCultivators
+     * within 32 blocks and their loaded DesireState data. Proves: (a) NPCs spawn,
+     * (b) Actor link works, (c) desire data loads from JSON.
+     */
+    private static int desireList(CommandSourceStack src) {
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            src.sendFailure(Component.literal("Run as a player."));
+            return 0;
+        }
+
+        var cultivators = player.level().getEntitiesOfClass(
+                dev.ergenverse.entity.EntityCultivator.class,
+                player.getBoundingBox().inflate(32));
+
+        if (cultivators.isEmpty()) {
+            src.sendSuccess(() -> Component.literal("No EntityCultivators within 32 blocks.")
+                    .withStyle(ChatFormatting.YELLOW), false);
+            src.sendSuccess(() -> Component.literal("NPCs spawn on chunk load. Try walking around.")
+                    .withStyle(ChatFormatting.GRAY), false);
+            return 1;
+        }
+
+        src.sendSuccess(() -> Component.literal("=== NPC Desires (Art XXXI) — " + cultivators.size() + " nearby ===")
+                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
+
+        int totalDesires = 0;
+        int activeDesires = 0;
+        for (dev.ergenverse.entity.EntityCultivator npc : cultivators) {
+            String charId = npc.getCharacterId();
+            String name = npc.getDisplayNameCn();
+            String actorId = dev.ergenverse.simulation.intent.ActorEntityLink.getActorId(npc.getUUID());
+            double dist = npc.distanceTo(player);
+
+            if (actorId == null) {
+                src.sendSuccess(() -> Component.literal(name + " (" + charId + ") — "
+                        + (int) dist + " blocks — NO ACTOR LINK")
+                        .withStyle(ChatFormatting.RED), false);
+                continue;
+            }
+
+            dev.ergenverse.simulation.actor.Actor actor =
+                    dev.ergenverse.simulation.actor.ActorRegistry.get(actorId);
+            if (actor == null) {
+                src.sendSuccess(() -> Component.literal(name + " (" + charId + ") — "
+                        + (int) dist + " blocks — ACTOR NULL")
+                        .withStyle(ChatFormatting.RED), false);
+                continue;
+            }
+
+            java.util.List<dev.ergenverse.simulation.cognition.DesireState> desires =
+                    actor.cognition.desires;
+            totalDesires += desires.size();
+
+            long now = player.level().getGameTime();
+            long activeCount = desires.stream()
+                    .filter(d -> d.isActive(now) && d.urgency() >= 0.3)
+                    .count();
+            activeDesires += activeCount;
+
+            ChatFormatting statusColor = desires.isEmpty() ? ChatFormatting.RED
+                    : activeCount > 0 ? ChatFormatting.GREEN : ChatFormatting.YELLOW;
+            src.sendSuccess(() -> Component.literal(name + " (" + charId + ") — "
+                    + (int) dist + " blocks — " + desires.size() + " desires, "
+                    + activeCount + " active")
+                    .withStyle(statusColor), false);
+
+            for (dev.ergenverse.simulation.cognition.DesireState d : desires) {
+                boolean active = d.isActive(now) && d.urgency() >= 0.3;
+                String modeStr = d.hasLine() ? (d.requiresApproach() ? "APPROACH" : "LINE") : "SILENT";
+                ChatFormatting lineColor = active ? ChatFormatting.WHITE : ChatFormatting.DARK_GRAY;
+                src.sendSuccess(() -> Component.literal("  [" + d.socialEngine() + "] "
+                        + d.id() + " (urgency=" + String.format("%.2f", d.urgency())
+                        + ", " + modeStr + ")" + (active ? "" : " [dormant]"))
+                        .withStyle(lineColor), false);
+                if (d.hasLine()) {
+                    src.sendSuccess(() -> Component.literal("    \"" + d.line() + "\"")
+                            .withStyle(ChatFormatting.GRAY), false);
+                }
+            }
+        }
+
+        final int finalTotal = totalDesires;
+        final int finalActive = activeDesires;
+        final int npcCount = cultivators.size();
+        src.sendSuccess(() -> Component.literal("Total: " + npcCount + " NPCs, "
+                + finalTotal + " desires, " + finalActive + " active")
+                .withStyle(ChatFormatting.AQUA), false);
+        return 1;
+    }
+
+    /**
+     * /ergenverse desire_fire — Art XL proof path. Force-fires the nearest
+     * NPC's highest-urgency active desire as a system message. Bypasses the
+     * 10-second settle timer so the player sees the desire system work
+     * IMMEDIATELY. This is the Five Minute Rule demonstration.
+     *
+     * <p>What the player sees: the NPC's desire line appears in chat, exactly
+     * as NpcDesireGoal.deliverLine() would produce it. Proves the full
+     * pipeline: JSON → ActorEntityLink → DesireState → observable text.</p>
+     */
+    private static int desireFire(CommandSourceStack src) {
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            src.sendFailure(Component.literal("Run as a player."));
+            return 0;
+        }
+
+        var cultivators = player.level().getEntitiesOfClass(
+                dev.ergenverse.entity.EntityCultivator.class,
+                player.getBoundingBox().inflate(32));
+
+        if (cultivators.isEmpty()) {
+            src.sendFailure(Component.literal("No EntityCultivators within 32 blocks. NPCs spawn on chunk load."));
+            return 0;
+        }
+
+        // Find the NPC with the highest-urgency active desire that has a line
+        dev.ergenverse.simulation.cognition.DesireState bestDesire = null;
+        dev.ergenverse.entity.EntityCultivator bestNpc = null;
+        String bestName = null;
+
+        long now = player.level().getGameTime();
+        for (dev.ergenverse.entity.EntityCultivator npc : cultivators) {
+            String actorId = dev.ergenverse.simulation.intent.ActorEntityLink.getActorId(npc.getUUID());
+            if (actorId == null) continue;
+            dev.ergenverse.simulation.actor.Actor actor =
+                    dev.ergenverse.simulation.actor.ActorRegistry.get(actorId);
+            if (actor == null) continue;
+
+            for (dev.ergenverse.simulation.cognition.DesireState d : actor.cognition.desires) {
+                if (!d.hasLine()) continue;
+                if (!d.isActive(now)) continue;
+                if (d.urgency() < 0.3) continue;
+                if (bestDesire == null || d.urgency() > bestDesire.urgency()) {
+                    bestDesire = d;
+                    bestNpc = npc;
+                    bestName = npc.getDisplayNameCn();
+                }
+            }
+        }
+
+        if (bestDesire == null || bestNpc == null) {
+            src.sendFailure(Component.literal("No active desires with lines found among "
+                    + cultivators.size() + " nearby NPCs."));
+            src.sendSuccess(() -> Component.literal("All desires may be on cooldown or have no spoken lines.")
+                    .withStyle(ChatFormatting.GRAY), false);
+            return 0;
+        }
+
+        // Deliver the line exactly as NpcDesireGoal.deliverLine() does
+        final String line = bestDesire.line();
+        final String firedName = bestName;
+        final String firedEngine = bestDesire.socialEngine();
+        final String firedId = bestDesire.id();
+        final double firedUrgency = bestDesire.urgency();
+        String prefix = "\u00A77<" + firedName + "> "; // gray NPC name
+        player.sendSystemMessage(
+                net.minecraft.network.chat.Component.literal(prefix + line + "\u00A7r"), true);
+
+        src.sendSuccess(() -> Component.literal("[DESIRE FIRED] " + firedName + " ["
+                + firedEngine + "] " + firedId
+                + " (urgency=" + String.format("%.2f", firedUrgency) + ")")
+                .withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD), false);
+
+        Ergenverse.LOGGER.info("[DesireFire] {} -> player [{}]: \"{}\"",
+                bestNpc.getCharacterId(), firedEngine, line);
+
         return 1;
     }
 

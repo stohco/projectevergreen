@@ -289,7 +289,7 @@ public class EntityCultivator extends PathfinderMob {
         // Priority 2, above CognitionDrivenGoal(3). Fires when player enters range,
         // sends a canon-faithful initiation line from NPC JSON data.
         this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcInitiationGoal(this));
-        // NpcDesireGoal: Article XXXI — NPCs ACT on their desires.
+        // Desire-driven goal: Article XXXI — NPCs ACT on their desires.
         // Priority 2 (same tier as NpcInitiationGoal). Uses MOVE+LOOK so it
         // preempts LOOK-only goals when active. Reads DesireState data from
         // the Actor system. For "approach" desires, the NPC physically walks
