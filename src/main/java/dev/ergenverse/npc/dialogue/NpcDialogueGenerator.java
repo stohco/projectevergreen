@@ -139,12 +139,25 @@ public final class NpcDialogueGenerator {
         public final NpcGoalQueue.DecisionStyle decisionStyle;
         public final int interactionCount; // how many times player interacted with this NPC
 
+        // ── Art XXXI.5: Memory-driven dialogue ──
+        /** The most recent WORLD_EVENT memory description, or null. */
+        @Nullable
+        public final String recentWorldEvent;
+        /** The most recent OBSERVATION memory description, or null. */
+        @Nullable
+        public final String recentObservation;
+        /** Whether the NPC has any WORLD_EVENT memory from the last 7 MC days. */
+        public final boolean hasRecentWorldMemory;
+
         public NpcDialogueContext(String npcId, String targetPlayerUuid,
                                   @Nullable NpcInternalMonologue.MonologueSnapshot monologue,
                                   double trustConfidence, double hostileConfidence,
                                   double dangerConfidence, boolean hasActiveUrgentGoal,
                                   NpcGoalQueue.DecisionStyle decisionStyle,
-                                  int interactionCount) {
+                                  int interactionCount,
+                                  @Nullable String recentWorldEvent,
+                                  @Nullable String recentObservation,
+                                  boolean hasRecentWorldMemory) {
             this.npcId = npcId;
             this.targetPlayerUuid = targetPlayerUuid;
             this.monologue = monologue;
@@ -154,6 +167,9 @@ public final class NpcDialogueGenerator {
             this.hasActiveUrgentGoal = hasActiveUrgentGoal;
             this.decisionStyle = decisionStyle;
             this.interactionCount = interactionCount;
+            this.recentWorldEvent = recentWorldEvent;
+            this.recentObservation = recentObservation;
+            this.hasRecentWorldMemory = hasRecentWorldMemory;
         }
     }
 
@@ -258,6 +274,27 @@ public final class NpcDialogueGenerator {
     }
 
     /**
+     * Get a memory fragment for insertion into dialogue templates.
+     * Returns the recentWorldEvent, falling back to recentObservation.
+     * Returns null if neither exists.
+     */
+    @Nullable
+    private static String slotMemory(NpcDialogueContext ctx) {
+        if (ctx.recentWorldEvent != null) return ctx.recentWorldEvent;
+        if (ctx.recentObservation != null) return ctx.recentObservation;
+        return null;
+    }
+
+    /**
+     * Whether to use a memory-referencing template.
+     * Only activates when the NPC has recent world memories.
+     * Uses idx to make it occasional (not every line mentions memory).
+     */
+    private static boolean shouldReferenceMemory(NpcDialogueContext ctx, int idx) {
+        return ctx.hasRecentWorldMemory && slotMemory(ctx) != null && idx < 25;
+    }
+
+    /**
      * Generate dialogue text for a given tone and context.
      */
     private static String generateText(DialogueTone tone, NpcDialogueContext ctx,
@@ -265,7 +302,13 @@ public final class NpcDialogueGenerator {
         String objective = slotObjective(ctx.monologue);
         String problem = slotProblem(ctx.monologue);
         String mood = slotMood(ctx.monologue);
+        String memory = slotMemory(ctx);
         int idx = (int) Math.abs(randomSeed % 100);
+
+        // Art XXXI.5: ~25% chance to reference a memory when one exists.
+        if (shouldReferenceMemory(ctx, idx) && memory != null) {
+            return generateMemoryLine(tone, memory, idx);
+        }
 
         return switch (tone) {
             case TERSE -> generateTerse(objective, problem, idx);
@@ -418,6 +461,59 @@ public final class NpcDialogueGenerator {
         if (idx < 80)
             return "I was breaking through realms before your grandparents were born.";
         return "Don't waste my time with trivialities.";
+    }
+
+    // ─── Memory-referencing dialogue (Art XXXI.5) ──────────────────
+    // When an NPC has recent world memories, these templates insert
+    // the memory content into natural dialogue. The Memory Metric test:
+    // "Week 5 Old Chen says 'Used to have one.'" requires this.
+
+    /**
+     * Generate a memory-referencing line for the given tone.
+     * Each tone has 2-3 variants. The memory text is inserted directly
+     * — it was written by MemoryEventSubscriber from canon-faithful
+     * event descriptions (e.g. "A wolf pack is moving through the
+     * hills, their eyes catching the moonlight.").
+     */
+    private static String generateMemoryLine(DialogueTone tone, String memory, int idx) {
+        // Truncate very long memory descriptions for natural speech.
+        if (memory.length() > 80) memory = memory.substring(0, 77) + "...";
+
+        return switch (tone) {
+            case FORMAL -> {
+                if (idx < 9) yield "There have been troubling signs. " + memory + ". We must be cautious.";
+                if (idx < 18) yield "I've been thinking about what happened. " + memory + ". The village cannot ignore this.";
+                yield "You should know — " + memory + ". Keep your guard up.";
+            }
+            case WARM -> {
+                if (idx < 9) yield "It's good to see you. By the way — " + memory + ". Be careful out there.";
+                if (idx < 18) yield "I've been meaning to tell someone. " + memory + ". I worry what it means for us.";
+                yield "Listen — " + memory + ". Stay safe, will you?";
+            }
+            case TERSE -> {
+                if (idx < 12) yield memory + ". Stay alert.";
+                yield "Remember: " + memory + ".";
+            }
+            case COLD -> {
+                if (idx < 12) yield "... " + memory + ". That is all.";
+                yield memory + ". Do with that what you will.";
+            }
+            case URGENT -> {
+                if (idx < 9) yield "Can't you see? " + memory + " — we need to act!";
+                yield "This is exactly what I feared. " + memory + ". There's no time to waste!";
+            }
+            case HOSTILE -> {
+                if (idx < 12) yield "And now " + memory.toLowerCase() + ". As if I needed more problems.";
+                yield memory + ". If you caused this, you'll answer for it.";
+            }
+            case MYSTERIOUS -> {
+                if (idx < 12) yield "The world stirs. " + memory + ". Perhaps you sense it too.";
+                yield "I've seen signs. " + memory + ". The dao reveals what eyes cannot.";
+            }
+            case CONDESCENDING -> {
+                yield memory + ". A triviality to one such as myself, but perhaps it concerns you.";
+            }
+        };
     }
 
     // ─── Thought summary (debug) ─────────────────────────────────────

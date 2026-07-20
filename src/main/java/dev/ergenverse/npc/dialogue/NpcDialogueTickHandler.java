@@ -169,14 +169,66 @@ public final class NpcDialogueTickHandler {
         // 4. Memory (B.2) — count social interactions with this player
         int interactionCount = 0;
         NpcCognitiveMemory memory = NpcCognitiveMemory.get(serverLevel);
+        String recentWorldEvent = null;
+        String recentObservation = null;
+        boolean hasRecentWorldMemory = false;
+
         if (memory != null) {
-            List<NpcCognitiveMemory.MemoryEntry> socialMemories =
-                    memory.getMemoriesAbout(npcId, playerUuid);
-            for (NpcCognitiveMemory.MemoryEntry e : socialMemories) {
-                if (e.category == NpcCognitiveMemory.MemoryCategory.SOCIAL
-                        || e.category == NpcCognitiveMemory.MemoryCategory.PLAYER_ACTION) {
-                    interactionCount++;
+            NpcCognitiveMemory.NpcMemoryStore store = memory.getStore(npcId);
+
+            // 4a. Count social interactions with this player
+            if (store != null) {
+                List<NpcCognitiveMemory.MemoryEntry> socialMemories =
+                        store.aboutTarget(playerUuid);
+                for (NpcCognitiveMemory.MemoryEntry e : socialMemories) {
+                    if (e.category == NpcCognitiveMemory.MemoryCategory.SOCIAL
+                            || e.category == NpcCognitiveMemory.MemoryCategory.PLAYER_ACTION) {
+                        interactionCount++;
+                    }
                 }
+
+                // 4b. Art XXXI.5: Fetch most recent WORLD_EVENT and OBSERVATION
+                // memories for memory-driven dialogue. These let NPCs reference
+                // what they've perceived — the Memory Metric's expression half.
+                // Only look at medium-term (14 days) and short-term (3 days).
+                long sevenDaysTicks = 7L * 24000L;
+                String newestWorldDesc = null;
+                long newestWorldTs = 0;
+                String newestObsDesc = null;
+                long newestObsTs = 0;
+
+                for (NpcCognitiveMemory.MemoryEntry e : store.getMediumTerm()) {
+                    long age = currentTick - e.timestamp;
+                    if (age > sevenDaysTicks || age < 0) continue;
+                    if (e.category == NpcCognitiveMemory.MemoryCategory.WORLD_EVENT
+                            && e.timestamp > newestWorldTs) {
+                        newestWorldTs = e.timestamp;
+                        newestWorldDesc = e.description;
+                    }
+                    if (e.category == NpcCognitiveMemory.MemoryCategory.OBSERVATION
+                            && e.timestamp > newestObsTs) {
+                        newestObsTs = e.timestamp;
+                        newestObsDesc = e.description;
+                    }
+                }
+                for (NpcCognitiveMemory.MemoryEntry e : store.getShortTerm()) {
+                    long age = currentTick - e.timestamp;
+                    if (age > sevenDaysTicks || age < 0) continue;
+                    if (e.category == NpcCognitiveMemory.MemoryCategory.WORLD_EVENT
+                            && e.timestamp > newestWorldTs) {
+                        newestWorldTs = e.timestamp;
+                        newestWorldDesc = e.description;
+                    }
+                    if (e.category == NpcCognitiveMemory.MemoryCategory.OBSERVATION
+                            && e.timestamp > newestObsTs) {
+                        newestObsTs = e.timestamp;
+                        newestObsDesc = e.description;
+                    }
+                }
+
+                recentWorldEvent = newestWorldDesc;
+                recentObservation = newestObsDesc;
+                hasRecentWorldMemory = (newestWorldDesc != null);
             }
         }
 
@@ -185,7 +237,8 @@ public final class NpcDialogueTickHandler {
                 new NpcDialogueGenerator.NpcDialogueContext(
                         npcId, playerUuid, monologue,
                         trust, hostile, danger,
-                        hasUrgentGoal, style, interactionCount);
+                        hasUrgentGoal, style, interactionCount,
+                        recentWorldEvent, recentObservation, hasRecentWorldMemory);
 
         // Generate using world random seed
         long seed = serverLevel.getRandom().nextLong();
