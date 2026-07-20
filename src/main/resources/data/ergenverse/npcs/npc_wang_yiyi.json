@@ -29,15 +29,15 @@
     "_comment": "INFERRED: Paragon-tier Wang descendant. Calm demeanor (high patience), immense power, strong dao heart. Not from Chapter 1.",
     "courage": 0.75,
     "patience": 0.85,
-    "greed": 0.20,
+    "greed": 0.2,
     "loyalty": 0.65,
-    "ruthlessness": 0.40,
-    "caution": 0.60,
+    "ruthlessness": 0.4,
+    "caution": 0.6,
     "curiosity": 0.45,
-    "ambition": 0.50,
+    "ambition": 0.5,
     "face": 0.55,
     "honor": 0.75,
-    "dao_heart": 0.90
+    "dao_heart": 0.9
   },
   "dao_heart": {
     "stability": 50,
@@ -47,5 +47,17 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "desires": [
+    {
+      "id": "help_mother_cook",
+      "what": "Offer to help Qingyue prepare food",
+      "target": "npc_wang_qingyue",
+      "why": "Wang Yiyi is the daughter. Helping her mother is expected.",
+      "social_engine": "favor",
+      "urgency": 0.35,
+      "cooldown_ticks": 24000,
+      "source": "INFERRED: RI Ch.1. Wang Yiyi is Wang Lin's sister. A daughter helping her mother cook is consistent with the rural setting."
+    }
+  ]
 }

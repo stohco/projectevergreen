@@ -54,6 +54,8 @@ public final class DecisionEngine {
      * @param personality     the actor's personality model
      * @param context         the current decision context string
      *                        (e.g. "confront_stranger", "sect_meeting", "wilderness")
+     * @param desires         the actor's active desires (Art XXXI). May be null.
+     *                        Produces SOCIAL goals in GoalGenerator.
      * @return the decision (goal + chosen action), or null if no goal passed threshold.
      */
     public static Decision decide(
@@ -63,11 +65,12 @@ public final class DecisionEngine {
             CultivationState cultivation,
             SocialState social,
             PersonalityModel personality,
-            String context) {
+            String context,
+            java.util.List<DesireState> desires) {
 
-        // (1) Generate goals
+        // (1) Generate goals (needs + desires)
         List<CognitionGoal> goals = GoalGenerator.generate(
-                dao, needIntensities, physical, cultivation, social);
+                dao, needIntensities, physical, cultivation, social, desires);
         if (goals.isEmpty()) return new Decision(null, null, null, 0.0);
 
         // (2) Pick highest-ranked goal

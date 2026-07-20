@@ -28,16 +28,16 @@
   "personality_traits": {
     "_comment": "INFERRED: Wang clan cultivator, measured, moderate traits across the board. Not a village mortal — has seen the cultivation world.",
     "courage": 0.55,
-    "patience": 0.50,
-    "greed": 0.30,
-    "loyalty": 0.60,
+    "patience": 0.5,
+    "greed": 0.3,
+    "loyalty": 0.6,
     "ruthlessness": 0.25,
-    "caution": 0.50,
-    "curiosity": 0.40,
+    "caution": 0.5,
+    "curiosity": 0.4,
     "ambition": 0.45,
     "face": 0.55,
-    "honor": 0.50,
-    "dao_heart": 0.60
+    "honor": 0.5,
+    "dao_heart": 0.6
   },
   "dao_heart": {
     "stability": 50,
@@ -47,5 +47,17 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "desires": [
+    {
+      "id": "practice_forms_together",
+      "what": "Ask a sibling to practice martial forms",
+      "target": "any_family_member",
+      "why": "Wang Wei is energetic and wants to become stronger before the aptitude test.",
+      "social_engine": "request",
+      "urgency": 0.4,
+      "cooldown_ticks": 24000,
+      "source": "INFERRED: RI Ch.1. Wang family children anticipate the aptitude test. An energetic brother would want to train."
+    }
+  ]
 }

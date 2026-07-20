@@ -46,6 +46,8 @@ public final class CognitionGoal {
         EXPLORE,
         WAIT,
         LEGACY,
+        /** Desire-driven social goal (Art XXXI). NPC wants something from someone. */
+        SOCIAL,
         OTHER
     }
 

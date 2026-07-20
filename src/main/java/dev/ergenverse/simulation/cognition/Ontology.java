@@ -2,7 +2,9 @@ package dev.ergenverse.simulation.cognition;
 
 import dev.ergenverse.simulation.actor.Territory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,6 +73,14 @@ public final class Ontology {
 
     /** Currently active plan (set by the Planner when a goal is chosen). */
     public Plan activePlan = null;
+
+    /**
+     * The actor's desires (Art XXXI). Loaded from NPC JSON "desires" array.
+     * Each desire is a social want directed at a specific target.
+     * The GoalGenerator reads these to produce SOCIAL goals.
+     * Empty list = no desires (world waits). Populated = world desires.
+     */
+    public final List<DesireState> desires = new ArrayList<>();
 
     public Ontology(Identity identity) {
         this.identity = identity;

@@ -136,5 +136,37 @@
       "reward_item": "minecraft:iron_ingot",
       "reward_count": 1
     }
+  ],
+  "desires": [
+    {
+      "id": "warn_about_teng",
+      "what": "Warn family members about the Teng family's grain purchases",
+      "target": "any_family_member",
+      "why": "The Teng family buys up all the grain at market. Someone in the family should know.",
+      "social_engine": "rumor",
+      "urgency": 0.55,
+      "cooldown_ticks": 48000,
+      "source": "INFERRED: RI Ch.1-3. Wang Tianshui expresses worry about Teng oppression to Wang Lin. Canon line: 'The Teng family servants were in the market again, buying up grain.'"
+    },
+    {
+      "id": "ask_about_aptitude_test",
+      "what": "Ask about the Heng Yue Sect elder's arrival date",
+      "target": "nearby_cultivator",
+      "why": "Every family is nervous about the aptitude test. Knowing when the elder arrives lets the family prepare.",
+      "social_engine": "request",
+      "urgency": 0.45,
+      "cooldown_ticks": 72000,
+      "source": "INFERRED: RI Ch.1. The Heng Yue elder arrives to test village children. Canon line: 'I have heard the Heng Yue Sect elder will arrive soon for the aptitude test.'"
+    },
+    {
+      "id": "ask_for_wood_help",
+      "what": "Request help gathering wood for the governor's commission",
+      "target": "player",
+      "why": "The governor's commission is the family's main income. Falling behind means less food.",
+      "social_engine": "request",
+      "urgency": 0.60,
+      "cooldown_ticks": 24000,
+      "source": "INFERRED: RI Ch.1. Wang Tianshui is a carpenter with a commission. The sect_tasks data references oak planks and sticks."
+    }
   ]
 }

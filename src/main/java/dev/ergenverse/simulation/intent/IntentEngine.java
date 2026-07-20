@@ -205,6 +205,7 @@ public final class IntentEngine {
                 break;
             case LEGACY:
             case OFFER_FAVOR:
+            case SOCIAL:
                 if (nature == IntentNature.TEST_JUDGMENT) return 2.0;
                 if (nature == IntentNature.NEGOTIATE) return 1.5;
                 break;

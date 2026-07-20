@@ -190,7 +190,8 @@ public final class ActorTickLoop {
                 a.cognition.cultivation,
                 a.cognition.social,
                 a.cognition.personality,
-                "default"
+                "default",
+                a.cognition.desires  // Art XXXI: desires produce SOCIAL goals
         );
         a.cognition.activeGoal = decision.goal;
         if (decision.goal != null) {

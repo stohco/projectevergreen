@@ -30,10 +30,12 @@ public final class GoalGenerator {
             java.util.Map<Need, Double> needIntensities,
             PhysicalState physical,
             CultivationState cultivation,
-            SocialState social) {
+            SocialState social,
+            java.util.List<DesireState> desires) {
 
         List<CognitionGoal> goals = new ArrayList<>();
 
+        // (1) Need-driven goals (existing pipeline)
         for (Map.Entry<Need, Double> e : needIntensities.entrySet()) {
             Need need = e.getKey();
             double intensity = e.getValue();
@@ -46,6 +48,23 @@ public final class GoalGenerator {
 
             String desc = need.label + " (intensity=" + round2(intensity) + ")";
             goals.add(new CognitionGoal(need, cat, desc, urgency, priority));
+        }
+
+        // (2) Desire-driven goals (Art XXXI — the world must desire)
+        // Each active desire produces a SOCIAL goal. The existing
+        // IntentEngine + DecisionEngine pipeline handles the rest.
+        // No new engines. No new buses. Data in, behavior out.
+        if (desires != null) {
+            for (DesireState d : desires) {
+                // Dormant desires (urgency < 0.3) don't become goals yet.
+                if (d.urgency() < 0.3) continue;
+                // urgency from JSON, priority weighted by Dao
+                double daoMod = dao.goalWeightModifier(CognitionGoal.Category.SOCIAL);
+                double priority = clamp01(d.urgency() * daoMod);
+                String desc = d.what() + " [" + d.socialEngine() + " → " + d.target() + "]";
+                goals.add(new CognitionGoal(null, CognitionGoal.Category.SOCIAL,
+                        desc, d.urgency(), priority));
+            }
         }
 
         goals.sort((a, b) -> Double.compare(

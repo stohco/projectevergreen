@@ -27,17 +27,17 @@
   "salt": 1794719128,
   "personality_traits": {
     "_comment": "INFERRED from canon: gentle younger brother, protective of family, willing to face hardship (fishing, firewood), worries but does not flee. Per Article XLI: general traits.",
-    "courage": 0.50,
-    "patience": 0.70,
-    "greed": 0.10,
+    "courage": 0.5,
+    "patience": 0.7,
+    "greed": 0.1,
     "loyalty": 0.95,
     "ruthlessness": 0.03,
     "caution": 0.45,
     "curiosity": 0.35,
     "ambition": 0.15,
-    "face": 0.40,
+    "face": 0.4,
     "honor": 0.65,
-    "dao_heart": 0.50
+    "dao_heart": 0.5
   },
   "dao_heart": {
     "stability": 50,
@@ -135,6 +135,18 @@
       ],
       "reward_item": "minecraft:coal",
       "reward_count": 4
+    }
+  ],
+  "desires": [
+    {
+      "id": "follow_older_brother",
+      "what": "Follow Wang Lin to the hills to watch him practice",
+      "target": "npc_wang_lin_manifestation",
+      "why": "Wang Ping is the youngest and curious. He idolizes his older brother.",
+      "social_engine": "request",
+      "urgency": 0.35,
+      "cooldown_ticks": 48000,
+      "source": "INFERRED: RI Ch.1. Wang Ping is the youngest brother. Younger siblings follow older ones. No specific canon line, but universally human."
     }
   ]
 }

@@ -6,6 +6,7 @@ import dev.ergenverse.simulation.actor.Actor;
 import dev.ergenverse.simulation.actor.ActorRegistry;
 import dev.ergenverse.simulation.cognition.PersonalityModel;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.server.level.ServerLevel;
@@ -110,6 +111,10 @@ public final class ActorEntityLink {
             // behavior for every NPC. The "cautious cultivator observes
             // predators" Canon Experience requires actual trait diversity.
             loadPersonalityFromData(characterId, actor.cognition.personality);
+            // ── Wire desires from NPC JSON data (Art XXXI) ──
+            // Without desires, the world waits. With desires, NPCs
+            // generate SOCIAL goals through the existing pipeline.
+            loadDesiresFromData(characterId, actor.cognition.desires);
             // Grant WANDER capability so the Planner can generate movement-based actions
             actor.grant(dev.ergenverse.simulation.actor.Capability.WANDER);
             // Set position from entity
@@ -257,5 +262,65 @@ public final class ActorEntityLink {
             Ergenverse.LOGGER.info("[ActorEntityLink] Loaded {} personality traits for {}",
                     loaded, characterId);
         }
+    }
+
+    /**
+     * Load desire-state from NPC JSON data into the Ontology's desire list.
+     *
+     * <p>Per Article XXXI: "Every NPC every cycle asks: 'Do I want something
+     * from someone else right now?'" The JSON {@code "desires"} array provides
+     * the answer. Each entry becomes a {@link DesireState} that the
+     * GoalGenerator reads to produce SOCIAL goals.
+     *
+     * <p>Per Article XLI: this is not special-casing any character.
+     * Every NPC with desire data gets the same treatment.
+     *
+     * @param characterId the NPC's canon character ID
+     * @param desires     the Ontology's desire list to populate
+     */
+    private static void loadDesiresFromData(String characterId,
+            java.util.List<dev.ergenverse.simulation.cognition.DesireState> desires) {
+        JsonObject data = dev.ergenverse.simulation.WorldStateDataLoader.getEntry("npcs", characterId);
+        if (data == null) return;
+
+        JsonElement desElement = data.get("desires");
+        if (desElement == null || !desElement.isJsonArray()) return;
+
+        var arr = desElement.getAsJsonArray();
+        for (var elem : arr) {
+            if (!elem.isJsonObject()) continue;
+            JsonObject d = elem.getAsJsonObject();
+            desires.add(new dev.ergenverse.simulation.cognition.DesireState(
+                    jsonStr(d, "id", ""),
+                    jsonStr(d, "what", ""),
+                    jsonStr(d, "target", ""),
+                    jsonStr(d, "why", ""),
+                    jsonStr(d, "social_engine", "request"),
+                    jsonDouble(d, "urgency", 0.5),
+                    jsonLong(d, "cooldown_ticks", 24000),
+                    jsonStr(d, "source", "unknown")
+            ));
+        }
+        if (!desires.isEmpty()) {
+            Ergenverse.LOGGER.info("[ActorEntityLink] Loaded {} desires for {}",
+                    desires.size(), characterId);
+        }
+    }
+
+    private static String jsonStr(JsonObject obj, String key, String fallback) {
+        JsonElement e = obj.get(key);
+        return (e != null && e.isJsonPrimitive()) ? e.getAsString() : fallback;
+    }
+
+    private static double jsonDouble(JsonObject obj, String key, double fallback) {
+        JsonElement e = obj.get(key);
+        return (e != null && e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber())
+                ? e.getAsDouble() : fallback;
+    }
+
+    private static long jsonLong(JsonObject obj, String key, long fallback) {
+        JsonElement e = obj.get(key);
+        return (e != null && e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber())
+                ? e.getAsLong() : fallback;
     }
 }

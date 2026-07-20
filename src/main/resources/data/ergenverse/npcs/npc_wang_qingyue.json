@@ -134,5 +134,27 @@
       "reward_item": "minecraft:emerald",
       "reward_count": 1
     }
+  ],
+  "desires": [
+    {
+      "id": "feed_children",
+      "what": "Ask Wang Lin or Yiyi to eat before leaving the house",
+      "target": "any_family_member",
+      "why": "A mother worries. The children forget to eat when they are excited about the aptitude test.",
+      "social_engine": "favor",
+      "urgency": 0.50,
+      "cooldown_ticks": 12000,
+      "source": "INFERRED: RI Ch.1. Wang Qingyue is Wang Lin's mother. Canon line: 'Lin'er, your mother prepared extra food today. Eat before you go wandering.' (Wang Tianshui's initiation_lines, but the sentiment is Qingyue's)"
+    },
+    {
+      "id": "warn_about_spirit_beasts",
+      "what": "Warn children not to wander into the hills alone",
+      "target": "any_family_member",
+      "why": "Wolves have been seen closer to the village. A mother protects.",
+      "social_engine": "warn",
+      "urgency": 0.55,
+      "cooldown_ticks": 48000,
+      "source": "INFERRED: RI Ch.2-3. Spirit beasts exist near Zhao. A village mother would warn children about predators. No specific canon line, but consistent with Wang Qingyue's protective nature."
+    }
   ]
 }
