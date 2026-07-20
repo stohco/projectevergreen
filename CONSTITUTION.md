@@ -1226,6 +1226,119 @@ When in doubt: if a player cannot notice it today, build the
                smallest observable version instead.
 
 
+Article XLI — The Simulation Must Be General
+
+The simulation has no protagonists. It has actors with traits.
+Wang Lin is not special-cased. His behavior emerges from his traits.
+If a mechanism works for Wang Lin, it works for any actor with
+the same traits. Article XXVIII's prohibition extends to spawn
+code, event handlers, activity logic, and conversation. The
+Constitution says nothing special-cases Wang Lin. That is law.
+
+§1 — Canon Experiences, Not Named Moments
+
+A Canon Experience is defined by what happens, not who does it.
+The unit of progress is the experience a player remembers.
+
+  "A cautious cultivator abandons cultivation after noticing
+   predator behavior" — not "Wang Lin watches wolves."
+
+Before a Canon Experience can be marked IMPL, the validator
+checks: does a suitable actor exist in the world? If not,
+the experience is IMPOSSIBLE, not pending. This validates
+reality instead of patching reality.
+
+The Living Moments Ledger (Article XL §4) is renamed the Canon
+Experiences Ledger. Each entry records the experience generically
+and the validation criteria for any actor that could fulfill it.
+
+§2 — Activity Is Process, Not State
+
+Every activity has a lifecycle:
+
+  Start → Progress → Interrupted? → React → Resume → Complete
+
+Interruption is not an added feature. It is a natural property of
+every activity. A cultivator meditating when a wolf howl is heard
+does not need a special "interruption system." The meditation
+activity has an interruption condition. When met, the activity
+pauses. The actor reacts. When the reaction completes, the
+activity resumes.
+
+This applies everywhere: meditation, conversation, herb-gathering,
+travel, crafting. There is no activity that cannot be interrupted.
+There is no interruption that exists outside an activity.
+
+§3 — The Simulation State Hierarchy
+
+The simulation layer tracks each actor through a hierarchy
+independent of Minecraft's AI goal system:
+
+  Identity — who they are (canon data, dao identity, personality)
+  Motivations — what they want long-term
+  Current Long-Term Objective — what they're working toward now
+  Current Activity — what they're doing right now (a process, §2)
+  Current Interruption — what just interrupted them, if anything
+  Current Reaction — how they're responding to the interruption
+  Resume Plan — what they'll return to after the reaction resolves
+
+This hierarchy has no reference to Minecraft, AI goals, or
+entities. Those are implementation details. This is simulation.
+
+§4 — Familiarity Is A Relationship Dimension
+
+Every relationship between two actors has multiple dimensions.
+The existing relationship graph (Article XXXIV) collapses these
+into a single strength value. This is insufficient. Required:
+
+  Trust      — belief the other will act in your interest
+  Respect    — acknowledgment of strength or character
+  Fear       — perceived threat differential
+  Familiarity — "I know who this person is. They are part of
+                my world." Not friendship. Not trust. Simply:
+                repeated exposure has made them a known quantity.
+  Debt       — obligation (karmic, social, or material)
+  Grievance  — unresolved harm
+
+A legendary elder you've heard of but never met:
+  Respect 100, Familiarity 5. A village merchant you see daily:
+  Trust 15, Familiarity 95. These produce radically different
+  conversations. The same words from each feel nothing alike.
+
+§5 — The Five Pre-Wiring Questions
+
+Before any Canon Experience is wired in Java, these five
+questions must be answered in order:
+
+  1. How do canonical people become simulated actors?
+  2. How do actors receive activities?
+  3. How are activities interrupted?
+  4. How do they resume afterward?
+  5. How does a canonical experience emerge from those systems?
+
+Answering these five questions builds a reusable simulation layer.
+Wiring one specific scene answers one scene. The project needs
+the layer. Once solved, the machinery serves every quiet,
+character-driven scene in Renegade Immortal: Wang Lin silently
+observing, Li Muwan gathering herbs, Situ Nan wandering,
+Qing Shui meditating, disciples training, merchants traveling,
+and conversations naturally interrupting daily life.
+
+§6 — Relationship To Prior Articles
+
+Article XXVIII says nothing special-cases Wang Lin. This Article
+enforces it: if a mechanism requires a character by name, the
+mechanism is wrong.
+
+Article XXXIV established the relationship graph. This Article
+adds dimensionality: multi-dimensional edge weights, not a
+single strength value.
+
+Article XL is strengthened: the "experience" is now defined
+generically and validated against reality, not patched into
+existence for a named character.
+
+
 ═══════════════════════════════════════════════════════════════
 CLOSING
 ═══════════════════════════════════════════════════════════════
@@ -1239,8 +1352,8 @@ Article XXXII makes conversation a simulation, not a menu.
 Article XXXIII replaces "desire" with the richer "motivation" —
    because Wang Lin does not chase desires, he responds to necessity.
 Article XXXIV makes relationships graphs, not numbers —
-   because trust, respect, fear, debt, and grievance are not
-   the same axis.
+   because trust, respect, fear, familiarity, debt, and grievance
+   are not the same axis (XLI §4 adds familiarity as a required dimension).
 Article XXXV makes the world character-first, not simulation-first —
    because the world runs on people, not on motivations.
 Article XXXVI unifies all engagement under the universal Interaction —
@@ -1261,12 +1374,20 @@ Article XL enforces that architecture must prove the experience
    observable moment is a hypothesis, not a feature, and the
    smallest believable experience is always worth more than the
    largest unexperienced design.
+Article XLI makes the simulation general, not character-specific —
+   because Wang Lin is not special-cased; his behavior emerges from
+   his traits. Activities are processes with natural interruption.
+   Relationships have multiple dimensions including familiarity.
+   Five pre-wiring questions must be answered before any Canon
+   Experience is wired.
 The Final Questions guard against drift.
 The Gold-Standard Template sets the bar for every location.
 The Memory Metric sets the bar for every Living Chapter.
 The Momentum Test sets the bar for whether a chapter is alive.
-The Living Moments Ledger sets the bar for whether a cycle
-   has advanced the simulation.
+The Canon Experiences Ledger (formerly Living Moments, renamed
+   by XLI §1) sets the bar for whether a cycle has advanced the
+   simulation. Experiences are defined generically and validated
+   against reality, not patched into existence for a named character.
 
 When in doubt: build a living chapter, not a feature.
 When in doubt: prove life, do not count files.
@@ -1285,3 +1406,5 @@ When in doubt: the world has momentum, not just history —
                the player arrives mid-sentence, never at the start.
 When in doubt: prove the experience before the architecture —
                one observed moment beats fifty schema files.
+When in doubt: the simulation is general —
+               if a mechanism requires a character by name, it is wrong.

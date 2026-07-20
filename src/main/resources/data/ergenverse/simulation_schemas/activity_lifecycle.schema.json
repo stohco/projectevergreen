@@ -1,0 +1,77 @@
+{
+  "_schema": "activity_lifecycle",
+  "_schema_version": 1,
+  "_article": "XLI §2 — Activity Is Process, Not State",
+  "_description": "An activity is a process with a lifecycle. Every activity supports interruption. The CultivatorActivity enum (WANDERING/MEDITATING/BREAKING_THROUGH) is a state snapshot; this schema replaces it with a process model that the simulation tracks over time.",
+  "_key_principle": "Interruption is not an added feature. It is a natural property of every activity. A cultivator meditating when a wolf howl is heard does not need a special interruption system. The meditation activity has an interruption condition.",
+  "_lifecycle_states": [
+    "STARTING — the activity is beginning (entity transitioning into the activity)",
+    "IN_PROGRESS — the activity is actively running (entity is performing it)",
+    "INTERRUPTED — something paused this activity (entity reacts to the interruption)",
+    "REACTING — the entity is responding to whatever interrupted them",
+    "RESUMING — the interruption is over; entity is returning to the activity",
+    "COMPLETED — the activity finished naturally (goal reached, timer expired)",
+    "ABANDONED — the activity was cancelled (higher priority took over permanently)"
+  ],
+  "activity": {
+    "activity_id": "string — unique within the actor's current session",
+    "activity_type": "string — the kind of activity",
+    "state": "enum — one of _lifecycle_states",
+    "started_tick": "int — server tick when the activity began",
+    "progress": "float 0.0-1.0 — how far through the activity",
+    "interruptible": "boolean — can this activity be interrupted? (default true; breakthrough = false)",
+    "interruption_conditions": [
+      {
+        "trigger": "string — event topic or perception threshold that can interrupt",
+        "evaluation": "string — how the actor evaluates whether to interrupt (ALWAYS, IF_PERSONALITY_MATCHES, IF_MOTIVATION_ALIGNS, IF_DANGER_EXCEEDS_THRESHOLD)",
+        "personality_traits": ["string — which personality dimensions affect this evaluation"],
+        "response": "string — what the actor does when interrupted (INVESTIGATE, OBSERVE, FLEE, CONFRONT, IGNORE, CONTINUE_AFTER_DELAY)"
+      }
+    ],
+    "current_interruption": {
+      "trigger_event": "string — the event topic that caused the interruption",
+      "trigger_tick": "int — when the interruption occurred",
+      "reaction": {
+        "type": "string — what the actor is doing (observe, approach, flee, investigate, ignore)",
+        "target_entity": "string|null — what they are reacting to",
+        "target_position": ["int, int, int — x, y, z if reacting to a location"],
+        "duration_ticks": "int|null — how long the reaction lasts (null = until condition resolves)",
+        "resume_after": "boolean — whether to resume the original activity after the reaction"
+      },
+      "resumption_state": {
+        "progress_at_interruption": "float — where in the activity we were when interrupted",
+        "context": "object — state needed to resume (position, target, conversation partner)"
+      }
+    },
+    "completion_conditions": [
+      "string — conditions under which the activity completes (timer, goal_reached, resource_exhausted, location_reached)"
+    ],
+    "completion_tick": "int|null — when the activity actually completed"
+  },
+  "_advisor_examples": [
+    {
+      "description": "Wang Lin studying a restriction. Player arrives.",
+      "activity_type": "STUDYING_RESTRICTION",
+      "state": "IN_PROGRESS",
+      "interruption_conditions": [
+        {"trigger": "player_proximity_30_blocks", "evaluation": "IF_DANGER_EXCEEDS_THRESHOLD", "response": "IGNORE"}
+      ],
+      "note": "He keeps studying. No special system needed. The interruption condition says IGNORE for player proximity at 30 blocks. After 30 seconds, if player is still there, a second condition triggers: CONVERSATION_REQUEST with response INVESTIGATE."
+    },
+    {
+      "description": "Li Muwan making pills. Player asks a complicated question.",
+      "activity_type": "ALCHEMY",
+      "state": "IN_PROGRESS",
+      "interruption_conditions": [
+        {"trigger": "conversation_request", "evaluation": "IF_SAFE_TO_PAUSE", "response": "CONTINUE_AFTER_DELAY"}
+      ],
+      "note": "She finishes pouring ingredients, then answers. The activity is not abandoned — it is paused at a safe point."
+    },
+    {
+      "description": "Xu Liguo interrupts the player.",
+      "activity_type": "WANDERING",
+      "state": "IN_PROGRESS",
+      "note": "Xu Liguo's personality traits (talkative, impulsive) have high interruption trigger rates. His activities are frequently self-interrupted by his own desire to speak. This is personality-driven interruption, not event-driven."
+    }
+  ]
+}

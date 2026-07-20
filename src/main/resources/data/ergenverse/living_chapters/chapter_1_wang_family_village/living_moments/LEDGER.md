@@ -1,93 +1,100 @@
-# THE LIVING MOMENTS LEDGER
+# THE CANON EXPERIENCES LEDGER
 
-> **Article XL §4 — The Living Moments Ledger sets the bar for whether a cycle has advanced the simulation.**
+> **Article XLI §1 — Canon Experiences, Not Named Moments** (renamed from Living Moments Ledger per XLI)
+> **Article XL §4 — The Ledger sets the bar for whether a cycle has advanced the simulation.**
 
-The unit of progress on this project is **not** files added, schemas authored, compilers built, or validators passing. The unit of progress is **Living Moments Created** — single observable scenes a player would remember years later.
+The unit of progress is **Canon Experiences** — single observable scenes a player would remember years later. Each experience is defined by **what happens**, not who does it. (Article XLI §1.)
 
-A Living Moment is a scene in which the world demonstrates that it has life independent of the player. The canonical reference (Article XL §3):
-
-> The player sees Wang Lin abandon his cultivation session because a distant spiritual disturbance exceeded his personal risk threshold — he stands, walks to a ridge, watches wolves stalking a spirit deer, turns, leaves. Nothing was scripted. Nothing involved the player. Yet the player learns: Wang Lin has priorities. Animals hunt. NPCs observe. The world has activity. Interesting things happen without quests.
+Per Article XLI §1, before a Canon Experience can be marked IMPL, the validator checks: **does a suitable actor exist in the world?** If not, the experience is IMPOSSIBLE, not pending. This validates reality instead of patching reality.
 
 ---
 
-## How a Living Moment earns status
+## How a Canon Experience earns status
 
 | Status | Earned when |
 |---|---|
-| **SPEC** | The moment is described concretely: scene, systems exercised, canon reference, perceivable cues. Not yet implemented. |
+| **SPEC** | The moment is described generically: scene, validation criteria, systems exercised, canon reference. Not yet implemented. |
+| **IMPOSSIBLE** | No suitable actor exists in the world to fulfill the experience. Architecture gap or data gap. |
 | **IMPL** | The Java/data wiring exists that should produce the moment. Not yet observed. |
 | **OBSERVED** | A real observer (developer or agent-browser) has witnessed the moment occur in a running world. |
 | **SURVIVED PLAYTEST** | The moment occurs in a fresh world without developer intervention, across at least two playtests. |
 
-A moment at SPEC is a hypothesis. A moment at IMPL is an untested hypothesis. A moment at OBSERVED is a feature. A moment at SURVIVED PLAYTEST is canon.
+A moment at SPEC is a hypothesis. IMPOSSIBLE means the world lacks the foundation. IMPL is an untested hypothesis. OBSERVED is a feature. SURVIVED PLAYTEST is canon.
+
+---
+
+## The Five Pre-Wiring Questions (Article XLI §5)
+
+Before any Canon Experience is wired in Java, these five questions must be answered in order:
+
+1. **How do canonical people become simulated actors?**
+2. **How do actors receive activities?**
+3. **How are activities interrupted?**
+4. **How do they resume afterward?**
+5. **How does a canonical experience emerge from those systems?**
+
+### Current answers (AUTO-CANON-069):
+
+| Question | Status | Answer |
+|---|---|---|
+| Q1: How do canonical people become simulated actors? | ANSWERED (gap fixed this cycle) | Canon data (npcs/*.json) -> NpcSpawnRegistry (location mapping) -> ReificationScan (proximity trigger) -> EntityCultivator (Minecraft entity) -> ActorEntityLink (simulation bridge) -> Actor (simulation state). Wang Family Village was missing from NpcSpawnRegistry; 6 Wang family NPCs now registered. Data gap: npc_wang_tiangui has no JSON file. |
+| Q2: How do actors receive activities? | SCHEMA PROVIDED | simulation_state_hierarchy.schema.json defines: motivations -> objective -> activity assignment. The DecisionEngine produces an objective; a resolver assigns a concrete activity (with lifecycle). See activity_lifecycle.schema.json. |
+| Q3: How are activities interrupted? | SCHEMA PROVIDED | activity_lifecycle.schema.json: each activity declares interruption_conditions with trigger, evaluation (personality-trait-based), and response. When a WorldEventBus event matches, the activity transitions to INTERRUPTED. |
+| Q4: How do they resume afterward? | SCHEMA PROVIDED | The resume_plan: when the reaction completes, the actor returns to the activity at the progress recorded in resumption_state. If resume_after is false, the activity is ABANDONED. |
+| Q5: How does a canonical experience emerge? | SCHEMA PROVIDED | Actor exists (Q1), has activity (Q2), gets interrupted by a world event (Q3), reacts (Q4), and the player witnesses the reaction. The player's memory of that reaction IS the Canon Experience. |
 
 ---
 
 ## The Ledger
 
-| # | Title | Status | Systems Exercised | Canon Ref |
-|---|---|---|---|---|
-| 1 | Wang Lin abandons cultivation to watch wolves stalk a spirit deer | SPEC | wolf_pack_momentum + Wang Lin AI + perception | RI Ch 1-5 (Wang Lin observes before acting) |
-| 2 | Heng Yue recruiter arrives; village reacts; rumor was already distorted | SPEC | caravan_momentum + rumor_momentum + NPC schedule | RI Ch 1-3 (recruitment circuit) |
-| 3 | Wang Lin approaches unbidden: "Watch." Demonstrates one restriction. Walks away. | SPEC | elder_breakthrough_momentum (Wang Lin) + player-action perception + bidirectional protocol | RI Ch 6-10 (Wang Lin's restriction study) |
-| 4 | Two cultivators arrive at the same herb before the player | SPEC | herb_momentum + rumor_momentum (spread to neighbor village) + travel_graph | RI Ch 4-7 (herb competition) |
-| 5 | Market day: half the stalls empty; caravan master refuses the bridge; village head watches | SPEC | river_erosion_momentum + economy + NPC schedule | RI Ch 2-3 (village economic decline) |
-| 6 | Burnt wagon on the south road; innkeeper's warning; smoke in the hills | SPEC | bandit_momentum + travel_graph threat + NPC ambient | RI Ch 3-5 (bandit presence) |
-| 7 | Teng merchant's caravan passes the turnoff without stopping; elder spits; child is hushed | SPEC | faction_grudge_momentum + caravan pathing + NPC ambient | RI (Wang-Teng feud) |
-| 8 | Patriarch's seclusion: disciple turns visitors away; rare herbs bought in bulk; faint pressure at night | SPEC | elder_breakthrough_momentum (patriarch) + spirit_graph coupling + market | RI Ch 1-2 (patriarch presence) |
-| 9 | Villagers disagree at the well about when the recruiter arrives and which sect | SPEC | rumor_momentum (distortion + disagreement) + NPC ambient | RI Ch 1 (village information ecology) |
-| 10 | Recruiter presses Wang Lin too hard; wandering cultivator mentions trouble in Heng Yue | SPEC | sect_momentum + recruiter motivation_state + NPC ambient | RI Ch 3-5 (sect decline) |
-| 11 | Old Chen's dog dies in a wolf raid; weeks later Old Chen says "used to have one" | SPEC | wolf_pack_momentum threshold + memory_ledger + relationship_graph + rumor_momentum (distorted retelling) | RI Ch 1-2 (Memory Metric canonical test) |
-| 12 | Spirit deer at the treeline — wolves stalking it — Wang Lin watching from the ridge | SPEC | wolf_pack_momentum + spirit_graph (deer as spirit-touched fauna) + Wang Lin AI | RI Ch 2-4 (Wang Lin's observation habit) |
-| 13 | Child retells Old Chen's dog story months later — "seven wolves, not five; red eyes" | SPEC | rumor_momentum (long-term distortion) + memory_ledger (decay) + child NPC ambient | RI Ch 1-2 (Memory Metric long-tail) |
-| 14 | Wang Lin emerges from the cave irritable, asks the herbalist about crimson root, gets nothing | SPEC | elder_breakthrough_momentum (supplement exhaustion) + Wang Lin motivation_state + herbalist NPC | RI Ch 6-8 (Wang Lin's resource scarcity) |
-| 15 | Village head organizes a wolf hunt after the third livestock loss — invites (or excludes) the player based on relationship | SPEC | wolf_pack_momentum (livestock_raid threshold) + village_head motivation_state + relationship_graph (player standing) | RI Ch 2-4 (village collective action) |
-| 16 | A wandering cultivator passes through, mentions "trouble in Heng Yue," leaves — never to be seen again | SPEC | sect_momentum + travel_graph (wandering NPC) + rumor_momentum (seed) | RI Ch 3-5 (sect decline foreshadow) |
-| 17 | The bridge finally collapses under a caravan — cargo lost, driver furious, village head ashen | SPEC | river_erosion_momentum (bridge_collapse threshold) + economy (trade route abandonment) + WorldEventBus cascade | RI Ch 2-3 (canonical history-vs-momentum example) |
-| 18 | The Teng merchant returns, demands double price for grain; village head refuses; grain stays on the wagon | SPEC | faction_grudge_momentum (trade_refusal threshold) + economy + negotiation | RI (Wang-Teng feud escalation) |
-| 19 | Wang Lin's parents quietly ask the player (only if relationship earned) to check on him in the cave | SPEC | elder_breakthrough_momentum + relationship_graph (player-to-family) + bidirectional protocol | RI Ch 6-8 (family concern) |
-| 20 | First snow: the bandits raid the south road; the village doubles the watch; the recruiter postpones | SPEC | bandit_momentum (raid_blitz) + season system + caravan_momentum (reroute) + village schedule | RI Ch 3-5 (winter pressure) |
+| # | Experience (generic) | Status | Validation Criteria | Systems | Canon Ref |
+|---|---|---|---|---|---|
+| 1 | A cautious cultivator abandons cultivation after noticing predator behavior | SPEC | Actor with caution > 0.7 exists, is in a stationary activity, within perception range of predator event | wolf_pack_momentum + activity_lifecycle (interruption) + simulation_state_hierarchy + perception | RI Ch 1-5 (Wang Lin observes before acting) |
+| 2 | A recruiter arrives at a remote village; villagers react; the rumor was already distorted | SPEC | NPC with faction=heng_yue_sect + motivation=recruit exists; village location is registered | caravan_momentum + rumor_momentum (distortion) + NPC schedule | RI Ch 1-3 (recruitment circuit) |
+| 3 | A cultivator approaches the player unbidden, demonstrates a technique silently, walks away | SPEC | Actor with personality.caution > 0.7 + personality.curiosity < 0.3 + capability in a demonstrable technique exists | activity_lifecycle (self-interruption) + bidirectional protocol + perception | RI Ch 6-10 (Wang Lin's restriction study) |
+| 4 | Two cultivators arrive at the same herb before the player | SPEC | At least 2 NPCs with motivation containing gather_knowledge or alchemy exist; herb location registered in travel_graph | herb_momentum + rumor_momentum + travel_graph | RI Ch 4-7 (herb competition) |
+| 5 | Market day: stalls empty; merchant refuses a bridge; village head watches | SPEC | NPC with motivation=economy exists; river_erosion_momentum below bridge_safe threshold | river_erosion_momentum + economy + NPC schedule | RI Ch 2-3 (village economic decline) |
+| 6 | Burnt wagon on a road; innkeeper warns; smoke in the hills | SPEC | NPC with motivation=survive exists; bandit_momentum above raid threshold | bandit_momentum + travel_graph threat + NPC ambient | RI Ch 3-5 (bandit presence) |
+| 7 | A merchant's caravan passes a turnoff without stopping; elder spits; child is hushed | SPEC | NPCs with competing motivations (trade vs. pride) exist; faction_grudge_momentum active | faction_grudge_momentum + caravan pathing + NPC ambient | RI (Wang-Teng feud) |
+| 8 | A patriarch's seclusion: disciple turns visitors away; rare herbs bought in bulk; faint pressure at night | SPEC | NPC with motivation=breakthrough exists; elder_breakthrough_momentum active; spirit_graph qi > threshold | elder_breakthrough_momentum + spirit_graph + market | RI Ch 1-2 (patriarch presence) |
+| 9 | Villagers disagree at the well about when a recruiter arrives and which sect | SPEC | Multiple NPCs with information about the same event; rumor_momentum active | rumor_momentum (distortion) + NPC ambient | RI Ch 1 (village information ecology) |
+| 10 | A recruiter presses too hard; a wandering cultivator mentions trouble in a sect | SPEC | NPC with motivation=recruit + personality.aggression > threshold; wandering NPC with information | sect_momentum + motivation_state + NPC ambient | RI Ch 3-5 (sect decline) |
+| 11 | A villager's dog dies in a predator raid; weeks later they say "used to have one" | SPEC | NPC with a pet/familiar relationship exists; predator_momentum crosses raid threshold; memory_ledger records the event | wolf_pack_momentum + memory_ledger + relationship_graph (familiarity decay) + rumor_momentum | RI Ch 1-2 (Memory Metric canonical test) |
+| 12 | A spirit-touched creature at the treeline; predators stalking it; a cultivator watching from above | SPEC | Predator_momentum + spirit_graph both active; NPC with caution > 0.5 + activity observation | wolf_pack_momentum + spirit_graph + activity_lifecycle (observation interruption) | RI Ch 2-4 (observation habit) |
+| 13 | A child retells an old story months later with the details wrong | SPEC | NPC child + original event recorded in memory_ledger with witnesses; time > 2 MC months | rumor_momentum (long-term distortion) + memory_ledger (decay) | RI Ch 1-2 (Memory Metric long-tail) |
+| 14 | A cultivator emerges from seclusion irritable, asks about a resource, gets nothing | SPEC | NPC with motivation=breakthrough completed + resource scarcity in economy | elder_breakthrough_momentum + motivation_state + herbalist NPC | RI Ch 6-8 (resource scarcity) |
+| 15 | A village head organizes a hunt after repeated losses; invites or excludes the player based on relationship | SPEC | NPC with motivation=protect_village exists; predator losses exceed threshold; relationship_graph has player dimensions | wolf_pack_momentum + motivation_state + relationship_graph (trust/familiarity) | RI Ch 2-4 (collective action) |
+| 16 | A wandering cultivator passes through, mentions trouble, leaves, never returns | SPEC | NPC with motivation=wander exists; travel_graph allows transit; information to share | sect_momentum + travel_graph + rumor_momentum (seed) | RI Ch 3-5 (foreshadow) |
+| 17 | A bridge collapses under a caravan; cargo lost; village head ashen | SPEC | river_erosion_momentum crosses bridge_collapse threshold; NPC with motivation=trade is present | river_erosion_momentum + economy + WorldEventBus cascade | RI Ch 2-3 (momentum consequences) |
+| 18 | A merchant returns, demands double price; village head refuses; grain stays on the wagon | SPEC | NPCs with competing motivations; faction_grudge_momentum active; negotiation system | faction_grudge_momentum + economy + relationship_dimensions | RI (feud escalation) |
+| 19 | A family member quietly asks the player (only if familiarity > threshold) to check on someone | SPEC | NPC with motivation=protect_family + relationship.familiarity > 0.5 toward player exists | relationship_dimensions (familiarity gate) + bidirectional protocol | RI Ch 6-8 (family concern) |
+| 20 | First snow: predators raid; village doubles the watch; a recruiter postpones | SPEC | Season system triggers winter; bandit_momentum + predator_momentum both active | bandit_momentum + season + caravan_momentum + village schedule | RI Ch 3-5 (winter pressure) |
 
 ---
 
 ## Current count
 
-- **Living Moments declared: 20**
-- **Living Moments at OBSERVED: 0**
-- **Living Moments at SURVIVED PLAYTEST: 0**
+- **Canon Experiences declared: 20**
+- **Canon Experiences at OBSERVED: 0**
+- **Canon Experiences at SURVIVED PLAYTEST: 0**
+- **Five Pre-Wiring Questions: 5/5 SCHEMA PROVIDED, 1/5 PIPELINE VERIFIED (Q1)**
 
-Per Article XL §3, the project's next milestone is **Living Moment #1 at OBSERVED**. Everything else is downstream of that.
+Per Article XLI §5, the next milestone is answering all five pre-wiring questions with running code, then observing Canon Experience #1.
 
 ---
 
 ## The honesty bar
 
-A cycle that produces 20 Living Moment SPECs and 0 OBSERVED has not advanced the simulation. It has produced 20 hypotheses. The cycle succeeds ONLY when one of those SPECs becomes OBSERVED in a running world.
+A cycle that produces 20 Canon Experience SPECs and 0 OBSERVED has not advanced the simulation. It has produced 20 hypotheses. The cycle succeeds ONLY when one of those SPECs becomes OBSERVED in a running world.
 
-Until Living Moment #1 is OBSERVED, every new schema, compiler, DSL, or validator is architecture before experience (Article XL §7) and must justify itself as the smallest believable path to that moment.
+Until the five pre-wiring questions are answered with running code and Canon Experience #1 is OBSERVED, every new schema, compiler, DSL, or validator is architecture before experience (Article XL §7) and must justify itself as the smallest believable path to that experience.
 
 ---
 
 ## The cascade
 
-Once Living Moment #1 is OBSERVED, the architecture it exercised (wolf_pack_momentum tick + Wang Lin AI threshold response + perception + ridge pathing) is **proven**. That architecture can then be generalized to produce Living Moments #2, #11, #12, #15, #20 — all of which share the same threshold-cascade backbone.
+Once Canon Experience #1 is OBSERVED, the architecture it exercised (activity_lifecycle interruption + simulation_state_hierarchy + predator momentum + perception) is **proven**. That architecture generalizes to every quiet, character-driven scene: observation, herb competition, resource scarcity, collective action.
 
-Once Living Moment #3 is OBSERVED, the bidirectional Wang Lin protocol is proven. That architecture generalizes to Living Moments #14, #19.
-
-Once Living Moment #11 is OBSERVED, the Memory Metric is proven. That architecture generalizes to Living Moments #13 (long-tail retelling), and to every future Chapter.
+Once Canon Experience #11 is OBSERVED, the Memory Metric is proven. That architecture generalizes to every long-tail retelling and familiarity-driven interaction.
 
 The cascade is: prove one, generalize to many. Not: build many, hope one works.
-
----
-
-## What does NOT count as a Living Moment
-
-- A scripted scene that fires once (Article IV violation)
-- A quest with a marker (Article IV violation)
-- A notification, toast, or "quest complete" (Article IV + XXXI violation)
-- A system that produces no perceivable output (Article XXX violation — "referenced, not experienced")
-- A moment that requires the player to exist (Article V violation — the world must move without the player)
-- A moment that is identical across worlds (Article XXXIX §4 violation — momentum is compiled, not scripted)
-- A moment that no NPC remembers later (Article XXXI.5 violation — Memory Metric)
-
-A scene that fails any of these is not a Living Moment. It is content wearing a Living Moment's clothes.

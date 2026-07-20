@@ -129,6 +129,14 @@ public enum EdgeType {
     ENEMY_OF,
     /** A saved B's life. */
     SAVED,
+    /**
+     * A is familiar with B — repeated exposure has made B a known
+     * quantity. Not friendship. Not trust. Simply: B is part of A's
+     * world. (Article XLI §4 — Familiarity Is A Relationship Dimension.)
+     * Day 1: 0. Day 20: nods. Day 60: "You're late." — all driven by
+     * familiarity, not trust or respect.
+     */
+    FAMILIAR_WITH,
 
     // ═══════════════════════════════════════════════════════════════════
     // 4. COSMOLOGICAL & SPATIAL

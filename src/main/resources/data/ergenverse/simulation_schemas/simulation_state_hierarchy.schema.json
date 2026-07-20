@@ -1,0 +1,75 @@
+{
+  "_schema": "simulation_state_hierarchy",
+  "_schema_version": 1,
+  "_article": "XLI §3 — The Simulation State Hierarchy",
+  "_description": "The simulation-layer state of every actor. Independent of Minecraft entities and AI goals. This is what the DecisionEngine and IntentEngine read to produce behavior. Minecraft's goal system is an implementation detail below this layer.",
+  "_design_principle": "This hierarchy has no reference to Minecraft, AI goals, or entities. Those are implementation details. This is simulation.",
+  "actor_state": {
+    "identity": {
+      "character_id": "string — canon character identifier",
+      "display_name": "string",
+      "dao_identity": "string — from DaoIdentity enum (SEEKING_DAO, GUARDING, WANDERING, etc.)",
+      "personality_traits": {
+        "_description": "Named dimensions that bias decision-making. Each is 0.0-1.0. These replace the single PersonalityModel object with named, queryable traits.",
+        "caution": "float 0.0-1.0 — how risk-averse the actor is (Wang Lin: 0.95; Xu Liguo: 0.1)",
+        "curiosity": "float 0.0-1.0 — how likely to investigate unknowns",
+        "patience": "float 0.0-1.0 — how long before abandoning a slow activity",
+        "aggression": "float 0.0-1.0 — likelihood of confrontation over avoidance",
+        "loyalty": "float 0.0-1.0 — resistance to betraying established bonds",
+        "talkativeness": "float 0.0-1.0 — likelihood of initiating conversation (Xu Liguo: 0.99; Wang Lin: 0.05)"
+      }
+    },
+    "motivations": [
+      {
+        "motivation": "string — what they want long-term (survive, cultivate, protect_family, avenge, seek_immortality, gather_knowledge, earn_respect)",
+        "intensity": "float 0.0-1.0 — how strongly this drives behavior",
+        "canon_ref": "string — EXPLICIT | INFERRED"
+      }
+    ],
+    "current_long_term_objective": {
+      "description": "string — what they are working toward now (breakthrough to Qi Condensation, find a teacher, protect the village, gather herbs for alchemy)",
+      "source_motivation": "string — which motivation drives this objective",
+      "progress": "float 0.0-1.0",
+      "blocking_conditions": ["string — what prevents progress"]
+    },
+    "current_activity": {
+      "_description": "Reference to the activity_lifecycle schema. What they are doing RIGHT NOW. This is the most important field — it drives entity animation, position, and available interactions.",
+      "_ref": "activity_lifecycle.schema.json",
+      "activity_type": "string",
+      "state": "string — lifecycle state from activity_lifecycle",
+      "progress": "float 0.0-1.0"
+    },
+    "current_interruption": {
+      "_description": "Populated only when state == INTERRUPTED or REACTING. What just interrupted them.",
+      "trigger_event": "string",
+      "reaction_type": "string — observe, approach, flee, investigate, continue_after_delay",
+      "reacting_to": "string|null — entity id or position being reacted to"
+    },
+    "current_reaction": {
+      "_description": "Populated only when state == REACTING. How they are responding.",
+      "type": "string",
+      "target": "string|null",
+      "duration_remaining_ticks": "int",
+      "will_resume": "boolean"
+    },
+    "resume_plan": {
+      "_description": "What the actor returns to after the interruption resolves. Populated when an activity is interrupted.",
+      "activity_to_resume": "string — activity_type",
+      "resumption_delay_ticks": "int — 0 means immediately",
+      "conditions": ["string — conditions that must be true to resume"]
+    }
+  },
+  "_relationship_to_existing_code": {
+    "Actor.cognition": "Currently holds Ontology (daoIdentity, personality, physical, cultivation, social, activeGoal, activeIntent). The simulation_state_hierarchy replaces the Ontology structure. The Actor.cognition field becomes an instance of this schema.",
+    "Actor.goals": "The List<Goal> on Actor is Minecraft-implementation-level. It is populated FROM the simulation state hierarchy, not the other way around. The hierarchy is the source of truth.",
+    "DecisionEngine.decide": "Currently takes daoIdentity, needs, physical, cultivation, social, personality. Under the new hierarchy, it takes the actor_state and produces a decision that updates current_activity, current_objective, or motivations.",
+    "CultivatorActivityResolver": "Currently determines activity from characterId + tick (deterministic). Under the new hierarchy, activity assignment is driven by motivations → objective → activity, with personality traits biasing the choice. The resolver becomes the bridge between the hierarchy and the entity's physical behavior."
+  },
+  "_five_pre_wiring_questions": {
+    "Q1_how_do_canonical_people_become_simulated_actors": "Answered: Canon data (npcs/<id>.json) → NpcSpawnRegistry (location mapping) → ReificationScan (proximity trigger) → EntityCultivator (Minecraft entity) → ActorEntityLink (simulation bridge) → Actor (simulation state). The pipeline is general. Wang Family Village was missing from NpcSpawnRegistry — this cycle fixes that gap.",
+    "Q2_how_do_actors_receive_activities": "Answered by this schema: motivations → objective → activity assignment. The DecisionEngine produces an objective; the activity resolver assigns a concrete activity (with lifecycle) that fulfills the objective. Personality traits bias which activities are chosen.",
+    "Q3_how_are_activities_interrupted": "Answered by activity_lifecycle.schema.json: each activity declares interruption_conditions with trigger, evaluation, and response. When a WorldEventBus event matches a trigger and the evaluation passes (checking personality traits and motivation alignment), the activity transitions to INTERRUPTED.",
+    "Q4_how_do_they_resume_afterward": "Answered by the resume_plan: when the reaction completes (duration expires or condition resolves), the actor returns to the activity at the progress level recorded in resumption_state. If resume_after is false, the activity is ABANDONED and a new activity is assigned from objectives.",
+    "Q5_how_does_a_canonical_experience_emerge": "Answered by the interaction of all four: an actor exists (Q1), has an activity (Q2), gets interrupted by a world event (Q3), reacts (Q4), and the player witnesses the reaction. The player's memory of that reaction IS the Canon Experience."
+  }
+}

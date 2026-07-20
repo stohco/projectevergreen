@@ -1,0 +1,96 @@
+{
+  "_schema": "relationship_dimensions",
+  "_schema_version": 1,
+  "_article": "XLI §4 — Familiarity Is A Relationship Dimension",
+  "_description": "Multi-dimensional relationship weights. The existing relationship graph (Article XXXIV) uses a single 'strength' float per edge. This schema defines the six required dimensions that replace that single value. Each dimension is 0.0-1.0.",
+  "_key_insight": "A legendary elder you have heard of but never met: Respect 100, Familiarity 5. A village merchant you see daily: Trust 15, Familiarity 95. These produce radically different conversations. The same words from each feel nothing alike.",
+  "dimensions": {
+    "trust": {
+      "range": "float 0.0–1.0",
+      "meaning": "Belief the other will act in your interest. Built through reliable positive interactions. Broken by betrayal.",
+      "growth_rate": "slow — years of consistent behavior required",
+      "decay_rate": "rapid — one betrayal can destroy years of trust",
+      "affects_conversation": "High trust: direct speech, fewer formalities, willingness to ask for help. Low trust: guarded speech, evasive answers, reluctance to share information."
+    },
+    "respect": {
+      "range": "float 0.0–1.0",
+      "meaning": "Acknowledgment of strength, character, or wisdom. Can exist without trust (a respected enemy) or familiarity (a legendary elder heard of but never met).",
+      "growth_rate": "moderate — demonstrated capability and character",
+      "decay_rate": "slow — respect is durable once earned",
+      "affects_conversation": "High respect: deferential language, willingness to follow advice, acceptance of criticism. Low respect: dismissive tone, challenges, refusal to take seriously."
+    },
+    "fear": {
+      "range": "float 0.0–1.0",
+      "meaning": "Perceived threat differential. Based on power gap, not morality. You can fear someone you respect (a strict teacher) or someone you hate (a powerful enemy).",
+      "growth_rate": "instant — power displays create fear immediately",
+      "decay_rate": "moderate — familiarity and equal power reduce fear over time",
+      "affects_conversation": "High fear: submissive speech, agreement regardless of opinion, physical retreat. Low fear: relaxed posture, disagreement, eye contact."
+    },
+    "familiarity": {
+      "range": "float 0.0–1.0",
+      "meaning": "Repeated exposure has made this person a known quantity. Not friendship. Not trust. Simply: they are part of my world. Day 1: 0. Day 20: nods. Day 60: 'You are late.' They never invited you, but somehow they expected you.",
+      "growth_rate": "slow and steady — proximity and repeated interaction over time",
+      "decay_rate": "very slow — familiarity persists even after long absence",
+      "affects_conversation": "High familiarity: shortened speech, shared references, unspoken understanding, absence of introductions. Low familiarity: full introductions, formal address, explanation of context. The advisor's example: Wang Lin Day 1 says 'Who are you?' Day 20: nods. Day 60: 'You are late.' — all driven by familiarity, not trust or respect.",
+      "_canon_examples": [
+        {
+          "context": "Wang Lin and the player, early in the novel",
+          "familiarity": 0,
+          "behavior": "Wang Lin does not acknowledge the player. The player is a stranger. No interaction."
+        },
+        {
+          "context": "After 20 days of proximity (player keeps returning to where Wang Lin cultivates)",
+          "familiarity": 0.3,
+          "behavior": "Wang Lin nods when the player passes. No words. But the nod means: I know you exist."
+        },
+        {
+          "context": "After 60 days (player has been consistently present)",
+          "familiarity": 0.6,
+          "behavior": "Wang Lin says 'You are late.' without looking up. He never invited the player. But the player has become part of his world. This is familiarity, not friendship."
+        },
+        {
+          "context": "Old Chen and the village merchant, years of daily interaction",
+          "familiarity": 0.95,
+          "behavior": "Conversations without greeting. Shared jokes. References to events both remember. The kind of interaction that only comes from years of proximity."
+        }
+      ]
+    },
+    "debt": {
+      "range": "float 0.0–1.0",
+      "meaning": "Obligation (karmic, social, or material). Can be one-directional (A owes B) or mutual. In Er Gen, karmic debt is a physical law.",
+      "growth_rate": "event-driven — specific actions create debt",
+      "decay_rate": "varies — karmic debt decays slowly, social debt decays with reciprocity",
+      "affects_conversation": "High debt: requests for repayment, guilt-driven compliance, avoidance. The debtor is uncomfortable; the creditor has leverage."
+    },
+    "grievance": {
+      "range": "float 0.0–1.0",
+      "meaning": "Unresolved harm. Accumulates from injuries, slights, and broken promises. In Er Gen, grievances fester and can last lifetimes across reincarnations.",
+      "growth_rate": "event-driven — harm creates grievance",
+      "decay_rate": "very slow without resolution — grievances fester for centuries in canon",
+      "affects_conversation": "High grievance: coldness, passive aggression, refusal to cooperate, plotting. In Er Gen, a grievance of 0.8+ can persist through multiple reincarnations and drive multi-generational conflicts."
+    }
+  },
+  "_example_profiles": [
+    {
+      "description": "A legendary elder you have heard stories about but never met",
+      "trust": 0, "respect": 1.0, "fear": 0.4, "familiarity": 0.05, "debt": 0, "grievance": 0
+    },
+    {
+      "description": "A village merchant you see daily",
+      "trust": 0.15, "respect": 0.2, "fear": 0, "familiarity": 0.95, "debt": 0, "grievance": 0
+    },
+    {
+      "description": "Wang Lin, early novel (player first encounters him)",
+      "trust": 0, "respect": 0.1, "fear": 0, "familiarity": 0, "debt": 0, "grievance": 0
+    },
+    {
+      "description": "Wang Lin, after years together",
+      "trust": 0.92, "respect": 0.99, "fear": 0.3, "familiarity": 1.0, "debt": 0, "grievance": 0
+    }
+  ],
+  "_integration_with_existing_graph": {
+    "EdgeType": "Add FAMILIAR_WITH as a new social edge type in EdgeType.java. This edge is created automatically when familiarity exceeds 0.1 between two actors who have co-existed for N ticks. It is not created by events — it emerges from proximity over time.",
+    "Edge_properties": "Each edge in the relationship graph gains a 'dimensions' property containing the six floats. The existing 'strength' field is deprecated in favor of these dimensions. For backward compatibility, strength = weighted average of dimensions if dimensions are absent.",
+    "WorldGraph_queries": "New query methods: relationshipDimensions(actorA, actorB) -> dimensions object. familiarWith(actorA, threshold) -> [actor]. The graph can now answer 'who does this character actually know well?' versus 'who is this character connected to?'"
+  }
+}

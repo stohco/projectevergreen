@@ -28,10 +28,16 @@ import java.util.Map;
  * Registering {@code situ_nan} (without prefix) causes a null lookup in
  * {@link dev.ergenverse.simulation.WorldStateDataLoader#getEntry}.
  *
+ * <p>Per Article XLI, NO character is special-cased. The pipeline is
+ * general: any NPC registered here will materialize when a player
+ * enters their location. Wang Lin is not special. His behavior emerges
+ * from his traits, not from spawn code.
+ *
  * <h2>Location mapping</h2>
  * <p>{@link SpatialBiomeCacheIndex} resolves biome IDs to location IDs:
  * {@code ergenverse:zhao_mountains} → {@code zhao_mountains},
- * {@code ergenverse:zhao_plains} → {@code zhao_plains}, etc.
+ * {@code ergenverse:zhao_plains} → {@code zhao_plains},
+ * {@code ergenverse:wang_family_village} → {@code wang_family_village}, etc.
  * NPCs are registered under the resolvable location ID where their biome
  * generates.
  *
@@ -94,6 +100,18 @@ public final class NpcSpawnRegistry {
         // ── Vermilion Bird Country (ergenverse:vermilion_bird_* biomes) ──
         register("vermilion_bird_country", "npc_situ_nan");       // Divine Emperor
         register("vermilion_bird_country", "npc_daoist_water");   // Ancient cultivator
+
+        // ── Wang Family Village (ergenverse:wang_family_village biome) ──
+        // Per Article XLI: no character is special-cased. These NPCs
+        // spawn through the same general pipeline as every other location.
+        // Note: npc_wang_tiangui data file does not yet exist (data gap,
+        // not architecture gap). Other Wang family NPCs use existing data.
+        register("wang_family_village", "npc_wang_tianshui");
+        register("wang_family_village", "npc_wang_qingyue");
+        register("wang_family_village", "npc_wang_wei");
+        register("wang_family_village", "npc_wang_zhou");
+        register("wang_family_village", "npc_wang_ping");
+        register("wang_family_village", "npc_wang_yiyi");
 
         Ergenverse.LOGGER.info("[NpcSpawnRegistry] Registered {} NPCs across {} locations.",
                 totalCount(), SPAWNS_BY_LOCATION.size());
