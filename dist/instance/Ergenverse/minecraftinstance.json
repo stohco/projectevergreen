@@ -3,7 +3,9 @@
   "customAuthor": "stohco",
   "version": "0.1.0-alpha",
   "baseModLoader": {
-    "name": "Minecraft Forge",
+    "name": "forge-47.4.0",
+    "displayName": "Forge 47.4.0 for 1.20.1",
+    "filename": "forge-47.4.0.jar",
     "version": "47.4.0",
     "modLoaders": [
       {
@@ -14,7 +16,9 @@
   },
   "addons": [
     {
-      "name": "Minecraft Forge",
+      "name": "forge-47.4.0",
+      "displayName": "Forge 47.4.0 for 1.20.1",
+      "filename": "forge-47.4.0.jar",
       "version": "47.4.0",
       "modLoaders": [
         {
@@ -32,12 +36,35 @@
     {
       "name": "forge",
       "version": "47.4.0"
+    },
+    {
+      "name": "java",
+      "version": "17"
     }
   ],
   "javaArguments": {
-    "version": "17"
+    "version": 17
   },
-  "installedMods": [],
+  "installedMods": [
+    {
+      "name": "Ergenverse",
+      "version": "0.1.0-alpha",
+      "fileName": "ergenverse-0.1.0-alpha.jar",
+      "filePath": "minecraft/mods/ergenverse-0.1.0-alpha.jar",
+      "downloadUrl": "",
+      "projectID": -1,
+      "fileID": -1,
+      "type": 1,
+      "moduleType": 0,
+      "category": 0,
+      "webSite": "",
+      "slug": "ergenverse",
+      "authorID": -1,
+      "author": "stohco",
+      "thumbURL": "",
+      "isBrowserDownload": false
+    }
+  ],
   "isVanilla": false,
   "profileImageInfo": {
     "url": "",
@@ -46,7 +73,7 @@
   "gameVersion": "1.20.1",
   "latestVersion": "0.1.0-alpha",
   "lastLaunched": "",
-  "lastUpdated": "",
+  "lastUpdated": "2026-07-20T14:10:00Z",
   "totalPlayTime": 0,
   "installPath": "Ergenverse",
   "modpackSource": {
@@ -54,5 +81,19 @@
     "projectID": -1,
     "fileID": -1,
     "type": "local"
-  }
+  },
+  "maxRecentJavas": 1,
+  "recentJavas": [
+    {
+      "version": "17",
+      "path": ""
+    }
+  ],
+  "isOriginsEnabled": false,
+  "isHidden": false,
+  "isBrowserDownloadEnabled": true,
+  "skipUpdate": false,
+  "overrideOptionalMods": false,
+  "isModpack": false,
+  "isThirdPartyModpack": false
 }

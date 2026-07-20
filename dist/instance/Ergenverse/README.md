@@ -1,89 +1,66 @@
-# Ergenverse — CurseForge Instance Folder
+# Ergenverse — Installation Guide
 
-This is a **ready-to-place CurseForge instance folder** for the Ergenverse mod (Renegade Immortal / 仙逆), Minecraft 1.20.1 + Forge 47.4.0.
+Minecraft 1.20.1 + Forge 47.4.0 + Java 17
 
-## What's inside
+## RECOMMENDED: Use the Modpack ZIP (Option B)
 
-```
-Ergenverse/
-├── profile.json                 ← CurseForge profile metadata (MC 1.20.1, Forge 47.4.0, Java 17)
-├── minecraftinstance.json       ← CurseForge instance metadata (forge addon, targets)
-└── minecraft/
-    ├── mods/
-    │   └── ergenverse-0.1.0-alpha.jar   ← THE MOD (13 MB, 814 compiled classes)
-    └── config/
-        └── (empty — mod generates configs on first run)
-```
+The **Modpack ZIP** is the most reliable install method. CurseForge reads the manifest, downloads Forge 47.4.0 automatically, and sets everything up.
 
-## How to use it — two options
+1. Download `ergenverse-modpack-0.1.0-alpha.zip`
+2. Open CurseForge → click **+ Create Custom Profile** → **Import**
+3. Select `ergenverse-modpack-0.1.0-alpha.zip`
+4. CurseForge creates a profile named **Ergenverse**, installs Forge 47.4.0, drops the mod in `mods/`
+5. Click **Play**
 
-### Option A: Drop into your existing CurseForge Instances folder (fastest)
+## ALTERNATIVE: Instance ZIP (Option A)
 
-1. Close the CurseForge app.
-2. Find your CurseForge instances folder:
+If the Modpack ZIP doesn't work, use the Instance ZIP:
+
+1. Download `ergenverse-instance-0.1.0-alpha.zip`
+2. Extract it — you get an `Ergenverse/` folder
+3. Find your CurseForge instances folder:
    - **Windows:** `C:\Users\<you>\curseforge\minecraft\Instances\`
    - **macOS:** `~/Library/Application Support/curseforge/minecraft/Instances/`
-   - **Linux:** `~/.curseforge/minecraft/Instances/` (or wherever CurseForge is installed)
-3. Copy this entire `Ergenverse/` folder into that `Instances/` directory.
-4. Reopen CurseForge. The **Ergenverse** profile should appear in your profile list.
-5. CurseForge will detect Forge 47.4.0 is required and install it on first launch if missing.
-6. Click **Play**.
-
-### Option B: Import as a modpack ZIP (cleaner, recommended)
-
-Use `ergenverse-modpack-0.1.0-alpha.zip` (the companion file in the GitHub release) instead:
-
-1. Open CurseForge → **+ Create Custom Profile** → **Import**.
-2. Select `ergenverse-modpack-0.1.0-alpha.zip`.
-3. CurseForge creates a fresh profile named **Ergenverse**, installs Forge 47.4.0, and drops the mod in `mods/`.
-4. Click **Play**.
+4. Copy the `Ergenverse/` folder into that `Instances/` directory
+5. Restart CurseForge — the Ergenverse profile should appear
+6. **Important:** In CurseForge settings, make sure Java 17 is selected (not Java 21)
+7. Click **Play**
 
 ## Requirements
 
 - **Minecraft 1.20.1** (CurseForge downloads automatically)
 - **Forge 47.4.0** (CurseForge installs automatically)
-- **Java 17** (Forge 1.20.1 requirement — CurseForge bundles its own, but having a system Java 17 helps)
+- **Java 17** — Forge 1.20.1 REQUIRES Java 17. If you only have Java 21, Forge will crash.
+  - Download Java 17 from Adoptium (Eclipse Temurin 17) if needed
+  - In CurseForge: Settings → Minecraft → set Java version to 17
 
-## What happens on first launch
+## If it still fails
 
-When you create a new world and join for the first time:
+If you get "FAILED TO LAUNCH MODPACK, UNEXPECTED ERROR OCCURRED":
 
-1. **Wang Family Village** is built around you at spawn — a 23×23 settlement made entirely of custom blocks:
-   - Central **spirit stone plaza** with a **Spirit Vein Stone** centerpiece and 4 **Formation Core Stones** forming a small array
-   - 4 corner houses (spirit wood planks + log pillars + leaves roofs):
-     - **NW — Alchemy Pavilion** (contains an Alchemy Furnace)
-     - **NE — Formation Hall** (contains a Formation Flag Base)
-     - **SW — Storage** (chest with starter gear: 8 spirit stones, jade slip, 4 qi gathering pills, meditation mat, 6 herb seeds, 2 formation flag blanks, 4 talisman papers)
-     - **SE — Your Dwelling** (empty, for you)
-   - **Herb garden** south of the plaza (8 custom herb species)
-   - 4 decorative **spirit wood trees** at the corners
-   - Torches lighting the plaza
-2. You receive a **Beginner's Guide** written book (6 pages: welcome, keybinds, first steps, village guide, danger, path forward)
-3. You're teleported to the plaza, facing the spirit vein
+1. Open the instance folder: `CurseForge/Minecraft/Instances/Ergenverse/minecraft/logs/`
+2. Find `latest.log` (or the most recent file in `crash-reports/`)
+3. Copy the last 50 lines (or anything saying "Exception", "Error", "Caused by")
+4. Send it to me — I'll fix the root cause immediately
 
-### Keybinds
-- **B** — Breakthrough attempt (when Qi is full)
-- **V** — Divine Sense pulse (scan nearby entities/concealed objects)
+## What's inside
 
-## What the mod contains
-
-817 compiled Java classes covering:
-- **Cultivation** — Qi Condensation → Foundation → Core Formation → Nascent Soul → Soul Formation → Void Tribulation → Ascendant
-- **Body Refining** — physical cultivation track
-- **Alchemy** — pill recipes and refinement
-- **Beasts & Flora** — ecological simulation
-- **Formations & Talismans** — placement, activation, hitboxes
-- **Canon & Divine Sense** — 175-check canon validator (passes)
-- **NPC AI** — IntentEngine, DecisionEngine, WorldEventBus, KnowledgeEngine, PerceptionEngine, BeliefRegistry, WorldHistory
-
-Plus, bundled inside the JAR as resources: 49 Living Chapter 1 JSON files (Wang Family Village) — 9 NPC motivation states, 31 relationship graph seeds, 9 favor/debt ledgers, universal interaction catalog (37 verbs), conversation system, NPC initiation consent pipeline, 10 social engines, Wang Lin bidirectional protocol.
-
-## Status
-
-This is an **alpha**. The mod compiles and loads. The data layer (NPC desires, relationships, favors, conversations) is schema-complete inside the JAR. Java runtime wiring of those schemas into the NPC AI engines is the next phase. The world compiles — next it must *desire*.
+```
+Ergenverse/
+├── minecraftinstance.json       ← CurseForge instance metadata
+├── profile.json                 ← Profile metadata
+└── minecraft/
+    ├── mods/
+    │   └── ergenverse-0.1.0-alpha.jar   ← THE MOD (13 MB, 800+ classes)
+    ├── config/                   ← Mod configs (generated on first run)
+    ├── versions/                 ← Forge/MC versions (created by CurseForge)
+    ├── logs/                     ← Game logs (created on first launch)
+    └── saves/                    ← World saves (created on first launch)
+```
 
 ## Links
 
 - **Release:** https://github.com/stohco/projectevergreen/releases/tag/v0.1.0-alpha
-- **Repo:** https://github.com/stohco/projectevergreen
-- **Mod JAR (direct):** https://github.com/stohco/projectevergreen/releases/download/v0.1.0-alpha/ergenverse-0.1.0-alpha.jar
+- **Modpack ZIP:** https://github.com/stohco/projectevergreen/releases/download/v0.1.0-alpha/ergenverse-modpack-0.1.0-alpha.zip
+- **Instance ZIP:** https://github.com/stohco/projectevergreen/releases/download/v0.1.0-alpha/ergenverse-instance-0.1.0-alpha.zip
+- **Mod JAR only:** https://github.com/stohco/projectevergreen/releases/download/v0.1.0-alpha/ergenverse-0.1.0-alpha.jar
