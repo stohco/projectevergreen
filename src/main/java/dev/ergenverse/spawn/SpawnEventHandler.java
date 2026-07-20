@@ -84,15 +84,20 @@ public final class SpawnEventHandler {
                 Ergenverse.LOGGER.info("[Ergenverse] Teleported {} to village plaza at ({}, {}, {}).",
                         sp.getName().getString(), landing.getX(), center.getY() + 1, landing.getZ());
 
-                // 3. Give the tutorial book.
+                // 3. Give the tutorial book + starter gear (no vanilla chest).
                 ItemStack book = TutorialBookFactory.create();
                 if (!sp.getInventory().add(book)) {
-                    // inventory full — drop at feet
                     sp.drop(book, false);
-                    Ergenverse.LOGGER.info("[Ergenverse] Inventory full — dropped tutorial book at feet.");
-                } else {
-                    Ergenverse.LOGGER.info("[Ergenverse] Tutorial book added to inventory.");
                 }
+                // Starter gear (formerly in the SW storage chest):
+                giveItem(sp, dev.ergenverse.item.ErgenverseItems.SPIRIT_STONE.get(), 8);
+                giveItem(sp, dev.ergenverse.item.ErgenverseItems.JADE_SLIP.get(), 1);
+                giveItem(sp, dev.ergenverse.item.ErgenverseItems.QI_GATHERING_PILL.get(), 4);
+                giveItem(sp, dev.ergenverse.item.ErgenverseItems.MEDITATION_MAT.get(), 1);
+                giveItem(sp, dev.ergenverse.item.ErgenverseItems.SPIRIT_HERB_SEED.get(), 6);
+                giveItem(sp, dev.ergenverse.item.ErgenverseItems.FORMATION_FLAG_BLANK.get(), 2);
+                giveItem(sp, dev.ergenverse.item.ErgenverseItems.TALISMAN_PAPER_BLANK.get(), 4);
+                Ergenverse.LOGGER.info("[Ergenverse] Tutorial book + starter gear given to {}.", sp.getName().getString());
 
                 // 4. Welcome messages.
                 sp.sendSystemMessage(Component.literal("")
@@ -120,5 +125,13 @@ public final class SpawnEventHandler {
                         sp.getName().getString(), e.getMessage(), e);
             }
         }));
+    }
+
+    /** Give an item stack to the player, dropping at feet if inventory is full. */
+    private static void giveItem(ServerPlayer sp, net.minecraft.world.item.Item item, int count) {
+        ItemStack stack = new ItemStack(item, count);
+        if (!sp.getInventory().add(stack)) {
+            sp.drop(stack, false);
+        }
     }
 }

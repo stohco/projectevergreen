@@ -52,10 +52,12 @@ public final class ErgenverseCommand {
                 .executes(ctx -> buildVillage(ctx.getSource())))
             .then(Commands.literal("book")
                 .executes(ctx -> giveBook(ctx.getSource())))
+            .then(Commands.literal("gear")
+                .executes(ctx -> giveGear(ctx.getSource())))
             .then(Commands.literal("reset")
                 .executes(ctx -> resetFlag(ctx.getSource())))
         );
-        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|reset).");
+        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset).");
     }
 
     /** /ergenverse status — print mod load + village + tutorial flag state. */
@@ -120,6 +122,32 @@ public final class ErgenverseCommand {
         src.sendSuccess(() -> Component.literal("Tutorial book given.")
                 .withStyle(ChatFormatting.GREEN), false);
         return 1;
+    }
+
+    /** /ergenverse gear — give starter gear to the player. */
+    private static int giveGear(CommandSourceStack src) {
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            src.sendFailure(Component.literal("Run this command as a player."));
+            return 0;
+        }
+        giveItem(player, dev.ergenverse.item.ErgenverseItems.SPIRIT_STONE.get(), 8);
+        giveItem(player, dev.ergenverse.item.ErgenverseItems.JADE_SLIP.get(), 1);
+        giveItem(player, dev.ergenverse.item.ErgenverseItems.QI_GATHERING_PILL.get(), 4);
+        giveItem(player, dev.ergenverse.item.ErgenverseItems.MEDITATION_MAT.get(), 1);
+        giveItem(player, dev.ergenverse.item.ErgenverseItems.SPIRIT_HERB_SEED.get(), 6);
+        giveItem(player, dev.ergenverse.item.ErgenverseItems.FORMATION_FLAG_BLANK.get(), 2);
+        giveItem(player, dev.ergenverse.item.ErgenverseItems.TALISMAN_PAPER_BLANK.get(), 4);
+        src.sendSuccess(() -> Component.literal("Starter gear given.")
+                .withStyle(ChatFormatting.GREEN), false);
+        return 1;
+    }
+
+    private static void giveItem(ServerPlayer player, net.minecraft.world.item.Item item, int count) {
+        net.minecraft.world.item.ItemStack stack = new net.minecraft.world.item.ItemStack(item, count);
+        if (!player.getInventory().add(stack)) {
+            player.drop(stack, false);
+        }
     }
 
     /** /ergenverse reset — clear the tutorial-given flag. */

@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -136,13 +135,14 @@ public final class WangFamilyVillageBuilder {
         buildTree(level, cx - VILLAGE_RADIUS + 1, cy + 1, cz + VILLAGE_RADIUS - 1);
         buildTree(level, cx + VILLAGE_RADIUS - 1, cy + 1, cz + VILLAGE_RADIUS - 1);
 
-        // ── 6. Torches around the plaza ────────────────────────────────
+        // ── 6. Spirit Vein Stones around the plaza (custom light markers) ──
+        //     (Replaces vanilla torches — 0 vanilla blocks in the village.)
         for (int angle = 0; angle < 360; angle += 45) {
             double rad = Math.toRadians(angle);
             int tx = cx + (int) Math.round(Math.cos(rad) * 5);
             int tz = cz + (int) Math.round(Math.sin(rad) * 5);
             level.setBlock(new BlockPos(tx, cy + 1, tz),
-                    Blocks.TORCH.defaultBlockState(), 3);
+                    ErgenverseBlocks.SPIRIT_VEIN_STONE.get().defaultBlockState(), 3);
         }
 
         Ergenverse.LOGGER.info("[Ergenverse] Wang Family Village construction complete.");
@@ -201,17 +201,11 @@ public final class WangFamilyVillageBuilder {
             case "formation" -> level.setBlock(interior,
                     ErgenverseBlocks.FORMATION_FLAG_BASE.get().defaultBlockState(), 3);
             case "storage" -> {
-                level.setBlock(interior, Blocks.CHEST.defaultBlockState(), 3);
-                if (level.getBlockEntity(interior) instanceof ChestBlockEntity chest) {
-                    chest.setItem(0, new ItemStack(ErgenverseItems.SPIRIT_STONE.get(), 8));
-                    chest.setItem(1, new ItemStack(ErgenverseItems.JADE_SLIP.get(), 1));
-                    chest.setItem(2, new ItemStack(ErgenverseItems.QI_GATHERING_PILL.get(), 4));
-                    chest.setItem(3, new ItemStack(ErgenverseItems.MEDITATION_MAT.get(), 1));
-                    chest.setItem(4, new ItemStack(ErgenverseItems.SPIRIT_HERB_SEED.get(), 6));
-                    chest.setItem(5, new ItemStack(ErgenverseItems.FORMATION_FLAG_BLANK.get(), 2));
-                    chest.setItem(6, new ItemStack(ErgenverseItems.TALISMAN_PAPER_BLANK.get(), 4));
-                    chest.setChanged();
-                }
+                // No vanilla chest — place a Formation Flag Base as a marker.
+                // Starter gear is given directly to the player on first spawn
+                // (see SpawnEventHandler).
+                level.setBlock(interior,
+                        ErgenverseBlocks.FORMATION_FLAG_BASE.get().defaultBlockState(), 3);
             }
             case "dwelling" -> {
                 // empty dwelling for the player — leave air so they can
