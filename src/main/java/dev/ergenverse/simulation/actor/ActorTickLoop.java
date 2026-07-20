@@ -1,6 +1,8 @@
 package dev.ergenverse.simulation.actor;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.npc.memory.NpcCognitiveMemory;
+import dev.ergenverse.npc.memory.NpcMemoryTickHandler;
 import dev.ergenverse.simulation.cognition.ActivityProcess;
 import dev.ergenverse.simulation.cognition.CognitionGoal;
 import dev.ergenverse.simulation.cognition.DecisionEngine;
@@ -257,6 +259,10 @@ public final class ActorTickLoop {
                 ap.progress = Math.min(1.0f, ap.progress + 0.0005f);
                 if (ap.progress >= 1.0f) {
                     ap.complete();
+                    // Art XXXI.5: NPCs remember what they did.
+                    // Activity completion creates a memory so the world
+                    // can reference past actions.
+                    recordActivityMemory(a, ap, tick);
                     Ergenverse.LOGGER.debug("[Ergenverse] Activity complete: {} for {}",
                             ap.activityType, a.id);
                 }
@@ -294,6 +300,42 @@ public final class ActorTickLoop {
                 // NOT_STARTED, STARTING — no action needed. The entity AI handles start.
                 break;
         }
+    }
+
+    // ── Memory recording (Art XXXI.5) ──
+
+    /**
+     * Record a memory when an NPC completes an activity.
+     * Social activities → SOCIAL memory. Meditation → EMOTIONAL.
+     * Other activities → OBSERVATION. Tier: medium-term (weeks).
+     *
+     * <p>This is the other half of the Memory Metric bridge:
+     * MemoryEventSubscriber handles world events → memories.
+     * This handles NPC actions → memories. Together, the world
+     * remembers both what happened TO it and what its inhabitants DID.
+     */
+    private static void recordActivityMemory(Actor a, ActivityProcess ap, long tick) {
+        if (ap.activityType == null) return;
+
+        NpcCognitiveMemory.MemoryCategory category;
+        String desc;
+
+        String act = ap.activityType.toLowerCase();
+        if (act.contains("social") || act.contains("trade") || act.contains("gift")) {
+            category = NpcCognitiveMemory.MemoryCategory.SOCIAL;
+            desc = "Completed: " + ap.activityType;
+        } else if (act.contains("meditat") || act.contains("cultivat") || act.contains("breath")) {
+            category = NpcCognitiveMemory.MemoryCategory.EMOTIONAL;
+            desc = "Finished meditating — mind is calm";
+        } else if (act.contains("combat") || act.contains("fight") || act.contains("hunt")) {
+            category = NpcCognitiveMemory.MemoryCategory.COMBAT;
+            desc = "Finished: " + ap.activityType;
+        } else {
+            category = NpcCognitiveMemory.MemoryCategory.OBSERVATION;
+            desc = "Completed: " + ap.activityType;
+        }
+
+        NpcMemoryTickHandler.recordMediumTerm(a.id, category, desc, "self", tick);
     }
 
     /** Mark an actor dirty for event-driven re-tick this pass. */

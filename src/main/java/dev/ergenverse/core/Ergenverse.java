@@ -312,7 +312,9 @@ public final class Ergenverse {
                     new dev.ergenverse.simulation.event.BirdFlightSubscriber());
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.simulation.event.ActivityInterruptionSubscriber());
-            LOGGER.info("[Ergenverse] Registered QiDisturbanceSubscriber + BirdFlightSubscriber + ActivityInterruptionSubscriber on WorldEventBus.");
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.npc.memory.MemoryEventSubscriber());
+            LOGGER.info("[Ergenverse] Registered QiDisturbanceSubscriber + BirdFlightSubscriber + ActivityInterruptionSubscriber + MemoryEventSubscriber on WorldEventBus.");
             // Initialize the NPC spawn registry — maps locations to canon NPCs.
             // Without this, only wang_tiangui would ever spawn.
             dev.ergenverse.simulation.NpcSpawnRegistry.initialize();
