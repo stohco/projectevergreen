@@ -1,0 +1,473 @@
+    30→    30→   430→   430→Every location must eventually satisfy this template.
+    31→    31→   431→   431→Wang Family Village is the first to do so, and becomes the
+    32→    32→   432→   432→canonical reference implementation for every future village,
+    33→    33→   433→   433→sect, city, cave, and continent.
+    34→    34→   434→   434→
+    35→    35→   435→   435→  1.  Ecology     — food chain, seasons, spirit veins, resources
+    36→    36→   436→   436→  2.  Society     — NPC relationships, routines, disputes, celebrations
+    37→    37→   437→   437→  3.  Economy     — production, trade, shortages, prices
+    38→    38→   438→   438→  4.  History     — persistent consequences and remembered events
+    39→    39→   439→   439→  5.  Opportunities — dynamic events that emerge naturally
+    40→    40→   440→   440→  6.  Affordances — unique interactions with every important NPC and object
+    41→    41→   441→   441→  7.  Mentorship  — NPCs can teach, challenge, recruit, request, reward
+    42→    42→   442→   442→  8.  Conflict    — factions, rivalries, ambitions, hidden agendas
+    43→    43→   443→   443→  9.  Exploration — secrets discoverable through observation, not markers
+    44→    44→   444→   444→  10. Evolution   — the location changes over time whether or not
+    45→    45→   445→   445→                    the player is present
+    46→    46→   446→   446→
+    47→    47→   447→   447→A location missing any of these ten dimensions is not complete.
+    48→    48→   448→   448→Wang Family Village must pass all ten before Chapter 2 begins.
+    49→    49→   449→   449→
+    50→    50→   450→   450→§ XXXI.5 — The Memory Metric (Addendum to Living Chapters)
+    51→    51→   451→   451→A Living Chapter is complete not only when the player can live
+    52→    52→   452→   452→through it without a quest log, but also when:
+    53→    53→   453→   453→
+    54→    54→   454→   454→  THE WORLD REMEMBERS.
+    55→    55→   455→   455→
+    56→    56→   456→   456→A village that resets when the player leaves is a diorama.
+    57→    57→   457→   457→A village that carries forward what happened — the dog that
+    58→    58→   458→   458→died in the wolf attack, the elder who no longer mentions it
+    59→    59→   459→   459→but whose routines shifted, the child who retells the story
+    60→    60→   460→   460→months later — is a place that has history.
+    61→    61→   461→   461→
+    62→    62→   462→   462→Memory is persistence with weight. Every significant event in
+    63→    63→   463→   463→a Living Chapter must be capable of being remembered,
+    64→    64→   464→   464→forgotten, misremembered, or retold by the NPCs who witnessed
+    65→    65→   465→   465→it. The canonical test:
+    66→    66→   466→   466→
+    67→    67→   467→   467→  Week one — Old Chen owns a dog.
+    68→    68→   468→   468→  Week three — wolf attack — the dog dies.
+    69→    69→   469→   469→  Week five — Old Chen no longer mentions the dog.
+    70→    70→   470→   470→              Instead he says, "Used to have one."
+    71→    71→   471→   471→  Months later — a child tells the story.
+    72→    72→   472→   472→
+    73→    73→   473→   473→When that sequence can occur without any developer scripting
+    74→    74→   474→   474→the specific beat, the world has memory. Until then, it does not.
+    75→    75→   475→   475→
+    76→    76→   476→   476→═══════════════════════════════════════════════════════════════
+    77→    77→   477→   477→THE CONVERSATION & MOTIVATION AMENDMENTS (Articles XXXII–XXXIV)
+    78→    78→   478→   478→Added when the project recognized that conversation is not a
+    79→    79→   479→   479→menu system layered over the world — it IS the world. And that
+    80→    80→   480→   480→"desire" was too narrow a word for what actually drives an
+    81→    81→   481→   481→Er Gen character. Wang Lin does not chase desires. He responds
+    82→    82→   482→   482→to necessity, protects what matters, honors debts, pursues
+    83→    83→   483→   483→long-term goals, and occasionally acts out of compassion or
+    84→    84→   484→   484→vengeance. The simulation must reflect that richness.
+    85→    85→   485→   485→═══════════════════════════════════════════════════════════════
+    86→    86→   486→   486→
+    87→    87→   487→   487→Article XXXII — Conversation Is The World
+    88→    88→   488→   488→Dialogue is not a separate menu system. Dialogue is a simulation
+    89→    89→   489→   489→system, governed by the same reasoning engine as cultivation,
+    90→    90→   490→   490→combat, and exploration. The Skyrim problem — "Hello. Tell me
+    91→    91→   491→   491→about... Goodbye." over and over — is forbidden.
+    92→    92→   492→   492→
+    93→    93→   493→   493→§ XXXII.1 — Three Conversation Modes
+    94→    94→   494→   494→There are exactly three conversation modes. The system selects
+    95→    95→   495→   495→the mode based on context, never on a toggle.
+    96→    96→   496→   496→
+    97→    97→   497→   497→  1. AMBIENT (≈90% of interactions) — No pause. No UI takeover.
+    98→    98→   498→   498→     The player right-clicks an NPC. The NPC glances over and
+    99→    99→   499→   499→     HOLDS STILL — pausing their pathing/schedule as a courtesy
+   100→   100→   500→   500→     so the player can explore the radial verb-prompts at their
+   101→   101→   501→   501→     own pace and talk as much as they want without the NPC
+   102→   102→   502→   502→     wandering off. "...Yes?" Radial verb-prompts appear. BUT
+   103→   103→   503→   503→     THE WORLD KEEPS RUNNING. Birds fly. OTHER NPCs walk.
+   104→   104→   504→   504→     Children run by. Li Muwan walks past carrying herbs. The
+   105→   105→   505→   505→     sun moves. Rain falls. Only the NPC you are talking to
+   106→   106→   506→   506→     holds still for you; everything else is alive. The player
+   107→   107→   507→   507→     remains mobile (may walk-and-talk, see § XXXII.6). When the
+   108→   108→   508→   508→     player selects "Nevermind" / dismisses the conversation,
+   109→   109→   509→   509→     the NPC resumes their schedule and pathing from where they
+   110→   110→   510→   510→     paused. This is the default.
+   111→   111→   511→   511→
+   112→   112→   512→   512→  2. FOCUS — When the conversation actually matters (discussing
+   113→   113→   513→   513→     Dao, requesting a Heaven Defying Bead copy, entering a sect,
+   114→   114→   514→   514→     negotiating). The camera subtly zooms. Player movement
+   115→   115→   515→   515→     disables. The NPC holds still (as in Ambient). BUT THE
+   116→   116→   516→   516→     WORLD KEEPS RUNNING. Other NPCs still move. The sun still
+   117→   117→   517→   517→     sets. Rain still falls. Rumors continue spreading. Only
+   118→   118→   518→   518→     the player stops moving because the player is busy talking.
+   119→   119→   519→   519→     Exactly like real life.
+   120→   120→   520→   520→
+   121→   121→   521→   521→  3. MAJOR CANON MOMENTS — Very rare. Inheritance, tribulation,
+   122→   122→   522→   522→     True Body meeting, major revelations. Cinematic framing —
+   123→   123→   523→   523→     camera, music, animations, special dialogue. These must be
+   124→   124→   524→   524→     incredibly uncommon. Otherwise they lose impact.
+   125→   125→   525→   525→
+   126→   126→   526→   526→§ XXXII.1a — "Holds Still" Is A Courtesy, Not A Freeze
+   127→   127→   527→   527→When an NPC holds still for the player, it is a behavioral
+   128→   128→   528→   528→courtesy, not a simulation freeze. The NPC is still perceiving
+   129→   129→   529→   529→the world: if a threat appears, they react (§ XXXII.5). If
+   130→   130→   530→   530→their schedule has a hard time-bound event (a sect lecture
+   131→   131→   531→   531→they must attend, a tribulation window), they may break the
+   132→   132→   532→   532→courtesy: "I have to go." and resume pathing. The courtesy
+   133→   133→   533→   533→expires on (a) player dismiss ("Nevermind"), (b) NPC
+   134→   134→   534→   534→hard-deadline, or (c) world interruption (combat, disaster).
+   135→   135→   535→   535→It does NOT expire on idle — the NPC will wait patiently
+   136→   136→   536→   536→because that is what a person does when someone is talking
+   137→   137→   537→   537→to them.
+   138→   138→   538→   538→
+   139→   139→   539→   539→§ XXXII.2 — Conversation Affordances, Not Dialogue Trees
+   140→   140→   540→   540→The interface shows VERBS, not dialogue options. Not "Tell me
+   141→   141→   541→   541→about yourself. Where are you from? Goodbye." Instead:
+   142→   142→   542→   542→Discuss, Request, Teach Me, Offer, Trade, Travel Together,
+   143→   143→   543→   543→Observe Technique, Challenge, Give Gift, Ask Opinion, Ask About...
+   144→   144→   544→   544→
+   145→   145→   545→   545→Each verb expands per-NPC. The same verb produces entirely
+   146→   146→   546→   546→different sub-menus for different NPCs:
+   147→   147→   547→   547→  Wang Lin → Request → {Technique, Artifact Copy, Advice,
+   148→   148→   548→   548→                         Restriction, Memory, Training}
+   149→   149→   549→   549→  Li Muwan → Request → {Pill, Herb Identification, Medical
+   150→   150→   550→   550→                         Advice, Alchemy Lesson}
+   151→   151→   551→   551→  Xu Liguo → Request → {Scout, Possess, Steal, Distract,
+   152→   152→   552→   552→                         Cause Trouble}
+   153→   153→   553→   553→Same system. Entirely different UI. No special-casing — the
+   154→   154→   554→   554→affordances are data the UI discovers (Article XXVIII).
+   155→   155→   555→   555→
+   156→   156→   556→   556→§ XXXII.3 — Requests Are Simulations, Not Transactions
+   157→   157→   557→   557→Asking Wang Lin for the God Slaying Sword does not instantly
+   158→   158→   558→   558→receive it. Wang Lin THINKS. He evaluates relationship, current
+   159→   159→   559→   559→cultivation, knowledge, judgment, intent, history. Then:
+   160→   160→   560→   560→  "..." / "No." / "You wouldn't survive using it."
+   161→   161→   561→   561→  OR "I can. But not yet. Learn this first." (hands something else)
+   162→   162→   562→   562→  OR "...Very well." (True Body manufactures a copy, clone
+   163→   163→   563→   563→      retrieves it, hands it over)
+   164→   164→   564→   564→  OR "If you still want it after Mosquito Valley..." (a challenge
+   165→   165→   565→   565→      begins naturally, no quest log)
+   166→   166→   566→   566→
+   167→   167→   567→   567→§ XXXII.4 — Fuzzy Asking
+   168→   168→   568→   568→The player does not select from item IDs. The player types or
+   169→   169→   569→   569→selects intent: "I want something that helps fight souls." The
+   170→   170→   570→   570→NPC REASONS about the intent — not a database search — and
+   171→   171→   571→   571→chooses: maybe a Soul Banner, maybe a Soul Restriction, maybe
+   172→   172→   572→   572→"Not yet." The NPC's response reflects their judgment of what
+   173→   173→   573→   573→the player needs, not what the player asked for verbatim.
+   174→   174→   574→   574→
+   175→   175→   575→   575→§ XXXII.5 — Conversations Are Interruptible
+   176→   176→   576→   576→If something happens — thunder, sect attack, spirit beast,
+   177→   177→   577→   577→tribulation, explosion, enemy arrives — NPCs react. Wang Lin
+   178→   178→   578→   578→stops talking mid-sentence. "Later." Draws his weapon. The
+   179→   179→   579→   579→conversation ends naturally because the world kept moving.
+   180→   180→   580→   580→The player never entered a frozen dialogue world.
+   181→   181→   581→   581→
+   182→   182→   582→   582→§ XXXII.6 — Walk And Talk
+   183→   183→   583→   583→NPCs do not stop to converse. Wang Lin says "Come." and walks
+   184→   184→   584→   584→toward a mountain. The player walks beside him. The conversation
+   185→   185→   585→   585→UI stays open in the corner. Both move through the world. He
+   186→   186→   586→   586→points out a restriction on a cliff. A spirit beast appears.
+   187→   187→   587→   587→The conversation naturally pauses while dealing with it. Then
+   188→   188→   588→   588→resumes. This is how conversations happen in Renegade Immortal
+   189→   189→   589→   589→— not standing face-to-face in a frozen box.
+   190→   190→   590→   590→
+   191→   191→   591→   591→§ XXXII.7 — Personality Changes The Interface
+   192→   192→   592→   592→The same conversation system renders differently per-NPC:
+   193→   193→   593→   593→  Wang Lin — very few words, lots of silence, observes you,
+   194→   194→   594→   594→              long pauses before responding.
+   195→   195→   595→   595→  Xu Liguo — interrupts constantly, makes jokes, changes
+   196→   196→   596→   596→              topics, lies.
+   197→   197→   597→   597→  Li Muwan — detailed, patient, explains thoroughly.
+   198→   198→   598→   598→  Situ Nan — laughs, mocks, walks away mid-conversation.
+   199→   199→   599→   599→  Qing Shui — may answer "...". For thirty seconds.
+   200→   200→   600→   600→This is personality through interaction, not just dialogue text.
+   201→   201→   601→   601→
+   202→   202→   602→   602→§ XXXII.8 — Conversations Are Stateful
+   203→   203→   603→   603→If the player asked Wang Lin about restrictions yesterday, he
+   204→   204→   604→   604→remembers. If he promised to teach after Foundation Establishment,
+   205→   205→   605→   605→that option is unavailable until then. If he refused the God
+   206→   206→   606→   606→Slaying Sword request because the player wasn't ready, he won't
+   207→   207→   607→   607→pretend it's the first time. Conversations evolve as relationship,
+   208→   208→   608→   608→reputation, knowledge, and cultivation change.
+   209→   209→   609→   609→
+   210→   210→   610→   610→§ XXXII.9 — Conversations Are World Events
+   211→   211→   611→   611→Dialogue is not outside the world. A conversation is an event
+   212→   212→   612→   612→with a location, volume, and witnesses. Nearby NPCs overhear.
+   213→   213→   613→   613→Beliefs update. Rumors may form. Relationships change. History
+   214→   214→   614→   614→records it. Loudly asking Wang Lin about the Heaven Defying Bead
+   215→   215→   615→   615→in the middle of Heng Yue Sect is potentially dangerous — someone
+   216→   216→   616→   616→may overhear fragments, grow suspicious, follow the player. A
+   217→   217→   617→   617→private discussion in a secluded cave has different consequences.
+   218→   218→   618→   618→The location of a conversation is a gameplay variable.
+   219→   219→   619→   619→
+   220→   220→   620→   620→Article XXXIII — Motivations, Not Desires
+   221→   221→   621→   621→Article XXXI.1 named the per-cycle NPC state "desire." That word
+   222→   222→   622→   622→is too narrow. Many interactions are motivated by things that are
+   223→   223→   623→   623→not desires at all: fears, duties, debts, grudges, survival.
+   224→   224→   624→   624→
+   225→   225→   625→   625→The per-cycle NPC state is hereby renamed MOTIVATION STATE.
+   226→   226→   626→   626→The ten social engines remain (Art XXXI.1) — they are the
+   227→   227→   627→   627→expression layer. What feeds them is the motivation state,
+   228→   228→   628→   628→which draws from a richer vocabulary of DRIVING FORCES:
+   229→   229→   629→   629→
+   230→   230→   630→   630→  ambitions, fears, duties, debts, promises, grudges,
+   231→   231→   631→   631→  curiosity, love, loyalty, survival, greed, vengeance,
+   232→   232→   632→   632→  sect orders, cultivation bottlenecks, opportunities.
+   233→   233→   633→   633→
+   234→   234→   634→   634→§ XXXIII.1 — Every Interaction Must Have A Reason
+   235→   235→   635→   635→Nobody wakes up wanting to talk to the player. Everyone wakes
+   236→   236→   636→   636→with problems, ambitions, fears, obligations, loyalties, and
+   237→   237→   637→   637→opportunities. Then they ask:
+   238→   238→   638→   638→  "Who, if anyone, can help me?"
+   239→   239→   639→   639→  "Who is standing in my way?"
+   240→   240→   640→   640→The player MIGHT be the answer. The player might not. The player
+   241→   241→   641→   641→is relevant only when circumstances make them relevant.
+   242→   242→   642→   642→
+   243→   243→   643→   643→§ XXXIII.2 — The Player Is Not Default Relevant
+   244→   244→   644→   644→Wang Lin's early priorities: protect family, become stronger,
+   245→   245→   645→   645→avoid attracting attention, acquire resources, study restrictions.
+   246→   246→   646→   646→Notice what is missing: the player. Until the player becomes
+   247→   247→   647→   647→relevant — by demonstrating a skill, owing a debt, holding a
+   248→   248→   648→   648→grudge, or standing in the way — Wang Lin has no motivation
+   249→   249→   649→   649→directed at the player. This is not coldness. This is how Er Gen
+   250→   250→   650→   650→characters actually behave. Relevance is earned, not assumed.
+   251→   251→   651→   651→
+   252→   252→   652→   652→§ XXXIII.3 — Relevance Is Earned Through Circumstance
+   253→   253→   653→   653→The player becomes relevant when an NPC's driving force intersects
+   254→   254→   654→   654→with the player's demonstrated behavior:
+   255→   255→   655→   655→  - Player excellent with restrictions + Wang Lin needs help
+   256→   256→   656→   656→    deciphering a restriction → player becomes relevant.
+   257→   257→   657→   657→  - Player knows herbs + Li Muwan needs Crimson Root → player
+   258→   258→   658→   658→    becomes relevant.
+   259→   259→   659→   659→  - Player helped Wang Lin + Wang Lin owes a favor → player
+   260→   260→   660→   660→    becomes relevant (Wang Lin may seek the player out).
+   261→   261→   661→   661→  - Player stole from merchant + merchant has a grievance →
+   262→   262→   662→   662→    player becomes relevant (merchant may warn others, refuse
+   263→   263→   663→   663→    trade, or set a trap).
+   264→   264→   664→   664→Relevance is never granted. It is earned or incurred.
+   265→   265→   665→   665→
+   266→   266→   666→   666→Article XXXIV — Relationships Are Graphs
+   267→   267→   667→   667→A relationship is not a number. A relationship is a graph of
+   268→   268→   668→   668→distinct, independently-variable dimensions. "Friendship > 50"
+   269→   269→   669→   669→is forbidden. NPCs maintain structured relationship state.
+   270→   270→   670→   670→
+   271→   271→   671→   671→§ XXXIV.1 — The Relationship Graph
+   272→   272→   672→   672→Every NPC maintains a per-target relationship graph with at
+   273→   273→   673→   673→minimum:
+   274→   274→   674→   674→  Trust (0-100)        — does the NPC believe the target's words
+   275→   275→   675→   675→  Respect (0-100)      — does the NPC esteem the target's capability
+   276→   276→   676→   676→  Fear (0-100)         — does the NPC fear the target
+   277→   277→   677→   677→  Debt (signed int)    — outstanding favors owed (+ = NPC owes
+   278→   278→   678→   678→                         target, - = target owes NPC)
+   279→   279→   679→   679→  Grievance (0-100)    — accumulated resentment from wrongs
+   280→   280→   680→   680→  Shared History (int) — count of significant shared events
+   281→   281→   681→   681→  Known Skills [list]  — skills the NPC has observed the target use
+   282→   282→   682→   682→  Known Personality [list] — traits the NPC has inferred
+   283→   283→   683→   683→                         (e.g. "keeps promises", "doesn't betray
+   284→   284→   684→   684→                         allies", "greedy", "merciful")
+   285→   285→   685→   685→
+   286→   286→   686→   686→Two NPCs can have completely different graphs for the same
+   287→   287→   687→   687→player. The village elder's graph (Trust 82, Respect 71, Fear
+   288→   288→   688→   688→10, Grievance 0) is a different relationship than Teng
+   289→   289→   689→   689→Huayuan's graph (Trust 5, Fear 88, Grievance 64, Respect 91).
+   290→   290→   690→   690→The simulation treats them as different relationships because
+   291→   291→   691→   691→they ARE different relationships.
+   292→   292→   692→   692→
+   293→   293→   693→   693→§ XXXIV.2 — Favors Are Callable Debts
+   294→   294→   694→   694→A favor is not "relationship += 20." A favor is a structured
+   295→   295→   695→   695→debt that persists and can be called in later:
+   296→   296→   696→   696→  Owner: who did the favor
+   297→   297→   697→   697→  Recipient: who received the benefit
+   298→   298→   698→   698→  Magnitude: Minor | Moderate | Major | Life-Saving
+   299→   299→   699→   699→  Reason: what happened
+   300→   300→   700→   700→  Expires: when (Never for Life-Saving)
+   301→   301→   701→   701→  Callable: can the owner demand repayment
+   302→   302→   702→   702→  Called: has it been called (and was it honored)
+   303→   303→   703→   703→
+   304→   304→   704→   704→Wang Lin once saved the player from a Core Formation cultivator.
+   305→   305→   705→   705→That is a Major favor, never expires. Years later, the player
+   306→   306→   706→   706→asks to study the Ji Realm. Wang Lin reasons:
+   307→   307→   707→   707→  "Player once risked his life for me. Player has shown
+   308→   308→   708→   708→   restraint. Player has sufficient cultivation. Teaching
+   309→   309→   709→   709→   benefits him. I owe him. Yes."
+   310→   310→   710→   710→The favor is called. The debt is honored. This feels earned
+   311→   311→   711→   711→because it IS earned — the simulation tracked the favor for
+   312→   312→   712→   712→years and surfaced it at the right moment.
+   313→   313→   713→   713→
+   314→   314→   714→   714→§ XXXIV.3 — Grievances Persist And Spread
+   315→   315→   715→   715→A grievance is not forgotten when the player leaves the area.
+   316→   316→   716→   716→If the player steals a spirit stone, the merchant remembers.
+   317→   317→   717→   717→The village remembers. A rumor spreads. People become cautious.
+   318→   318→   718→   718→Li Muwan may still trust the player (her graph is independent),
+   319→   319→   719→   719→but the merchant does not. Grievances feed the RumorEngine
+   320→   320→   720→   720→(Art XXXI.1) and shape future interactions. A grievance may
+   321→   321→   721→   721→decay if amends are made, but it never silently resets.
+   322→   322→   722→   722→
+   323→   323→   723→   723→§ XXXIV.4 — The Deconfliction Principle
+   324→   324→   724→   724→When multiple NPCs have motivations that could target the
+   325→   325→   725→   725→player simultaneously, they do NOT all approach. Each reasons
+   326→   326→   726→   726→independently:
+   327→   327→   727→   727→  NPC A: "Player is busy. Tomorrow."
+   328→   328→   728→   728→  NPC B: "The merchant can help instead. I'll ask him."
+   329→   329→   729→   729→  NPC C: "I'll gather the herbs myself."
+   330→   330→   730→   730→  NPC D: "I'll ask Wang Lin."
+   331→   331→   731→   731→  NPC E: "Not urgent."
+   332→   332→   732→   732→  NPC F: "Player owes me. I'll go now."
+   333→   333→   733→   733→Only NPC F actually approaches. The others resolved their
+   334→   334→   734→   734→motivation through alternative means. This is the "everyone
+   335→   335→   735→   735→lining up" problem, solved by the same reasoning engine that
+   336→   336→   736→   736→governs every other NPC decision. The player is never mobbed.
+   337→   337→   737→   737→
+   338→   338→   738→   738→═══════════════════════════════════════════════════════════════
+   339→   339→   739→   739→THE CHARACTER-FIRST & UNIVERSAL INTERACTION AMENDMENTS
+   340→   340→   740→   740→(Articles XXXV–XXXVIII)
+   341→   341→   741→   741→Added when the project recognized that even motivation-driven
+   342→   342→   742→   742→simulation is still simulation-first. The world should not run
+   343→   343→   743→   743→on motivations. It should run on people. Wang Lin should not
+   344→   344→   744→   744→wake up and ask "which motivation has the highest score?" He
+   345→   345→   745→   745→should ask "What do I believe is happening? What kind of person
+   346→   346→   746→   746→am I? What matters today? What options do I actually have?"
+   347→   347→   747→   747→And the common language through which every entity — player,
+   348→   348→   748→   748→NPC, beast, artifact, sect, location — engages the world is a
+   349→   349→   749→   749→single universal object: the Interaction.
+   350→   350→   750→   750→═══════════════════════════════════════════════════════════════
+   351→   351→   751→   751→
+   352→   352→   752→   752→Article XXXV — Character-First, Not Simulation-First
+   353→   353→   753→   753→The world does not run on motivations. The world runs on people.
+   354→   354→   754→   754→Motivation is one ingredient in a character's reasoning, not
+   355→   355→   755→   755→the driver of it. The old pipeline (Motivation → Interaction)
+   356→   356→   756→   756→is superseded.
+   357→   357→   757→   757→
+   358→   358→   758→   758→The character reasoning pipeline is:
+   359→   359→   759→   759→  Perception → Beliefs → Relationships → Identity →
+   360→   360→   760→   760→  Current Circumstances → Opportunities → Prediction →
+   361→   361→   761→   761→  Intent → Plan → Action
+   362→   362→   762→   762→
+   363→   363→   763→   763→§ XXXV.1 — What A Character Asks Each Cycle
+   364→   364→   764→   764→Every character, each reasoning cycle, asks:
+   365→   365→   765→   765→  - What do I believe is happening? (Perception → Beliefs)
+   366→   366→   766→   766→  - What kind of person am I? (Identity)
+   367→   367→   767→   767→  - What matters today? (Identity + Circumstances)
+   368→   368→   768→   768→  - What options do I actually have? (Opportunities)
+   369→   369→   769→   769→  - What do I predict will happen if I act? (Prediction)
+   370→   370→   770→   770→  - What will I attempt? (Intent → Plan → Action)
+   371→   371→   771→   771→
+   372→   372→   772→   772→Motivation is one input to Intent — alongside beliefs,
+   373→   373→   773→   773→relationships, identity, circumstances, and prediction.
+   374→   374→   774→   774→It does not disappear, but it is no longer the apex.
+   375→   375→   775→   775→
+   376→   376→   776→   776→§ XXXV.2 — Relevance Is Universal, Not Player-Special
+   377→   377→   777→   777→The old `player_relevance` field (Article XXXIII) special-cased
+   378→   378→   778→   778→the player. That is forbidden. Relevance is calculated for EVERY
+   379→   379→   779→   779→actor a character can perceive, using the same system:
+   380→   380→   780→   780→  relevance(target) = f(perceived_threat, perceived_opportunity,
+   381→   381→   781→   781→                       shared_history, current_goals_alignment,
+   382→   382→   782→   782→                       power_differential, recent_interactions)
+   383→   383→   783→   783→
+   384→   384→   784→   784→Wang Lin calculates relevance for Li Muwan, Situ Nan, Teng
+   385→   385→   785→   785→Huayuan, a random disciple, and the player using the same
+   386→   386→   786→   786→function. The player is a variable, not a special case. This
+   387→   387→   787→   787→makes the system extensible to the entire Er Gen multiverse
+   388→   388→   788→   788→without per-player code paths.
+   389→   389→   789→   789→
+   390→   390→   790→   790→§ XXXV.3 — Understanding Is A Relationship Dimension
+   391→   391→   791→   791→The relationship graph (Article XXXIV) is extended with a new
+   392→   392→   792→   792→dimension: Understanding (0-100). This is NOT Respect — you can
+   393→   393→   793→   793→respect someone you do not understand, and understand someone
+   394→   394→   794→   794→you do not respect.
+   395→   395→   795→   795→  - Wang Lin trusts Situ Nan but does not always understand him.
+   396→   396→   796→   796→  - Li Muwan understands Wang Lin extremely well.
+   397→   397→   797→   797→  - Xu Liguo misunderstands everyone constantly.
+   398→   398→   798→   798→Understanding shapes dialogue: low understanding means the NPC
+   399→   399→   799→   799→misinterprets the player's intent, responds to what they THOUGHT
+   400→   400→   800→   800→was said, and may agree to the wrong thing or refuse the right
+   401→   401→   801→   801→one. High understanding means the NPC reads subtext and responds
+   402→   402→   802→   802→to what the player meant, not just what they said.
+   403→   403→   803→   803→
+   404→   404→   804→   804→Article XXXVI — The Universal Interaction
+   405→   405→   805→   805→There is one universal object through which every entity in the
+   406→   406→   806→   806→game engages every other entity: the INTERACTION. Every NPC,
+   407→   407→   807→   807→item, beast, plant, technique, formation, location, artifact,
+   408→   408→   808→   808→and sect exposes a set of interactions. The player, NPCs, beasts,
+   409→   409→   809→   809→and even the world itself initiate interactions. The affordance
+   410→   410→   810→   810→system (Article XXVIII) and the social engines (Article XXXI.1)
+   411→   411→   811→   811→are now unified under this single object.
+   412→   412→   812→   812→
+   413→   413→   813→   813→§ XXXVI.1 — What Is An Interaction
+   414→   414→   814→   814→An interaction is a bidirectional engagement between two entities
+   415→   415→   815→   815→(initiator and target) with: a verb, an intent, a context, a
+   416→   416→   816→   816→negotiation, and an outcome. It is not a quest, not a dialogue
+   417→   417→   817→   817→option, not a transaction. It is the atomic unit of all
+   418→   418→   818→   818→engagement in the world.
+   419→   419→   819→   819→
+   420→   420→   820→   820→§ XXXVI.2 — The Interaction Catalog
+   421→   421→   821→   821→Every entity exposes interactions from a shared catalog. The
+   422→   422→   822→   822→catalog includes but is not limited to:
+   423→   423→   823→   823→  Ask, Teach, Trade, Threaten, Observe, Challenge, Gift, Borrow,
+   424→   424→   824→   824→  Copy, Cultivate Together, Explore Together, Travel Together,
+   425→   425→   825→   825→  Spar, Escort, Protect, Hire, Recruit, Investigate, Confess,
+   426→   426→   826→   826→  Lie, Deceive, Negotiate, Call Debt, Repay Debt, Warn, Reveal
+   427→   427→   827→   827→  Secret, Share Memory, Study Together, Meditate Together,
+   428→   428→   828→   828→  Request, Offer, Demonstrate, Follow, Block, Approach, Leave.
+   429→   429→   829→   829→
+   430→   430→   830→   830→Two entities are mechanically unique when they expose different
+   431→   431→   831→   831→interaction sets (Article XXVIII, extended). The UI discovers
+   432→   432→   832→   832→these. The AI uses these as its language for engaging the world.
+   433→   433→   833→   833→
+   434→   434→   834→   834→§ XXXVI.3 — Conversations Are Negotiations
+   435→   435→   835→   835→When the player initiates an interaction (e.g., "Teach me
+   436→   436→   836→   836→restrictions"), the NPC does not simply grant or refuse. The NPC
+   437→   437→   837→   837→reasons as a planner: pros, cons, alternatives, risk. Then the
+   438→   438→   838→   838→NPC responds as a negotiator:
+   439→   439→   839→   839→  - "Not yet. Learn formations first." (redirect, not refusal)
+   440→   440→   840→   840→  - "I can. But not until you reach Foundation Establishment." (conditional)
+   441→   441→   841→   841→  - "...Very well. But only the first layer." (partial grant)
+   442→   442→   842→   842→  - "No. You would die." (refusal with reason)
+   443→   443→   843→   843→  - "If you still want it after Mosquito Valley..." (defer + challenge)
+   444→   444→   844→   844→The NPC is trying to satisfy their own goals while engaging the
+   445→   445→   845→   845→player's request. This is how Wang Lin actually converses.
+   446→   446→   846→   846→
+   447→   447→   847→   847→§ XXXVI.4 — Interactions Are The AI's Language
+   448→   448→   848→   848→NPCs do not have a separate system for "what to do with the
+   449→   449→   849→   849→player." They use interactions to engage everything: Wang Lin
+   450→   450→   850→   850→asks Li Muwan for herbs (interaction: Request), a sect elder
+   451→   451→   851→   851→challenges a disciple (interaction: Challenge), a beast stalks
+   452→   452→   852→   852→a spirit rabbit (interaction: Hunt — a beast-specific interaction).
+   453→   453→   853→   853→The same object, the same reasoning, every direction. This is
+   454→   454→   854→   854→what makes the world feel inhabited rather than simulated.
+   455→   455→   855→   855→
+   456→   456→   856→   856→Article XXXVII — The Conversation UI (Three Layers + Learning)
+   457→   457→   857→   857→The conversation UI must solve the hardest design problem in the
+   458→   458→   858→   858→project: the player does not know what they don't know. Showing
+   459→   459→   859→   859→every possible interaction spoils discovery. Making everything
+   460→   460→   860→   860→free-form typing leaves 99% of players lost. The answer is
+   461→   461→   861→   861→neither — it is three layers, with a UI that learns.
+   462→   462→   862→   862→
+   463→   463→   863→   863→§ XXXVII.1 — Layer 1: Obvious Actions
+   464→   464→   864→   864→When the player right-clicks an NPC, a small clean verb wheel
+   465→   465→   865→   865→appears: Observe, Talk, Ask, Offer, Request, Train, Travel,
+   466→   466→   866→   866→Leave. That is all. No spoilers. "Teach me Ji Realm" and "Copy
+   467→   467→   867→   867→God Slaying Sword" do NOT appear, because the character does not
+   468→   468→   868→   868→yet know those are possibilities. The wheel is small enough to
+   469→   469→   869→   869→read in a glance and clean enough to feel like talking to a
+   470→   470→   870→   870→person, not browsing a database.
+   471→   471→   871→   871→
+   472→   472→   872→   872→§ XXXVII.2 — Layer 2: Context Expansion
+   473→   473→   873→   873→Clicking a Layer 1 verb drills down. "Ask" expands to: About
+   474→   474→   874→   874→this place / About cultivation / About recent events / About
+   475→   475→   875→   875→himself / Something else... The submenu is PER-NPC — asking
+   476→   476→   876→   876→Wang Lin about cultivation yields (Beginner advice / Current
+   477→   477→   877→   877→bottleneck / Recommended techniques / Breakthroughs) while
+   478→   478→   878→   878→asking Li Muwan yields (Herbs / Pills / Poison / Healing).
+   479→   479→   879→   879→Same UI, different affordances, discovered from data.
+   480→   480→   880→   880→
+   481→   481→   881→   881→§ XXXVII.3 — Layer 3: Natural Language
+   482→   482→   882→   882→Every submenu ends with "Something else..." which opens a free
+   483→   483→   883→   883→text input: "What do you want to ask?" The player may type
+   484→   484→   884→   884→"Can you teach me restrictions?" or "Can I borrow your mosquito
+   485→   485→   885→   885→swarm?" or "Would you come with me?" The NPC's reasoning
+   486→   486→   886→   886→interprets the intent. If the NPC cannot understand, they say
+   487→   487→   887→   887→"I don't understand." — exactly like talking to a real person.
+   488→   488→   888→   888→~95% of interactions happen through Layers 1-2; ~5% through
+   489→   489→   889→   889→Layer 3. Typing feels powerful, not mandatory.
+   490→   490→   890→   890→
+   491→   491→   891→   891→§ XXXVII.4 — The Menu Learns
+   492→   492→   892→   892→The UI evolves with the character's knowledge and relationship.
+   493→   493→   893→   893→Before observing Wang Lin study restrictions: "Ask → Cultivation
+   494→   494→   894→   894→/ Recent Events / Himself." After weeks of observation: "Ask →
+   495→   495→   895→   895→Cultivation / Restriction Formations / Recent Events / Himself."
+   496→   496→   896→   896→A new branch appeared because the character learned. Before
+   497→   497→   897→   897→becoming friends: "Request → Directions / Advice / Spar / Leave."
+   498→   498→   898→   898→After becoming sworn brothers: "Request → Teach Technique / Copy
+   499→   499→   899→   899→Capability / Help Breakthrough / Explore Together / Hold Item /
+   500→   500→   900→   900→Leave." The UI is a reflection of the character's place in the
+   501→
+   502→[showing lines 1-500 of 502; use offset=501 with limit to continue reading]
