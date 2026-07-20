@@ -1,0 +1,81 @@
+{
+  "_schema": "ergenverse:living_chapters/chapter_1_wang_family_village/living_moments/moment_11_old_chen_dog_memory",
+  "_article": "XL §1 + XXXI.5 (Memory Metric — Chapter complete only when THE WORLD REMEMBERS)",
+  "moment_id": 11,
+  "title": "Old Chen's dog dies in a wolf raid; weeks later Old Chen says 'used to have one'; months later a child retells it wrong",
+  "status": "SPEC",
+
+  "scene": "This is the canonical Memory Metric test (Article XXXI.5). It unfolds across ~6 Minecraft weeks: (Week 1) Old Chen owns a dog — the player may or may not notice it. (Week 3) The wolf pack, whose wolf_pack_momentum has been crossing its 'pet_or_villager_attack' threshold, raids the village edge at night. Old Chen's dog is killed. The event is written to memory_ledger with witnesses (Old Chen, nearby villagers). Old Chen's relationship_graph updates (grievance against the pack, fear). His motivation_state shifts (grief, desire for revenge or for the village to act). The village head's motivation_state activates 'organize_wolf_hunt'. A rumor_momentum seeds (the dog-death story). (Week 5) Old Chen, in ambient dialogue when a traveler asks about his gate, says 'used to have one' — unprompted, unscripted. (Months later) A child retells the story — with distorted details ('seven wolves, not five; red eyes'). NONE of this is scripted as a beat. It emerges from the wolf_pack_momentum crossing its threshold, the memory_ledger recording it, the relationship_graph updating, the motivation_state activating, and the rumor_momentum spreading and distorting.",
+
+  "observed_checklist": {
+    "without_player_interaction": "The ENTIRE arc must occur without player intervention. The player is a witness, not a participant. If the player must trigger any beat, the Memory Metric FAILS.",
+    "with_player_interaction": "Player can intervene at multiple points: warn Old Chen before the raid (if relationship earned — changes outcome, dog may survive), participate in the village wolf hunt (relationship + memoryLedger updates), ask Old Chen about his dog later (triggers the 'used to have one' dialogue — but the dialogue must be AVAILABLE even without the player asking, as ambient). Player can also IGNORE the entire arc — and it still happens.",
+    "different_outcomes_across_worlds": "Whether the dog dies (depends on wolf_pack threshold crossing AND dog being outside that night — 70% dog dies, 20% dog survives inside, 10% wolf pack defers and raids later). How Old Chen grieves (silent, bitter, or vengeful — personality-dependent). Which child retells it (any of 3 child NPCs). The distortion details (seven wolves not five; red eyes; the dog was 'as big as a calf').",
+    "remembered_by_npcs_later": "This IS the remember test. Old Chen remembers (grief, grievance). The village remembers (the hunt, the loss). The child remembers (distorted retelling). The memory_ledger persists the event across Minecraft months. The rumor_momentum decays but leaves a residual belief."
+  },
+
+  "systems_exercised": [
+    "wolf_pack_momentum — crosses 'pet_or_villager_attack' threshold; fires WolfRaidEvent",
+    "memory_ledger — records the raid: witnesses=[old_chen, nearby_villagers], location=village_edge, victim=old_chen_dog, time=week_3",
+    "relationship_graph — Old Chen's edges update: grievance += north_wolf_pack, fear += north_wolf_pack",
+    "motivation_state — Old Chen: grief + desire_for_revenge_or_village_action; village_head: organize_wolf_hunt activated",
+    "rumor_momentum — dog_death_story seeds with belief_intensity=0.6, distortion_rate=0.15/tick, decay_rate=0.02/tick",
+    "NPC ambient dialogue — pulls from memory_ledger and motivation_state; Old Chen's 'used to have one' line fires when traveler asks about his gate (gate = his yard, where the dog used to be)",
+    "child NPC ambient — pulls from rumor_momentum (distorted version); child retells the story to other children or to the player",
+    "ActorTickLoop — Old Chen's behavior changes for weeks after (slower pace, less laughter, visits the dog's grave)"
+  ],
+
+  "canon_reference": "Renegade Immortal Chapter 1-2 — Wang Lin's village life is marked by small losses that accumulate. The death of a pet, the loss of a neighbor, the slow erosion of safety — these are the textures of mortal life in Er Gen's world that make Wang Lin's later coldness feel earned, not arbitrary. The Memory Metric is the project's test that the world can produce these textures WITHOUT scripting them.",
+
+  "perceivable_cues": [
+    "Week 1: Old Chen's dog is visible at his gate (ambient, missable)",
+    "Week 3 night: wolf howls close; dog barks frantically; then silence; Old Chen's shout",
+    "Week 3 morning: Old Chen burying something at the village edge; villagers gathered; village head organizing a hunt",
+    "Week 5: Old Chen's gate is empty; he moves slower; when a traveler asks about his gate, he says 'used to have one' (ambient — player must be near to hear)",
+    "Months later: a child tells the story to other children; details are wrong (seven wolves, red eyes, dog as big as a calf)",
+    "NO quest. NO marker. NO journal entry. NO 'Memory Unlocked' notification."
+  ],
+
+  "anti_patterns_violated_if_broken": [
+    "Article XXXI.5 — if any beat is scripted (e.g., a quest triggers the dog death at week 3), the Memory Metric is dead",
+    "Article V — if the dog death requires the player to be present, the moment is dead (the wolves raid whether or not the player is there)",
+    "Article XXX — if Old Chen's 'used to have one' is delivered in a cutscene rather than as ambient dialogue, the moment is dead",
+    "Article XL §2 — if the arc cannot be compressed via debug command to verify within 5 minutes per beat, the moment is dead"
+  ],
+
+  "minimal_java_wiring_required": [
+    "wolf_pack_momentum tick advances; at threshold 'pet_or_villager_attack', fires WolfRaidEvent on WorldEventBus",
+    "WolfRaidEvent handler: selects victim (Old Chen's dog if outside, else livestock), spawns wolf NPCs at village edge, runs combat resolution, records outcome",
+    "MemoryLedgerWriter: records event with witnesses (computed from perception_engine), location, victim, time",
+    "RelationshipGraphUpdater: Old Chen edges updated (grievance, fear)",
+    "MotivationStateUpdater: Old Chen (grief, revenge), village_head (organize_wolf_hunt)",
+    "RumorMomentumSeeder: creates dog_death_story rumor with initial belief_intensity, distortion_rate, decay_rate",
+    "AmbientDialogueEngine: Old Chen's dialogue pulls from memory_ledger; 'used_to_have_one' line fires when context = 'traveler asks about gate' AND memory_ledger has dog_death entry AND weeks_since > 2",
+    "ChildAmbientDialogue: child NPCs pull from rumor_momentum; distorted retelling fires when context = 'children gathered' AND months_since > 1",
+    "Debug commands: /ergen debug force wolf_raid (fires WolfRaidEvent now), /ergen debug time +30d (advances time for memory decay), /ergen debug force ambient old_chen (fires his ambient dialogue)"
+  ],
+
+  "five_minute_rule_compliance": "COMPLIANT via debug commands. Tester can: (1) /ergen debug force wolf_raid, (2) verify memory_ledger entry, (3) /ergen debug time +21d, (4) /ergen debug force ambient old_chen, (5) hear 'used to have one', (6) /ergen debug time +60d, (7) /ergen debug force ambient child, (8) hear distorted retelling. Full arc verified in <5 minutes per beat.",
+
+  "verification_protocol": [
+    "1. Spawn in Wang Family Village.",
+    "2. Verify Old Chen has a dog (observe his gate for 1 Minecraft day).",
+    "3. Run /ergen debug force wolf_raid.",
+    "4. Verify: Old Chen's dog dies. Memory_ledger records the event with witnesses.",
+    "5. Verify: Old Chen's relationship_graph updates (grievance, fear).",
+    "6. Verify: village_head's motivation_state activates organize_wolf_hunt.",
+    "7. Verify: dog_death_story rumor seeds in rumor_momentum.",
+    "8. Run /ergen debug time +21d (advance 3 Minecraft weeks).",
+    "9. Position near Old Chen's gate. Have a traveler NPC (or debug-spawn one) ask about the gate.",
+    "10. Verify: Old Chen says 'used to have one' in ambient dialogue. NO quest. NO cutscene.",
+    "11. Run /ergen debug time +60d (advance 2 Minecraft months).",
+    "12. Position near a gathering of child NPCs.",
+    "13. Verify: a child retells the story with distorted details (seven wolves, red eyes, dog as big as a calf).",
+    "14. Verify across 3 fresh worlds: dog dies in 2-3 of them (probability-gated); Old Chen's grief style varies; which child retells varies; distortion details vary.",
+    "15. If all pass: status -> OBSERVED. The Memory Metric is satisfied."
+  ],
+
+  "success_means": "When this moment reaches OBSERVED, the project has proven: (a) the world remembers (memory_ledger persists and surfaces), (b) NPCs are changed by events (relationship_graph + motivation_state update), (c) stories distort over time (rumor_momentum), (d) none of this requires player intervention. Article XXXI.5 (the Memory Metric) is satisfied. Chapter 1's deepest bar is met.",
+
+  "failure_means": "If any beat requires a scripted trigger (e.g., a quest fires the dog death), the Memory Metric FAILS. The world does not remember — it replays. Root cause must be documented and the architecture fixed before Chapter 1 can be considered complete."
+}

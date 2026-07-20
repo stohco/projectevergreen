@@ -1,0 +1,68 @@
+{
+  "_schema": "ergenverse:living_chapters/chapter_1_wang_family_village/living_moments/moment_04_herb_competition",
+  "_article": "XL §1 + IV (Opportunity, Not Content) — opportunities arise because the world evolves",
+  "moment_id": 4,
+  "title": "Two cultivators arrive at the same spirit herb before the player",
+  "status": "SPEC",
+
+  "scene": "The player has learned (via rumor_momentum, ambient dialogue, or their own observation) that the crimson root patch west of the village is approaching peak harvest. The player decides to go harvest it. When the player arrives, a cultivator from a neighboring village is already there — also intending to harvest. The two characters arrive within minutes of each other. Neither has a quest. Neither has a marker. The world produced this confrontation because: (a) herb_momentum declared the patch approaching peak (ripeness 0.78 → 0.95), (b) rumor_momentum spread news of the patch to the neighboring village, (c) the neighboring cultivator's motivation_state includes 'seek_spirit_herb' with high intensity, (d) the cultivator pathfound to the patch on travel_graph. The player must decide: compete (the harvest is limited — 0.60 remaining after Wang Lin's earlier harvest), negotiate (split it), defer (let the other cultivator take it — costs nothing but loses the herb), or ambush (combat — has consequences).",
+
+  "observed_checklist": {
+    "without_player_interaction": "If the player never goes to the patch, the neighboring cultivator harvests it (or fails to — depends on the cultivator's capability). The patch is then depleted or in decay. Wang Lin's supplement_exhaustion trajectory worsens (he needed that herb). The world moves on without the player.",
+    "with_player_interaction": "Player can compete (first-come-first-served on harvest actions), negotiate (conversation system — requires relationship or persuasion), defer, or ambush. Each has consequences: compete -> relationship with neighboring cultivator sours; negotiate -> split, relationship neutral-or-positive; defer -> lose herb, relationship positive; ambush -> combat, reputation damage, possible sect involvement.",
+    "different_outcomes_across_worlds": "Which neighboring cultivator (3 variants, different capability and personality). Whether they arrived first or the player did (50/50 based on travel time). Whether the cultivator is willing to negotiate (personality-dependent). Whether Wang Lin is also at the patch when the player arrives (20% — he visits at night, player likely day).",
+    "remembered_by_npcs_later": "The encounter is written to memory_ledger. If the player ambushed, the memory propagates as a rumor ('a stranger attacked a cultivator at the crimson root patch') — affects player reputation across the region. If the player negotiated, the neighboring cultivator may return the favor later (a future Living Moment)."
+  },
+
+  "systems_exercised": [
+    "herb_momentum — patch ripeness crosses peak_harvest_window threshold, making it perceivable and valuable",
+    "rumor_momentum — news of the patch spread to neighboring village; the cultivator's belief_registry includes 'crimson_root_patch_location' with belief_intensity > 0.5",
+    "travel_graph — neighboring cultivator pathfinds from their village to the patch",
+    "motivation_state — neighboring cultivator's motivation includes 'seek_spirit_herb' (high intensity, due to their own cultivation needs)",
+    "relationship_graph — outcome updates player's relationship with the cultivator and (if ambush) with the cultivator's sect",
+    "conversation_system — if player negotiates, the conversation UI engages; the cultivator's willingness depends on their personality and the player's capability_compatibility",
+    "capability_compatibility — the cultivator assesses the player during negotiation (willingness, withstand, integrate)"
+  ],
+
+  "canon_reference": "Renegade Immortal Chapters 4-7 — Wang Lin repeatedly encounters competition for spirit resources. The canonical dynamic: mortals and low-realm cultivators compete viciously for scarce herbs because herbs are the difference between stagnation and breakthrough. Er Gen's world does not have infinite resources; competition is the norm. This Living Moment recreates that scarcity-driven encounter.",
+
+  "perceivable_cues": [
+    "The patch glows faintly at dusk (spirit herb bioluminescence at peak ripeness)",
+    "The herbalist mentions the patch is 'ready' (ambient dialogue, only if player has neutral-or-better relationship)",
+    "A traveler mentions 'a cultivator from [neighboring village] heading west with a basket' (rumor_momentum spread)",
+    "When the player arrives at the patch, the other cultivator is visible (or their footprints/scent if they just left)",
+    "NO quest marker points to the patch. NO notification says 'compete for the herb.'"
+  ],
+
+  "anti_patterns_violated_if_broken": [
+    "Article IV — if a quest marker points to the patch, the moment is dead",
+    "Article V — if the competing cultivator only spawns because the player went to the patch, the moment is dead (the cultivator was already en route)",
+    "Article XXX — if the cultivator is a generic 'bandit' NPC with no motivation_state, the moment is dead (the cultivator must want the herb for their own reasons)"
+  ],
+
+  "minimal_java_wiring_required": [
+    "herb_momentum tick advances ripeness; at threshold peak_harvest_window, fires HerbRipenessEvent",
+    "Rumor_momentum already spread 'crimson_root_patch_location' to neighboring village; belief_intensity > 0.5 in neighbor cultivator's belief_registry",
+    "Neighboring cultivar's IntentEngine produces 'travel_to_herb_patch' intent; planner pathfinds on travel_graph",
+    "Cultivator NPC spawns at neighbor village, pathfinds to patch, arrives within ~1 Minecraft day of patch reaching peak",
+    "Conversation system engages if player initiates dialogue; cultivator's willingness to negotiate depends on personality + player capability_compatibility",
+    "MemoryLedgerWriter records encounter; if combat, reputation system updates"
+  ],
+
+  "five_minute_rule_compliance": "COMPLIANT via debug command: /ergen debug force herb_peak — advances herb_momentum to ripeness=0.94, fires the rumor spread, spawns the neighboring cultivator en route. Tester waits at the patch; the encounter occurs within 1-2 Minecraft hours.",
+
+  "verification_protocol": [
+    "1. Spawn in Wang Family Village.",
+    "2. Run /ergen debug force herb_peak.",
+    "3. Wait at the crimson root patch (west of village).",
+    "4. Within 1-2 Minecraft hours, a neighboring cultivator arrives.",
+    "5. Verify: NO quest marker. NO notification.",
+    "6. Verify: the cultivator has their own motivation (ask them — they will mention needing the herb for their own cultivation).",
+    "7. Attempt to negotiate. Verify: conversation UI engages; cultivator's willingness is personality-dependent.",
+    "8. Verify across 3 fresh worlds: cultivator variant differs; arrival order varies; willingness to negotiate varies.",
+    "9. Verify 1 Minecraft week later: memory_ledger records the encounter; if combat, reputation system has propagated the rumor.",
+    "10. If all pass: status -> OBSERVED."
+  ],
+
+  "success_means": "When this moment reaches OBSERVED, the project has proven: (a) herb_momentum produces perceivable ripeness events, (b) rumor_momentum drives NPC behavior across villages (not just within one village), (c) opportunities emerge from world state, not from quest triggers (Article IV), (d) NPCs have their own motivations and pursue them (Article V). The Opportunity Engine is proven."
+}

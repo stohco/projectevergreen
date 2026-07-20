@@ -1,0 +1,76 @@
+{
+  "_schema": "ergenverse:living_chapters/chapter_1_wang_family_village/living_moments/moment_02_recruiter_arrives",
+  "_article": "XL §1 — Experiences, not systems. XXXI.3 — Stronger Chapter 1 Metric (could somebody who never read RI accidentally recreate Wang Lin's early life?)",
+  "moment_id": 2,
+  "title": "Heng Yue recruiter arrives; the village was already reacting; the rumor was already distorted",
+  "status": "SPEC",
+
+  "scene": "The player arrives at Wang Family Village (Chapter 1 start). Within the first Minecraft day, ambient cues establish that 'a recruiter is coming.' A traveler at the inn mentions seeing a sect carriage on the Zhao road. The village head orders the ancestral hall cleaned. Children are told to behave. The herbalist sets out her best herbs. A rumor circulates — but villagers DISAGREE: one says the recruiter comes Tuesday, another says Friday; one says it's Heng Yue, another says it's a different sect. The merchant passing through tells a fourth, distorted version. ~3 Minecraft days later, the recruiter's caravan arrives. The recruiter is polite but visibly stressed (a symptom of Heng Yue's decline — Living Moment #10). The recruiter asks about village children of suitable age. The recruiter asks pointed questions about Wang Lin. NO QUEST. NO MARKER. NO JOURNAL ENTRY. The player learns by living in the world.",
+
+  "observed_checklist": {
+    "without_player_interaction": true,
+    "with_player_interaction": "Player can ask villagers about the recruiter (gets distorted/disagreeing answers). Player can follow the recruiter. Player can attempt to be recruited (the recruiter will assess — most players fail, because Wang Lin's early life is not the player's power fantasy). Player can warn Wang Lin (if relationship earned).",
+    "different_outcomes_across_worlds": "Recruiter arrival day (varies ±2 days), which sect (80% Heng Yue, 20% a minor sect — different rumor distortions), recruiter personality (3 variants), whether Wang Lin is home when the recruiter asks (50/50 — he may be in the cave), villager who tells the player first (any of 4 NPCs).",
+    "remembered_by_npcs_later": "The recruiter's visit is written to memory_ledger. For weeks after, villagers reference it in ambient dialogue ('after the recruiter left...'). If the player warned Wang Lin and Wang Lin hid, the recruiter's frustration is remembered. If Wang Lin was found, the recruiter's assessment of him is remembered (and may surface years later when the player encounters Heng Yue)."
+  },
+
+  "systems_exercised": [
+    "caravan_momentum — the recruiter's caravan ticks along its route on travel_graph; arrival fires a CaravanArrivalEvent",
+    "rumor_momentum — the rumor of the visit has been spreading for ~14000 ticks before player arrival; disagreement_level and distortion_rate have produced conflicting versions across hamlets",
+    "NPC schedule — village head orders ancestral hall cleaned (schedule change); children's behavior expectations change; herbalist prepares",
+    "motivation_state — the recruiter's motivation_state includes 'urgent_recruitment_quota' (high intensity, due to sect decline — Living Moment #10 coupling)",
+    "belief_registry — each villager holds a different belief about the visit (timing, sect, purpose) based on which distorted version they heard",
+    "relationship_graph — if player warns Wang Lin, Wang Lin's trust in player increases; if player betrays Wang Lin to the recruiter, relationship collapses",
+    "bidirectional_protocol — if player has been studying cultivation visibly, the recruiter may approach the player unbidden (Article XXXI.2)"
+  ],
+
+  "canon_reference": "Renegade Immortal Chapters 1-3 — the Heng Yue recruitment is the inciting event of Wang Lin's arc. In canon, the recruiter arrives, tests village children, Wang Lin fails the initial test (his spiritual root is judged mediocre), and Wang Lin is taken only as a courtesy to his family's relationship with a senior elder. The player should be able to witness this arc WITHOUT having read the novel — the world teaches it through ambient cues.",
+
+  "perceivable_cues": [
+    "Traveler at the inn mentions a sect carriage (player must be at the inn at the right time, or overhear)",
+    "Village head's order to clean the ancestral hall (player must be near the hall, or a villager mentions it)",
+    "Children being corrected by parents ('stand straight when the cultivator comes')",
+    "Herbalist arranging her best herbs on the shelf",
+    "Two villagers disagreeing at the well about timing and sect",
+    "The merchant's distorted version (third-hand, includes invented details)",
+    "The caravan's arrival — dust on the road, then the carriage",
+    "The recruiter's polite but stressed demeanor (subtle: tight jaw, too-fast smile, gripping the recruitment scroll)",
+    "The recruiter asking about Wang Lin by description (not by name — the sect has heard of a 'talented child in the Wang village')",
+    "NO quest marker. NO notification. NO journal entry."
+  ],
+
+  "anti_patterns_violated_if_broken": [
+    "Article XXXI.3 — if a quest log entry says 'Witness the Heng Yue recruitment,' the moment is dead",
+    "Article IV — if a marker points to the recruiter, the moment is dead",
+    "Article XXX — if the rumor is uniform (all villagers agree on timing/sect), the rumor_momentum is not real, and the moment is dead",
+    "Article V — if the recruiter only arrives because the player entered the village, the moment is dead (the caravan was already en route)"
+  ],
+
+  "minimal_java_wiring_required": [
+    "MomentumAdvancer ticks caravan_momentum; at position=1.0, fires CaravanArrivalEvent",
+    "Caravan NPC pathfinds to village on travel_graph; spawns at route origin ~5800 ticks before arrival",
+    "Rumor_momentum already seeded (rumor_heng_yue_recruiter_visit in momentum_wang_family_village.json); NPC ambient dialogue pulls from belief_registry",
+    "Village head motivation_state includes 'prepare_for_recruiter_visit' — activated by rumor belief_intensity > 0.5",
+    "Recruiter NPC motivation_state includes 'urgent_recruitment_quota' (coupled to sect_momentum stagnation)",
+    "MemoryLedgerWriter records the visit, the recruiter's assessment of village children, and any player intervention"
+  ],
+
+  "five_minute_rule_compliance": "COMPLIANT via debug command: /ergen debug force recruiter_arrival — advances caravan_momentum to position=0.95, fires the ambient cues within 1 Minecraft day, caravan arrives within 2-3 Minecraft days. Tester can also /ergen debug time set dawn to compress.",
+
+  "verification_protocol": [
+    "1. Spawn in Wang Family Village.",
+    "2. Run /ergen debug force recruiter_arrival.",
+    "3. Spend one Minecraft day in the village without interacting with anyone.",
+    "4. Verify: at least 3 ambient cues fire (traveler's mention, village head's order, villager disagreement at well).",
+    "5. Ask 3 different villagers about the recruiter. Verify: at least 2 different versions (timing or sect).",
+    "6. Wait 2-3 Minecraft days. Verify: caravan arrives. Verify: recruiter is polite but visibly stressed.",
+    "7. Verify: no quest marker, no journal entry, no notification at any point.",
+    "8. Verify across 3 fresh worlds: arrival day varies, sect sometimes differs (20%), villager who tells first varies.",
+    "9. Verify 2 Minecraft weeks later: villagers reference the visit in ambient dialogue ('after the recruiter left...').",
+    "10. If all pass: status -> OBSERVED."
+  ],
+
+  "success_means": "When this moment reaches OBSERVED, the project has proven: (a) caravan_momentum produces perceivable arrival events, (b) rumor_momentum produces disagreement and distortion in NPC dialogue, (c) the village schedule responds to world events, (d) a player who never read RI can witness the inciting event of Wang Lin's arc without any UI hand-holding. Article XXXI.3 becomes enforceable.",
+
+  "failure_means": "If the rumor is uniform, the moment is a scripted scene — not a Living Moment. If the recruiter arrives only because the player spawned, Article V is violated. Root cause must be documented."
+}

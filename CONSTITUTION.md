@@ -962,6 +962,271 @@ UI option appear only when all three gates pass, and knows
 the world judged them ready.
 
 ═══════════════════════════════════════════════════════════════
+THE MOMENTUM AMENDMENT
+(Article XXXIX)
+Added when the project recognized that an authored world with
+history is still a diorama. History records what happened.
+Momentum records what is STILL happening — right now, before the
+player arrives, and will continue happening whether or not the
+player ever intervenes. The leap is from "authored world" to
+"authored world with inertia." Once every system has momentum
+before the player ever joins, the world stops feeling like a game
+level and starts feeling like a place that genuinely exists
+independently of the player.
+═══════════════════════════════════════════════════════════════
+
+Article XXXIX — Reality Has Momentum
+The world is not merely authored, and it is not merely historical.
+Every system must possess ongoing state and direction independent
+of the player's presence. Rivers continue to erode, spirit veins
+continue to fluctuate, caravans continue to travel, sects continue
+to recruit, grudges continue to fester, herbs continue to ripen,
+and opportunities continue to emerge. The player enters a world
+already in motion and can alter its trajectory, but never serve as
+the origin of motion itself.
+
+§ XXXIX.1 — History Versus Momentum
+History is a record: "The bridge over Zhao River collapsed in
+the winter of Wang Lin's fourteenth year." Momentum is a live
+trajectory: "The village is slowly dying because trade never
+recovered after the bridge collapse — three families have already
+left, the merchant visits half as often, and the elder is
+quietly considering whether to ask Heng Yue Sect for aid." Both
+are true. History is what happened. Momentum is what is still
+happening AS A CONSEQUENCE, right now, in the present tick. A
+living world has both. A dead world has only history.
+
+§ XXXIX.2 — Every System Has A Trajectory
+Every simulated system — not just NPCs — must declare its
+momentum: a current state, a rate of change, a set of drivers,
+a set of thresholds, and a set of consequences when a threshold
+is crossed. This applies to:
+  - Spirit veins (qi density rising or falling, fluctuation
+    period, depletion risk, recovery rate)
+  - Sects (recruitment rate, resource drain, faction tension,
+    ideological drift, decline or ascent)
+  - Caravans and patrols (position along route, supplies
+    remaining, threat exposure, ETA, morale)
+  - Cultivators approaching breakthrough (progress, backlash
+    risk, window of vulnerability, accumulation rate)
+  - Herbs and spirit flora (ripeness, potency, maturation ETA,
+    decay if not harvested, mutation under spirit density)
+  - Bandit and beast groups (food supply, desperation, raid
+    cadence, territory size, prey density)
+  - Rumors and reputation (spread vector, belief intensity,
+    decay, distortion per retelling, reach)
+  - Rivers and terrain (erosion rate, flood risk, course
+    drift, spirit-mineral deposition)
+  - Factions and grudges (festering rate, flashpoint proximity,
+    catalysts, decay under amends)
+  - Economies (price drift, supply chain stress, scarcity
+    emergence, speculation bubbles)
+A system WITHOUT a declared momentum is forbidden from being
+called "living." It is scenery.
+
+§ XXXIX.3 — The Player Intersects Trajectories, Never Originates Them
+When the player arrives at Wang Family Village, the world is
+already mid-sentence. Old Chen's dog is already old. The wolf
+pack has already been pressing closer for two seasons. The
+village's spirit vein has already been thinning for a decade.
+The Heng Yue recruiter is already en route and three days out.
+Wang Lin has already been studying the cave restriction for
+weeks and is already stuck on the third layer. The player did
+not cause any of this. The player arrives into it. The player's
+choices can accelerate, divert, or resolve these trajectories —
+but the trajectories were moving before the player existed and,
+under Article V, would continue moving if the player never
+existed.
+
+§ XXXIX.4 — Momentum Is Compiled, Not Scripted
+Momentum is not a scripted event sequence ("on day 7, the wolf
+attack happens"). Momentum is a compiled property of the world
+state, derived from the World Blueprint and advanced every
+simulation tick by the drivers declared in each system's
+momentum schema. The same blueprint, given a different
+Simulation Seed and a different player arrival time, produces a
+different present moment — not because the geography changed
+(it never does) but because the trajectories have advanced to
+different points. This is the source of replayability under the
+authored-world model: the stage is fixed, the actors are mid-
+motion, and WHERE in the motion the player arrives varies.
+
+§ XXXIX.5 — The Momentum Test (Living Chapter Bar)
+A chapter is not living unless, at the moment the player first
+arrives, at least THREE systems are visibly mid-trajectory and
+the player can perceive at least one of them WITHOUT being told.
+Examples of perceivable momentum without notification:
+  - The player sees a caravan's wagons in the distance, already
+    moving — nobody assigned a quest.
+  - The player overhears two villagers discussing a rumor that
+    has clearly been circulating for days (it has details, age,
+    and disagreement).
+  - The player notices the shrine incense is fresh though the
+    shrine is abandoned — someone was here recently and will
+    return.
+  - The player finds a half-harvested herb garden — the
+    cultivator is mid-task and will return.
+If everything the player perceives was placed there FOR the
+player to perceive, the world has no momentum. It has dressing.
+
+§ XXXIX.6 — Momentum Must Be Interruptible And Redirectable
+The player (and NPCs, and world events) can alter a trajectory.
+A weakening spirit vein can be restored by a formation. A
+festering grudge can be settled by a mediation. A ripening herb
+can be harvested early (losing potency) or guarded (gaining
+potency but risking discovery). A caravan can be raided (its
+trajectory ends; the village it was supplying begins a scarcity
+trajectory). Momentum is not a cutscene. It is a live vector
+the world holds, and any sufficiently strong intervention
+redirects it. The redirect itself becomes history and seeds new
+momentum.
+
+§ XXXIX.7 — The Architectural Consequence
+This article requires the architectural inversion the project
+has been approaching: the world is authored as a COMPILED STATE
+with momentum, not as a set of objects placed at chunk-load
+time. Chunks render a world that already exists in the compiled
+state. The simulation queries a world database (spatial index,
+relationship graph, travel graph, spirit graph, hydrology
+graph, settlement graph, influence map) — not raw JSON. The
+compiler turns the World Blueprint DSL into this compiled state,
+seeds every system's momentum to its canonical initial
+trajectory, and the simulation advances it every tick. Terrain
+is the LAST concern, because terrain is merely the block-level
+visualization of a world whose semantic state (traversable,
+steep, river, forest, spirit-rich) already exists in the
+compiled state. Build the living state first. Render it last.
+
+
+Article XL — Prove The Experience Before The Architecture
+
+Every major system must first demonstrate the experience it
+exists to create before expanding into additional architecture,
+content, schemas, tooling, or DSL refinement.
+
+A cycle that increases architectural sophistication without
+producing a new player experience has not advanced the
+simulation. The smallest believable experience is always worth
+more than the largest unexperienced design.
+
+§1 — Experiences, Not Systems
+The unit of progress on this project is the Living Moment: a
+single observable scene a player would remember years later.
+Progress is NOT measured in files added, schemas authored,
+compilers built, or validators passing. Progress is measured
+in Living Moments Created (see the Living Moments Ledger).
+
+Do not say "Momentum Engine." Say:
+  "The player notices Wang Lin quietly watching them from a hill."
+Do not say "Opportunity Engine." Say:
+  "Two cultivators arrive at the same herb before the player."
+Do not say "Relationship Graph." Say:
+  "Wang Lin unexpectedly trusts the player because of something
+   that happened three hours ago."
+Do not say "Memory Ledger." Say:
+  "Weeks later, a child retells the story of Old Chen's dog —
+   with the details wrong, because that is how stories distort."
+
+Those are experiences. Systems exist to produce them. A system
+that has produced no experience is a hypothesis, not a feature.
+
+§2 — The Five Minute Rule
+Every new major mechanic must be demonstrable to a new player
+within five minutes — via a debug command, a test world, or an
+in-game scene — before it is expanded into additional
+architecture. Not polished. Not balanced. Not complete. Just
+OBSERVABLE. A mechanic that cannot be observed in five minutes
+is architecture before experience, and architecture before
+experience is the project's recurring failure mode.
+
+§3 — The First Living Moment
+The project's next milestone is not "Momentum." It is not
+"Spirit Graph." It is not "Compiled World State." It is:
+
+  THE FIRST LIVING MOMENT
+
+A single complete, observable, memorable scene in Wang Family
+Village, survivable across playtests, in which the world
+demonstrates that it has life independent of the player. The
+canonical reference: the player sees Wang Lin abandon his
+cultivation session because a distant spiritual disturbance
+exceeded his personal risk threshold — he stands, walks to a
+ridge, watches wolves stalking a spirit deer, turns, leaves.
+Nothing was scripted. Nothing involved the player. Yet the
+player learns: Wang Lin has priorities. Animals hunt. NPCs
+observe. The world has activity. Interesting things happen
+without quests.
+
+One moment like that is worth more than fifty schema files.
+Build that moment. Then build another. Then another. Only when
+moments exist and survive observation does it make sense to
+generalize them into more data, more schemas, more content.
+
+§4 — The Living Moments Ledger
+The worklog no longer measures progress as "Files Added" or
+"Schemas Authored." It measures progress as Living Moments
+Created. Each Living Moment entry must record:
+
+  Living Moment #N
+  Title: <one line>
+  Scene: <what the player observes>
+  Observed:
+    [ ] Without player interaction
+    [ ] With player interaction
+    [ ] Different outcomes across worlds
+    [ ] Remembered by NPCs later
+  Systems exercised: <which existing engines this moment
+                      exercises simultaneously>
+  Canon reference: <which Er Gen scene this recreates>
+  Status: SPEC / OBSERVED / SURVIVED PLAYTEST
+
+A Living Moment earns the status OBSERVED only when a real
+observer (developer or agent-browser) has witnessed it occur
+in a running world. It earns SURVIVED PLAYTEST only when it
+occurs in a fresh world without developer intervention.
+
+§5 — The Standing Cycle Question
+Before beginning any cycle, the autonomous agent must answer:
+
+  "Am I about to create another schema, compiler, DSL, or
+   validator — or am I about to create a Living Moment?"
+
+If the answer is the former, the agent must ask:
+
+  "Can a player notice this today?
+   If not, can a debug command demonstrate it?
+   If not, can an NPC demonstrate it?
+   If not, I am building architecture before experience.
+   I will build the smallest observable version instead."
+
+§6 — Relationship To Prior Articles
+This Article does not supersede Articles I–XXXIX. It enforces
+them. Article V (the world exists without the player) is
+unfalsifiable until a Living Moment proves it. Article XXX
+(referenced ≠ experienced) is unenforceable without observed
+moments. Article XXXI (the world must desire the player) is
+a claim until an NPC approaches the player unbidden. Article
+XXXIX (reality has momentum) is a schema until a trajectory
+produces a perceivable event in a running world.
+
+Article XL is the enforcement mechanism. The Constitution's
+other Articles describe what the world must be. Article XL
+describes how the project proves it.
+
+§7 — The Honesty Clause
+A cycle may produce architecture (schemas, compilers, DSLs)
+ONLY when that architecture is the smallest believable path
+to a named Living Moment that will be observed within the
+next three cycles. Architecture without a named downstream
+moment is drift, regardless of how well-designed it is.
+
+When in doubt: prove the experience before the architecture.
+When in doubt: one observed moment beats fifty schema files.
+When in doubt: if a player cannot notice it today, build the
+               smallest observable version instead.
+
+
+═══════════════════════════════════════════════════════════════
 CLOSING
 ═══════════════════════════════════════════════════════════════
 
@@ -987,9 +1252,21 @@ Article XXXVII makes the conversation UI learn with the character —
 Article XXXVIII bounds the protagonist's cheat by Capability
    Compatibility — willingness, withstand, integrate — because
    growth must be earned, not shortcut.
+Article XXXIX gives the world momentum, not just history —
+   because an authored world that is not already in motion is a
+   diorama, and the player must intersect trajectories, never
+   originate them.
+Article XL enforces that architecture must prove the experience
+   it exists to create — because a system that has produced no
+   observable moment is a hypothesis, not a feature, and the
+   smallest believable experience is always worth more than the
+   largest unexperienced design.
 The Final Questions guard against drift.
 The Gold-Standard Template sets the bar for every location.
 The Memory Metric sets the bar for every Living Chapter.
+The Momentum Test sets the bar for whether a chapter is alive.
+The Living Moments Ledger sets the bar for whether a cycle
+   has advanced the simulation.
 
 When in doubt: build a living chapter, not a feature.
 When in doubt: prove life, do not count files.
@@ -1004,3 +1281,7 @@ When in doubt: the world runs on people, not on motivations —
                ask what the character believes, not what the system scores.
 When in doubt: one universal Interaction object —
                every entity speaks the same language of verbs.
+When in doubt: the world has momentum, not just history —
+               the player arrives mid-sentence, never at the start.
+When in doubt: prove the experience before the architecture —
+               one observed moment beats fifty schema files.

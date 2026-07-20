@@ -1,0 +1,81 @@
+{
+  "_schema": "ergenverse:living_chapters/chapter_1_wang_family_village/living_moments/moment_01_wang_lin_watches_wolves",
+  "_article": "XL §3 — THE FIRST LIVING MOMENT (canonical reference)",
+  "moment_id": 1,
+  "title": "Wang Lin abandons cultivation to watch wolves stalk a spirit deer",
+  "status": "SPEC",
+
+  "scene": "The player is in or near Wang Family Village. It is daytime. Without warning, Wang Lin — who was sitting in meditation outside his cave above the village — stands up. He walks to a ridge overlooking the northern treeline. He stops. He looks down. The player, curious, follows at a distance. From the ridge, the player sees what Wang Lin sees: a small pack of wolves (5-7) is stalking a spirit deer at the treeline. The deer is spirit-touched (faint glow, unusual coloring). Wang Lin watches silently for ~30 seconds (real time). Then he turns and walks back to his cave. He does not speak. He does not intervene. He does not acknowledge the player unless the player has a high-trust relationship with him (in which case he may give a single acknowledging nod before leaving). The wolves either make the kill or spook and flee — the outcome varies per world (Article XXXIX §4).",
+
+  "observed_checklist": {
+    "without_player_interaction": true,
+    "with_player_interaction": "Optional — player can follow, can approach, can try to scare the wolves. If player intervenes, Wang Lin's reaction depends on relationship: neutral (watches player, judges silently), high-trust (slight nod), low-trust (ignores). Player intervention changes the outcome (wolves flee, deer survives) but does NOT trigger a quest or reward.",
+    "different_outcomes_across_worlds": "Wolf pack size (5-7), deer spirit-touched variant (3 possible), time of day (morning/afternoon/dusk), Wang Lin's response to player (based on relationship state), kill outcome (60% wolves kill, 25% deer escapes, 15% player intervention changes outcome). Same simulation seed = same outcome; different seed = different outcome.",
+    "remembered_by_npcs_later": "If wolves kill the deer, the kill site becomes a memory_ledger entry (witnesses: Wang Lin if present, any villagers who wander by). Wang Lin's ambient dialogue may later reference it obliquely ('the treeline is not safe'). If player intervened, Wang Lin's assessment of the player updates (capability_compatibility — willingness to act, judgment in acting)."
+  },
+
+  "systems_exercised": [
+    "wolf_pack_momentum — the pack crossed its 'treeline_incursion' threshold, putting it in stalking range",
+    "spirit_graph — the spirit deer spawned because the spirit vein (qi_density 0.42) still produces spirit-touched fauna at the treeline",
+    "Wang Lin AI — subscribes to wolf_pack threshold events; when the pack crosses 'treeline_incursion' AND Wang Lin's current activity is meditative, he abandons the activity and walks to the nearest observation ridge",
+    "perception_engine — Wang Lin perceives the wolves and the deer; the player perceives Wang Lin moving",
+    "travel_graph / pathing — Wang Lin pathfinds to the ridge (navigation graph, not Minecraft blocks — Article XXXVII.7)",
+    "relationship_graph — Wang Lin's response to the player (if present) depends on his trust assessment",
+    "capability_compatibility — if the player intervenes, Wang Lin updates his assessment of the player (willingness + judgment)",
+    "memory_ledger — the scene is recorded with witnesses; may surface in later ambient dialogue",
+    "ActorTickLoop — Wang Lin's action state transitions from 'meditating' to 'observing' to 'returning' across ticks",
+    "WorldEventBus — the wolf_pack threshold event routes to Wang Lin's motivation_state"
+  ],
+
+  "canon_reference": "Renegade Immortal Chapters 1-5 — Wang Lin's defining early trait is that he observes before acting. He watches the village, the wolves, the cultivators, the recruiters. He forms assessments silently. This is the seed of his later cold pragmatism. The First Living Moment recreates this: the player witnesses Wang Lin being Wang Lin, without anyone announcing it.",
+
+  "perceivable_cues": [
+    "Wang Lin stands suddenly (the player notices movement if Wang Lin is in view)",
+    "Wang Lin walks with purpose toward the ridge (not his usual wandering pace)",
+    "From the ridge, the wolves and deer are visible to the player if they follow",
+    "Wang Lin's posture is watchful (head down, still)",
+    "Wang Lin's return is unhurried (he has what he came for — information)",
+    "No UI element highlights any of this. No sound cue. No quest update. No notification."
+  ],
+
+  "anti_patterns_violated_if_broken": [
+    "Article IV — if a quest marker points to the ridge, the moment is dead",
+    "Article V — if the moment requires the player to be present, the moment is dead (Wang Lin must do this even if no player is within render distance; the player merely witnesses a world that was already moving)",
+    "Article XXX — if the moment is 'referenced' (a villager tells you Wang Lin watches wolves) but not 'experienced' (the player does not see it), the moment is dead",
+    "Article XXXI — if Wang Lin does this for the player's benefit (to teach them something), the moment is dead; he does it for himself",
+    "Article XXXIX §4 — if the moment is identical across worlds (same wolves, same deer, same time, same outcome), the moment is dead; momentum must be compiled-not-scripted",
+    "Article XL §2 — if the moment cannot be observed within five minutes of a debug command (e.g., /ergen debug force wolf_threshold), the moment is dead"
+  ],
+
+  "minimal_java_wiring_required": [
+    "MomentumAdvancer.tick() advances wolf_pack_momentum; when territory_radius_blocks crosses treeline_incursion threshold, fires WolfPackThresholdEvent on WorldEventBus",
+    "Wang Lin Actor subscribes to WolfPackThresholdEvent; if current_action == MEDITATING, transitions to OBSERVE_TREELINE; pathfinds to nearest ridge waypoint on travel_graph",
+    "Ridge waypoint defined in travel_graph for the cave-above-village area",
+    "Spirit deer spawns at treeline when spirit_graph reports qi_density > 0.35 in the village vein AND wolf_pack is in stalking phase",
+    "MemoryLedgerWriter records the scene if witnesses (Wang Lin, player if present) are within perception range",
+    "Debug command: /ergen debug force wolf_treeline_incursion — advances wolf_pack_momentum to just below threshold, then crosses it, so the moment fires within 5 minutes (Article XL §2)"
+  ],
+
+  "five_minute_rule_compliance": "COMPLIANT via debug command. A tester can run /ergen debug force wolf_treeline_incursion, then wait at the village for Wang Lin to stand and walk. The moment occurs within 1-3 in-game hours. No five-minute violation.",
+
+  "verification_protocol": [
+    "1. Spawn in Wang Family Village (debug spawn point)",
+    "2. Run /ergen debug force wolf_treeline_incursion",
+    "3. Position near Wang Lin's cave (or anywhere with a view of the ridge path)",
+    "4. Wait. Do NOT interact with Wang Lin.",
+    "5. Within 1-3 in-game hours, Wang Lin should stand and walk to the ridge.",
+    "6. Follow at a distance.",
+    "7. From the ridge, wolves stalking a spirit deer should be visible.",
+    "8. Wang Lin watches ~30 seconds, turns, walks back.",
+    "9. Verify: no quest marker appeared. No notification. No journal entry. No 'quest complete.'",
+    "10. Verify in memory_ledger: scene recorded with witnesses=[wang_lin, player] (if player was present).",
+    "11. Verify across 3 fresh worlds: wolf pack size, deer variant, time of day, kill outcome vary (Article XXXIX §4).",
+    "12. If all pass: status -> OBSERVED. If any fail: status stays SPEC, root cause documented."
+  ],
+
+  "success_means": "When this moment reaches OBSERVED, the project has its first proof that the world has life independent of the player. Article V becomes falsifiable. Article XXXIX becomes enforceable. Article XL §3 is satisfied. The architecture (wolf_pack_momentum + Wang Lin AI + perception + memory_ledger) is proven and can be generalized to Living Moments #11, #12, #15, #20.",
+
+  "failure_means": "If this moment cannot reach OBSERVED within three cycles, the architecture declared in AUTO-CANON-068 (momentum schemas + v2 blueprint + this file) is drift per Article XL §7. It must be reduced to the smallest observable subset or deleted.",
+
+  "_honest_note": "This is a SPEC. It exists because the user explicitly requested continued expansion of possible situations. But per Article XL, this SPEC is permitted ONLY because it names a downstream OBSERVED moment within three cycles. The next three cycles MUST produce this moment at OBSERVED, or this file is drift. The autonomous cron must hold this bar."
+}

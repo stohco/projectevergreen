@@ -1,0 +1,49 @@
+{
+  "_schema": "compiled_settlement_graph",
+  "_schema_version": 1,
+  "_article": "XXXIX.7 — Settlement Graph is a first-class compiled artifact. User directive: 'Wang Village located_in Zhao, connected_to Heng Yue, fed_by Spirit Vein A, protected_by Zhao Patrol, supplied_by Farmland 3, threatened_by Wolves.'",
+  "_description": "Schema for the COMPILED Settlement Graph — the civilizational viability graph where nodes are Settlements (villages/towns/cities/sects/strongholds) and edges are supply/protection/threat/dependency relationships. This is the graph the simulation traverses to answer 'is Wang Village thriving or dying?' by checking its suppliers, defenders, threats, and spirit vein — not by reading a static 'health' field.",
+  "_schema_compact": true,
+  "schema": {
+    "nodes": [
+      {
+        "settlement_id": "string",
+        "settlement_class": "enum — village | town | city | sect | stronghold | outpost | market | caravanserai | harbor | shrine",
+        "viability_state": {
+          "population_class": "enum — handful | small | medium | large | sprawling",
+          "founding_era": "string — canon era",
+          "primary_economy": "string",
+          "decline_or_ascent_trend": "enum — ascending | stable | stagnating | declining | collapsing | abandoned",
+          "defense_class": "enum — undefended | militia | walled | garrisoned | sect_protected",
+          "cultivation_viability": "float 0.0–1.0 — driven by spirit_graph (can cultivators progress here?)"
+        },
+        "momentum_ref": "string|null — settlement-level momentum (decline_spiral, ascent, etc.)"
+      }
+    ],
+    "edges": [
+      {
+        "edge_id": "string",
+        "from": "string — settlement id",
+        "to": "string — supplier/defender/threat/vein entity id",
+        "type": "enum — supplied_by | protected_by | threatened_by | fed_by (spirit vein) | governed_by | allied_with | trades_with | recruits_from | shelters (refugee edge when a settlement falls)",
+        "strength": "float 0.0–1.0 — how dependent / how strong the protection / how severe the threat",
+        "live": "bool — is this edge currently active? (a defeated threat edge becomes live=false; a destroyed bridge makes a supplied_by edge live=false)",
+        "canon_ref": "enum"
+      }
+    ],
+    "indices": {
+      "by_settlement": "map<settlement_id, [edge_id]> — full viability profile",
+      "by_threat": "map<threat_id, [settlement_id]> — what is this threat menacing",
+      "by_supplier": "map<supplier_id, [settlement_id]> — what does this supplier support"
+    },
+    "queries_supported": [
+      "viability(settlement_id) -> {supply_edges, protection_edges, threat_edges, vein_edge} — full profile",
+      "is_thriving(settlement_id) -> bool — derived: supply stable, protection >= threat, vein healthy",
+      "is_dying(settlement_id) -> bool — derived: supply disrupted OR protection < threat OR vein depleting",
+      "cascade_if_lost(settlement_id, edge_type, edge_id) -> [consequence] — what happens to this settlement if this edge is severed",
+      "decline_drivers(settlement_id) -> [edge_id] — which edges are driving decline (for NPC reasoning: 'why is the village dying?')"
+    ]
+  },
+  "_compile_source": "World Blueprint DSL v2 — Settlement entities + supplied_by/protected_by/threatened_by/fed_by/governed_by/allied_with/trades_with/recruits_from relationships",
+  "_runtime_consumers": ["DecisionEngine (settlement viability reasoning)", "IntentEngine (village head's motivations)", "SectMomentum (recruitment targets)", "CaravanMomentum (supply destinations)", "EconomyMomentum", "MemoryLedger (decline events recorded as memories)"]
+}

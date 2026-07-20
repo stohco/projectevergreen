@@ -1,0 +1,35 @@
+{
+  "_schema": "compiled_biome_lookup",
+  "_schema_version": 1,
+  "_article": "XXXIX.7 — 'Terrain is the LAST concern, because terrain is merely the block-level visualization of a world whose semantic state (traversable, steep, river, forest, spirit-rich) already exists in the compiled state.' User directive: 'I'd do terrain almost last.'",
+  "_description": "Schema for the COMPILED Biome Lookup — the point-to-biome mapping the Minecraft adapter queries AT RENDER TIME (the LAST step). Derived from country_lookup (country -> biome_rule) plus local semantic modifiers (spirit-rich overlay, river proximity, forest density). The simulation does NOT query this for gameplay; it queries the semantic fields directly. This lookup exists solely so the chunk renderer knows how to paint blocks.",
+  "_schema_compact": true,
+  "schema": {
+    "biome_rules": [
+      {
+        "biome_id": "string — e.g. ergenverse:zhao_plains",
+        "country_id": "string — the country whose interior uses this biome",
+        "semantic_modifiers": {
+          "spirit_rich_overlay": "string|null — biome variant where spirit_graph reports high qi density",
+          "river_proximity_overlay": "string|null — biome variant within N blocks of a river (from hydrology_graph)",
+          "forest_density_overlay": "string|null — biome variant in high-density Forest entities",
+          "elevation_band_overlay": "string|null — biome variant at high elevation (from MountainRange facts)"
+        },
+        "default_block_palette": {
+          "surface": "string — block id (e.g. ergenverse:spirit_grass)",
+          "subsurface": "string — block id (e.g. ergenverse:spirit_dirt)",
+          "stone": "string — block id (e.g. ergenverse:spirit_stone)",
+          "fluid": "string — block id (e.g. minecraft:water)"
+        },
+        "lod_fidelity_profile": "string — reference to lod_regions entry for this biome's render fidelity at distance"
+      }
+    ],
+    "queries_supported": [
+      "biome_at(x, z) -> biome_id — derived from country_at(x,z) -> biome_rule + local semantic modifiers",
+      "block_palette_at(x, z) -> {surface, subsurface, stone, fluid} — what the chunk renderer should paint"
+    ]
+  },
+  "_compile_source": "World Blueprint DSL v2 — Country.biome_rule + semantic modifier overlays from spirit_graph/hydrology_graph/Forest entities",
+  "_runtime_consumers": ["ChunkRenderer (Minecraft adapter) — THE ONLY consumer. The simulation never queries this; it queries semantic state directly."],
+  "_note": "This is the boundary between the authored/compiled world and Minecraft. Everything above this layer is simulation; everything at and below is rendering. Article XXXIX.7: build the living state first, render it last."
+}

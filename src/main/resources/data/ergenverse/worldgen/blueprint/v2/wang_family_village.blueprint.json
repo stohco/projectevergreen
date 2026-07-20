@@ -1,0 +1,838 @@
+{
+  "_schema": "world_blueprint_v2",
+  "_schema_version": 2,
+  "_article": "Prime Directive + V, XXVI, XXIX, XXXIV, XXXIX. Supersedes worldgen/blueprint/planet_suzaku.json (v1, object-oriented) for the Chapter 1 scope.",
+  "_description": "Wang Family Village authored in the World Blueprint DSL v2 (see dsl_specification.md). This is the CANONICAL REFERENCE IMPLEMENTATION of the relationship-based, momentum-bearing authored world. Every entity is a node with semantic facts (not terrain data) and a declared momentum trajectory. Every relationship is a directed typed edge. The World Compiler reads this file and produces the Compiled World State (spatial_index, relationship_graph, travel_graph, spirit_graph, hydrology_graph, settlement_graph, influence_map, country_lookup, biome_lookup, lod_regions, momentum_registry). The simulation advances the momentum_registry every tick. The Minecraft adapter renders LAST. The player arrives mid-sentence — into trajectories already in motion (Art XXXIX.3).",
+
+  "blueprint": {
+    "id": "wang_family_village_chapter_1",
+    "name": "Wang Family Village — Chapter 1 Scope",
+    "canon_name": "Wang Jia Cun / 王家村",
+    "canon_confidence": "EXPLICIT — Wang Lin's birthplace (Er Gen RI canon)",
+    "canon_seed": -7283654891029384756,
+    "_canon_seed_note": "Fixed. Geography never varies (Art XXXIX.4).",
+    "simulation_seed_note": "Random per playthrough. Drives initial momentum state variance: which herb patch is ripest, which rumor has spread furthest, whether the patriarch's breakthrough is closer or farther, exactly where the wolf pack's territory edge sits. The STAGE is fixed; the ACTORS are mid-motion at varying points.",
+
+    "coordinate_system": {
+      "unit": "1_block = 1_meter",
+      "origin": { "id": "wang_family_village_center", "x": 3842, "z": -1184 },
+      "_note": "Wang Family Village is the anchor. All Chapter 1 entities are within ~3 days' travel (the canon distance to Heng Yue Sect)."
+    },
+
+    "entities": [
+      {
+        "id": "wang_family_village",
+        "type": "Settlement",
+        "canon_ref": "EXPLICIT",
+        "facts": {
+          "settlement_class": "village",
+          "population_class": "small",
+          "founding_era": "pre_Heng_Yue_sect_era",
+          "primary_economy": "subsistence_farming_with_minor_spirit_herb_foraging",
+          "governing_body": "village_elder_council",
+          "spirit_vein_dependency": "spirit_vein_wang_village",
+          "defense_class": "militia",
+          "decline_or_ascent_trend": "slow_decline",
+          "_decline_note": "The village is slowly dying. Not catastrophically — quietly. The spirit vein is thinning (decade-scale). Two families have left in the last generation. The young who show spirit roots leave for Heng Yue and do not return. This is the trajectory the player arrives into (Art XXXIX.3).",
+          "polygon_ref": "wang_village_footprint"
+        },
+        "momentum": {
+          "system": "settlement_decline",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/settlement_decline.schema.json (implicit; derived from settlement_graph viability queries)",
+          "current_state": {
+            "population_trend": "declining (-2 families over 20 years)",
+            "spirit_root_births_per_decade": "1.2 (declining from 2.1 two generations ago — the vein is thinning)",
+            "trade_visits_per_year": "8 (declining from 14 — the bridge erosion and the bandit pressure)",
+            "village_morale": "0.42 (low; the elder is quietly considering asking Heng Yue for aid)"
+          },
+          "drivers": [
+            "spirit_vein_wang_village qi_density declining at 0.005/tick (decade-scale thinning) — fewer spirit-rooted children, weaker cultivation, less to trade",
+            "zhao_river_bridge integrity declining — caravans detour, trade visits fall",
+            "north_wolf_pack territory closing — livestock losses, fear, a family may leave next spring",
+            "Heng Yue recruiter visits take the spirit-rooted young; they do not return"
+          ],
+          "perceivable_without_notification": "The village is smaller than its fields suggest — there are abandoned house-sites at the edge, the roofs caved in. The shrine's incense is thin. The elder, asked how the village fares, pauses before answering. A child mentions that her friend's family left last winter. None of this is announced; it is visible to a player who looks."
+        },
+        "affordances": ["Approach", "Observe", "Trade (limited)", "Ask About (village, history, families, the road, the wolves, the sect)", "Offer (aid, goods, protection)", "Stay (lodging)"],
+        "occupants": ["npc_wang_tianshui (village head)", "npc_wang_ping", "npc_wang_qingyue", "npc_zhou_rui", "npc_zhou_tingsu", "npc_zhang_tian", "npc_da_niu", "npc_wang_lin (present, mid-restriction-study)", "npc_old_chen (with dog, until the wolf event)"]
+      },
+
+      {
+        "id": "spirit_vein_wang_village",
+        "type": "SpiritVein",
+        "canon_ref": "INFERRED (Art XV) — a minor spirit vein under Wang Lin's home village is implied by his early cultivation context",
+        "facts": {
+          "origin": { "x": 3850, "z": -1170, "y_band": "underground" },
+          "qi_density_nominal": 0.52,
+          "depth_class": "shallow",
+          "element_affinity": "none (neutral qi, suitable for foundational cultivation)",
+          "fluctuation_period_ticks": 24000,
+          "integrity": 0.61,
+          "connected_settlements": ["wang_family_village"],
+          "_grid_note": "This is THE GRID for Wang Village. The village's cultivation viability, herb growth, and birth of spirit-rooted children all depend on this vein (Art XXXIX.7 spirit_graph)."
+        },
+        "momentum": {
+          "system": "spirit_vein",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/spirit_vein_momentum.schema.json",
+          "current_state": {
+            "qi_density": 0.41,
+            "depth_class": "shallow",
+            "element_affinity": "none",
+            "fluctuation_phase": 0.34,
+            "fluctuation_period_ticks": 24000,
+            "integrity": 0.58,
+            "extraction_load": 0.38
+          },
+          "rate_of_change": {
+            "qi_density_per_tick": -0.00018,
+            "components": {
+              "natural_recharge": 0.00012,
+              "extraction_drain": 0.00030,
+              "formation_recharge": 0.0,
+              "geological_drift": -0.00000,
+              "seasonal_fluctuation": "oscillating ±0.04 over 24000 ticks"
+            }
+          },
+          "drivers": [
+            "wang_family_village draws 0.00030/tick for daily cultivation (modest, but the vein is modest too)",
+            "no formation in place to recharge (Art XXXIX.6 — a formation could restore it; none exists)",
+            "geological_drift is neutral (the vein is not failing geologically; it is being drawn down faster than it recharges)",
+            "seasonal fluctuation ±0.04 over the fluctuation period"
+          ],
+          "thresholds_state": {
+            "depletion": { "eta_ticks_if_unchecked": 460000, "irreversible_below_integrity": 0.3, "current_risk": "slow but real — the village has perhaps 8-10 years at this rate before cultivation becomes impractical" },
+            "surge": { "next_window_eta": 8000, "current_risk": "opportunity" },
+            "over_extraction": { "current": false, "extraction_load": 0.38, "threshold": 0.85 },
+            "stabilization": { "current": false, "would_require": "reduce extraction by ~60% OR install a recharge formation" }
+          },
+          "interruptible_by": [
+            "Formation placed with type=qi_restoration (the canon intervention; Heng Yue knows how but has no reason to help unless asked)",
+            "Reduction in extraction (the village declining would ironically stabilize the vein — but that is the decline trajectory, not a solution)",
+            "Canon event: tectonic shift, ancient god influence (not expected in Chapter 1)"
+          ],
+          "perceivable_without_notification": "Cultivators in the village (Wang Lin, the village head in his youth) sit longer in meditation and gain less than the old records suggest was normal. Wild spirit herbs that the village herbalist names as common are now scarce within a day's foraging. The shrine's spirit lamp — lit from the vein's ambient qi — flickers weaker than a traveler might expect of a village with a living vein. Old villagers, in ambient dialogue, remark 'the qi used to be thicker when I was young.' None of this is a notification; it is the texture of a place whose grid is slowly failing.",
+          "perceivable_at_arrival": true,
+          "compiled_into": "spirit_graph (primary node); feeds settlement_graph (wang_family_village viability), herb_momentum (qi_density_at for herb growth)"
+        }
+      },
+
+      {
+        "id": "north_wolf_pack",
+        "type": "BeastPopulation",
+        "canon_ref": "INFERRED (Art XV) — mortal villages and wolf packs are ambient Er Gen canon; the specific Memory Metric scenario (Old Chen's dog) is the Constitution's canonical test case (Art XXXI.5)",
+        "facts": {
+          "species_id": "ergenverse:gray_wolf",
+          "headcount": 9,
+          "territory_polygon_ref": "north_forest_territory",
+          "territory_size_class": "regional",
+          "prey_density_nominal": 0.55,
+          "aggression_class": "bold",
+          "migration_pattern": "seasonal_winter_pressure_toward_settlements",
+          "_canon_note": "This is the pack that will take Old Chen's dog (Art XXXI.5 Memory Metric). NOT scripted. The pack's momentum drives the territory toward the village; a livestock-pressure threshold crossing fires the taking event; the dog is the victim; the memory is written; Old Chen grieves; a child retells it months later. The world remembers because the trajectory produced the event."
+        },
+        "momentum": {
+          "system": "wolf_pack",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/wolf_pack_momentum.schema.json",
+          "current_state": {
+            "species_id": "ergenverse:gray_wolf",
+            "headcount": 9,
+            "territory_polygon_id": "north_forest_territory",
+            "territory_size_class": "regional",
+            "prey_density": 0.28,
+            "aggression_class": "bold",
+            "livestock_pressure": 0.34,
+            "distance_to_nearest_settlement_blocks": 240,
+            "seasonal_modifier": "autumn_trending_winter"
+          },
+          "rate_of_change": {
+            "territory_size_per_tick": 0.0000020,
+            "prey_density_per_tick": -0.0000040,
+            "aggression_per_tick": 0.0000015,
+            "distance_to_settlement_per_tick": -0.00018,
+            "headcount_per_tick": 0,
+            "components": {
+              "hunting_pressure": 0.0000040,
+              "prey_recovery": 0.0000000,
+              "expansion_drive": 0.0000020,
+              "seasonal_pressure": "rising as winter approaches"
+            }
+          },
+          "drivers": [
+            "prey_density 0.28 and declining — the pack has over-hunted the north forest",
+            "season: autumn trending winter — seasonal_pressure rising, will push the pack toward the village through the cold months",
+            "livestock_pressure 0.34 — the pack has already taken two goats this season (a memory_ledger event already exists from 6000 ticks ago)",
+            "distance 240 blocks and closing (was 600 last season) — the pack's territory edge is approaching the village grazing land"
+          ],
+          "thresholds_state": {
+            "livestock_raiding": { "current": true, "crossed_at_tick": 38000, "consequence_fired": true },
+            "pet_or_villager_attack": { "current": false, "eta_ticks_if_unchanged": 12000, "consequence": "Old Chen's dog dies. The canonical Memory Metric event. NOT scripted — emerges from this trajectory crossing its threshold." },
+            "territory_collapse": { "current": false, "eta_ticks_if_unchanged": 180000, "current_risk": "low in the near term; the pack is expanding, not collapsing" },
+            "territory_expansion_into_settlement": { "current": false, "eta_ticks_if_unchanged": 24000, "consequence": "the village enters a fear trajectory; patrols or hunters may be organized" }
+          },
+          "interruptible_by": [
+            "Hunter or patrol culls the pack (lowers headcount; may end trajectory — the village head's motivation_state includes 'organize_wolf_hunt' as an unacted motivation)",
+            "Player or NPC drives the pack off (temporary)",
+            "Prey recovery (seasonal spring rebound; months away)",
+            "Village counter-raid (canon-grade escalation; the village takes the fight to the den)"
+          ],
+          "perceivable_without_notification": "Howls east of the village, closer than last moon — a player who lingers at night will hear them. Old Chen's gate has no dog at it this week — he does not mention it unless asked. A goat skeleton picked clean in the south pasture, less than a week old. Tracks in the snow at the village edge (in winter) — the pack was here in the night. A child in the village, asked about the howling, tells a story about a goat that died — though she has the details slightly wrong, and says there were seven wolves where there were five.",
+          "perceivable_at_arrival": true,
+          "compiled_into": "settlement_graph (threat edge to wang_family_village); feeds memory_ledger (the canonical Memory Metric driver), rumor_momentum"
+        },
+        "affordances": ["Observe (tracks, howls, prey remains)", "Hunt (combat)", "Drive Off (temporary)", "Track (to the den)"]
+      },
+
+      {
+        "id": "zhao_river",
+        "type": "River",
+        "canon_ref": "INFERRED (Art XV) — the river and its bridge are the Constitution's canonical history-vs-momentum example (Art XXXIX.1)",
+        "facts": {
+          "source": { "x": 3200, "z": -2000, "y_band": "surface" },
+          "mouth": { "x": 4600, "z": -200, "y_band": "surface" },
+          "course": "winding_southeast_from_zhao_mountains_through_wang_village_valley_to_chu_plain",
+          "flow_class": "river",
+          "flood_risk_class_nominal": "moderate",
+          "spirit_mineral_deposition_sites": [{"bend_id": "west_bend", "vein_coupling": "spirit_vein_wang_village", "deposition_rate": 0.0008}],
+          "navigation_class": "small_craft_only"
+        },
+        "momentum": {
+          "system": "river_erosion",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/river_erosion_momentum.schema.json",
+          "current_state": {
+            "course_class": "shifting",
+            "bank_erosion_rate": 0.04,
+            "flood_risk_class": "high (autumn rains; winter ice dam risk)",
+            "spirit_mineral_deposition_sites": [{"bend_id": "west_bend", "deposition_rate": 0.0008, "vein_id_coupling": "spirit_vein_wang_village"}],
+            "threatened_chokepoints": [{"chokepoint_id": "zhao_river_bridge", "integrity": 0.38, "failure_eta_ticks": 6000}],
+            "deposited_fertility_sites": [{"floodplain_id": "south_floodplain", "fertility_gain_per_flood": 0.02}]
+          },
+          "rate_of_change": {
+            "bank_erosion_per_tick": 0.0000020,
+            "course_shift_per_tick": 0.0000010,
+            "chokepoint_integrity_per_tick": -0.0000060,
+            "components": {
+              "flow_force": "moderate (autumn rains raising it)",
+              "soil_resistance": "moderate (clay banks with some bedrock)",
+              "vegetation_anchor": "low (the south bank was deforested for farmland two generations ago — the elder remembers)",
+              "seasonal_flood_multiplier": "1.6 (autumn)"
+            }
+          },
+          "drivers": [
+            "zhao_river_bridge south abutment undermined (integrity 0.38, declining) — the bridge is the Constitution's canonical history-vs-momentum example",
+            "south bank deforested two generations ago — erosion concentrated there",
+            "autumn rains raising flow_force — flood risk high",
+            "west bend deposits spirit minerals from spirit_vein_wang_village (a cultivator's foraging opportunity — perceivable)"
+          ],
+          "thresholds_state": {
+            "chokepoint_failure": { "target": "zhao_river_bridge", "integrity": 0.38, "threshold": 0.20, "eta_ticks_if_unchecked": 6000, "consequence": "bridge collapses. Caravans must detour (travel_graph edge removed). Wang Village's trade visits drop further. The village's decline trajectory steepens. THIS is the history-vs-momentum distinction (Art XXXIX.1): the collapse is history; the village dying because trade never recovered is momentum.", "irreversible": "true for the bridge (must be rebuilt)" },
+            "course_avulsion": { "current": false, "risk": "low this season" },
+            "spring_flood": { "current": false, "eta": "next spring", "consequence": "floodplain inundated, silt deposited (fertility gain), low structures damaged, fords impassable" },
+            "spirit_mineral_bloom": { "current": true, "site": "west_bend", "consequence": "a cultivator can harvest spirit minerals from the riverbed; perceivable as glittering deposits on a clear day" }
+          },
+          "interruptible_by": [
+            "Bridge repair or reinforcement (requires materials and labor — a village task the elder is considering)",
+            "Bank reinforcement (riprap, vegetation replanting)",
+            "Canon intervention (formation, tectonic event — not expected in Chapter 1)"
+          ],
+          "perceivable_without_notification": "The Zhao River bridge's south abutment is cracked through, moss in the fissures, the stone worn by years of current. A traveler crossing it feels the give. The river at the south bend has eaten into the bank — the old marker post stands in water now. At the west bend, where the current slows over the spirit vein, something glitters in the shallows on a clear day — a cultivator would know it for spirit mineral. The innkeeper, asked about the bridge, says it has needed repair for two years and the village cannot agree on the cost.",
+          "perceivable_at_arrival": true,
+          "compiled_into": "hydrology_graph (primary); feeds travel_graph (chokepoint integrity), settlement_graph (flood risk, trade viability), economy_momentum (trade disruption)"
+        },
+        "affordances": ["Observe (erosion, deposits, flood signs)", "Cross (via bridge or ford)", "Forage (spirit minerals at west bend)", "Fish", "Repair Bridge (task)"]
+      },
+
+      {
+        "id": "zhao_river_bridge",
+        "type": "Bridge",
+        "canon_ref": "INFERRED (Art XV) — the Constitution's canonical history-vs-momentum example (Art XXXIX.1)",
+        "facts": {
+          "position": { "x": 3920, "z": -1180 },
+          "crosses": "zhao_river",
+          "on_road": "wang_village_to_zhao_market_road",
+          "construction": "stone_abutments_timber_deck",
+          "integrity_nominal": 1.0,
+          "current_integrity": 0.38,
+          "_note": "The bridge is a chokepoint on the travel_graph. Its integrity is driven by zhao_river's erosion momentum. When integrity crosses 0.20 (with a flood event), the bridge fails — the travel_graph edge is removed, caravans detour, trade declines."
+        },
+        "momentum_ref": "zhao_river.river_erosion (the bridge's integrity is a field IN the river's momentum, not a separate momentum)",
+        "affordances": ["Cross", "Inspect (reveals integrity state)", "Repair (task; requires materials + labor)"]
+      },
+
+      {
+        "id": "heng_yue_recruiter_route",
+        "type": "Road",
+        "canon_ref": "EXPLICIT — Heng Yue Sect recruits from Wang Village (Wang Lin's own recruitment is canon)",
+        "facts": {
+          "surface_class": "dirt",
+          "maintenance_state": "fair",
+          "traffic_class": "low (occasional recruiter, merchant, patrol)",
+          "toll_class": "none",
+          "danger_class": "low_to_moderate (bandit_group_south operates on the southern stretch)",
+          "seasonality": "all_seasons (mountain_pass at the Heng Yue end is impassable in deep winter)"
+        },
+        "segments": [
+          {"id": "seg_wang_to_crossroads", "from": "wang_family_village", "to": "zhao_crossroads", "length_blocks": 800, "danger": "low"},
+          {"id": "seg_crossroads_to_pass", "from": "zhao_crossroads", "to": "heng_yue_mountain_pass", "length_blocks": 1400, "danger": "low"},
+          {"id": "seg_pass_to_heng_yue", "from": "heng_yue_mountain_pass", "to": "heng_yue_sect_gate", "length_blocks": 400, "danger": "low", "chokepoint": "heng_yue_mountain_pass"}
+        ],
+        "canonical_travel_time_ticks": 36000,
+        "_canon_distance_note": "Wang Village to Heng Yue Sect: ~1 day on foot (canon). 36000 ticks = 3 Minecraft days at 12000 ticks/day; adjusted for pathfinding speed. This MUST be literally true (user directive: 'If Wang Lin says Heng Yue is three days away, that should literally be true.').",
+        "affordances": ["Travel", "Observe (traffic, tracks)", "Ambush (if hostile)", "Patrol (if sect-affiliated)"]
+      },
+
+      {
+        "id": "heng_yue_recruiter_caravan",
+        "type": "WanderingCultivator",
+        "canon_ref": "EXPLICIT — Heng Yue recruiters visit Wang Village (Wang Lin's recruitment is canon)",
+        "facts": {
+          "npc_id": "npc_heng_yue_recruiter",
+          "route_id": "heng_yue_recruiter_route",
+          "position_along_route": 0.62,
+          "direction": "outbound (toward wang_family_village)",
+          "supplies_remaining": 0.81,
+          "morale": 0.70,
+          "threat_exposure": 0.18,
+          "cargo": {"spirit_root_test_kit": 1, "recruitment_jade_slips": 5, "sect_provisions": "modest"},
+          "eta_ticks": 9000,
+          "_canon_note": "The recruiter is already en route when the player arrives. This is THE perceivable-momentum example from the user directive: 'Merchant caravan halfway through its route.' The player did not start this journey. The player sees it (or its tracks, or its news) already in progress."
+        },
+        "momentum": {
+          "system": "caravan",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/caravan_momentum.schema.json",
+          "current_state": {
+            "route_id": "heng_yue_recruiter_route",
+            "position_along_route": 0.62,
+            "current_segment_id": "seg_crossroads_to_pass",
+            "supplies_remaining": 0.81,
+            "morale": 0.70,
+            "threat_exposure": 0.18,
+            "cargo": {"spirit_root_test_kit": 1, "recruitment_jade_slips": 5, "sect_provisions": "modest"},
+            "direction": "outbound",
+            "eta_ticks": 9000
+          },
+          "rate_of_change": {
+            "position_per_tick": 0.000068,
+            "supplies_per_tick": -0.0000035,
+            "morale_per_tick": 0.0000010,
+            "components": {
+              "base_speed": "foot (the recruiter travels modestly, not by spirit beast — Heng Yue is not wealthy)",
+              "terrain_modifier": "0.85 (fair road, some hills)",
+              "threat_caution_modifier": "1.0 (threat_exposure low)",
+              "weather_modifier": "1.0 (fair autumn weather)"
+            }
+          },
+          "drivers": [
+            "heng_yue_sect recruitment_status = active (the sect needs disciples; the vein is adequate but the headcount is declining)",
+            "route: seg_crossroads_to_pass, 1400 blocks, 9000 ticks ETA at current speed",
+            "supplies adequate, morale good, threat low — the recruiter will arrive unless interrupted"
+          ],
+          "thresholds_state": {
+            "arrival": { "eta_ticks": 9000, "consequence": "recruiter arrives at wang_family_village; tests children for spirit roots; may recruit one (canonically, will recruit Wang Lin's contemporary or a sibling — the canon event). economy_momentum supply event (sect_provisions traded). rumor_momentum seeds (the village hears the sect is recruiting)." },
+            "supply_crisis": { "current": false },
+            "ambush": { "current": false, "risk": "low on this segment; rises on seg_wang_to_crossroads if bandit_group_south is active" },
+            "morale_break": { "current": false }
+          },
+          "interruptible_by": [
+            "Player or NPC intercepts the recruiter on the road (delays or diverts)",
+            "Bandit ambush on the southern stretch (if bandit_group_south momentum is in raid_blitz)",
+            "Weather (storm slows)",
+            "Canon event (the recruiter turns back if the sect recalls them)"
+          ],
+          "perceivable_without_notification": "Fresh footprints on the road from Zhao crossroads, heading toward the village — a single traveler, recent, deliberate. A merchant who passed the crossroads two days ago mentions, unprompted, that he saw a young man in Heng Yue sect robes heading northeast. The village head, asked if the sect visits soon, says 'perhaps within the month' — but the tracks suggest sooner. Dust on the road at midday, if the player looks east at the right hour, might show a distant figure already walking.",
+          "perceivable_at_arrival": true,
+          "compiled_into": "travel_graph (position update every tick); feeds economy_momentum, settlement_graph (arrival event), rumor_momentum (recruiter visit rumor), motivation_state (village parents' hope/fear for their children)"
+        },
+        "affordances": ["Observe (tracks, the figure if visible)", "Intercept (on the road)", "Greet (when arrived)", "Ask About (the sect, recruitment, the road, the pass)"]
+      },
+
+      {
+        "id": "heng_yue_sect",
+        "type": "Sect",
+        "canon_ref": "EXPLICIT — Heng Yue Sect is Wang Lin's first sect (Er Gen RI canon)",
+        "facts": {
+          "sect_tier": "minor (Zhao Country's primary sect; modest by Suzaku standards)",
+          "path_affinity": "orthodox_foundational",
+          "headcount_class": "medium",
+          "resource_pressure_nominal": 0.45,
+          "doctrine": "orthodox (the patriarch's line; contested by younger elders pushing for expansion)",
+          "recruitment_status": "active",
+          "internal_factions": ["orthodox_patriarch_faction", "expansionist_young_elder_faction"],
+          "position": { "x": 5200, "z": -2400 },
+          "_canon_note": "Heng Yue is the sect Wang Lin joins. It is under modest resource pressure (the vein is adequate, not rich). The patriarch is aging. Internal faction tension is simmering. The recruiter is en route because the sect needs disciples. This is the world the player arrives into."
+        },
+        "momentum": {
+          "system": "sect",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/sect_momentum.schema.json",
+          "current_state": {
+            "headcount_class": "medium",
+            "recruitment_status": "active",
+            "resource_pressure": 0.52,
+            "internal_faction_tension": 0.44,
+            "doctrine_drift": "contested",
+            "ascent_decline_trend": "stagnating",
+            "rivalry_state": {"rival": "zhao_rival_sect (INFERRED)", "hostility": 0.30, "flashpoint_proximity": 0.20}
+          },
+          "rate_of_change": {
+            "headcount_per_tick": -0.0001,
+            "resource_pressure_per_tick": 0.0000080,
+            "faction_tension_per_tick": 0.0000020,
+            "components": {
+              "recruitment_rate": "0.8 disciples per recruiting visit (every ~60 days)",
+              "attrition_rate": "1.1 per equivalent period (deaths, completions, defections to larger sects)",
+              "resource_draw": "feeds spirit_vein_heng_yue extraction (not detailed in Chapter 1 scope, but referenced)",
+              "faction_drift": "expansionist faction gaining slow ground"
+            }
+          },
+          "drivers": [
+            "spirit_vein_heng_yue qi_density trend slightly negative (the sect's own vein, like the village's, is slowly thinning) — resource_pressure rising",
+            "patriarch aging, no clear heir — faction_tension rising (the patriarch's seclusion/breakthrough is a separate elder_breakthrough momentum, see heng_yue_patriarch_breakthrough)",
+            "recruitment_status active — the recruiter is en route (heng_yue_recruiter_caravan momentum)"
+          ],
+          "thresholds_state": {
+            "recruitment_blitz": { "current": false, "approaching": "if resource_pressure crosses 0.6 the sect will enter aggressive recruitment; the recruiter will visit more villages" },
+            "schism": { "current": false, "risk": "moderate (faction_tension 0.44, rising); a patriarch death without a clear heir could trigger it" },
+            "decline_spiral": { "current": false, "risk": "low in the near term" },
+            "ascension": { "current": false, "would_require": "a patriarch breakthrough (see heng_yue_patriarch_breakthrough) AND resource_pressure relief" }
+          },
+          "interruptible_by": [
+            "Successful patriarch breakthrough (would ascend the sect; see heng_yue_patriarch_breakthrough)",
+            "External threat unifying factions",
+            "New spirit vein discovery or formation (lowers resource_pressure)",
+            "Schism (would end this trajectory and begin two new ones)"
+          ],
+          "perceivable_without_notification": "The Heng Yue recruiter's visit is the perceivable cue (see heng_yue_recruiter_caravan). Additionally: a Heng Yue disciple passed through the village three days ago buying grain — more than usual (the sect's headcount pressure shows in its provisioning). The village head mentions, unsolicited, that the sect has been asking after children again. A traveler from the sect's direction reports the patriarch has not been seen in the main hall in weeks (see heng_yue_patriarch_breakthrough).",
+          "perceivable_at_arrival": true,
+          "compiled_into": "settlement_graph (sect as a settlement-class node); influence_map (Heng Yue influence over Zhao Country); travel_graph (recruiter route); feeds faction_grudge_momentum (with the rival sect)"
+        }
+      },
+
+      {
+        "id": "heng_yue_patriarch_breakthrough",
+        "type": "ElderBreakthrough",
+        "canon_ref": "INFERRED (Art XV) — a senior Heng Yue figure's breakthrough window creates the political opportunity characteristic of Er Gen sect dynamics",
+        "facts": {
+          "cultivator_id": "npc_heng_yue_patriarch",
+          "target_realm": "nascent_soul_late (or equivalent senior advancement)",
+          "seclusion_location": "heng_yue_sect_main_peak_hall",
+          "_canon_note": "The patriarch is in seclusion, nearing a breakthrough. This is the political opportunity the expansionist faction has been waiting for (sect_momentum faction_tension rising). If the breakthrough succeeds, the sect may ascend. If it fails, the sect may schism or decline. The player does not know this on arrival — but perceives the cues."
+        },
+        "momentum": {
+          "system": "elder_breakthrough",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/elder_breakthrough_momentum.schema.json",
+          "current_state": {
+            "target_realm": "nascent_soul_late",
+            "progress": 0.74,
+            "accumulation_rate_per_tick": 0.0000042,
+            "backlash_risk": 0.31,
+            "vulnerability_window": {"open": false, "opens_at_progress": 0.9, "eta_ticks": 38000},
+            "seclusion_location": "heng_yue_sect_main_peak_hall",
+            "supplements_remaining": 0.45
+          },
+          "rate_of_change": {
+            "progress_per_tick": 0.0000042,
+            "backlash_risk_per_tick": 0.0000010,
+            "components": {
+              "qi_accumulation": "from spirit_vein_heng_yue (adequate)",
+              "mental_state": "good (seclusion undisturbed)",
+              "supplement_burn": "0.0000035/tick; supplements will deplete before completion unless resupplied (the perceivable 'rare herbs being bought' cue)"
+            }
+          },
+          "drivers": [
+            "progress 0.74, rising — the breakthrough is months away, not days",
+            "supplements 0.45 and falling — will deplete before completion; the sect is buying rare herbs (perceivable in the village market)",
+            "backlash_risk 0.31, rising slowly — moderate; the vulnerability window will raise it sharply when it opens",
+            "vulnerability_window opens at progress 0.9 (~38000 ticks) — the political opportunity for the expansionist faction"
+          ],
+          "thresholds_state": {
+            "vulnerability_window_open": { "current": false, "eta_ticks": 38000 },
+            "breakthrough_success": { "current": false, "eta_ticks_if_uninterrupted": 62000, "consequence": "patriarch advances; sect may ascend; influence_map expands; canon-grade memory_ledger entry" },
+            "breakthrough_failure": { "current": false, "risk": "moderate (backlash_risk 0.31; rises sharply if interrupted during vulnerability window)", "consequence": "patriarch crippled or killed; sect may schism or decline; faction_grudge_momentum may ignite" },
+            "supplement_exhaustion": { "current": false, "eta_ticks": 28000, "consequence": "accumulation_rate drops; backlash_risk rises; the sect must resupply (the perceivable rare-herb-buying cue) or push through under-supported (raises failure risk)" }
+          },
+          "interruptible_by": [
+            "Sect resupplies supplements (the perceivable market activity)",
+            "Faction sabotage (interruption during vulnerability window — the succession play; would trigger failure)",
+            "Canon event (karmic disturbance, restriction rupture — not expected in Chapter 1)",
+            "Player or NPC delivers rare herbs (lowers backlash_risk, raises accumulation_rate — a way to aid the sect)"
+          ],
+          "perceivable_without_notification": "A Heng Yue disciple at the sect gate turns visitors away with a strained face — 'the patriarch is in seclusion.' The village herbalist mentions, unprompted, that the sect bought three times the usual spirit-replenishing herbs last month. A traveler from the sect's direction reports the main peak hall is sealed and disciples are on high alert. To a cultivator passing the sect's mountain, the air at the peak feels heavier — unmistakably the sign of a major breakthrough in progress. None of this is announced; it is the texture of a sect holding its breath.",
+          "perceivable_at_arrival": true,
+          "compiled_into": "settlement_graph (heng_yue_sect node state); feeds sect_momentum, faction_grudge_momentum, rumor_momentum"
+        }
+      },
+
+      {
+        "id": "crimson_root_patch_west",
+        "type": "SpiritHerbCluster",
+        "canon_ref": "INFERRED (Art XV) — spirit herbs and their harvest timing are pervasive Er Gen canon; the specific patch is authored for Chapter 1",
+        "facts": {
+          "species_id": "ergenverse:crimson_root",
+          "extent": "small cluster, 12 plants",
+          "spirit_vein_dependency": "spirit_vein_wang_village (the patch sits over a node of the village vein)",
+          "position": { "x": 3790, "z": -1210 },
+          "_canon_note": "A spirit herb patch that Wang Lin has been half-harvesting (he is mid-restriction-study and uses the roots as supplements). The half-harvested state is the perceivable cue. The patch is days from peak maturity. A cultivator who finds it faces the choice: take it now (weak), wait (risk Wang Lin or a beast taking it), guard it (reveal presence)."
+        },
+        "momentum": {
+          "system": "herb",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/herb_momentum.schema.json",
+          "current_state": {
+            "species_id": "ergenverse:crimson_root",
+            "plant_count": 12,
+            "ripeness": 0.62,
+            "potency": 0.55,
+            "maturation_eta_ticks": 8000,
+            "decay_eta_ticks": 16000,
+            "mutation_state": "stable",
+            "harvest_history": [{"tick": -6000, "harvester_id": "npc_wang_lin", "count_taken": 4}]
+          },
+          "rate_of_change": {
+            "ripeness_per_tick": 0.0000048,
+            "potency_per_tick": 0.0000040,
+            "components": {
+              "growth_rate": "species_base 0.0000040 * spirit_density_modifier 1.2 (the vein, though thinning, still nourishes this patch) * season_modifier 1.0",
+              "potency_accumulation": "rising toward ceiling 0.85 (species ceiling for this qi density)",
+              "decay_rate": "0 (not yet mature)",
+              "mutation_pressure": "low"
+            }
+          },
+          "drivers": [
+            "spirit_vein_wang_village qi_density 0.41 — adequate for this patch (the patch is over a vein node)",
+            "season autumn — growth moderate",
+            "last harvested 6000 ticks ago by npc_wang_lin (took 4 of 16 — the half-harvested perceivable cue)",
+            "maturation_eta 8000 ticks — days from peak"
+          ],
+          "thresholds_state": {
+            "peak_maturity": { "current": false, "eta_ticks": 8000, "consequence": "patch at peak; harvest now for max potency; if unharvested, decay countdown begins" },
+            "overripening": { "current": false, "eta_ticks": 16000 },
+            "mutation": { "current": false, "risk": "low (would require a spirit vein surge)" },
+            "depletion": { "current": false, "plant_count": 12, "sustainability_floor": 4, "risk": "if over-harvested, the patch dies" }
+          },
+          "interruptible_by": [
+            "Harvest (reduces plant_count; Wang Lin's motivation_state includes gathering these roots for his restriction study)",
+            "Guard (player or NPC; raises chance of catching a competing forager)",
+            "Spirit vein surge (raises growth; may trigger mutation)",
+            "Beast grazing (the north_wolf_pack does not eat these, but other fauna might)"
+          ],
+          "perceivable_without_notification": "A cluster of crimson root in the west wood, half-picked — four stalks cut cleanly, eight still growing, the cut marks less than three days old. Someone was here and will return. The roots are budding but not yet flowered — a cultivator who knows herbs knows they are ten days from peak. The cut marks are clean and deliberate, not a beast's work — a cultivator's harvest.",
+          "perceivable_at_arrival": true,
+          "compiled_into": "settlement_graph (resource node for wang_family_village); feeds economy_momentum; coupled to spirit_graph (qi dependency)"
+        },
+        "affordances": ["Observe (reveals ripeness, harvest history to a cultivator)", "Harvest", "Guard", "Tend (raise growth_rate)"]
+      },
+
+      {
+        "id": "bandit_group_south",
+        "type": "BanditGroup",
+        "canon_ref": "INFERRED (Art XV) — bandits are ambient Er Gen canon; the specific group authored for Chapter 1",
+        "facts": {
+          "headcount": 14,
+          "territory_polygon_ref": "south_hills_territory",
+          "territory_size_class": "roaming",
+          "base_camp": {"x": 3500, "z": -1600},
+          "_canon_note": "A bandit group in the south hills, pressing the southern stretch of the road between Wang Village and the Zhao market. Not yet in raid_blitz, but supplies are falling and desperation rising. This is the threat that makes the southern road dangerous — not because bandits are 'spawned there' but because this specific group, with this specific supply situation, is being forced toward raiding."
+        },
+        "momentum": {
+          "system": "bandit",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/bandit_momentum.schema.json",
+          "current_state": {
+            "headcount": 14,
+            "supplies": 0.31,
+            "desperation": 0.68,
+            "raid_cadence_ticks": 9000,
+            "last_raid_tick": 4000,
+            "territory_polygon_id": "south_hills_territory",
+            "territory_size_class": "roaming",
+            "prey_density": 0.42,
+            "morale": 0.55
+          },
+          "rate_of_change": {
+            "supplies_per_tick": -0.0000028,
+            "desperation_per_tick": 0.0000020,
+            "territory_size_per_tick": 0.0000010,
+            "headcount_per_tick": 0,
+            "components": {
+              "consumption": "14 * 0.0000002 = 0.0000028",
+              "raid_income": "0.0000014 (occasional successful raids)",
+              "forage_income": "0.0 (autumn, not winter, but the south hills are picked clean)",
+              "desperation_pressure": "rising as supplies fall"
+            }
+          },
+          "drivers": [
+            "supplies 0.31 and falling — the group is consuming faster than raids replenish",
+            "desperation 0.68 and rising — approaching raid_blitz threshold (0.7)",
+            "raid_cadence 9000 ticks (halved from 18000 last season — they are getting bold)",
+            "last_raid 4000 ticks ago — a caravan on the southern road; perceivable as a burnt wagon"
+          ],
+          "thresholds_state": {
+            "starvation_crisis": { "current": false, "approaching": "supplies will cross 0.15 in ~57000 ticks if no successful raid" },
+            "raid_blitz": { "current": false, "approaching": "desperation will cross 0.7 in ~10000 ticks; then the southern road becomes actively dangerous", "consequence": "multiple caravans/settlements hit; regional economy_momentum may enter scarcity; patrols dispatched" },
+            "dispersal": { "current": false, "risk": "low (headcount stable, morale adequate)" },
+            "expansion": { "current": false, "risk": "low (supplies too low for expansion)" }
+          },
+          "interruptible_by": [
+            "Patrol or sect suppression (the village head has considered asking Heng Yue for aid — a motivation_state)",
+            "Player clears the camp (ends trajectory)",
+            "Successful raid (resupplies, lowers desperation — temporarily)",
+            "Village pays protection (the village has not; the elder refuses on principle)",
+            "Famine or winter (accelerates starvation_crisis)"
+          ],
+          "perceivable_without_notification": "A burnt wagon off the southern road, the attack less than a week old — a player traveling south will find it. The village innkeeper, without prompting, warns travelers not to take the south road alone. Smoke rises from the south hills at dusk where no farmstead sits. A merchant limped into the village last month, stripped of goods, talking of fourteen bandits — he counted them before they let him run.",
+          "perceivable_at_arrival": true,
+          "compiled_into": "travel_graph (southern segment threat_exposure); settlement_graph (raid events on caravans supplying the village); influence_map (bandit influence zone in south hills)"
+        },
+        "affordances": ["Observe (smoke, tracks, the burnt wagon)", "Hunt (combat)", "Negotiate (if the player is formidable)", "Report (to the village, to Heng Yue)"]
+      },
+
+      {
+        "id": "grudge_wang_village_vs_teng_ally_merchant",
+        "type": "Grudge",
+        "canon_ref": "INFERRED (Art XV) — grudges are central Er Gen canon (the Teng family feud with Wang Lin is canonical); this specific Chapter 1 grudge is AUTHORED for simulation coherence to demonstrate faction_grudge_momentum at village scale",
+        "facts": {
+          "party_a": "wang_family_village",
+          "party_b": "teng_ally_merchant (a Teng-family-affiliated trader who cheated the village on a spirit-stone deal three years ago)",
+          "origin_event_id": "memory_cheating_event_tick_12000",
+          "severity_nominal": 0.50,
+          "festering_rate_nominal": 0.0008,
+          "_canon_note": "A festering village-scale grudge against a Teng-affiliated merchant. This is the seed of the larger Wang-vs-Teng dynamic that will define Wang Lin's later arc. At Chapter 1, it is a simmering village grievance — perceivable as cold politeness and economic friction, not open conflict."
+        },
+        "momentum": {
+          "system": "faction_grudge",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/faction_grudge_momentum.schema.json",
+          "current_state": {
+            "party_a": "wang_family_village",
+            "party_b": "teng_ally_merchant",
+            "origin_event_id": "memory_cheating_event_tick_12000",
+            "severity": 0.62,
+            "festering_rate": 0.0008,
+            "flashpoint_proximity": 0.55,
+            "catalysts": ["new cheating incident", "teng_family_pressure_on_the_merchant", "the_merchant_visits_again"],
+            "decay_conditions": ["reparation", "mediator_intervention (the village head has considered asking Heng Yue to mediate — a motivation_state)"],
+            "spread_to_allies": true,
+            "current_phase": "heated"
+          },
+          "rate_of_change": {
+            "severity_per_tick": 0.0000080,
+            "flashpoint_proximity_per_tick": 0.0000060,
+            "components": {
+              "festering": 0.0000080,
+              "amends": 0.0,
+              "catalyst_pressure": 0.0,
+              "shared_threat_cooling": 0.0,
+              "generational_decay": 0.0
+            }
+          },
+          "drivers": [
+            "origin: the merchant cheated the village on a spirit-stone deal three years ago; the village remembers",
+            "festering: no amends made; the merchant has not returned (he avoids the village); the grievance rises slowly",
+            "spread: the village's allied families share the grudge; the Teng family (distantly) backs the merchant",
+            "phase: heated (cold politeness, economic friction, no open conflict yet)"
+          ],
+          "thresholds_state": {
+            "simmering_to_heated": { "current": true, "crossed_at_tick": 24000 },
+            "flashpoint": { "current": false, "approaching": "would require a catalyst (the merchant returns, a new incident); if crossed, a conflict_schema trajectory begins — a lawsuit, a boycott, or a skirmish" },
+            "active_conflict": { "current": false },
+            "settlement": { "current": false, "would_require": "reparation or Heng Yue mediation" },
+            "dormant": { "current": false }
+          },
+          "interruptible_by": [
+            "Mediation by Heng Yue (the village head's motivation_state includes 'seek_mediation' as unacted)",
+            "Reparation by the merchant (unlikely without pressure)",
+            "A catalyst (the merchant returns — would raise severity sharply)",
+            "Shared external threat (the bandits, if they raid the merchant too, could cool the grudge by making him a victim)"
+          ],
+          "perceivable_without_notification": "The Wang family and the Zhou family (allied to the Wang) do not trade with the Teng-affiliated merchant — the innkeeper mentions it offhand when a traveler asks after spirit-stone dealers. At the spring market, the merchant's agents were overcharged three times by Wang-affiliated stalls — nobody called it a grudge, but everyone saw it. The village head has been quiet on the matter, which is itself a signal. An elder, asked, says only: it started before you were born, and it isn't finished.",
+          "perceivable_at_arrival": true,
+          "compiled_into": "relationship_graph (the grudge edge, with live severity); feeds conflict_schema, rumor_momentum, settlement_graph (economic friction)"
+        },
+        "affordances": ["Ask About (the grudge, the merchant, the deal)", "Mediate (if the player has standing)", "Investigate (the original cheating event, in memory_ledger)"]
+      },
+
+      {
+        "id": "rumor_heng_yue_recruiter_visit",
+        "type": "Rumor",
+        "canon_ref": "INFERRED (Art XV) — rumors are pervasive Er Gen canon; this rumor is the perceivable carrier of the heng_yue_recruiter_caravan trajectory",
+        "facts": {
+          "subject": "heng_yue_recruiter_caravan",
+          "subject_type": "opportunity",
+          "origin_settlement_id": "wang_family_village",
+          "origin_tick": 42000,
+          "_canon_note": "The rumor that the Heng Yue recruiter is coming. Five days old, spread to two neighboring hamlets, already distorted (east hamlet thinks it's next month, not this). This is the user's canonical perceivable-momentum example: 'two villagers discussing a rumor that has clearly been circulating for days (it has details, age, and disagreement).'"
+        },
+        "momentum": {
+          "system": "rumor",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/rumor_momentum.schema.json",
+          "current_state": {
+            "subject": "heng_yue_recruiter_caravan",
+            "subject_type": "opportunity",
+            "origin_settlement_id": "wang_family_village",
+            "origin_tick": 42000,
+            "belief_intensity": 0.72,
+            "spread_vector": [
+              {"settlement_id": "wang_family_village", "first_heard_tick": 42000, "local_belief_intensity": 0.78, "local_distortion": 0.05},
+              {"settlement_id": "east_hamlet", "first_heard_tick": 46000, "local_belief_intensity": 0.61, "local_distortion": 0.18},
+              {"settlement_id": "zhao_market", "first_heard_tick": 50000, "local_belief_intensity": 0.44, "local_distortion": 0.22}
+            ],
+            "distortion_rate_per_retelling": 0.04,
+            "decay_rate_per_tick": 0.0000020,
+            "reach_class": "regional",
+            "disagreement_level": 0.42
+          },
+          "rate_of_change": {
+            "belief_intensity_per_tick": -0.0000020,
+            "spread_per_tick": 0.0000010,
+            "distortion_per_tick": 0.0000004,
+            "components": {
+              "natural_decay": 0.0000020,
+              "caravan_spread": "0 (no caravan has arrived recently to spread it further)",
+              "npc_spread": "0.0000010 (a traveling peddler carried it to zhao_market)",
+              "re_catalysis": 0.0,
+              "charismatic_reteller_boost": 0.0
+            }
+          },
+          "drivers": [
+            "origin: a villager saw the recruiter's robes at the crossroads two weeks ago and speculated",
+            "spread: a peddler carried it to zhao_market; a farmer carried it to east_hamlet",
+            "distortion: east_hamlet thinks the visit is next month (the original said 'soon'); zhao_market thinks the recruiter is testing for a specific spirit root (he isn't; he's testing all children)",
+            "decay: belief fading slowly; will be confirmed or disproved when the recruiter arrives (~9000 ticks)"
+          ],
+          "thresholds_state": {
+            "regional_reach": { "current": true, "crossed_at_tick": 50000 },
+            "distortion_fork": { "current": false, "approaching": "if disagreement rises above 0.6 (currently 0.42), the rumor forks into incompatible versions" },
+            "fading": { "current": false, "eta_if_unconfirmed": 80000 },
+            "confirmed": { "current": false, "eta_ticks": 9000, "consequence": "recruiter arrives; belief spikes to ~1.0 in settlements that heard the rumor; transforms from speculation to remembered fact (memory_ledger entry)" },
+            "disproved": { "current": false }
+          },
+          "interruptible_by": [
+            "Player or NPC publicly confirms or denies (the village head could confirm; he hasn't because he isn't certain)",
+            "Recruiter arrives (confirms) or definitively fails to arrive (disproves)",
+            "Heng Yue elder rules on the schedule (shifts belief in the sect's influence zone)",
+            "A bigger rumor eclipses it (the patriarch's seclusion is a competing rumor)"
+          ],
+          "perceivable_without_notification": "Two villagers at the well disagree about whether the Heng Yue recruiter comes this month or next — the rumor is two weeks old and has already forked between the village and the east hamlet. A merchant from the east hamlet mentions, unprompted, that he heard the recruiter is coming — his version adds that the sect is looking for a specific spirit root (it isn't; that's distortion). A child, asked if the sect will take anyone, says 'my cousin says maybe, but grandmother says not this year.' The rumor has age, detail, and disagreement — the texture of a real circulating story.",
+          "perceivable_at_arrival": true,
+          "compiled_into": "feeds belief_registry (NPC beliefs about the recruiter's visit), motivation_state (village parents' hope/fear for their children); carried by travel_graph (peddler/caravan spread)"
+        },
+        "affordances": ["Overhear (ambient dialogue)", "Ask About (the rumor, the recruiter, the sect)", "Confirm/Deny (if the player has authority or evidence)", "Spread (the player can carry the rumor further)"]
+      },
+
+      {
+        "id": "wang_lin_restriction_study",
+        "type": "ElderBreakthrough",
+        "canon_ref": "EXPLICIT — Wang Lin studying the restriction in the cave above the village is canonical early RI",
+        "facts": {
+          "cultivator_id": "npc_wang_lin",
+          "target_realm": "restriction_decipherment (not a cultivation breakthrough per se; a knowledge breakthrough — the third layer of the cave restriction)",
+          "seclusion_location": "wang_village_cave_above_village",
+          "_canon_note": "Wang Lin is mid-study on the cave restriction, stuck on the third layer. This is the bidirectional-Wang-Lin opportunity (Art XXXI.2): the player who demonstrates restriction skill becomes relevant to Wang Lin's motivation (he cannot decipher the third layer alone). This momentum is a knowledge-trajectory variant of elder_breakthrough — progress is decipherment, not qi accumulation."
+        },
+        "momentum": {
+          "system": "elder_breakthrough (knowledge variant)",
+          "schema_ref": "ergenverse:worldgen/blueprint/v2/momentum/elder_breakthrough_momentum.schema.json (adapted: progress = decipherment, backlash_risk = mental-strain risk)",
+          "current_state": {
+            "target_realm": "restriction_decipherment_layer_3",
+            "progress": 0.58,
+            "accumulation_rate_per_tick": 0.0000012,
+            "backlash_risk": 0.22,
+            "_backlash_note": "mental strain; Wang Lin is cautious",
+            "vulnerability_window": {"open": false, "note": "knowledge breakthrough has no seclusion lockout, but Wang Lin is irritable when deep in study"},
+            "seclusion_location": "wang_village_cave_above_village",
+            "supplements_remaining": "crimson_root reserves (see crimson_root_patch_west) — 0.30, falling"
+          },
+          "rate_of_change": {
+            "progress_per_tick": 0.0000012,
+            "backlash_risk_per_tick": 0.0000004,
+            "components": {
+              "qi_accumulation": "from spirit_vein_wang_village (thin, slowing progress)",
+              "mental_state": "good but strained",
+              "supplement_burn": "crimson_root at 0.30; will deplete in ~20000 ticks unless resupplied from crimson_root_patch_west (which is 8000 ticks from peak)"
+            }
+          },
+          "drivers": [
+            "progress 0.58 — stuck on the third layer; the restriction is incomplete and Wang Lin cannot decipher it alone",
+            "supplements (crimson_root) at 0.30 — he has been harvesting the west patch (the half-harvested cue)",
+            "backlash_risk 0.22 — he is cautious; he will not push recklessly",
+            "the player who demonstrates restriction skill becomes relevant (Art XXXI.2, XXXIII.3) — Wang Lin's motivation_state includes 'm_decode_restriction_cave' with target_filter unresolved"
+          ],
+          "thresholds_state": {
+            "vulnerability_window_open": { "current": false, "note": "knowledge breakthrough variant; Wang Lin is irritable but not seclusion-locked" },
+            "breakthrough_success": { "current": false, "eta_ticks_if_uninterrupted": 84000, "consequence": "Wang Lin deciphers the third layer; canon-grade memory_ledger entry; his capability_score rises; a new restriction-knowledge opportunity emerges for the player" },
+            "breakthrough_failure": { "current": false, "risk": "low (backlash_risk 0.22); would manifest as mental strain, not cultivation damage" },
+            "supplement_exhaustion": { "current": false, "eta_ticks": 20000, "consequence": "progress slows; Wang Lin must harvest more crimson_root (the west patch, 8000 ticks from peak — a timing tension) or seek an alternative (the player could bring herbs, becoming relevant)" }
+          },
+          "interruptible_by": [
+            "Player or NPC offers restriction insight (the bidirectional Wang Lin opportunity; Art XXXI.2 — Wang Lin evaluates understanding/harm/motive/judgment/timing, then may accept aid)",
+            "Player or NPC brings crimson_root (lowers supplement_exhaustion; raises progress; becomes relevant via capability)",
+            "Wang Lin solves it alone (canon path; the player merely observes)",
+            "Canon event (a restriction rupture, an ancient god fragment — not expected in Chapter 1)"
+          ],
+          "perceivable_without_notification": "Wang Lin is often absent from the village — at the cave above, studying. A villager mentions it offhand: 'the young Wang is always up at that cave.' The cave entrance shows signs of habitual use (worn path, old incense stubs). Wang Lin, when present in the village, is distracted, irritable, and uninterested in village affairs — the texture of a man deep in a problem he cannot solve. His hands smell of crimson root. None of this is a quest; it is the texture of a man mid-work.",
+          "perceivable_at_arrival": true,
+          "compiled_into": "feeds npc_wang_lin motivation_state (m_decode_restriction_cave); coupled to crimson_root_patch_west (supplement dependency); the bidirectional-Wang-Lin opportunity surface"
+        },
+        "affordances": ["Observe (Wang Lin's behavior, the cave entrance)", "Approach Wang Lin", "Ask About (the cave, the restriction, his study)", "Offer Aid (restriction insight, crimson root) — becomes relevant via capability"]
+      }
+    ],
+
+    "relationships": [
+      {"from": "wang_family_village", "to": "zhao_country", "type": "located_in", "since": "founding_era", "canon_ref": "EXPLICIT"},
+      {"from": "wang_family_village", "to": "spirit_vein_wang_village", "type": "fed_by", "since": "founding_era", "canon_ref": "EXPLICIT", "strength": 1.0},
+      {"from": "wang_family_village", "to": "zhao_river", "type": "supplied_by", "since": "founding_era", "canon_ref": "INFERRED", "strength": 0.7, "_note": "the river provides fish, irrigation, and the spirit-mineral foraging site"},
+      {"from": "wang_family_village", "to": "zhao_river_bridge", "type": "depends_on", "since": "bridge_construction", "canon_ref": "INFERRED", "strength": 0.6, "_note": "trade depends on the bridge; bridge failure steepens village decline"},
+      {"from": "wang_family_village", "to": "heng_yue_sect", "type": "recruits_from", "since": "founding_era", "canon_ref": "EXPLICIT", "strength": 0.8, "_note": "the sect takes the spirit-rooted young; they do not return"},
+      {"from": "wang_family_village", "to": "heng_yue_sect", "type": "protected_by", "since": "founding_era", "canon_ref": "INFERRED", "strength": 0.4, "_note": "nominal protection; Heng Yue is the local sect authority but does not actively garrison the village"},
+      {"from": "wang_family_village", "to": "north_wolf_pack", "type": "threatened_by", "since": 38000, "canon_ref": "INFERRED", "strength": 0.55, "momentum_ref": "north_wolf_pack.wolf_pack", "_note": "the pack's territory is closing on the village; livestock_pressure rising"},
+      {"from": "wang_family_village", "to": "bandit_group_south", "type": "threatened_by", "since": 20000, "canon_ref": "INFERRED", "strength": 0.35, "momentum_ref": "bandit_group_south.bandit", "_note": "the bandits threaten the southern road, which the village's trade depends on"},
+      {"from": "wang_family_village", "to": "teng_ally_merchant", "type": "grudge_against", "since": 12000, "canon_ref": "AUTHORED", "strength": 0.62, "momentum_ref": "grudge_wang_village_vs_teng_ally_merchant.faction_grudge", "_note": "the festering village-scale grudge"},
+
+      {"from": "spirit_vein_wang_village", "to": "wang_family_village", "type": "fed_by", "since": "founding_era", "canon_ref": "EXPLICIT", "_note": "the vein feeds the village (reverse direction for spirit_graph source->consumer)"},
+      {"from": "wang_family_village", "to": "spirit_vein_wang_village", "type": "drains", "since": "founding_era", "canon_ref": "EXPLICIT", "_note": "the village draws from the vein (extraction edge in spirit_graph)"},
+      {"from": "crimson_root_patch_west", "to": "spirit_vein_wang_village", "type": "depends_on", "since": "founding_era", "canon_ref": "INFERRED", "_note": "the herb patch depends on the vein's qi for growth"},
+      {"from": "wang_lin_restriction_study", "to": "crimson_root_patch_west", "type": "depends_on", "since": 8000, "canon_ref": "INFERRED", "_note": "Wang Lin's study depends on crimson_root supplements from the patch"},
+
+      {"from": "heng_yue_recruiter_caravan", "to": "heng_yue_recruiter_route", "type": "route_of", "since": 12000, "canon_ref": "EXPLICIT"},
+      {"from": "heng_yue_recruiter_caravan", "to": "wang_family_village", "type": "leads_to", "since": 12000, "canon_ref": "EXPLICIT", "_note": "the recruiter is en route TO the village"},
+      {"from": "heng_yue_recruiter_caravan", "to": "heng_yue_sect", "type": "origin_of", "since": 12000, "canon_ref": "EXPLICIT", "_note": "the recruiter originated FROM the sect"},
+
+      {"from": "zhao_river", "to": "zhao_river_bridge", "type": "crosses", "since": "bridge_construction", "canon_ref": "INFERRED", "_note": "the river crosses the road at the bridge (hydrology_graph crossing edge)"},
+      {"from": "zhao_river", "to": "south_floodplain", "type": "floods", "since": "geological_era", "canon_ref": "INFERRED"},
+      {"from": "zhao_river", "to": "spirit_vein_wang_village", "type": "fed_by_spring", "since": "geological_era", "canon_ref": "INFERRED", "_note": "the river deposits spirit minerals from the vein at the west bend (spirit_mineral_bloom perceivable cue)"},
+
+      {"from": "heng_yue_sect", "to": "wang_family_village", "type": "recruits_from", "since": "founding_era", "canon_ref": "EXPLICIT"},
+      {"from": "heng_yue_sect", "to": "npc_heng_yue_patriarch", "type": "governs", "since": "patriarch_succession", "canon_ref": "EXPLICIT"},
+      {"from": "heng_yue_patriarch_breakthrough", "to": "heng_yue_sect", "type": "depends_on", "since": "seclusion_began", "canon_ref": "INFERRED", "_note": "the sect's trajectory depends on the patriarch's breakthrough outcome"},
+
+      {"from": "rumor_heng_yue_recruiter_visit", "to": "wang_family_village", "type": "spread_to", "since": 42000, "canon_ref": "INFERRED"},
+      {"from": "rumor_heng_yue_recruiter_visit", "to": "east_hamlet", "type": "spread_to", "since": 46000, "canon_ref": "INFERRED"},
+      {"from": "rumor_heng_yue_recruiter_visit", "to": "zhao_market", "type": "spread_to", "since": 50000, "canon_ref": "INFERRED"},
+      {"from": "rumor_heng_yue_recruiter_visit", "to": "heng_yue_recruiter_caravan", "type": "origin_of", "since": 42000, "canon_ref": "INFERRED", "_note": "the rumor is ABOUT the recruiter caravan"}
+    ],
+
+    "momentum_test_at_arrival": {
+      "_article": "XXXIX.5 — A chapter is not living unless at least THREE systems are visibly mid-trajectory and the player can perceive at least one WITHOUT being told.",
+      "perceivable_momentums_at_arrival": [
+        "spirit_vein_wang_village.spirit_vein (the vein thinning — perceivable via weak shrine lamp, scarce herbs, old villagers' remarks)",
+        "north_wolf_pack.wolf_pack (the pack closing — perceivable via howls, Old Chen's missing dog, goat remains, child's retelling)",
+        "zhao_river.river_erosion (the bridge failing — perceivable via cracked abutment, eaten bank, glittering spirit minerals)",
+        "heng_yue_recruiter_caravan.caravan (the recruiter en route — perceivable via tracks, merchant's mention, village head's uncertainty)",
+        "heng_yue_patriarch_breakthrough.elder_breakthrough (the patriarch in seclusion — perceivable via disciple turning visitors away, rare-herb buying, heavy air at the peak)",
+        "crimson_root_patch_west.herb (the half-harvested patch — perceivable via clean cut marks, budding not flowering, Wang Lin's herb-stained hands)",
+        "bandit_group_south.bandit (the bandits pressing — perceivable via burnt wagon, innkeeper's warning, smoke in the hills)",
+        "grudge_wang_village_vs_teng_ally_merchant.faction_grudge (the festering grudge — perceivable via cold trade, overcharging, elder's silence)",
+        "rumor_heng_yue_recruiter_visit.rumor (the circulating rumor — perceivable via villagers' disagreement, distortion between hamlets)",
+        "wang_lin_restriction_study.elder_breakthrough (Wang Lin mid-study — perceivable via his absence, the cave path, his irritability, crimson-root smell)",
+        "heng_yue_sect.sect (the sect stagnating — perceivable via the recruiter's activity, the disciple's provisioning, the patriarch's seclusion)"
+      ],
+      "count_perceivable_at_arrival": 11,
+      "momentum_test_passed": true,
+      "_note": "11 systems visibly mid-trajectory at arrival, far exceeding the Article XXXIX.5 minimum of 3. The player arrives into a world already in motion on eleven fronts. None are announced; all are perceivable to a player who looks."
+    },
+
+    "memory_metric_seed": {
+      "_article": "XXXI.5 — Chapter complete only when THE WORLD REMEMBERS. Test: Week 1 Old Chen owns a dog. Week 3 wolf attack — dog dies. Week 5 Old Chen says 'Used to have one.' Months later a child tells the story. When that occurs WITHOUT developer scripting the beat, the world has memory.",
+      "canonical_test": "north_wolf_pack.wolf_pack threshold 'pet_or_villager_attack' (eta ~12000 ticks if unchecked) produces the dog-death event. The event is written to memory_ledger with witnesses (Old Chen, nearby villagers), location (the village edge), and victim (Old Chen's dog). Old Chen's relationship_graph updates (grievance against the pack, fear). His motivation_state shifts (grief, desire for revenge or for the village to act). The village head's motivation_state activates 'organize_wolf_hunt'. A rumor_momentum seeds (the dog-death story). Weeks later, Old Chen in ambient dialogue says 'used to have one' — unprompted, when a traveler asks about his gate. Months later, a child retells the story — with distorted details (seven wolves, not five). NONE of this is scripted as a beat. It emerges from the wolf_pack_momentum crossing its threshold, the memory_ledger recording it, the relationship_graph updating, the motivation_state activating, and the rumor_momentum spreading and distorting. The world remembers because the trajectory produced the event.",
+      "unscripted_verification": "The cycle succeeds ONLY if a tester, arriving at a random tick and observing for ~6 Minecraft weeks, witnesses the dog-death event occur naturally (from the momentum, not a script), witnesses Old Chen's grief emerge in ambient dialogue (from his updated motivation_state), and witnesses a child retell the distorted story (from the rumor_momentum). If any of these require a scripted trigger, the Memory Metric FAILS."
+    },
+
+    "chapter_1_arrival_state_summary": "When the player arrives at Wang Family Village, the world is mid-sentence on eleven fronts. The spirit vein has been thinning for a decade. The wolf pack has been closing for a season. The bridge has been failing for two years. The Heng Yue recruiter is on the road, three days out. The patriarch is in seclusion, months from a breakthrough. The crimson root patch is days from peak, half-harvested by Wang Lin. The bandits are weeks from raid-blitz. The grudge against the Teng merchant is festering. The recruiter-visit rumor is two weeks old and already distorted between hamlets. Wang Lin is stuck on the third layer of the cave restriction. The sect is stagnating under faction tension. The player did not cause any of this. The player arrives into it. The player's choices can accelerate, divert, or resolve these trajectories — but they were moving before the player existed and, under Article V, would continue moving if the player never existed. This is the authored world with inertia. This is Article XXXIX."
+  }
+}

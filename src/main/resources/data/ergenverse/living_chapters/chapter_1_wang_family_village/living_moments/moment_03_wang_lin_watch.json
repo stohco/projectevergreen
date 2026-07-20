@@ -1,0 +1,77 @@
+{
+  "_schema": "ergenverse:living_chapters/chapter_1_wang_family_village/living_moments/moment_03_wang_lin_watch",
+  "_article": "XL §1 + XXXI.2 (Bidirectional Wang Lin) — sometimes Wang Lin approaches unbidden",
+  "moment_id": 3,
+  "title": "Wang Lin approaches the player unbidden: 'Watch.' Demonstrates one restriction. Walks away.",
+  "status": "SPEC",
+
+  "scene": "The player has been studying restriction stones — visibly, using the player's own cultivation action, for ~3 Minecraft days. The player has NOT asked Wang Lin for help. The player has NOT triggered any quest. On day four, Wang Lin approaches the player unbidden. He says one word: 'Watch.' He demonstrates one restriction technique (a simple seal formation, visible as a brief particle effect on the ground). He does not explain. He does not name it. He walks away. NO reward window. NO 'quest complete.' NO notification. NO skill unlock. The player has merely witnessed Wang Lin deciding, on his own, that this person is worth a single demonstration. Whether the player learns anything from it is up to the player.",
+
+  "observed_checklist": {
+    "without_player_interaction": "Partially — Wang Lin's approach is triggered by the player's restriction-study action, so the player must exist and must have been studying. But the approach ITSELF is unbidden; Wang Lin is not asked. If the player never studies restrictions, Wang Lin never approaches (Article V — Wang Lin's life continues; he just doesn't teach strangers).",
+    "with_player_interaction": "The player must have been studying restrictions visibly (perceivable by Wang Lin or reported to him). The player's relationship_graph state with Wang Lin must be neutral-or-better (Wang Lin will not approach a hostile player). The player's capability_compatibility 'willingness' score must be > 0.4 (Wang Lin assesses: does this person actually try, or just collect techniques?).",
+    "different_outcomes_across_worlds": "Whether Wang Lin approaches at all (depends on player's study cadence — if player studies intensely for 3 days, ~70% chance; if casually, ~20%). Which restriction he demonstrates (3 variants: simple seal, formation knot, dispel pattern). Whether he says 'Watch' or says nothing (50/50). Whether he returns to his cave or to the village (depends on his supplement_exhaustion trajectory — if supplements low, he goes to ask the herbalist).",
+    "remembered_by_npcs_later": "Wang Lin's relationship_graph updates: 'assessed player as worth-a-single-demonstration.' Future interactions reference this ('I showed you once. Watch again, or do not.'). If the player later demonstrates the technique correctly (without being taught), Wang Lin's trust increases sharply. If the player never uses it, Wang Lin's assessment downgrades."
+  },
+
+  "systems_exercised": [
+    "elder_breakthrough_momentum (wang_lin_restriction_study) — Wang Lin's own trajectory includes supplement_exhaustion; when supplements are low, his motivation_state includes 'seek_observer_for_assessment' (he wants to gauge if anyone else is worth teaching, because teaching is a form of confirming his own understanding)",
+    "player-action perception — Wang Lin (or his perception_engine) perceives the player's restriction-study action if within range, or hears about it via rumor_momentum (villagers mention 'the stranger who stares at stones')",
+    "relationship_graph — Wang Lin's trust assessment of the player gates the approach",
+    "capability_compatibility — Wang Lin evaluates the player's 'willingness' (does this person actually study?) and 'judgment' (do they study the right stones?) before approaching",
+    "bidirectional_protocol (Article XXXI.2) — this is the canonical 'sometimes Wang Lin approaches unbidden' moment",
+    "motivation_state — Wang Lin's motivation_state must include 'teach_once' with target=player; the IntentEngine produces this intent when the conditions are met",
+    "memory_ledger — the demonstration is recorded; future interactions reference it"
+  ],
+
+  "canon_reference": "Renegade Immortal Chapters 6-10 — Wang Lin's restriction study is the foundation of his later mastery. In canon, Wang Lin is largely self-taught (the Situ Zhai elder gives him one jade slip, then abandons him). Wang Lin's teaching style, when he does teach, is minimalist: he shows, he does not explain. The player must infer. This is the Er Gen 'knowledge is progression' (Article VII) made flesh — Wang Lin does not unlock a skill for the player; he shows a thing, and the player must figure out what to do with it.",
+
+  "perceivable_cues": [
+    "Wang Lin walks toward the player (unusual — he normally avoids the village center)",
+    "Wang Lin stops at conversation distance",
+    "Wang Lin says 'Watch.' (or says nothing — 50/50)",
+    "A brief particle effect on the ground (the restriction demonstration) — visible for ~2 seconds",
+    "Wang Lin turns and walks away",
+    "NO skill unlock notification. NO quest update. NO UI element. NO reward window.",
+    "The player may or may not understand what they just saw. That is by design."
+  ],
+
+  "anti_patterns_violated_if_broken": [
+    "Article XXXI.2 — if Wang Lin only approaches when the player asks, the bidirectional protocol is dead",
+    "Article VII — if the demonstration unlocks a skill or grants XP, the moment is dead (knowledge is not progression; knowledge is progression)",
+    "Article IV — if a notification appears ('Wang Lin taught you Restriction: Basic Seal'), the moment is dead",
+    "Article XXXV — if Wang Lin approaches for the player's benefit (to help them), the moment is dead; he approaches for his own assessment reasons"
+  ],
+
+  "minimal_java_wiring_required": [
+    "Player cultivation action 'study_restriction_stone' fires a PlayerActionEvent on WorldEventBus, perceivable by nearby NPCs",
+    "Wang Lin's perception_engine receives the event (if in range) or receives a rumor-based version (if out of range, delayed)",
+    "Wang Lin's IntentEngine evaluates: IF player.restriction_study_count > threshold AND relationship.trust >= 0.0 AND capability.willingness > 0.4 AND own.supplement_exhaustion < 0.20 AND NOT already_assessed_player THEN produce intent 'teach_once' target=player",
+    "Wang Lin's DecisionEngine routes 'teach_once' to the ApproachAndDemonstrate planner action",
+    "ApproachAndDemonstrate pathfinds to player, plays 'Watch' voice line (or silent), plays restriction particle effect, pathfinds away",
+    "MemoryLedgerWriter records: witness=player, action=demonstration, restriction_variant=chosen, assessment=positive_initial",
+    "RelationshipGraph updates: Wang Lin -> player, 'assessed_worth_demonstration' = true",
+    "Debug command: /ergen debug force wang_lin_assessment — sets Wang Lin's assessment conditions to true, so the approach fires within 5 minutes (Article XL §2)"
+  ],
+
+  "five_minute_rule_compliance": "COMPLIANT via debug command. Tester can run /ergen debug force wang_lin_assessment, then wait near Wang Lin's cave. He will approach within 1-2 Minecraft hours. Alternatively, tester can study restriction stones for 3 Minecraft days (legitimate path).",
+
+  "verification_protocol": [
+    "1. Spawn in Wang Family Village.",
+    "2. Approach a restriction stone (defined as an interactable block in the village or cave).",
+    "3. Use the 'study' cultivation action on it, 3 times per Minecraft day, for 3 Minecraft days.",
+    "4. Do NOT approach Wang Lin. Do NOT ask him anything.",
+    "5. On day 4, position near Wang Lin's cave or in the village center.",
+    "6. Wait. Within 1-3 Minecraft hours, Wang Lin should approach.",
+    "7. Verify: he says 'Watch' (or nothing), plays a particle effect, walks away.",
+    "8. Verify: NO skill unlock. NO notification. NO quest update. NO UI element.",
+    "9. Verify in memory_ledger: 'wang_lin_assessed_player' entry exists.",
+    "10. Verify across 3 fresh worlds: Wang Lin approaches in 2-3 of them (probability-gated); which restriction he demonstrates varies; 'Watch' vs silence varies.",
+    "11. Verify 1 Minecraft week later: if player uses the demonstrated restriction correctly, Wang Lin's trust increases. If player ignores it, Wang Lin's assessment downgrades.",
+    "12. If all pass: status -> OBSERVED."
+  ],
+
+  "success_means": "When this moment reaches OBSERVED, the project has proven: (a) the bidirectional Wang Lin protocol works (Article XXXI.2), (b) NPC approach is driven by IntentEngine evaluating world state, not by scripted triggers, (c) knowledge is shown, not unlocked (Article VII), (d) the player must earn the approach through observable behavior, not quest completion. Article XXXV (character-first) becomes enforceable.",
+
+  "failure_means": "If Wang Lin approaches on a scripted timer (not driven by his IntentEngine evaluating player actions), the bidirectional protocol is fake. If a skill unlocks, Article VII is violated. Root cause must be documented."
+}

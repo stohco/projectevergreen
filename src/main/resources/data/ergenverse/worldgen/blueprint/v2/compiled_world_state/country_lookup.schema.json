@@ -1,0 +1,31 @@
+{
+  "_schema": "compiled_country_lookup",
+  "_schema_version": 1,
+  "_article": "XXXIX.7 — Country Lookup is a first-class compiled artifact. User directive: 'Country borders as GIS polygons. Point-in-polygon test during chunk generation.'",
+  "_description": "Schema for the COMPILED Country Lookup — a point-in-polygon index that answers 'which country is (x,z) in?' in O(log n) or better. Built from the Country entities' polygons in the blueprint. The chunk renderer and the biome lookup both query this; the simulation queries it for political-jurisdiction questions ('whose law applies here?').",
+  "_schema_compact": true,
+  "schema": {
+    "countries": [
+      {
+        "country_id": "string",
+        "name": "string",
+        "canon_name": "string",
+        "polygon": "list of [x, z] vertex pairs defining the country border (point-in-polygon test target)",
+        "bounding_box": {"min_x": "int", "min_z": "int", "max_x": "int", "max_z": "int"},
+        "capital": "string — settlement_id",
+        "political_tier": "enum — minor_mortal_kingdom | major_mortal_kingdom | ruling_dynasty | specialized_kingdom | wasteland | contested",
+        "ruling_faction": "string",
+        "biome_rule": "string — the biome that applies inside this polygon (drives biome_lookup)",
+        "canon_ref": "enum"
+      }
+    ],
+    "spatial_index": "r_tree | quadtree — over bounding boxes for fast point-in-bbox prefilter, then point-in-polygon for the candidate",
+    "queries_supported": [
+      "country_at(x, z) -> country_id|null — the core point-in-polygon query",
+      "contains(country_id, x, z) -> bool",
+      "neighbors(country_id) -> [country_id] — countries sharing a border"
+    ]
+  },
+  "_compile_source": "World Blueprint DSL v2 — Country entities (polygon field)",
+  "_runtime_consumers": ["BiomeLookup (country -> biome_rule)", "ChunkRenderer (which country's terrain rules apply)", "InfluenceMap (jurisdiction)", "DecisionEngine (whose law applies to an event)"]
+}

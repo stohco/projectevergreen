@@ -1,0 +1,65 @@
+{
+  "_schema": "compiled_momentum_registry",
+  "_schema_version": 1,
+  "_article": "XXXIX.2 — every system has a trajectory. XXXIX.4 — momentum is compiled, not scripted. XXXIX.5 — the Momentum Test. XXXIX.7 — the simulation advances momentum every tick.",
+  "_description": "Schema for the COMPILED Momentum Registry — the master index of all LIVE TRAJECTORIES in the world, advanced every simulation tick. This is the heart of Article XXXIX. When the player arrives, the registry contains every momentum seeded to its canonical initial state (derived from Historical Timeline + Simulation Seed + player arrival time). Every tick, the simulation advances each momentum per its declared rate_of_change and drivers, checks thresholds, fires consequences, and records memory_ledger entries. This registry is what makes the world 'already in motion'.",
+  "_design_notes": {
+    "the_inversion": "Without this registry, the world is a diorama placed at chunk-load. WITH this registry, the world is a set of trajectories that have been advancing since the canon epoch, and the player arrives at a specific point in each trajectory. The same blueprint + a different arrival time = a different present moment. This is the replayability mechanism (Art XXXIX.4).",
+    "the_momentum_test_gate": "Every momentum entry MUST have a non-empty `perceivable_without_notification` field (Art XXXIX.5). The registry validator rejects any momentum that fails this gate. A chapter cannot be declared living unless at least 3 of its momentums are perceivable at arrival time."
+  },
+  "schema": {
+    "world_seed": "int — the Simulation Seed (random per playthrough); drives initial-state variance",
+    "canon_seed": "int — the Canon Seed (fixed); drives geography (never varies)",
+    "player_arrival_tick": "int — the tick at which the player arrives; momentums are seeded to their state at this tick",
+    "current_tick": "int — advanced every simulation tick",
+    "momentums": [
+      {
+        "momentum_id": "string — unique; typically '<entity_id>.<system>'",
+        "entity_id": "string — the entity this momentum belongs to",
+        "system": "enum — spirit_vein | sect | caravan | elder_breakthrough | herb | bandit | wolf_pack | rumor | river_erosion | faction_grudge | settlement_decline | economy | (extensible)",
+        "schema_ref": "string — path to the per-system momentum schema (e.g. ergenverse:worldgen/blueprint/v2/momentum/wolf_pack_momentum.schema.json)",
+        "current_state": "object — the system-specific current_state fields (per the schema)",
+        "rate_of_change": "object — the system-specific rate_of_change fields (per the schema)",
+        "drivers": ["string"],
+        "thresholds_state": [
+          {
+            "name": "string — threshold name from the schema",
+            "crossed": "bool — has this threshold been crossed?",
+            "crossed_at_tick": "int|null",
+            "consequence_fired": "bool — has the consequence been applied?",
+            "irreversible": "bool"
+          }
+        ],
+        "perceivable_without_notification": "string — REQUIRED (Art XXXIX.5). Concrete ambient cue. NON-EMPTY or the momentum FAILS the Momentum Test.",
+        "perceivable_at_arrival": "bool — is this momentum's perceivable cue active at player_arrival_tick? (drives the Momentum Test count)",
+        "compiled_into": "string — which compiled-state graph this momentum advances",
+        "memory_ledger_refs": ["string — memory_ledger entry ids produced by this momentum's threshold crossings"],
+        "last_advanced_tick": "int — when this momentum was last advanced (for tick budgeting)"
+      }
+    ],
+    "indices": {
+      "by_entity": "map<entity_id, [momentum_id]> — all momentums for an entity",
+      "by_system": "map<system, [momentum_id]> — all spirit_vein momentums, all wolf_pack momentums, etc.",
+      "by_perceivable_at_arrival": "[momentum_id] — the momentums that satisfy the Momentum Test at arrival",
+      "by_threshold_imminent": "sorted by nearest threshold crossing — for 'what is about to happen' queries"
+    },
+    "queries_supported": [
+      "momentum(entity_id, system?) -> momentum_entry | [momentum_entry]",
+      "perceivable_at_arrival() -> [momentum_id] — the Momentum Test set",
+      "imminent_thresholds(within_ticks) -> [{momentum_id, threshold_name, eta_ticks}] — what is about to happen",
+      "cascade_if_severed(edge_id) -> [momentum_id] — which momentums are affected if a relationship edge is severed (the 'if wolves disappear, what changes?' query)"
+    ],
+    "tick_advance_protocol": {
+      "frequency": "every simulation tick (or batched per system for performance)",
+      "operations": [
+        "1. For each momentum: advance current_state by rate_of_change * dt",
+        "2. For each momentum: evaluate threshold conditions; mark newly-crossed thresholds",
+        "3. For each newly-crossed threshold: fire consequence (apply to compiled state, write memory_ledger entry, seed rumors, trigger NPC motivations)",
+        "4. Update perceivable_at_arrival flags (a momentum may become perceivable mid-playthrough as its state shifts)",
+        "5. Update indices"
+      ]
+    }
+  },
+  "_compile_source": "World Blueprint DSL v2 — every entity's `momentum` block, seeded per Historical Timeline + Simulation Seed + player_arrival_tick",
+  "_runtime_consumers": ["WorldEventBus (threshold consequences)", "DecisionEngine (imminent thresholds shape NPC reasoning)", "IntentEngine (momentum-driven motivations)", "MemoryLedger (threshold crossings recorded)", "RumorMomentum (events seed rumors)", "PerceptionEngine (perceivable cues)", "ChunkRenderer (renders perceivable momentum cues — wagons, smoke, half-harvested gardens — LAST)"]
+}

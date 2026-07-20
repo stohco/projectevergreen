@@ -1,0 +1,83 @@
+{
+  "_schema": "bandit_momentum",
+  "_schema_version": 1,
+  "_article": "XXXIX.2 — bandits run out of food, expand or contract territory, raise or lower raid cadence. XXXIX.3 — the player intersects trajectories (bandits are already mid-campaign).",
+  "_description": "Momentum schema for a BanditGroup (or hostile BeastPopulation used as bandit-equivalent) trajectory entity. A bandit group is not a static spawn. It has a food/supply trajectory, a desperation level, a raid cadence, a territory size, and a prey density. When supplies are high, raids are cautious and opportunistic. When supplies run low, desperation rises and raids become bold and frequent — until the group is destroyed, dispersed, or resupplied by a successful raid.",
+  "_design_notes": {
+    "why_this_matters": "The user's example: 'Bandits running out of food.' This is the trajectory that makes a road dangerous not because bandits are 'spawned there' but because a specific group, with a specific supply situation, is being forced to raid. The player who understands this can exploit it (wait for them to starve), redirect it (feed them to lower desperation — at a cost), or end it (destroy the group).",
+    "coupling": "Feeds: caravan_momentum (ambush threshold), settlement_graph (raid events), travel_graph (segment threat_exposure), rumor_momentum (raid news spreads). Fed by: regional economy (prey density = caravans + villages).",
+    "perceivable_without_notification_examples": [
+      "A burned-out wagon off the road, weeks old — a bandit attack happened here.",
+      "Villagers no longer travel the east road alone — the innkeeper mentions it offhand.",
+      "Smoke from a campfire in the hills where no lawful person would camp.",
+      "A merchant arrives in town wounded and stripped of goods — the bandits are active and bold."
+    ]
+  },
+  "schema": {
+    "group_id": "string — matches a BanditGroup entity id",
+    "system": "bandit",
+    "current_state": {
+      "headcount": "int — active bandits",
+      "supplies": "float 0.0–1.0 — food/water/weapons",
+      "desperation": "float 0.0–1.0 — driven by supplies; high desperation = bold raids",
+      "raid_cadence_ticks": "int — average ticks between raids (low when desperate, high when comfortable)",
+      "last_raid_tick": "int — when the last raid occurred (drives perceivable 'recent attack' cues)",
+      "territory_polygon_id": "string — the region entity the group currently operates in",
+      "territory_size_class": "enum — den | camp | roaming | sprawling",
+      "prey_density": "float 0.0–1.0 — caravan + village traffic in territory (drives raid success and supply replenishment)",
+      "morale": "float 0.0–1.0 — group cohesion (low morale = desertion, splintering)"
+    },
+    "rate_of_change": {
+      "supplies_per_tick": "float — negative (consumption) + positive (successful raids, foraging, external supply)",
+      "desperation_per_tick": "float — inversely correlated with supplies; rises sharply below 0.2 supplies",
+      "territory_size_per_tick": "float — expands when comfortable and unopposed; contracts when pressured",
+      "headcount_per_tick": "int — recruitment (from desperate locals) - attrition (raids, starvation, desertion)",
+      "components": {
+        "consumption": "float — headcount * per-bandit consumption",
+        "raid_income": "float — supplies gained per successful raid (driven by prey_density and desperation)",
+        "forage_income": "float — baseline wilderness foraging (low, weather-dependent)",
+        "desperation_pressure": "float — rises as supplies fall; raises raid_cadence and boldness"
+      }
+    },
+    "drivers": [
+      "string — e.g. 'black_wind bandits: 14 headcount, supplies 0.31 (falling), desperation 0.68 (rising), raid_cadence 9000 ticks (was 18000 last season — they are getting bold), last_raid 4000 ticks ago (a caravan on the zhao-chu road), territory east hills, prey_density 0.42 (the road is still traveled enough to be worth raiding)'"
+    ],
+    "thresholds": [
+      {
+        "name": "starvation_crisis",
+        "condition": "supplies < 0.15",
+        "consequence": "desperation maxes; raid_cadence halves; bandits attack targets they would normally avoid (patrols, walled settlements); morale begins to break. Either a successful raid resupplies them, or the group starves and disperses (some die, some desert, some become lone raiders).",
+        "irreversible": false
+      },
+      {
+        "name": "raid_blitz",
+        "condition": "desperation > 0.7 AND prey_density > 0.4",
+        "consequence": "group commits to aggressive raiding; multiple caravans/settlements hit in short window; this is the perceivable 'the road has become dangerous' period. Regional economy_momentum may enter scarcity. Patrols may be dispatched.",
+        "irreversible": false
+      },
+      {
+        "name": "dispersal",
+        "condition": "headcount < 4 OR morale < 0.1",
+        "consequence": "group ceases to exist as a coherent threat; survivors scatter (some may reform elsewhere, some may join other groups, some may return to village life under false identities). The territory becomes safe — until a new group forms.",
+        "irreversible": true
+      },
+      {
+        "name": "expansion",
+        "condition": "supplies > 0.7 AND morale > 0.7 AND headcount growing",
+        "consequence": "group expands territory; may absorb smaller groups; may establish a permanent camp (becomes a Stronghold entity); may begin extortion (protection deals with villages). This is how bandits become warlords in Er Gen canon.",
+        "irreversible": false
+      }
+    ],
+    "interruptible_by": [
+      "Patrol or sect suppression (lowers headcount, raises morale-break risk)",
+      "Player or NPC clears the camp (ends trajectory)",
+      "Successful raid (resupplies, lowers desperation — temporarily)",
+      "Village pays protection (lowers raid_cadence on that village; raises supplies)",
+      "Famine or weather (lowers forage_income; accelerates starvation_crisis)",
+      "Recruitment by a faction (bandits become soldiers; trajectory transforms)"
+    ],
+    "perceivable_without_notification": "string — REQUIRED (Art XXXIX.5). e.g. 'A burnt wagon off the Zhao–Chu road, the attack less than a week old. The village innkeeper, without prompting, warns travelers not to take the east road alone. Smoke rises from the hills at dusk where no farmstead sits. A merchant limped in last night, stripped of goods, talking of fourteen bandits — he counted them before they let him run.' If empty, FAILS the Momentum Test.",
+    "compiled_into": "travel_graph (segment threat_exposure); settlement_graph (raid events); influence_map (bandit influence zone)",
+    "canon_ref": "INFERRED (Art XV) — bandits are a constant low-canon presence in Er Gen's mortal world; specific groups authored for Chapter 1"
+  }
+}

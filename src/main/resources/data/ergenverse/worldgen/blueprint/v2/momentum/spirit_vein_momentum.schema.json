@@ -1,0 +1,77 @@
+{
+  "_schema": "spirit_vein_momentum",
+  "_schema_version": 1,
+  "_article": "XXXIX.2 — Every system has a trajectory. Spirit veins are the electrical grid (user directive).",
+  "_description": "Momentum schema for a SpiritVein entity. A spirit vein is not decoration — it is the grid everything hangs off (qi density → herb growth → beasts → cultivators → trade → road usage → bandits → history). This schema declares the vein's live trajectory: current qi density, rate of change, drivers (extraction, formation recharge, seasonal fluctuation, geological drift), thresholds (depletion, surge, stabilization), and consequences. The compiler seeds this to the vein's canonical initial state; the simulation advances it every tick.",
+  "_design_notes": {
+    "why_this_matters": "If the village's spirit vein is thinning, the village is dying. If a sect's spirit vein is surging, the sect is ascending. The spirit vein's momentum is the heartbeat of every settlement and sect that depends on it. A spirit vein without momentum is a decoration; with momentum, it is the reason the village exists and the reason it may fall.",
+    "coupling": "This momentum advances the spirit_graph and feeds: SettlementGraph (settlement viability), FloraPatch momentum (herb ripening depends on qi density), BeastPopulation momentum (spirit beasts concentrate near dense veins), SectMomentum (sect resource pressure), and EconomyMomentum (spirit-stone scarcity when veins deplete).",
+    "perceivable_without_notification_examples": [
+      "Cultivators in the village meditate longer and gain less — perceivable by observing NPC schedules, not by a UI notification.",
+      "Herbs that once grew wild are now scarce — perceivable by foraging failure, not a quest flag.",
+      "The shrine's spirit lamp flickers weaker each season — perceivable by looking at it, not being told.",
+      "Old villagers remark 'the qi used to be thicker when I was young' in ambient dialogue — perceivable by talking, not by tutorial."
+    ]
+  },
+  "schema": {
+    "vein_id": "string — matches a SpiritVein entity id in the blueprint",
+    "system": "spirit_vein",
+    "current_state": {
+      "qi_density": "float 0.0–1.0 — current density (1.0 = prime cultivation vein, 0.0 = depleted)",
+      "depth_class": "enum — shallow | moderate | deep | abyssal",
+      "element_affinity": "enum — none | fire | water | earth | wood | metal | ice | lightning | soul | devils",
+      "fluctuation_phase": "float 0.0–1.0 — position in the natural fluctuation cycle (0 = trough, 0.5 = peak, 1.0 = trough again)",
+      "fluctuation_period_ticks": "int — length of one full natural cycle",
+      "integrity": "float 0.0–1.0 — geological health (fractures reduce effective qi output below nominal density)",
+      "extraction_load": "float 0.0–1.0 — how much is being drawn by dependent settlements/sects/formations (0 = none, 1 = saturated)"
+    },
+    "rate_of_change": {
+      "qi_density_per_tick": "float — signed. Positive = recovering/rising. Negative = depleting. Derived from (recharge - extraction - geological_drift).",
+      "components": {
+        "natural_recharge": "float — baseline recovery when undisturbed (veins slowly self-replenish)",
+        "extraction_drain": "float — sum of all dependents' draw (settlements, sects, formations, mines)",
+        "formation_recharge": "float — positive contribution from placed Formations (recharges relationship)",
+        "geological_drift": "float — slow long-term drift (a vein may naturally weaken over centuries or strengthen after tectonic events)",
+        "seasonal_fluctuation": "float — oscillating contribution driven by fluctuation_phase"
+      }
+    },
+    "drivers": [
+      "string — what is pushing this trajectory. e.g. 'wang_family_village draws 0.02/tick for daily cultivation', 'no formation in place to recharge', 'geological drift -0.005/tick (century-scale weakening)', 'seasonal fluctuation ±0.03'"
+    ],
+    "thresholds": [
+      {
+        "name": "depletion",
+        "condition": "qi_density < 0.15 AND integrity < 0.3",
+        "consequence": "vein becomes inert; dependent settlements lose cultivation viability; sects must relocate or decline; herb patches dependent on this vein wither; spirit beasts migrate away. This may trigger settlement decline momentum.",
+        "irreversible": "bool — true if geological integrity is too low to recover without a major formation or canon event"
+      },
+      {
+        "name": "surge",
+        "condition": "qi_density > 0.9 AND fluctuation_phase in [0.4, 0.6]",
+        "consequence": "vein produces a qi surge; dependent cultivators progress faster; rare herbs may spontaneously germinate; spirit beasts may be drawn to the vein and become territorial; sects may send disciples to capitalize. This is an opportunity trajectory, not a threat.",
+        "irreversible": false
+      },
+      {
+        "name": "over_extraction",
+        "condition": "extraction_load > 0.85 for sustained period",
+        "consequence": "vein integrity begins to fracture (integrity -= 0.01/tick); if uncorrected, depletion threshold becomes inevitable even if extraction ceases. This is the slow death of a settlement that takes more than the vein can give.",
+        "irreversible": "partially — integrity loss is hard to reverse; qi density can recover but fractured integrity caps the ceiling"
+      },
+      {
+        "name": "stabilization",
+        "condition": "extraction_load <= natural_recharge AND integrity stable for sustained period",
+        "consequence": "vein reaches equilibrium; dependent settlements experience steady cultivation conditions. This is the 'healthy vein' state — most canon villages exist here before some disruption begins the decline trajectory.",
+        "irreversible": false
+      }
+    ],
+    "interruptible_by": [
+      "Formation placed with type=qi_restoration (recharges the vein; Art XXXIX.6)",
+      "Reduction in extraction (a sect relocates, a settlement declines, a mine is closed) — reduces extraction_drain",
+      "Canon event: tectonic shift, ancient god awakening, restriction rupture (geological_drift shift)",
+      "Player/NPC intervention: sealing an over-extractive mine, negotiating sect relocation, repairing a damaged formation"
+    ],
+    "perceivable_without_notification": "string — REQUIRED (Art XXXIX.5). Concrete ambient cue a player could perceive WITHOUT being told. e.g. 'The shrine's spirit lamp flickers weaker than the one in the neighboring village. Cultivators in the village sit longer in meditation but rise looking unsatisfied. Wild herbs that the village herbalist names as common are now hard to find within a day's foraging.' If empty, the vein FAILS the Momentum Test.",
+    "compiled_into": "spirit_graph (primary); feeds settlement_graph, and via herb/beast/sect momentum, the full ecological-civilizational cascade",
+    "canon_ref": "EXPLICIT — spirit veins are central to Er Gen cultivation geography; INFERRED (Art XV) for specific qi-density values and decline rates"
+  }
+}
