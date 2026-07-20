@@ -25,6 +25,20 @@
   "note": "Wang clan member; complex rivalry with Wang Lin",
   "derivation_type": "A",
   "salt": 779900918,
+  "personality_traits": {
+    "_comment": "NOVEL_STATEMENT: fellow disciple, friendly disposition, moderate across the board. Not exceptional in any trait.",
+    "courage": 0.45,
+    "patience": 0.50,
+    "greed": 0.30,
+    "loyalty": 0.60,
+    "ruthlessness": 0.20,
+    "caution": 0.50,
+    "curiosity": 0.45,
+    "ambition": 0.35,
+    "face": 0.50,
+    "honor": 0.55,
+    "dao_heart": 0.50
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

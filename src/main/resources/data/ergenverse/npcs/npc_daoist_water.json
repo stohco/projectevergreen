@@ -25,6 +25,20 @@
   "note": "Water-aspected major antagonist",
   "derivation_type": "A",
   "salt": 1498907572,
+  "personality_traits": {
+    "_comment": "NOVEL_STATEMENT: serene exterior, ruthless interior. Extremely high caution, patience, dao_heart. High ruthlessness hidden behind calm. Per Article XLI: any ancient cultivator with hidden ruthlessness gets these traits.",
+    "courage": 0.65,
+    "patience": 0.90,
+    "greed": 0.20,
+    "loyalty": 0.35,
+    "ruthlessness": 0.75,
+    "caution": 0.88,
+    "curiosity": 0.30,
+    "ambition": 0.55,
+    "face": 0.50,
+    "honor": 0.60,
+    "dao_heart": 0.92
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

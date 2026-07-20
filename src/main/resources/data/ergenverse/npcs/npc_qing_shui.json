@@ -25,6 +25,20 @@
   "note": "Gave Wang Lin the Slaughter Sword; mentor figure",
   "derivation_type": "A",
   "salt": 1454779581,
+  "personality_traits": {
+    "_comment": "NOVEL_STATEMENT: serene water-aspected mentor. High patience, high honor, high dao_heart. Low greed, low ambition (already Third Step). Moderately curious about promising disciples. Per Article XLI: these traits apply to ANY serene mentor figure.",
+    "courage": 0.60,
+    "patience": 0.92,
+    "greed": 0.08,
+    "loyalty": 0.70,
+    "ruthlessness": 0.15,
+    "caution": 0.70,
+    "curiosity": 0.55,
+    "ambition": 0.15,
+    "face": 0.30,
+    "honor": 0.88,
+    "dao_heart": 0.95
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

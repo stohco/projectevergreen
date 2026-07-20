@@ -23,6 +23,20 @@
   "note": "Wang family member NPC",
   "derivation_type": "B",
   "salt": 780976576,
+  "personality_traits": {
+    "_comment": "INFERRED: mother figure, patient, loyal, low ambition (village life), moderate caution, not curious about outside world.",
+    "courage": 0.35,
+    "patience": 0.75,
+    "greed": 0.10,
+    "loyalty": 0.92,
+    "ruthlessness": 0.02,
+    "caution": 0.55,
+    "curiosity": 0.20,
+    "ambition": 0.10,
+    "face": 0.45,
+    "honor": 0.60,
+    "dao_heart": 0.50
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

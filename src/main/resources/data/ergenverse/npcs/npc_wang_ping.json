@@ -25,6 +25,20 @@
   "note": "Wang Lin's brother; tragic fate drives Wang Lin's early motivation",
   "derivation_type": "A",
   "salt": 1794719128,
+  "personality_traits": {
+    "_comment": "INFERRED from canon: gentle younger brother, protective of family, willing to face hardship (fishing, firewood), worries but does not flee. Per Article XLI: general traits.",
+    "courage": 0.50,
+    "patience": 0.70,
+    "greed": 0.10,
+    "loyalty": 0.95,
+    "ruthlessness": 0.03,
+    "caution": 0.45,
+    "curiosity": 0.35,
+    "ambition": 0.15,
+    "face": 0.40,
+    "honor": 0.65,
+    "dao_heart": 0.50
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

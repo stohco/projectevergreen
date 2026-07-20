@@ -25,6 +25,20 @@
   "note": "Wang family Paragon-tier descendant",
   "derivation_type": "A",
   "salt": 1949092614,
+  "personality_traits": {
+    "_comment": "INFERRED: Paragon-tier Wang descendant. Calm demeanor (high patience), immense power, strong dao heart. Not from Chapter 1.",
+    "courage": 0.75,
+    "patience": 0.85,
+    "greed": 0.20,
+    "loyalty": 0.65,
+    "ruthlessness": 0.40,
+    "caution": 0.60,
+    "curiosity": 0.45,
+    "ambition": 0.50,
+    "face": 0.55,
+    "honor": 0.75,
+    "dao_heart": 0.90
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

@@ -25,6 +25,20 @@
   "note": "Wang Lin's father; driven to ruin by Teng family",
   "derivation_type": "A",
   "salt": 911002794,
+  "personality_traits": {
+    "_comment": "INFERRED from canon: stern patriarch, protective, not curious about cultivation, loyal to family, accepts Teng oppression (low courage against power). Per Article XLI: general traits, not Wang Lin-specific.",
+    "courage": 0.30,
+    "patience": 0.65,
+    "greed": 0.15,
+    "loyalty": 0.90,
+    "ruthlessness": 0.05,
+    "caution": 0.60,
+    "curiosity": 0.15,
+    "ambition": 0.20,
+    "face": 0.55,
+    "honor": 0.70,
+    "dao_heart": 0.50
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

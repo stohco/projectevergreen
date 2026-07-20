@@ -6,6 +6,12 @@ import dev.ergenverse.simulation.cognition.CognitionGoal;
 import dev.ergenverse.simulation.cognition.DecisionEngine;
 import dev.ergenverse.simulation.los.SimulationLevel;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
+
 /**
  * ActorTickLoop — seasonal / event-driven actor simulation tick.
  *
@@ -31,8 +37,13 @@ public final class ActorTickLoop {
     /** One season = 7 MC days = 7 * 24000 ticks. */
     public static final long SEASON_TICKS = 7L * 24000L;
 
-    /** Minimum gap between full-cognition ticks (avoid hot-spinning). */
-    public static final long FULL_COGNITION_MIN_GAP = 24000L;
+    /** Minimum gap between full-cognition ticks for the SAME actor.
+     *  600 ticks = 30 seconds. This is fast enough that a player who
+     *  walks up to a meditating NPC sees the NPC make a new decision
+     *  within half a minute, but slow enough to avoid hot-spinning.
+     *  Before this was 24000 (20 min) — so slow that the pipeline
+     *  was effectively dead for linked actors. */
+    public static final long FULL_COGNITION_MIN_GAP = 600L;
 
     private ActorTickLoop() {}
 
@@ -43,28 +54,63 @@ public final class ActorTickLoop {
      * (via {@link dev.ergenverse.simulation.intent.ActorEntityLink}) so the
      * IntentEngine's situational queries use current positions.
      *
+     * <p><b>Importance score computation (CE #1 prerequisite):</b>
+     * For each linked actor, we compute the distance-to-nearest-player
+     * contribution and set storySignificance for canon NPCs. Without this,
+     * all actors remain at STATIC_DATA (score 0) and the cognition pipeline
+     * never fires. Per Article XLI: the simulation must work — this is the
+     * minimum wiring to make it so.
+     *
      * @param currentTick the current server tick (overworld gameTime)
      * @param level       the overworld ServerLevel (for entity lookups)
      */
-    public static void tick(long currentTick, net.minecraft.server.level.ServerLevel level) {
-        // ── Position sync: pull current entity positions into Actors ──
-        // This is critical for the cognition pipeline: the IntentEngine scores
-        // intents based on the actor's position, and the CognitionDrivenGoal
-        // needs the actor's blockX/Z to be current when it decomposes tasks.
+    public static void tick(long currentTick, ServerLevel level) {
+        // ── Position sync + importance score computation ──
+        // Before this fix, SimulationImportanceScore was never written to,
+        // so all actors had score 0 → STATIC_DATA → no cognition ever ran.
+        // Now we compute distance for linked actors so player proximity
+        // promotes them to ACTIVE_ACTOR or FULL_COGNITION.
         if (level != null) {
+            List<ServerPlayer> players = level.players();
             for (Actor a : ActorRegistry.all()) {
                 if (dev.ergenverse.simulation.intent.ActorEntityLink.isLinked(a.id)) {
                     dev.ergenverse.simulation.intent.ActorEntityLink.syncPosition(a.id, level);
+
+                    // Compute distance to nearest player (0..1, 1 = closest).
+                    // MAX_IMPORTANCE_DISTANCE = 128 blocks (8 chunks).
+                    // Within 16 blocks → distance = 1.0 (max).
+                    // At 128+ blocks → distance = 0.0 (no contribution).
+                    double nearestDistSq = Double.MAX_VALUE;
+                    for (ServerPlayer p : players) {
+                        double dx = a.blockX + 0.5 - p.getX();
+                        double dz = a.blockZ + 0.5 - p.getZ();
+                        double distSq = dx * dx + dz * dz;
+                        if (distSq < nearestDistSq) nearestDistSq = distSq;
+                    }
+                    double distBlocks = Math.sqrt(nearestDistSq);
+                    a.importance.distance = Math.max(0.0, 1.0 - (distBlocks / 128.0));
+
+                    // Canon NPCs get a base story significance so they can
+                    // reach FULL_COGNITION when near a player.
+                    // Per Article XLI: no character special-casing — ALL
+                    // canon NPCs get this, not just Wang Lin.
+                    if (a.isCanon() && a.importance.storySignificance < 0.4) {
+                        a.importance.storySignificance = 0.4;
+                    }
                 }
             }
         }
 
         boolean seasonalTick = (currentTick % SEASON_TICKS == 0);
         if (!seasonalTick) {
-            // Event-driven path: only re-tick actors flagged dirty (lastSimulatedTick==currentTick)
-            // — these are actors that have been touched by an event this tick.
+            // Non-seasonal: tick actors that are (a) flagged dirty by events, or
+            // (b) linked + promoted to at least ACTIVE_ACTOR by player proximity.
+            // Without (b), the cognition pipeline never fires for nearby NPCs.
             for (Actor a : ActorRegistry.all()) {
-                if (a.lastSimulatedTick == currentTick) {
+                boolean dirty = a.lastSimulatedTick == currentTick;
+                boolean linkedAndActive = dev.ergenverse.simulation.intent.ActorEntityLink.isLinked(a.id)
+                        && a.simLevel.order >= SimulationLevel.ACTIVE_ACTOR.order;
+                if (dirty || linkedAndActive) {
                     tickActor(a, currentTick);
                 }
             }
@@ -119,8 +165,22 @@ public final class ActorTickLoop {
 
     private static void tickFullCognition(Actor a, long tick) {
         if (a.cognition == null) return;
-        // Tick the actor's current activity process.
+        // Tick the actor's current activity process EVERY tick
+        // (interruption checking, progress, reaction, resume).
         tickActivity(a, tick);
+
+        // DecisionEngine: throttle to avoid hot-spinning.
+        // Check using the seasonal tick gate — if this is a non-seasonal
+        // tick AND the actor already has an active activity, skip the
+        // full decision. This way, the decision fires on seasonal ticks
+        // (every 7 MC days) and when the actor has no activity yet.
+        boolean hasActiveActivity = a.currentActivity != null
+                && !a.currentActivity.isComplete()
+                && !a.currentActivity.isAbandoned();
+        boolean seasonalTick = (tick % SEASON_TICKS == 0);
+        if (!seasonalTick && hasActiveActivity) {
+            return;
+        }
         // Run the full DecisionEngine pipeline.
         var needs = a.cognition.computeNeedIntensities();
         var decision = DecisionEngine.decide(

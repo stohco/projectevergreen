@@ -4,7 +4,10 @@ import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.simulation.actor.Actor;
 import dev.ergenverse.simulation.actor.ActorRegistry;
+import dev.ergenverse.simulation.cognition.PersonalityModel;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 
@@ -99,6 +102,14 @@ public final class ActorEntityLink {
                             characterId, entity.getDisplayNameCn(), "npc"));
             // Default Dao identity — canon-specific overrides can be applied later
             actor.cognition.daoIdentity = dev.ergenverse.simulation.cognition.DaoIdentity.SEEKING_DAO;
+
+            // ── Wire personality traits from NPC JSON data ──
+            // Per Article XLI: personality drives behavior. Without this,
+            // all NPCs have default 0.5 traits, and ActivityAssigner's
+            // personality-gated interruption conditions produce identical
+            // behavior for every NPC. The "cautious cultivator observes
+            // predators" Canon Experience requires actual trait diversity.
+            loadPersonalityFromData(characterId, actor.cognition.personality);
             // Grant WANDER capability so the Planner can generate movement-based actions
             actor.grant(dev.ergenverse.simulation.actor.Capability.WANDER);
             // Set position from entity
@@ -195,5 +206,56 @@ public final class ActorEntityLink {
     /** Number of active (loaded) entity links. */
     public static int linkedCount() {
         return ACTOR_TO_ENTITY.size();
+    }
+
+    /**
+     * Load personality traits from the NPC's JSON data file into the
+     * actor's PersonalityModel.
+     *
+     * <p>NPC data files may contain a {@code "personality_traits"} object
+     * mapping trait names (from {@link PersonalityModel#CANONICAL_TRAITS})
+     * to numeric values in [0,1]. For example:
+     * <pre>{@code
+     * "personality_traits": {
+     *   "caution": 0.82,
+     *   "curiosity": 0.25,
+     *   "patience": 0.70
+     * }
+     * }</pre>
+     *
+     * <p>If the NPC has no {@code personality_traits} field, the
+     * PersonalityModel keeps its default 0.5 values. If a trait value
+     * is outside [0,1], it is clamped.
+     *
+     * <p>Per Article XLI: this is not special-casing any character.
+     * Every NPC with a data file gets the same treatment.
+     *
+     * @param characterId the NPC's canon character ID
+     * @param personality the PersonalityModel to populate
+     */
+    private static void loadPersonalityFromData(String characterId, PersonalityModel personality) {
+        JsonObject data = dev.ergenverse.simulation.WorldStateDataLoader.getEntry("npcs", characterId);
+        if (data == null) return;
+
+        JsonElement ptElement = data.get("personality_traits");
+        if (ptElement == null || !ptElement.isJsonObject()) return;
+
+        JsonObject pt = ptElement.getAsJsonObject();
+        int loaded = 0;
+        for (String traitName : PersonalityModel.CANONICAL_TRAITS) {
+            JsonElement val = pt.get(traitName);
+            if (val != null && val.isJsonPrimitive() && val.getAsJsonPrimitive().isNumber()) {
+                double v = val.getAsDouble();
+                // Set for both "default" context (used by ActivityAssigner)
+                // and the trait's own name as context (used by DecisionEngine).
+                personality.set(traitName, "default", v);
+                personality.set(traitName, traitName, v);
+                loaded++;
+            }
+        }
+        if (loaded > 0) {
+            Ergenverse.LOGGER.info("[ActorEntityLink] Loaded {} personality traits for {}",
+                    loaded, characterId);
+        }
     }
 }

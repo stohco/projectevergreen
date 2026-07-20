@@ -23,6 +23,20 @@
   "note": "Early bullying antagonist at Heng Yue",
   "derivation_type": "B",
   "salt": 1976472068,
+  "personality_traits": {
+    "_comment": "NOVEL_STATEMENT: rival disciple, ecology enemy. High ambition, moderate ruthlessness, low loyalty. Arrogant.",
+    "courage": 0.60,
+    "patience": 0.35,
+    "greed": 0.50,
+    "loyalty": 0.30,
+    "ruthlessness": 0.50,
+    "caution": 0.35,
+    "curiosity": 0.30,
+    "ambition": 0.75,
+    "face": 0.70,
+    "honor": 0.35,
+    "dao_heart": 0.45
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

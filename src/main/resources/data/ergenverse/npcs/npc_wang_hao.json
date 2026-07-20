@@ -23,6 +23,20 @@
   "note": "Friendly Heng Yue disciple",
   "derivation_type": "B",
   "salt": 1384967935,
+  "personality_traits": {
+    "_comment": "NOVEL_STATEMENT: friendly fellow disciple (CANON_RI N06), helpful, moderate courage, high loyalty to friends.",
+    "courage": 0.50,
+    "patience": 0.60,
+    "greed": 0.20,
+    "loyalty": 0.75,
+    "ruthlessness": 0.10,
+    "caution": 0.45,
+    "curiosity": 0.50,
+    "ambition": 0.30,
+    "face": 0.45,
+    "honor": 0.60,
+    "dao_heart": 0.50
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

@@ -25,6 +25,20 @@
   "note": "Nirvana Shatterer Wang clan cultivator",
   "derivation_type": "B",
   "salt": 1650079956,
+  "personality_traits": {
+    "_comment": "INFERRED: Wang clan cultivator, measured, moderate traits across the board. Not a village mortal — has seen the cultivation world.",
+    "courage": 0.55,
+    "patience": 0.50,
+    "greed": 0.30,
+    "loyalty": 0.60,
+    "ruthlessness": 0.25,
+    "caution": 0.50,
+    "curiosity": 0.40,
+    "ambition": 0.45,
+    "face": 0.55,
+    "honor": 0.50,
+    "dao_heart": 0.60
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

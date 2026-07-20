@@ -25,6 +25,20 @@
   "note": "Heng Yue Sect disciple; survived the sect's destruction",
   "derivation_type": "A",
   "salt": 1250886609,
+  "personality_traits": {
+    "_comment": "NOVEL_STATEMENT: senior disciple, ambitious, moderate-to-high face, somewhat ruthless in competition. Sees Wang Lin as rival.",
+    "courage": 0.55,
+    "patience": 0.45,
+    "greed": 0.45,
+    "loyalty": 0.50,
+    "ruthlessness": 0.40,
+    "caution": 0.50,
+    "curiosity": 0.35,
+    "ambition": 0.70,
+    "face": 0.75,
+    "honor": 0.45,
+    "dao_heart": 0.50
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

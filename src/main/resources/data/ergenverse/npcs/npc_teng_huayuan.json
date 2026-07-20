@@ -25,6 +25,20 @@
   "note": "Destroyed Heng Yue Sect and Wang family; Wang Lin's first major enemy",
   "derivation_type": "A",
   "salt": 23020141,
+  "personality_traits": {
+    "_comment": "NOVEL_STATEMENT: Teng patriarch, arrogant, ambitious, low honor, moderate ruthlessness. His power makes him low caution. High face — reputation matters.",
+    "courage": 0.70,
+    "patience": 0.40,
+    "greed": 0.60,
+    "loyalty": 0.45,
+    "ruthlessness": 0.55,
+    "caution": 0.25,
+    "curiosity": 0.20,
+    "ambition": 0.80,
+    "face": 0.85,
+    "honor": 0.25,
+    "dao_heart": 0.40
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

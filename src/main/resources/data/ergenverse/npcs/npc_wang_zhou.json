@@ -23,6 +23,20 @@
   "note": "Qi Condensation cultivator NPC",
   "derivation_type": "B",
   "salt": 1992988508,
+  "personality_traits": {
+    "_comment": "INFERRED: low-tier cultivator, timid speech suggests low courage and high caution. Not ambitious — happy with Qi Condensation.",
+    "courage": 0.25,
+    "patience": 0.55,
+    "greed": 0.25,
+    "loyalty": 0.55,
+    "ruthlessness": 0.10,
+    "caution": 0.70,
+    "curiosity": 0.30,
+    "ambition": 0.20,
+    "face": 0.40,
+    "honor": 0.50,
+    "dao_heart": 0.45
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],

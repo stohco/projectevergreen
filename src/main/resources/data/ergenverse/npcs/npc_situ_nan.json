@@ -26,6 +26,20 @@
   "note": "Wang Lin's first true friend and sworn brother; Divine Emperor",
   "derivation_type": "A",
   "salt": 322030831,
+  "personality_traits": {
+    "_comment": "NOVEL_STATEMENT: Divine Emperor, playful exterior but ancient power. Low caution (nearly invincible), high curiosity, moderate ambition. Not ruthless but not soft. High face — emperor pride.",
+    "courage": 0.85,
+    "patience": 0.70,
+    "greed": 0.35,
+    "loyalty": 0.55,
+    "ruthlessness": 0.30,
+    "caution": 0.20,
+    "curiosity": 0.80,
+    "ambition": 0.45,
+    "face": 0.80,
+    "honor": 0.65,
+    "dao_heart": 0.88
+  },
   "dao_heart": {
     "stability": 50,
     "cracks": [],
