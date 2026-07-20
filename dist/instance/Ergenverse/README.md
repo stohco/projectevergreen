@@ -44,9 +44,30 @@ Use `ergenverse-modpack-0.1.0-alpha.zip` (the companion file in the GitHub relea
 - **Forge 47.4.0** (CurseForge installs automatically)
 - **Java 17** (Forge 1.20.1 requirement — CurseForge bundles its own, but having a system Java 17 helps)
 
+## What happens on first launch
+
+When you create a new world and join for the first time:
+
+1. **Wang Family Village** is built around you at spawn — a 23×23 settlement made entirely of custom blocks:
+   - Central **spirit stone plaza** with a **Spirit Vein Stone** centerpiece and 4 **Formation Core Stones** forming a small array
+   - 4 corner houses (spirit wood planks + log pillars + leaves roofs):
+     - **NW — Alchemy Pavilion** (contains an Alchemy Furnace)
+     - **NE — Formation Hall** (contains a Formation Flag Base)
+     - **SW — Storage** (chest with starter gear: 8 spirit stones, jade slip, 4 qi gathering pills, meditation mat, 6 herb seeds, 2 formation flag blanks, 4 talisman papers)
+     - **SE — Your Dwelling** (empty, for you)
+   - **Herb garden** south of the plaza (8 custom herb species)
+   - 4 decorative **spirit wood trees** at the corners
+   - Torches lighting the plaza
+2. You receive a **Beginner's Guide** written book (6 pages: welcome, keybinds, first steps, village guide, danger, path forward)
+3. You're teleported to the plaza, facing the spirit vein
+
+### Keybinds
+- **B** — Breakthrough attempt (when Qi is full)
+- **V** — Divine Sense pulse (scan nearby entities/concealed objects)
+
 ## What the mod contains
 
-814 compiled Java classes covering:
+817 compiled Java classes covering:
 - **Cultivation** — Qi Condensation → Foundation → Core Formation → Nascent Soul → Soul Formation → Void Tribulation → Ascendant
 - **Body Refining** — physical cultivation track
 - **Alchemy** — pill recipes and refinement
