@@ -149,6 +149,13 @@ public final class NpcDialogueGenerator {
         /** Whether the NPC has any WORLD_EVENT memory from the last 7 MC days. */
         public final boolean hasRecentWorldMemory;
 
+        // ── Art XXXI.5: Rumor-driven dialogue (NPC→NPC retelling chain) ──
+        /** The most recent RUMOR memory description, or null. */
+        @Nullable
+        public final String recentRumor;
+        /** Whether the NPC has any RUMOR memory from the last 7 MC days. */
+        public final boolean hasRecentRumor;
+
         public NpcDialogueContext(String npcId, String targetPlayerUuid,
                                   @Nullable NpcInternalMonologue.MonologueSnapshot monologue,
                                   double trustConfidence, double hostileConfidence,
@@ -157,7 +164,9 @@ public final class NpcDialogueGenerator {
                                   int interactionCount,
                                   @Nullable String recentWorldEvent,
                                   @Nullable String recentObservation,
-                                  boolean hasRecentWorldMemory) {
+                                  boolean hasRecentWorldMemory,
+                                  @Nullable String recentRumor,
+                                  boolean hasRecentRumor) {
             this.npcId = npcId;
             this.targetPlayerUuid = targetPlayerUuid;
             this.monologue = monologue;
@@ -170,6 +179,8 @@ public final class NpcDialogueGenerator {
             this.recentWorldEvent = recentWorldEvent;
             this.recentObservation = recentObservation;
             this.hasRecentWorldMemory = hasRecentWorldMemory;
+            this.recentRumor = recentRumor;
+            this.hasRecentRumor = hasRecentRumor;
         }
     }
 
@@ -304,6 +315,11 @@ public final class NpcDialogueGenerator {
         String mood = slotMood(ctx.monologue);
         String memory = slotMemory(ctx);
         int idx = (int) Math.abs(randomSeed % 100);
+
+        // Art XXXI.5: ~12% chance to reference a rumor (secondhand info, rarer).
+        if (ctx.hasRecentRumor && ctx.recentRumor != null && idx < 12) {
+            return generateRumorLine(tone, ctx.recentRumor, idx);
+        }
 
         // Art XXXI.5: ~25% chance to reference a memory when one exists.
         if (shouldReferenceMemory(ctx, idx) && memory != null) {
@@ -512,6 +528,57 @@ public final class NpcDialogueGenerator {
             }
             case CONDESCENDING -> {
                 yield memory + ". A triviality to one such as myself, but perhaps it concerns you.";
+            }
+        };
+    }
+
+    // ─── Rumor-referencing dialogue (Art XXXI.5 retelling chain) ──
+    // When an NPC has heard a rumor (RUMOR memory from NPC→NPC spread),
+    // these templates express it as secondhand information — hedged,
+    // attributed to "someone," or uncertain. The Memory Metric test:
+    // "Months later a child tells the story" requires this.
+
+    /**
+     * Generate a rumor-referencing line for the given tone.
+     * Rumor dialogue is more hedged and secondhand than direct memory
+     * dialogue — NPCs heard this from someone else, not witnessed it.
+     */
+    private static String generateRumorLine(DialogueTone tone, String rumor, int idx) {
+        if (rumor.length() > 80) rumor = rumor.substring(0, 77) + "...";
+
+        return switch (tone) {
+            case FORMAL -> {
+                if (idx < 3) yield "I've heard something troubling. " + rumor + ". I cannot confirm it.";
+                if (idx < 6) yield "Word is spreading. " + rumor + ". We should be cautious about rumors, however.";
+                yield "Someone mentioned — " + rumor + ". I don't know the source.";
+            }
+            case WARM -> {
+                if (idx < 3) yield "Oh, have you heard? " + rumor + ". I'm not sure if it's true, but...";
+                if (idx < 6) yield "People are talking. " + rumor + ". I thought you should know.";
+                yield "Between us — " + rumor + ". Don't tell anyone I told you.";
+            }
+            case TERSE -> {
+                if (idx < 4) yield "Heard a rumor. " + rumor + ".";
+                yield "People say: " + rumor + ".";
+            }
+            case COLD -> {
+                if (idx < 4) yield "... " + rumor + ". That's what they say.";
+                yield "Someone told me " + rumor + ". I have no opinion on it.";
+            }
+            case URGENT -> {
+                if (idx < 4) yield "Have you heard what they're saying? " + rumor + " — if it's true, we're in danger!";
+                yield "The rumors — " + rumor + ". We need to verify this immediately.";
+            }
+            case HOSTILE -> {
+                if (idx < 4) yield "Rumors. " + rumor + ". People will believe anything.";
+                yield "Someone is spreading stories. " + rumor + ". Probably nonsense.";
+            }
+            case MYSTERIOUS -> {
+                if (idx < 4) yield "Interesting whispers. " + rumor + ". There may be more to this than meets the eye.";
+                yield "The wind carries strange tales. " + rumor + ". Truth or deception?";
+            }
+            case CONDESCENDING -> {
+                yield "The common folk are abuzz. " + rumor + ". Amusing, but likely distorted.";
             }
         };
     }

@@ -1,6 +1,10 @@
 package dev.ergenverse.npc.rumor;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.npc.memory.NpcMemoryTickHandler;
+import dev.ergenverse.simulation.actor.Actor;
+import dev.ergenverse.simulation.actor.ActorRegistry;
+import dev.ergenverse.simulation.intent.ActorEntityLink;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -246,15 +250,55 @@ public class RumorNetwork extends SavedData {
             // Update the rumor in the network
             rumors.put(rumorId, distorted);
 
-            // NPC knowledge: pick 1-3 random NPCs that "hear" this hop
-            int spreadCount = RumorDistortion.getSpreadCount(actor, random);
-            for (int i = 0; i < spreadCount; i++) {
-                // For now, generate a synthetic NPC ID based on actor class
-                // In Phase B.8 (world-sim-tick), this will use real NPC positions
-                String npcId = "npc_" + actor.name().toLowerCase() + "_" +
-                        random.nextInt(100);
-                npcKnowledge.computeIfAbsent(npcId, k -> ConcurrentHashMap.newKeySet())
+            // Art XXXI.5: Propagate to REAL linked NPCs near the source.
+            // Replaces synthetic NPC IDs (Phase B.8 — this IS Phase B.8).
+            // Each nearby NPC who doesn't already know this rumor hears it,
+            // records a RUMOR memory, and can retell it later.
+            int newlyInformed = 0;
+            String sourceId = rumor.getSourceNpcId();
+            Actor sourceActor = (!sourceId.isEmpty()) ? ActorRegistry.get(sourceId) : null;
+
+            for (Actor nearby : ActorRegistry.all()) {
+                if (newlyInformed >= 3) break; // max 3 NPCs per hop
+                if (nearby.id.equals(sourceId)) continue;
+                if (!ActorEntityLink.isLinked(nearby.id)) continue;
+
+                // Already knows this rumor — skip
+                Set<String> known = npcKnowledge.get(nearby.id);
+                if (known != null && known.contains(rumorId)) continue;
+
+                // Distance check: 48 blocks from source actor (or any informed NPC)
+                double distSq;
+                if (sourceActor != null) {
+                    distSq = Math.pow(sourceActor.blockX - nearby.blockX, 2)
+                          + Math.pow(sourceActor.blockZ - nearby.blockZ, 2);
+                } else {
+                    // No source actor — find nearest informed NPC
+                    distSq = Double.MAX_VALUE;
+                    for (String informedId : npcKnowledge.keySet()) {
+                        Actor informed = ActorRegistry.get(informedId);
+                        if (informed != null && ActorEntityLink.isLinked(informed.id)) {
+                            double d = Math.pow(informed.blockX - nearby.blockX, 2)
+                                     + Math.pow(informed.blockZ - nearby.blockZ, 2);
+                            if (d < distSq) distSq = d;
+                        }
+                    }
+                }
+                if (distSq > 48.0 * 48.0) continue;
+
+                // This NPC hears the rumor!
+                npcKnowledge.computeIfAbsent(nearby.id, k -> ConcurrentHashMap.newKeySet())
                         .add(rumorId);
+
+                // Record as RUMOR memory in cognitive store (Art XXXI.5)
+                // This is the "child tells the story" mechanism.
+                NpcMemoryTickHandler.recordRumorHeard(
+                        nearby.id, rumorId,
+                        distorted.getCurrentContent(), tick);
+
+                newlyInformed++;
+                Ergenverse.LOGGER.debug("[RumorNetwork] {} heard rumor '{}' (hop {})",
+                        nearby.id, rumorId, distorted.getHopCount());
             }
 
             propagated++;

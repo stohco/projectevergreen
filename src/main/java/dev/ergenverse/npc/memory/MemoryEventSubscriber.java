@@ -1,6 +1,8 @@
 package dev.ergenverse.npc.memory;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.npc.rumor.Rumor;
+import dev.ergenverse.npc.rumor.RumorEngineEvents;
 import dev.ergenverse.simulation.actor.Actor;
 import dev.ergenverse.simulation.actor.ActorRegistry;
 import dev.ergenverse.simulation.event.WorldEvent;
@@ -69,11 +71,24 @@ public final class MemoryEventSubscriber implements WorldEventSubscriber {
      *  6000 ticks = 5 minutes. Prevents memory spam from repeated howls. */
     private static final long TOPIC_COOLDOWN_TICKS = 6000L;
 
+    /** Severity threshold for rumor creation. Only notable events seed rumors. */
+    private static final float RUMOR_SEVERITY_THRESHOLD = 0.5f;
+
+    /** Cooldown: same topic prefix won't seed a new rumor within this many ticks.
+     *  12000 ticks = 10 minutes. Prevents duplicate rumors from repeated events. */
+    private static final long RUMOR_TOPIC_COOLDOWN_TICKS = 12000L;
+
     /**
      * Last recording time per actor+topicPrefix. Prevents memory spam.
      * Key: "actorId|topicPrefix" → last tick recorded.
      */
     private final java.util.Map<String, Long> lastRecorded = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /**
+     * Last rumor creation time per topicPrefix. Prevents duplicate rumors.
+     * Key: "topicPrefix" → last tick a rumor was created.
+     */
+    private final java.util.Map<String, Long> lastRumorCreated = new java.util.concurrent.ConcurrentHashMap<>();
 
     @Override
     public String topicPrefix() {
@@ -150,6 +165,70 @@ public final class MemoryEventSubscriber implements WorldEventSubscriber {
             Ergenverse.LOGGER.debug("[NpcMemory] {} remembered event '{}' as {} ({})",
                     a.id, event.topic(), tier, category);
         }
+
+        // Art XXXI.5: Seed a rumor from high-severity events.
+        // This closes G1: events now birth rumors that propagate through NPCs.
+        // Only create one rumor per event (not per-actor), with topic cooldown.
+        if (event.severity() >= RUMOR_SEVERITY_THRESHOLD) {
+            String rumorCooldownKey = topicPrefix;
+            Long lastRumorTick = lastRumorCreated.get(rumorCooldownKey);
+            if (lastRumorTick == null
+                    || (event.timestamp() - lastRumorTick) >= RUMOR_TOPIC_COOLDOWN_TICKS) {
+                lastRumorCreated.put(rumorCooldownKey, event.timestamp());
+                seedRumorFromEvent(event);
+            }
+        }
+    }
+
+    /**
+     * Create a rumor from a high-severity world event.
+     * Maps the event topic to a Rumor.OriginType and calls the
+     * appropriate RumorEngineEvents creation method.
+     *
+     * <p>Not a new engine (Art XXVI): calls existing RumorNetwork
+     * creation API through RumorEngineEvents static methods.
+     */
+    private void seedRumorFromEvent(WorldEvent event) {
+        String locationHint = "x=" + (int) event.pos().getX()
+                + ",z=" + (int) event.pos().getZ();
+        Rumor.OriginType originType = mapTopicToRumorOrigin(event.topic());
+
+        try {
+            switch (originType) {
+                case COMBAT_EVENT ->
+                    RumorEngineEvents.createCombatRumor(
+                            event.description(), "", locationHint, event.timestamp());
+                case SPIRIT_EVENT ->
+                    RumorEngineEvents.createOpportunityRumor(
+                            event.description(), locationHint, event.timestamp());
+                case PLAYER_ACTION ->
+                    RumorEngineEvents.createPlayerActionRumor(
+                            event.description(), "", locationHint, event.timestamp());
+                default ->
+                    RumorEngineEvents.createEnvironmentalRumor(
+                            event.description(), locationHint, event.timestamp());
+            }
+            Ergenverse.LOGGER.debug("[NpcMemory] Seeded rumor from event '{}'",
+                    event.topic());
+        } catch (Exception e) {
+            // Rumor creation is best-effort — don't let it break memory recording.
+            Ergenverse.LOGGER.debug("[NpcMemory] Failed to seed rumor from '{}': {}",
+                    event.topic(), e.getMessage());
+        }
+    }
+
+    /**
+     * Map event topic to a Rumor.OriginType for rumor creation.
+     */
+    private static Rumor.OriginType mapTopicToRumorOrigin(String topic) {
+        if (topic.startsWith("beast.")) return Rumor.OriginType.ENVIRONMENTAL;
+        if (topic.contains("death") || topic.contains("combat")
+                || topic.contains("attack"))
+            return Rumor.OriginType.COMBAT_EVENT;
+        if (topic.startsWith("opportunity.")) return Rumor.OriginType.SPIRIT_EVENT;
+        if (topic.startsWith("player.")) return Rumor.OriginType.PLAYER_ACTION;
+        if (topic.startsWith("sect.")) return Rumor.OriginType.FACTION_EVENT;
+        return Rumor.OriginType.OTHER;
     }
 
     /**

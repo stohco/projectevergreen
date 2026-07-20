@@ -172,6 +172,7 @@ public final class NpcDialogueTickHandler {
         String recentWorldEvent = null;
         String recentObservation = null;
         boolean hasRecentWorldMemory = false;
+        long sevenDaysTicks = 7L * 24000L;
 
         if (memory != null) {
             NpcCognitiveMemory.NpcMemoryStore store = memory.getStore(npcId);
@@ -191,7 +192,6 @@ public final class NpcDialogueTickHandler {
                 // memories for memory-driven dialogue. These let NPCs reference
                 // what they've perceived — the Memory Metric's expression half.
                 // Only look at medium-term (14 days) and short-term (3 days).
-                long sevenDaysTicks = 7L * 24000L;
                 String newestWorldDesc = null;
                 long newestWorldTs = 0;
                 String newestObsDesc = null;
@@ -232,13 +232,49 @@ public final class NpcDialogueTickHandler {
             }
         }
 
+        // 4c. Art XXXI.5: Fetch most recent RUMOR memory for rumor-driven
+        // dialogue. This is the retelling chain: NPC A heard from NPC B,
+        // who heard from NPC C. The player hears it as secondhand info.
+        String recentRumor = null;
+        boolean hasRecentRumor = false;
+        if (memory != null) {
+            NpcCognitiveMemory.NpcMemoryStore rumorStore = memory.getStore(npcId);
+            if (rumorStore != null) {
+                String newestRumorDesc = null;
+                long newestRumorTs = 0;
+
+                for (NpcCognitiveMemory.MemoryEntry e : rumorStore.getShortTerm()) {
+                    long age = currentTick - e.timestamp;
+                    if (age > sevenDaysTicks || age < 0) continue;
+                    if (e.category == NpcCognitiveMemory.MemoryCategory.RUMOR
+                            && e.timestamp > newestRumorTs) {
+                        newestRumorTs = e.timestamp;
+                        newestRumorDesc = e.description;
+                    }
+                }
+                for (NpcCognitiveMemory.MemoryEntry e : rumorStore.getMediumTerm()) {
+                    long age = currentTick - e.timestamp;
+                    if (age > sevenDaysTicks || age < 0) continue;
+                    if (e.category == NpcCognitiveMemory.MemoryCategory.RUMOR
+                            && e.timestamp > newestRumorTs) {
+                        newestRumorTs = e.timestamp;
+                        newestRumorDesc = e.description;
+                    }
+                }
+
+                recentRumor = newestRumorDesc;
+                hasRecentRumor = (newestRumorDesc != null);
+            }
+        }
+
         // Assemble context
         NpcDialogueGenerator.NpcDialogueContext ctx =
                 new NpcDialogueGenerator.NpcDialogueContext(
                         npcId, playerUuid, monologue,
                         trust, hostile, danger,
                         hasUrgentGoal, style, interactionCount,
-                        recentWorldEvent, recentObservation, hasRecentWorldMemory);
+                        recentWorldEvent, recentObservation, hasRecentWorldMemory,
+                        recentRumor, hasRecentRumor);
 
         // Generate using world random seed
         long seed = serverLevel.getRandom().nextLong();
