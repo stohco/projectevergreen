@@ -304,6 +304,9 @@ def assert_04_ownership_chain(idx, rep):
         if not owner:
             rep.err("04-ownership", f"canon:{aid}", "currentOwner", "missing currentOwner")
             continue
+        if not isinstance(owner, str):
+            rep.err("04-ownership", f"canon:{aid}", "currentOwner", f"not a string: {type(owner).__name__}")
+            continue
         if owner.lower() in OWNERSHIP_SENTINELS:
             continue
         name, status = parse_prose_owner(owner)
@@ -324,7 +327,12 @@ def assert_04_ownership_chain(idx, rep):
     # provenance files
     for stem, (f, d) in load_all("provenance").items():
         owner = d.get("current_owner")
-        if not owner or owner.lower() in OWNERSHIP_SENTINELS:
+        if not owner:
+            continue
+        if not isinstance(owner, str):
+            rep.err("04-ownership", str(f), "current_owner", f"not a string: {type(owner).__name__}")
+            continue
+        if owner.lower() in OWNERSHIP_SENTINELS:
             continue
         name, status = parse_prose_owner(owner)
         if status:
@@ -581,7 +589,7 @@ def assert_14_unique_inheritance_mutex(idx, rep):
     # Load provenance and collect current_owner per object
     owners_by_object = defaultdict(list)
     for stem, (f, d) in load_all("provenance").items():
-        owner = d.get("current_owner", "")
+        owner = d.get("current_owner", "") or ""
         if not owner or owner.lower() in OWNERSHIP_SENTINELS:
             continue
         name, status = parse_prose_owner(owner)
