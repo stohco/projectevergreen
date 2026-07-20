@@ -2,6 +2,16 @@
   "name": "Ergenverse",
   "customAuthor": "stohco",
   "version": "0.1.0-alpha",
+  "baseModLoader": {
+    "name": "Minecraft Forge",
+    "version": "47.4.0",
+    "modLoaders": [
+      {
+        "id": "forge-47.4.0",
+        "primary": true
+      }
+    ]
+  },
   "addons": [
     {
       "name": "Minecraft Forge",

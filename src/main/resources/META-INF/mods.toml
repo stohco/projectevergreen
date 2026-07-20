@@ -1,64 +1,64 @@
 modLoader="javafml"
-loaderVersion="${loader_version_range}"
-license="${mod_license}"
+loaderVersion="[47,)"
+license="MIT"
 issueTrackerURL="https://example.com/issues"
 
 [[mods]]
-modId="${mod_id}"
-version="${mod_version}"
-displayName="${mod_name}"
-authors="${mod_authors}"
+modId="ergenverse"
+version="0.1.0-alpha"
+displayName="Ergenverse"
+authors="Ergenverse Team"
 description='''
-${mod_description}
+A living cultivation-world simulator reconstructing the Er Gen multiverse. Spawn into a mortal world that already exists -- feel the ecology, discover cultivation, find a sect, perceive the deeper truths as your cultivation advances.
 
-Phase 0 — The Living Mortal World:
+Phase 0 - The Living Mortal World:
   Spawn into a forested biome on Planet Suzaku. The world already exists:
   birds flock between trees, spirit butterflies drift around herbs, wolves
   avoid one valley, fish flee something unseen, distant roars echo from
   mountains. No cultivation yet. No UI. Just: this world is alive.
 
-Phase 1 — Discover cultivation:
+Phase 1 - Discover cultivation:
   Find a spirit vein landmark. Meditate. Break through to Qi Condensation.
   The deer you saw at spawn is suddenly a Spirit Deer. The wolf leader is
   a disguised cultivator. The forest has depth.
 
-Phase 2 — Find a sect (ecosystem, not building):
-  Outer disciples → inner → core → elders → grand elder → patriarch,
+Phase 2 - Find a sect (ecosystem, not building):
+  Outer disciples to inner to core to elders to grand elder to patriarch,
   plus spirit beasts, herb fields, alchemy hall, formation defenses,
-  nearby mortal villages. NPCs meditate, break through, compete, die —
+  nearby mortal villages. NPCs meditate, break through, compete, die --
   all on their own.
 
-Phase 3 — World Pulse + Ambient Simulation:
+Phase 3 - World Pulse + Ambient Simulation:
   Every Minecraft day the world evolves: migrating beasts, sect conflicts,
   auctions, discoveries, ruins found, outbreaks, heavenly phenomena,
   tribulations, famous-cultivator sightings. The world is already moving.
 
-Phase 4 — Landmarks + Ocean dread:
+Phase 4 - Landmarks + Ocean dread:
   Rare memorable landmarks (split mountain, submerged palace, beast-corpse
   forest, immortal-battle canyon). Ocean depth system. World-scale entities
-  whose presence reshapes the environment — a city-sized beast beneath the
+  whose presence reshapes the environment -- a city-sized beast beneath the
   sea that changes tides, makes fish vanish, spawns storms, panics NPCs,
-  triggers sect warnings. You may never see it. You know it's there.
+  triggers sect warnings. You may never see it. You know it is there.
 
-Phase 5 — Perception as core mechanic:
-  Same entity, different truths at different tiers. Mortal deer → spirit
-  deer → disguised cultivator → karmic history visible → ancient bloodline.
+Phase 5 - Perception as core mechanic:
+  Same entity, different truths at different tiers. Mortal deer to spirit
+  deer to disguised cultivator to karmic history visible to ancient bloodline.
 
-Phase 6 (delayed) — Wang Lin dimension:
+Phase 6 (delayed) - Wang Lin dimension:
   Rumors first. Investigation. Nothing. More rumors, much later. Eventually
   the encounter. Anticipation makes it unforgettable.
 '''
 
-[[dependencies.${mod_id}]]
+[[dependencies.ergenverse]]
     modId="forge"
     type="required"
-    versionRange="${forge_version_range}"
+    versionRange="[47,)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.ergenverse]]
     modId="minecraft"
     type="required"
-    versionRange="${minecraft_version_range}"
+    versionRange="[1.20.1,1.21)"
     ordering="NONE"
     side="BOTH"
