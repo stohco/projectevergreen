@@ -147,6 +147,16 @@ public final class Ergenverse {
         //    exposes a featuresForBiome() lookup for the future perception
         //    system (higher-tier cultivators see more feature types).
 
+        // ── World Blueprint: AUTHORED geography of Planet Suzaku.
+        //    The simulation is the source of truth; Minecraft is the renderer.
+        //    Minecraft's random seed does NOT determine geography — this
+        //    blueprint does. Countries, settlements, mountain ranges, rivers,
+        //    spirit veins, and roads are all defined as data. The stage is
+        //    fixed; the simulation (NPCs, ecology, events) varies per playthrough.
+        //    Like Zelda/Elden Ring/Skyrim — Whiterun doesn't randomly spawn
+        //    somewhere else. Neither does Wang Family Village.
+        dev.ergenverse.world.blueprint.WorldBlueprintManager.load();
+
         // ── Perception Engine: produces understanding of objective
         //    reality. Does NOT change the world. Does NOT swap models.
         //    Does NOT spawn things because the player leveled up.

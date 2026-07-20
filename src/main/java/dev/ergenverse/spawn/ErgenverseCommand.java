@@ -56,8 +56,10 @@ public final class ErgenverseCommand {
                 .executes(ctx -> giveGear(ctx.getSource())))
             .then(Commands.literal("reset")
                 .executes(ctx -> resetFlag(ctx.getSource())))
+            .then(Commands.literal("geography")
+                .executes(ctx -> geography(ctx.getSource())))
         );
-        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset).");
+        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset|geography).");
     }
 
     /** /ergenverse status — print mod load + village + player state. */
@@ -186,6 +188,89 @@ public final class ErgenverseCommand {
         }
         player.getPersistentData().putBoolean(NBT_SUZAKU_TELEPORTED, false);
         src.sendSuccess(() -> Component.literal("Tutorial flag cleared. Re-log or run /ergenverse village + /ergenverse book.")
+                .withStyle(ChatFormatting.AQUA), false);
+        return 1;
+    }
+
+    /**
+     * /ergenverse geography — shows which country/settlement the player is in,
+     * based on the AUTHORED World Blueprint. This proves geography is fixed
+     * (not seed-dependent). The same coordinates always yield the same country.
+     */
+    private static int geography(CommandSourceStack src) {
+        src.sendSuccess(() -> Component.literal("=== Planet Suzaku — Authored Geography ===")
+                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
+
+        if (!dev.ergenverse.world.blueprint.WorldBlueprintManager.isLoaded()) {
+            src.sendSuccess(() -> Component.literal("World Blueprint: NOT LOADED")
+                    .withStyle(ChatFormatting.RED), false);
+            return 0;
+        }
+
+        src.sendSuccess(() -> Component.literal("World Blueprint: LOADED")
+                .withStyle(ChatFormatting.GREEN), false);
+        src.sendSuccess(() -> Component.literal("Canon Seed: -7283654891029384756 (terrain is deterministic)")
+                .withStyle(ChatFormatting.DARK_GRAY), false);
+
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            // Console: show all settlements
+            src.sendSuccess(() -> Component.literal("--- Canonical Settlements ---")
+                    .withStyle(ChatFormatting.YELLOW), false);
+            for (com.google.gson.JsonObject s : dev.ergenverse.world.blueprint.WorldBlueprintManager.getSettlements()) {
+                String name = s.has("name") ? s.get("name").getAsString() : s.get("id").getAsString();
+                int x = s.get("x").getAsInt();
+                int z = s.get("z").getAsInt();
+                String type = s.has("type") ? s.get("type").getAsString() : "?";
+                src.sendSuccess(() -> Component.literal("  " + name + " (" + type + ") at (" + x + ", " + z + ")")
+                        .withStyle(ChatFormatting.WHITE), false);
+            }
+            return 1;
+        }
+
+        BlockPos ppos = player.blockPosition();
+        int px = ppos.getX();
+        int pz = ppos.getZ();
+
+        // Show which country the player is in.
+        String country = dev.ergenverse.world.blueprint.WorldBlueprintManager.getCountryAt(px, pz);
+        if (country != null) {
+            src.sendSuccess(() -> Component.literal("Country: " + country)
+                    .withStyle(ChatFormatting.GREEN), false);
+        } else {
+            src.sendSuccess(() -> Component.literal("Country: Wilderness/Ocean (not in any canonical country)")
+                    .withStyle(ChatFormatting.GRAY), false);
+        }
+
+        // Check if in a restriction zone.
+        com.google.gson.JsonObject restriction =
+                dev.ergenverse.world.blueprint.WorldBlueprintManager.getRestrictionAt(px, pz);
+        if (restriction != null) {
+            String rName = restriction.has("name") ? restriction.get("name").getAsString() : "Unknown Restriction";
+            src.sendSuccess(() -> Component.literal("RESTRICTION ZONE: " + rName)
+                    .withStyle(ChatFormatting.RED, ChatFormatting.BOLD), false);
+        }
+
+        // Show nearby settlements (within 500 blocks).
+        src.sendSuccess(() -> Component.literal("--- Nearby Canonical Settlements (500 blocks) ---")
+                .withStyle(ChatFormatting.YELLOW), false);
+        var nearby = dev.ergenverse.world.blueprint.WorldBlueprintManager.getSettlementsNear(px, pz, 500);
+        if (nearby.isEmpty()) {
+            src.sendSuccess(() -> Component.literal("  (none nearby)")
+                    .withStyle(ChatFormatting.GRAY), false);
+        } else {
+            for (com.google.gson.JsonObject s : nearby) {
+                String name = s.has("name") ? s.get("name").getAsString() : s.get("id").getAsString();
+                int sx = s.get("x").getAsInt();
+                int sz = s.get("z").getAsInt();
+                int dist = (int) Math.sqrt(Math.pow(px - sx, 2) + Math.pow(pz - sz, 2));
+                String type = s.has("type") ? s.get("type").getAsString() : "?";
+                src.sendSuccess(() -> Component.literal("  " + name + " (" + type + ") — " + dist + " blocks away at (" + sx + ", " + sz + ")")
+                        .withStyle(ChatFormatting.WHITE), false);
+            }
+        }
+
+        src.sendSuccess(() -> Component.literal("Geography is AUTHORED — same every playthrough. Simulation varies per seed.")
                 .withStyle(ChatFormatting.AQUA), false);
         return 1;
     }
