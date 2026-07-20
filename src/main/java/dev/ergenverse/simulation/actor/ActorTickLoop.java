@@ -136,6 +136,16 @@ public final class ActorTickLoop {
         if (decision.goal != null) {
             decision.goal.status = CognitionGoal.Status.ACTIVE;
 
+            // ── ACTIVITY ASSIGNMENT (Article XLI) ──
+            // Map the cognition goal to an ActivityProcess so the
+            // interruption pipeline can manage it. Not all goals
+            // produce activities (e.g. FLEE is handled by entity AI).
+            if (a.currentActivity == null || a.currentActivity.isComplete()
+                    || a.currentActivity.isAbandoned()) {
+                dev.ergenverse.simulation.cognition.ActivityAssigner.assign(
+                        a, decision.goal, tick);
+            }
+
             // ── INTENT LAYER ──
             // Derive the immediate Intent from the active Goal + Dao Identity +
             // Personality. This is the "WHY" behind the NPC's current behavior —
