@@ -354,7 +354,14 @@ public final class Ergenverse {
         // Without this call, 5,800+ LOC of cognition is dead code (Art III, V, X).
         dev.ergenverse.simulation.actor.ActorTickLoop.tick(ticks, overworld);
 
-        // Loop H: WorldEventBus — set current level for write-through.
+        // Loop H: VillageBeastActivity — fires beast events on the
+        // WorldEventBus near NPC clusters. This is the event SOURCE
+        // that makes CE #1 possible: without beast events, the
+        // ActivityInterruptionSubscriber has nothing to interrupt.
+        // Throttled internally to every 6000 ticks (5 minutes).
+        dev.ergenverse.ecology.VillageBeastActivity.tick(overworld, ticks);
+
+        // Loop I: WorldEventBus — set current level for write-through.
         // The bus itself is event-driven (publish/subscribe); this just ensures
         // it has the ServerLevel reference needed for WorldHistory persistence.
         dev.ergenverse.simulation.event.WorldEventBus.setCurrentLevel(overworld);
