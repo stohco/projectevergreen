@@ -1,36 +1,39 @@
 package dev.ergenverse.spawn;
 
 import dev.ergenverse.core.Ergenverse;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * SpawnEventHandler — handles the player's first login into the Ergenverse.
+ * SpawnEventHandler — handles world initialization and player first-join.
  *
- * <p>On first join (per-player NBT flag), this handler:
- * <ol>
- *   <li>Builds the Wang Family Village at world spawn (if not already built).
- *       The village is built from custom blocks so the player immediately
- *       sees they are not in vanilla Minecraft.</li>
- *   <li>Teleports the player to the village center.</li>
- *   <li>Gives the player the tutorial book (keybinds + hints + village guide).</li>
- *   <li>Sends a welcome message.</li>
- * </ol>
+ * <p><b>Phase 1: World initialization (ServerStartingEvent).</b>
+ * When the server starts, the Wang Family Village is built at its canonical
+ * fixed coordinate (3842, surface, -1184) on Planet Suzaku. This happens
+ * BEFORE any player joins. The village exists independently of the player.
+ * Per the user's directive: "The player shouldn't be causing canonical
+ * places to come into existence."
  *
- * <p>The village-build is world-scoped (idempotent via
- * {@link WangFamilyVillageBuilder#isAlreadyBuilt}); the tutorial book +
- * teleport are per-player (gated by persistent NBT).
+ * <p><b>Phase 2: Player first-join (PlayerLoggedInEvent).</b>
+ * On first join, the player is teleported to Planet Suzaku at a point
+ * ~600 blocks from the village. They receive NO tutorial book. NO starter
+ * gear. NO chat messages. They wake up in the world and must find their
+ * own way. Per the user's directive: "Nobody explains anything. Learning
+ * comes from asking, watching, following, copying, exploring — not opening
+ * Page 3 of a guidebook."
+ *
+ * <p>The player's spawn point is set to the teleport location so that
+ * death-respawns return them there (not to the village).
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17 APIs only.
  */
@@ -39,117 +42,101 @@ public final class SpawnEventHandler {
 
     private SpawnEventHandler() {}
 
-    /** Per-player NBT flag: true once the tutorial book has been given. */
-    private static final String NBT_TUTORIAL_GIVEN = "ergenverse.tutorial_given";
+    /** Per-player NBT flag: true once the player has been teleported to Suzaku. */
+    private static final String NBT_SUZAKU_TELEPORTED = "ergenverse.suzaku_teleported";
+
+    /** Distance from the village where the player spawns (blocks). */
+    private static final int SPAWN_DISTANCE_FROM_VILLAGE = 600;
+
+    // ── Phase 1: Build the village on server start ───────────────────
+
+    @SubscribeEvent
+    public static void onServerStarting(ServerStartingEvent event) {
+        // Build the Wang Family Village at its canonical coordinate on
+        // Planet Suzaku. This happens before any player joins — the village
+        // exists independently of the player.
+        ResourceKey<Level> suzakuKey = ResourceKey.create(Registries.DIMENSION,
+                new net.minecraft.resources.ResourceLocation(Ergenverse.MOD_ID, "planet_suzaku"));
+        ServerLevel suzakuLevel = event.getServer().getLevel(suzakuKey);
+
+        if (suzakuLevel == null) {
+            Ergenverse.LOGGER.error("[Ergenverse] Planet Suzaku dimension not found! Village not built.");
+            return;
+        }
+
+        // Delay by 20 ticks (1s) to ensure all dimensions are fully loaded.
+        event.getServer().tell(new TickTask(event.getServer().getTickCount() + 20, () -> {
+            try {
+                if (!WangFamilyVillageBuilder.isAlreadyBuilt(suzakuLevel)) {
+                    Ergenverse.LOGGER.info("[Ergenverse] Building Wang Family Village at canonical coordinate ({}, ?, {}) on Planet Suzaku.",
+                            WangFamilyVillageBuilder.VILLAGE_X, WangFamilyVillageBuilder.VILLAGE_Z);
+                    WangFamilyVillageBuilder.build(suzakuLevel);
+                } else {
+                    Ergenverse.LOGGER.info("[Ergenverse] Wang Family Village already built at canonical coordinate.");
+                }
+            } catch (Exception e) {
+                Ergenverse.LOGGER.error("[Ergenverse] Failed to build Wang Family Village: {}", e.getMessage(), e);
+            }
+        }));
+    }
+
+    // ── Phase 2: Teleport player to Planet Suzaku on first join ──────
 
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer sp)) return;
         if (sp.server == null) return;
 
-        ServerLevel level = sp.server.overworld();
-        boolean firstJoin = !sp.getPersistentData().getBoolean(NBT_TUTORIAL_GIVEN);
+        boolean firstJoin = !sp.getPersistentData().getBoolean(NBT_SUZAKU_TELEPORTED);
+        if (!firstJoin) return; // returning player — they're already on Suzaku
 
-        Ergenverse.LOGGER.info("[Ergenverse] PlayerLoggedInEvent fired for {} (firstJoin={})",
-                sp.getName().getString(), firstJoin);
+        Ergenverse.LOGGER.info("[Ergenverse] First join for {} — teleporting to Planet Suzaku.",
+                sp.getName().getString());
 
-        if (!firstJoin) return; // returning player — nothing to do here
+        // Mark immediately to prevent re-triggering.
+        sp.getPersistentData().putBoolean(NBT_SUZAKU_TELEPORTED, true);
 
-        // Mark the tutorial as given immediately so a re-login during the
-        // delayed task doesn't double-give.
-        sp.getPersistentData().putBoolean(NBT_TUTORIAL_GIVEN, true);
-
-        // ── Delay the teleport/book by 40 ticks (2s) so the player
-        //    has fully loaded into the world before we move them.
+        // Delay by 40 ticks (2s) so the player has fully loaded.
         sp.server.tell(new TickTask(sp.server.getTickCount() + 40, () -> {
             try {
-                Ergenverse.LOGGER.info("[Ergenverse] First-spawn task executing for {}.",
-                        sp.getName().getString());
-
-                // 1. Get the Planet Suzaku dimension.
                 ResourceKey<Level> suzakuKey = ResourceKey.create(Registries.DIMENSION,
                         new net.minecraft.resources.ResourceLocation(Ergenverse.MOD_ID, "planet_suzaku"));
                 ServerLevel suzakuLevel = sp.server.getLevel(suzakuKey);
 
-                if (suzakuLevel != null) {
-                    // 2. Teleport the player to Planet Suzaku.
-                    BlockPos spawn = suzakuLevel.getSharedSpawnPos();
-                    if (spawn == BlockPos.ZERO) {
-                        spawn = suzakuLevel.getHeightmapPos(
-                                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                                new BlockPos(0, 0, 0));
-                    }
-                    suzakuLevel.getChunkAt(spawn); // ensure loaded
-                    sp.teleportTo(suzakuLevel, spawn.getX() + 0.5, spawn.getY() + 1.0,
-                            spawn.getZ() + 0.5, 0.0F, 0.0F);
-                    Ergenverse.LOGGER.info("[Ergenverse] Teleported {} to Planet Suzaku at ({}, {}, {}).",
-                            sp.getName().getString(), spawn.getX(), spawn.getY(), spawn.getZ());
-
-                    // 3. Build the Wang Family Village at the spawn point.
-                    if (!WangFamilyVillageBuilder.isAlreadyBuilt(suzakuLevel)) {
-                        WangFamilyVillageBuilder.build(suzakuLevel);
-                        Ergenverse.LOGGER.info("[Ergenverse] Wang Family Village built on Planet Suzaku.");
-                    }
-                } else {
-                    Ergenverse.LOGGER.error("[Ergenverse] Planet Suzaku dimension not found! Falling back to overworld village.");
-                    // Fallback: build village in overworld.
-                    if (!WangFamilyVillageBuilder.isAlreadyBuilt(level)) {
-                        WangFamilyVillageBuilder.build(level);
-                    }
-                    BlockPos center = WangFamilyVillageBuilder.getVillageCenter(level);
-                    BlockPos landing = center.north(3);
-                    sp.moveTo(landing.getX() + 0.5, center.getY() + 1.0, landing.getZ() + 0.5,
-                            0.0F, 180.0F);
-                    level.getChunkAt(center);
+                if (suzakuLevel == null) {
+                    Ergenverse.LOGGER.error("[Ergenverse] Planet Suzaku dimension not found! Player stays in overworld.");
+                    return;
                 }
 
-                // 4. Give the tutorial book + starter gear (no vanilla chest).
-                ItemStack book = TutorialBookFactory.create();
-                if (!sp.getInventory().add(book)) {
-                    sp.drop(book, false);
-                }
-                giveItem(sp, dev.ergenverse.item.ErgenverseItems.SPIRIT_STONE.get(), 8);
-                giveItem(sp, dev.ergenverse.item.ErgenverseItems.JADE_SLIP.get(), 1);
-                giveItem(sp, dev.ergenverse.item.ErgenverseItems.QI_GATHERING_PILL.get(), 4);
-                giveItem(sp, dev.ergenverse.item.ErgenverseItems.MEDITATION_MAT.get(), 1);
-                giveItem(sp, dev.ergenverse.item.ErgenverseItems.SPIRIT_HERB_SEED.get(), 6);
-                giveItem(sp, dev.ergenverse.item.ErgenverseItems.FORMATION_FLAG_BLANK.get(), 2);
-                giveItem(sp, dev.ergenverse.item.ErgenverseItems.TALISMAN_PAPER_BLANK.get(), 4);
-                Ergenverse.LOGGER.info("[Ergenverse] Tutorial book + starter gear given to {}.", sp.getName().getString());
+                // Player spawn point: SPAWN_DISTANCE_FROM_VILLAGE blocks west
+                // of the village, at the same Z. The player must travel east
+                // to find the village.
+                int spawnX = WangFamilyVillageBuilder.VILLAGE_X - SPAWN_DISTANCE_FROM_VILLAGE;
+                int spawnZ = WangFamilyVillageBuilder.VILLAGE_Z;
+                int spawnY = suzakuLevel.getHeightmapPos(
+                        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                        new BlockPos(spawnX, 0, spawnZ)).getY();
 
-                // 5. Welcome messages.
-                sp.sendSystemMessage(Component.literal("")
-                        .append(Component.literal("Welcome to Planet Suzaku.")
-                                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)));
-                sp.sendSystemMessage(Component.literal("")
-                        .append(Component.literal("You have been given a ")
-                                .withStyle(ChatFormatting.GRAY))
-                        .append(Component.literal("Beginner's Guide")
-                                .withStyle(ChatFormatting.AQUA))
-                        .append(Component.literal(". Open it to learn the keybinds.")
-                                .withStyle(ChatFormatting.GRAY)));
-                sp.sendSystemMessage(Component.literal("")
-                        .append(Component.literal("The Wang Family Village surrounds you. The spirit vein glows at the plaza center.")
-                                .withStyle(ChatFormatting.YELLOW)));
-                sp.sendSystemMessage(Component.literal("")
-                        .append(Component.literal("Tip: type ")
-                                .withStyle(ChatFormatting.DARK_GRAY))
-                        .append(Component.literal("/ergenverse status")
-                                .withStyle(ChatFormatting.AQUA))
-                        .append(Component.literal(" to check mod status.")
-                                .withStyle(ChatFormatting.DARK_GRAY)));
+                // Ensure the chunk is loaded.
+                suzakuLevel.getChunkAt(new BlockPos(spawnX, spawnY, spawnZ));
+
+                // Teleport the player.
+                sp.teleportTo(suzakuLevel, spawnX + 0.5, spawnY + 1.0, spawnZ + 0.5, 90.0F, 0.0F);
+                Ergenverse.LOGGER.info("[Ergenverse] Teleported {} to Planet Suzaku at ({}, {}, {}) — {} blocks from the village.",
+                        sp.getName().getString(), spawnX, spawnY, spawnZ, SPAWN_DISTANCE_FROM_VILLAGE);
+
+                // Set the player's spawn point to this location (so death
+                // respawns them here, not at the village).
+                sp.setRespawnPosition(suzakuLevel.dimension(), new BlockPos(spawnX, spawnY, spawnZ),
+                        0.0F, true, false);
+
+                // NO tutorial book. NO starter gear. NO chat messages.
+                // The player wakes up in the world. Nobody explains anything.
+                // Per the user's directive: learning is emergent.
             } catch (Exception e) {
-                Ergenverse.LOGGER.error("[Ergenverse] Failed to set up first-spawn for {}: {}",
+                Ergenverse.LOGGER.error("[Ergenverse] Failed to teleport {} to Planet Suzaku: {}",
                         sp.getName().getString(), e.getMessage(), e);
             }
         }));
-    }
-
-    /** Give an item stack to the player, dropping at feet if inventory is full. */
-    private static void giveItem(ServerPlayer sp, net.minecraft.world.item.Item item, int count) {
-        ItemStack stack = new ItemStack(item, count);
-        if (!sp.getInventory().add(stack)) {
-            sp.drop(stack, false);
-        }
     }
 }

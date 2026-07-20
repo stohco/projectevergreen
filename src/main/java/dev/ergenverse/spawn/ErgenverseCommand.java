@@ -39,8 +39,8 @@ public final class ErgenverseCommand {
 
     private ErgenverseCommand() {}
 
-    /** Per-player NBT flag — must match SpawnEventHandler.NBT_TUTORIAL_GIVEN. */
-    private static final String NBT_TUTORIAL_GIVEN = "ergenverse.tutorial_given";
+    /** Per-player NBT flag — must match SpawnEventHandler.NBT_SUZAKU_TELEPORTED. */
+    private static final String NBT_SUZAKU_TELEPORTED = "ergenverse.suzaku_teleported";
 
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event) {
@@ -60,50 +60,77 @@ public final class ErgenverseCommand {
         Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset).");
     }
 
-    /** /ergenverse status — print mod load + village + tutorial flag state. */
+    /** /ergenverse status — print mod load + village + player state. */
     private static int status(CommandSourceStack src) {
         src.sendSuccess(() -> Component.literal("=== Ergenverse Status ===")
                 .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
         src.sendSuccess(() -> Component.literal("Mod loaded: YES")
                 .withStyle(ChatFormatting.GREEN), false);
 
-        ServerLevel level = src.getLevel();
-        boolean villageBuilt = WangFamilyVillageBuilder.isAlreadyBuilt(level);
-        src.sendSuccess(() -> Component.literal("Village built at spawn: "
-                + (villageBuilt ? "YES" : "NO"))
-                .withStyle(villageBuilt ? ChatFormatting.GREEN : ChatFormatting.YELLOW), false);
+        // Check the Planet Suzaku dimension for the village.
+        net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> suzakuKey =
+                net.minecraft.resources.ResourceKey.create(
+                        net.minecraft.core.registries.Registries.DIMENSION,
+                        new net.minecraft.resources.ResourceLocation(Ergenverse.MOD_ID, "planet_suzaku"));
+        ServerLevel suzakuLevel = src.getServer().getLevel(suzakuKey);
 
-        BlockPos spawn = level.getSharedSpawnPos();
-        src.sendSuccess(() -> Component.literal("World spawn: " + spawn.getX() + ", "
-                + spawn.getY() + ", " + spawn.getZ()), false);
+        if (suzakuLevel != null) {
+            boolean villageBuilt = WangFamilyVillageBuilder.isAlreadyBuilt(suzakuLevel);
+            src.sendSuccess(() -> Component.literal("Village at (" + WangFamilyVillageBuilder.VILLAGE_X
+                    + ", ?, " + WangFamilyVillageBuilder.VILLAGE_Z + "): "
+                    + (villageBuilt ? "BUILT" : "NOT BUILT"))
+                    .withStyle(villageBuilt ? ChatFormatting.GREEN : ChatFormatting.YELLOW), false);
+        } else {
+            src.sendSuccess(() -> Component.literal("Planet Suzaku: NOT FOUND")
+                    .withStyle(ChatFormatting.RED), false);
+        }
 
         ServerPlayer player = src.getPlayer();
         if (player != null) {
-            boolean flag = player.getPersistentData().getBoolean(NBT_TUTORIAL_GIVEN);
-            src.sendSuccess(() -> Component.literal("Tutorial book given: "
-                    + (flag ? "YES" : "NO"))
-                    .withStyle(flag ? ChatFormatting.GREEN : ChatFormatting.YELLOW), false);
+            boolean teleported = player.getPersistentData().getBoolean(NBT_SUZAKU_TELEPORTED);
+            src.sendSuccess(() -> Component.literal("On Planet Suzaku: "
+                    + (teleported ? "YES" : "NO"))
+                    .withStyle(teleported ? ChatFormatting.GREEN : ChatFormatting.YELLOW), false);
+
+            BlockPos ppos = player.blockPosition();
+            int distToVillage = (int) Math.sqrt(
+                    Math.pow(ppos.getX() - WangFamilyVillageBuilder.VILLAGE_X, 2) +
+                    Math.pow(ppos.getZ() - WangFamilyVillageBuilder.VILLAGE_Z, 2));
+            src.sendSuccess(() -> Component.literal("Distance to village: " + distToVillage + " blocks")
+                    .withStyle(ChatFormatting.AQUA), false);
         }
 
-        src.sendSuccess(() -> Component.literal("Commands: /ergenverse <status|village|book|reset>")
+        src.sendSuccess(() -> Component.literal("Commands: /ergenverse <status|village|book|gear|reset>")
                 .withStyle(ChatFormatting.AQUA), false);
         return 1;
     }
 
-    /** /ergenverse village — build the village at world spawn. */
+    /** /ergenverse village — build the village at its canonical coordinate on Planet Suzaku. */
     private static int buildVillage(CommandSourceStack src) {
-        ServerLevel level = src.getLevel();
-        if (WangFamilyVillageBuilder.isAlreadyBuilt(level)) {
-            src.sendSuccess(() -> Component.literal("Village already built at spawn.")
+        net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> suzakuKey =
+                net.minecraft.resources.ResourceKey.create(
+                        net.minecraft.core.registries.Registries.DIMENSION,
+                        new net.minecraft.resources.ResourceLocation(Ergenverse.MOD_ID, "planet_suzaku"));
+        ServerLevel suzakuLevel = src.getServer().getLevel(suzakuKey);
+
+        if (suzakuLevel == null) {
+            src.sendFailure(Component.literal("Planet Suzaku dimension not found."));
+            return 0;
+        }
+
+        if (WangFamilyVillageBuilder.isAlreadyBuilt(suzakuLevel)) {
+            src.sendSuccess(() -> Component.literal("Village already built at ("
+                    + WangFamilyVillageBuilder.VILLAGE_X + ", ?, " + WangFamilyVillageBuilder.VILLAGE_Z + ").")
                     .withStyle(ChatFormatting.YELLOW), false);
         } else {
-            WangFamilyVillageBuilder.build(level);
-            src.sendSuccess(() -> Component.literal("Wang Family Village built at spawn!")
+            WangFamilyVillageBuilder.build(suzakuLevel);
+            src.sendSuccess(() -> Component.literal("Wang Family Village built at ("
+                    + WangFamilyVillageBuilder.VILLAGE_X + ", ?, " + WangFamilyVillageBuilder.VILLAGE_Z + ")!")
                     .withStyle(ChatFormatting.GREEN), false);
         }
-        BlockPos spawn = level.getSharedSpawnPos();
-        src.sendSuccess(() -> Component.literal("Center: " + spawn.getX() + ", "
-                + spawn.getY() + ", " + spawn.getZ()), false);
+        BlockPos center = WangFamilyVillageBuilder.getVillageCenter(suzakuLevel);
+        src.sendSuccess(() -> Component.literal("Center: " + center.getX() + ", "
+                + center.getY() + ", " + center.getZ()), false);
         return 1;
     }
 
@@ -118,7 +145,7 @@ public final class ErgenverseCommand {
         if (!player.getInventory().add(book)) {
             player.drop(book, false);
         }
-        player.getPersistentData().putBoolean(NBT_TUTORIAL_GIVEN, true);
+        player.getPersistentData().putBoolean(NBT_SUZAKU_TELEPORTED, true);
         src.sendSuccess(() -> Component.literal("Tutorial book given.")
                 .withStyle(ChatFormatting.GREEN), false);
         return 1;
@@ -157,7 +184,7 @@ public final class ErgenverseCommand {
             src.sendFailure(Component.literal("Run this command as a player."));
             return 0;
         }
-        player.getPersistentData().putBoolean(NBT_TUTORIAL_GIVEN, false);
+        player.getPersistentData().putBoolean(NBT_SUZAKU_TELEPORTED, false);
         src.sendSuccess(() -> Component.literal("Tutorial flag cleared. Re-log or run /ergenverse village + /ergenverse book.")
                 .withStyle(ChatFormatting.AQUA), false);
         return 1;

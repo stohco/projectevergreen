@@ -10,15 +10,20 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * WangFamilyVillageBuilder — places the player's starting village at world
- * spawn using the mod's custom blocks.
+ * WangFamilyVillageBuilder — places the Wang Family Village at a FIXED
+ * canonical coordinate on Planet Suzaku, using the mod's custom blocks.
  *
- * <p>The village is the player's first experience of the Ergenverse. Per the
- * user's directive, it must be built from <b>custom</b> blocks (spirit wood,
- * spirit stone, custom herbs, alchemy furnace, formation stones, spirit vein)
- * so the player immediately sees they are not in vanilla Minecraft.
+ * <p><b>Canonical location:</b> The village always exists at
+ * (3842, surface, -1184) on Planet Suzaku. Every world. Every seed. Every
+ * player. The village is NOT triggered by the player joining — it exists
+ * from the moment the server starts. The player spawns ~600 blocks away
+ * and must travel to find it.
  *
- * <p>Layout (23x23 footprint, centered on world spawn):
+ * <p>Per the user's directive: "The player shouldn't be causing canonical
+ * places to come into existence." The village is a place in the world, not
+ * an event triggered by the player.
+ *
+ * <p>Layout (23x23 footprint, centered on the canonical coordinate):
  * <ul>
  *   <li>Central plaza (spirit stone) with a spirit vein centerpiece +
  *       4 formation core stones forming a small array.</li>
@@ -26,12 +31,12 @@ import net.minecraft.world.level.block.state.BlockState;
  *     <ul>
  *       <li>NW — Alchemy Pavilion (contains an Alchemy Furnace)</li>
  *       <li>NE — Formation Hall (contains a Formation Flag Base)</li>
- *       <li>SW — Storage (contains a Chest with starter gear)</li>
- *       <li>SE — Dwelling (empty, for the player)</li>
+ *       <li>SW — Storage (formation flag base marker)</li>
+ *       <li>SE — Dwelling (empty)</li>
  *     </ul></li>
- *   <li>Herb garden south of the plaza (6 custom herb species).</li>
- *   <li>3 decorative spirit wood trees at the edges.</li>
- *   <li>Torches around the plaza for light.</li>
+ *   <li>Herb garden south of the plaza (8 custom herb species).</li>
+ *   <li>4 decorative spirit wood trees at the corners.</li>
+ *   <li>Spirit vein stones around the plaza (custom light markers).</li>
  * </ul>
  *
  * <p>Idempotent: {@link #isAlreadyBuilt(ServerLevel)} checks whether the
@@ -47,12 +52,22 @@ public final class WangFamilyVillageBuilder {
     /** Village half-extent. Total footprint = (2*RADIUS+1) squared. */
     public static final int VILLAGE_RADIUS = 11;
 
+    /** Canonical village X coordinate. Fixed for every world/seed/player. */
+    public static final int VILLAGE_X = 3842;
+
+    /** Canonical village Z coordinate. Fixed for every world/seed/player. */
+    public static final int VILLAGE_Z = -1184;
+
     /**
-     * The village center is the world shared spawn position. The player
-     * spawns here, so the village is built around them.
+     * The village center is the fixed canonical position. The Y coordinate
+     * is found by scanning the surface height at (VILLAGE_X, VILLAGE_Z).
      */
     public static BlockPos getVillageCenter(ServerLevel level) {
-        return level.getSharedSpawnPos();
+        // Find the surface height at the canonical XZ.
+        int surfaceY = level.getHeightmapPos(
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                new BlockPos(VILLAGE_X, 0, VILLAGE_Z)).getY();
+        return new BlockPos(VILLAGE_X, surfaceY, VILLAGE_Z);
     }
 
     /**
