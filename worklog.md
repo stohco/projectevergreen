@@ -53,3 +53,61 @@ Stage Summary:
 - JDK: ABSENT
 
 Next: When JDK is restored, the JDK cycle must implement the 7 Java changes in canon_experience_wiring_spec.json. The Familiarity and Simulation State Hierarchy additions are now complete in data — the JDK cycle only needs to read them. Per XL §7, 3 JDK-cycles remaining before the wiring spec is declared drift.
+
+---
+Task ID: AUTO-CANON-076
+Agent: autonomous-cron
+Task: Fix 2 blocking data gaps that would have prevented Living Moment 01 from ever firing, even with perfect Java wiring. (Art XXXI desire-driven cycle; Art XL §3 First Living Moment; Art XXXIX momentum)
+
+Work Log:
+- Read worklog.md (last entry: AUTO-CAN-002). No entries between 003-075 — those cycles were interrupted by context limits before any file operations began.
+- Read CONSTITUTION.md in full (1411 lines). Articles I–XLI. Focus: Art XXXI (desire-driven), Art XXXIX (momentum), Art XL (prove the experience), Art XLI (general simulation).
+- Verified JDK 17: ABSENT (no .jdks directory). Data-only cycle confirmed.
+- Ran canon_validator.py: EXIT=0.
+- Standing Cycle Question (Art XL §5): 'Am I about to create another schema, or am I about to create a Living Moment?' Honest answer: neither. All 50+ schemas exist. The task instructions list 7 data priorities — ALL 7 already exist from prior cycles. Creating more schemas is drift (Art XL §7). But scrutinizing existing data for INTERNAL CONSISTENCY revealed two gaps.
+- Canon Audit: scrutinized the full data chain for moment_01 (npc_wang_lin.json → NpcSpawnRegistry → motivation_state_wang_lin.json → momentum_wang_family_village.json → VillageBeastActivity → WolfPackThresholdEvent → ActivityInterruptionSubscriber → CognitionDrivenGoal). Found two BLOCKING gaps:
+  1. MISSING THRESHOLD: momentum_wang_family_village.json wolf_pressure_escalation had thresholds 'tracks_near_village' (0.5) and 'wolf_attack_south_bend' (0.7) but NOT 'treeline_incursion'. Both moment_01_wang_lin_watches_wolves.json and canon_experience_wiring_spec.json referenced 'treeline_incursion' as the trigger. Without this threshold, Change 3 would never fire the correct event. The moment was impossible.
+  2. MISSING NPC DEFINITION: motivation_state_wang_lin.json references npc_id 'npc_wang_lin'. Only npc_wang_lin_manifestation.json (the companion system) existed. No spawnable Chapter 1 Wang Lin NPC definition existed. Wang Lin could not spawn. The moment had no actor.
+- Fix 1: Added 'treeline_incursion' threshold (pressure_above: 0.55) to momentum_wang_family_village.json between 'tracks_near_village' and 'wolf_attack_south_bend'. This is the stalking-range threshold — wolves enter the northern treeline, hunt spirit deer, and trigger cautious cultivators to interrupt meditation.
+- Fix 2: Created npc_wang_lin.json — Chapter 1 world-NPC definition for Wang Lin. Canon-faithful: qi_condensation_1 (barely broke through, considered 'waste'), caution=0.85 (defining early trait), patience=0.80, curiosity=0.75, loyalty=0.85, dao_heart stability=75. Daily schedule: 16h meditating/studying restriction in cave, walks the northern ridge, brief village visits, night walks. Per Art XLI: not special-cased. Any NPC with caution > 0.6 produces the same behavior.
+- Updated canon_experience_wiring_spec.json: Change 3 now references treeline_incursion as primary trigger with explicit threshold values. Change 4 now discriminates between threshold types (treeline_incursion = observation, wolf_attack_south_bend = catastrophe). Added _prerequisite_data_additions documenting both fixes and the remaining JDK step (register npc_wang_lin in NpcSpawnRegistry).
+- Validated: 56 Chapter 1 JSONs all valid. Deep consistency check: all motivation_state files have matching NPC definitions. Wolf thresholds: [tracks_near_village, treeline_incursion, wolf_attack_south_bend, village_siege]. Wang Lin caution=0.85 (passes >0.6 check).
+- Committed: de03cc3. Push: SUCCESS.
+
+Canon Audit:
+- Audited element: The data chain for Canon Experience moment_01 ('A cautious cultivator abandons cultivation after noticing predator behavior')
+- Verdict: The chain was BROKEN before this cycle — two data gaps would have caused silent failure even with perfect Java. Now the chain is INTERNALLY CONSISTENT: npc_wang_lin.json exists with correct npc_id and traits → motivation_state_wang_lin.json references it → momentum_wang_family_village.json has the treeline_incursion threshold → wiring spec documents the exact threshold_id the Java must read. The only remaining prerequisite is the Java registration line (one line in NpcSpawnRegistry.java). DATA CHAIN: PASS. RUNTIME: STILL WAITING.
+
+Living Chapter Status:
+- Chapter 1 (Wang Family Village):
+  - Art XXVII 5Q: 0/5 pass at runtime, 5/5 SCHEMA-READY
+  - 10 Gold-Standard dims: 0/10 pass at runtime, 10/10 SCHEMA-READY
+  - Memory Metric: FAIL at runtime (schema + seed + chain defined; no recording)
+  - Art XL §3 First Living Moment: SPEC (data chain now internally consistent; was BROKEN before)
+  - moment_01: SPEC → data chain now complete, awaiting Java wiring
+- Chapter 2+: blocked by Art XXIX
+
+Desire-Driven Status (Art XXXI):
+- 10/10 NPCs with motivation states now have matching NPC definitions (was 9/9; npc_wang_lin added)
+- 10/10 social engines have data templates
+- 0/10 NPCs have LIVE motivation at runtime (ActorTickLoop does not read the JSONs)
+- 0/10 social engines produce intents at runtime (SOCIAL_INITIATION IntentNature does not exist)
+- The world DOES NOT desire anyone at runtime. It waits.
+- BUT: the data chain for the first desire-driven moment is no longer broken.
+
+Final Questions:
+1. Would this work without the player? YES — treeline_incursion fires from wolf_pressure_escalation advancing from natural prey decline and spirit vein decay. Wang Lin meditates on his schedule. The moment occurs regardless of player presence. The player merely witnesses it (Art V).
+2. What possibilities emerge? The player can follow Wang Lin to the ridge and observe what he observes. No quest marker tells them to. If the player has high trust, Wang Lin may give an acknowledging nod — a possibility that emerges from relationship state, not a script. The player discovers that the world has dangers by watching someone else react to them.
+3. Does it recreate an experience or merely reference one? HONEST: The DATA now recreates the conditions for the experience. The EXPERIENCE requires Java wiring. Before this cycle, the experience was IMPOSSIBLE even with Java (missing threshold, missing NPC definition). Now it is POSSIBLE. REFERENCED at the data level, but the reference was broken before and is now fixed.
+4. Does the world want something from someone this cycle, or still waiting? STILL WAITING at runtime. But the data now CORRECTLY DESCRIBES what the world wants: Wang Lin wants to study his restriction, and when wolf pressure crosses the treeline, his caution interrupts that study. The world wants to produce this moment. The data is ready. Java is not.
+
+Stage Summary:
+- Created files: npc_wang_lin.json (new Chapter 1 world-NPC definition)
+- Modified files: momentum_wang_family_village.json (added treeline_incursion threshold), canon_experience_wiring_spec.json (updated Changes 3+4, added prerequisite docs)
+- 56 Chapter 1 JSONs validated: ALL VALID
+- Canon validator: EXIT=0
+- Build: SKIPPED (no JDK)
+- Commit: de03cc3 (pushed successfully)
+- JDK: ABSENT
+
+Next: The next JDK cycle must: (1) add register("zhao_plains", "npc_wang_lin") to NpcSpawnRegistry.java (one line), then (2) implement the 7 Java changes in canon_experience_wiring_spec.json. If moment_01 reaches OBSERVED within 3 JDK-cycles, the spec is validated. If not, per Art XL §7, it is drift and must be reduced or deleted. Per XL §7 honesty clause, 3 JDK-cycles remaining (including the registration line as a prerequisite).
