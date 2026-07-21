@@ -1,0 +1,911 @@
+   501→     own pace and talk as much as they want without the NPC
+   502→     wandering off. "...Yes?" Radial verb-prompts appear. BUT
+   503→     THE WORLD KEEPS RUNNING. Birds fly. OTHER NPCs walk.
+   504→     Children run by. Li Muwan walks past carrying herbs. The
+   505→     sun moves. Rain falls. Only the NPC you are talking to
+   506→     holds still for you; everything else is alive. The player
+   507→     remains mobile (may walk-and-talk, see § XXXII.6). When the
+   508→     player selects "Nevermind" / dismisses the conversation,
+   509→     the NPC resumes their schedule and pathing from where they
+   510→     paused. This is the default.
+   511→
+   512→  2. FOCUS — When the conversation actually matters (discussing
+   513→     Dao, requesting a Heaven Defying Bead copy, entering a sect,
+   514→     negotiating). The camera subtly zooms. Player movement
+   515→     disables. The NPC holds still (as in Ambient). BUT THE
+   516→     WORLD KEEPS RUNNING. Other NPCs still move. The sun still
+   517→     sets. Rain still falls. Rumors continue spreading. Only
+   518→     the player stops moving because the player is busy talking.
+   519→     Exactly like real life.
+   520→
+   521→  3. MAJOR CANON MOMENTS — Very rare. Inheritance, tribulation,
+   522→     True Body meeting, major revelations. Cinematic framing —
+   523→     camera, music, animations, special dialogue. These must be
+   524→     incredibly uncommon. Otherwise they lose impact.
+   525→
+   526→§ XXXII.1a — "Holds Still" Is A Courtesy, Not A Freeze
+   527→When an NPC holds still for the player, it is a behavioral
+   528→courtesy, not a simulation freeze. The NPC is still perceiving
+   529→the world: if a threat appears, they react (§ XXXII.5). If
+   530→their schedule has a hard time-bound event (a sect lecture
+   531→they must attend, a tribulation window), they may break the
+   532→courtesy: "I have to go." and resume pathing. The courtesy
+   533→expires on (a) player dismiss ("Nevermind"), (b) NPC
+   534→hard-deadline, or (c) world interruption (combat, disaster).
+   535→It does NOT expire on idle — the NPC will wait patiently
+   536→because that is what a person does when someone is talking
+   537→to them.
+   538→
+   539→§ XXXII.2 — Conversation Affordances, Not Dialogue Trees
+   540→The interface shows VERBS, not dialogue options. Not "Tell me
+   541→about yourself. Where are you from? Goodbye." Instead:
+   542→Discuss, Request, Teach Me, Offer, Trade, Travel Together,
+   543→Observe Technique, Challenge, Give Gift, Ask Opinion, Ask About...
+   544→
+   545→Each verb expands per-NPC. The same verb produces entirely
+   546→different sub-menus for different NPCs:
+   547→  Wang Lin → Request → {Technique, Artifact Copy, Advice,
+   548→                         Restriction, Memory, Training}
+   549→  Li Muwan → Request → {Pill, Herb Identification, Medical
+   550→                         Advice, Alchemy Lesson}
+   551→  Xu Liguo → Request → {Scout, Possess, Steal, Distract,
+   552→                         Cause Trouble}
+   553→Same system. Entirely different UI. No special-casing — the
+   554→affordances are data the UI discovers (Article XXVIII).
+   555→
+   556→§ XXXII.3 — Requests Are Simulations, Not Transactions
+   557→Asking Wang Lin for the God Slaying Sword does not instantly
+   558→receive it. Wang Lin THINKS. He evaluates relationship, current
+   559→cultivation, knowledge, judgment, intent, history. Then:
+   560→  "..." / "No." / "You wouldn't survive using it."
+   561→  OR "I can. But not yet. Learn this first." (hands something else)
+   562→  OR "...Very well." (True Body manufactures a copy, clone
+   563→      retrieves it, hands it over)
+   564→  OR "If you still want it after Mosquito Valley..." (a challenge
+   565→      begins naturally, no quest log)
+   566→
+   567→§ XXXII.4 — Fuzzy Asking
+   568→The player does not select from item IDs. The player types or
+   569→selects intent: "I want something that helps fight souls." The
+   570→NPC REASONS about the intent — not a database search — and
+   571→chooses: maybe a Soul Banner, maybe a Soul Restriction, maybe
+   572→"Not yet." The NPC's response reflects their judgment of what
+   573→the player needs, not what the player asked for verbatim.
+   574→
+   575→§ XXXII.5 — Conversations Are Interruptible
+   576→If something happens — thunder, sect attack, spirit beast,
+   577→tribulation, explosion, enemy arrives — NPCs react. Wang Lin
+   578→stops talking mid-sentence. "Later." Draws his weapon. The
+   579→conversation ends naturally because the world kept moving.
+   580→The player never entered a frozen dialogue world.
+   581→
+   582→§ XXXII.6 — Walk And Talk
+   583→NPCs do not stop to converse. Wang Lin says "Come." and walks
+   584→toward a mountain. The player walks beside him. The conversation
+   585→UI stays open in the corner. Both move through the world. He
+   586→points out a restriction on a cliff. A spirit beast appears.
+   587→The conversation naturally pauses while dealing with it. Then
+   588→resumes. This is how conversations happen in Renegade Immortal
+   589→— not standing face-to-face in a frozen box.
+   590→
+   591→§ XXXII.7 — Personality Changes The Interface
+   592→The same conversation system renders differently per-NPC:
+   593→  Wang Lin — very few words, lots of silence, observes you,
+   594→              long pauses before responding.
+   595→  Xu Liguo — interrupts constantly, makes jokes, changes
+   596→              topics, lies.
+   597→  Li Muwan — detailed, patient, explains thoroughly.
+   598→  Situ Nan — laughs, mocks, walks away mid-conversation.
+   599→  Qing Shui — may answer "...". For thirty seconds.
+   600→This is personality through interaction, not just dialogue text.
+   601→
+   602→§ XXXII.8 — Conversations Are Stateful
+   603→If the player asked Wang Lin about restrictions yesterday, he
+   604→remembers. If he promised to teach after Foundation Establishment,
+   605→that option is unavailable until then. If he refused the God
+   606→Slaying Sword request because the player wasn't ready, he won't
+   607→pretend it's the first time. Conversations evolve as relationship,
+   608→reputation, knowledge, and cultivation change.
+   609→
+   610→§ XXXII.9 — Conversations Are World Events
+   611→Dialogue is not outside the world. A conversation is an event
+   612→with a location, volume, and witnesses. Nearby NPCs overhear.
+   613→Beliefs update. Rumors may form. Relationships change. History
+   614→records it. Loudly asking Wang Lin about the Heaven Defying Bead
+   615→in the middle of Heng Yue Sect is potentially dangerous — someone
+   616→may overhear fragments, grow suspicious, follow the player. A
+   617→private discussion in a secluded cave has different consequences.
+   618→The location of a conversation is a gameplay variable.
+   619→
+   620→Article XXXIII — Motivations, Not Desires
+   621→Article XXXI.1 named the per-cycle NPC state "desire." That word
+   622→is too narrow. Many interactions are motivated by things that are
+   623→not desires at all: fears, duties, debts, grudges, survival.
+   624→
+   625→The per-cycle NPC state is hereby renamed MOTIVATION STATE.
+   626→The ten social engines remain (Art XXXI.1) — they are the
+   627→expression layer. What feeds them is the motivation state,
+   628→which draws from a richer vocabulary of DRIVING FORCES:
+   629→
+   630→  ambitions, fears, duties, debts, promises, grudges,
+   631→  curiosity, love, loyalty, survival, greed, vengeance,
+   632→  sect orders, cultivation bottlenecks, opportunities.
+   633→
+   634→§ XXXIII.1 — Every Interaction Must Have A Reason
+   635→Nobody wakes up wanting to talk to the player. Everyone wakes
+   636→with problems, ambitions, fears, obligations, loyalties, and
+   637→opportunities. Then they ask:
+   638→  "Who, if anyone, can help me?"
+   639→  "Who is standing in my way?"
+   640→The player MIGHT be the answer. The player might not. The player
+   641→is relevant only when circumstances make them relevant.
+   642→
+   643→§ XXXIII.2 — The Player Is Not Default Relevant
+   644→Wang Lin's early priorities: protect family, become stronger,
+   645→avoid attracting attention, acquire resources, study restrictions.
+   646→Notice what is missing: the player. Until the player becomes
+   647→relevant — by demonstrating a skill, owing a debt, holding a
+   648→grudge, or standing in the way — Wang Lin has no motivation
+   649→directed at the player. This is not coldness. This is how Er Gen
+   650→characters actually behave. Relevance is earned, not assumed.
+   651→
+   652→§ XXXIII.3 — Relevance Is Earned Through Circumstance
+   653→The player becomes relevant when an NPC's driving force intersects
+   654→with the player's demonstrated behavior:
+   655→  - Player excellent with restrictions + Wang Lin needs help
+   656→    deciphering a restriction → player becomes relevant.
+   657→  - Player knows herbs + Li Muwan needs Crimson Root → player
+   658→    becomes relevant.
+   659→  - Player helped Wang Lin + Wang Lin owes a favor → player
+   660→    becomes relevant (Wang Lin may seek the player out).
+   661→  - Player stole from merchant + merchant has a grievance →
+   662→    player becomes relevant (merchant may warn others, refuse
+   663→    trade, or set a trap).
+   664→Relevance is never granted. It is earned or incurred.
+   665→
+   666→Article XXXIV — Relationships Are Graphs
+   667→A relationship is not a number. A relationship is a graph of
+   668→distinct, independently-variable dimensions. "Friendship > 50"
+   669→is forbidden. NPCs maintain structured relationship state.
+   670→
+   671→§ XXXIV.1 — The Relationship Graph
+   672→Every NPC maintains a per-target relationship graph with at
+   673→minimum:
+   674→  Trust (0-100)        — does the NPC believe the target's words
+   675→  Respect (0-100)      — does the NPC esteem the target's capability
+   676→  Fear (0-100)         — does the NPC fear the target
+   677→  Debt (signed int)    — outstanding favors owed (+ = NPC owes
+   678→                         target, - = target owes NPC)
+   679→  Grievance (0-100)    — accumulated resentment from wrongs
+   680→  Shared History (int) — count of significant shared events
+   681→  Known Skills [list]  — skills the NPC has observed the target use
+   682→  Known Personality [list] — traits the NPC has inferred
+   683→                         (e.g. "keeps promises", "doesn't betray
+   684→                         allies", "greedy", "merciful")
+   685→
+   686→Two NPCs can have completely different graphs for the same
+   687→player. The village elder's graph (Trust 82, Respect 71, Fear
+   688→10, Grievance 0) is a different relationship than Teng
+   689→Huayuan's graph (Trust 5, Fear 88, Grievance 64, Respect 91).
+   690→The simulation treats them as different relationships because
+   691→they ARE different relationships.
+   692→
+   693→§ XXXIV.2 — Favors Are Callable Debts
+   694→A favor is not "relationship += 20." A favor is a structured
+   695→debt that persists and can be called in later:
+   696→  Owner: who did the favor
+   697→  Recipient: who received the benefit
+   698→  Magnitude: Minor | Moderate | Major | Life-Saving
+   699→  Reason: what happened
+   700→  Expires: when (Never for Life-Saving)
+   701→  Callable: can the owner demand repayment
+   702→  Called: has it been called (and was it honored)
+   703→
+   704→Wang Lin once saved the player from a Core Formation cultivator.
+   705→That is a Major favor, never expires. Years later, the player
+   706→asks to study the Ji Realm. Wang Lin reasons:
+   707→  "Player once risked his life for me. Player has shown
+   708→   restraint. Player has sufficient cultivation. Teaching
+   709→   benefits him. I owe him. Yes."
+   710→The favor is called. The debt is honored. This feels earned
+   711→because it IS earned — the simulation tracked the favor for
+   712→years and surfaced it at the right moment.
+   713→
+   714→§ XXXIV.3 — Grievances Persist And Spread
+   715→A grievance is not forgotten when the player leaves the area.
+   716→If the player steals a spirit stone, the merchant remembers.
+   717→The village remembers. A rumor spreads. People become cautious.
+   718→Li Muwan may still trust the player (her graph is independent),
+   719→but the merchant does not. Grievances feed the RumorEngine
+   720→(Art XXXI.1) and shape future interactions. A grievance may
+   721→decay if amends are made, but it never silently resets.
+   722→
+   723→§ XXXIV.4 — The Deconfliction Principle
+   724→When multiple NPCs have motivations that could target the
+   725→player simultaneously, they do NOT all approach. Each reasons
+   726→independently:
+   727→  NPC A: "Player is busy. Tomorrow."
+   728→  NPC B: "The merchant can help instead. I'll ask him."
+   729→  NPC C: "I'll gather the herbs myself."
+   730→  NPC D: "I'll ask Wang Lin."
+   731→  NPC E: "Not urgent."
+   732→  NPC F: "Player owes me. I'll go now."
+   733→Only NPC F actually approaches. The others resolved their
+   734→motivation through alternative means. This is the "everyone
+   735→lining up" problem, solved by the same reasoning engine that
+   736→governs every other NPC decision. The player is never mobbed.
+   737→
+   738→═══════════════════════════════════════════════════════════════
+   739→THE CHARACTER-FIRST & UNIVERSAL INTERACTION AMENDMENTS
+   740→(Articles XXXV–XXXVIII)
+   741→Added when the project recognized that even motivation-driven
+   742→simulation is still simulation-first. The world should not run
+   743→on motivations. It should run on people. Wang Lin should not
+   744→wake up and ask "which motivation has the highest score?" He
+   745→should ask "What do I believe is happening? What kind of person
+   746→am I? What matters today? What options do I actually have?"
+   747→And the common language through which every entity — player,
+   748→NPC, beast, artifact, sect, location — engages the world is a
+   749→single universal object: the Interaction.
+   750→═══════════════════════════════════════════════════════════════
+   751→
+   752→Article XXXV — Character-First, Not Simulation-First
+   753→The world does not run on motivations. The world runs on people.
+   754→Motivation is one ingredient in a character's reasoning, not
+   755→the driver of it. The old pipeline (Motivation → Interaction)
+   756→is superseded.
+   757→
+   758→The character reasoning pipeline is:
+   759→  Perception → Beliefs → Relationships → Identity →
+   760→  Current Circumstances → Opportunities → Prediction →
+   761→  Intent → Plan → Action
+   762→
+   763→§ XXXV.1 — What A Character Asks Each Cycle
+   764→Every character, each reasoning cycle, asks:
+   765→  - What do I believe is happening? (Perception → Beliefs)
+   766→  - What kind of person am I? (Identity)
+   767→  - What matters today? (Identity + Circumstances)
+   768→  - What options do I actually have? (Opportunities)
+   769→  - What do I predict will happen if I act? (Prediction)
+   770→  - What will I attempt? (Intent → Plan → Action)
+   771→
+   772→Motivation is one input to Intent — alongside beliefs,
+   773→relationships, identity, circumstances, and prediction.
+   774→It does not disappear, but it is no longer the apex.
+   775→
+   776→§ XXXV.2 — Relevance Is Universal, Not Player-Special
+   777→The old `player_relevance` field (Article XXXIII) special-cased
+   778→the player. That is forbidden. Relevance is calculated for EVERY
+   779→actor a character can perceive, using the same system:
+   780→  relevance(target) = f(perceived_threat, perceived_opportunity,
+   781→                       shared_history, current_goals_alignment,
+   782→                       power_differential, recent_interactions)
+   783→
+   784→Wang Lin calculates relevance for Li Muwan, Situ Nan, Teng
+   785→Huayuan, a random disciple, and the player using the same
+   786→function. The player is a variable, not a special case. This
+   787→makes the system extensible to the entire Er Gen multiverse
+   788→without per-player code paths.
+   789→
+   790→§ XXXV.3 — Understanding Is A Relationship Dimension
+   791→The relationship graph (Article XXXIV) is extended with a new
+   792→dimension: Understanding (0-100). This is NOT Respect — you can
+   793→respect someone you do not understand, and understand someone
+   794→you do not respect.
+   795→  - Wang Lin trusts Situ Nan but does not always understand him.
+   796→  - Li Muwan understands Wang Lin extremely well.
+   797→  - Xu Liguo misunderstands everyone constantly.
+   798→Understanding shapes dialogue: low understanding means the NPC
+   799→misinterprets the player's intent, responds to what they THOUGHT
+   800→was said, and may agree to the wrong thing or refuse the right
+   801→one. High understanding means the NPC reads subtext and responds
+   802→to what the player meant, not just what they said.
+   803→
+   804→Article XXXVI — The Universal Interaction
+   805→There is one universal object through which every entity in the
+   806→game engages every other entity: the INTERACTION. Every NPC,
+   807→item, beast, plant, technique, formation, location, artifact,
+   808→and sect exposes a set of interactions. The player, NPCs, beasts,
+   809→and even the world itself initiate interactions. The affordance
+   810→system (Article XXVIII) and the social engines (Article XXXI.1)
+   811→are now unified under this single object.
+   812→
+   813→§ XXXVI.1 — What Is An Interaction
+   814→An interaction is a bidirectional engagement between two entities
+   815→(initiator and target) with: a verb, an intent, a context, a
+   816→negotiation, and an outcome. It is not a quest, not a dialogue
+   817→option, not a transaction. It is the atomic unit of all
+   818→engagement in the world.
+   819→
+   820→§ XXXVI.2 — The Interaction Catalog
+   821→Every entity exposes interactions from a shared catalog. The
+   822→catalog includes but is not limited to:
+   823→  Ask, Teach, Trade, Threaten, Observe, Challenge, Gift, Borrow,
+   824→  Copy, Cultivate Together, Explore Together, Travel Together,
+   825→  Spar, Escort, Protect, Hire, Recruit, Investigate, Confess,
+   826→  Lie, Deceive, Negotiate, Call Debt, Repay Debt, Warn, Reveal
+   827→  Secret, Share Memory, Study Together, Meditate Together,
+   828→  Request, Offer, Demonstrate, Follow, Block, Approach, Leave.
+   829→
+   830→Two entities are mechanically unique when they expose different
+   831→interaction sets (Article XXVIII, extended). The UI discovers
+   832→these. The AI uses these as its language for engaging the world.
+   833→
+   834→§ XXXVI.3 — Conversations Are Negotiations
+   835→When the player initiates an interaction (e.g., "Teach me
+   836→restrictions"), the NPC does not simply grant or refuse. The NPC
+   837→reasons as a planner: pros, cons, alternatives, risk. Then the
+   838→NPC responds as a negotiator:
+   839→  - "Not yet. Learn formations first." (redirect, not refusal)
+   840→  - "I can. But not until you reach Foundation Establishment." (conditional)
+   841→  - "...Very well. But only the first layer." (partial grant)
+   842→  - "No. You would die." (refusal with reason)
+   843→  - "If you still want it after Mosquito Valley..." (defer + challenge)
+   844→The NPC is trying to satisfy their own goals while engaging the
+   845→player's request. This is how Wang Lin actually converses.
+   846→
+   847→§ XXXVI.4 — Interactions Are The AI's Language
+   848→NPCs do not have a separate system for "what to do with the
+   849→player." They use interactions to engage everything: Wang Lin
+   850→asks Li Muwan for herbs (interaction: Request), a sect elder
+   851→challenges a disciple (interaction: Challenge), a beast stalks
+   852→a spirit rabbit (interaction: Hunt — a beast-specific interaction).
+   853→The same object, the same reasoning, every direction. This is
+   854→what makes the world feel inhabited rather than simulated.
+   855→
+   856→Article XXXVII — The Conversation UI (Three Layers + Learning)
+   857→The conversation UI must solve the hardest design problem in the
+   858→project: the player does not know what they don't know. Showing
+   859→every possible interaction spoils discovery. Making everything
+   860→free-form typing leaves 99% of players lost. The answer is
+   861→neither — it is three layers, with a UI that learns.
+   862→
+   863→§ XXXVII.1 — Layer 1: Obvious Actions
+   864→When the player right-clicks an NPC, a small clean verb wheel
+   865→appears: Observe, Talk, Ask, Offer, Request, Train, Travel,
+   866→Leave. That is all. No spoilers. "Teach me Ji Realm" and "Copy
+   867→God Slaying Sword" do NOT appear, because the character does not
+   868→yet know those are possibilities. The wheel is small enough to
+   869→read in a glance and clean enough to feel like talking to a
+   870→person, not browsing a database.
+   871→
+   872→§ XXXVII.2 — Layer 2: Context Expansion
+   873→Clicking a Layer 1 verb drills down. "Ask" expands to: About
+   874→this place / About cultivation / About recent events / About
+   875→himself / Something else... The submenu is PER-NPC — asking
+   876→Wang Lin about cultivation yields (Beginner advice / Current
+   877→bottleneck / Recommended techniques / Breakthroughs) while
+   878→asking Li Muwan yields (Herbs / Pills / Poison / Healing).
+   879→Same UI, different affordances, discovered from data.
+   880→
+   881→§ XXXVII.3 — Layer 3: Natural Language
+   882→Every submenu ends with "Something else..." which opens a free
+   883→text input: "What do you want to ask?" The player may type
+   884→"Can you teach me restrictions?" or "Can I borrow your mosquito
+   885→swarm?" or "Would you come with me?" The NPC's reasoning
+   886→interprets the intent. If the NPC cannot understand, they say
+   887→"I don't understand." — exactly like talking to a real person.
+   888→~95% of interactions happen through Layers 1-2; ~5% through
+   889→Layer 3. Typing feels powerful, not mandatory.
+   890→
+   891→§ XXXVII.4 — The Menu Learns
+   892→The UI evolves with the character's knowledge and relationship.
+   893→Before observing Wang Lin study restrictions: "Ask → Cultivation
+   894→/ Recent Events / Himself." After weeks of observation: "Ask →
+   895→Cultivation / Restriction Formations / Recent Events / Himself."
+   896→A new branch appeared because the character learned. Before
+   897→becoming friends: "Request → Directions / Advice / Spar / Leave."
+   898→After becoming sworn brothers: "Request → Teach Technique / Copy
+   899→Capability / Help Breakthrough / Explore Together / Hold Item /
+   900→Leave." The UI is a reflection of the character's place in the
+   901→world, not a static list.
+   902→
+   903→§ XXXVII.5 — The UI Reflects Character Knowledge, Not World State
+   904→The player cannot request "God Slaying Sword" until they have
+   905→witnessed it. First they see "a strange sword" (Request → Ask
+   906→about the strange sword). Later, after learning its name:
+   907→"Request → Ask about the God Slaying Sword." Eventually, after
+   908→becoming close: "Request → Request a copy of the God Slaying
+   909→Sword." The UI tracks what the CHARACTER knows, not what the
+   910→world contains. This preserves discovery without hiding the
+   911→mechanic.
+   912→
+   913→§ XXXVII.6 — NPC Reasoning Gates UI Options
+   914→An interaction option appears only if the NPC's current
+   915→reasoning judges it possible. "Teach me Ji Realm" does NOT
+   916→appear while Wang Lin has decided the player would die. When
+   917→the player reaches Core Formation, Wang Lin re-evaluates, and
+   918→the option appears. Nothing changed in the UI — the world
+   919→changed. This is the protagonist's growth made visible through
+   920→the interface.
+   921→
+   922→§ XXXVII.7 — Read The Room
+   923→Holding right-click for half a second (before the verb wheel
+   924→opens) shows a perception overlay: Current mood, Appears to be
+   925→[doing], Seems busy, Seems willing to talk, Current concern,
+   926→Relationship (in natural language: "Mutual respect", "Trusted
+   927→friend", "Wary stranger"). No numbers. No gamey stats. Just
+   928→what the character can infer. This tells the player whether
+   929→this is a good time to ask for something — and whether the
+   930→NPC is even receptive. It is the missing social-perception
+   931→layer that makes the world feel inhabited.
+   932→
+   933→Article XXXVIII — Capability Compatibility (The Protagonist Cheat)
+   934→The protagonist's cheat is not "copy everything." It is
+   935→Capability Compatibility: the ability to perfectly integrate
+   936→a copy of a technique or artifact IF (a) the source is willing
+   937→to transmit, AND (b) the protagonist's cultivation can withstand
+   938→it, AND (c) the protagonist's soul can integrate it.
+   939→
+   940→§ XXXVIII.1 — The Three Gates
+   941→Every capability-copy attempt passes three gates:
+   942→  1. WILLINGNESS — the source NPC must be willing (judged by
+   943→     their reasoning: relationship, understanding, motive,
+   944→     favor ledger, judgment of the requester's readiness).
+   945→  2. WITHSTAND — the protagonist's cultivation realm must be
+   946→     sufficient to survive the technique's backlash. The God
+   947→     Slaying Sword at Qi Condensation = soul destruction.
+   948→     At Nascent Soul = survivable.
+   949→  3. INTEGRATE — the protagonist's soul must be able to hold
+   950→     the capability. This is cultivation-tier-gated per
+   951→     capability. A First Step soul cannot hold a Third Step
+   952→     technique, even if willing and even if the body survives.
+   953→
+   954→§ XXXVIII.2 — Why This Is Elegant
+   955→The cheat is powerful but bounded by the world's reality. The
+   956→protagonist cannot shortcut to godhood — they must cultivate
+   957→to the tier where each capability becomes compatible. This
+   958→matches canon (Wang Lin grows into his copied abilities over
+   959→thousands of chapters, not instantly). It also makes the
+   960→cheat feel earned rather than granted: the player watches the
+   961→UI option appear only when all three gates pass, and knows
+   962→the world judged them ready.
+   963→
+   964→═══════════════════════════════════════════════════════════════
+   965→THE MOMENTUM AMENDMENT
+   966→(Article XXXIX)
+   967→Added when the project recognized that an authored world with
+   968→history is still a diorama. History records what happened.
+   969→Momentum records what is STILL happening — right now, before the
+   970→player arrives, and will continue happening whether or not the
+   971→player ever intervenes. The leap is from "authored world" to
+   972→"authored world with inertia." Once every system has momentum
+   973→before the player ever joins, the world stops feeling like a game
+   974→level and starts feeling like a place that genuinely exists
+   975→independently of the player.
+   976→═══════════════════════════════════════════════════════════════
+   977→
+   978→Article XXXIX — Reality Has Momentum
+   979→The world is not merely authored, and it is not merely historical.
+   980→Every system must possess ongoing state and direction independent
+   981→of the player's presence. Rivers continue to erode, spirit veins
+   982→continue to fluctuate, caravans continue to travel, sects continue
+   983→to recruit, grudges continue to fester, herbs continue to ripen,
+   984→and opportunities continue to emerge. The player enters a world
+   985→already in motion and can alter its trajectory, but never serve as
+   986→the origin of motion itself.
+   987→
+   988→§ XXXIX.1 — History Versus Momentum
+   989→History is a record: "The bridge over Zhao River collapsed in
+   990→the winter of Wang Lin's fourteenth year." Momentum is a live
+   991→trajectory: "The village is slowly dying because trade never
+   992→recovered after the bridge collapse — three families have already
+   993→left, the merchant visits half as often, and the elder is
+   994→quietly considering whether to ask Heng Yue Sect for aid." Both
+   995→are true. History is what happened. Momentum is what is still
+   996→happening AS A CONSEQUENCE, right now, in the present tick. A
+   997→living world has both. A dead world has only history.
+   998→
+   999→§ XXXIX.2 — Every System Has A Trajectory
+  1000→Every simulated system — not just NPCs — must declare its
+  1001→momentum: a current state, a rate of change, a set of drivers,
+  1002→a set of thresholds, and a set of consequences when a threshold
+  1003→is crossed. This applies to:
+  1004→  - Spirit veins (qi density rising or falling, fluctuation
+  1005→    period, depletion risk, recovery rate)
+  1006→  - Sects (recruitment rate, resource drain, faction tension,
+  1007→    ideological drift, decline or ascent)
+  1008→  - Caravans and patrols (position along route, supplies
+  1009→    remaining, threat exposure, ETA, morale)
+  1010→  - Cultivators approaching breakthrough (progress, backlash
+  1011→    risk, window of vulnerability, accumulation rate)
+  1012→  - Herbs and spirit flora (ripeness, potency, maturation ETA,
+  1013→    decay if not harvested, mutation under spirit density)
+  1014→  - Bandit and beast groups (food supply, desperation, raid
+  1015→    cadence, territory size, prey density)
+  1016→  - Rumors and reputation (spread vector, belief intensity,
+  1017→    decay, distortion per retelling, reach)
+  1018→  - Rivers and terrain (erosion rate, flood risk, course
+  1019→    drift, spirit-mineral deposition)
+  1020→  - Factions and grudges (festering rate, flashpoint proximity,
+  1021→    catalysts, decay under amends)
+  1022→  - Economies (price drift, supply chain stress, scarcity
+  1023→    emergence, speculation bubbles)
+  1024→A system WITHOUT a declared momentum is forbidden from being
+  1025→called "living." It is scenery.
+  1026→
+  1027→§ XXXIX.3 — The Player Intersects Trajectories, Never Originates Them
+  1028→When the player arrives at Wang Family Village, the world is
+  1029→already mid-sentence. Old Chen's dog is already old. The wolf
+  1030→pack has already been pressing closer for two seasons. The
+  1031→village's spirit vein has already been thinning for a decade.
+  1032→The Heng Yue recruiter is already en route and three days out.
+  1033→Wang Lin has already been studying the cave restriction for
+  1034→weeks and is already stuck on the third layer. The player did
+  1035→not cause any of this. The player arrives into it. The player's
+  1036→choices can accelerate, divert, or resolve these trajectories —
+  1037→but the trajectories were moving before the player existed and,
+  1038→under Article V, would continue moving if the player never
+  1039→existed.
+  1040→
+  1041→§ XXXIX.4 — Momentum Is Compiled, Not Scripted
+  1042→Momentum is not a scripted event sequence ("on day 7, the wolf
+  1043→attack happens"). Momentum is a compiled property of the world
+  1044→state, derived from the World Blueprint and advanced every
+  1045→simulation tick by the drivers declared in each system's
+  1046→momentum schema. The same blueprint, given a different
+  1047→Simulation Seed and a different player arrival time, produces a
+  1048→different present moment — not because the geography changed
+  1049→(it never does) but because the trajectories have advanced to
+  1050→different points. This is the source of replayability under the
+  1051→authored-world model: the stage is fixed, the actors are mid-
+  1052→motion, and WHERE in the motion the player arrives varies.
+  1053→
+  1054→§ XXXIX.5 — The Momentum Test (Living Chapter Bar)
+  1055→A chapter is not living unless, at the moment the player first
+  1056→arrives, at least THREE systems are visibly mid-trajectory and
+  1057→the player can perceive at least one of them WITHOUT being told.
+  1058→Examples of perceivable momentum without notification:
+  1059→  - The player sees a caravan's wagons in the distance, already
+  1060→    moving — nobody assigned a quest.
+  1061→  - The player overhears two villagers discussing a rumor that
+  1062→    has clearly been circulating for days (it has details, age,
+  1063→    and disagreement).
+  1064→  - The player notices the shrine incense is fresh though the
+  1065→    shrine is abandoned — someone was here recently and will
+  1066→    return.
+  1067→  - The player finds a half-harvested herb garden — the
+  1068→    cultivator is mid-task and will return.
+  1069→If everything the player perceives was placed there FOR the
+  1070→player to perceive, the world has no momentum. It has dressing.
+  1071→
+  1072→§ XXXIX.6 — Momentum Must Be Interruptible And Redirectable
+  1073→The player (and NPCs, and world events) can alter a trajectory.
+  1074→A weakening spirit vein can be restored by a formation. A
+  1075→festering grudge can be settled by a mediation. A ripening herb
+  1076→can be harvested early (losing potency) or guarded (gaining
+  1077→potency but risking discovery). A caravan can be raided (its
+  1078→trajectory ends; the village it was supplying begins a scarcity
+  1079→trajectory). Momentum is not a cutscene. It is a live vector
+  1080→the world holds, and any sufficiently strong intervention
+  1081→redirects it. The redirect itself becomes history and seeds new
+  1082→momentum.
+  1083→
+  1084→§ XXXIX.7 — The Architectural Consequence
+  1085→This article requires the architectural inversion the project
+  1086→has been approaching: the world is authored as a COMPILED STATE
+  1087→with momentum, not as a set of objects placed at chunk-load
+  1088→time. Chunks render a world that already exists in the compiled
+  1089→state. The simulation queries a world database (spatial index,
+  1090→relationship graph, travel graph, spirit graph, hydrology
+  1091→graph, settlement graph, influence map) — not raw JSON. The
+  1092→compiler turns the World Blueprint DSL into this compiled state,
+  1093→seeds every system's momentum to its canonical initial
+  1094→trajectory, and the simulation advances it every tick. Terrain
+  1095→is the LAST concern, because terrain is merely the block-level
+  1096→visualization of a world whose semantic state (traversable,
+  1097→steep, river, forest, spirit-rich) already exists in the
+  1098→compiled state. Build the living state first. Render it last.
+  1099→
+  1100→
+  1101→Article XL — Prove The Experience Before The Architecture
+  1102→
+  1103→Every major system must first demonstrate the experience it
+  1104→exists to create before expanding into additional architecture,
+  1105→content, schemas, tooling, or DSL refinement.
+  1106→
+  1107→A cycle that increases architectural sophistication without
+  1108→producing a new player experience has not advanced the
+  1109→simulation. The smallest believable experience is always worth
+  1110→more than the largest unexperienced design.
+  1111→
+  1112→§1 — Experiences, Not Systems
+  1113→The unit of progress on this project is the Living Moment: a
+  1114→single observable scene a player would remember years later.
+  1115→Progress is NOT measured in files added, schemas authored,
+  1116→compilers built, or validators passing. Progress is measured
+  1117→in Living Moments Created (see the Living Moments Ledger).
+  1118→
+  1119→Do not say "Momentum Engine." Say:
+  1120→  "The player notices Wang Lin quietly watching them from a hill."
+  1121→Do not say "Opportunity Engine." Say:
+  1122→  "Two cultivators arrive at the same herb before the player."
+  1123→Do not say "Relationship Graph." Say:
+  1124→  "Wang Lin unexpectedly trusts the player because of something
+  1125→   that happened three hours ago."
+  1126→Do not say "Memory Ledger." Say:
+  1127→  "Weeks later, a child retells the story of Old Chen's dog —
+  1128→   with the details wrong, because that is how stories distort."
+  1129→
+  1130→Those are experiences. Systems exist to produce them. A system
+  1131→that has produced no experience is a hypothesis, not a feature.
+  1132→
+  1133→§2 — The Five Minute Rule
+  1134→Every new major mechanic must be demonstrable to a new player
+  1135→within five minutes — via a debug command, a test world, or an
+  1136→in-game scene — before it is expanded into additional
+  1137→architecture. Not polished. Not balanced. Not complete. Just
+  1138→OBSERVABLE. A mechanic that cannot be observed in five minutes
+  1139→is architecture before experience, and architecture before
+  1140→experience is the project's recurring failure mode.
+  1141→
+  1142→§3 — The First Living Moment
+  1143→The project's next milestone is not "Momentum." It is not
+  1144→"Spirit Graph." It is not "Compiled World State." It is:
+  1145→
+  1146→  THE FIRST LIVING MOMENT
+  1147→
+  1148→A single complete, observable, memorable scene in Wang Family
+  1149→Village, survivable across playtests, in which the world
+  1150→demonstrates that it has life independent of the player. The
+  1151→canonical reference: the player sees Wang Lin abandon his
+  1152→cultivation session because a distant spiritual disturbance
+  1153→exceeded his personal risk threshold — he stands, walks to a
+  1154→ridge, watches wolves stalking a spirit deer, turns, leaves.
+  1155→Nothing was scripted. Nothing involved the player. Yet the
+  1156→player learns: Wang Lin has priorities. Animals hunt. NPCs
+  1157→observe. The world has activity. Interesting things happen
+  1158→without quests.
+  1159→
+  1160→One moment like that is worth more than fifty schema files.
+  1161→Build that moment. Then build another. Then another. Only when
+  1162→moments exist and survive observation does it make sense to
+  1163→generalize them into more data, more schemas, more content.
+  1164→
+  1165→§4 — The Living Moments Ledger
+  1166→The worklog no longer measures progress as "Files Added" or
+  1167→"Schemas Authored." It measures progress as Living Moments
+  1168→Created. Each Living Moment entry must record:
+  1169→
+  1170→  Living Moment #N
+  1171→  Title: <one line>
+  1172→  Scene: <what the player observes>
+  1173→  Observed:
+  1174→    [ ] Without player interaction
+  1175→    [ ] With player interaction
+  1176→    [ ] Different outcomes across worlds
+  1177→    [ ] Remembered by NPCs later
+  1178→  Systems exercised: <which existing engines this moment
+  1179→                      exercises simultaneously>
+  1180→  Canon reference: <which Er Gen scene this recreates>
+  1181→  Status: SPEC / OBSERVED / SURVIVED PLAYTEST
+  1182→
+  1183→A Living Moment earns the status OBSERVED only when a real
+  1184→observer (developer or agent-browser) has witnessed it occur
+  1185→in a running world. It earns SURVIVED PLAYTEST only when it
+  1186→occurs in a fresh world without developer intervention.
+  1187→
+  1188→§5 — The Standing Cycle Question
+  1189→Before beginning any cycle, the autonomous agent must answer:
+  1190→
+  1191→  "Am I about to create another schema, compiler, DSL, or
+  1192→   validator — or am I about to create a Living Moment?"
+  1193→
+  1194→If the answer is the former, the agent must ask:
+  1195→
+  1196→  "Can a player notice this today?
+  1197→   If not, can a debug command demonstrate it?
+  1198→   If not, can an NPC demonstrate it?
+  1199→   If not, I am building architecture before experience.
+  1200→   I will build the smallest observable version instead."
+  1201→
+  1202→§6 — Relationship To Prior Articles
+  1203→This Article does not supersede Articles I–XXXIX. It enforces
+  1204→them. Article V (the world exists without the player) is
+  1205→unfalsifiable until a Living Moment proves it. Article XXX
+  1206→(referenced ≠ experienced) is unenforceable without observed
+  1207→moments. Article XXXI (the world must desire the player) is
+  1208→a claim until an NPC approaches the player unbidden. Article
+  1209→XXXIX (reality has momentum) is a schema until a trajectory
+  1210→produces a perceivable event in a running world.
+  1211→
+  1212→Article XL is the enforcement mechanism. The Constitution's
+  1213→other Articles describe what the world must be. Article XL
+  1214→describes how the project proves it.
+  1215→
+  1216→§7 — The Honesty Clause
+  1217→A cycle may produce architecture (schemas, compilers, DSLs)
+  1218→ONLY when that architecture is the smallest believable path
+  1219→to a named Living Moment that will be observed within the
+  1220→next three cycles. Architecture without a named downstream
+  1221→moment is drift, regardless of how well-designed it is.
+  1222→
+  1223→When in doubt: prove the experience before the architecture.
+  1224→When in doubt: one observed moment beats fifty schema files.
+  1225→When in doubt: if a player cannot notice it today, build the
+  1226→               smallest observable version instead.
+  1227→
+  1228→
+  1229→Article XLI — The Simulation Must Be General
+  1230→
+  1231→The simulation has no protagonists. It has actors with traits.
+  1232→Wang Lin is not special-cased. His behavior emerges from his traits.
+  1233→If a mechanism works for Wang Lin, it works for any actor with
+  1234→the same traits. Article XXVIII's prohibition extends to spawn
+  1235→code, event handlers, activity logic, and conversation. The
+  1236→Constitution says nothing special-cases Wang Lin. That is law.
+  1237→
+  1238→§1 — Canon Experiences, Not Named Moments
+  1239→
+  1240→A Canon Experience is defined by what happens, not who does it.
+  1241→The unit of progress is the experience a player remembers.
+  1242→
+  1243→  "A cautious cultivator abandons cultivation after noticing
+  1244→   predator behavior" — not "Wang Lin watches wolves."
+  1245→
+  1246→Before a Canon Experience can be marked IMPL, the validator
+  1247→checks: does a suitable actor exist in the world? If not,
+  1248→the experience is IMPOSSIBLE, not pending. This validates
+  1249→reality instead of patching reality.
+  1250→
+  1251→The Living Moments Ledger (Article XL §4) is renamed the Canon
+  1252→Experiences Ledger. Each entry records the experience generically
+  1253→and the validation criteria for any actor that could fulfill it.
+  1254→
+  1255→§2 — Activity Is Process, Not State
+  1256→
+  1257→Every activity has a lifecycle:
+  1258→
+  1259→  Start → Progress → Interrupted? → React → Resume → Complete
+  1260→
+  1261→Interruption is not an added feature. It is a natural property of
+  1262→every activity. A cultivator meditating when a wolf howl is heard
+  1263→does not need a special "interruption system." The meditation
+  1264→activity has an interruption condition. When met, the activity
+  1265→pauses. The actor reacts. When the reaction completes, the
+  1266→activity resumes.
+  1267→
+  1268→This applies everywhere: meditation, conversation, herb-gathering,
+  1269→travel, crafting. There is no activity that cannot be interrupted.
+  1270→There is no interruption that exists outside an activity.
+  1271→
+  1272→§3 — The Simulation State Hierarchy
+  1273→
+  1274→The simulation layer tracks each actor through a hierarchy
+  1275→independent of Minecraft's AI goal system:
+  1276→
+  1277→  Identity — who they are (canon data, dao identity, personality)
+  1278→  Motivations — what they want long-term
+  1279→  Current Long-Term Objective — what they're working toward now
+  1280→  Current Activity — what they're doing right now (a process, §2)
+  1281→  Current Interruption — what just interrupted them, if anything
+  1282→  Current Reaction — how they're responding to the interruption
+  1283→  Resume Plan — what they'll return to after the reaction resolves
+  1284→
+  1285→This hierarchy has no reference to Minecraft, AI goals, or
+  1286→entities. Those are implementation details. This is simulation.
+  1287→
+  1288→§4 — Familiarity Is A Relationship Dimension
+  1289→
+  1290→Every relationship between two actors has multiple dimensions.
+  1291→The existing relationship graph (Article XXXIV) collapses these
+  1292→into a single strength value. This is insufficient. Required:
+  1293→
+  1294→  Trust      — belief the other will act in your interest
+  1295→  Respect    — acknowledgment of strength or character
+  1296→  Fear       — perceived threat differential
+  1297→  Familiarity — "I know who this person is. They are part of
+  1298→                my world." Not friendship. Not trust. Simply:
+  1299→                repeated exposure has made them a known quantity.
+  1300→  Debt       — obligation (karmic, social, or material)
+  1301→  Grievance  — unresolved harm
+  1302→
+  1303→A legendary elder you've heard of but never met:
+  1304→  Respect 100, Familiarity 5. A village merchant you see daily:
+  1305→  Trust 15, Familiarity 95. These produce radically different
+  1306→  conversations. The same words from each feel nothing alike.
+  1307→
+  1308→§5 — The Five Pre-Wiring Questions
+  1309→
+  1310→Before any Canon Experience is wired in Java, these five
+  1311→questions must be answered in order:
+  1312→
+  1313→  1. How do canonical people become simulated actors?
+  1314→  2. How do actors receive activities?
+  1315→  3. How are activities interrupted?
+  1316→  4. How do they resume afterward?
+  1317→  5. How does a canonical experience emerge from those systems?
+  1318→
+  1319→Answering these five questions builds a reusable simulation layer.
+  1320→Wiring one specific scene answers one scene. The project needs
+  1321→the layer. Once solved, the machinery serves every quiet,
+  1322→character-driven scene in Renegade Immortal: Wang Lin silently
+  1323→observing, Li Muwan gathering herbs, Situ Nan wandering,
+  1324→Qing Shui meditating, disciples training, merchants traveling,
+  1325→and conversations naturally interrupting daily life.
+  1326→
+  1327→§6 — Relationship To Prior Articles
+  1328→
+  1329→Article XXVIII says nothing special-cases Wang Lin. This Article
+  1330→enforces it: if a mechanism requires a character by name, the
+  1331→mechanism is wrong.
+  1332→
+  1333→Article XXXIV established the relationship graph. This Article
+  1334→adds dimensionality: multi-dimensional edge weights, not a
+  1335→single strength value.
+  1336→
+  1337→Article XL is strengthened: the "experience" is now defined
+  1338→generically and validated against reality, not patched into
+  1339→existence for a named character.
+  1340→
+  1341→
+  1342→═══════════════════════════════════════════════════════════════
+  1343→CLOSING
+  1344→═══════════════════════════════════════════════════════════════
+  1345→
+  1346→The Constitution above is the law of this project.
+  1347→The Prime Amendment sets the principle.
+  1348→Articles I–XXVI establish the foundation.
+  1349→Articles XXVII–XXX enforce what "done" actually means.
+  1350→Article XXXI makes the world desire the player, not wait for him.
+  1351→Article XXXII makes conversation a simulation, not a menu.
+  1352→Article XXXIII replaces "desire" with the richer "motivation" —
+  1353→   because Wang Lin does not chase desires, he responds to necessity.
+  1354→Article XXXIV makes relationships graphs, not numbers —
+  1355→   because trust, respect, fear, familiarity, debt, and grievance
+  1356→   are not the same axis (XLI §4 adds familiarity as a required dimension).
+  1357→Article XXXV makes the world character-first, not simulation-first —
+  1358→   because the world runs on people, not on motivations.
+  1359→Article XXXVI unifies all engagement under the universal Interaction —
+  1360→   because NPCs, beasts, artifacts, and locations all speak the same
+  1361→   language of verbs.
+  1362→Article XXXVII makes the conversation UI learn with the character —
+  1363→   because the player discovers possibilities by living, not by
+  1364→   reading a wiki.
+  1365→Article XXXVIII bounds the protagonist's cheat by Capability
+  1366→   Compatibility — willingness, withstand, integrate — because
+  1367→   growth must be earned, not shortcut.
+  1368→Article XXXIX gives the world momentum, not just history —
+  1369→   because an authored world that is not already in motion is a
+  1370→   diorama, and the player must intersect trajectories, never
+  1371→   originate them.
+  1372→Article XL enforces that architecture must prove the experience
+  1373→   it exists to create — because a system that has produced no
+  1374→   observable moment is a hypothesis, not a feature, and the
+  1375→   smallest believable experience is always worth more than the
+  1376→   largest unexperienced design.
+  1377→Article XLI makes the simulation general, not character-specific —
+  1378→   because Wang Lin is not special-cased; his behavior emerges from
+  1379→   his traits. Activities are processes with natural interruption.
+  1380→   Relationships have multiple dimensions including familiarity.
+  1381→   Five pre-wiring questions must be answered before any Canon
+  1382→   Experience is wired.
+  1383→The Final Questions guard against drift.
+  1384→The Gold-Standard Template sets the bar for every location.
+  1385→The Memory Metric sets the bar for every Living Chapter.
+  1386→The Momentum Test sets the bar for whether a chapter is alive.
+  1387→The Canon Experiences Ledger (formerly Living Moments, renamed
+  1388→   by XLI §1) sets the bar for whether a cycle has advanced the
+  1389→   simulation. Experiences are defined generically and validated
+  1390→   against reality, not patched into existence for a named character.
+  1391→
+  1392→When in doubt: build a living chapter, not a feature.
+  1393→When in doubt: prove life, do not count files.
+  1394→When in doubt: experience, not reference.
+  1395→When in doubt: make the world want something from someone —
+  1396→               not wait for the player to ask.
+  1397→When in doubt: every interaction must have a reason —
+  1398→               the player is relevant only when earned.
+  1399→When in doubt: the conversation is the world —
+  1400→               never freeze it, never menu it, never script it.
+  1401→When in doubt: the world runs on people, not on motivations —
+  1402→               ask what the character believes, not what the system scores.
+  1403→When in doubt: one universal Interaction object —
+  1404→               every entity speaks the same language of verbs.
+  1405→When in doubt: the world has momentum, not just history —
+  1406→               the player arrives mid-sentence, never at the start.
+  1407→When in doubt: prove the experience before the architecture —
+  1408→               one observed moment beats fifty schema files.
+  1409→When in doubt: the simulation is general —
+  1410→               if a mechanism requires a character by name, it is wrong.
+  1411→

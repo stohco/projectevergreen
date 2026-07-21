@@ -111,3 +111,61 @@ Stage Summary:
 - JDK: ABSENT
 
 Next: The next JDK cycle must: (1) add register("zhao_plains", "npc_wang_lin") to NpcSpawnRegistry.java (one line), then (2) implement the 7 Java changes in canon_experience_wiring_spec.json. If moment_01 reaches OBSERVED within 3 JDK-cycles, the spec is validated. If not, per Art XL §7, it is drift and must be reduced or deleted. Per XL §7 honesty clause, 3 JDK-cycles remaining (including the registration line as a prerequisite).
+
+---
+Task ID: AUTO-CANON-077
+Agent: autonomous-cron
+Task: Create living_chapters/_index.json to unblock WorldStateDataLoader discovery of all 55 Chapter 1 files. (Art XXXI desire-driven; Art XL §3 First Living Moment; Art XL §7 honesty clause)
+
+Work Log:
+- Read worklog.md (last: AUTO-CANON-076). Task ID: 077.
+- Read CONSTITUTION.md in full (1411 lines).
+- Verified JDK 17: ABSENT. Data-only cycle confirmed.
+- Ran canon_validator.py: EXIT=0.
+- Standing Cycle Question (Art XL §5): 'Am I about to create another schema, or am I about to create a Living Moment?' Honest answer: cannot create a Living Moment (requires JDK). All 7 data priorities from the task instructions already exist. The 076 cycle fixed 2 blocking data gaps. This cycle identified a THIRD: the living_chapters directory had no _index.json, making all 55 files invisible to WorldStateDataLoader.
+- Canon Audit: audited the full data load chain: WorldStateDataLoader.java loads subsystems via _index.json files. The SUBSYSTEMS array defines which directories to scan. living_chapters/ was not listed, and no _index.json existed. Without this, Change 2 (ActorTickLoop reads motivation_state) would load null for every NPC — the social engines would remain dead data even with perfect Java wiring of all 7 changes.
+- Created living_chapters/_index.json: 55 files listed with relative paths (e.g., 'chapter_1_wang_family_village/motivation_state_wang_tianshui.json'). Verified all 55 links resolve and all JSONs are valid.
+- Updated canon_experience_wiring_spec.json: Change 2 now documents the exact WorldStateDataLoader lookup pattern: getEntry('living_chapters', 'chapter_1_wang_family_village/motivation_state_' + characterId.replace('npc_', '')). Added lookup_example showing npc_wang_tianshui mapping. Documented that 5 spawning NPCs without motivation_state files (wang_wei, wang_zhou, wang_yiyi, teng_huayuan, qing_shui) fall back to legacy desires array behavior.
+- Updated _prerequisite_data_additions: now 3 fixes across 076-077. Remaining JDK steps clearly enumerated: (1) add living_chapters to SUBSYSTEMS, (2) register npc_wang_lin, (3) implement 7 changes.
+- Additional finding (flagged, not fixed — cosmetic): 3 village NPC defs have wrong cultivation levels (wang_wei=Nirvana Shatterer, wang_yiyi=Paragon-tier). Canon accuracy issue, not a blocker for moment_01.
+- Validation: 55 indexed links valid, 50 Chapter 1 JSONs valid, 10/10 motivation states have NPC defs, canon validator EXIT=0.
+- Committed: ad32a92. Push: SUCCESS.
+
+Canon Audit:
+- Audited element: The WorldStateDataLoader discovery path for Chapter 1 motivation states.
+- Verdict: The path was BROKEN before this cycle — WorldStateDataLoader had no mechanism to discover any file in living_chapters/. Creating _index.json fixes the discovery layer. The JDK cycle now needs one SUBSYSTEMS array addition (one line) to activate it. DATA DISCOVERY: PASS. RUNTIME: STILL WAITING.
+
+Living Chapter Status:
+- Chapter 1 (Wang Family Village):
+  - Art XXVII 5Q: 0/5 pass at runtime, 5/5 SCHEMA-READY
+  - 10 Gold-Standard dims: 0/10 pass at runtime, 10/10 SCHEMA-READY
+  - Memory Metric: FAIL at runtime
+  - Art XL §3 First Living Moment: SPEC (data chain: NPC def → motivation_state → _index → WorldStateDataLoader → ActorTickLoop → IntentEngine → DecisionEngine. All data links now verified.)
+  - moment_01: SPEC → data chain now complete, awaiting Java wiring
+- Chapter 2+: blocked by Art XXIX
+
+Desire-Driven Status (Art XXXI):
+- 10/10 NPCs with motivation states have matching NPC definitions
+- 10/10 social engines have data templates
+- 55/55 Chapter 1 files now discoverable by WorldStateDataLoader via _index.json
+- 0/10 NPCs have LIVE motivation at runtime
+- 0/10 social engines produce intents at runtime
+- The world DOES NOT desire anyone at runtime. It waits.
+- 3 data prerequisites for moment_01 are now documented: threshold (076), NPC def (076), index (077).
+
+Final Questions:
+1. Would this work without the player? YES — the _index.json enables the loader to find motivation states regardless of player presence. The motivation states drive NPC→NPC interaction (e.g., Wang Tianshui requesting help from Wang Ping), which occurs without the player. The player is relevant only when an NPC's reasoning determines they are (Art XXXIII.2).
+2. What possibilities emerge? The _index enables the entire motivation/social engine system to activate at runtime. This is not a new possibility for the player — it is the FOUNDATION for every desire-driven possibility in Chapter 1. Without it, the social engines are inert data. With it, every motivation in every NPC can fire.
+3. Does it recreate an experience or merely reference one? HONEST: The _index makes existing data loadable. It does not create an experience. But it moves the system from IMPOSSIBLE (data not loadable) to IMPL (data is loadable, Java wiring not yet done). Before this fix, the moment was IMPOSSIBLE because the loader would return null. Now it is IMPL.
+4. Does the world want something from someone this cycle, or still waiting? STILL WAITING at runtime. But the infrastructure to discover wants is now complete. The world wants; the Java doesn't yet listen.
+
+Stage Summary:
+- Created files: living_chapters/_index.json (55 entries)
+- Modified files: canon_experience_wiring_spec.json (Change 2 lookup docs, prerequisite updates, validation pre-flight)
+- 50 Chapter 1 JSONs validated: ALL VALID
+- Canon validator: EXIT=0
+- Build: SKIPPED (no JDK)
+- Commit: ad32a92 (pushed successfully)
+- JDK: ABSENT
+
+Next: The next JDK cycle must: (1) add {"living_chapters", "living_chapters/"} to SUBSYSTEMS in WorldStateDataLoader.java (one line), (2) add register("zhao_plains", "npc_wang_lin") to NpcSpawnRegistry.java (one line), (3) implement the 7 Java changes in canon_experience_wiring_spec.json. If moment_01 reaches OBSERVED within 2 JDK-cycles (076 + 077 consumed 2 of the 3-cycle budget for data work), the spec is validated. If 3 JDK-cycles pass without OBSERVED, per Art XL §7, the spec is drift.
