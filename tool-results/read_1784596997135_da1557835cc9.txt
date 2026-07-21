@@ -1,0 +1,562 @@
+     1→package dev.ergenverse.spawn;
+     2→
+     3→import com.mojang.brigadier.CommandDispatcher;
+     4→import dev.ergenverse.core.Ergenverse;
+     5→import net.minecraft.commands.CommandSourceStack;
+     6→import net.minecraft.commands.Commands;
+     7→import net.minecraft.network.chat.Component;
+     8→import net.minecraft.ChatFormatting;
+     9→import net.minecraft.server.level.ServerLevel;
+    10→import net.minecraft.server.level.ServerPlayer;
+    11→import net.minecraft.core.BlockPos;
+    12→import net.minecraftforge.event.RegisterCommandsEvent;
+    13→import net.minecraftforge.eventbus.api.SubscribeEvent;
+    14→
+    15→/**
+    16→ * ErgenverseCommand — {@code /ergenverse} diagnostic command.
+    17→ *
+    18→ * <p>Provides a way for the player to verify the mod is loaded and manually
+    19→ * trigger the village build + tutorial book if the automatic first-spawn
+    20→ * handler didn't fire.
+    21→ *
+    22→ * <h2>Subcommands</h2>
+    23→ * <ul>
+    24→ *   <li>{@code /ergenverse status} — Prints whether the mod is loaded, the
+    25→ *       village build status, and the player's tutorial-given flag.</li>
+    26→ *   <li>{@code /ergenverse village} — Builds the Wang Family Village at the
+    27→ *       player's current position (or world spawn if run from console).</li>
+    28→ *   <li>{@code /ergenverse book} — Gives the player the tutorial book.</li>
+    29→ *   <li>{@code /ergenverse reset} — Clears the player's tutorial-given flag
+    30→ *       so the first-spawn handler will fire again on next login.</li>
+    31→ * </ul>
+    32→ *
+    33→ * <p>No permission requirement — any player can run it. This is an alpha
+    34→ * mod for testing; the commands are intentionally open.
+    35→ *
+    36→ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17 APIs only.
+    37→ */
+    38→public final class ErgenverseCommand {
+    39→
+    40→    private ErgenverseCommand() {}
+    41→
+    42→    /** Per-player NBT flag — must match SpawnEventHandler.NBT_SUZAKU_TELEPORTED. */
+    43→    private static final String NBT_SUZAKU_TELEPORTED = "ergenverse.suzaku_teleported";
+    44→
+    45→    @SubscribeEvent
+    46→    public static void register(RegisterCommandsEvent event) {
+    47→        CommandDispatcher<CommandSourceStack> disp = event.getDispatcher();
+    48→        disp.register(Commands.literal("ergenverse")
+    49→            .then(Commands.literal("status")
+    50→                .executes(ctx -> status(ctx.getSource())))
+    51→            .then(Commands.literal("village")
+    52→                .executes(ctx -> buildVillage(ctx.getSource())))
+    53→            .then(Commands.literal("book")
+    54→                .executes(ctx -> giveBook(ctx.getSource())))
+    55→            .then(Commands.literal("gear")
+    56→                .executes(ctx -> giveGear(ctx.getSource())))
+    57→            .then(Commands.literal("reset")
+    58→                .executes(ctx -> resetFlag(ctx.getSource())))
+    59→            .then(Commands.literal("geography")
+    60→                .executes(ctx -> geography(ctx.getSource())))
+    61→            .then(Commands.literal("desire_list")
+    62→                .executes(ctx -> desireList(ctx.getSource())))
+    63→            .then(Commands.literal("desire_fire")
+    64→                .executes(ctx -> desireFire(ctx.getSource())))
+    65→            .then(Commands.literal("desire_targets")
+    66→                .executes(ctx -> desireTargets(ctx.getSource())))
+    67→        );
+    68→        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset|geography|desire_list|desire_fire|desire_targets).");
+    69→    }
+    70→
+    71→    /** /ergenverse status — print mod load + village + player state. */
+    72→    private static int status(CommandSourceStack src) {
+    73→        src.sendSuccess(() -> Component.literal("=== Ergenverse Status ===")
+    74→                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
+    75→        src.sendSuccess(() -> Component.literal("Mod loaded: YES")
+    76→                .withStyle(ChatFormatting.GREEN), false);
+    77→
+    78→        // Check the Planet Suzaku dimension for the village.
+    79→        net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> suzakuKey =
+    80→                net.minecraft.resources.ResourceKey.create(
+    81→                        net.minecraft.core.registries.Registries.DIMENSION,
+    82→                        new net.minecraft.resources.ResourceLocation(Ergenverse.MOD_ID, "planet_suzaku"));
+    83→        ServerLevel suzakuLevel = src.getServer().getLevel(suzakuKey);
+    84→
+    85→        if (suzakuLevel != null) {
+    86→            boolean villageBuilt = WangFamilyVillageBuilder.isAlreadyBuilt(suzakuLevel);
+    87→            src.sendSuccess(() -> Component.literal("Village at (" + WangFamilyVillageBuilder.VILLAGE_X
+    88→                    + ", ?, " + WangFamilyVillageBuilder.VILLAGE_Z + "): "
+    89→                    + (villageBuilt ? "BUILT" : "NOT BUILT"))
+    90→                    .withStyle(villageBuilt ? ChatFormatting.GREEN : ChatFormatting.YELLOW), false);
+    91→        } else {
+    92→            src.sendSuccess(() -> Component.literal("Planet Suzaku: NOT FOUND")
+    93→                    .withStyle(ChatFormatting.RED), false);
+    94→        }
+    95→
+    96→        ServerPlayer player = src.getPlayer();
+    97→        if (player != null) {
+    98→            boolean teleported = player.getPersistentData().getBoolean(NBT_SUZAKU_TELEPORTED);
+    99→            src.sendSuccess(() -> Component.literal("On Planet Suzaku: "
+   100→                    + (teleported ? "YES" : "NO"))
+   101→                    .withStyle(teleported ? ChatFormatting.GREEN : ChatFormatting.YELLOW), false);
+   102→
+   103→            BlockPos ppos = player.blockPosition();
+   104→            int distToVillage = (int) Math.sqrt(
+   105→                    Math.pow(ppos.getX() - WangFamilyVillageBuilder.VILLAGE_X, 2) +
+   106→                    Math.pow(ppos.getZ() - WangFamilyVillageBuilder.VILLAGE_Z, 2));
+   107→            src.sendSuccess(() -> Component.literal("Distance to village: " + distToVillage + " blocks")
+   108→                    .withStyle(ChatFormatting.AQUA), false);
+   109→        }
+   110→
+   111→        src.sendSuccess(() -> Component.literal("Commands: /ergenverse <status|village|book|gear|reset|desire_list|desire_fire>")
+   112→                .withStyle(ChatFormatting.AQUA), false);
+   113→        return 1;
+   114→    }
+   115→
+   116→    /** /ergenverse village — build the village at its canonical coordinate on Planet Suzaku. */
+   117→    private static int buildVillage(CommandSourceStack src) {
+   118→        net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> suzakuKey =
+   119→                net.minecraft.resources.ResourceKey.create(
+   120→                        net.minecraft.core.registries.Registries.DIMENSION,
+   121→                        new net.minecraft.resources.ResourceLocation(Ergenverse.MOD_ID, "planet_suzaku"));
+   122→        ServerLevel suzakuLevel = src.getServer().getLevel(suzakuKey);
+   123→
+   124→        if (suzakuLevel == null) {
+   125→            src.sendFailure(Component.literal("Planet Suzaku dimension not found."));
+   126→            return 0;
+   127→        }
+   128→
+   129→        if (WangFamilyVillageBuilder.isAlreadyBuilt(suzakuLevel)) {
+   130→            src.sendSuccess(() -> Component.literal("Village already built at ("
+   131→                    + WangFamilyVillageBuilder.VILLAGE_X + ", ?, " + WangFamilyVillageBuilder.VILLAGE_Z + ").")
+   132→                    .withStyle(ChatFormatting.YELLOW), false);
+   133→        } else {
+   134→            WangFamilyVillageBuilder.build(suzakuLevel);
+   135→            src.sendSuccess(() -> Component.literal("Wang Family Village built at ("
+   136→                    + WangFamilyVillageBuilder.VILLAGE_X + ", ?, " + WangFamilyVillageBuilder.VILLAGE_Z + ")!")
+   137→                    .withStyle(ChatFormatting.GREEN), false);
+   138→        }
+   139→        BlockPos center = WangFamilyVillageBuilder.getVillageCenter(suzakuLevel);
+   140→        src.sendSuccess(() -> Component.literal("Center: " + center.getX() + ", "
+   141→                + center.getY() + ", " + center.getZ()), false);
+   142→        return 1;
+   143→    }
+   144→
+   145→    /** /ergenverse book — give the tutorial book to the player. */
+   146→    private static int giveBook(CommandSourceStack src) {
+   147→        ServerPlayer player = src.getPlayer();
+   148→        if (player == null) {
+   149→            src.sendFailure(Component.literal("Run this command as a player, not from console."));
+   150→            return 0;
+   151→        }
+   152→        net.minecraft.world.item.ItemStack book = TutorialBookFactory.create();
+   153→        if (!player.getInventory().add(book)) {
+   154→            player.drop(book, false);
+   155→        }
+   156→        player.getPersistentData().putBoolean(NBT_SUZAKU_TELEPORTED, true);
+   157→        src.sendSuccess(() -> Component.literal("Tutorial book given.")
+   158→                .withStyle(ChatFormatting.GREEN), false);
+   159→        return 1;
+   160→    }
+   161→
+   162→    /** /ergenverse gear — give starter gear to the player. */
+   163→    private static int giveGear(CommandSourceStack src) {
+   164→        ServerPlayer player = src.getPlayer();
+   165→        if (player == null) {
+   166→            src.sendFailure(Component.literal("Run this command as a player."));
+   167→            return 0;
+   168→        }
+   169→        giveItem(player, dev.ergenverse.item.ErgenverseItems.SPIRIT_STONE.get(), 8);
+   170→        giveItem(player, dev.ergenverse.item.ErgenverseItems.JADE_SLIP.get(), 1);
+   171→        giveItem(player, dev.ergenverse.item.ErgenverseItems.QI_GATHERING_PILL.get(), 4);
+   172→        giveItem(player, dev.ergenverse.item.ErgenverseItems.MEDITATION_MAT.get(), 1);
+   173→        giveItem(player, dev.ergenverse.item.ErgenverseItems.SPIRIT_HERB_SEED.get(), 6);
+   174→        giveItem(player, dev.ergenverse.item.ErgenverseItems.FORMATION_FLAG_BLANK.get(), 2);
+   175→        giveItem(player, dev.ergenverse.item.ErgenverseItems.TALISMAN_PAPER_BLANK.get(), 4);
+   176→        src.sendSuccess(() -> Component.literal("Starter gear given.")
+   177→                .withStyle(ChatFormatting.GREEN), false);
+   178→        return 1;
+   179→    }
+   180→
+   181→    private static void giveItem(ServerPlayer player, net.minecraft.world.item.Item item, int count) {
+   182→        net.minecraft.world.item.ItemStack stack = new net.minecraft.world.item.ItemStack(item, count);
+   183→        if (!player.getInventory().add(stack)) {
+   184→            player.drop(stack, false);
+   185→        }
+   186→    }
+   187→
+   188→    /** /ergenverse reset — clear the tutorial-given flag. */
+   189→    private static int resetFlag(CommandSourceStack src) {
+   190→        ServerPlayer player = src.getPlayer();
+   191→        if (player == null) {
+   192→            src.sendFailure(Component.literal("Run this command as a player."));
+   193→            return 0;
+   194→        }
+   195→        player.getPersistentData().putBoolean(NBT_SUZAKU_TELEPORTED, false);
+   196→        src.sendSuccess(() -> Component.literal("Tutorial flag cleared. Re-log or run /ergenverse village + /ergenverse book.")
+   197→                .withStyle(ChatFormatting.AQUA), false);
+   198→        return 1;
+   199→    }
+   200→
+   201→    /**
+   202→     * /ergenverse desire_list — Art XL proof path. Lists all EntityCultivators
+   203→     * within 32 blocks and their loaded DesireState data. Proves: (a) NPCs spawn,
+   204→     * (b) Actor link works, (c) desire data loads from JSON.
+   205→     */
+   206→    private static int desireList(CommandSourceStack src) {
+   207→        ServerPlayer player = src.getPlayer();
+   208→        if (player == null) {
+   209→            src.sendFailure(Component.literal("Run as a player."));
+   210→            return 0;
+   211→        }
+   212→
+   213→        var cultivators = player.level().getEntitiesOfClass(
+   214→                dev.ergenverse.entity.EntityCultivator.class,
+   215→                player.getBoundingBox().inflate(32));
+   216→
+   217→        if (cultivators.isEmpty()) {
+   218→            src.sendSuccess(() -> Component.literal("No EntityCultivators within 32 blocks.")
+   219→                    .withStyle(ChatFormatting.YELLOW), false);
+   220→            src.sendSuccess(() -> Component.literal("NPCs spawn on chunk load. Try walking around.")
+   221→                    .withStyle(ChatFormatting.GRAY), false);
+   222→            return 1;
+   223→        }
+   224→
+   225→        src.sendSuccess(() -> Component.literal("=== NPC Desires (Art XXXI) — " + cultivators.size() + " nearby ===")
+   226→                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
+   227→
+   228→        int totalDesires = 0;
+   229→        int activeDesires = 0;
+   230→        for (dev.ergenverse.entity.EntityCultivator npc : cultivators) {
+   231→            String charId = npc.getCharacterId();
+   232→            String name = npc.getDisplayNameCn();
+   233→            String actorId = dev.ergenverse.simulation.intent.ActorEntityLink.getActorId(npc.getUUID());
+   234→            double dist = npc.distanceTo(player);
+   235→
+   236→            if (actorId == null) {
+   237→                src.sendSuccess(() -> Component.literal(name + " (" + charId + ") — "
+   238→                        + (int) dist + " blocks — NO ACTOR LINK")
+   239→                        .withStyle(ChatFormatting.RED), false);
+   240→                continue;
+   241→            }
+   242→
+   243→            dev.ergenverse.simulation.actor.Actor actor =
+   244→                    dev.ergenverse.simulation.actor.ActorRegistry.get(actorId);
+   245→            if (actor == null) {
+   246→                src.sendSuccess(() -> Component.literal(name + " (" + charId + ") — "
+   247→                        + (int) dist + " blocks — ACTOR NULL")
+   248→                        .withStyle(ChatFormatting.RED), false);
+   249→                continue;
+   250→            }
+   251→
+   252→            java.util.List<dev.ergenverse.simulation.cognition.DesireState> desires =
+   253→                    actor.cognition.desires;
+   254→            totalDesires += desires.size();
+   255→
+   256→            long now = player.level().getGameTime();
+   257→            long activeCount = desires.stream()
+   258→                    .filter(d -> d.isActive(now) && d.urgency() >= 0.3)
+   259→                    .count();
+   260→            activeDesires += activeCount;
+   261→
+   262→            ChatFormatting statusColor = desires.isEmpty() ? ChatFormatting.RED
+   263→                    : activeCount > 0 ? ChatFormatting.GREEN : ChatFormatting.YELLOW;
+   264→            src.sendSuccess(() -> Component.literal(name + " (" + charId + ") — "
+   265→                    + (int) dist + " blocks — " + desires.size() + " desires, "
+   266→                    + activeCount + " active")
+   267→                    .withStyle(statusColor), false);
+   268→
+   269→            for (dev.ergenverse.simulation.cognition.DesireState d : desires) {
+   270→                boolean active = d.isActive(now) && d.urgency() >= 0.3;
+   271→                String modeStr = d.hasLine() ? (d.requiresApproach() ? "APPROACH" : "LINE") : "SILENT";
+   272→                ChatFormatting lineColor = active ? ChatFormatting.WHITE : ChatFormatting.DARK_GRAY;
+   273→                src.sendSuccess(() -> Component.literal("  [" + d.socialEngine() + "] "
+   274→                        + d.id() + " (urgency=" + String.format("%.2f", d.urgency())
+   275→                        + ", " + modeStr + ")" + (active ? "" : " [dormant]"))
+   276→                        .withStyle(lineColor), false);
+   277→                if (d.hasLine()) {
+   278→                    src.sendSuccess(() -> Component.literal("    \"" + d.line() + "\"")
+   279→                            .withStyle(ChatFormatting.GRAY), false);
+   280→                }
+   281→            }
+   282→        }
+   283→
+   284→        final int finalTotal = totalDesires;
+   285→        final int finalActive = activeDesires;
+   286→        final int npcCount = cultivators.size();
+   287→        src.sendSuccess(() -> Component.literal("Total: " + npcCount + " NPCs, "
+   288→                + finalTotal + " desires, " + finalActive + " active")
+   289→                .withStyle(ChatFormatting.AQUA), false);
+   290→        return 1;
+   291→    }
+   292→
+   293→    /**
+   294→     * /ergenverse desire_fire — Art XL proof path. Force-fires the nearest
+   295→     * NPC's highest-urgency active desire as a system message. Bypasses the
+   296→     * 10-second settle timer so the player sees the desire system work
+   297→     * IMMEDIATELY. This is the Five Minute Rule demonstration.
+   298→     *
+   299→     * <p>Now includes NPC→NPC desires: if the best desire targets an NPC,
+   300→     * the player sees it as an overheard conversation (same as
+   301→     * NpcDesireGoal.broadcastToNearbyPlayers). This proves Art V:
+   302→     * the world fires desires at each other, not just at the player.</p>
+   303→     */
+   304→    private static int desireFire(CommandSourceStack src) {
+   305→        ServerPlayer player = src.getPlayer();
+   306→        if (player == null) {
+   307→            src.sendFailure(Component.literal("Run as a player."));
+   308→            return 0;
+   309→        }
+   310→
+   311→        var cultivators = player.level().getEntitiesOfClass(
+   312→                dev.ergenverse.entity.EntityCultivator.class,
+   313→                player.getBoundingBox().inflate(32));
+   314→
+   315→        if (cultivators.isEmpty()) {
+   316→            src.sendFailure(Component.literal("No EntityCultivators within 32 blocks. NPCs spawn on chunk load."));
+   317→            return 0;
+   318→        }
+   319→
+   320→        // Find the NPC with the highest-urgency active desire that has a line
+   321→        dev.ergenverse.simulation.cognition.DesireState bestDesire = null;
+   322→        dev.ergenverse.entity.EntityCultivator bestNpc = null;
+   323→        String bestName = null;
+   324→
+   325→        long now = player.level().getGameTime();
+   326→        for (dev.ergenverse.entity.EntityCultivator npc : cultivators) {
+   327→            String actorId = dev.ergenverse.simulation.intent.ActorEntityLink.getActorId(npc.getUUID());
+   328→            if (actorId == null) continue;
+   329→            dev.ergenverse.simulation.actor.Actor actor =
+   330→                    dev.ergenverse.simulation.actor.ActorRegistry.get(actorId);
+   331→            if (actor == null) continue;
+   332→
+   333→            for (dev.ergenverse.simulation.cognition.DesireState d : actor.cognition.desires) {
+   334→                if (!d.hasLine()) continue;
+   335→                if (!d.isActive(now)) continue;
+   336→                if (d.urgency() < 0.3) continue;
+   337→                if (bestDesire == null || d.urgency() > bestDesire.urgency()) {
+   338→                    bestDesire = d;
+   339→                    bestNpc = npc;
+   340→                    bestName = npc.getDisplayNameCn();
+   341→                }
+   342→            }
+   343→        }
+   344→
+   345→        if (bestDesire == null || bestNpc == null) {
+   346→            src.sendFailure(Component.literal("No active desires with lines found among "
+   347→                    + cultivators.size() + " nearby NPCs."));
+   348→            src.sendSuccess(() -> Component.literal("All desires may be on cooldown or have no spoken lines.")
+   349→                    .withStyle(ChatFormatting.GRAY), false);
+   350→            return 0;
+   351→        }
+   352→
+   353→        // Deliver the line exactly as NpcDesireGoal.deliverLine() does
+   354→        final String line = bestDesire.line();
+   355→        final String firedName = bestName;
+   356→        final String firedEngine = bestDesire.socialEngine();
+   357→        final String firedId = bestDesire.id();
+   358→        final String firedTarget = bestDesire.target();
+   359→        final double firedUrgency = bestDesire.urgency();
+   360→        String prefix = "\u00A77<" + firedName + "> "; // gray NPC name
+   361→
+   362→        // Show target info — proves Art V (NPC→NPC or NPC→Player)
+   363→        boolean isNpcTarget = firedTarget != null && !firedTarget.equals("player");
+   364→        String targetLabel = isNpcTarget
+   365→                ? ("NPC target: \u00A7b" + firedTarget + "\u00A7r (you overhear this)")
+   366→                : "\u00A7aTarget: you\u00A7r";
+   367→
+   368→        player.sendSystemMessage(
+   369→                net.minecraft.network.chat.Component.literal(prefix + line + "\u00A7r"), true);
+   370→        src.sendSuccess(() -> Component.literal("[DESIRE FIRED] " + firedName + " ["
+   371→                + firedEngine + "] " + firedId
+   372→                + " (urgency=" + String.format("%.2f", firedUrgency) + ")")
+   373→                .withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD), false);
+   374→        src.sendSuccess(() -> Component.literal(targetLabel), false);
+   375→
+   376→        Ergenverse.LOGGER.info("[DesireFire] {} -> {} [{}]: \"{}\"",
+   377→                bestNpc.getCharacterId(), firedTarget != null ? firedTarget : "player",
+   378→                firedEngine, line);
+   379→
+   380→        return 1;
+   381→    }
+   382→
+   383→    /**
+   384→     * /ergenverse desire_targets — Art V verification. Shows what each
+   385→     * nearby NPC's desires would resolve to. Proves that NPC→NPC desires
+   386→     * exist and would fire without a player.
+   387→     *
+   388→     * <p>For each NPC, shows its desires with target type classification:</p>
+   389→     * <ul>
+   390→     *   <li>\u00A7aPLAYER\u00A7r — targets player only</li>
+   391→     *   <li>\u00A7bFAMILY\u00A7r — targets any_family_member (NPC→NPC preferred)</li>
+   392→     *   <li>\u00A7eCULTIVATOR\u00A7r — targets nearby_cultivator (NPC→NPC)</li>
+   393→     *   <li>\u00A75SPECIFIC\u00A7r — targets a specific NPC by ID</li>
+   394→     * </ul>
+   395→     */
+   396→    private static int desireTargets(CommandSourceStack src) {
+   397→        ServerPlayer player = src.getPlayer();
+   398→        if (player == null) {
+   399→            src.sendFailure(Component.literal("Run as a player."));
+   400→            return 0;
+   401→        }
+   402→
+   403→        var cultivators = player.level().getEntitiesOfClass(
+   404→                dev.ergenverse.entity.EntityCultivator.class,
+   405→                player.getBoundingBox().inflate(32));
+   406→
+   407→        if (cultivators.isEmpty()) {
+   408→            src.sendFailure(Component.literal("No EntityCultivators within 32 blocks."));
+   409→            return 0;
+   410→        }
+   411→
+   412→        src.sendSuccess(() -> Component.literal("=== Desire Target Resolution (Art V) ===")
+   413→                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
+   414→        src.sendSuccess(() -> Component.literal("Green=player-only  Blue=NPC-preferring  Yellow=cultivator  Purple=specific NPC")
+   415→                .withStyle(ChatFormatting.GRAY), false);
+   416→
+   417→        long now = player.level().getGameTime();
+   418→        int npcTargetDesires = 0;
+   419→        int playerTargetDesires = 0;
+   420→
+   421→        for (dev.ergenverse.entity.EntityCultivator npc : cultivators) {
+   422→            String actorId = dev.ergenverse.simulation.intent.ActorEntityLink.getActorId(npc.getUUID());
+   423→            if (actorId == null) continue;
+   424→            dev.ergenverse.simulation.actor.Actor actor =
+   425→                    dev.ergenverse.simulation.actor.ActorRegistry.get(actorId);
+   426→            if (actor == null) continue;
+   427→            if (actor.cognition.desires.isEmpty()) continue;
+   428→
+   429→            String name = npc.getDisplayNameCn();
+   430→            src.sendSuccess(() -> Component.literal("--- " + name + " (" + npc.getCharacterId() + ") ---")
+   431→                    .withStyle(ChatFormatting.WHITE), false);
+   432→
+   433→            for (dev.ergenverse.simulation.cognition.DesireState d : actor.cognition.desires) {
+   434→                String t = d.target();
+   435→                String targetClass;
+   436→                if (t == null || t.isEmpty()) {
+   437→                    targetClass = "\u00A7bFAMILY\u00A7r";
+   438→                    npcTargetDesires++;
+   439→                } else if (t.equals("player")) {
+   440→                    targetClass = "\u00A7aPLAYER\u00A7r";
+   441→                    playerTargetDesires++;
+   442→                } else if (t.equals("any_family_member")) {
+   443→                    targetClass = "\u00A7bFAMILY\u00A7r";
+   444→                    npcTargetDesires++;
+   445→                } else if (t.equals("nearby_cultivator")) {
+   446→                    targetClass = "\u00A7eCULTIVATOR\u00A7r";
+   447→                    npcTargetDesires++;
+   448→                } else if (t.startsWith("npc_")) {
+   449→                    targetClass = "\u00A75SPECIFIC(" + t + ")\u00A7r";
+   450→                    npcTargetDesires++;
+   451→                } else {
+   452→                    targetClass = "\u00A77" + t + "\u00A7r";
+   453→                    playerTargetDesires++;
+   454→                }
+   455→                boolean active = d.isActive(now);
+   456→                String status = active ? "\u00A7aACT\u00A7r" : "\u00A78dorm\u00A7r";
+   457→                src.sendSuccess(() -> Component.literal(
+   458→                        "  " + status + " " + d.id()
+   459→                        + " [" + targetClass + "]"
+   460→                        + " u=" + String.format("%.2f", d.urgency())), false);
+   461→            }
+   462→        }
+   463→
+   464→        src.sendSuccess(() -> Component.literal("") , false);
+   465→        final int fnpc = npcTargetDesires;
+   466→        final int fplayer = playerTargetDesires;
+   467→        src.sendSuccess(() -> Component.literal("Art V: " + fnpc + " desires target NPCs, "
+   468→                + fplayer + " target player-only")
+   469→                .withStyle(fnpc > fplayer
+   470→                        ? ChatFormatting.GREEN : ChatFormatting.YELLOW), false);
+   471→        if (fnpc > fplayer) {
+   472→            src.sendSuccess(() -> Component.literal("The majority of desires work without a player.")
+   473→                    .withStyle(ChatFormatting.GREEN), false);
+   474→        }
+   475→
+   476→        return 1;
+   477→    }
+   478→
+   479→    /**
+   480→     * /ergenverse geography — shows which country/settlement the player is in,
+   481→     * based on the AUTHORED World Blueprint. This proves geography is fixed
+   482→     * (not seed-dependent). The same coordinates always yield the same country.
+   483→     */
+   484→    private static int geography(CommandSourceStack src) {
+   485→        src.sendSuccess(() -> Component.literal("=== Planet Suzaku — Authored Geography ===")
+   486→                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
+   487→
+   488→        if (!dev.ergenverse.world.blueprint.WorldBlueprintManager.isLoaded()) {
+   489→            src.sendSuccess(() -> Component.literal("World Blueprint: NOT LOADED")
+   490→                    .withStyle(ChatFormatting.RED), false);
+   491→            return 0;
+   492→        }
+   493→
+   494→        src.sendSuccess(() -> Component.literal("World Blueprint: LOADED")
+   495→                .withStyle(ChatFormatting.GREEN), false);
+   496→        src.sendSuccess(() -> Component.literal("Canon Seed: -7283654891029384756 (terrain is deterministic)")
+   497→                .withStyle(ChatFormatting.DARK_GRAY), false);
+   498→
+   499→        ServerPlayer player = src.getPlayer();
+   500→        if (player == null) {
+   501→            // Console: show all settlements
+   502→            src.sendSuccess(() -> Component.literal("--- Canonical Settlements ---")
+   503→                    .withStyle(ChatFormatting.YELLOW), false);
+   504→            for (com.google.gson.JsonObject s : dev.ergenverse.world.blueprint.WorldBlueprintManager.getSettlements()) {
+   505→                String name = s.has("name") ? s.get("name").getAsString() : s.get("id").getAsString();
+   506→                int x = s.get("x").getAsInt();
+   507→                int z = s.get("z").getAsInt();
+   508→                String type = s.has("type") ? s.get("type").getAsString() : "?";
+   509→                src.sendSuccess(() -> Component.literal("  " + name + " (" + type + ") at (" + x + ", " + z + ")")
+   510→                        .withStyle(ChatFormatting.WHITE), false);
+   511→            }
+   512→            return 1;
+   513→        }
+   514→
+   515→        BlockPos ppos = player.blockPosition();
+   516→        int px = ppos.getX();
+   517→        int pz = ppos.getZ();
+   518→
+   519→        // Show which country the player is in.
+   520→        String country = dev.ergenverse.world.blueprint.WorldBlueprintManager.getCountryAt(px, pz);
+   521→        if (country != null) {
+   522→            src.sendSuccess(() -> Component.literal("Country: " + country)
+   523→                    .withStyle(ChatFormatting.GREEN), false);
+   524→        } else {
+   525→            src.sendSuccess(() -> Component.literal("Country: Wilderness/Ocean (not in any canonical country)")
+   526→                    .withStyle(ChatFormatting.GRAY), false);
+   527→        }
+   528→
+   529→        // Check if in a restriction zone.
+   530→        com.google.gson.JsonObject restriction =
+   531→                dev.ergenverse.world.blueprint.WorldBlueprintManager.getRestrictionAt(px, pz);
+   532→        if (restriction != null) {
+   533→            String rName = restriction.has("name") ? restriction.get("name").getAsString() : "Unknown Restriction";
+   534→            src.sendSuccess(() -> Component.literal("RESTRICTION ZONE: " + rName)
+   535→                    .withStyle(ChatFormatting.RED, ChatFormatting.BOLD), false);
+   536→        }
+   537→
+   538→        // Show nearby settlements (within 500 blocks).
+   539→        src.sendSuccess(() -> Component.literal("--- Nearby Canonical Settlements (500 blocks) ---")
+   540→                .withStyle(ChatFormatting.YELLOW), false);
+   541→        var nearby = dev.ergenverse.world.blueprint.WorldBlueprintManager.getSettlementsNear(px, pz, 500);
+   542→        if (nearby.isEmpty()) {
+   543→            src.sendSuccess(() -> Component.literal("  (none nearby)")
+   544→                    .withStyle(ChatFormatting.GRAY), false);
+   545→        } else {
+   546→            for (com.google.gson.JsonObject s : nearby) {
+   547→                String name = s.has("name") ? s.get("name").getAsString() : s.get("id").getAsString();
+   548→                int sx = s.get("x").getAsInt();
+   549→                int sz = s.get("z").getAsInt();
+   550→                int dist = (int) Math.sqrt(Math.pow(px - sx, 2) + Math.pow(pz - sz, 2));
+   551→                String type = s.has("type") ? s.get("type").getAsString() : "?";
+   552→                src.sendSuccess(() -> Component.literal("  " + name + " (" + type + ") — " + dist + " blocks away at (" + sx + ", " + sz + ")")
+   553→                        .withStyle(ChatFormatting.WHITE), false);
+   554→            }
+   555→        }
+   556→
+   557→        src.sendSuccess(() -> Component.literal("Geography is AUTHORED — same every playthrough. Simulation varies per seed.")
+   558→                .withStyle(ChatFormatting.AQUA), false);
+   559→        return 1;
+   560→    }
+   561→}
+   562→
