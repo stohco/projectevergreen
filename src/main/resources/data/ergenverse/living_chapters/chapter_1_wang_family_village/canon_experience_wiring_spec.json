@@ -40,14 +40,16 @@
     "change_2_actor_tick_reads_motivation": {
       "file": "src/main/java/dev/ergenverse/simulation/actor/ActorTickLoop.java",
       "action": "EXTEND_ON_TICK",
-      "content": "In the per-tick evaluation, after the existing schedule check, add: (a) Load motivation_state_{characterId}.json from WorldStateDataLoader (same pattern as WorldStateDataLoader.getEntry('npcs', characterId) but from the living_chapters path). (b) For each motivation, evaluate: does highest_relevance_target exceed initiation_threshold? Do all conditions pass? (c) If yes, check npc_initiation_consent_pipeline.json stages (8 gates — proximity, cooldown, not busy, not in combat, deconfliction, etc.). (d) If all gates pass, emit Intent with nature=SOCIAL_INITIATION, payload={engine, mode, line, target_id}. (e) The existing IntentEngine routes this to DecisionEngine, which resolves to the existing NpcInitiationGoal executing the approach.",
+      "content": "In the per-tick evaluation, after the existing schedule check, add: (a) Load the NPC's motivation state via WorldStateDataLoader.getEntry('living_chapters', 'chapter_1_wang_family_village/motivation_state_' + characterId.replace('npc_', '')). The characterId from NpcSpawnRegistry is 'npc_wang_tianshui'; strip the 'npc_' prefix to form the lookup key. AUTO-CANON-077: living_chapters/_index.json now exists with all 55 chapter files indexed — the WorldStateDataLoader can discover them. The JDK cycle must add {\"living_chapters\", \"living_chapters/\"} to the SUBSYSTEMS array in WorldStateDataLoader.java (one line). (b) For each motivation, evaluate: does highest_relevance_target exceed initiation_threshold? Do all conditions pass? (c) If yes, check npc_initiation_consent_pipeline.json stages (8 gates — proximity, cooldown, not busy, not in combat, deconfliction, etc.). (d) If all gates pass, emit Intent with nature=SOCIAL_INITIATION, payload={engine, mode, line, target_id}. (e) The existing IntentEngine routes this to DecisionEngine, which resolves to the existing NpcInitiationGoal executing the approach.",
       "rationale": "This is the CORE wiring. Without it, motivation_state_*.json is dead data. With it, every motivation in every NPC becomes live.",
       "estimated_lines": 60,
       "reads_from": [
-        "living_chapters/chapter_1_wang_family_village/motivation_state_{characterId}.json",
+        "living_chapters/_index.json (55 files, AUTO-CANON-077 created)",
+        "living_chapters/chapter_1_wang_family_village/motivation_state_{name}.json",
         "living_chapters/chapter_1_wang_family_village/npc_initiation_consent_pipeline.json",
         "living_chapters/chapter_1_wang_family_village/approach_deconfliction_schema.json"
-      ]
+      ],
+      "lookup_example": "WorldStateDataLoader.getEntry('living_chapters', 'chapter_1_wang_family_village/motivation_state_wang_tianshui') returns the JSON for npc_wang_tianshui. The characterId 'npc_wang_tianshui' is stripped to 'wang_tianshui' and prefixed with 'motivation_state_'. NPC defs without a matching motivation_state file (wang_wei, wang_zhou, wang_yiyi, teng_huayuan, qing_shui) simply get no motivation data — their old-format desires array continues to drive legacy behavior."
     },
     "change_3_village_beast_reads_momentum": {
       "file": "src/main/java/dev/ergenverse/ecology/VillageBeastActivity.java",
@@ -115,13 +117,19 @@
   },
 
   "_prerequisite_data_additions": {
-    "note": "AUTO-CANON-076 discovered two data gaps blocking moment_01. These have been fixed:",
-    "fix_1_treeline_incursion_threshold": "Added 'treeline_incursion' threshold (pressure_above: 0.55) to momentum_wang_family_village.json wolf_pressure_escalation trajectory. Previously only 'tracks_near_village' (0.5) and 'wolf_attack_south_bend' (0.7) existed. The moment_01 spec and the wiring spec both referenced 'treeline_incursion' but the momentum data did not contain it. Without this threshold, Change 3 would never fire the correct WolfPackThresholdEvent for moment_01.",
-    "fix_2_npc_wang_lin_definition": "Created npc_wang_lin.json — the Chapter 1 world-NPC definition for Wang Lin. Previously only npc_wang_lin_manifestation.json (the companion system) existed. The motivation_state_wang_lin.json references npc_wang_lin as its npc_id, but no spawnable definition existed. Without this, Wang Lin cannot spawn at the village and moment_01 has no canonical actor. The JDK cycle must also add 'register(\"zhao_plains\", \"npc_wang_lin\")' to NpcSpawnRegistry.java."
+    "note": "Three data gaps blocking moment_01 have been fixed across AUTO-CANON-076 and AUTO-CANON-077:",
+    "fix_1_treeline_incursion_threshold": "AUTO-CANON-076: Added 'treeline_incursion' threshold (pressure_above: 0.55) to momentum_wang_family_village.json wolf_pressure_escalation trajectory.",
+    "fix_2_npc_wang_lin_definition": "AUTO-CANON-076: Created npc_wang_lin.json — the Chapter 1 world-NPC definition for Wang Lin.",
+    "fix_3_living_chapters_index": "AUTO-CANON-077: Created living_chapters/_index.json listing all 55 chapter files. Without this, WorldStateDataLoader could not discover any living_chapters files — motivation_states, momentum, memory_ledger, consent_pipeline, etc. were all invisible. The JDK cycle must add {\"living_chapters\", \"living_chapters/\"} to SUBSYSTEMS in WorldStateDataLoader.java (one line). Change 2 now documents the exact lookup: getEntry('living_chapters', 'chapter_1_wang_family_village/motivation_state_' + characterId.replace('npc_', '')).",
+    "remaining_jdk_steps": [
+      "1. Add {\"living_chapters\", \"living_chapters/\"} to SUBSYSTEMS array in WorldStateDataLoader.java",
+      "2. Add register(\"zhao_plains\", \"npc_wang_lin\") to NpcSpawnRegistry.java",
+      "3. Implement all 7 Java changes documented above"
+    ]
   },
 
   "validation_after_implementation": [
-    "0. PRE-FLIGHT: Verify npc_wang_lin.json exists and NpcSpawnRegistry registers npc_wang_lin in zhao_plains",
+    "0. PRE-FLIGHT: Verify npc_wang_lin.json exists, NpcSpawnRegistry registers npc_wang_lin, WorldStateDataLoader includes living_chapters subsystem, and getEntry('living_chapters', 'chapter_1_wang_family_village/motivation_state_wang_tianshui') returns non-null",
     "1. /ergenverse debug force wolf_threshold",
     "2. Stand near the cautious NPC's meditation spot (Wang Lin's cave above the village)",
     "3. Within 1-3 in-game hours, the NPC stands and walks to a ridge",
