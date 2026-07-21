@@ -117,14 +117,18 @@
   },
 
   "_prerequisite_data_additions": {
-    "note": "Three data gaps blocking moment_01 have been fixed across AUTO-CANON-076 and AUTO-CANON-077:",
+    "note": "Four data fixes across AUTO-CANON-076, AUTO-CANON-077, and AUTO-CANON-078:",
     "fix_1_treeline_incursion_threshold": "AUTO-CANON-076: Added 'treeline_incursion' threshold (pressure_above: 0.55) to momentum_wang_family_village.json wolf_pressure_escalation trajectory.",
     "fix_2_npc_wang_lin_definition": "AUTO-CANON-076: Created npc_wang_lin.json — the Chapter 1 world-NPC definition for Wang Lin.",
-    "fix_3_living_chapters_index": "AUTO-CANON-077: Created living_chapters/_index.json listing all 55 chapter files. Without this, WorldStateDataLoader could not discover any living_chapters files — motivation_states, momentum, memory_ledger, consent_pipeline, etc. were all invisible. The JDK cycle must add {\"living_chapters\", \"living_chapters/\"} to SUBSYSTEMS in WorldStateDataLoader.java (one line). Change 2 now documents the exact lookup: getEntry('living_chapters', 'chapter_1_wang_family_village/motivation_state_' + characterId.replace('npc_', '')).",
+    "fix_3_living_chapters_index": "AUTO-CANON-077: Created living_chapters/_index.json listing all 55 chapter files.",
+    "fix_4_wang_lin_desires_populated": "AUTO-CANON-078: Populated npc_wang_lin.json desires array with 5 canon-faithful desires (warn_wolf_pressure, restriction_frustration, spirit_herbs_observation, protect_cave_space, silent_guide_come). Previously desires=[] with a note saying 'uses motivation_state instead' — but motivation_state JSONs are NOT loaded by any Java code. The legacy desires array IS loaded by ActorEntityLink.loadDesiresFromData() and read by NpcDesireGoal. Wang Lin was the ONLY Chapter 1 NPC who never initiated. Now he does — rarely (low urgency, long cooldown) and tersely (1-6 words per line), consistent with Art XXXII.7.",
+    "fix_5_canon_accuracy": "AUTO-CANON-078: Fixed npc_wang_wei.json (Nirvana Shatterer → mortal) and npc_wang_yiyi.json (Paragon-tier → mortal). Both had endgame cultivation levels but spawn in Chapter 1 village. Their desires were already canon-faithful for village children — the cultivation was the error.",
     "remaining_jdk_steps": [
       "1. Add {\"living_chapters\", \"living_chapters/\"} to SUBSYSTEMS array in WorldStateDataLoader.java",
       "2. Add register(\"zhao_plains\", \"npc_wang_lin\") to NpcSpawnRegistry.java",
-      "3. Implement all 7 Java changes documented above"
+      "3. Implement Changes 3-5 (VillageBeastActivity momentum, ActivityInterruption wolf handler, observation goal) — these are NOT covered by NpcDesireGoal which handles social initiation only",
+      "4. Change 6 (debug command) and Change 7 (memory recording) remain as-documented",
+      "NOTE: Changes 1-2 (SOCIAL_INITIATION enum + ActorTickLoop reads motivation_state) are PARTIALLY SUPERSEDED by NpcDesireGoal which already handles NPC→Player and NPC→NPC desire firing. The motivation_state JSONs remain future data. For moment_01 specifically, only Changes 3-7 are strictly required — the social initiation path already works via NpcDesireGoal."
     ]
   },
 

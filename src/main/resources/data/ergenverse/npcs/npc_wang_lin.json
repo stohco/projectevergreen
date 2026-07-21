@@ -115,6 +115,67 @@
       "location_note": "Sleeps in the cave or at the family home depending on weather and cultivation progress."
     }
   ],
-  "desires": [],
-  "desires_note": "This NPC uses motivation_state_wang_lin.json (v2, Article XXXV) instead of the legacy desires array. The motivation_state defines Wang Lin's per-cycle reasoning: perception → beliefs → relationships → identity → circumstances → opportunities → prediction → intent → plan → action. Desires are deprecated. The ActorTickLoop (Change 2 in canon_experience_wiring_spec.json) reads motivation_state_wang_lin.json when it is wired."
+  "desires": [
+    {
+      "id": "warn_wolf_pressure",
+      "what": "Warn a family member that wolf tracks have been getting closer to the village every day",
+      "target": "any_family_member",
+      "why": "He walks the northern ridge daily (schedule t0=4000-5000). His caution is 0.85 — the highest of any village NPC. He has observed the escalation. A cautious person who sees a growing threat warns someone — once, quietly, then returns to observation. He does not panic. He states a fact.",
+      "social_engine": "rumor",
+      "urgency": 0.50,
+      "cooldown_ticks": 48000,
+      "source": "INFERRED: RI Ch.1-3. Wang Lin's defining early trait is observation. He notices what others miss. The wolf pressure is documented in momentum_wang_family_village.json. His caution=0.85 makes this warning behavior general — any NPC with caution>0.8 would produce the same alert (Art XLI).",
+      "line": "Wolves. Closer every day.",
+      "mode": "approach"
+    },
+    {
+      "id": "restriction_frustration",
+      "what": "Mutter about the cave restriction's third layer — he has been stuck for weeks",
+      "target": "nearby_cultivator",
+      "why": "He spends 16 hours per day (schedule t0=0-4000, t0=7000-12000) studying the restriction. At patience=0.80 he persists, but frustration leaks through in rare unguarded moments. He would not complain to mortals — only to another cultivator who might understand what it means to be stuck.",
+      "social_engine": "rumor",
+      "urgency": 0.35,
+      "cooldown_ticks": 72000,
+      "source": "INFERRED: RI Ch.1-3. Wang Lin studies a pre-Heng Yue restriction in a cave. His persistence is canonical. The frustration is inferred from 16h/day on a single problem — any person would occasionally express it. Art XXXII.7: 'very few words, lots of silence' — this is one of those rare moments.",
+      "line": "The third layer. I cannot read it.",
+      "mode": "line"
+    },
+    {
+      "id": "spirit_herbs_observation",
+      "what": "Mention spirit herbs growing near the village well — noticed during night walks",
+      "target": "nearby_cultivator",
+      "why": "His night walks (schedule t0=12000-14000) pass the well. He has noticed qi fluctuation in the water and herbs nearby. His curiosity=0.75 drives him to note these things. He shares the observation not from generosity but because another cultivator might find them useful — and because noting them aloud helps him think.",
+      "social_engine": "offer",
+      "urgency": 0.40,
+      "cooldown_ticks": 60000,
+      "source": "INFERRED: RI Ch.1-5. Wang Lin's night walk schedule and the qi fluctuation at the well are defined in his schedule. His curiosity trait makes him notice environmental details. This is information sharing between cultivators, not a quest — no reward, no follow-up expected.",
+      "line": "Herbs. By the well. Not ripe yet.",
+      "mode": "line"
+    },
+    {
+      "id": "protect_cave_space",
+      "what": "Tell a stranger to stay away from the cave where he studies the restriction",
+      "target": "player",
+      "why": "The cave restriction is the one thing he has. He is protective of it — not out of greed (greed=0.10) but out of the understanding that it represents his only path forward. A stranger approaching the cave triggers his caution (0.85). He does not explain. He does not invite. He states a boundary.",
+      "social_engine": "request",
+      "urgency": 0.55,
+      "cooldown_ticks": 36000,
+      "source": "INFERRED: RI Ch.1-3. Wang Lin's secrecy about his restriction studies is canonical. He studies alone, in a cave, away from the village. Art XXXII.7: his interface is minimal — two words, then silence.",
+      "line": "Don't go up there.",
+      "mode": "line"
+    },
+    {
+      "id": "silent_guide_come",
+      "what": "Approach someone unbidden and say one word — then walk toward something worth seeing",
+      "target": "player",
+      "why": "This is the rarest initiation. Art XXXI.2: 'Sometimes Wang Lin approaches the player — unbidden, no marker, no quest log entry — and offers a copied jade slip, a silent demonstration, or a single word of warning. Then leaves.' At Chapter 1, he cannot copy techniques or offer jade slips. What he CAN do is show someone something he has observed — a spirit herb, a qi fluctuation, the ridge viewpoint at dusk. The word 'Come.' is not a quest trigger. It is an invitation the player can ignore. Art XLI: this is not special-cased to Wang Lin. Any cautious, observant NPC could do this. But only Wang Lin's traits produce this specific combination of extreme rarity, minimal speech, and genuine intent.",
+      "social_engine": "teaching",
+      "urgency": 0.50,
+      "cooldown_ticks": 120000,
+      "source": "EXPLICIT: Art XXXI.2 (Bidirectional Wang Lin). The Constitution mandates this interaction pattern. Also INFERRED from RI Ch.1-5: Wang Lin occasionally acts on his observations in ways that benefit others — not because he is kind, but because he has judged that the other person is worth the effort.",
+      "line": "Come.",
+      "mode": "approach"
+    }
+  ],
+  "desires_note": "Wang Lin's desires are LOW URGENCY and LONG COOLDOWN by design. His caution=0.85, patience=0.80, and personality=terse produce a character who initiates rarely (every 1-3 in-game days) and speaks minimally (1-6 words per line). Art XLI: 'Wang Lin is not special-cased. His behavior emerges from his traits.' Any NPC with caution>0.8, patience>0.7, and greed<0.2 would produce similar reticent behavior. The legacy desires array is the ACTIVE system (NpcDesireGoal reads it). motivation_state_wang_lin.json (Art XXXV richer format) exists as future data for when the ActorTickLoop motivation-reading pipeline is wired (Change 2 in canon_experience_wiring_spec.json). Until then, this array makes Wang Lin desire the player at runtime today."
 }
