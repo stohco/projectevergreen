@@ -1,0 +1,148 @@
+{
+  "_schema": "canon_experience_wiring_spec",
+  "_schema_version": 1,
+  "_article": "XL §7 (Honesty Clause — architecture permitted when it is the smallest believable path to a named Living Moment within 3 cycles) + XLI §5 (Five Pre-Wiring Questions)",
+  "_purpose": "This is NOT a schema. This is the precise wiring bridge between 48 existing Chapter 1 data files and the first observable Canon Experience (moment_01: 'A cautious cultivator abandons cultivation after noticing predator behavior'). A JDK-available cycle reads this file and implements the listed changes. No other new Java classes are created (Art XXVI).",
+  "_honest_assessment": "The project has 48 JSON schemas for Chapter 1 and zero Living Moments at OBSERVED status. Per Article XL, one observed moment beats fifty schema files. This spec names the first moment to observe and the exact Java changes to produce it. If the next 3 JDK-cycles cannot produce this moment at OBSERVED, the spec is drift and must be deleted.",
+
+  "target_canon_experience": {
+    "moment_id": 1,
+    "file": "living_moments/moment_01_wang_lin_watches_wolves.json",
+    "generic_title": "A cautious cultivator abandons cultivation after noticing predator behavior",
+    "art_xli_generic": "The experience is defined by WHAT happens, not WHO does it. Any actor with the trait 'cautious + observant' can fulfill this. Wang Lin is the canonical example, but the mechanism must be general (Art XLI §1)."
+  },
+
+  "five_pre_wiring_questions": {
+    "q1_how_canonical_people_become_simulated_actors": {
+      "answer": "NPCs are already EntityCultivator instances spawned by NpcSpawnRegistry with characterId. ActorTickLoop ticks them. The gap: ActorTickLoop does NOT read motivation_state_*.json. It runs hardcoded schedules. FIX: ActorTickLoop.onTick() loads motivation_state_{characterId}.json via WorldStateDataLoader, evaluates relevance_to_targets, and if any motivation exceeds its initiation_threshold AND passes conditions, emits a SOCIAL_INITIATION IntentNature to IntentEngine. No new Engine class — ActorTickLoop gains ~40 lines of data-reading logic."
+    },
+    "q2_how_actors_receive_activities": {
+      "answer": "Activities are already modeled as CultivatorActivity (START→PROGRESS→INTERRUPTED→REACT→RESUME→COMPLETE, Art XLI §2). The gap: CultivatorActivityResolver does not know about momentum thresholds. FIX: VillageBeastActivity.tick() reads momentum_wang_family_village.json, advances wolf_pressure_escalation trajectory, and when a threshold crosses, fires a WorldEvent (e.g. WolfPackThresholdEvent) on the existing WorldEventBus. No new Bus class."
+    },
+    "q3_how_activities_are_interrupted": {
+      "answer": "ActivityInterruptionSubscriber already exists and listens to WorldEventBus. The gap: it handles QiDisturbanceSubscriber events but not beast events. FIX: ActivityInterruptionSubscriber gains a case for WolfPackThresholdEvent: if the actor's current activity is MEDITATING and the actor's trait 'cautious' is high, interrupt the activity and transition to OBSERVE_TREELINE. The trait check reads from the actor's personality data (PersonalityModel already exists)."
+    },
+    "q4_how_they_resume_afterward": {
+      "answer": "ActivityProcess already has resume() logic. The gap: after observing, the actor needs to return. FIX: After ~600 ticks of OBSERVE_TREELINE (configurable per-actor), auto-resume the previous activity (MEDITATING). The resume is handled by ActivityProcess.resume(prevActivity) — no new code needed, just the timer in the goal that drives the observation behavior."
+    },
+    "q5_how_a_canonical_experience_emerges": {
+      "answer": "The chain: (1) VillageBeastActivity.tick() advances wolf_pressure. (2) When pressure crosses 'treeline_incursion' threshold (defined in momentum JSON), it fires WolfPackThresholdEvent on WorldEventBus. (3) The actor (any with 'cautious' trait, perched near a viewpoint) receives the event via ActivityInterruptionSubscriber. (4) Actor transitions from MEDITATING to OBSERVE_TREELINE, pathfinds to nearest viewpoint waypoint. (5) Actor pauses ~600 ticks, watching. (6) Actor returns. The player, if nearby, sees this happen. No quest. No marker. The world had momentum; the actor responded. This IS the experience."
+    }
+  },
+
+  "exact_java_changes": {
+    "change_1_add_social_initiation_intent": {
+      "file": "src/main/java/dev/ergenverse/simulation/intent/IntentNature.java",
+      "action": "ADD_ONE_ENUM_VALUE",
+      "content": "SOCIAL_INITIATION(\"Social initiation\", \"Art XXXI.1 — NPC initiates an interaction via one of the 10 social engines\")",
+      "rationale": "The _README declares this as the only new IntentNature needed. It distinguishes 'NPC approaches someone because their motivation state fired' from all 17 existing intents."
+    },
+    "change_2_actor_tick_reads_motivation": {
+      "file": "src/main/java/dev/ergenverse/simulation/actor/ActorTickLoop.java",
+      "action": "EXTEND_ON_TICK",
+      "content": "In the per-tick evaluation, after the existing schedule check, add: (a) Load motivation_state_{characterId}.json from WorldStateDataLoader (same pattern as WorldStateDataLoader.getEntry('npcs', characterId) but from the living_chapters path). (b) For each motivation, evaluate: does highest_relevance_target exceed initiation_threshold? Do all conditions pass? (c) If yes, check npc_initiation_consent_pipeline.json stages (8 gates — proximity, cooldown, not busy, not in combat, deconfliction, etc.). (d) If all gates pass, emit Intent with nature=SOCIAL_INITIATION, payload={engine, mode, line, target_id}. (e) The existing IntentEngine routes this to DecisionEngine, which resolves to the existing NpcInitiationGoal executing the approach.",
+      "rationale": "This is the CORE wiring. Without it, motivation_state_*.json is dead data. With it, every motivation in every NPC becomes live.",
+      "estimated_lines": 60,
+      "reads_from": [
+        "living_chapters/chapter_1_wang_family_village/motivation_state_{characterId}.json",
+        "living_chapters/chapter_1_wang_family_village/npc_initiation_consent_pipeline.json",
+        "living_chapters/chapter_1_wang_family_village/approach_deconfliction_schema.json"
+      ]
+    },
+    "change_3_village_beast_reads_momentum": {
+      "file": "src/main/java/dev/ergenverse/ecology/VillageBeastActivity.java",
+      "action": "EXTEND_TICK",
+      "content": "At the start of tick(), load momentum_wang_family_village.json via WorldStateDataLoader. Find the 'wolf_pressure_escalation' trajectory. Advance its pressure_level by escalation_rate_per_day (scaled to per-tick). Apply driver deltas (prey_decline linked to spirit_vein_decline, winter_hunger if season=winter, player_hunting if world_state flag set). Check thresholds in order. If 'treeline_incursion' crosses (pressure_above 0.55): fire WolfPackThresholdEvent on WorldEventBus with payload={threshold_id:'treeline_incursion', pressure_level, location:'northern_treeline'}. This is the trigger for moment_01 — cautious cultivators interrupt meditation. If 'wolf_attack_south_bend' crosses (pressure_above 0.7): fire a second WolfPackThresholdEvent with payload={threshold_id:'wolf_attack_south_bend', pressure_level, location:'south_bend'}. If 'tracks_near_village' crosses (pressure_above 0.5): spawn wolf track particles, fire a smaller non-interrupting event.",
+      "rationale": "This turns the momentum JSON into a live trajectory. Without it, wolf_pressure is a static number. With it, it advances every tick — the world has momentum.",
+      "estimated_lines": 50,
+      "reads_from": [
+        "living_chapters/chapter_1_wang_family_village/momentum_wang_family_village.json"
+      ],
+      "fires_event": "WolfPackThresholdEvent on WorldEventBus"
+    },
+    "change_4_interrupt_on_predator_event": {
+      "file": "src/main/java/dev/ergenverse/simulation/event/ActivityInterruptionSubscriber.java",
+      "action": "ADD_CASE",
+      "content": "Add handler for WolfPackThresholdEvent. When received: (a) Check payload.threshold_id. If 'treeline_incursion': proceed. If 'wolf_attack_south_bend': this is a catastrophe, not an observation trigger — route to existing combat/flee behavior instead. If 'tracks_near_village': ignore (non-interrupting). (b) For 'treeline_incursion': Find the actor's current CultivatorActivity. If activity is MEDITATING (or any QUIET activity: studying, cultivating) AND actor's personality has 'cautious' trait > 0.6 (read from PersonalityModel), then: interrupt the activity. (c) Set actor's current intent to OBSERVE_FROM_DISTANCE. (d) Store the previous activity for later resume. NOTE: npc_wang_lin (caution 0.85) and npc_qing_shui (caution 0.70) both pass. npc_wang_tianshui (caution 0.60) is borderline — the 0.6 check is >= not >, so he passes but he is mortal and unlikely to be meditating.",
+      "rationale": "This is the moment: a cautious cultivator senses danger and abandons meditation. The player sees them stand up and walk toward a ridge. This is Wang Lin's defining early trait made observable.",
+      "estimated_lines": 30,
+      "reads_from": [
+        "Actor's PersonalityModel (existing Java)",
+        "Actor's CultivatorActivity (existing Java)"
+      ]
+    },
+    "change_5_observation_goal": {
+      "file": "src/main/java/dev/ergenverse/entity/ai/CognitionDrivenGoal.java",
+      "action": "ADD_OBSERVATION_BEHAVIOR",
+      "content": "When the actor's intent is OBSERVE_FROM_DISTANCE and no target is specified, the goal should: (a) Pathfind to the nearest high-ground waypoint within 30 blocks (ridge, hilltop, tower). (b) Face the direction of the WolfPackThresholdEvent origin. (c) Hold position for 600 ticks (~30 seconds at 20 tps). (d) After timer, resume previous activity. This is the simplest possible version — no wolf/deer rendering needed for v1. Just the act of observing.",
+      "rationale": "The player follows the NPC to the ridge and sees them watching something. Even without wolves being rendered (v1), the BEHAVIOR of abandoning meditation to observe is the experience. Wolves can be added in v2.",
+      "estimated_lines": 40
+    },
+    "change_6_debug_command": {
+      "file": "src/main/java/dev/ergenverse/command/ErgenverseCommand.java",
+      "action": "ADD_SUBCOMMAND",
+      "content": "Add '/ergenverse debug force wolf_threshold' — directly advances wolf_pressure_escalation to just below the 'treeline_incursion' threshold, then crosses it. This satisfies the Five Minute Rule (Art XL §2): a tester runs the command, waits, and sees the NPC react within 1-3 in-game hours. No spawning, no waiting for natural escalation.",
+      "rationale": "Art XL §2 requires observability within 5 minutes. Without a debug command, the natural momentum takes hours to cross the threshold. The debug command compresses time for testing.",
+      "estimated_lines": 25
+    },
+    "change_7_memory_recording": {
+      "file": "src/main/java/dev/ergenverse/history/WorldHistory.java",
+      "action": "EXTEND_EVENT_RECORDING",
+      "content": "When a WolfPackThresholdEvent fires AND actors are within perception range, record a memory_ledger entry: {event_id, event_type='predator_activity', witnesses=[actor_ids_in_range], timestamp, significance=4, memory_decay={model:'exponential', half_life_ticks:48000}}. This is v1 — no retelling yet. Just the recording. The Memory Metric test (moment_11) requires this foundation.",
+      "rationale": "Memory requires recording first, retelling second. This change makes the world START remembering.",
+      "estimated_lines": 25,
+      "writes_to": [
+        "memory_ledger (runtime data, persisted via WorldRuntimeState)"
+      ]
+    }
+  },
+
+  "files_NOT_changed": {
+    "note": "Per Article XXVI, the following are NOT created or modified: no new Engine class, no new Subscriber class (ActivityInterruptionSubscriber is extended in-place), no new Bus class (WorldEventBus is reused), no new Goal class (CognitionDrivenGoal is extended). The 10 social engines remain DATA. The motivation_state remains DATA. Everything is read by existing architecture.",
+    "no_new_classes": true,
+    "existing_systems_used": [
+      "ActorTickLoop (extended)",
+      "IntentEngine (reads new SOCIAL_INITIATION intent)",
+      "DecisionEngine (routes to existing NpcInitiationGoal)",
+      "WorldEventBus (reused for WolfPackThresholdEvent)",
+      "ActivityInterruptionSubscriber (extended, not new)",
+      "WorldStateDataLoader (reads momentum JSON)",
+      "WorldHistory (extended for memory recording)",
+      "PersonalityModel (read, not modified)",
+      "CultivatorActivity (read, not modified)",
+      "PerceptionEngine (used for witness detection)"
+    ]
+  },
+
+  "_prerequisite_data_additions": {
+    "note": "AUTO-CANON-076 discovered two data gaps blocking moment_01. These have been fixed:",
+    "fix_1_treeline_incursion_threshold": "Added 'treeline_incursion' threshold (pressure_above: 0.55) to momentum_wang_family_village.json wolf_pressure_escalation trajectory. Previously only 'tracks_near_village' (0.5) and 'wolf_attack_south_bend' (0.7) existed. The moment_01 spec and the wiring spec both referenced 'treeline_incursion' but the momentum data did not contain it. Without this threshold, Change 3 would never fire the correct WolfPackThresholdEvent for moment_01.",
+    "fix_2_npc_wang_lin_definition": "Created npc_wang_lin.json — the Chapter 1 world-NPC definition for Wang Lin. Previously only npc_wang_lin_manifestation.json (the companion system) existed. The motivation_state_wang_lin.json references npc_wang_lin as its npc_id, but no spawnable definition existed. Without this, Wang Lin cannot spawn at the village and moment_01 has no canonical actor. The JDK cycle must also add 'register(\"zhao_plains\", \"npc_wang_lin\")' to NpcSpawnRegistry.java."
+  },
+
+  "validation_after_implementation": [
+    "0. PRE-FLIGHT: Verify npc_wang_lin.json exists and NpcSpawnRegistry registers npc_wang_lin in zhao_plains",
+    "1. /ergenverse debug force wolf_threshold",
+    "2. Stand near the cautious NPC's meditation spot (Wang Lin's cave above the village)",
+    "3. Within 1-3 in-game hours, the NPC stands and walks to a ridge",
+    "4. Follow at a distance",
+    "5. NPC watches for ~30 seconds, then returns to meditation",
+    "6. No quest marker, no notification, no journal entry",
+    "7. /ergenverse history list — shows predator_activity memory recorded with witnesses",
+    "8. If all pass: moment_01 status -> OBSERVED"
+  ],
+
+  "downstream_moments_unlocked": [
+    "moment_01 (this cycle) → proves ActorTickLoop reads motivation, momentum advances, activities interrupt",
+    "moment_02 (recruiter arrives) → same mechanism, different motivation (recruitment engine)",
+    "moment_04 (herb competition) → same mechanism, opportunity engine",
+    "moment_11 (dog memory) → requires moment_01's memory recording + time advance + retelling (2-3 more cycles)"
+  ],
+
+  "art_xl_compliance": {
+    "section_1_experience_not_system": "This spec names a Canon Experience ('A cautious cultivator abandons cultivation after noticing predator behavior'), not a system. The 7 Java changes produce ONE observable moment.",
+    "section_2_five_minute_rule": "The debug command (/ergenverse debug force wolf_threshold) makes the moment observable within 5 minutes.",
+    "section_3_first_living_moment": "This IS the first living moment. Article XL §3 canonical reference.",
+    "section_7_honesty_clause": "This spec is permitted because it names a downstream OBSERVED moment within 3 JDK-cycles. If 3 cycles pass without OBSERVED status, this spec and all 48 schemas it depends on are drift."
+  }
+}

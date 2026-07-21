@@ -1,0 +1,120 @@
+{
+  "_comment": "NPC: Wang Lin (王林) — Chapter 1 world-NPC. This is the young Wang Lin who lives at Wang Family Village, studies a restriction formation in a cave above the village, and is considered 'waste' by the villagers due to poor cultivation aptitude. He is NOT the manifestation companion (npc_wang_lin_manifestation.json). This definition is a spawnable world NPC whose behavior emerges from traits (Article XLI). Per Art XLI §1: 'Wang Lin is not special-cased. His behavior emerges from his traits. If a mechanism works for Wang Lin, it works for any actor with the same traits.' The Constitution says nothing special-cases Wang Lin. That is law.",
+  "npc_id": "npc_wang_lin",
+  "name": "Wang Lin",
+  "nameCn": "王林",
+  "canon_id": "N01",
+  "type": "cultivator",
+  "faction": "wang_family_village",
+  "location": "wang_family_village",
+  "cultivation": "qi_condensation_1",
+  "cultivation_note": "Early Qi Condensation Stage 1 — barely broke through. The village considers him 'waste' (废柴) because his aptitude is poor and progress is glacial. This is canonical: Wang Lin's defining early characteristic is that he appears untalented to everyone around him. His actual strength is not aptitude but stubborn persistence and an extraordinary capacity for observation.",
+  "personality": "terse, watchful, stubbornly persistent; speaks only when necessary; observes everything; judges silently",
+  "speech": "few words, long pauses, direct when he does speak; children of the village say 'Wang Lin never talks' (INFERRED from RI Ch.1-5 — his silence is a recurring character note)",
+  "relationship_to_wanglin": "is_wang_lin",
+  "dialogue_available": true,
+  "quest_available": false,
+  "trade_available": false,
+  "teaching_available": false,
+  "teaching_note": "At this stage, Wang Lin has nothing to teach anyone. He is a struggling student of a cave restriction. Teaching_available becomes true only after he decodes the restriction (a Chapter 1 opportunity) or when motivated by m_silent_warning_danger (Art XXXI.2 bidirectional — Wang Lin approaches unbidden to warn someone, one word, then leaves).",
+  "perception_tiers": {
+    "mortal": "The elder's son. Quiet. Keeps to himself. Spends all his time in that cave above the village. Waste of a cultivator.",
+    "qi_condensation": "Wang Lin. Qi Condensation Stage 1 — same as you, maybe lower. Why does he spend all day staring at that cave wall? He seems... focused. But his Qi is thin.",
+    "core_formation": "You remember this man. He was the 'waste' of Wang Family Village. Something about the way he watches the treeline reminds you of a predator, not prey. His restriction studies gave him an edge no one expected.",
+    "nascent_soul": "Wang Lin. The village produced a Nascent Soul cultivator from nothing. How? You recall his youth — silent, stubborn, staring at cave walls. That persistence was always the answer."
+  },
+  "canon_confidence": 5,
+  "note": "EXPLICIT: Wang Lin is the protagonist of Renegade Immortal. His Chapter 1 state: teenage boy, poor cultivation aptitude, studies a pre-Heng Yue restriction in a cave above Wang Family Village, considered worthless by the village. His defining traits at this stage are extreme caution, observation skill, and persistence — not power. EXPLICIT (RI Ch.1-3): the village calls him 'waste' (废柴). INFERRED: his daily routine revolves around the cave restriction.",
+  "derivation_type": "A",
+  "salt": 141526,
+  "personality_traits": {
+    "_comment": "Per Article XLI: these traits are GENERAL. Any NPC with caution=0.85 and patience=0.80 would produce similar behavior. Wang Lin's early traits in RI Ch.1-5: extremely cautious (watches before acting, never rushes), patient (spends weeks on a single restriction layer), stubborn (continues despite being called waste), observant (notices what others miss — this is his actual talent), low ambition (not seeking glory, just trying to survive and understand), low face (does not care about reputation), high dao_heart (the one thing he has in abundance, though no one can measure it at this stage).",
+    "courage": 0.50,
+    "patience": 0.80,
+    "greed": 0.10,
+    "loyalty": 0.85,
+    "ruthlessness": 0.25,
+    "caution": 0.85,
+    "curiosity": 0.75,
+    "ambition": 0.15,
+    "face": 0.10,
+    "honor": 0.70,
+    "dao_heart": 0.75
+  },
+  "dao_heart": {
+    "stability": 75,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. Wang Lin's Dao heart is famously strong even at early stages — this is what sets him apart from 'talented' cultivators who crumble under pressure. At Chapter 1, his stability is high but untested. The cracks array will fill as he faces tribulations in later chapters."
+  },
+  "soul_state": "none",
+  "tribulation_debt": 0,
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "...",
+    "Don't follow me.",
+    "The third layer. I cannot read it.",
+    "Come."
+  ],
+  "initiation_lines_note": "Wang Lin's initiation lines are deliberately minimal. Per Art XXXII.7, his personality changes the interface — 'very few words, lots of silence, observes you, long pauses before responding.' Most interactions begin with silence or a single word.",
+  "daily_schedule": [
+    {
+      "t0": 0,
+      "t1": 4000,
+      "act": "meditating",
+      "dir": null,
+      "dist": 0,
+      "location_note": "Cave above the village — studying the restriction formation on the cave wall. This is where moment_01 (Art XL §3) fires: WolfPackThresholdEvent (treeline_incursion) interrupts this meditation, causing Wang Lin to walk to the ridge and observe wolves stalking a spirit deer."
+    },
+    {
+      "t0": 4000,
+      "t1": 5000,
+      "act": "wandering",
+      "dir": "north",
+      "dist": 20,
+      "location_note": "Walks the northern ridge. This is both observation (watching for threats, tracking wolf movement) and mental rest. The ridge is one of his regular waypoints — the player may encounter him here looking out over the treeline."
+    },
+    {
+      "t0": 5000,
+      "t1": 6000,
+      "act": "wandering",
+      "dir": "south",
+      "dist": 30,
+      "location_note": "Descends to the village briefly. May pass through the market, observe the Teng servants, check on family (Wang Ping, parents). Does not initiate conversation unless his motivation state fires."
+    },
+    {
+      "t0": 6000,
+      "t1": 7000,
+      "act": "eating",
+      "dir": null,
+      "dist": 0,
+      "location_note": "Eats at the family home. Brief. Efficient. Returns to the cave."
+    },
+    {
+      "t0": 7000,
+      "t1": 12000,
+      "act": "meditating",
+      "dir": null,
+      "dist": 0,
+      "location_note": "Returns to the cave. Studies the restriction through the afternoon and evening. This is his primary activity — 10 of 24 hours are spent in the cave."
+    },
+    {
+      "t0": 12000,
+      "t1": 14000,
+      "act": "wandering",
+      "dir": "east",
+      "dist": 15,
+      "location_note": "Night walk. Sometimes toward the spirit herb patches (he notices them even if he cannot use them yet). Sometimes to the well — he has noticed the qi fluctuation in the water (if qi_condensation perception)."
+    },
+    {
+      "t0": 14000,
+      "t1": 24000,
+      "act": "sleeping",
+      "dir": null,
+      "dist": 0,
+      "location_note": "Sleeps in the cave or at the family home depending on weather and cultivation progress."
+    }
+  ],
+  "desires": [],
+  "desires_note": "This NPC uses motivation_state_wang_lin.json (v2, Article XXXV) instead of the legacy desires array. The motivation_state defines Wang Lin's per-cycle reasoning: perception → beliefs → relationships → identity → circumstances → opportunities → prediction → intent → plan → action. Desires are deprecated. The ActorTickLoop (Change 2 in canon_experience_wiring_spec.json) reads motivation_state_wang_lin.json when it is wired."
+}

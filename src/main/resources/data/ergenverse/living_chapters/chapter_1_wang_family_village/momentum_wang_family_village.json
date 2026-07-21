@@ -88,6 +88,13 @@
             "times_fired": 0
           },
           {
+            "id": "treeline_incursion",
+            "pressure_above": 0.55,
+            "consequence": "Wolves enter stalking range at the northern treeline. They hunt spirit deer and other prey within 48 blocks of the village edge. A cautious cultivator (caution > 0.6) who is meditating and receives this event via WorldEventBus will interrupt their activity, pathfind to the nearest ridge viewpoint, observe for ~600 ticks, then resume. This is the trigger for Canon Experience moment_01 (Art XL §3). No quest, no marker, no notification — the world had momentum, the actor responded. The spirit deer spawns only when qi_density > 0.35 (the current vein level supports it).",
+            "fired": false,
+            "times_fired": 0
+          },
+          {
             "id": "wolf_attack_south_bend",
             "pressure_above": 0.7,
             "consequence": "A wolf pack attacks the south bend. If the hunting dog is there, it fights and may die (50% chance). This is the canonical Art XXXI.5 Memory Metric event: Old Chen's dog dies. Triggers memory chain: grief → retelling → 'Used to have one.' Memory: dog_died_wolf_attack.",

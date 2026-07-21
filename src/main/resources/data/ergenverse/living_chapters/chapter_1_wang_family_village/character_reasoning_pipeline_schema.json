@@ -3,7 +3,7 @@
   "_schema": "character_reasoning_pipeline",
   "_schema_version": 1,
   "_article": "XXXV",
-  "_supersedes": "The motivation→interaction shortcut implied by motivation_state_schema (Art XXXIII). motivation_state is retained as one INPUT to this pipeline (Stage 6: Opportunities), not as the driver.",
+  "_supersedes": "The motivation→interaction shortcut implied by motivation_state_schema (Art XXXIII). motivation_state is retained as one INPUT to this pipeline (Stage 6: Opportunities), not as the driver. Extended in AUTO-CANON-002 with the Simulation State Hierarchy (Art XLI §3) that the Java wiring reads to track activity lifecycle (Start→Progress→Interrupted→React→Resume→Complete).",
   "pipeline": [
     {
       "stage": 1,
@@ -24,7 +24,7 @@
     {
       "stage": 3,
       "name": "relationships",
-      "description": "What are the character's current relationships with perceived actors? (relationship_graph — Article XXXIV, extended with Understanding.) For each nearby actor, the character recalls Trust, Respect, Fear, Debt, Grievance, Shared History, Known Skills, Known Personality, Understanding, and current Relevance (Article XXXV.2).",
+      "description": "What are the character's current relationships with perceived actors? (relationship_graph — Article XXXIV, extended with Understanding.) For each nearby actor, the character recalls Trust, Respect, Fear, Debt, Grievance, Shared History, Known Skills, Known Personality, Understanding, Familiarity (Art XLI §4), and current Relevance (Article XXXV.2).",
       "inputs": ["relationship_graph (per target)", "relevance(target) calculation"],
       "output": "relationship_context: per-actor graph snapshot",
       "example_wanglin": "Wang Lin's relationship with player: Trust 15, Respect 10, Fear 0, Debt 0, Grievance 0, Shared History 1, Known Skills [], Known Personality [], Understanding 5. Relevance(player) = 3/100 (unknown traveler). Wang Lin's relationship with Situ Nan: Trust 80, Respect 90, Understanding 40 (trusts but doesn't always understand)."
@@ -114,5 +114,63 @@
       "action": "Walk toward player. Hold still nearby (consent pipeline stage 6). If acknowledged: 'Come.' Walk toward cave. If ignored: leave, try another day."
     },
     "note": "Wang Lin initiated NOT because a motivation score crossed a threshold, but because his MODEL OF THE PLAYER changed. The player's demonstrated persistence, aptitude, and discretion shifted Wang Lin's beliefs, which shifted relevance, which shifted the predicted outcome of approaching, which shifted the intent. This is character-first reasoning, not simulation-first scoring."
+  },
+  "simulation_state_hierarchy": {
+    "_article": "XLI §3",
+    "_description": "The simulation layer tracks each actor through this hierarchy INDEPENDENT of Minecraft's AI goal system. This is what the Java wiring reads/writes. The character_reasoning_pipeline (above) produces the INTENT; this hierarchy tracks the ACTIVITY LIFECYCLE (Art XLI §2: Start to Progress to Interrupted to React to Resume to Complete). ActorTickLoop maintains this state per-actor; Minecraft goals are the implementation detail.",
+    "hierarchy": [
+      {
+        "level": "identity",
+        "field": "who they are (canon data, dao identity, personality)",
+        "source": "NPC canon JSON (stable, loaded once at spawn)",
+        "persistence": "permanent (survives restart)",
+        "java_field": "DaoIdentity + PersonalityModel (existing)"
+      },
+      {
+        "level": "motivations",
+        "field": "what they want long-term",
+        "source": "motivation_state_{characterId}.json (evaluated per cycle)",
+        "persistence": "persistent (re-loaded each cycle from JSON)",
+        "java_field": "DesireState.driving_forces (existing, reads JSON)"
+      },
+      {
+        "level": "long_term_objective",
+        "field": "what they are working toward now (hours to days)",
+        "source": "motivation_state, highest-priority active motivation with relevance above threshold",
+        "persistence": "persistent until completed or deprioritized",
+        "java_field": "cultivationTask.objective (existing)"
+      },
+      {
+        "level": "current_activity",
+        "field": "what they are doing right now (a process with interruption, Art XLI 2)",
+        "source": "ActivityAssigner assigns based on long_term_objective + circumstances",
+        "persistence": "saved on interruption, restored on resume",
+        "java_field": "cultivatorActivity.current (existing)",
+        "interruption_condition": "WorldEventBus event matching activity interruption_conditions field",
+        "resume_plan": "stored when interrupted, executed when reaction completes"
+      },
+      {
+        "level": "current_interruption",
+        "field": "what just interrupted them, if anything",
+        "source": "WorldEventBus event that matched interruption_condition",
+        "persistence": "transient (cleared when reaction resolves)",
+        "java_field": "cultivatorActivity.interruption (new field on ActivityProcess)"
+      },
+      {
+        "level": "current_reaction",
+        "field": "how they are responding to the interruption",
+        "source": "DecisionEngine evaluates options given personality + beliefs + relationship to interrupt source",
+        "persistence": "transient (cleared when reaction completes)",
+        "java_field": "cultivatorActivity.reaction (new field on ActivityProcess)"
+      },
+      {
+        "level": "resume_plan",
+        "field": "what they will return to after the reaction resolves",
+        "source": "saved from current_activity when interruption occurred",
+        "persistence": "persistent until executed or superseded",
+        "java_field": "cultivationActivity.resume_plan (new field on ActivityProcess)"
+      }
+    ],
+    "java_wiring_note": "This hierarchy is NOT a new class (Art XXVI). It is the state shape that ActorTickLoop already maintains in part. The gaps for moment_01 wiring: (a) CultivatorActivity does not have interruption_condition / interruption / reaction / resume_plan fields, (b) ActorTickLoop does not restore from resume_plan after a reaction. These are approximately 10-line additions to EXISTING classes, not new classes. The canon_experience_wiring_spec.json change_4 (ActivityInterruptionSubscriber handles wolf events) writes to current_interruption and current_reaction. Change_5 (CognitionDrivenGoal observation behavior) reads from current_reaction to determine behavior."
   }
 }

@@ -21,7 +21,7 @@ existing IntentEngine, DecisionEngine, WorldEventBus, KnowledgeEngine,
 PerceptionEngine, BeliefRegistry, and WorldHistory will READ these
 schemas and act on them once JDK is restored.
 
-## Current assets (audit — as of AUTO-CANON-056)
+## Current assets (audit — as of AUTO-CANON-001)
 
 ### Furnished (scaffolding layer — exists since 051)
 - **Structures:** 13 (village center + 12 districts: warehouse, governor
@@ -181,7 +181,14 @@ social/motivation/conversation/economy/conflict systems are DATA; the
 existing engines gain one new IntentNature (`SOCIAL_INITIATION`) and
 read these JSONs. That is the extent of the Java change.
 
-## Status
+### Wiring bridge (AUTO-CANON-001)
+- **Canon Experience Wiring Spec:** `canon_experience_wiring_spec.json`
+  — answers Art XLI §5 Five Pre-Wiring Questions, names 7 exact Java
+  changes (no new Engine/Subscriber/Bus classes — Art XXVI), targets
+  moment_01 (first Living Moment at OBSERVED within 3 JDK-cycles).
+  This is the bridge from 49 JSON files to one observable moment.
+
+## Status (updated AUTO-CANON-001)
 
 - **Schema definitions:** COMPLETE (data-only, JDK-blocked from runtime).
 - **Populated examples:** COMPLETE — 9/9 NPC motivation states, 9/9 NPC

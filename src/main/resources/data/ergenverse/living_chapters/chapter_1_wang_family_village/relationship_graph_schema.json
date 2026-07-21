@@ -1,8 +1,8 @@
 {
   "_comment": "Relationship graph schema (Article XXXIV, extended by Article XXXV.3). A relationship is not a number — it is a graph of distinct, independently-variable dimensions. 'Friendship > 50' is forbidden. Every NPC maintains a per-target relationship graph. This is the data the DecisionEngine, IntentEngine, and conversation system read to determine how an NPC treats a target. Two NPCs can have completely different graphs for the same player — the simulation treats them as different relationships because they ARE different relationships. EXTENDED in AUTO-CANON-053 with the Understanding dimension (Article XXXV.3). DATA, not Java (Article XXVI).",
   "_schema": "relationship_graph",
-  "_schema_version": 2,
-  "_article": "XXXIV + XXXV.3",
+  "_schema_version": 3,
+  "_article": "XXXIV + XXXV.3 + XLI §4",
   "schema": {
     "npc_id": "string — the NPC who owns this relationship graph",
     "target_id": "string — who the graph is about (player, another NPC, a faction)",
@@ -65,6 +65,13 @@
         "loss_triggers": ["target_behaved_unpredictably_and_NPC_failed_to_comprehend (-2-5)", "target_deceived_NPC_successfully (-10-20)", "long_separation (-1-2 per month)"],
         "dialogue_impact": "<30: literal interpretation, misses subtext. 30-70: reads surface intent. >70: reads subtext, finishes sentences."
       },
+      "familiarity": {
+        "range": "0-100",
+        "description": "Article XLI §4. 'I know who this person is. They are part of my world.' Not friendship. Not trust. Simply: repeated exposure has made them a known quantity. Familiarity is the cheapest relationship dimension to gain (just be around) and the slowest to lose. It enables casual interaction — an NPC with high Familiarity will chat about the weather even with low Trust. An NPC with Familiarity 5 will not. A legendary elder heard-of but never met: Respect 100, Familiarity 5. A village merchant seen daily: Trust 15, Familiarity 95. These produce radically different conversations.",
+        "decay": "slow — familiarity decays only through long separation (1-2 per month). Being in the same location without interaction maintains it.",
+        "gain_triggers": ["co_location_over_time (+1-2 per day, capped at 80)", "shared_activity (+5-10)", "conversation (+3-5)", "witnessed_same_event (+5-8)"],
+        "loss_triggers": ["long_separation (-1-2 per month)", "target_changed_appearance_dramatically (-5-10, may reset partial familiarity if NPC fails to recognize)"]
+      },
       "relevance": {
         "range": "0-100",
         "description": "Article XXXV.2. Current assessment of how relevant the target is to the NPC's life right now. NOT friendship, NOT affinity — relevance. Calculated UNIVERSALLY for every actor the NPC can perceive (player, other NPCs, factions, beasts) using the same function. The player is NOT special-cased.",
@@ -82,28 +89,28 @@
       "npc_id": "npc_wang_tianshui",
       "target_id": "player",
       "target_type": "player",
-      "dimensions": {"trust": 82, "respect": 71, "fear": 10, "debt": 2, "grievance": 0, "shared_history": 19, "known_skills": ["restriction_basic", "herb_gathering", "combat_mortal"], "known_personality": ["keeps_promises", "does_not_betray_allies", "merciful"]},
+      "dimensions": {"trust": 82, "respect": 71, "fear": 10, "debt": 2, "grievance": 0, "shared_history": 19, "known_skills": ["restriction_basic", "herb_gathering", "combat_mortal"], "known_personality": ["keeps_promises", "does_not_betray_allies", "merciful"], "understanding": 50, "familiarity": 60, "relevance": 35},
       "interpretation": "The elder trusts the player (82), respects their capability (71), does not fear them (10), owes them two favors (debt +2), holds no grievance (0), has 19 shared events of history, knows three of the player's skills, and has inferred the player is trustworthy, loyal, and merciful. This is a deep, positive relationship — the elder would gift the strange jade (Trust >= 5, the Chapter 1 catalyst)."
     },
     "teng_huayuan_to_player_who_helped_wang_lin": {
       "npc_id": "npc_teng_huayuan",
       "target_id": "player",
       "target_type": "player",
-      "dimensions": {"trust": 5, "respect": 91, "fear": 88, "debt": 0, "grievance": 64, "shared_history": 3, "known_skills": ["combat_mortal", "restriction_basic"], "known_personality": ["loyal_to_wang_lin", "meddlesome", "dangerous_for_their_realm"]},
+      "dimensions": {"trust": 5, "respect": 91, "fear": 88, "debt": 0, "grievance": 64, "shared_history": 3, "known_skills": ["combat_mortal", "restriction_basic"], "known_personality": ["loyal_to_wang_lin", "meddlesome", "dangerous_for_their_realm"], "understanding": 25, "familiarity": 15, "relevance": 70},
       "interpretation": "Teng Huayuan barely trusts the player (5), deeply respects their capability (91 — they are a genuine threat), fears them (88), owes nothing (0), holds a heavy grievance (64 — the player helped Wang Lin, Teng Huayuan's enemy), has little shared history (3), knows the player's combat and restriction skills, and has inferred the player is loyal to Wang Lin and meddlesome. This is a completely different relationship than the elder's, for the same player. The simulation treats them differently: the elder gifts the jade; Teng Huayuan plots an ambush. Article XXXIV.1."
     },
     "wang_lin_to_player_early_game": {
       "npc_id": "npc_wang_lin",
       "target_id": "player",
       "target_type": "player",
-      "dimensions": {"trust": 15, "respect": 10, "fear": 0, "debt": 0, "grievance": 0, "shared_history": 1, "known_skills": [], "known_personality": []},
+      "dimensions": {"trust": 15, "respect": 10, "fear": 0, "debt": 0, "grievance": 0, "shared_history": 1, "known_skills": [], "known_personality": [], "understanding": 5, "familiarity": 8, "relevance": 3},
       "interpretation": "Early game. Wang Lin has noticed the player (shared_history=1) but has minimal trust (15), low respect (10 — the player has not demonstrated capability), no fear (0 — the player is no threat), no debt, no grievance, and knows nothing about the player's skills or personality. The player is NOT YET RELEVANT to Wang Lin's motivations (Article XXXIII.2). He will not initiate. If the player approaches him, he will respond minimally. This is correct — this is how Wang Lin behaves in the novel toward strangers."
     },
     "wang_lin_to_player_after_favor": {
       "npc_id": "npc_wang_lin",
       "target_id": "player",
       "target_type": "player",
-      "dimensions": {"trust": 65, "respect": 55, "fear": 0, "debt": 3, "grievance": 0, "shared_history": 12, "known_skills": ["restriction_basic", "herb_gathering", "restraint_under_provocation"], "known_personality": ["keeps_promises", "patient", "does_not_press", "merciful"]},
+      "dimensions": {"trust": 65, "respect": 55, "fear": 0, "debt": 3, "grievance": 0, "shared_history": 12, "known_skills": ["restriction_basic", "herb_gathering", "restraint_under_provocation"], "known_personality": ["keeps_promises", "patient", "does_not_press", "merciful"], "understanding": 40, "familiarity": 55, "relevance": 65},
       "interpretation": "The player protected Wang Lin's family (debt +3, includes a Major favor in the ledger). Trust has risen to 65. Respect to 55 (the player demonstrated capability and restraint). Wang Lin now knows the player is good with restrictions, gathers herbs, shows restraint, and is merciful. The player is NOW RELEVANT (Article XXXIII.3) — Wang Lin's m_decode_restriction_cave motivation may target the player. He may approach with 'Come.' and walk-and-talk to the cave. This is earned, not granted."
     }
   }
