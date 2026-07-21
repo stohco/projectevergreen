@@ -185,6 +185,18 @@
       "source": "INFERRED: RI Ch.1. Wang Ping is the youngest brother. Younger siblings follow older ones.",
       "line": "Wait for me! I want to come too!",
       "mode": "approach"
+    },
+    {
+      "id": "call_in_favor_tax_crisis",
+      "what": "Ask someone who previously helped the family during the Teng tax crisis to help again",
+      "target": "player",
+      "why": "Per Art XXXI.1 (DebtEngine — 'You owe me. Or I owe you. Both bind.'). The Teng family takes half the rice every season. Someone who helped the Wang family during the last crisis created a debt of gratitude. Wang Ping, loyal to a fault (loyalty: 0.95), remembers who helped and is not too proud to ask again. This is not a transaction — it is the social fabric of a poor village where mutual obligation is survival.",
+      "social_engine": "debt",
+      "urgency": 0.50,
+      "cooldown_ticks": 48000,
+      "source": "INFERRED: RI Ch.1-3. The Teng tax oppression is explicit. Wang Ping's loyalty (0.95) and his initiation_lines about the tax ('They took half our rice again') establish the debt context. The specific act of calling in a favor is INFERRED, but consistent with village social dynamics where reciprocal obligation is the primary economy.",
+      "line": "You helped us before, when the Teng collectors came. We owe you for that. But... they are coming again next week. I do not know what we will do.",
+      "mode": "approach"
     }
   ]
 }

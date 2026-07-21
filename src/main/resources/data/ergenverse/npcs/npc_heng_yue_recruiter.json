@@ -90,6 +90,18 @@
       "source": "INFERRED: A sect recruiter would coordinate with village leadership. This is standard operational behavior.",
       "line": "How many children between twelve and sixteen in the village this year? I need names before I begin testing.",
       "mode": "approach"
+    },
+    {
+      "id": "recruit_promising_youth",
+      "what": "Actively recruit a child who shows potential during the aptitude test",
+      "target": "player",
+      "why": "The recruiter's primary duty is finding disciples for Heng Yue Sect. Per Art XXXI.1: RecruitmentEngine — 'Join me. Or I will join against you.' A Qi Condensation 3 cultivator represents a path out of poverty for village mortals. The recruiter is indifferent (personality) but not blind to talent. This fires when the player has been tested and shows spiritual root potential.",
+      "social_engine": "recruitment",
+      "urgency": 0.75,
+      "cooldown_ticks": 60000,
+      "source": "EXPLICIT: RI Ch.1 — the Heng Yue recruiter conducts the aptitude test and accepts those with spiritual roots. Canon line: 'If your aptitude is sufficient, you will join the outer sect.' The recruitment desire makes the recruiter INITIATE toward a promising candidate rather than waiting to be asked.",
+      "line": "You have spiritual root. Not strong, but present. The Heng Yue Sect accepts disciples once a year. Think carefully — this is your only chance to leave this mortal village behind.",
+      "mode": "approach"
     }
   ],
   "_xianxia_schema": 1,

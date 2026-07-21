@@ -153,7 +153,7 @@
       "what": "Warn children not to wander into the hills alone",
       "target": "any_family_member",
       "why": "Wolves have been seen closer to the village. A mother protects.",
-      "social_engine": "warn",
+      "social_engine": "rumor",
       "urgency": 0.55,
       "cooldown_ticks": 48000,
       "source": "INFERRED: RI Ch.2-3. Spirit beasts exist near Zhao. A village mother would warn children about predators. No specific canon line, but consistent with Wang Qingyue's protective nature.",

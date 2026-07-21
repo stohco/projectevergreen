@@ -173,6 +173,18 @@
       "source": "INFERRED: RI Ch.1. Wang Tianshui is a carpenter with a commission. The sect_tasks data references oak planks and sticks.",
       "line": "The governor's commission won't finish itself. I could use another pair of hands with the oak.",
       "mode": "approach"
+    },
+    {
+      "id": "gift_strange_jade",
+      "what": "Give a strange jade fragment found years ago to someone heading into the outside world",
+      "target": "player",
+      "why": "Per Art XXXI.4 (Gold-Standard Template, Mentorship dimension) and Art XXXI.1 (GiftEngine — 'This belongs with you, not me'). Wang Tianshui found a peculiar jade fragment decades ago while working the northern hills. It has no use to a mortal carpenter. But if someone in the family is leaving for the sect — or even just wandering further than the village — perhaps it will mean something to them. He does not know what it is. He only knows it is not ordinary. This is how the Heaven Defying Bead enters the player's story: not as a quest reward, but as a father's uncertain gift.",
+      "social_engine": "gift",
+      "urgency": 0.40,
+      "cooldown_ticks": 120000,
+      "source": "EXPLICIT: RI Ch.1 — Wang Lin obtains the Heaven Defying Bead (a strange jade) which becomes his defining artifact. The exact gifting moment is INFERRED (the novel does not explicitly show Tianshui handing it over), but the bead originates from the village and Wang Lin's family. Per Art XXXI.4, the village elder gifting a strange jade is the canonical example for the GiftEngine. Tianshui is the family patriarch and the one most likely to possess and part with a mysterious heirloom.",
+      "line": "I found this in the northern hills, thirty years ago. I never knew what it was. If you are leaving... take it. Perhaps it will be of more use to you than it ever was to me.",
+      "mode": "approach"
     }
   ]
 }
