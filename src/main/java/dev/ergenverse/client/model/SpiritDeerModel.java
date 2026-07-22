@@ -1,0 +1,252 @@
+package dev.ergenverse.client.model;
+
+// TEXTURE: assets/ergenverse/textures/entity/beast/spirit_deer.png  SIZE: 64x64
+/*
+ * SpiritDeerModel — slender long-necked quadruped with branched antlers.
+ *
+ * ANATOMY:
+ *   - body        : slim torso (3 x 5 x 8) at chest height
+ *   - neck        : long (length 4) tilted up-forward, connects body to head
+ *   - head        : skull (2x3x2) + snout (2x1x2) + 2 branched antlers
+ *                   (main beam + 2 tines each) + 2 ears
+ *   - tail        : short puffy tuft at the rear
+ *   - legs        : 4 slim legs, 2 segments each (thigh + shin), feet at y=15
+ *
+ * ANIMATION:
+ *   - Walk gait   : diagonal trot, cos(swing*0.6662)*amp*swingAmt, shins
+ *                   counter-flex.
+ *   - Flee (run)  : when limbSwingAmount > 0.6, swing frequency x1.6, amp 1.3,
+ *                   head up, tail flagged.
+ *   - Graze       : when idle (limbSwingAmount < 0.1), head dips down
+ *                   head.xRot cycles to +1.2 on a slow sin(age*0.05).
+ *   - Alert       : head snaps up (-0.3), ears forward, tail flicks up.
+ *                   Triggered by an alert cycle out of phase with graze.
+ *   - Head turn   : head.yRot = netHeadYaw * deg2rad (clamped); head.xRot
+ *                   overridden by graze/alert when idle.
+ *
+ * HARSH SELF-CRITIQUE:
+ *   - Antlers are crude stick boxes; real deer antlers are curved beams with
+ *     palmate tines, brow tines, bay tines, and a crown. Mine look like TV
+ *     antennae. No curve, no palmation, no asymmetry.
+ *   - The neck is a single 1x4x1 stick — real deer necks taper and have a
+ *     mane ridge. Looks like a broom handle.
+ *   - Legs are straight sticks with no hock (rear) or knee (front) silhouette
+ *     differentiation. Real deer have a distinct rear hock that angles forward.
+ *   - No dewclaws, no cloven hooves — feet are just shin box ends.
+ *   - Body has no chest depth vs. waist taper — real deer are deep-chested
+ *     and narrow-waisted. Mine is a uniform box.
+ *   - Ears are boxes, not the large leaf-shaped pinnae real deer have.
+ *   - Graze/alert cycle is a blind sin wave — a real deer reacts to threats.
+ *     Should be driven by a synced startled flag (PanicGoal state) instead.
+ *   - No "stotting" (pronk) gait for flee — real deer bounce with all four
+ *     legs off the ground. Mine just runs faster.
+ *   - Texture UVs invented; existing spirit_deer.png (vanilla CowModel layout)
+ *     will scramble on this model.
+ */
+import dev.ergenverse.entity.SpiritBeastEntity;
+import net.minecraft.client.model.HierarchicalModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+
+public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
+
+    private final ModelPart root;
+    private final ModelPart head;
+    private final ModelPart neck;
+    private final ModelPart earLeft;
+    private final ModelPart earRight;
+    private final ModelPart tail;
+    private final ModelPart frontLeftThigh;
+    private final ModelPart frontLeftShin;
+    private final ModelPart frontRightThigh;
+    private final ModelPart frontRightShin;
+    private final ModelPart backLeftThigh;
+    private final ModelPart backLeftShin;
+    private final ModelPart backRightThigh;
+    private final ModelPart backRightShin;
+
+    public SpiritDeerModel(ModelPart root) {
+        this.root = root;
+        this.neck = root.getChild("neck");
+        this.head = this.neck.getChild("head");
+        this.earLeft = this.head.getChild("ear_left");
+        this.earRight = this.head.getChild("ear_right");
+        this.tail = root.getChild("tail");
+        this.frontLeftThigh = root.getChild("front_left_thigh");
+        this.frontLeftShin = this.frontLeftThigh.getChild("shin");
+        this.frontRightThigh = root.getChild("front_right_thigh");
+        this.frontRightShin = this.frontRightThigh.getChild("shin");
+        this.backLeftThigh = root.getChild("back_left_thigh");
+        this.backLeftShin = this.backLeftThigh.getChild("shin");
+        this.backRightThigh = root.getChild("back_right_thigh");
+        this.backRightShin = this.backRightThigh.getChild("shin");
+    }
+
+    public static LayerDefinition createBodyLayer() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+
+        // ── body : slim torso ────────────────────────────────────────────
+        root.addOrReplaceChild("body",
+                CubeListBuilder.create().texOffs(0, 0)
+                        .addBox(-1.5F, -2.5F, -4.0F, 3.0F, 5.0F, 8.0F),
+                PartPose.offset(0.0F, 6.0F, 0.0F));
+
+        // ── neck : long, tilted up-forward ───────────────────────────────
+        PartDefinition neck = root.addOrReplaceChild("neck",
+                CubeListBuilder.create().texOffs(22, 0)
+                        .addBox(-0.5F, -4.0F, -0.5F, 1.0F, 4.0F, 1.0F),
+                PartPose.offsetAndRotation(0.0F, 4.0F, -4.0F, 1.0F, 0.0F, 0.0F));
+
+        // ── head : child of neck, at the tip ─────────────────────────────
+        PartDefinition head = neck.addOrReplaceChild("head",
+                CubeListBuilder.create().texOffs(0, 16)
+                        .addBox(-1.0F, -1.5F, -2.0F, 2.0F, 3.0F, 2.0F)   // skull
+                        .texOffs(8, 16)
+                        .addBox(-1.0F, 0.0F, -3.5F, 2.0F, 1.0F, 2.0F),   // snout forward
+                PartPose.offset(0.0F, -4.0F, 0.0F));
+        // ears : leaf-shaped boxes on top of skull
+        head.addOrReplaceChild("ear_left",
+                CubeListBuilder.create().texOffs(20, 16)
+                        .addBox(-1.0F, -1.5F, 0.0F, 1.0F, 2.0F, 1.0F),
+                PartPose.offsetAndRotation(-1.0F, -1.5F, -1.0F, 0.0F, 0.0F, -0.4F));
+        head.addOrReplaceChild("ear_right",
+                CubeListBuilder.create().texOffs(20, 20)
+                        .addBox(0.0F, -1.5F, 0.0F, 1.0F, 2.0F, 1.0F),
+                PartPose.offsetAndRotation(1.0F, -1.5F, -1.0F, 0.0F, 0.0F, 0.4F));
+
+        // ── antlers : main beam + 2 tines per side ───────────────────────
+        PartDefinition antlerL = head.addOrReplaceChild("antler_left",
+                CubeListBuilder.create().texOffs(28, 16)
+                        .addBox(-0.5F, -3.0F, -0.5F, 1.0F, 3.0F, 1.0F),   // main beam up
+                PartPose.offsetAndRotation(-0.5F, -1.5F, 0.0F, 0.0F, 0.0F, -0.3F));
+        antlerL.addOrReplaceChild("tine1",
+                CubeListBuilder.create().texOffs(36, 16)
+                        .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F),
+                PartPose.offsetAndRotation(0.0F, -1.0F, 0.0F, 0.0F, 0.0F, -0.9F));
+        antlerL.addOrReplaceChild("tine2",
+                CubeListBuilder.create().texOffs(36, 20)
+                        .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F),
+                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.0F, 0.0F, -0.6F));
+
+        PartDefinition antlerR = head.addOrReplaceChild("antler_right",
+                CubeListBuilder.create().texOffs(28, 24)
+                        .addBox(-0.5F, -3.0F, -0.5F, 1.0F, 3.0F, 1.0F),
+                PartPose.offsetAndRotation(0.5F, -1.5F, 0.0F, 0.0F, 0.0F, 0.3F));
+        antlerR.addOrReplaceChild("tine1",
+                CubeListBuilder.create().texOffs(36, 24)
+                        .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F),
+                PartPose.offsetAndRotation(0.0F, -1.0F, 0.0F, 0.0F, 0.0F, 0.9F));
+        antlerR.addOrReplaceChild("tine2",
+                CubeListBuilder.create().texOffs(36, 28)
+                        .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F),
+                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.0F, 0.0F, 0.6F));
+
+        // ── tail : short puffy tuft ──────────────────────────────────────
+        root.addOrReplaceChild("tail",
+                CubeListBuilder.create().texOffs(40, 0)
+                        .addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 2.0F),
+                PartPose.offsetAndRotation(0.0F, 4.0F, 4.0F, 0.3F, 0.0F, 0.0F));
+
+        // ── legs : 4 slim legs, thigh + shin, feet at y=15 ───────────────
+        root.addOrReplaceChild("front_left_thigh",
+                CubeListBuilder.create().texOffs(0, 28).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+                PartPose.offset(-1.5F, 9.0F, -3.0F));
+        root.getChild("front_left_thigh").addOrReplaceChild("shin",
+                CubeListBuilder.create().texOffs(0, 34).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+                PartPose.offset(0.0F, 3.0F, 0.0F));
+
+        root.addOrReplaceChild("front_right_thigh",
+                CubeListBuilder.create().texOffs(8, 28).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+                PartPose.offset(1.5F, 9.0F, -3.0F));
+        root.getChild("front_right_thigh").addOrReplaceChild("shin",
+                CubeListBuilder.create().texOffs(8, 34).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+                PartPose.offset(0.0F, 3.0F, 0.0F));
+
+        root.addOrReplaceChild("back_left_thigh",
+                CubeListBuilder.create().texOffs(0, 40).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+                PartPose.offset(-1.5F, 9.0F, 3.0F));
+        root.getChild("back_left_thigh").addOrReplaceChild("shin",
+                CubeListBuilder.create().texOffs(0, 46).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+                PartPose.offset(0.0F, 3.0F, 0.0F));
+
+        root.addOrReplaceChild("back_right_thigh",
+                CubeListBuilder.create().texOffs(8, 40).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+                PartPose.offset(1.5F, 9.0F, 3.0F));
+        root.getChild("back_right_thigh").addOrReplaceChild("shin",
+                CubeListBuilder.create().texOffs(8, 46).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+                PartPose.offset(0.0F, 3.0F, 0.0F));
+
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    @Override
+    public ModelPart root() {
+        return this.root;
+    }
+
+    @Override
+    public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
+                          float ageInTicks, float netHeadYaw, float headPitch) {
+        boolean moving = limbSwingAmount > 0.1F;
+        boolean fleeing = limbSwingAmount > 0.6F;
+
+        // ── walk / flee gait ─────────────────────────────────────────────
+        float swingPhase = fleeing ? limbSwing * 1.6F : limbSwing;
+        float amp = (fleeing ? 1.3F : 0.8F) * limbSwingAmount;
+        float phase = swingPhase * 0.6662F;
+
+        this.frontLeftThigh.xRot  = (float) Math.cos(phase)            * amp;
+        this.frontRightThigh.xRot = (float) Math.cos(phase + Math.PI)  * amp;
+        this.backLeftThigh.xRot   = (float) Math.cos(phase + Math.PI)  * amp;
+        this.backRightThigh.xRot  = (float) Math.cos(phase)            * amp;
+
+        this.frontLeftShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase))            * 0.6F * limbSwingAmount;
+        this.frontRightShin.xRot = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI))  * 0.6F * limbSwingAmount;
+        this.backLeftShin.xRot   = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI))  * 0.6F * limbSwingAmount;
+        this.backRightShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase))            * 0.6F * limbSwingAmount;
+
+        // ── head behaviour ───────────────────────────────────────────────
+        // neck base tilt — neck already tilted up by 1.0 rad in the pose;
+        // we add a small bob.
+        this.neck.xRot = 1.0F + (float) Math.sin(ageInTicks * 0.1F) * 0.03F;
+
+        float yaw = netHeadYaw * 0.017453292F;
+        this.head.yRot = Math.max(-0.8F, Math.min(0.8F, yaw));
+
+        if (fleeing) {
+            // FLEE : head up, tail flagged
+            this.head.xRot = -0.3F;
+            this.neck.xRot = 0.7F;                  // neck more upright to raise head
+            this.tail.xRot = -0.8F;                 // tail flagged up
+            this.earLeft.zRot  = -0.4F;
+            this.earRight.zRot = 0.4F;
+        } else if (moving) {
+            // WALK : head level, look around
+            this.head.xRot = headPitch * 0.017453292F;
+            this.tail.xRot = 0.3F;
+            this.earLeft.zRot  = -0.4F;
+            this.earRight.zRot = 0.4F;
+        } else {
+            // IDLE : slow graze / alert cycle
+            float cycle = (float) Math.sin(ageInTicks * 0.05F);
+            if (cycle > 0.0F) {
+                // GRAZE : head dips toward the ground
+                this.head.xRot = 1.2F * cycle;
+                this.neck.xRot = 1.3F;              // neck arches down
+                this.tail.xRot = 0.3F;
+            } else {
+                // ALERT : head snaps up, ears forward, tail flicks
+                this.head.xRot = -0.3F;
+                this.neck.xRot = 0.8F;
+                this.tail.xRot = -0.5F + (float) Math.sin(ageInTicks * 1.5F) * 0.3F; // flick
+                this.earLeft.zRot  = -0.2F;
+                this.earRight.zRot = 0.2F;
+            }
+        }
+    }
+}
