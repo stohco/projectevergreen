@@ -24,7 +24,9 @@ import net.minecraft.world.level.Level;
  *
  * <p>This is the unified shell for spirit-beast entities. The {@link BeastType}
  * enum distinguishes the four canon v1 beasts (RABBIT, WOLF, DEER, HAWK).
- * Each type selects its own texture in the {@link dev.ergenverse.client.render.SpiritBeastRenderer}.
+ * Each type has its own per-species renderer in
+ * {@link dev.ergenverse.client.render.SpiritBeastRenderers} which uses a
+ * custom anatomically-correct model (SpiritWolfModel, SpiritHawkModel, etc.).
  *
  * <h2>Canon</h2>
  * <p>Spirit beasts are animals that have absorbed ambient Qi and developed
