@@ -193,10 +193,15 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
         boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
         // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — boar swims (pigs can swim) ──
         boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+        // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — heavy charge, head low, legs pump ──
+        boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
 
         if (resting) {
             // Boar rests: heavy body lowers, thick legs fold, head on ground
-            this.root.y = -2.5F;
+            // CRON-COMPLETIONIST-17: Added breathing, snout micro-movement
+            float breath = (float) Math.sin(ageInTicks * 0.06F) * 0.04F;
+            float snoutShift = (float) Math.sin(ageInTicks * 0.12F) * 0.03F;
+            this.root.y = -2.5F + breath;
             this.root.xRot = 0.05F;
             this.frontLeftThigh.xRot  = -0.5F;
             this.frontRightThigh.xRot = -0.5F;
@@ -206,15 +211,16 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backRightThigh.xRot  = 0.2F;
             this.backLeftShin.xRot    = -0.15F;
             this.backRightShin.xRot   = -0.15F;
-            this.head.xRot = 0.8F;
+            this.head.xRot = 0.8F + snoutShift;
             this.tail.xRot = 0.3F;
             return;
         } else if (swimming) {
-            // Boar swims: body buoyant, legs paddle, snout up
-            this.root.xRot = -0.2F;
-            this.root.y = -1.5F;
-            this.head.xRot = -0.4F;
+            // CRON-COMPLETIONIST-17: Added vertical bob
             float paddle = ageInTicks * 0.9F;
+            float bob = (float) Math.sin(paddle * 0.5F) * 0.12F;
+            this.root.xRot = -0.2F;
+            this.root.y = -1.5F + bob;
+            this.head.xRot = -0.4F;
             this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.6F;
             this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.6F;
             this.backLeftThigh.xRot   = (float) Math.cos(paddle + Math.PI) * 0.4F;
@@ -224,6 +230,27 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backLeftShin.xRot    = -0.1F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.15F;
             this.backRightShin.xRot   = -0.1F + Math.abs((float) Math.cos(paddle)) * 0.15F;
             this.tail.xRot = 0.2F;
+            return;
+        } else if (sprinting) {
+            // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — heavy boar charge ──
+            float sprintPhase = limbSwing * 1.8F;
+            float sprintAmp = 1.1F * limbSwingAmount;
+            float sp = sprintPhase * 0.8F;
+            this.root.xRot = -0.15F;
+            this.root.y = (float) Math.sin(ageInTicks * 0.15F) * 0.1F;
+            // Heavy pumping legs
+            this.frontLeftThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
+            this.frontRightThigh.xRot = (float) Math.cos(sp + Math.PI)  * sprintAmp;
+            this.backLeftThigh.xRot   = (float) Math.cos(sp + Math.PI)  * sprintAmp;
+            this.backRightThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
+            // Boars barely flex shins even when sprinting
+            this.frontLeftShin.xRot  = -0.15F + Math.max(0.0F, (float) Math.cos(sp))            * 0.25F * limbSwingAmount;
+            this.frontRightShin.xRot = -0.15F + Math.max(0.0F, (float) Math.cos(sp + Math.PI))  * 0.25F * limbSwingAmount;
+            this.backLeftShin.xRot   = -0.15F + Math.max(0.0F, (float) Math.cos(sp + Math.PI))  * 0.25F * limbSwingAmount;
+            this.backRightShin.xRot  = -0.15F + Math.max(0.0F, (float) Math.cos(sp))            * 0.25F * limbSwingAmount;
+            // Head LOW (boar charges head-down), tail straight
+            this.head.xRot = 1.0F;
+            this.tail.xRot = -0.1F;
             return;
         }
 

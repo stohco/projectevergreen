@@ -196,10 +196,16 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
         // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — deer swims, head above water ──
         boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+        // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — stretched gallop, head up, tail flagged ──
+        boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
 
         if (resting) {
             // Deer rests: body lowers, legs fold under, neck curls, head on ground
-            this.root.y = -2.0F;
+            // CRON-COMPLETIONIST-17: Added breathing, ear twitch, tail micro-sway
+            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.04F;
+            float earTwitch = (ageInTicks % 80 < 4) ? (float) Math.sin(ageInTicks * 1.8F) * 0.08F : 0.0F;
+            float tailSway = (float) Math.sin(ageInTicks * 0.1F) * 0.06F;
+            this.root.y = -2.0F + breath;
             this.frontLeftThigh.xRot  = -0.7F;
             this.frontRightThigh.xRot = -0.7F;
             this.frontLeftShin.xRot   = 0.5F;
@@ -208,17 +214,20 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backRightThigh.xRot  = 0.4F;
             this.backLeftShin.xRot    = -0.3F;
             this.backRightShin.xRot   = -0.3F;
-            this.neck.xRot = 1.3F;
-            this.head.xRot = 0.8F;
-            this.tail.xRot = 0.5F;
+            this.neck.xRot = 1.3F + breath * 0.3F;
+            this.head.xRot = 0.8F + breath * 0.2F;
+            this.tail.xRot = 0.5F + tailSway;
+            this.earLeft.zRot  = -0.4F + earTwitch;
+            this.earRight.zRot = 0.4F - earTwitch;
             return;
         } else if (swimming) {
-            // Deer swims: body pitches, head elevated, legs paddle
+            // CRON-COMPLETIONIST-17: Added vertical bob synchronized with paddle.
+            float paddle = ageInTicks * 1.0F;
+            float bob = (float) Math.sin(paddle * 0.5F) * 0.12F;
             this.root.xRot = -0.3F;
-            this.root.y = -1.5F;
+            this.root.y = -1.5F + bob;
             this.head.xRot = -0.4F;
             this.neck.xRot = 0.5F;
-            float paddle = ageInTicks * 1.0F;
             this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.7F;
             this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.7F;
             this.backLeftThigh.xRot   = (float) Math.cos(paddle + Math.PI) * 0.5F;
@@ -231,14 +240,36 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.earLeft.zRot  = -0.3F;
             this.earRight.zRot = 0.3F;
             return;
-        }
+        } else if (sprinting) {
+            // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — deer gallop, stotting bounce ──
+            float sprintPhase = limbSwing * 2.0F;
+            float sprintAmp = 1.4F * limbSwingAmount;
+            float sp = sprintPhase * 0.6662F;
+            // Stotting bounce — all four feet off ground at peak
+            float stot = (float) Math.abs(Math.sin(sp * 0.5F)) * 1.0F * limbSwingAmount;
+            this.root.y = -stot;
+            this.root.xRot = (float) Math.sin(sp + Math.PI * 0.5F) * 0.08F * limbSwingAmount;
+            this.frontLeftThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
+            this.frontRightThigh.xRot = (float) Math.cos(sp + Math.PI)  * sprintAmp;
+            this.backLeftThigh.xRot   = (float) Math.cos(sp + Math.PI)  * sprintAmp;
+            this.backRightThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
+            this.frontLeftShin.xRot  = -0.4F + Math.max(0.0F, (float) Math.cos(sp))            * 0.7F * limbSwingAmount;
+            this.frontRightShin.xRot = -0.4F + Math.max(0.0F, (float) Math.cos(sp + Math.PI))  * 0.7F * limbSwingAmount;
+            this.backLeftShin.xRot   = -0.4F + Math.max(0.0F, (float) Math.cos(sp + Math.PI))  * 0.7F * limbSwingAmount;
+            this.backRightShin.xRot  = -0.4F + Math.max(0.0F, (float) Math.cos(sp))            * 0.7F * limbSwingAmount;
+            // Head up, neck extended, tail flagged high
+            this.neck.xRot = 0.6F;
+            this.head.xRot = -0.4F;
+            this.tail.xRot = -1.0F;              // tail flagged high
+            this.earLeft.zRot  = -0.4F;
+            this.earRight.zRot = 0.4F;
+        } else {
+            boolean moving = limbSwingAmount > 0.1F;
+            boolean fleeing = limbSwingAmount > 0.6F;
 
-        boolean moving = limbSwingAmount > 0.1F;
-        boolean fleeing = limbSwingAmount > 0.6F;
-
-        // ── CRON-COMPLETIONIST-13: DATA_POSE overrides for graze/alert ──
-        boolean poseGrazing = entity.getSpiritPose() == SpiritBeastEntity.POSE_GRAZING;
-        boolean poseAlert   = entity.getSpiritPose() == SpiritBeastEntity.POSE_ALERT;
+            // ── CRON-COMPLETIONIST-13: DATA_POSE overrides for graze/alert ──
+            boolean poseGrazing = entity.getSpiritPose() == SpiritBeastEntity.POSE_GRAZING;
+            boolean poseAlert   = entity.getSpiritPose() == SpiritBeastEntity.POSE_ALERT;
 
         // ── walk / flee gait ─────────────────────────────────────────────
         float swingPhase = fleeing ? limbSwing * 1.6F : limbSwing;
@@ -310,6 +341,7 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
                 }
             }
         }
+        } // end of walk/flee else block
 
         // ── attack : deer rears up (front hooves lift, head back) ─────
         float atk = entity.attackAnim;

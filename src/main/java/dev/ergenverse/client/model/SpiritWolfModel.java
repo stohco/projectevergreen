@@ -97,9 +97,11 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offset(0.0F, 6.0F, -2.5F));
 
         // ── body_hip : rear torso, narrower at hips ───────────────────────
+        // CRON-COMPLETIONIST-17: Extend z from 5→6 to overlap with chest by 1px,
+        // eliminating the visible seam between chest and hip.
         root.addOrReplaceChild("body_hip",
                 CubeListBuilder.create().texOffs(0, 12)
-                        .addBox(-1.5F, -2.5F, 0.0F, 3.0F, 5.0F, 5.0F),
+                        .addBox(-1.5F, -2.5F, -1.0F, 3.0F, 5.0F, 6.0F),
                 PartPose.offset(0.0F, 5.5F, 2.5F));
 
         // ── neck : short tilted connector at the front ───────────────────
@@ -210,6 +212,8 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
         // ── CRON-COMPLETIONIST-16: POSE_SWIMMING (body pitches, legs paddle, head up) ──
         boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+        // ── CRON-COMPLETIONIST-17: POSE_SPRINTING (stretched stride, body low, head forward) ──
+        boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
 
         // ── head turn (clamped) ──────────────────────────────────────────
         float yaw = netHeadYaw * 0.017453292F;
@@ -219,9 +223,14 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
 
         if (resting) {
             // ── POSE_RESTING : wolf curls up on the ground ─────────────
-            // Body lowers, legs fold under, head rests on paws, tail wraps
-            this.root.y = -2.0F;                    // body sinks to ground
-            this.root.xRot = 0.05F;                  // very slight forward lean
+            // CRON-COMPLETIONIST-17: Added breathing oscillation, ear twitches,
+            // and slow tail sway so resting is not a frozen mannequin.
+            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.05F;
+            float earTwitch = (ageInTicks % 60 < 5) ? (float) Math.sin(ageInTicks * 2.0F) * 0.1F : 0.0F;
+            float tailSway = (float) Math.sin(ageInTicks * 0.12F) * 0.08F;
+            // Body lowers with breathing
+            this.root.y = -2.0F + breath;
+            this.root.xRot = 0.05F;
             // Front legs fold forward (paws extended)
             this.frontLeftThigh.xRot  = -0.8F;
             this.frontRightThigh.xRot = -0.8F;
@@ -232,29 +241,31 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backRightThigh.xRot  = 0.5F;
             this.backLeftShin.xRot    = -0.4F;
             this.backRightShin.xRot   = -0.4F;
-            // Head rests on front paws (droops low)
-            this.head.xRot = 0.6F;
-            this.neck.xRot = 0.8F;
-            // Tail wraps around (tip curls toward body)
+            // Head rests on front paws with breathing
+            this.head.xRot = 0.6F + breath * 0.5F;
+            this.neck.xRot = 0.8F + breath * 0.3F;
+            // Tail wraps with slow sway
             this.tailBase.xRot = 0.8F;
             this.tailMid.xRot  = 0.6F;
             this.tailTip.xRot  = -0.4F;
-            this.tailBase.yRot = 0.5F;
+            this.tailBase.yRot = 0.5F + tailSway;
             // Jaw relaxed
             this.jaw.xRot = 0.0F;
-            // Ears relaxed
-            this.earLeft.zRot  = -0.2F;
-            this.earRight.zRot = 0.2F;
+            // Ears with occasional twitch
+            this.earLeft.zRot  = -0.2F + earTwitch;
+            this.earRight.zRot = 0.2F - earTwitch;
         } else if (swimming) {
             // ── POSE_SWIMMING : wolf paddles through water ─────────────
-            // Body pitches slightly, head elevated above water
+            // CRON-COMPLETIONIST-17: Added vertical bob synchronized with paddle cycle.
+            float paddle = ageInTicks * 1.2F;
+            float bob = (float) Math.sin(paddle * 0.5F) * 0.15F;
+            // Body pitches slightly, head elevated above water, with bob
             this.root.xRot = -0.3F;
-            this.root.y = -1.0F;
+            this.root.y = -1.0F + bob;
             // Head elevated above waterline
             this.head.xRot = -0.5F;
             this.neck.xRot = 0.2F;
-            // Legs paddle in a fast circular motion
-            float paddle = ageInTicks * 1.2F;
+            // Legs paddle in a fast circular motion (paddle already declared above)
             this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.8F;
             this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.8F;
             this.backLeftThigh.xRot   = (float) Math.cos(paddle + Math.PI) * 0.6F;
@@ -272,6 +283,38 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
             this.jaw.xRot = 0.0F;
             this.earLeft.zRot  = -0.5F;
             this.earRight.zRot = 0.5F;
+        } else if (sprinting) {
+            // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — stretched gallop ──
+            // Body lower and longer stride, head forward, ears pinned
+            float sprintPhase = limbSwing * 2.0F;
+            float sprintAmp = 1.4F * limbSwingAmount;
+            float sp = sprintPhase * 0.6662F;
+            this.root.xRot = -0.15F;                 // body pitches forward
+            this.root.y = (float) Math.sin(ageInTicks * 0.15F) * 0.08F;
+            // Extended gallop stride
+            this.frontLeftThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
+            this.frontRightThigh.xRot = (float) Math.cos(sp + Math.PI)  * sprintAmp;
+            this.backLeftThigh.xRot   = (float) Math.cos(sp + Math.PI)  * sprintAmp;
+            this.backRightThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
+            this.frontLeftShin.xRot  = -0.4F + Math.max(0.0F, (float)Math.cos(sp))            * 0.8F * limbSwingAmount;
+            this.frontRightShin.xRot = -0.4F + Math.max(0.0F, (float)Math.cos(sp + Math.PI))  * 0.8F * limbSwingAmount;
+            this.backLeftShin.xRot   = -0.4F + Math.max(0.0F, (float)Math.cos(sp + Math.PI))  * 0.8F * limbSwingAmount;
+            this.backRightShin.xRot  = -0.4F + Math.max(0.0F, (float)Math.cos(sp))            * 0.8F * limbSwingAmount;
+            // Spine flex amplified during sprint
+            float sprintFlex = (float) Math.sin(sp + Math.PI * 0.5F) * 0.12F * limbSwingAmount;
+            this.bodyChest.xRot = sprintFlex;
+            this.bodyHip.xRot  = -sprintFlex * 0.6F;
+            // Head thrusts forward, ears pinned back
+            this.head.xRot = -0.2F;
+            this.neck.xRot = -0.1F;
+            this.earLeft.zRot  = -0.5F;
+            this.earRight.zRot = 0.5F;
+            // Jaw open, tail streams straight
+            this.jaw.xRot = 0.3F;
+            this.tailBase.xRot = 0.2F;
+            this.tailBase.yRot = 0.0F;
+            this.tailMid.yRot  = 0.0F;
+            this.tailTip.yRot  = 0.0F;
         } else {
             // ── walk / run gait : diagonal trot ──────────────────────────────
             boolean running = limbSwingAmount > 0.5F;

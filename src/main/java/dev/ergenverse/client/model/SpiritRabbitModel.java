@@ -137,31 +137,38 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
         // CRON-COMPLETIONIST-13: DATA_POSE for grazing posture
         boolean poseGrazing = entity.getSpiritPose() == SpiritBeastEntity.POSE_GRAZING;
 
-        // ── CRON-COMPLETIONIST-16: POSE_RESTING — rabbit crouches flat ──
+        // CRON-COMPLETIONIST-16: POSE_RESTING — rabbit crouches flat ──
         boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
-        // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — rabbit paddles ──
+        // CRON-COMPLETIONIST-16: POSE_SWIMMING — rabbit paddles ──
         boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+        // CRON-COMPLETIONIST-17: POSE_SPRINTING — panicked sprint hop
+        boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
 
         if (resting) {
             // Rabbit rests: body flattens, ears relax to sides, legs tucked
-            this.root.y = -3.0F;
+            // CRON-COMPLETIONIST-17: Added breathing, nose twitch, ear micro-movement
+            float breath = (float) Math.sin(ageInTicks * 0.1F) * 0.03F;
+            float noseTwitch = (float) Math.sin(ageInTicks * 1.5F) * 0.02F;
+            float earShift = (float) Math.sin(ageInTicks * 0.15F) * 0.05F;
+            this.root.y = -3.0F + breath;
             this.root.xRot = 0.1F;
             this.frontLegLeft.xRot  = 0.3F;
             this.frontLegRight.xRot = 0.3F;
             this.backLegLeft.xRot   = 0.2F;
             this.backLegRight.xRot  = 0.2F;
-            this.earLeft.zRot  = 0.8F;   // ears flop to sides
-            this.earRight.zRot = -0.8F;
+            this.earLeft.zRot  = 0.8F + earShift;
+            this.earRight.zRot = -0.8F - earShift;
             this.earLeft.xRot  = 0.3F;
             this.earRight.xRot = 0.3F;
-            this.head.xRot = 0.1F;
+            this.head.xRot = 0.1F + noseTwitch;
             return;
         } else if (swimming) {
-            // Rabbit swims: body pitches up, head above water, legs paddle frantically
-            this.root.xRot = -0.4F;
-            this.root.y = -2.0F;
-            this.head.xRot = -0.3F;
+            // CRON-COMPLETIONIST-17: Added vertical bob synchronized with paddle.
             float paddle = ageInTicks * 1.5F;
+            float bob = (float) Math.sin(paddle * 0.5F) * 0.1F;
+            this.root.xRot = -0.4F;
+            this.root.y = -2.0F + bob;
+            this.head.xRot = -0.3F;
             this.frontLegLeft.xRot  = (float) Math.cos(paddle) * 1.0F;
             this.frontLegRight.xRot = (float) Math.cos(paddle + Math.PI) * 1.0F;
             this.backLegLeft.xRot   = (float) Math.cos(paddle + Math.PI) * 1.2F;
@@ -171,9 +178,22 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
             this.earLeft.zRot  = 0.0F;
             this.earRight.zRot = 0.0F;
             return;
+        } else if (sprinting) {
+            // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — panicked sprint, bigger hops ──
+            float sprintHop = (float) Math.abs(Math.sin(limbSwing * 0.4F)) * 3.0F * limbSwingAmount;
+            this.root.y = -sprintHop;
+            this.root.xRot = -0.15F * limbSwingAmount;
+            this.earLeft.xRot  = -0.8F * limbSwingAmount;
+            this.earRight.xRot = -0.8F * limbSwingAmount;
+            this.frontLegLeft.xRot  = -1.0F * limbSwingAmount;
+            this.frontLegRight.xRot = -1.0F * limbSwingAmount;
+            this.backLegLeft.xRot   =  0.8F * limbSwingAmount;
+            this.backLegRight.xRot  =  0.8F * limbSwingAmount;
+            this.head.xRot = -0.3F * limbSwingAmount;
+            this.tail.yRot = (float) Math.sin(ageInTicks * 2.0F) * 0.4F;
         }
 
-        if (limbSwingAmount > 0.05F) {
+        if (!sprinting && !swimming && !resting && limbSwingAmount > 0.05F) {
             // ── HOP : body bounces, ears flap back, legs tuck/extend ──────
             float hop = (float) Math.abs(Math.sin(limbSwing * 0.5F)) * 2.0F * limbSwingAmount;
             this.root.y = -hop;                       // body rises (negative Y = up)

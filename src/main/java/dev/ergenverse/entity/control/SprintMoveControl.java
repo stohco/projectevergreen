@@ -40,6 +40,7 @@ public class SprintMoveControl extends MoveControl {
 
     @Override
     public void tick() {
+        boolean wasSprinting = sprintTicks > 0;
         if (sprintTicks > 0) sprintTicks--;
         if (sprintCooldown > 0) sprintCooldown--;
 
@@ -52,6 +53,14 @@ public class SprintMoveControl extends MoveControl {
             this.beast.setDeltaMovement(
                     this.beast.getDeltaMovement().multiply(boost, 1.0D, boost));
             this.beast.hurtMarked = true;
+            // Wire POSE_SPRINTING so models can render sprint animation
+            this.beast.setSpiritPose(SpiritBeastEntity.POSE_SPRINTING);
+        } else if (wasSprinting && sprintTicks <= 0) {
+            // Sprint just ended — clear POSE_SPRINTING back to STANDING
+            // Only reset if no other goal is driving a different pose
+            if (this.beast.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING) {
+                this.beast.setSpiritPose(SpiritBeastEntity.POSE_STANDING);
+            }
         }
     }
 }

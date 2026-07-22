@@ -217,11 +217,16 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
         // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — hawk swims to shore ──
         boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+        // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — fast stoop/diving flight ──
+        boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
 
         if (resting) {
             // Hawk rests: beak tucks under wing, wings fold tight, legs grip perch
-            this.root.y = -1.0F;
-            this.head.xRot = 0.8F;           // beak tucks down
+            // CRON-COMPLETIONIST-17: Added breathing, occasional head micro-adjust
+            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.03F;
+            float headShift = (ageInTicks % 100 < 3) ? (float) Math.sin(ageInTicks * 1.5F) * 0.05F : 0.0F;
+            this.root.y = -1.0F + breath;
+            this.head.xRot = 0.8F + headShift;           // beak tucks down
             this.leftWing.zRot = -0.9F;       // wings wrap around body
             this.rightWing.zRot = 0.9F;
             this.leftWing.xRot = 0.7F;
@@ -235,12 +240,13 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
             this.tail.xRot = 0.3F;
             return;
         } else if (swimming) {
-            // Hawk swims: body buoyant, wings rowing, head above water
-            this.root.xRot = -0.2F;
-            this.root.y = -2.0F;
-            this.head.xRot = -0.3F;
+            // CRON-COMPLETIONIST-17: Added vertical bob synchronized with row cycle.
             float row = ageInTicks * 0.8F;
-            // Wings row alternately (like butterfly stroke)
+            float bob = (float) Math.sin(row * 0.5F) * 0.1F;
+            this.root.xRot = -0.2F;
+            this.root.y = -2.0F + bob;
+            this.head.xRot = -0.3F;
+            // Wings row alternately (like butterfly stroke) — row already declared above
             this.leftWing.zRot = -0.3F + (float) Math.sin(row) * 0.6F;
             this.rightWing.zRot = 0.3F - (float) Math.sin(row) * 0.6F;
             this.leftShoulder.zRot = -(float) Math.sin(row) * 0.3F;
@@ -261,7 +267,25 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         float flapAmp = 0.4F + limbSwingAmount * 0.8F;
         float flap = (float) Math.sin(ageInTicks * 0.6F) * flapAmp;
 
-        if (perched) {
+        if (sprinting) {
+            // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — fast diving stoop ──
+            this.root.xRot = 0.4F;                    // body pitches steeply down
+            this.root.y = (float) Math.sin(ageInTicks * 0.15F) * 0.05F;
+            // Wings swept back tight (minimal drag)
+            this.leftWing.zRot = -0.15F;
+            this.rightWing.zRot = 0.15F;
+            this.leftWing.xRot = 0.4F;
+            this.rightWing.xRot = -0.4F;
+            this.leftShoulder.zRot = 0.0F;
+            this.rightShoulder.zRot = 0.0F;
+            this.leftForearm.zRot = 0.0F;
+            this.rightForearm.zRot = 0.0F;
+            // Legs tucked tight
+            this.leftLeg.xRot = -0.8F;
+            this.rightLeg.xRot = -0.8F;
+            // Head forward, beak aimed
+            this.head.xRot = 0.2F;
+        } else if (perched) {
             // PERCHED : wings fold against body, legs straight down
             this.leftWing.zRot = -0.7F;   // wings fold flat
             this.rightWing.zRot = 0.7F;

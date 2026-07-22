@@ -233,12 +233,17 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
         boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
         // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — fire beast swims (reluctantly) ──
         boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+        // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — raging charge, flames flare ──
+        boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
 
         ModelPart[] mane = { this.mane0, this.mane1, this.mane2, this.mane3, this.mane4 };
 
         if (resting) {
             // Fire beast rests: body lowers, legs fold, flames shrink to embers
-            this.root.y = -2.0F;
+            // CRON-COMPLETIONIST-17: Added breathing, ember pulse
+            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.03F;
+            float emberPulse = (float) Math.sin(ageInTicks * 0.15F) * 0.05F;
+            this.root.y = -2.0F + breath;
             this.frontLeftThigh.xRot  = -0.6F;
             this.frontRightThigh.xRot = -0.6F;
             this.frontLeftShin.xRot   = 0.4F;
@@ -249,9 +254,9 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backRightShin.xRot   = -0.2F;
             this.head.xRot = 0.3F;
             this.jaw.xRot = 0.0F;
-            // Flames dim to low embers
+            // Flames dim to low embers with slow pulse
             for (int i = 0; i < mane.length; i++) {
-                mane[i].yScale = 0.3F;
+                mane[i].yScale = 0.3F + emberPulse;
                 mane[i].xScale = 0.5F;
             }
             this.flameTip.yScale = 0.2F;
@@ -259,10 +264,13 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
             return;
         } else if (swimming) {
             // Fire beast swims: body pitches, legs paddle, flames sputter
-            this.root.xRot = -0.3F;
-            this.root.y = -1.0F;
-            this.head.xRot = -0.4F;
+            // CRON-COMPLETIONIST-17: Added vertical bob
             float paddle = ageInTicks * 1.0F;
+            float bob = (float) Math.sin(paddle * 0.5F) * 0.1F;
+            this.root.xRot = -0.3F;
+            this.root.y = -1.0F + bob;
+            this.head.xRot = -0.4F;
+            // paddle already declared above
             this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.7F;
             this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.7F;
             this.backLeftThigh.xRot   = (float) Math.cos(paddle + Math.PI) * 0.5F;
@@ -279,6 +287,35 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
             }
             this.flameTip.yScale = 0.3F;
             this.jaw.xRot = 0.0F;
+            return;
+        } else if (sprinting) {
+            // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — raging charge, flames flare high ──
+            float sprintPhase = limbSwing * 2.0F;
+            float sprintAmp = 1.4F * limbSwingAmount;
+            float sp = sprintPhase * 0.6662F;
+            this.root.xRot = -0.2F;               // body pitches forward aggressively
+            this.root.y = (float) Math.sin(ageInTicks * 0.15F) * 0.08F;
+            // Extended stride
+            this.frontLeftThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
+            this.frontRightThigh.xRot = (float) Math.cos(sp + Math.PI)  * sprintAmp;
+            this.backLeftThigh.xRot   = (float) Math.cos(sp + Math.PI)  * sprintAmp;
+            this.backRightThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
+            this.frontLeftShin.xRot  = -0.4F + Math.max(0.0F, (float) Math.cos(sp))            * 0.8F * limbSwingAmount;
+            this.frontRightShin.xRot = -0.4F + Math.max(0.0F, (float) Math.cos(sp + Math.PI))  * 0.8F * limbSwingAmount;
+            this.backLeftShin.xRot   = -0.4F + Math.max(0.0F, (float) Math.cos(sp + Math.PI))  * 0.8F * limbSwingAmount;
+            this.backRightShin.xRot  = -0.4F + Math.max(0.0F, (float) Math.cos(sp))            * 0.8F * limbSwingAmount;
+            // Flames flare WILD during sprint charge
+            for (int i = 0; i < mane.length; i++) {
+                float p = ageInTicks * 1.2F + i * 0.5F;
+                mane[i].yScale = 1.5F + (float) Math.sin(p) * 0.3F;  // bigger than normal
+                mane[i].yRot   = (float) Math.sin(p) * 0.2F;
+            }
+            this.flameTip.yScale = 1.8F + (float) Math.sin(ageInTicks * 1.5F) * 0.3F;
+            this.flameTip.yRot  = (float) Math.sin(ageInTicks * 1.5F) * 0.3F;
+            // Head thrusts forward, jaw wide, rage
+            this.head.xRot = -0.3F;
+            this.jaw.xRot = 0.6F;
+            this.tailBase.yRot = (float) Math.sin(ageInTicks * 0.5F) * 0.3F;
             return;
         }
 
