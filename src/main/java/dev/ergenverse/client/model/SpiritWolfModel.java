@@ -264,7 +264,7 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         // LivingEntity.deathTime counts 0..20 (1 second). We collapse over
         // the first 10 ticks, then hold the pose for the remaining fade.
         if (entity.deathTime > 0) {
-            float t = Math.min(entity.deathTime / 10.0F, 1.0F); // 0→1 over 0.5s
+            float t = Math.min(entity.deathTime / 8.0F, 1.0F); // 0→1 over 0.4s (visible before fade)
             float collapse = t * t; // quadratic ease-in for weight
             this.root.xRot = collapse * -0.4F;                // body tips to side
             this.root.zRot = collapse * 0.6F;                 // rolls onto side

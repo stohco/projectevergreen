@@ -115,18 +115,45 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
             }
-            case RABBIT, DEER, STONE_BACK_BOAR -> {
+            case RABBIT -> {
+                // CRON-COMPLETIONIST-3: Rabbit kicks with back legs when cornered.
+                // PanicGoal (flee) is primary, but if cornered it fights.
                 this.goalSelector.addGoal(1, new PanicGoal(this, 1.4));
+                this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.8, true));
                 this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7));
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+            }
+            case DEER -> {
+                // CRON-COMPLETIONIST-3: Deer rear up and strike with front hooves.
+                // Primarily flees, but will fight if cornered (canon: spirit deer are
+                // not helpless prey — they have absorbed Qi and gained spiritual nature).
+                this.goalSelector.addGoal(1, new PanicGoal(this, 1.4));
+                this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, true));
+                this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7));
+                this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+            }
+            case STONE_BACK_BOAR -> {
+                // CRON-COMPLETIONIST-3: Boar charges and head-butts with stone plate.
+                // A stone-backed boar is aggressive — it has a geological weapon.
+                // PanicGoal is removed; it fights instead of fleeing.
+                this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.1, true));
+                this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 0.7));
+                this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+                this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
             }
             case HAWK -> {
+                // CRON-COMPLETIONIST-3: Hawk has talon strike (MeleeAttackGoal).
                 // Spirit hawks FLY — the flight goal replaces ground wandering.
                 // Constitution Article I: "If Minecraft conflicts with canon: Minecraft changes."
-                // A hawk that walks is wrong; a hawk that flies is canon.
+                this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
                 this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.SpiritBeastFlightGoal(this, 0.8D));
                 this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0));
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+                this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
             }
             case FIRE_BEAST -> {
                 this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));

@@ -273,7 +273,7 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
 
         // ── death : wings fold tight, body drops ─────────────────────
         if (entity.deathTime > 0) {
-            float t = Math.min(entity.deathTime / 10.0F, 1.0F);
+            float t = Math.min(entity.deathTime / 8.0F, 1.0F); // 0→1 over 0.4s (visible before fade)
             float collapse = t * t;
             // body pitches forward and rolls
             this.root.xRot = collapse * 0.5F;

@@ -297,7 +297,7 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
 
         // ── death collapse : fire beast slumps, flames wither ─────────
         if (entity.deathTime > 0) {
-            float t = Math.min(entity.deathTime / 10.0F, 1.0F);
+            float t = Math.min(entity.deathTime / 8.0F, 1.0F); // 0→1 over 0.4s (visible before fade)
             float collapse = t * t;
             this.root.xRot = collapse * -0.5F;
             this.root.zRot = collapse * 0.5F;
