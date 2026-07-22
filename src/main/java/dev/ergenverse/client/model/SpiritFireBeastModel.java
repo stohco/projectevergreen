@@ -248,7 +248,9 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
         // ── flame mane flicker : per-segment phase offset ───────────────
         // Rotation flicker + vertical scale pulse = "lickering flame" feel.
         ModelPart[] mane = { this.mane0, this.mane1, this.mane2, this.mane3, this.mane4 };
-        boolean rage = entity.getTarget() != null;
+        // CRON-COMPLETIONIST-13: Check DATA_POSE in addition to getTarget()
+        boolean rage = entity.getTarget() != null
+                || entity.getSpiritPose() == SpiritBeastEntity.POSE_CHARGING;
         float flare = rage ? 0.4F : 0.0F;            // mane flares bigger when raging
         for (int i = 0; i < mane.length; i++) {
             float p = ageInTicks * 0.8F + i * 0.5F;

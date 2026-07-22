@@ -1,5 +1,6 @@
 package dev.ergenverse.entity.ai;
 
+import dev.ergenverse.entity.SpiritBeastEntity;
 import dev.ergenverse.simulation.actor.BeastIntelligence;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -62,6 +63,9 @@ public class SpiritBeastAmbushGoal extends Goal {
         state = 0;
         stateTimer = 0;
         prey = null;
+        if (mob instanceof SpiritBeastEntity beast) {
+            beast.setSpiritPose(SpiritBeastEntity.POSE_STANDING);
+        }
     }
 
     @Override
@@ -76,12 +80,18 @@ public class SpiritBeastAmbushGoal extends Goal {
 
         if (state == 1) {
             // Hiding — hold still, wait for timer
+            if (mob instanceof SpiritBeastEntity beast) {
+                beast.setSpiritPose(SpiritBeastEntity.POSE_ALERT);
+            }
             stateTimer--;
             if (stateTimer <= 0) {
                 state = 2; // leap!
             }
         } else if (state == 2) {
             // Leap toward prey
+            if (mob instanceof SpiritBeastEntity beast) {
+                beast.setSpiritPose(SpiritBeastEntity.POSE_CHARGING);
+            }
             Vec3 leap = prey.position().subtract(mob.position()).normalize().scale(leapSpeed);
             leap = leap.add(0, 0.45D, 0); // arc upward
             mob.setDeltaMovement(leap);

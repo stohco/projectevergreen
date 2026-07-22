@@ -134,6 +134,9 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
         this.head.yRot = netHeadYaw * 0.017453292F;
         this.head.xRot = headPitch * 0.017453292F;
 
+        // CRON-COMPLETIONIST-13: DATA_POSE for grazing posture
+        boolean poseGrazing = entity.getSpiritPose() == SpiritBeastEntity.POSE_GRAZING;
+
         if (limbSwingAmount > 0.05F) {
             // ── HOP : body bounces, ears flap back, legs tuck/extend ──────
             float hop = (float) Math.abs(Math.sin(limbSwing * 0.5F)) * 2.0F * limbSwingAmount;

@@ -213,11 +213,28 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         this.head.yRot = netHeadYaw * 0.017453292F;
         this.head.xRot = headPitch * 0.017453292F;
 
+        // ── CRON-COMPLETIONIST-13: Perched stance via DATA_POSE ──
+        boolean perched = entity.getSpiritPose() == SpiritBeastEntity.POSE_PERCHING
+                && entity.onGround();
+
         // ── flap intensity : faster flap when moving ─────────────────────
         float flapAmp = 0.4F + limbSwingAmount * 0.8F;
         float flap = (float) Math.sin(ageInTicks * 0.6F) * flapAmp;
 
-        if (limbSwingAmount < 0.1F) {
+        if (perched) {
+            // PERCHED : wings fold against body, legs straight down
+            this.leftWing.zRot = -0.7F;   // wings fold flat
+            this.rightWing.zRot = 0.7F;
+            this.leftWing.xRot = 0.6F;    // wings tuck down
+            this.rightWing.xRot = -0.6F;
+            this.leftShoulder.zRot = 0.0F;
+            this.rightShoulder.zRot = 0.0F;
+            this.leftForearm.zRot = 0.0F;
+            this.rightForearm.zRot = 0.0F;
+            // legs stand straight
+            this.leftLeg.xRot = 0.0F;
+            this.rightLeg.xRot = 0.0F;
+        } else if (limbSwingAmount < 0.1F) {
             // GLIDE : wings hold flat with slow rise-fall
             float glide = (float) Math.sin(ageInTicks * 0.15F) * 0.15F;
             this.leftWing.zRot = -0.1F + glide;

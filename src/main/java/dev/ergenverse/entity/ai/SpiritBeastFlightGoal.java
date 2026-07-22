@@ -9,6 +9,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 import java.util.List;
 
+import dev.ergenverse.entity.SpiritBeastEntity;
+
 /**
  * SpiritBeastFlightGoal — true 3D flight for flying beasts (Hawk, future dragons).
  *
@@ -61,6 +63,9 @@ public class SpiritBeastFlightGoal extends Goal {
         pickNewWaypoint();
         waypointCooldown = 100 + mob.getRandom().nextInt(100); // 5-10 seconds of flight
         swoopCooldown = 60;
+        if (mob instanceof SpiritBeastEntity beast) {
+            beast.setSpiritPose(SpiritBeastEntity.POSE_FLYING);
+        }
     }
 
     @Override
@@ -70,6 +75,9 @@ public class SpiritBeastFlightGoal extends Goal {
         // Gentle descent
         mob.setDeltaMovement(mob.getDeltaMovement().add(0, -0.1D, 0));
         mob.hurtMarked = true;
+        if (mob instanceof SpiritBeastEntity beast) {
+            beast.setSpiritPose(SpiritBeastEntity.POSE_PERCHING);
+        }
     }
 
     @Override

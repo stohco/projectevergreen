@@ -1,6 +1,9 @@
 package dev.ergenverse.entity;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.entity.ai.SpiritBeastGrazeGoal;
+import dev.ergenverse.entity.ai.SpiritBeastHuntGoal;
+import dev.ergenverse.entity.ai.SpiritBeastSwimGoal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -8,43 +11,35 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 /**
- * SpiritBeastEntity — base entity for spirit-beast mobs (rabbit, wolf, deer, hawk).
+ * SpiritBeastEntity — base entity for spirit-beast mobs (rabbit, wolf, deer, hawk,
+ * fire_beast, stone_back_boar).
  *
- * <p>This is the unified shell for spirit-beast entities. The {@link BeastType}
- * enum distinguishes the four canon v1 beasts (RABBIT, WOLF, DEER, HAWK).
- * Each type has its own per-species renderer in
+ * <p>CRON-COMPLETIONIST-13: Added DATA_POSE synced pose system (10 constants),
+ * 3 new AI goals (GrazeGoal, HuntGoal, SwimGoal), type-appropriate MoveControls
+ * (FlightMoveControl, WaterBoundMoveControl, SprintMoveControl), and tick()
+ * heuristic pose auto-update.
+ *
+ * <p>Each type has its own per-species renderer in
  * {@link dev.ergenverse.client.render.SpiritBeastRenderers} which uses a
  * custom anatomically-correct model (SpiritWolfModel, SpiritHawkModel, etc.).
- *
- * <h2>Canon</h2>
- * <p>Spirit beasts are animals that have absorbed ambient Qi and developed
- * spiritual nature. Their physical appearance is similar to mortal animals
- * (a Spirit Rabbit looks like a rabbit) but with spiritual markings, faint
- * glows, and (at higher tiers) cultivation. Mortals see "a strange rabbit";
- * cultivators see the spirit beast.
- *
- * <p>v1: four BeastTypes, simple wander AI, no combat yet. The renderer uses
- * the vanilla PigModel (suitable for a quadruped). v2 will add per-type models.
- *
- * <h2>Synced data</h2>
- * <p>{@link #DATA_BEAST_TYPE} is a synced string ("rabbit" | "wolf" | "deer" |
- * "hawk") used by the client renderer to pick the texture.
  */
 public class SpiritBeastEntity extends PathfinderMob {
 
-    /** The four v1 beast types. */
+    /** The v1 beast types. */
     public enum BeastType {
         RABBIT("rabbit"),
         WOLF("wolf"),
@@ -60,7 +55,29 @@ public class SpiritBeastEntity extends PathfinderMob {
             for (BeastType t : values()) if (t.id.equals(id)) return t;
             return RABBIT;
         }
+
+        /** Movement category for MoveControl selection. */
+        public boolean isFlyer()    { return this == HAWK; }
+        public boolean isAquatic()  { return false; /* future: SEA_SERPENT, SOUL_FISH */ }
+        public boolean isGround()   { return !isFlyer() && !isAquatic(); }
     }
+
+    // ── Synced Pose System (DATA_POSE) ─────────────────────────────────────
+    // 10 canonical pose constants. AI goals set the pose; models read it.
+    // This is the bridge between AI state and visual animation.
+    public static final int POSE_STANDING  = 0;
+    public static final int POSE_GRAZING   = 1;
+    public static final int POSE_RESTING    = 2;
+    public static final int POSE_FLYING    = 3;
+    public static final int POSE_SWIMMING  = 4;
+    public static final int POSE_SPRINTING = 5;
+    public static final int POSE_PERCHING  = 6;
+    public static final int POSE_PLAYING   = 7;
+    public static final int POSE_ALERT     = 8;
+    public static final int POSE_CHARGING  = 9;
+
+    private static final EntityDataAccessor<Integer> DATA_POSE =
+            SynchedEntityData.defineId(SpiritBeastEntity.class, EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<String> DATA_BEAST_TYPE =
             SynchedEntityData.defineId(SpiritBeastEntity.class, EntityDataSerializers.STRING);
@@ -85,6 +102,7 @@ public class SpiritBeastEntity extends PathfinderMob {
         super.defineSynchedData();
         this.entityData.define(DATA_BEAST_TYPE, "rabbit");
         this.entityData.define(DATA_CULTIVATION_TIER, 0);
+        this.entityData.define(DATA_POSE, POSE_STANDING);
     }
 
     public BeastType getBeastType() {
@@ -95,12 +113,26 @@ public class SpiritBeastEntity extends PathfinderMob {
         this.entityData.set(DATA_BEAST_TYPE, type.id);
     }
 
+    /** Reassess MoveControl after entityData is fully initialized. */
+    public void reassessMoveControlPublic() {
+        reassessMoveControl();
+    }
+
     public int getCultivationTier() {
         return this.entityData.get(DATA_CULTIVATION_TIER);
     }
 
     public void setCultivationTier(int tier) {
         this.entityData.set(DATA_CULTIVATION_TIER, tier);
+    }
+
+    // ── Pose accessors ──────────────────────────────────────────────────
+    public int getSpiritPose() {
+        return this.entityData.get(DATA_POSE);
+    }
+
+    public void setSpiritPose(int pose) {
+        this.entityData.set(DATA_POSE, pose);
     }
 
     @Override
@@ -112,53 +144,48 @@ public class SpiritBeastEntity extends PathfinderMob {
 
         switch (type) {
             case WOLF -> {
-                this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, true));
+                this.goalSelector.addGoal(1, new SpiritBeastHuntGoal(this, 1.2D));
+                this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, true));
                 this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.8));
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
             }
             case RABBIT -> {
-                // CRON-COMPLETIONIST-3: Rabbit kicks with back legs when cornered.
-                // PanicGoal (flee) is primary, but if cornered it fights.
                 this.goalSelector.addGoal(1, new PanicGoal(this, 1.4));
                 this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.8, true));
+                this.goalSelector.addGoal(4, new SpiritBeastGrazeGoal(this));
                 this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7));
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
             }
             case DEER -> {
-                // CRON-COMPLETIONIST-3: Deer rear up and strike with front hooves.
-                // Primarily flees, but will fight if cornered (canon: spirit deer are
-                // not helpless prey — they have absorbed Qi and gained spiritual nature).
                 this.goalSelector.addGoal(1, new PanicGoal(this, 1.4));
                 this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, true));
+                this.goalSelector.addGoal(3, new SpiritBeastGrazeGoal(this));
                 this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7));
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
             }
             case STONE_BACK_BOAR -> {
-                // CRON-COMPLETIONIST-3: Boar charges and head-butts with stone plate.
-                // A stone-backed boar is aggressive — it has a geological weapon.
-                // PanicGoal is removed; it fights instead of fleeing.
-                this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.1, true));
+                this.goalSelector.addGoal(1, new SpiritBeastHuntGoal(this, 1.1D));
+                this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.1, true));
                 this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 0.7));
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
                 this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
             }
             case HAWK -> {
-                // CRON-COMPLETIONIST-3: Hawk has talon strike (MeleeAttackGoal).
-                // Spirit hawks FLY — the flight goal replaces ground wandering.
-                // Constitution Article I: "If Minecraft conflicts with canon: Minecraft changes."
-                this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
-                this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.SpiritBeastFlightGoal(this, 0.8D));
+                this.goalSelector.addGoal(1, new SpiritBeastHuntGoal(this, 0.8D));
+                this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, true));
+                this.goalSelector.addGoal(3, new dev.ergenverse.entity.ai.SpiritBeastFlightGoal(this, 0.8D));
                 this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0));
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
                 this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
             }
             case FIRE_BEAST -> {
-                this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
+                this.goalSelector.addGoal(1, new SpiritBeastHuntGoal(this, 1.0D));
+                this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, true));
                 this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 0.8));
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
@@ -167,9 +194,6 @@ public class SpiritBeastEntity extends PathfinderMob {
         }
 
         // ── BeastIntelligence-tiered AI (Constitution: 7-tier system) ──
-        // The cultivation tier (0-6+) maps to a BeastIntelligence tier (INSTINCT→OLD_MONSTER).
-        // Higher-tier beasts get territory patrol, ambush, smart flee, rest recovery.
-        // This is the bridge from the simulation layer's BeastIntelligence to actual entity AI.
         dev.ergenverse.simulation.actor.BeastIntelligence tier =
                 dev.ergenverse.entity.ai.BeastIntelligenceGoalFactory.tierFromInt(getCultivationTier());
         dev.ergenverse.entity.ai.BeastIntelligenceGoalFactory.applyBeastGoals(
@@ -187,6 +211,7 @@ public class SpiritBeastEntity extends PathfinderMob {
         super.addAdditionalSaveData(compound);
         compound.putString("BeastType", getBeastType().id);
         compound.putInt("CultivationTier", getCultivationTier());
+        compound.putInt("SpiritPose", getSpiritPose());
     }
 
     @Override
@@ -197,6 +222,38 @@ public class SpiritBeastEntity extends PathfinderMob {
         }
         if (compound.contains("CultivationTier")) {
             setCultivationTier(compound.getInt("CultivationTier"));
+        }
+        if (compound.contains("SpiritPose")) {
+            setSpiritPose(compound.getInt("SpiritPose"));
+        }
+    }
+
+    // ── MoveControl: replace default WalkMoveControl per beast type ───────
+    private void reassessMoveControl() {
+        BeastType type = getBeastType();
+        if (type.isFlyer()) {
+            this.moveControl = new dev.ergenverse.entity.control.FlightMoveControl(this);
+        } else if (type.isAquatic()) {
+            this.moveControl = new dev.ergenverse.entity.control.WaterBoundMoveControl(this);
+        } else {
+            this.moveControl = new dev.ergenverse.entity.control.SprintMoveControl(this);
+        }
+    }
+
+    // ── tick(): auto-update pose as heuristic fallback ─────────────────────
+    @Override
+    public void tick() {
+        super.tick();
+        // Pose auto-update: heuristic fallback when no AI goal is driving pose.
+        // Goals call setSpiritPose() every tick they run, so goal wins (last writer).
+        if (!this.level().isClientSide()) {
+            if (this.isInWater()) {
+                setSpiritPose(POSE_SWIMMING);
+            } else if (!this.onGround()) {
+                setSpiritPose(POSE_FLYING);
+            } else if (this.getDeltaMovement().lengthSqr() > 0.01D) {
+                setSpiritPose(POSE_STANDING);
+            }
         }
     }
 }

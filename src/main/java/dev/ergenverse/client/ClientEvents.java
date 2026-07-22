@@ -46,6 +46,10 @@ public class ClientEvents {
         event.registerLayerDefinition(SpiritBeastModelLayers.SPIRIT_DEER,     SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SPIRIT_DEER));
         event.registerLayerDefinition(SpiritBeastModelLayers.SPIRIT_HAWK,     SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SPIRIT_HAWK));
         event.registerLayerDefinition(SpiritBeastModelLayers.FIRE_BEAST,      SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.FIRE_BEAST));
+        // Eye-only layer for fire beast emissive rendering (CRON-COMPLETIONIST-4).
+        // The main model renders at ambient light; this eye-only model renders
+        // at FULLBRIGHT so only the eyes glow, not the skull/jaw/horns.
+        event.registerLayerDefinition(SpiritBeastModelLayers.FIRE_BEAST_EYES, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.FIRE_BEAST_EYES));
         event.registerLayerDefinition(SpiritBeastModelLayers.STONE_BACK_BOAR, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.STONE_BACK_BOAR));
         event.registerLayerDefinition(SpiritBeastModelLayers.CULTIVATOR_ROBE, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.CULTIVATOR_ROBE));
     }

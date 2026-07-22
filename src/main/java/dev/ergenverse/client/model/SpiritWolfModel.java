@@ -230,7 +230,9 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         this.tailTip.yRot  = (float) Math.sin(ageInTicks * 0.2F + 0.8F) * 0.2F;
 
         // ── combat stance : when targeting, head dips, jaw opens, ears pin ──
-        boolean combat = entity.getTarget() != null;
+        // CRON-COMPLETIONIST-13: Now checks DATA_POSE in addition to getTarget()
+        boolean combat = entity.getTarget() != null
+                || entity.getSpiritPose() == SpiritBeastEntity.POSE_CHARGING;
         if (combat) {
             this.head.xRot += 0.3F;                          // head dips
             this.jaw.xRot = 0.45F;                            // mouth open

@@ -37,6 +37,8 @@ public final class SpiritBeastModelLayers {
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "spirit_hawk"), "main");
     public static final ModelLayerLocation FIRE_BEAST =
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "fire_beast"), "main");
+    public static final ModelLayerLocation FIRE_BEAST_EYES =
+            new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "fire_beast"), "eyes");
     public static final ModelLayerLocation STONE_BACK_BOAR =
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "stone_back_boar"), "main");
     public static final ModelLayerLocation CULTIVATOR_ROBE =
@@ -56,6 +58,7 @@ public final class SpiritBeastModelLayers {
         if (SPIRIT_DEER.equals(location))         return SpiritDeerModel::createBodyLayer;
         if (SPIRIT_HAWK.equals(location))         return SpiritHawkModel::createBodyLayer;
         if (FIRE_BEAST.equals(location))          return SpiritFireBeastModel::createBodyLayer;
+        if (FIRE_BEAST_EYES.equals(location))   return SpiritFireBeastModel::createBodyLayer;
         if (STONE_BACK_BOAR.equals(location))     return StoneBackBoarModel::createBodyLayer;
         if (CULTIVATOR_ROBE.equals(location))     return CultivatorRobeModel::createBodyLayer;
         return null;

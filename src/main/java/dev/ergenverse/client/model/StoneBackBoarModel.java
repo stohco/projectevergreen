@@ -183,7 +183,8 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
     public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
                           float ageInTicks, float netHeadYaw, float headPitch) {
         boolean moving = limbSwingAmount > 0.1F;
-        boolean charging = limbSwingAmount > 0.55F;
+        boolean charging = limbSwingAmount > 0.55F
+                || entity.getSpiritPose() == SpiritBeastEntity.POSE_CHARGING;
 
         // ── head turn ────────────────────────────────────────────────────
         this.head.yRot = Math.max(-0.8F, Math.min(0.8F, netHeadYaw * 0.017453292F));

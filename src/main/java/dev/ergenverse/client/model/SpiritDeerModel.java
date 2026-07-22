@@ -195,6 +195,10 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         boolean moving = limbSwingAmount > 0.1F;
         boolean fleeing = limbSwingAmount > 0.6F;
 
+        // ── CRON-COMPLETIONIST-13: DATA_POSE overrides for graze/alert ──
+        boolean poseGrazing = entity.getSpiritPose() == SpiritBeastEntity.POSE_GRAZING;
+        boolean poseAlert   = entity.getSpiritPose() == SpiritBeastEntity.POSE_ALERT;
+
         // ── walk / flee gait ─────────────────────────────────────────────
         float swingPhase = fleeing ? limbSwing * 1.6F : limbSwing;
         float amp = (fleeing ? 1.3F : 0.8F) * limbSwingAmount;
@@ -232,20 +236,33 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.earLeft.zRot  = -0.4F;
             this.earRight.zRot = 0.4F;
         } else {
-            // IDLE : slow graze / alert cycle
-            float cycle = (float) Math.sin(ageInTicks * 0.05F);
-            if (cycle > 0.0F) {
-                // GRAZE : head dips toward the ground
-                this.head.xRot = 1.2F * cycle;
-                this.neck.xRot = 1.3F;              // neck arches down
+            // IDLE / POSE_GRAZING / POSE_ALERT — driven by DATA_POSE
+            if (poseGrazing) {
+                // GRAZE : head dips toward the ground (driven by GrazeGoal)
+                this.head.xRot = 1.2F;
+                this.neck.xRot = 1.3F;
                 this.tail.xRot = 0.3F;
-            } else {
+            } else if (poseAlert) {
                 // ALERT : head snaps up, ears forward, tail flicks
                 this.head.xRot = -0.3F;
                 this.neck.xRot = 0.8F;
-                this.tail.xRot = -0.5F + (float) Math.sin(ageInTicks * 1.5F) * 0.3F; // flick
+                this.tail.xRot = -0.5F + (float) Math.sin(ageInTicks * 1.5F) * 0.3F;
                 this.earLeft.zRot  = -0.2F;
                 this.earRight.zRot = 0.2F;
+            } else {
+                // Fallback: slow graze / alert cycle when no goal is active
+                float cycle = (float) Math.sin(ageInTicks * 0.05F);
+                if (cycle > 0.0F) {
+                    this.head.xRot = 1.2F * cycle;
+                    this.neck.xRot = 1.3F;
+                    this.tail.xRot = 0.3F;
+                } else {
+                    this.head.xRot = -0.3F;
+                    this.neck.xRot = 0.8F;
+                    this.tail.xRot = -0.5F + (float) Math.sin(ageInTicks * 1.5F) * 0.3F;
+                    this.earLeft.zRot  = -0.2F;
+                    this.earRight.zRot = 0.2F;
+                }
             }
         }
 
