@@ -223,7 +223,7 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         if (resting) {
             // Hawk rests: beak tucks under wing, wings fold tight, legs grip perch
             // CRON-COMPLETIONIST-17: Added breathing, occasional head micro-adjust
-            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.03F;
+            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.12F;
             float headShift = (ageInTicks % 100 < 3) ? (float) Math.sin(ageInTicks * 1.5F) * 0.05F : 0.0F;
             this.root.y = -1.0F + breath;
             this.head.xRot = 0.8F + headShift;           // beak tucks down
@@ -265,6 +265,9 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         float flapAmp = 0.4F + limbSwingAmount * 0.8F;
         float flap = (float) Math.sin(ageInTicks * 0.6F) * flapAmp;
 
+        // CRON-19: Wing/flight branches now skip when resting/swimming, so those
+        // poses' wing rotations are not overwritten by glide/flap.
+        if (!resting && !swimming) {
         if (sprinting) {
             // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — fast diving stoop ──
             this.root.xRot = 0.4F;                    // body pitches steeply down
@@ -322,6 +325,7 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
             this.leftLeg.xRot = -0.4F * limbSwingAmount;
             this.rightLeg.xRot = -0.4F * limbSwingAmount;
         }
+        } // end wing/flight guard (!resting && !swimming)
 
         // ── banking : gentle roll on the whole body ──────────────────────
         this.root.zRot = (float) Math.sin(ageInTicks * 0.1F) * 0.15F;

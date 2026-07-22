@@ -235,7 +235,7 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
         if (resting) {
             // Fire beast rests: body lowers, legs fold, flames shrink to embers
             // CRON-COMPLETIONIST-17: Added breathing, ember pulse
-            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.03F;
+            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.12F;
             float emberPulse = (float) Math.sin(ageInTicks * 0.15F) * 0.05F;
             this.root.y = -2.0F + breath;
             this.frontLeftThigh.xRot  = -0.6F;
@@ -308,30 +308,35 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
             this.head.xRot = -0.3F;
             this.jaw.xRot = 0.6F;
             this.tailBase.yRot = (float) Math.sin(ageInTicks * 0.5F) * 0.3F;
-        }
+        } // end of resting/swimming/sprinting if-else chain
 
-        // ── walk / run gait ──────────────────────────────────────────────
-        boolean running = limbSwingAmount > 0.5F;
-        float swingPhase = running ? limbSwing * 1.5F : limbSwing;
-        float amp = (running ? 1.3F : 0.8F) * limbSwingAmount;
-        float phase = swingPhase * 0.6662F;
+        // ── walk / run gait + mane flicker : ONLY when not in a special pose ──
+        // CRON-19: Previously this code ran UNCONDITIONALLY after the pose branches,
+        // overwriting leg rotations set by resting/swimming/sprinting. Now guarded.
+        if (!resting && !swimming && !sprinting) {
+            boolean running = limbSwingAmount > 0.5F;
+            float swingPhase = running ? limbSwing * 1.5F : limbSwing;
+            float amp = (running ? 1.3F : 0.8F) * limbSwingAmount;
+            float phase = swingPhase * 0.6662F;
 
-        this.frontLeftThigh.xRot  = (float) Math.cos(phase)            * amp;
-        this.frontRightThigh.xRot = (float) Math.cos(phase + Math.PI)  * amp;
-        this.backLeftThigh.xRot   = (float) Math.cos(phase + Math.PI)  * amp;
-        this.backRightThigh.xRot  = (float) Math.cos(phase)            * amp;
+            this.frontLeftThigh.xRot  = (float) Math.cos(phase)            * amp;
+            this.frontRightThigh.xRot = (float) Math.cos(phase + Math.PI)  * amp;
+            this.backLeftThigh.xRot   = (float) Math.cos(phase + Math.PI)  * amp;
+            this.backRightThigh.xRot  = (float) Math.cos(phase)            * amp;
 
-        this.frontLeftShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase))            * 0.6F * limbSwingAmount;
-        this.frontRightShin.xRot = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI))  * 0.6F * limbSwingAmount;
-        this.backLeftShin.xRot   = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI))  * 0.6F * limbSwingAmount;
-        this.backRightShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase))            * 0.6F * limbSwingAmount;
+            this.frontLeftShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase))            * 0.6F * limbSwingAmount;
+            this.frontRightShin.xRot = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI))  * 0.6F * limbSwingAmount;
+            this.backLeftShin.xRot   = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI))  * 0.6F * limbSwingAmount;
+            this.backRightShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase))            * 0.6F * limbSwingAmount;
 
-        // ── flame mane flicker : per-segment phase offset ───────────────
-        // Rotation flicker + vertical scale pulse = "lickering flame" feel.
-        // CRON-COMPLETIONIST-13: Check DATA_POSE in addition to getTarget()
+            // ── breathing (walk idle) ────────────────────────────────────
+            this.root.y = (float) Math.sin(ageInTicks * 0.1F) * 0.1F;
+        } // end walk-gait guard
+
+        // ── flame mane flicker : per-segment phase offset (runs in ALL poses) ──
         boolean rage = entity.getTarget() != null
                 || entity.getSpiritPose() == SpiritBeastEntity.POSE_CHARGING;
-        float flare = rage ? 0.4F : 0.0F;            // mane flares bigger when raging
+        float flare = rage ? 0.4F : 0.0F;
         for (int i = 0; i < mane.length; i++) {
             float p = ageInTicks * 0.8F + i * 0.5F;
             mane[i].yRot   = (float) Math.sin(p) * 0.10F;
@@ -347,9 +352,6 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
         this.flameTip.yScale    = 1.0F + (float) Math.sin(tf) * 0.2F + flare;
         this.tailBase.yRot      = (float) Math.sin(ageInTicks * 0.2F) * 0.2F;
 
-        // ── breathing ────────────────────────────────────────────────────
-        this.root.y = (float) Math.sin(ageInTicks * 0.1F) * 0.1F;
-
         // ── rage roar : head up, jaw wide ────────────────────────────────
         if (rage) {
             this.head.xRot -= 0.4F;             // head rears up
@@ -363,7 +365,7 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
         if (atk > 0.0F) {
             float lunge = (float) Math.sin(atk * Math.PI);
             this.root.xRot = -lunge * 0.7F;                 // body pitches forward
-            this.head.xRot -= lunge * 1.0F;                 // head snaps forward aggressively
+            this.head.xRot = -lunge * 1.0F;                  // CRON-19: override, not -=
             this.jaw.xRot = lunge * 0.8F;                    // jaw wide open
             // front legs push, back legs anchor
             this.frontLeftThigh.xRot  += lunge * 0.5F;

@@ -147,7 +147,7 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
         if (resting) {
             // Rabbit rests: body flattens, ears relax to sides, legs tucked
             // CRON-COMPLETIONIST-17: Added breathing, nose twitch, ear micro-movement
-            float breath = (float) Math.sin(ageInTicks * 0.1F) * 0.03F;
+            float breath = (float) Math.sin(ageInTicks * 0.1F) * 0.12F;
             float noseTwitch = (float) Math.sin(ageInTicks * 1.5F) * 0.02F;
             float earShift = (float) Math.sin(ageInTicks * 0.15F) * 0.05F;
             this.root.y = -3.0F + breath;
@@ -205,7 +205,19 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backLegRight.xRot  =  0.6F * limbSwingAmount;
             // head pitches slightly forward in the leap
             this.head.xRot += -0.2F * limbSwingAmount;
-        } else {
+        } else if (poseGrazing && !sprinting && !swimming && !resting) {
+            // ── CRON-19: GRAZE — rabbit nibbles at ground level ─────────
+            float nibble = (float) Math.sin(ageInTicks * 0.8F) * 0.1F;
+            this.root.y = -0.5F;            // body lowers slightly
+            this.head.xRot = 0.6F + nibble; // head dips to ground with nibble motion
+            this.earLeft.zRot  = (float) Math.sin(ageInTicks * 0.3F) * 0.15F;
+            this.earRight.zRot = (float) Math.sin(ageInTicks * 0.3F + 0.7F) * 0.15F;
+            this.tail.yRot = (float) Math.sin(ageInTicks * 0.6F) * 0.2F;
+            this.frontLegLeft.xRot  = -0.1F;
+            this.frontLegRight.xRot = -0.1F;
+            this.backLegLeft.xRot   = 0.1F;
+            this.backLegRight.xRot  = 0.1F;
+        } else if (!sprinting && !swimming && !resting) {
             // ── IDLE : nose twitches, ears listen, tail wiggles ───────────
             this.root.y = 0.0F;
             // nose twitch — small rapid jitter on head pitch

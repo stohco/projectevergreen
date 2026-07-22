@@ -199,7 +199,7 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
         if (resting) {
             // Boar rests: heavy body lowers, thick legs fold, head on ground
             // CRON-COMPLETIONIST-17: Added breathing, snout micro-movement
-            float breath = (float) Math.sin(ageInTicks * 0.06F) * 0.04F;
+            float breath = (float) Math.sin(ageInTicks * 0.06F) * 0.12F;
             float snoutShift = (float) Math.sin(ageInTicks * 0.12F) * 0.03F;
             this.root.y = -2.5F + breath;
             this.root.xRot = 0.05F;
@@ -251,7 +251,10 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.tail.xRot = -0.1F;
         }
 
-        // ── walk / charge gait : slow & heavy by default ─────────────────
+        // ── walk / charge gait : slow & heavy — ONLY when not in special pose ──
+        // CRON-19: Previously ran UNCONDITIONALLY, overwriting leg rotations from
+        // resting/swimming/sprinting branches. Now guarded.
+        if (!resting && !swimming && !sprinting) {
         float swingPhase = charging ? limbSwing * 1.8F : limbSwing;
         float freq = charging ? 0.8F : 0.5F;            // slower base frequency
         float amp = (charging ? 1.1F : 0.6F) * limbSwingAmount;
@@ -285,6 +288,7 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.head.xRot = 1.0F;
             this.tail.xRot = 0.4F + (float) Math.sin(ageInTicks * 0.4F) * 0.2F;
         }
+        } // end walk-gait guard
 
         // ── attack lunge : boar head-butts, stone plate shifts ─────────
         float atk = entity.attackAnim;

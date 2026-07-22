@@ -223,9 +223,7 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
 
         if (resting) {
             // ── POSE_RESTING : wolf curls up on the ground ─────────────
-            // CRON-COMPLETIONIST-17: Added breathing oscillation, ear twitches,
-            // and slow tail sway so resting is not a frozen mannequin.
-            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.05F;
+            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.12F;
             float earTwitch = (ageInTicks % 60 < 5) ? (float) Math.sin(ageInTicks * 2.0F) * 0.1F : 0.0F;
             float tailSway = (float) Math.sin(ageInTicks * 0.12F) * 0.08F;
             // Body lowers with breathing
@@ -254,7 +252,7 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
             // Ears with occasional twitch
             this.earLeft.zRot  = -0.2F + earTwitch;
             this.earRight.zRot = 0.2F - earTwitch;
-            // CRON-18: Reset spine flex so it doesn't leak from walk/run
+            // Spine neutral during rest (chest/hip at default)
             this.bodyChest.xRot = 0.0F;
             this.bodyHip.xRot = 0.0F;
         } else if (swimming) {
@@ -321,9 +319,6 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
             this.tailBase.yRot = 0.0F;
             this.tailMid.yRot  = 0.0F;
             this.tailTip.yRot  = 0.0F;
-            // CRON-18: Reset spine flex so it doesn't leak from sprint
-            this.bodyChest.xRot = 0.0F;
-            this.bodyHip.xRot = 0.0F;
         } else {
             // ── walk / run gait : diagonal trot ──────────────────────────────
             boolean running = limbSwingAmount > 0.5F;
@@ -347,41 +342,52 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
             this.bodyChest.xRot = spineFlex;
             this.bodyHip.xRot  = -spineFlex * 0.5F;
 
-            // ── idle breathing + spine bob ──────────────────────────────────
+            // ── idle breathing + spine bob + neck walk animation ──────────
             this.root.y = (float) Math.sin(ageInTicks * 0.1F) * 0.1F;
+            // CRON-19: Neck bobs with gait — was static at baked -0.4 rad
+            this.neck.xRot = -0.4F + (float) Math.sin(phase) * 0.06F * limbSwingAmount;
+            this.neck.yRot = (float) Math.sin(phase * 0.5F) * 0.04F * limbSwingAmount;
 
             // ── tail sway ────────────────────────────────────────────────────
             this.tailBase.yRot = (float) Math.sin(ageInTicks * 0.2F) * 0.3F;
             this.tailMid.yRot  = (float) Math.sin(ageInTicks * 0.2F + 0.4F) * 0.2F;
             this.tailTip.yRot  = (float) Math.sin(ageInTicks * 0.2F + 0.8F) * 0.2F;
 
-            // ── combat stance : when targeting, head dips, jaw opens, ears pin ──
-            boolean combat = entity.getTarget() != null
-                    || entity.getSpiritPose() == SpiritBeastEntity.POSE_CHARGING;
-            if (combat) {
-                this.head.xRot += 0.3F;
-                this.jaw.xRot = 0.45F;
+            // ── attack lunge (BEFORE combat so lunge overrides combat head) ──
+            float atk = entity.attackAnim;
+            boolean lunging = false;
+            if (atk > 0.0F) {
+                lunging = true;
+                float lunge = (float) Math.sin(atk * Math.PI);
+                this.root.xRot = -lunge * 0.6F;
+                this.head.xRot = -lunge * 0.8F;  // CRON-19: override, not -=
+                this.jaw.xRot = lunge * 0.5F;     // CRON-19: override, not +=
                 this.earLeft.zRot  = -0.6F;
                 this.earRight.zRot = 0.6F;
                 this.tailBase.xRot = 0.9F;
-            } else {
-                this.jaw.xRot = 0.0F;
-                this.earLeft.zRot  = -0.3F;
-                this.earRight.zRot = 0.3F;
-                this.tailBase.xRot = 0.3F;
-            }
-
-            // ── attack lunge ────────────────────────────────────────────────
-            float atk = entity.attackAnim;
-            if (atk > 0.0F) {
-                float lunge = (float) Math.sin(atk * Math.PI);
-                this.root.xRot = -lunge * 0.6F;
-                this.head.xRot -= lunge * 0.8F;
-                this.jaw.xRot += lunge * 0.5F;
                 this.frontLeftThigh.xRot  += lunge * 0.4F;
                 this.frontRightThigh.xRot += lunge * 0.4F;
                 this.backLeftThigh.xRot   -= lunge * 0.3F;
                 this.backRightThigh.xRot  -= lunge * 0.3F;
+            }
+
+            // ── combat stance : when targeting, head dips, jaw opens, ears pin ──
+            // CRON-19: Only apply combat if NOT lunging (lunge overrides combat)
+            if (!lunging) {
+                boolean combat = entity.getTarget() != null
+                        || entity.getSpiritPose() == SpiritBeastEntity.POSE_CHARGING;
+                if (combat) {
+                    this.head.xRot += 0.3F;
+                    this.jaw.xRot = 0.45F;
+                    this.earLeft.zRot  = -0.6F;
+                    this.earRight.zRot = 0.6F;
+                    this.tailBase.xRot = 0.9F;
+                } else {
+                    this.jaw.xRot = 0.0F;
+                    this.earLeft.zRot  = -0.3F;
+                    this.earRight.zRot = 0.3F;
+                    this.tailBase.xRot = 0.3F;
+                }
             }
         }
 

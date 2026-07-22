@@ -202,7 +202,7 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         if (resting) {
             // Deer rests: body lowers, legs fold under, neck curls, head on ground
             // CRON-COMPLETIONIST-17: Added breathing, ear twitch, tail micro-sway
-            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.04F;
+            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.12F;
             float earTwitch = (ageInTicks % 80 < 4) ? (float) Math.sin(ageInTicks * 1.8F) * 0.08F : 0.0F;
             float tailSway = (float) Math.sin(ageInTicks * 0.1F) * 0.06F;
             this.root.y = -2.0F + breath;
@@ -289,9 +289,9 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         this.root.xRot = spineFlex;
 
         // ── head behaviour ───────────────────────────────────────────────
-        // neck base tilt — neck already tilted up by 1.0 rad in the pose;
-        // we add a small bob.
-        this.neck.xRot = 1.0F + (float) Math.sin(ageInTicks * 0.1F) * 0.03F;
+        // CRON-19: Neck bobs with walk cycle (was static sin(age) bob)
+        this.neck.xRot = 1.0F + (float) Math.sin(phase) * 0.04F * limbSwingAmount;
+        this.neck.yRot = (float) Math.sin(phase * 0.5F) * 0.03F * limbSwingAmount;
 
         float yaw = netHeadYaw * 0.017453292F;
         this.head.yRot = Math.max(-0.8F, Math.min(0.8F, yaw));
