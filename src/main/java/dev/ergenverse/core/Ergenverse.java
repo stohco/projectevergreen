@@ -188,6 +188,8 @@ public final class Ergenverse {
         ErgenverseBlocks.register(modEventBus);
         dev.ergenverse.item.ErgenverseItems.register(modEventBus);
         EREntityTypes.ENTITY_TYPES.register(modEventBus);
+        // Projectile entities (flying sword qi-blade) — registered alongside other entity types.
+        dev.ergenverse.entity.projectile.ModProjectiles.PROJECTILES.register(modEventBus);
 
         // ── Workstation systems: Alchemy Furnace block entity + menu types.
         //    Block entities MUST be registered AFTER their owning blocks

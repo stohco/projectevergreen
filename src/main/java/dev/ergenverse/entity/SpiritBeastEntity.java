@@ -104,10 +104,10 @@ public class SpiritBeastEntity extends PathfinderMob {
     @Override
     protected void registerGoals() {
         BeastType type = getBeastType();
-        
+
         // Common to all: float in water
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        
+
         switch (type) {
             case WOLF -> {
                 this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, true));
@@ -121,6 +121,10 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
             }
             case HAWK -> {
+                // Spirit hawks FLY — the flight goal replaces ground wandering.
+                // Constitution Article I: "If Minecraft conflicts with canon: Minecraft changes."
+                // A hawk that walks is wrong; a hawk that flies is canon.
+                this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.SpiritBeastFlightGoal(this, 0.8D));
                 this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0));
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
             }
@@ -132,6 +136,15 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
             }
         }
+
+        // ── BeastIntelligence-tiered AI (Constitution: 7-tier system) ──
+        // The cultivation tier (0-6+) maps to a BeastIntelligence tier (INSTINCT→OLD_MONSTER).
+        // Higher-tier beasts get territory patrol, ambush, smart flee, rest recovery.
+        // This is the bridge from the simulation layer's BeastIntelligence to actual entity AI.
+        dev.ergenverse.simulation.actor.BeastIntelligence tier =
+                dev.ergenverse.entity.ai.BeastIntelligenceGoalFactory.tierFromInt(getCultivationTier());
+        dev.ergenverse.entity.ai.BeastIntelligenceGoalFactory.applyBeastGoals(
+                this, tier, this.goalSelector, this.targetSelector);
     }
 
     @Override

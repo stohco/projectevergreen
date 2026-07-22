@@ -111,7 +111,18 @@ public final class CanonGeographyPlacer {
                         WangFamilyVillageBuilder.build(level);
                     }
                 }
-                case "heng_yue_sect" -> buildHengYueSectMarker(level, x, z, settlement);
+                case "heng_yue_sect" -> {
+                    // Full hand-built Heng Yue Sect (恒岳派) — Wang Lin's first cultivation sect.
+                    // Constitution: the world is completely hand-crafted, NOT a block-swap script.
+                    // Every block placed intentionally in Java via HengYueSectBuilder.
+                    int hengYueY = level.getHeightmapPos(
+                            net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                            new BlockPos(x, 0, z)).getY();
+                    BlockPos center = new BlockPos(x, hengYueY, z);
+                    if (!dev.ergenverse.spawn.HengYueSectBuilder.isAlreadyBuilt(level, center)) {
+                        dev.ergenverse.spawn.HengYueSectBuilder.build(level, center);
+                    }
+                }
                 case "teng_city" -> buildTengCityMarker(level, x, z, settlement);
                 case "zhao_capital" -> buildZhaoCapitalMarker(level, x, z, settlement);
                 default -> buildSettlementMarker(level, x, z, settlement);

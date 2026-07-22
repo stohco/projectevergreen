@@ -315,6 +315,22 @@ public class EntityCultivator extends PathfinderMob {
         this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.CognitionDrivenGoal(this));
         this.goalSelector.addGoal(7, new net.minecraft.world.entity.ai.goal.RandomStrollGoal(this, 0.35D));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+
+        // ── Combat AI (Constitution: cultivators must fight, not just die) ──
+        // Prior to these goals, EntityCultivator had ZERO combat capability —
+        // a Nascent Soul elder would stand still while a zombie punched it to death.
+        // CultivatorCombatGoal: melee (realm-scaled damage) + pursuit.
+        // CultivatorSwordQiGoal: ranged sword-qi projectile (Qi Condensation+).
+        // Both claim MOVE+LOOK, so they preempt wandering/cognition when a target exists.
+        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.CultivatorCombatGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.CultivatorSwordQiGoal(this));
+
+        // ── Target selectors — WITHOUT these, getTarget() is always null and combat goals never fire ──
+        // HurtByTargetGoal: retaliate when attacked (canon: a cultivator does not stand idle when struck).
+        // NearestAttackableTargetGoal(Monster): defend the sect against hostile mobs (zombies, skeletons, etc.).
+        this.targetSelector.addGoal(1, new net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(
+                this, net.minecraft.world.entity.monster.Monster.class, true));
     }
 
     // ═══════════════════════════════════════════════════════════════════

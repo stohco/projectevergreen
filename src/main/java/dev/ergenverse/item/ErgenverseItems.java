@@ -95,6 +95,61 @@ public final class ErgenverseItems {
     public static final RegistryObject<Item> JADE_SLIP_BLANK = ITEMS.register("jade_slip_blank",
             () -> new Item(new Item.Properties()));
 
+    // ── Real-mechanic items (Constitution: items must have real mechanics, not generic stubs) ──
+    // Flying swords: right-click launches a homing qi-blade projectile. Left-click = melee.
+    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> WEALTH_FLYING_SWORD =
+            ITEMS.register("wealth_flying_sword", () -> new dev.ergenverse.item.FlyingSwordItem(8.0F,
+                    new Item.Properties().durability(500).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> CORE_TREASURE_SWORD =
+            ITEMS.register("core_treasure_sword", () -> new dev.ergenverse.item.FlyingSwordItem(14.0F,
+                    new Item.Properties().durability(1200).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> BLOOD_SLAUGHTER_SWORD =
+            ITEMS.register("blood_slaughter_sword", () -> new dev.ergenverse.item.FlyingSwordItem(20.0F,
+                    new Item.Properties().durability(2000).rarity(net.minecraft.world.item.Rarity.EPIC)));
+
+    // Talismans: single-use, right-click deploys the effect, consumed on use.
+    public static final RegistryObject<dev.ergenverse.item.TalismanItem> FIREBALL_TALISMAN =
+            ITEMS.register("fireball_talisman", () -> new dev.ergenverse.item.TalismanItem(
+                    dev.ergenverse.item.TalismanType.FIREBALL, new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<dev.ergenverse.item.TalismanItem> BARRIER_TALISMAN =
+            ITEMS.register("barrier_talisman", () -> new dev.ergenverse.item.TalismanItem(
+                    dev.ergenverse.item.TalismanType.BARRIER, new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<dev.ergenverse.item.TalismanItem> LIGHTNING_TALISMAN =
+            ITEMS.register("lightning_talisman", () -> new dev.ergenverse.item.TalismanItem(
+                    dev.ergenverse.item.TalismanType.LIGHTNING, new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<dev.ergenverse.item.TalismanItem> SHIELD_TALISMAN =
+            ITEMS.register("shield_talisman", () -> new dev.ergenverse.item.TalismanItem(
+                    dev.ergenverse.item.TalismanType.SHIELD, new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<dev.ergenverse.item.TalismanItem> SWORD_QI_TALISMAN =
+            ITEMS.register("sword_qi_talisman", () -> new dev.ergenverse.item.TalismanItem(
+                    dev.ergenverse.item.TalismanType.SWORD_QI, new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<dev.ergenverse.item.TalismanItem> SPEED_BOOST_TALISMAN =
+            ITEMS.register("speed_boost_talisman", () -> new dev.ergenverse.item.TalismanItem(
+                    dev.ergenverse.item.TalismanType.SPEED_BOOST, new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<dev.ergenverse.item.TalismanItem> LIGHT_TALISMAN =
+            ITEMS.register("light_talisman", () -> new dev.ergenverse.item.TalismanItem(
+                    dev.ergenverse.item.TalismanType.LIGHT, new Item.Properties().stacksTo(16)));
+
+    // Spirit pills: consumed via eat animation, apply realm-appropriate buffs.
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> QI_GATHERING_PILL_REAL =
+            ITEMS.register("qi_gathering_pill_real", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.QI_GATHERING, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> FOUNDATION_PILL_REAL =
+            ITEMS.register("foundation_pill_real", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.FOUNDATION, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> PURIFICATION_PILL_REAL =
+            ITEMS.register("purification_pill_real", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.PURIFICATION, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> SOUL_MENDING_PILL_REAL =
+            ITEMS.register("soul_mending_pill_real", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.SOUL_MENDING, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> BLOOD_SOUL_PILL =
+            ITEMS.register("blood_soul_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.BLOOD_SOUL, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> MINOR_HEALING_PILL =
+            ITEMS.register("minor_healing_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.MINOR_HEALING, new Item.Properties().stacksTo(16)));
+
 
     // ── Spawn Eggs ────────────────────────────────────────────────────
     public static final RegistryObject<Item> SPIRIT_RABBIT_SPAWN_EGG = ITEMS.register("spirit_rabbit_spawn_egg",

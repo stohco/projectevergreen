@@ -65,6 +65,11 @@ public class ClientEvents {
         event.registerEntityRenderer(EREntityTypes.SPIRIT_HAWK.get(),      SpiritBeastRenderers.HawkRenderer::new);
         event.registerEntityRenderer(EREntityTypes.FIRE_BEAST.get(),       SpiritBeastRenderers.FireBeastRenderer::new);
         event.registerEntityRenderer(EREntityTypes.STONE_BACK_BOAR.get(),  SpiritBeastRenderers.BoarRenderer::new);
+
+        // Flying sword projectile (launched by FlyingSwordItem). Invisible except
+        // for its particle trail — the renderer is a no-op shell.
+        event.registerEntityRenderer(dev.ergenverse.entity.projectile.ModProjectiles.FLYING_SWORD.get(),
+                dev.ergenverse.client.render.FlyingSwordProjectileRenderer::new);
     }
 
     /**
