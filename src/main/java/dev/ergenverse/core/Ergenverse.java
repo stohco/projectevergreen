@@ -216,6 +216,8 @@ public final class Ergenverse {
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.HistoryCommand.class);
         // Art XLII/XLIII: WorldChronicle (living history) + CanonDivergenceRecorder (canon-vs-actual).
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ChronicleCommand.class);
+        // WorldSimCommand: /ergen worldsim — debug window into the macro simulation.
+        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.WorldSimCommand.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.history.HistoryEvents.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.SectMissionInteraction.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.LectureInteraction.class);
@@ -341,8 +343,11 @@ public final class Ergenverse {
         CausalEcology.tickAll();
 
         // Loop B: WorldStateEngine — every 24000 ticks (1 MC day = 1 sim day)
+        // Advances migrations (waypoint movement + beast spawns), ecosystems (seasonal state),
+        // civilizations (recruitment/economy), and opportunities (aging toward maturity).
+        // All advances fire events on the WorldEventBus → auto-chronicled + observable.
         if (ticks % 24000 == 0) {
-            dev.ergenverse.simulation.WorldStateEngine.tick();
+            dev.ergenverse.simulation.WorldStateEngine.tick(overworld);
         }
 
         // Loop C: ReificationScan — every 100 ticks (5 sec proximity scan)

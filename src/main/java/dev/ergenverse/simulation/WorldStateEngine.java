@@ -5,7 +5,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.cultivation.RealmId;
+import dev.ergenverse.entity.EREntityTypes;
+import dev.ergenverse.entity.MosquitoSwarmEntity;
+import dev.ergenverse.entity.SpiritBeastEntity;
 import dev.ergenverse.perception.PerceptionTier;
+import dev.ergenverse.simulation.event.EnergyType;
+import dev.ergenverse.simulation.event.WorldEventBus;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,6 +87,12 @@ public final class WorldStateEngine {
     /** The current world tick. 1 tick = 1 in-game day. */
     private static long worldTick = 0;
 
+    /** The current server level (set at the start of each tick()). */
+    private static ServerLevel currentLevel = null;
+
+    /** Ticks per in-game year (365 days). Used for opportunity aging. */
+    private static final long TICKS_PER_YEAR = 365L;
+
     /** The current season. */
     public enum Season {
         SPRING("Spring", "万物生"),
@@ -105,16 +118,23 @@ public final class WorldStateEngine {
     /** Get the current season. */
     public static Season getCurrentSeason() { return currentSeason; }
 
-    /** Advance the world by one tick (one day). */
-    public static void tick() {
+    /** Advance the world by one tick (one day). Requires the server level for event dispatch + beast spawning. */
+    public static void tick(ServerLevel level) {
         // Lazy-load data on first tick (idempotent)
         WorldStateDataLoader.loadOnce();
+        currentLevel = level;
 
         worldTick++;
         // Season changes every 91 ticks (~3 months)
         if (worldTick % 91 == 0) {
+            Season prev = currentSeason;
             currentSeason = currentSeason.next();
-            Ergenverse.LOGGER.debug("World State Engine: season changed to {}", currentSeason.name);
+            Ergenverse.LOGGER.info("[WorldStateEngine] Season changed: {} -> {} (tick {})",
+                    prev.name, currentSeason.name, worldTick);
+            // Fire a global season-change event so subscribers (ecology, agriculture, etc.) can react.
+            WorldEventBus.publishGlobal("season.change", EnergyType.QI, 0.5f,
+                    "The season has turned to " + currentSeason.name + ".",
+                    "INFERRED — seasonal rotation", worldTick);
         }
         // Execute per-tick subsystem advances
         advanceTimeEvents();
@@ -124,16 +144,21 @@ public final class WorldStateEngine {
         advanceOpportunities();
         advanceProvenance();
         advanceMacroTerrain();
-    }
 
-    /** Advance the world by N ticks. */
-    public static void tick(int days) {
-        for (int i = 0; i < days; i++) {
-            tick();
+        // Persist the runtime sim state once per tick.
+        if (currentLevel != null) {
+            WorldSimState.persist(currentLevel);
         }
     }
 
-    // ─── Per-Tick Subsystem Advances (stubs — full impl is next phase) ───
+    /** Advance the world by N ticks. */
+    public static void tick(ServerLevel level, int days) {
+        for (int i = 0; i < days; i++) {
+            tick(level);
+        }
+    }
+
+    // ─── Per-Tick Subsystem Advances ───
 
     /**
      * Advance time events: check triggers, apply effects.
@@ -152,49 +177,358 @@ public final class WorldStateEngine {
     }
 
     /**
-     * Advance migrations: move waypoints, spawn markets.
+     * Advance migrations: move waypoints, fire arrival events, spawn beasts.
      * Reads data/ergenverse/migrations/*.json
+     *
+     * <p>Each migration has a list of waypoints, each with a duration_days.
+     * Each tick (= 1 day), we increment daysAtWaypoint. When it exceeds
+     * duration_days, the migration advances to the next waypoint (wrapping
+     * around), fires a {@code migration.arrived} event on the WorldEventBus,
+     * and spawns 2-3 beasts of the migration's species near the waypoint
+     * location (if a player is online to observe).
      */
     private static void advanceMigrations() {
         Map<String, JsonObject> migrations = WorldStateDataLoader.getSubsystem("migrations");
-        if (migrations.isEmpty()) return;
-        // Full migration waypoint advancement is a future task.
-        // The data is loaded and queryable; the tick does not yet move waypoints.
+        if (migrations.isEmpty() || currentLevel == null) return;
+        WorldSimState sim = WorldSimState.get(currentLevel);
+
+        for (Map.Entry<String, JsonObject> entry : migrations.entrySet()) {
+            String migrationId = entry.getKey();
+            JsonObject data = entry.getValue();
+            JsonArray waypoints = data.getAsJsonArray("waypoints");
+            if (waypoints == null || waypoints.size() == 0) continue;
+
+            int currentIdx = sim.getMigrationWaypointIndex(migrationId);
+            int days = sim.incrementMigrationDays(migrationId);
+
+            JsonObject currentWaypoint = waypoints.get(currentIdx).getAsJsonObject();
+            int duration = currentWaypoint.has("duration_days")
+                    ? currentWaypoint.get("duration_days").getAsInt() : 30;
+
+            if (days >= duration) {
+                // Advance to next waypoint (wrap around)
+                int nextIdx = (currentIdx + 1) % waypoints.size();
+                sim.advanceMigrationWaypoint(migrationId, nextIdx);
+                JsonObject nextWaypoint = waypoints.get(nextIdx).getAsJsonObject();
+                String pointName = nextWaypoint.has("point")
+                        ? nextWaypoint.get("point").getAsString() : "unknown";
+                String season = nextWaypoint.has("season")
+                        ? nextWaypoint.get("season").getAsString() : "";
+                String species = data.has("species")
+                        ? data.get("species").getAsString() : "spirit_wolf";
+                String migrationName = data.has("name")
+                        ? data.get("name").getAsString() : migrationId;
+
+                // Fire the migration.arrived event — this gets chronicled automatically.
+                String desc = String.format("%s has arrived at %s (%s). The beasts move.",
+                        migrationName, pointName, season);
+                BlockPos spawnPos = resolveWaypointCoords(pointName);
+                if (spawnPos != null) {
+                    WorldEventBus.publish("migration.arrived", EnergyType.PHYSICAL,
+                            spawnPos, 0.6f, desc, "INFERRED — migration cycle", worldTick);
+                    // Spawn 2-3 beasts of the migration's species at the waypoint.
+                    spawnMigrationBeasts(currentLevel, species, spawnPos);
+                } else {
+                    WorldEventBus.publishGlobal("migration.arrived", EnergyType.SOCIAL,
+                            0.6f, desc, "INFERRED — migration cycle", worldTick);
+                }
+
+                Ergenverse.LOGGER.info("[WorldStateEngine] Migration {} advanced to waypoint {} ({}) — spawned beasts.",
+                        migrationId, nextIdx, pointName);
+            }
+        }
     }
 
     /**
-     * Advance ecosystems: apply seasonal state, adjust populations.
+     * Resolve a waypoint point-name (e.g. "mosquito_valley") to world coordinates.
+     * Uses the same coordinates as TerritorySeeder. Returns null if unknown.
+     */
+    private static BlockPos resolveWaypointCoords(String pointName) {
+        switch (pointName) {
+            case "mosquito_valley":           return new BlockPos(120, 64, -380);
+            case "heng_yue_mountain":         return new BlockPos(-240, 120, 400);
+            case "sea_of_devils":             return new BlockPos(800, 64, -1200);
+            case "ancient_god_battlefield":   return new BlockPos(-1600, 80, 1600);
+            case "suzaku_tomb":               return new BlockPos(0, 64, 2400);
+            case "zhao_country":              return new BlockPos(-400, 70, 100);
+            case "approaching_battlefield":   return new BlockPos(400, 64, -800);
+            case "battlefield_aftermath":     return new BlockPos(500, 64, -900);
+            default: return null;
+        }
+    }
+
+    /**
+     * Spawn 2-3 spirit beasts of the given species near the given position.
+     * This is the VISUAL observable proof that a migration arrived.
+     */
+    private static void spawnMigrationBeasts(ServerLevel level, String species, BlockPos center) {
+        // Only spawn if a player is online to observe (saves CPU when no one is watching).
+        if (level.players().isEmpty()) return;
+
+        int count = 2 + level.getRandom().nextInt(2); // 2-3 beasts
+        for (int i = 0; i < count; i++) {
+            // Random offset within 16 blocks
+            int dx = level.getRandom().nextInt(32) - 16;
+            int dz = level.getRandom().nextInt(32) - 16;
+            int x = center.getX() + dx;
+            int z = center.getZ() + dz;
+            int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+
+            try {
+                if (species.contains("mosquito")) {
+                    MosquitoSwarmEntity beast = new MosquitoSwarmEntity(
+                            EREntityTypes.MOSQUITO_SWARM.get(), level);
+                    beast.moveTo(x + 0.5, y, z + 0.5,
+                            level.getRandom().nextFloat() * 360f, 0f);
+                    level.addFreshEntity(beast);
+                } else {
+                    // Default: spawn a spirit beast with an appropriate type.
+                    SpiritBeastEntity.BeastType bt = pickBeastType(species);
+                    var entityType = pickBeastEntityType(bt);
+                    SpiritBeastEntity beast = new SpiritBeastEntity(entityType, level);
+                    beast.setBeastType(bt);
+                    beast.moveTo(x + 0.5, y, z + 0.5,
+                            level.getRandom().nextFloat() * 360f, 0f);
+                    level.addFreshEntity(beast);
+                }
+            } catch (Exception e) {
+                Ergenverse.LOGGER.warn("[WorldStateEngine] Failed to spawn migration beast {}: {}",
+                        species, e.getMessage());
+            }
+        }
+    }
+
+    /** Map a species name to a SpiritBeastEntity.BeastType. */
+    private static SpiritBeastEntity.BeastType pickBeastType(String species) {
+        if (species == null) return SpiritBeastEntity.BeastType.WOLF;
+        String s = species.toLowerCase();
+        if (s.contains("rabbit") || s.contains("hare"))  return SpiritBeastEntity.BeastType.RABBIT;
+        if (s.contains("wolf") || s.contains("dog"))     return SpiritBeastEntity.BeastType.WOLF;
+        if (s.contains("deer") || s.contains("stag"))    return SpiritBeastEntity.BeastType.DEER;
+        if (s.contains("hawk") || s.contains("bird") || s.contains("eagle")) return SpiritBeastEntity.BeastType.HAWK;
+        if (s.contains("fire"))                           return SpiritBeastEntity.BeastType.FIRE_BEAST;
+        if (s.contains("boar") || s.contains("pig"))     return SpiritBeastEntity.BeastType.STONE_BACK_BOAR;
+        return SpiritBeastEntity.BeastType.WOLF;
+    }
+
+    /** Map a BeastType to its registered EntityType. */
+    private static net.minecraft.world.entity.EntityType<SpiritBeastEntity> pickBeastEntityType(SpiritBeastEntity.BeastType bt) {
+        return switch (bt) {
+            case RABBIT -> EREntityTypes.SPIRIT_RABBIT.get();
+            case WOLF -> EREntityTypes.SPIRIT_WOLF.get();
+            case DEER -> EREntityTypes.SPIRIT_DEER.get();
+            case HAWK -> EREntityTypes.SPIRIT_HAWK.get();
+            case FIRE_BEAST -> EREntityTypes.FIRE_BEAST.get();
+            case STONE_BACK_BOAR -> EREntityTypes.STONE_BACK_BOAR.get();
+        };
+    }
+
+    /**
+     * Advance ecosystems: apply seasonal state, detect collapses/booms.
      * Reads data/ergenverse/ecosystems/*.json + ecosystem_integration/*.json
+     *
+     * <p>Each ecosystem JSON has a {@code seasonal_states} object keyed by
+     * season name (spring/summer/autumn/winter/tribulation_storm). Each state
+     * has population multipliers + a behavior label + a note. We rotate the
+     * ecosystem's active state to match the world season, and fire
+     * {@code ecology.seasonal_shift} when it changes.
+     *
+     * <p>The actual trophic population math is already done by
+     * {@link dev.ergenverse.ecology.CausalEcology#tickAll()} (called every
+     * tick from Ergenverse.onServerTick). Here we sync the data-driven
+     * ecosystem state and fire events when populations cross thresholds.
      */
     private static void advanceEcosystems() {
         Map<String, JsonObject> ecosystems = WorldStateDataLoader.getSubsystem("ecosystems");
-        if (ecosystems.isEmpty()) return;
-        // Apply the current seasonal state to each ecosystem. Each ecosystem JSON
-        // has a seasonal_states[] array; we select the one matching currentSeason.
-        // Full population dynamics is a future task; for now we just ensure the data
-        // is loaded so queries can surface it.
+        if (ecosystems.isEmpty() || currentLevel == null) return;
+        WorldSimState sim = WorldSimState.get(currentLevel);
+
+        String seasonKey = currentSeason.name().toLowerCase(); // "spring", "summer", etc.
+
+        for (Map.Entry<String, JsonObject> entry : ecosystems.entrySet()) {
+            String ecoId = entry.getKey();
+            JsonObject data = entry.getValue();
+
+            // Rotate seasonal state.
+            JsonObject seasonalStates = data.has("seasonal_states")
+                    ? data.getAsJsonObject("seasonal_states") : null;
+            if (seasonalStates != null && seasonalStates.has(seasonKey)) {
+                String prevState = sim.getEcosystemSeasonalState(ecoId);
+                if (!seasonKey.equals(prevState)) {
+                    sim.setEcosystemSeasonalState(ecoId, seasonKey);
+                    JsonObject state = seasonalStates.getAsJsonObject(seasonKey);
+                    String behavior = state != null && state.has("behavior")
+                            ? state.get("behavior").getAsString() : "";
+                    String note = state != null && state.has("note")
+                            ? state.get("note").getAsString() : "";
+                    String ecoName = data.has("name") ? data.get("name").getAsString() : ecoId;
+
+                    // Fire a seasonal-shift event (severity 0.3 — below chronicling threshold,
+                    // so it fires on the bus for subscribers but doesn't clutter the Chronicle).
+                    String desc = String.format("%s enters %s: %s. %s",
+                            ecoName, seasonKey, behavior, note);
+                    WorldEventBus.publishGlobal("ecology.seasonal_shift", EnergyType.QI,
+                            0.3f, desc, "INFERRED — seasonal ecology", worldTick);
+                    Ergenverse.LOGGER.debug("[WorldStateEngine] Ecosystem {} shifted to {} state.",
+                            ecoId, seasonKey);
+                }
+            }
+        }
+
+        // Sync CausalEcology events (collapses/booms) to the bus.
+        // CausalEcology already ran this tick; we surface its recentEvents.
+        for (dev.ergenverse.ecology.CausalEcology.Ecosystem eco : dev.ergenverse.ecology.CausalEcology.all()) {
+            if (eco.recentEvents.isEmpty()) continue;
+            String topEvent = eco.recentEvents.get(0);
+            // Determine severity: collapses are high, shifts are moderate.
+            float severity = 0.7f;
+            if (topEvent.contains("collapse") || topEvent.contains("starve")) severity = 0.85f;
+            if (topEvent.contains("boom") || topEvent.contains("spread")) severity = 0.6f;
+
+            // Fire the ecology event on the bus. This gets chronicled automatically
+            // if severity >= 0.45.
+            WorldEventBus.publishGlobal("ecology.shift", EnergyType.QI,
+                    severity, eco.name + ": " + topEvent,
+                    "INFERRED — causal ecology trophic cascade", worldTick);
+        }
     }
 
     /**
-     * Advance civilizations: recruitment, economy, politics, lifecycle.
-     * Reads data/ergenverse/civilizations/*.json + faction_relationships/*.json
+     * Advance civilizations: recruitment, economy drift.
+     * Reads data/ergenverse/civilizations/*.json
+     *
+     * <p>Each civilization JSON has a {@code population_structure} with disciple
+     * counts and an {@code economy} block with resource levels. We track a
+     * runtime disciple count + economy level (0-4) in WorldSimState. Each tick:
+     * <ul>
+     *   <li>Spring: +1-3 disciples (recruitment season).</li>
+     *   <li>Winter: -1-2 disciples (beast attacks, harsh conditions).</li>
+     *   <li>Economy level drifts toward 2 (moderate) with random noise.</li>
+     * </ul>
+     * When disciples change by >5% in a tick, fire {@code sect.recruitment}
+     * or {@code sect.decline} on the bus.
      */
     private static void advanceCivilizations() {
         Map<String, JsonObject> civs = WorldStateDataLoader.getSubsystem("civilizations");
-        if (civs.isEmpty()) return;
-        // Full civilization lifecycle simulation (recruitment, economy, politics,
-        // schisms, wars) is a future task. The data is loaded and queryable.
+        if (civs.isEmpty() || currentLevel == null) return;
+        WorldSimState sim = WorldSimState.get(currentLevel);
+
+        for (Map.Entry<String, JsonObject> entry : civs.entrySet()) {
+            String civId = entry.getKey();
+            JsonObject data = entry.getValue();
+
+            // Initialize disciples from canon data on first encounter.
+            int disciples = sim.getCivilizationDisciples(civId);
+            if (disciples < 0) {
+                JsonObject popStr = data.has("population_structure")
+                        ? data.getAsJsonObject("population_structure") : null;
+                if (popStr != null) {
+                    int outer = popStr.has("outer_disciples") ? popStr.get("outer_disciples").getAsInt() : 0;
+                    int inner = popStr.has("inner_disciples") ? popStr.get("inner_disciples").getAsInt() : 0;
+                    disciples = outer + inner;
+                } else {
+                    disciples = 100;
+                }
+                sim.setCivilizationState(civId, disciples, 2); // economy = moderate
+            }
+
+            int prevDisciples = disciples;
+            int economyLevel = sim.getCivilizationEconomyLevel(civId);
+
+            // Seasonal recruitment / attrition.
+            switch (currentSeason) {
+                case SPRING:
+                    disciples += 1 + currentLevel.getRandom().nextInt(3); // +1-3
+                    break;
+                case SUMMER:
+                    disciples += currentLevel.getRandom().nextInt(2); // +0-1
+                    break;
+                case AUTUMN:
+                    disciples -= currentLevel.getRandom().nextInt(2); // -0-1
+                    break;
+                case WINTER:
+                    disciples -= 1 + currentLevel.getRandom().nextInt(2); // -1-2
+                    break;
+            }
+            disciples = Math.max(0, disciples);
+
+            // Economy level drifts with noise (0=collapsed, 4=flourishing).
+            if (currentLevel.getRandom().nextInt(10) == 0) {
+                economyLevel += currentLevel.getRandom().nextInt(3) - 1; // -1, 0, or +1
+                economyLevel = Math.max(0, Math.min(4, economyLevel));
+            }
+
+            sim.setCivilizationState(civId, disciples, economyLevel);
+
+            // Fire event if disciple count changed significantly (>5%).
+            String civName = data.has("name") ? data.get("name").getAsString() : civId;
+            int delta = disciples - prevDisciples;
+            if (Math.abs(delta) >= Math.max(1, prevDisciples / 20)) {
+                if (delta > 0) {
+                    WorldEventBus.publishGlobal("sect.recruitment", EnergyType.SOCIAL,
+                            0.5f, civName + " recruited " + delta + " new disciples this season.",
+                            "INFERRED — civilization lifecycle", worldTick);
+                } else if (delta < 0) {
+                    WorldEventBus.publishGlobal("sect.decline", EnergyType.SOCIAL,
+                            0.55f, civName + " lost " + (-delta) + " disciples this season.",
+                            "INFERRED — civilization lifecycle", worldTick);
+                }
+            }
+        }
     }
 
     /**
-     * Advance opportunities: infer new opportunities at aged locations.
+     * Advance opportunities: age them toward discoverability.
      * Reads data/ergenverse/opportunities/*.json
+     *
+     * <p>Each opportunity JSON has an {@code age_requirement_years} field.
+     * Each tick (= 1 day), we add 1/365 years to the opportunity's age.
+     * When it exceeds the requirement, it matures — fires
+     * {@code opportunity.matured} on the bus. This makes the opportunity
+     * discoverable by players with sufficient perception/cultivation.
      */
     private static void advanceOpportunities() {
         Map<String, JsonObject> opps = WorldStateDataLoader.getSubsystem("opportunities");
-        if (opps.isEmpty()) return;
-        // Full opportunity inference (age/cultivation/perception/luck gating) is
-        // a future task. The data is loaded and queryable.
+        if (opps.isEmpty() || currentLevel == null) return;
+        WorldSimState sim = WorldSimState.get(currentLevel);
+
+        long currentYear = worldTick / TICKS_PER_YEAR;
+
+        for (Map.Entry<String, JsonObject> entry : opps.entrySet()) {
+            String oppId = entry.getKey();
+            JsonObject data = entry.getValue();
+
+            // Initialize age from canon data.
+            boolean alreadyMatured = sim.isOpportunityMatured(oppId);
+            if (alreadyMatured) continue; // already matured, skip
+
+            int ageYears = sim.getOpportunityAgeYears(oppId);
+            // Age by 1/365 years per tick (we store integer years, so use the world tick).
+            int effectiveAge = (int) currentYear;
+
+            int requiredAge = data.has("age_requirement_years")
+                    ? data.get("age_requirement_years").getAsInt() : 0;
+
+            if (effectiveAge >= requiredAge) {
+                // Opportunity has matured — fire the event.
+                sim.setOpportunityMaturity(oppId, effectiveAge, true);
+                String oppName = data.has("name") ? data.get("name").getAsString() : oppId;
+                String desc = data.has("description")
+                        ? data.get("description").getAsString() : "";
+                String whyUntaken = data.has("why_untaken")
+                        ? data.get("why_untaken").getAsString() : "";
+
+                String fullDesc = String.format("%s has matured and become discoverable. %s Why untaken: %s",
+                        oppName, desc, whyUntaken);
+                WorldEventBus.publishGlobal("opportunity.matured", EnergyType.ACQUIRE,
+                        0.7f, fullDesc, "INFERRED — opportunity aging", worldTick);
+                Ergenverse.LOGGER.info("[WorldStateEngine] Opportunity {} matured at age {} years.",
+                        oppId, effectiveAge);
+            } else {
+                // Track age (not yet matured).
+                sim.setOpportunityMaturity(oppId, effectiveAge, false);
+            }
+        }
     }
 
     /**
