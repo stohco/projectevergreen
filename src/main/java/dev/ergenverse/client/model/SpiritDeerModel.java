@@ -248,5 +248,42 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
                 this.earRight.zRot = 0.2F;
             }
         }
+
+        // ── attack : deer rears up (front hooves lift, head back) ─────
+        float atk = entity.attackAnim;
+        if (atk > 0.0F) {
+            float lunge = (float) Math.sin(atk * Math.PI);
+            // Deer don't lunge forward — they rear up and strike with hooves
+            this.frontLeftThigh.xRot  = -lunge * 1.2F;   // front legs lift
+            this.frontRightThigh.xRot = -lunge * 1.2F;
+            this.frontLeftShin.xRot  = -lunge * 0.8F;   // knees fold
+            this.frontRightShin.xRot = -lunge * 0.8F;
+            this.backLeftThigh.xRot   += lunge * 0.2F;   // back legs anchor
+            this.backRightThigh.xRot  += lunge * 0.2F;
+            this.root.xRot = lunge * 0.3F;               // body tilts back
+            this.neck.xRot -= lunge * 0.3F;             // neck raises
+            this.head.xRot -= lunge * 0.5F;             // head throws back
+        }
+
+        // ── death collapse : deer crumples, legs fold under ─────────
+        if (entity.deathTime > 0) {
+            float t = Math.min(entity.deathTime / 10.0F, 1.0F);
+            float collapse = t * t;
+            this.root.xRot = collapse * -0.3F;
+            this.root.zRot = collapse * 0.5F;
+            this.neck.xRot = 1.0F + collapse * 0.5F;       // neck folds down
+            this.head.xRot = collapse * 0.6F;                  // head droops to ground
+            // legs fold under the body (deer crumples)
+            this.frontLeftThigh.xRot  = collapse * 0.8F;
+            this.frontRightThigh.xRot = collapse * 0.8F;
+            this.backLeftThigh.xRot   = collapse * 0.6F;
+            this.backRightThigh.xRot  = collapse * 0.6F;
+            this.frontLeftShin.xRot  = collapse * 0.5F;
+            this.frontRightShin.xRot = collapse * 0.5F;
+            this.backLeftShin.xRot   = collapse * 0.4F;
+            this.backRightShin.xRot  = collapse * 0.4F;
+            // tail goes limp
+            this.tail.xRot = 0.3F + collapse * 0.3F;
+        }
     }
 }

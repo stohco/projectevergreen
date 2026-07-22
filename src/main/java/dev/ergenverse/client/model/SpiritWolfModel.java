@@ -243,5 +243,44 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
             this.earRight.zRot = 0.3F;
             this.tailBase.xRot = 0.3F;                        // tail relaxed
         }
+
+        // ── attack lunge : body surges forward, head snaps, jaw wide ────
+        // Mob.attackAnim is a synced float 0→1→0 during each melee swing.
+        // The peak of the lunge is at attackAnim ~ 0.5 (mid-swing).
+        float atk = entity.attackAnim;
+        if (atk > 0.0F) {
+            float lunge = (float) Math.sin(atk * Math.PI); // 0→1→0 smooth arc
+            this.root.xRot = -lunge * 0.6F;                 // body pitches forward
+            this.head.xRot -= lunge * 0.8F;                 // head snaps forward
+            this.jaw.xRot += lunge * 0.5F;                  // jaw opens wider
+            // front legs push back (rearing push), back legs dig in
+            this.frontLeftThigh.xRot  += lunge * 0.4F;
+            this.frontRightThigh.xRot += lunge * 0.4F;
+            this.backLeftThigh.xRot   -= lunge * 0.3F;
+            this.backRightThigh.xRot  -= lunge * 0.3F;
+        }
+
+        // ── death collapse : body tips sideways, legs splay, head drops ──
+        // LivingEntity.deathTime counts 0..20 (1 second). We collapse over
+        // the first 10 ticks, then hold the pose for the remaining fade.
+        if (entity.deathTime > 0) {
+            float t = Math.min(entity.deathTime / 10.0F, 1.0F); // 0→1 over 0.5s
+            float collapse = t * t; // quadratic ease-in for weight
+            this.root.xRot = collapse * -0.4F;                // body tips to side
+            this.root.zRot = collapse * 0.6F;                 // rolls onto side
+            this.head.xRot = collapse * 0.8F;                  // head droops
+            this.head.zRot = collapse * 0.3F;                  // head lolls
+            // legs splay outward
+            this.frontLeftThigh.zRot  = -collapse * 0.5F;
+            this.frontRightThigh.zRot =  collapse * 0.5F;
+            this.backLeftThigh.zRot   = -collapse * 0.4F;
+            this.backRightThigh.zRot  =  collapse * 0.4F;
+            // tail goes limp
+            this.tailBase.xRot = 0.3F + collapse * 1.2F;
+            this.tailMid.xRot  = collapse * 0.5F;
+            this.tailTip.xRot  = collapse * 0.3F;
+            // jaw falls open (relaxed death)
+            this.jaw.xRot = collapse * 0.6F;
+        }
     }
 }

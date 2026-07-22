@@ -222,5 +222,39 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.head.xRot = 1.0F;
             this.tail.xRot = 0.4F + (float) Math.sin(ageInTicks * 0.4F) * 0.2F;
         }
+
+        // ── attack lunge : boar head-butts, stone plate shifts ─────────
+        float atk = entity.attackAnim;
+        if (atk > 0.0F) {
+            float lunge = (float) Math.sin(atk * Math.PI);
+            this.root.xRot -= lunge * 0.3F;              // body pitches forward
+            this.head.xRot += lunge * 0.5F;               // head drives down further
+            // heavy boar: front legs barely move, back legs dig
+            this.frontLeftThigh.xRot  -= lunge * 0.2F;
+            this.frontRightThigh.xRot -= lunge * 0.2F;
+            this.backLeftThigh.xRot   += lunge * 0.3F;
+            this.backRightThigh.xRot  += lunge * 0.3F;
+        }
+
+        // ── death collapse : heavy body slumps hard ───────────────────
+        if (entity.deathTime > 0) {
+            float t = Math.min(entity.deathTime / 10.0F, 1.0F);
+            float collapse = t * t;
+            this.root.xRot = collapse * -0.3F;
+            this.root.zRot = collapse * 0.4F;
+            this.head.xRot = collapse * 0.7F;
+            this.head.zRot = collapse * 0.2F;
+            // thick legs buckle outward under weight
+            this.frontLeftThigh.zRot  = -collapse * 0.4F;
+            this.frontRightThigh.zRot =  collapse * 0.4F;
+            this.backLeftThigh.zRot   = -collapse * 0.35F;
+            this.backRightThigh.zRot  =  collapse * 0.35F;
+            // shins splay (boar's short legs spread on death)
+            this.frontLeftShin.zRot  = -collapse * 0.3F;
+            this.frontRightShin.zRot =  collapse * 0.3F;
+            this.backLeftShin.zRot   = -collapse * 0.25F;
+            this.backRightShin.zRot  =  collapse * 0.25F;
+            this.tail.xRot = 0.0F; // tail goes limp
+        }
     }
 }

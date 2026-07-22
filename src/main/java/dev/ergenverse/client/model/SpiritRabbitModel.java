@@ -167,13 +167,47 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
             this.tail.yRot = (float) Math.sin(ageInTicks * 0.8F) * 0.3F;
         }
 
-        // ── alert snap : if recently hit (hurtTime > 0), ears straight up ──
+ // ── alert snap : if recently hit (hurtTime > 0), ears straight up ──
         if (entity.hurtTime > 0) {
             this.earLeft.zRot  = 0.0F;
             this.earRight.zRot = 0.0F;
             this.earLeft.xRot  = 0.0F;
             this.earRight.xRot = 0.0F;
             this.head.xRot = -0.3F;
+        }
+
+        // ── attack : rabbit kicks with back legs ────────────────────
+        float atk = entity.attackAnim;
+        if (atk > 0.0F) {
+            float kick = (float) Math.sin(atk * Math.PI);
+            // back legs extend in a powerful kick
+            this.backLegLeft.xRot  = kick * 1.5F;
+            this.backLegRight.xRot = kick * 1.5F;
+            // body pitches slightly back (recoil)
+            this.root.xRot = -kick * 0.3F;
+            // front legs tuck tight
+            this.frontLegLeft.xRot  = -kick * 0.6F;
+            this.frontLegRight.xRot = -kick * 0.6F;
+        }
+
+        // ── death : rabbit flips onto side, legs splay ────────────
+        if (entity.deathTime > 0) {
+            float t = Math.min(entity.deathTime / 8.0F, 1.0F);
+            float collapse = t * t;
+            // body tips and rolls
+            this.root.xRot = collapse * -0.5F;
+            this.root.zRot = collapse * 0.8F;
+            // head droops
+            this.head.xRot = collapse * 0.5F;
+            this.head.zRot = collapse * 0.4F;
+            // ears flatten
+            this.earLeft.zRot = collapse * 0.6F;
+            this.earRight.zRot = -collapse * 0.6F;
+            // all legs splay
+            this.frontLegLeft.zRot  = -collapse * 0.3F;
+            this.frontLegRight.zRot =  collapse * 0.3F;
+            this.backLegLeft.zRot   = -collapse * 0.4F;
+            this.backLegRight.zRot  =  collapse * 0.4F;
         }
     }
 }

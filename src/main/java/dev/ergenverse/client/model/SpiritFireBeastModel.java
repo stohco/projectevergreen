@@ -272,5 +272,48 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
         } else {
             this.jaw.xRot = 0.0F;
         }
+
+        // ── attack lunge : fire beast surges forward, mane flares ──────
+        float atk = entity.attackAnim;
+        if (atk > 0.0F) {
+            float lunge = (float) Math.sin(atk * Math.PI);
+            this.root.xRot = -lunge * 0.7F;                 // body pitches forward
+            this.head.xRot -= lunge * 1.0F;                 // head snaps forward aggressively
+            this.jaw.xRot = lunge * 0.8F;                    // jaw wide open
+            // front legs push, back legs anchor
+            this.frontLeftThigh.xRot  += lunge * 0.5F;
+            this.frontRightThigh.xRot += lunge * 0.5F;
+            this.backLeftThigh.xRot   -= lunge * 0.4F;
+            this.backRightThigh.xRot  -= lunge * 0.4F;
+            // mane flares bigger during attack
+            float atkFlare = lunge * 0.6F;
+            for (int i = 0; i < mane.length; i++) {
+                mane[i].yScale += atkFlare;
+                mane[i].xScale += atkFlare * 0.5F;
+            }
+            // flame tip extends
+            this.flameTip.yScale += lunge * 0.5F;
+        }
+
+        // ── death collapse : fire beast slumps, flames wither ─────────
+        if (entity.deathTime > 0) {
+            float t = Math.min(entity.deathTime / 10.0F, 1.0F);
+            float collapse = t * t;
+            this.root.xRot = collapse * -0.5F;
+            this.root.zRot = collapse * 0.5F;
+            this.head.xRot = collapse * 0.6F;
+            this.head.zRot = collapse * 0.4F;
+            this.frontLeftThigh.zRot  = -collapse * 0.5F;
+            this.frontRightThigh.zRot =  collapse * 0.5F;
+            this.backLeftThigh.zRot   = -collapse * 0.4F;
+            this.backRightThigh.zRot  =  collapse * 0.4F;
+            // jaw falls open, flames die down
+            this.jaw.xRot = collapse * 0.8F;
+            for (int i = 0; i < mane.length; i++) {
+                mane[i].yScale *= (1.0F - collapse * 0.7F);
+                mane[i].xScale *= (1.0F - collapse * 0.7F);
+            }
+            this.flameTip.yScale *= (1.0F - collapse * 0.8F);
+        }
     }
 }

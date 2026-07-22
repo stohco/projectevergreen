@@ -249,5 +249,48 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
 
         // ── tail fan sway ────────────────────────────────────────────────
         this.tail.yRot = (float) Math.sin(ageInTicks * 0.3F) * 0.2F;
+
+        // ── attack : hawk talon-strikes (wings sweep, legs extend) ─────
+        float atk = entity.attackAnim;
+        if (atk > 0.0F) {
+            float strike = (float) Math.sin(atk * Math.PI);
+            // wings sweep down and forward (diving strike)
+            this.leftWing.zRot = -0.1F - strike * 0.8F;
+            this.rightWing.zRot = 0.1F + strike * 0.8F;
+            // elbows tuck (wings fold partially)
+            this.leftShoulder.zRot = -strike * 0.4F;
+            this.rightShoulder.zRot = strike * 0.4F;
+            this.leftForearm.zRot = -strike * 0.2F;
+            this.rightForearm.zRot = strike * 0.2F;
+            // body pitches down (stoop)
+            this.root.xRot = strike * 0.5F;
+            // head tilts down, beak forward
+            this.head.xRot = strike * 0.4F;
+            // legs extend for talon grab
+            this.leftLeg.xRot = strike * 1.2F;
+            this.rightLeg.xRot = strike * 1.2F;
+        }
+
+        // ── death : wings fold tight, body drops ─────────────────────
+        if (entity.deathTime > 0) {
+            float t = Math.min(entity.deathTime / 10.0F, 1.0F);
+            float collapse = t * t;
+            // body pitches forward and rolls
+            this.root.xRot = collapse * 0.5F;
+            this.root.zRot = collapse * -0.4F;
+            // head droops
+            this.head.xRot = collapse * 0.7F;
+            this.head.zRot = collapse * 0.3F;
+            // wings fold flat against body
+            this.leftWing.zRot = 0.0F - collapse * 0.1F;
+            this.rightWing.zRot = 0.0F + collapse * 0.1F;
+            this.leftWing.xRot = collapse * 0.8F;   // wings fold down
+            this.rightWing.xRot = -collapse * 0.8F;
+            // tail drops
+            this.tail.xRot = collapse * 0.5F;
+            // legs go limp
+            this.leftLeg.xRot = collapse * 0.3F;
+            this.rightLeg.xRot = collapse * 0.3F;
+        }
     }
 }
