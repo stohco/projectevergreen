@@ -189,6 +189,44 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
         // ── head turn ────────────────────────────────────────────────────
         this.head.yRot = Math.max(-0.8F, Math.min(0.8F, netHeadYaw * 0.017453292F));
 
+        // ── CRON-COMPLETIONIST-16: POSE_RESTING — boar lies down heavily ──
+        boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
+        // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — boar swims (pigs can swim) ──
+        boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+
+        if (resting) {
+            // Boar rests: heavy body lowers, thick legs fold, head on ground
+            this.root.y = -2.5F;
+            this.root.xRot = 0.05F;
+            this.frontLeftThigh.xRot  = -0.5F;
+            this.frontRightThigh.xRot = -0.5F;
+            this.frontLeftShin.xRot   = 0.3F;
+            this.frontRightShin.xRot  = 0.3F;
+            this.backLeftThigh.xRot   = 0.2F;
+            this.backRightThigh.xRot  = 0.2F;
+            this.backLeftShin.xRot    = -0.15F;
+            this.backRightShin.xRot   = -0.15F;
+            this.head.xRot = 0.8F;
+            this.tail.xRot = 0.3F;
+            return;
+        } else if (swimming) {
+            // Boar swims: body buoyant, legs paddle, snout up
+            this.root.xRot = -0.2F;
+            this.root.y = -1.5F;
+            this.head.xRot = -0.4F;
+            float paddle = ageInTicks * 0.9F;
+            this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.6F;
+            this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.6F;
+            this.backLeftThigh.xRot   = (float) Math.cos(paddle + Math.PI) * 0.4F;
+            this.backRightThigh.xRot  = (float) Math.cos(paddle) * 0.4F;
+            this.frontLeftShin.xRot   = -0.1F + Math.abs((float) Math.cos(paddle)) * 0.2F;
+            this.frontRightShin.xRot  = -0.1F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.2F;
+            this.backLeftShin.xRot    = -0.1F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.15F;
+            this.backRightShin.xRot   = -0.1F + Math.abs((float) Math.cos(paddle)) * 0.15F;
+            this.tail.xRot = 0.2F;
+            return;
+        }
+
         // ── walk / charge gait : slow & heavy by default ─────────────────
         float swingPhase = charging ? limbSwing * 1.8F : limbSwing;
         float freq = charging ? 0.8F : 0.5F;            // slower base frequency

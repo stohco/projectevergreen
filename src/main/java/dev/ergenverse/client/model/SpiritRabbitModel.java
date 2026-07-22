@@ -137,6 +137,42 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
         // CRON-COMPLETIONIST-13: DATA_POSE for grazing posture
         boolean poseGrazing = entity.getSpiritPose() == SpiritBeastEntity.POSE_GRAZING;
 
+        // ── CRON-COMPLETIONIST-16: POSE_RESTING — rabbit crouches flat ──
+        boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
+        // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — rabbit paddles ──
+        boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+
+        if (resting) {
+            // Rabbit rests: body flattens, ears relax to sides, legs tucked
+            this.root.y = -3.0F;
+            this.root.xRot = 0.1F;
+            this.frontLegLeft.xRot  = 0.3F;
+            this.frontLegRight.xRot = 0.3F;
+            this.backLegLeft.xRot   = 0.2F;
+            this.backLegRight.xRot  = 0.2F;
+            this.earLeft.zRot  = 0.8F;   // ears flop to sides
+            this.earRight.zRot = -0.8F;
+            this.earLeft.xRot  = 0.3F;
+            this.earRight.xRot = 0.3F;
+            this.head.xRot = 0.1F;
+            return;
+        } else if (swimming) {
+            // Rabbit swims: body pitches up, head above water, legs paddle frantically
+            this.root.xRot = -0.4F;
+            this.root.y = -2.0F;
+            this.head.xRot = -0.3F;
+            float paddle = ageInTicks * 1.5F;
+            this.frontLegLeft.xRot  = (float) Math.cos(paddle) * 1.0F;
+            this.frontLegRight.xRot = (float) Math.cos(paddle + Math.PI) * 1.0F;
+            this.backLegLeft.xRot   = (float) Math.cos(paddle + Math.PI) * 1.2F;
+            this.backLegRight.xRot  = (float) Math.cos(paddle) * 1.2F;
+            this.earLeft.xRot  = -0.4F;   // ears pinned back
+            this.earRight.xRot = -0.4F;
+            this.earLeft.zRot  = 0.0F;
+            this.earRight.zRot = 0.0F;
+            return;
+        }
+
         if (limbSwingAmount > 0.05F) {
             // ── HOP : body bounces, ears flap back, legs tuck/extend ──────
             float hop = (float) Math.abs(Math.sin(limbSwing * 0.5F)) * 2.0F * limbSwingAmount;

@@ -213,6 +213,46 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         this.head.yRot = netHeadYaw * 0.017453292F;
         this.head.xRot = headPitch * 0.017453292F;
 
+        // ── CRON-COMPLETIONIST-16: POSE_RESTING — hawk sleeps perched ──
+        boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
+        // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — hawk swims to shore ──
+        boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+
+        if (resting) {
+            // Hawk rests: beak tucks under wing, wings fold tight, legs grip perch
+            this.root.y = -1.0F;
+            this.head.xRot = 0.8F;           // beak tucks down
+            this.leftWing.zRot = -0.9F;       // wings wrap around body
+            this.rightWing.zRot = 0.9F;
+            this.leftWing.xRot = 0.7F;
+            this.rightWing.xRot = -0.7F;
+            this.leftShoulder.zRot = 0.0F;
+            this.rightShoulder.zRot = 0.0F;
+            this.leftForearm.zRot = 0.0F;
+            this.rightForearm.zRot = 0.0F;
+            this.leftLeg.xRot = 0.0F;        // legs grip perch
+            this.rightLeg.xRot = 0.0F;
+            this.tail.xRot = 0.3F;
+            return;
+        } else if (swimming) {
+            // Hawk swims: body buoyant, wings rowing, head above water
+            this.root.xRot = -0.2F;
+            this.root.y = -2.0F;
+            this.head.xRot = -0.3F;
+            float row = ageInTicks * 0.8F;
+            // Wings row alternately (like butterfly stroke)
+            this.leftWing.zRot = -0.3F + (float) Math.sin(row) * 0.6F;
+            this.rightWing.zRot = 0.3F - (float) Math.sin(row) * 0.6F;
+            this.leftShoulder.zRot = -(float) Math.sin(row) * 0.3F;
+            this.rightShoulder.zRot = (float) Math.sin(row) * 0.3F;
+            this.leftForearm.zRot = -(float) Math.sin(row) * 0.15F;
+            this.rightForearm.zRot = (float) Math.sin(row) * 0.15F;
+            // Legs paddle behind
+            this.leftLeg.xRot = (float) Math.cos(row) * 0.4F;
+            this.rightLeg.xRot = (float) Math.cos(row + Math.PI) * 0.4F;
+            return;
+        }
+
         // ── CRON-COMPLETIONIST-13: Perched stance via DATA_POSE ──
         boolean perched = entity.getSpiritPose() == SpiritBeastEntity.POSE_PERCHING
                 && entity.onGround();

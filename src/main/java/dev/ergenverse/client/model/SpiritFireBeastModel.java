@@ -229,6 +229,59 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
         this.head.yRot = Math.max(-1.0F, Math.min(1.0F, yaw));
         this.head.xRot = Math.max(-0.7F, Math.min(0.7F, pitch));
 
+        // ── CRON-COMPLETIONIST-16: POSE_RESTING — fire beast lies down, flames dim ──
+        boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
+        // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — fire beast swims (reluctantly) ──
+        boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+
+        ModelPart[] mane = { this.mane0, this.mane1, this.mane2, this.mane3, this.mane4 };
+
+        if (resting) {
+            // Fire beast rests: body lowers, legs fold, flames shrink to embers
+            this.root.y = -2.0F;
+            this.frontLeftThigh.xRot  = -0.6F;
+            this.frontRightThigh.xRot = -0.6F;
+            this.frontLeftShin.xRot   = 0.4F;
+            this.frontRightShin.xRot  = 0.4F;
+            this.backLeftThigh.xRot   = 0.3F;
+            this.backRightThigh.xRot  = 0.3F;
+            this.backLeftShin.xRot    = -0.2F;
+            this.backRightShin.xRot   = -0.2F;
+            this.head.xRot = 0.3F;
+            this.jaw.xRot = 0.0F;
+            // Flames dim to low embers
+            for (int i = 0; i < mane.length; i++) {
+                mane[i].yScale = 0.3F;
+                mane[i].xScale = 0.5F;
+            }
+            this.flameTip.yScale = 0.2F;
+            this.tailBase.xRot = 0.5F;
+            return;
+        } else if (swimming) {
+            // Fire beast swims: body pitches, legs paddle, flames sputter
+            this.root.xRot = -0.3F;
+            this.root.y = -1.0F;
+            this.head.xRot = -0.4F;
+            float paddle = ageInTicks * 1.0F;
+            this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.7F;
+            this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.7F;
+            this.backLeftThigh.xRot   = (float) Math.cos(paddle + Math.PI) * 0.5F;
+            this.backRightThigh.xRot  = (float) Math.cos(paddle) * 0.5F;
+            this.frontLeftShin.xRot   = -0.2F + Math.abs((float) Math.cos(paddle)) * 0.3F;
+            this.frontRightShin.xRot  = -0.2F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.3F;
+            this.backLeftShin.xRot    = -0.2F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.2F;
+            this.backRightShin.xRot   = -0.2F + Math.abs((float) Math.cos(paddle)) * 0.2F;
+            // Flames sputter in water (reduced scale, fast flicker)
+            for (int i = 0; i < mane.length; i++) {
+                float p = ageInTicks * 2.0F + i * 0.5F;
+                mane[i].yScale = 0.5F + (float) Math.sin(p) * 0.1F;
+                mane[i].yRot   = (float) Math.sin(p) * 0.15F;
+            }
+            this.flameTip.yScale = 0.3F;
+            this.jaw.xRot = 0.0F;
+            return;
+        }
+
         // ── walk / run gait ──────────────────────────────────────────────
         boolean running = limbSwingAmount > 0.5F;
         float swingPhase = running ? limbSwing * 1.5F : limbSwing;
@@ -247,7 +300,6 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
 
         // ── flame mane flicker : per-segment phase offset ───────────────
         // Rotation flicker + vertical scale pulse = "lickering flame" feel.
-        ModelPart[] mane = { this.mane0, this.mane1, this.mane2, this.mane3, this.mane4 };
         // CRON-COMPLETIONIST-13: Check DATA_POSE in addition to getTarget()
         boolean rage = entity.getTarget() != null
                 || entity.getSpiritPose() == SpiritBeastEntity.POSE_CHARGING;

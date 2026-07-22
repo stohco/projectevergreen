@@ -192,6 +192,47 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
     @Override
     public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
                           float ageInTicks, float netHeadYaw, float headPitch) {
+        // ── CRON-COMPLETIONIST-16: POSE_RESTING — deer lies down, legs tucked ──
+        boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
+        // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — deer swims, head above water ──
+        boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+
+        if (resting) {
+            // Deer rests: body lowers, legs fold under, neck curls, head on ground
+            this.root.y = -2.0F;
+            this.frontLeftThigh.xRot  = -0.7F;
+            this.frontRightThigh.xRot = -0.7F;
+            this.frontLeftShin.xRot   = 0.5F;
+            this.frontRightShin.xRot  = 0.5F;
+            this.backLeftThigh.xRot   = 0.4F;
+            this.backRightThigh.xRot  = 0.4F;
+            this.backLeftShin.xRot    = -0.3F;
+            this.backRightShin.xRot   = -0.3F;
+            this.neck.xRot = 1.3F;
+            this.head.xRot = 0.8F;
+            this.tail.xRot = 0.5F;
+            return;
+        } else if (swimming) {
+            // Deer swims: body pitches, head elevated, legs paddle
+            this.root.xRot = -0.3F;
+            this.root.y = -1.5F;
+            this.head.xRot = -0.4F;
+            this.neck.xRot = 0.5F;
+            float paddle = ageInTicks * 1.0F;
+            this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.7F;
+            this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.7F;
+            this.backLeftThigh.xRot   = (float) Math.cos(paddle + Math.PI) * 0.5F;
+            this.backRightThigh.xRot  = (float) Math.cos(paddle) * 0.5F;
+            this.frontLeftShin.xRot   = -0.2F + Math.abs((float) Math.cos(paddle)) * 0.3F;
+            this.frontRightShin.xRot  = -0.2F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.3F;
+            this.backLeftShin.xRot    = -0.2F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.2F;
+            this.backRightShin.xRot   = -0.2F + Math.abs((float) Math.cos(paddle)) * 0.2F;
+            this.tail.xRot = 0.3F;
+            this.earLeft.zRot  = -0.3F;
+            this.earRight.zRot = 0.3F;
+            return;
+        }
+
         boolean moving = limbSwingAmount > 0.1F;
         boolean fleeing = limbSwingAmount > 0.6F;
 
@@ -213,6 +254,10 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         this.frontRightShin.xRot = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI))  * 0.6F * limbSwingAmount;
         this.backLeftShin.xRot   = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI))  * 0.6F * limbSwingAmount;
         this.backRightShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase))            * 0.6F * limbSwingAmount;
+
+        // ── CRON-16: Spine flex on gait ──────────────────────────
+        float spineFlex = (float) Math.sin(phase + Math.PI * 0.5F) * 0.06F * limbSwingAmount;
+        this.root.xRot = spineFlex;
 
         // ── head behaviour ───────────────────────────────────────────────
         // neck base tilt — neck already tilted up by 1.0 rad in the pose;
