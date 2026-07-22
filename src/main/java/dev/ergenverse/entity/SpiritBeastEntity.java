@@ -302,6 +302,14 @@ public class SpiritBeastEntity extends PathfinderMob {
                 dev.ergenverse.entity.ai.BeastIntelligenceGoalFactory.tierFromInt(getCultivationTier());
         dev.ergenverse.entity.ai.BeastIntelligenceGoalFactory.applyBeastGoals(
                 this, tier, this.goalSelector, this.targetSelector);
+
+        // ── Living Events: make beast behavior observable to NPCs/WorldHistory ──
+        // Per the Living Moments framework: "No subsystem is considered
+        // complete until it has participated in at least one observable
+        // Living Moment." This goal watches pose transitions and publishes
+        // events to the WorldEventBus so NPCs can react and WorldHistory
+        // can record memories.
+        this.goalSelector.addGoal(10, new dev.ergenverse.entity.ai.BeastLivingEventGoal(this));
     }
 
     @Override

@@ -333,7 +333,22 @@ public final class Ergenverse {
             // A catch-all subscriber that compiles every notable event into a permanent prose annal.
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.simulation.event.ChronicleSubscriber());
-            LOGGER.info("[Ergenverse] Registered QiDisturbanceSubscriber + BirdFlightSubscriber + ActivityInterruptionSubscriber + MemoryEventSubscriber + ChronicleSubscriber on WorldEventBus.");
+            // ── Event-Sourced Architecture (2026-07-23 pivot) ──
+            // The player is now a first-class actor. SimulationActions publishes
+            // player/actor/semantic events to the bus; these three subscribers
+            // derive consequences from those facts:
+            //   HistorySubscriber     — records to PlayerHistory, NpcMemory, WorldHistory
+            //   RelationshipEngine    — infers relationship deltas (NO canon checks)
+            //   OpportunityGenerator  — creates new possibilities from notable deeds
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.action.HistorySubscriber());
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.action.RelationshipEngine());
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.action.OpportunityGenerator());
+            LOGGER.info("[Ergenverse] Registered WorldEventBus subscribers: QiDisturbance + BirdFlight "
+                    + "+ ActivityInterruption + Memory + Chronicle + HistorySubscriber "
+                    + "+ RelationshipEngine + OpportunityGenerator (event-sourced architecture).");
             // Art XLII/XLIII: seed the chronicle opening + canon divergence ledger on world load.
             // The chronicle's t₀ entry is the immutable "world at the moment the player arrives" record.
             dev.ergenverse.history.WorldChronicle chronicle =

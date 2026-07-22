@@ -221,6 +221,9 @@ public final class WorldEventBus {
      */
     private static String mapTopicToHistoryType(String topic) {
         if (topic.startsWith("opportunity.")) return "OPPORTUNITY_EVENT";
+        if (topic.startsWith("player.")) return "PLAYER_ACTION";
+        if (topic.startsWith("actor.")) return "ACTOR_ACTION";
+        if (topic.startsWith("semantic.")) return "SEMANTIC_EVENT";
         if (topic.startsWith("npc.")) return "NPC_EVENT";
         if (topic.startsWith("beast.")) return "BEAST_EVENT";
         if (topic.startsWith("rumor.")) return "RUMOR_EVENT";

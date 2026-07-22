@@ -343,6 +343,12 @@ public class EntityCultivator extends PathfinderMob {
         this.goalSelector.addGoal(3, new dev.ergenverse.entity.ai.NpcScheduleGoal(this));
         // CognitionDrivenGoal: intent-based responses override schedule.
         this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.CognitionDrivenGoal(this));
+        // NpcReactToWorldGoal: Living Moments bridge — NPCs observe beast events
+        // (hunts, flees, rests) and react with contextual dialogue, look-at
+        // behavior, and WorldHistory memory recording. This goal subscribes
+        // to the WorldEventBus on "beast.*" topics. Priority 5 (below
+        // CognitionDrivenGoal so intent-based behavior takes precedence).
+        this.goalSelector.addGoal(5, new dev.ergenverse.entity.ai.NpcReactToWorldGoal(this));
         this.goalSelector.addGoal(7, new net.minecraft.world.entity.ai.goal.RandomStrollGoal(this, 0.35D));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 

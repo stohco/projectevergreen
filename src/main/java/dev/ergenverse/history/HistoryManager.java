@@ -1,36 +1,71 @@
 package dev.ergenverse.history;
 
-import dev.ergenverse.core.Ergenverse;
-import dev.ergenverse.cultivation.CultivationCapability;
-import dev.ergenverse.cultivation.CultivationState;
-import dev.ergenverse.entity.EntityCultivator;
+import dev.ergenverse.simulation.action.SimulationActions;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 
 /**
- * HistoryManager — the cross-system wiring layer for Layer 3 (Emergent History).
+ * HistoryManager — now a <b>thin facade</b> that delegates to
+ * {@link SimulationActions}.
  *
- * <p>Provides static hook methods that other game systems call when
- * significant events happen. Each method writes to the appropriate
- * history system (PlayerHistory, NpcMemory, RelationshipHistory,
- * WorldHistory) and persists everything via WorldRuntimeState.
+ * <p><b>Architectural pivot (2026-07-23):</b>
+ * The user's directive:
+ * <pre>
+ *   "HistoryManager shouldn't be the destination.
+ *    It should be a subscriber.
  *
- * <h2>Wiring points</h2>
- * <ul>
- *   <li>{@link #onBreakthrough} — called from CultivationEvents when
- *       the player achieves a new realm.</li>
- *   *   <li>{@link #onNpcInteraction} — called from PerceptionBlockEvents or
- *       EntityCultivator right-click when the player interacts with an NPC.</li>
- *   *   <li>{@link #onGiftReceived} — called from ManifestationGiftHandler
- *       when the manifestation grants an item.</li>
- *   <li>{@link #onNpcCombat} — called when the player damages/kills
- *       an EntityCultivator.</li>
- * </ul>
+ *    Instead of:  Player → HistoryManager → Bus
+ *    Do:          Player → WorldEventBus → EVERYTHING"
+ * </pre>
  *
- * <p>The tick integration (WorldHistory advancing canon consequences over time)
- * is handled directly in Ergenverse.onServerTick via WorldStateEngine.
- * This class is purely event-driven — it records what happened, it does
- * not tick.
+ * <p>Before this pivot, HistoryManager's hook methods wrote directly to
+ * siloed stores (PlayerHistory, NpcMemory, RelationshipHistory, WorldHistory)
+ * and never reached the WorldEventBus. The player's actions were invisible
+ * to every downstream cognitive system. This was the root cause of the
+ * "systems exist but don't connect" disease.
+ *
+ * <p>Now, each hook method delegates to {@link SimulationActions}, which
+ * publishes a {@link dev.ergenverse.simulation.event.WorldEvent} to the
+ * {@link dev.ergenverse.simulation.event.WorldEventBus}. The recording
+ * is done by {@link dev.ergenverse.simulation.action.HistorySubscriber}
+ * (the inversion — HistoryManager's recording logic, now bus-driven) and
+ * {@link dev.ergenverse.simulation.action.RelationshipEngine} (which
+ * infers relationship deltas from the semantic tag, with NO canon checks).
+ *
+ * <p>The flow is now:
+ * <pre>
+ *   Gameplay code (EntityCultivator, CultivationEvents, etc.)
+ *     → HistoryManager.onNpcInteraction(...)        ← this facade
+ *     → SimulationActions.playerInteractedWithNpc(...)
+ *     → WorldEventBus.dispatch(player.interaction)
+ *     → HistorySubscriber.onEvent()                 ← records to history
+ *     → MemoryEventSubscriber.onEvent()             ← NPCs remember
+ *     → RelationshipEngine.onEvent()                ← trust inferred
+ *     → ChronicleSubscriber.onEvent()               ← world chronicle
+ *     → OpportunityGenerator.onEvent()              ← new possibilities
+ * </pre>
+ *
+ * <p><b>The isManifestation() gate is GONE.</b> The old code only recorded
+ * relationship affinity for "manifestation" NPCs (a string match on
+ * {@code npcCanonId.contains("manifestation")}), excluding Wang Ping, Old
+ * Chen, sect elders, and every non-manifestation NPC. The RelationshipEngine
+ * now infers relationship deltas for ALL actors — the graph knows actors,
+ * not canon.
+ *
+ * <h2>Why keep this class at all?</h2>
+ * <p>There are 10+ existing call sites (EntityCultivator, CultivationEvents,
+ * NpcGiftOfferGoal, ManifestationGiftHandler, etc.) that call
+ * {@code HistoryManager.onX(...)}. Rather than update all of them in one
+ * risky pass, this facade preserves the API while routing through the new
+ * event-sourced architecture. New code should call {@link SimulationActions}
+ * directly; this facade exists for backward compatibility.
+ *
+ * <h2>Migration path</h2>
+ * <ol>
+ *   <li>Phase 1 (this commit): HistoryManager becomes a facade. All call
+ *       sites still work, but now flow through the bus.</li>
+ *   <li>Phase 2 (future): update call sites to call SimulationActions
+ *       directly. HistoryManager can then be deprecated/removed.</li>
+ * </ol>
  */
 public final class HistoryManager {
 
@@ -40,137 +75,67 @@ public final class HistoryManager {
 
     /**
      * Called when the player successfully breaks through to a new realm.
-     * Records in PlayerHistory.
+     * Delegates to {@link SimulationActions#playerBreakthrough}.
      */
     public static void onBreakthrough(ServerPlayer player,
                                         String fromRealmName,
                                         String toRealmName,
                                         long worldTick) {
-        PlayerHistory.recordBreakthrough(player, fromRealmName, toRealmName, worldTick);
-
-        // Breakthroughs are visible in the world — record in WorldHistory too
-        // if the player is at a notable realm
-        if (isNotableRealm(toRealmName)) {
-            String playerName = player.getName().getString();
-            WorldHistory.recordGlobal(player.serverLevel(), worldTick,
-                    "PLAYER_ACTION", "planet_suzaku",
-                    playerName + " achieved " + toRealmName +
-                    " — a cultivation event detectable across the region.",
-                    "player_breakthrough:" + toRealmName);
-        }
+        SimulationActions.playerBreakthrough(player, fromRealmName, toRealmName, worldTick);
     }
 
     // ─── NPC Interaction ──────────────────────────────────────────────
 
     /**
      * Called when the player right-clicks or otherwise interacts with
-     * an EntityCultivator NPC.
+     * an EntityCultivator NPC. Delegates to
+     * {@link SimulationActions#playerInteractedWithNpc}.
      */
     public static void onNpcInteraction(ServerPlayer player,
                                              String npcCanonId,
                                              String interactionType,
                                              String detail,
                                              long worldTick) {
-        // Record in NpcMemory
-        NpcMemory.recordInteraction(player, npcCanonId,
-                interactionType + ": " + detail, worldTick);
-
-        // If the NPC is a manifestation companion, also record in RelationshipHistory
-        if (isManifestation(npcCanonId)) {
-            RelationshipHistory.recordAffinityEarned(player, npcCanonId,
-                    detail, 1, worldTick);
-        }
+        SimulationActions.playerInteractedWithNpc(player, npcCanonId,
+                interactionType, detail, worldTick);
     }
 
     /**
-     * Called when the player receives a gift from a manifestation NPC.
-     * Records in PlayerHistory, RelationshipHistory, and NpcMemory.
+     * Called when the player receives a gift from an NPC.
+     * Delegates to {@link SimulationActions#playerReceivedGift}.
      */
     public static void onGiftReceived(ServerPlayer player,
                                           String protagonistId,
                                           String itemName,
                                           long worldTick) {
-        PlayerHistory.recordGiftReceived(player, itemName, protagonistId, worldTick);
-        RelationshipHistory.recordGiftReceived(player, protagonistId, itemName, 5, worldTick);
-        NpcMemory.recordInteraction(player, protagonistId,
-                "GIFT_RECEIVED: " + itemName, worldTick);
-
-        // Gift reception is a world event (if the item is significant)
-        WorldHistory.recordGlobal(player.serverLevel(), worldTick,
-                "PLAYER_ACTION", "planet_suzaku",
-                player.getName().getString() + " received " + itemName +
-                " from a manifestation companion.",
-                "gift:" + itemName);
+        SimulationActions.playerReceivedGift(player, protagonistId, itemName, worldTick);
     }
 
     // ─── NPC Combat ────────────────────────────────────────────────────
 
     /**
      * Called when the player damages or kills an EntityCultivator.
+     * Delegates to {@link SimulationActions#playerEngagedCombat}.
      */
     public static void onNpcCombat(ServerPlayer player,
                                      String npcCanonId,
                                      String npcName,
                                      boolean playerWon,
                                      long worldTick) {
-        String outcome = playerWon
-                ? "Killed " + npcName + "."
-                : "Defeated by " + npcName + ".";
-
-        NpcMemory.recordCombat(player, npcCanonId, outcome, playerWon, worldTick);
-        PlayerHistory.recordKill(player, npcName,
-                playerWon ? "combat" : "defeat", worldTick);
-
-        // Killing an NPC is a world event (especially if they're notable)
-        if (playerWon && isNotableNpc(npcCanonId)) {
-            WorldHistory.recordGlobal(player.serverLevel(), worldTick,
-                    "PLAYER_ACTION", "planet_suzaku",
-                    player.getName().getString() + " killed " + npcName +
-                    " (" + npcCanonId + ") — a significant event.",
-                    "kill:" + npcCanonId);
-        }
+        SimulationActions.playerEngagedCombat(player, npcCanonId, npcName,
+                playerWon, worldTick);
     }
 
     // ─── Discovery ────────────────────────────────────────────────────
 
     /**
      * Called when the player discovers something noteworthy.
+     * Delegates to {@link SimulationActions#playerDiscovered}.
      */
     public static void onDiscovery(ServerPlayer player,
                                        String subject,
                                        String detail,
                                        long worldTick) {
-        PlayerHistory.recordDiscovery(player, subject, detail, worldTick);
-    }
-
-    // ─── Helper predicates ─────────────────────────────────────────────
-
-    /** Realms that are notable enough to record as world-history events. */
-    private static boolean isNotableRealm(String realmName) {
-        if (realmName == null) return false;
-        String lower = realmName.toLowerCase();
-        // Nascent Soul and above are detectable across regions
-        return lower.contains("nascent") || lower.contains("soul formation")
-                || lower.contains("ascendant") || lower.contains("transcendence")
-                || lower.contains("true immortal") || lower.contains("paragon");
-    }
-
-    /** Check if an NPC is a manifestation companion (Wang Lin's manifestation, etc.). */
-    private static boolean isManifestation(String npcCanonId) {
-        if (npcCanonId == null) return false;
-        return npcCanonId.contains("manifestation") || npcCanonId.equals("wang_lin_manifestation");
-    }
-
-    /** Check if an NPC is a notable canon character whose death would be world-news. */
-    private static boolean isNotableNpc(String npcCanonId) {
-        if (npcCanonId == null) return false;
-        String lower = npcCanonId.toLowerCase();
-        // Sect heads, patriarchs, country rulers, Wang Lin
-        return lower.contains("patriarch") || lower.contains("sect_head")
-                || lower.contains("elder")
-                || lower.contains("king_zhao")
-                || lower.contains("wang_lin")
-                || lower.contains("teng_huayuan")
-                || lower.contains("situ_nan");
+        SimulationActions.playerDiscovered(player, subject, detail, worldTick);
     }
 }
