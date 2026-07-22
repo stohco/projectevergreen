@@ -1,71 +1,62 @@
 package dev.ergenverse.history;
 
-import dev.ergenverse.simulation.action.SimulationActions;
+import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.simulation.event.EnergyType;
+import dev.ergenverse.simulation.event.SemanticEventTopics;
+import dev.ergenverse.simulation.event.SemanticTag;
+import dev.ergenverse.simulation.event.WorldEvent;
+import dev.ergenverse.simulation.event.WorldEventBus;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.Map;
+
 /**
- * HistoryManager — now a <b>thin facade</b> that delegates to
- * {@link SimulationActions}.
+ * HistoryManager — the <b>single entry point</b> where gameplay code
+ * publishes player and NPC actions to the WorldEventBus.
  *
- * <p><b>Architectural pivot (2026-07-23):</b>
- * The user's directive:
+ * <p><b>Per user directive (2026-07-23 #2):</b>
  * <pre>
- *   "HistoryManager shouldn't be the destination.
- *    It should be a subscriber.
+ *   "I'd remove SimulationActions.
+ *    The world should only know about events. Not who published them.
  *
- *    Instead of:  Player → HistoryManager → Bus
- *    Do:          Player → WorldEventBus → EVERYTHING"
+ *    PlayerController → publish(WorldEvent) → Bus
+ *    NpcAI → publish(WorldEvent) → Bus
+ *
+ *    No special 'simulation action' layer."
  * </pre>
  *
- * <p>Before this pivot, HistoryManager's hook methods wrote directly to
- * siloed stores (PlayerHistory, NpcMemory, RelationshipHistory, WorldHistory)
- * and never reached the WorldEventBus. The player's actions were invisible
- * to every downstream cognitive system. This was the root cause of the
- * "systems exist but don't connect" disease.
- *
- * <p>Now, each hook method delegates to {@link SimulationActions}, which
- * publishes a {@link dev.ergenverse.simulation.event.WorldEvent} to the
- * {@link dev.ergenverse.simulation.event.WorldEventBus}. The recording
- * is done by {@link dev.ergenverse.simulation.action.HistorySubscriber}
- * (the inversion — HistoryManager's recording logic, now bus-driven) and
- * {@link dev.ergenverse.simulation.action.RelationshipEngine} (which
- * infers relationship deltas from the semantic tag, with NO canon checks).
- *
- * <p>The flow is now:
+ * <p>This class is the answer to "who calls WorldEventBus.dispatch()?"
+ * Gameplay code (EntityCultivator, CultivationEvents, NpcGiftOfferGoal, etc.)
+ * calls these static methods, which construct and dispatch WorldEvents
+ * directly. There is no intermediate coordinator. The event flows:
  * <pre>
- *   Gameplay code (EntityCultivator, CultivationEvents, etc.)
- *     → HistoryManager.onNpcInteraction(...)        ← this facade
- *     → SimulationActions.playerInteractedWithNpc(...)
- *     → WorldEventBus.dispatch(player.interaction)
- *     → HistorySubscriber.onEvent()                 ← records to history
- *     → MemoryEventSubscriber.onEvent()             ← NPCs remember
- *     → RelationshipEngine.onEvent()                ← trust inferred
- *     → ChronicleSubscriber.onEvent()               ← world chronicle
- *     → OpportunityGenerator.onEvent()              ← new possibilities
+ *   Gameplay code
+ *     → HistoryManager.onNpcInteraction(...)
+ *     → WorldEventBus.dispatch(player.interaction WorldEvent)
+ *     → ALL subscribers observe it
  * </pre>
  *
- * <p><b>The isManifestation() gate is GONE.</b> The old code only recorded
- * relationship affinity for "manifestation" NPCs (a string match on
- * {@code npcCanonId.contains("manifestation")}), excluding Wang Ping, Old
- * Chen, sect elders, and every non-manifestation NPC. The RelationshipEngine
- * now infers relationship deltas for ALL actors — the graph knows actors,
- * not canon.
+ * <p>Each method constructs a WorldEvent with:
+ * <ul>
+ *   <li>The correct topic from {@link SemanticEventTopics}</li>
+ *   <li>The appropriate {@link EnergyType} for propagation radius</li>
+ *   <li>Actor metadata (sourceActorId = player UUID, targetActorId = NPC canon ID)</li>
+ *   <li>A {@link SemanticTag} for the meaning layer</li>
+ *   <li>Structured metadata (no more string parsing by subscribers)</li>
+ * </ul>
  *
- * <h2>Why keep this class at all?</h2>
- * <p>There are 10+ existing call sites (EntityCultivator, CultivationEvents,
- * NpcGiftOfferGoal, ManifestationGiftHandler, etc.) that call
- * {@code HistoryManager.onX(...)}. Rather than update all of them in one
- * risky pass, this facade preserves the API while routing through the new
- * event-sourced architecture. New code should call {@link SimulationActions}
- * directly; this facade exists for backward compatibility.
+ * <p><b>Structured metadata (per user directive):</b> Each method packs
+ * machine-readable data into the event's metadata map. Subscribers read
+ * this directly — no parsing description strings. Examples:
+ * <ul>
+ *   <li>{@link #onNpcInteraction} → metadata: interactionType, npcCanonId</li>
+ *   <li>{@link #onGiftReceived} → metadata: itemName, sourceNpcId</li>
+ *   <li>{@link #onNpcCombat} → metadata: npcName, npcCanonId, combatOutcome</li>
+ *   <li>{@link #onBreakthrough} → metadata: fromRealm, toRealm</li>
+ * </ul>
  *
- * <h2>Migration path</h2>
- * <ol>
- *   <li>Phase 1 (this commit): HistoryManager becomes a facade. All call
- *       sites still work, but now flow through the bus.</li>
- *   <li>Phase 2 (future): update call sites to call SimulationActions
- *       directly. HistoryManager can then be deprecated/removed.</li>
- * </ol>
+ * <p><b>The isManifestation() gate is GONE.</b> Every NPC gets relationship
+ * inference via RelationshipEngine, not just manifestations.
  */
 public final class HistoryManager {
 
@@ -74,68 +65,280 @@ public final class HistoryManager {
     // ─── Cultivation Events ──────────────────────────────────────────
 
     /**
-     * Called when the player successfully breaks through to a new realm.
-     * Delegates to {@link SimulationActions#playerBreakthrough}.
+     * Called when the player breaks through to a new realm.
+     * Publishes a player.breakthrough event AND a semantic.cultivation_revealed event.
      */
     public static void onBreakthrough(ServerPlayer player,
                                         String fromRealmName,
                                         String toRealmName,
                                         long worldTick) {
-        SimulationActions.playerBreakthrough(player, fromRealmName, toRealmName, worldTick);
+        float severity = isNotableRealm(toRealmName) ? 0.8f : 0.5f;
+
+        // Action event
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.PLAYER_BREAKTHROUGH, EnergyType.SPIRITUAL,
+                player.blockPosition(), 0.7f, severity,
+                player.getName().getString() + " broke through from "
+                        + fromRealmName + " to " + toRealmName + ".",
+                "SIMULATION", worldTick,
+                player.getStringUUID(), "", SemanticTag.BREAKTHROUGH.name(),
+                Map.of(
+                        "from_realm", fromRealmName,
+                        "to_realm", toRealmName,
+                        "player_name", player.getName().getString()
+                )));
+
+        // Semantic event — a breakthrough IS cultivation revealed.
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.SEMANTIC_CULTIVATION_REVEALED, EnergyType.SPIRITUAL,
+                player.blockPosition(), 0.7f, severity,
+                player.getName().getString() + " revealed " + toRealmName
+                        + " cultivation through a breakthrough.",
+                "SIMULATION", worldTick,
+                player.getStringUUID(), "", SemanticTag.CULTIVATION_REVEALED.name(),
+                Map.of(
+                        "realm", toRealmName,
+                        "player_name", player.getName().getString()
+                )));
     }
 
     // ─── NPC Interaction ──────────────────────────────────────────────
 
     /**
-     * Called when the player right-clicks or otherwise interacts with
-     * an EntityCultivator NPC. Delegates to
-     * {@link SimulationActions#playerInteractedWithNpc}.
+     * Called when the player right-clicks an EntityCultivator NPC.
      */
     public static void onNpcInteraction(ServerPlayer player,
                                              String npcCanonId,
                                              String interactionType,
                                              String detail,
                                              long worldTick) {
-        SimulationActions.playerInteractedWithNpc(player, npcCanonId,
-                interactionType, detail, worldTick);
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.PLAYER_INTERACTION, EnergyType.SOCIAL,
+                player.blockPosition(), 0.25f, 0.25f,
+                player.getName().getString() + " interacted with " + npcCanonId
+                        + " (" + interactionType + "): " + detail,
+                "SIMULATION", worldTick,
+                player.getStringUUID(), npcCanonId, SemanticTag.INTERACTION.name(),
+                Map.of(
+                        "interaction_type", interactionType,
+                        "npc_canon_id", npcCanonId,
+                        "player_name", player.getName().getString()
+                )));
     }
+
+    // ─── Gift ─────────────────────────────────────────────────────────
 
     /**
      * Called when the player receives a gift from an NPC.
-     * Delegates to {@link SimulationActions#playerReceivedGift}.
+     * The NPC is the source actor; the player is the target.
      */
     public static void onGiftReceived(ServerPlayer player,
                                           String protagonistId,
                                           String itemName,
                                           long worldTick) {
-        SimulationActions.playerReceivedGift(player, protagonistId, itemName, worldTick);
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.PLAYER_GIFT_RECEIVED, EnergyType.SOCIAL,
+                player.blockPosition(), 0.5f, 0.5f,
+                protagonistId + " gave " + itemName
+                        + " to " + player.getName().getString() + ".",
+                "SIMULATION", worldTick,
+                protagonistId, player.getStringUUID(), SemanticTag.GIFT_RECEIVED.name(),
+                Map.of(
+                        "item_name", itemName,
+                        "source_npc_id", protagonistId,
+                        "player_name", player.getName().getString()
+                )));
     }
 
     // ─── NPC Combat ────────────────────────────────────────────────────
 
     /**
      * Called when the player damages or kills an EntityCultivator.
-     * Delegates to {@link SimulationActions#playerEngagedCombat}.
      */
     public static void onNpcCombat(ServerPlayer player,
                                      String npcCanonId,
                                      String npcName,
                                      boolean playerWon,
                                      long worldTick) {
-        SimulationActions.playerEngagedCombat(player, npcCanonId, npcName,
-                playerWon, worldTick);
+        String outcome = playerWon ? "player_won" : "player_lost";
+        float severity = playerWon ? 0.7f : 0.5f;
+        String desc = playerWon
+                ? player.getName().getString() + " killed " + npcName
+                + " (" + npcCanonId + ")."
+                : player.getName().getString() + " was defeated by " + npcName + ".";
+
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.PLAYER_COMBAT_ENGAGED, EnergyType.PHYSICAL,
+                player.blockPosition(), 0.6f, severity, desc,
+                "SIMULATION", worldTick,
+                player.getStringUUID(), npcCanonId, SemanticTag.COMBAT_ENGAGED.name(),
+                Map.of(
+                        "npc_name", npcName,
+                        "npc_canon_id", npcCanonId,
+                        "combat_outcome", outcome,
+                        "player_won", String.valueOf(playerWon),
+                        "player_name", player.getName().getString()
+                )));
     }
 
     // ─── Discovery ────────────────────────────────────────────────────
 
     /**
      * Called when the player discovers something noteworthy.
-     * Delegates to {@link SimulationActions#playerDiscovered}.
      */
     public static void onDiscovery(ServerPlayer player,
                                        String subject,
                                        String detail,
                                        long worldTick) {
-        SimulationActions.playerDiscovered(player, subject, detail, worldTick);
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.PLAYER_DISCOVERY, EnergyType.ACQUIRE,
+                player.blockPosition(), 0.4f, 0.4f,
+                player.getName().getString() + " discovered " + subject
+                        + ": " + detail,
+                "SIMULATION", worldTick,
+                player.getStringUUID(), "", SemanticTag.DISCOVERY.name(),
+                Map.of(
+                        "subject", subject,
+                        "player_name", player.getName().getString()
+                )));
+    }
+
+    // ─── Actor-to-actor (for NPC-NPC events, called from NPC AI) ───
+
+    /**
+     * An NPC gave a gift to another actor.
+     * e.g. Wang Lin gives Li Muwan a flower.
+     * The simulation doesn't distinguish player vs NPC sources —
+     * both flow through the same bus.
+     */
+    public static void onActorGift(String sourceNpcCanonId, String targetActorId,
+                                     String itemName, net.minecraft.core.BlockPos pos,
+                                     long worldTick) {
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.ACTOR_GIFT_GIVEN, EnergyType.SOCIAL,
+                pos, 0.4f, 0.4f,
+                sourceNpcCanonId + " gave " + itemName
+                        + " to " + targetActorId + ".",
+                "SIMULATION", worldTick,
+                sourceNpcCanonId, targetActorId, SemanticTag.GIFT_GIVEN.name(),
+                Map.of(
+                        "item_name", itemName,
+                        "source_npc_id", sourceNpcCanonId
+                )));
+    }
+
+    /**
+     * An NPC engaged in combat with another actor.
+     */
+    public static void onActorCombat(String sourceNpcCanonId, String targetActorId,
+                                      String combatOutcome, net.minecraft.core.BlockPos pos,
+                                      long worldTick) {
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.ACTOR_COMBAT_ENGAGED, EnergyType.PHYSICAL,
+                pos, 0.6f, 0.6f,
+                sourceNpcCanonId + " engaged in combat with "
+                        + targetActorId + " (" + combatOutcome + ").",
+                "SIMULATION", worldTick,
+                sourceNpcCanonId, targetActorId, SemanticTag.COMBAT_ENGAGED.name(),
+                Map.of(
+                        "combat_outcome", combatOutcome,
+                        "source_npc_id", sourceNpcCanonId
+                )));
+    }
+
+    // ─── Semantic events (meaning layer) ────────────────────────────
+
+    /** An act of mercy — sparing a defeated enemy, healing, feeding. */
+    public static void onActOfMercy(ServerPlayer player, String targetActorId,
+                                        String detail, long worldTick) {
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.SEMANTIC_ACT_OF_MERCY, EnergyType.SOCIAL,
+                player.blockPosition(), 0.6f, 0.6f,
+                player.getName().getString() + " showed mercy to "
+                        + targetActorId + ": " + detail,
+                "SIMULATION", worldTick,
+                player.getStringUUID(), targetActorId,
+                SemanticTag.ACT_OF_MERCY.name(),
+                Map.of("target_id", targetActorId)));
+    }
+
+    /** An act of cruelty — killing surrendered foe, torture, etc. */
+    public static void onActOfCruelty(ServerPlayer player, String targetActorId,
+                                         String detail, long worldTick) {
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.SEMANTIC_ACT_OF_CRUELTY, EnergyType.KARMA,
+                player.blockPosition(), 0.7f, 0.7f,
+                player.getName().getString() + " committed cruelty against "
+                        + targetActorId + ": " + detail,
+                "SIMULATION", worldTick,
+                player.getStringUUID(), targetActorId,
+                SemanticTag.ACT_OF_CRUELTY.name(),
+                Map.of("target_id", targetActorId)));
+    }
+
+    /** A technique displayed publicly. */
+    public static void onTechniqueDisplayed(ServerPlayer player, String techniqueName,
+                                             long worldTick) {
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.SEMANTIC_TECHNIQUE_DISPLAYED, EnergyType.SPIRITUAL,
+                player.blockPosition(), 0.6f, 0.6f,
+                player.getName().getString() + " displayed technique: "
+                        + techniqueName,
+                "SIMULATION", worldTick,
+                player.getStringUUID(), "",
+                SemanticTag.TECHNIQUE_DISPLAYED.name(),
+                Map.of("technique_name", techniqueName)));
+    }
+
+    /** A cultivation level revealed publicly. */
+    public static void onCultivationRevealed(ServerPlayer player, String realm,
+                                              long worldTick) {
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.SEMANTIC_CULTIVATION_REVEALED, EnergyType.SPIRITUAL,
+                player.blockPosition(), 0.6f, 0.6f,
+                player.getName().getString() + " revealed cultivation: "
+                        + realm,
+                "SIMULATION", worldTick,
+                player.getStringUUID(), "",
+                SemanticTag.CULTIVATION_REVEALED.name(),
+                Map.of("realm", realm)));
+    }
+
+    /** A promise made between two actors. */
+    public static void onPromiseMade(ServerPlayer player, String targetActorId,
+                                       String promiseDetail, long worldTick) {
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.SEMANTIC_PROMISE_MADE, EnergyType.SOCIAL,
+                player.blockPosition(), 0.5f, 0.5f,
+                player.getName().getString() + " made a promise to "
+                        + targetActorId + ": " + promiseDetail,
+                "SIMULATION", worldTick,
+                player.getStringUUID(), targetActorId,
+                SemanticTag.PROMISE_MADE.name(),
+                Map.of("promise_detail", promiseDetail)));
+    }
+
+    /** A previously made promise was broken. */
+    public static void onPromiseBroken(ServerPlayer player, String targetActorId,
+                                         String promiseDetail, long worldTick) {
+        WorldEventBus.dispatch(WorldEvent.of(
+                SemanticEventTopics.SEMANTIC_PROMISE_BROKEN, EnergyType.KARMA,
+                player.blockPosition(), 0.7f, 0.7f,
+                player.getName().getString() + " broke a promise to "
+                        + targetActorId + ": " + promiseDetail,
+                "SIMULATION", worldTick,
+                player.getStringUUID(), targetActorId,
+                SemanticTag.PROMISE_BROKEN.name(),
+                Map.of("promise_detail", promiseDetail)));
+    }
+
+    // ─── Helper predicates ─────────────────────────────────────────────
+
+    private static boolean isNotableRealm(String realmName) {
+        if (realmName == null) return false;
+        String lower = realmName.toLowerCase();
+        return lower.contains("nascent") || lower.contains("soul formation")
+                || lower.contains("ascendant") || lower.contains("transcendence")
+                || lower.contains("true immortal") || lower.contains("paragon");
     }
 }

@@ -2,57 +2,59 @@ package dev.ergenverse.simulation.event;
 
 import net.minecraft.core.BlockPos;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * WorldEvent — an immutable record describing one disturbance in the world.
  *
- * <p>Per the ChatGPT architectural review: "No quests. No scripts. Just
- * consequences." Every WorldEvent is a consequence — something that
- * objectively happened in the world, now propagating to any system that
- * cares.
+ * <p><b>Event-Sourced Architecture (2026-07-23):</b>
+ * "The world is no longer driven by methods. It's driven by facts."
+ * A WorldEvent is a rich <b>fact</b> carrying what happened, where, who did it,
+ * who was affected, what it meant, and structured metadata for downstream
+ * subscribers. The player is a first-class actor — their actions publish
+ * WorldEvents exactly like spirit fruit ripening or sect declarations.
  *
- * <p><b>Event-Sourced Architecture (2026-07-23 pivot):</b>
- * The user's core directive: "The world is no longer driven by methods.
- * It's driven by facts." A WorldEvent is now a rich <b>fact</b> — it
- * carries not just what happened and where, but <b>who</b> did it and
- * <b>who</b> was affected. This makes the player a first-class actor in
- * the simulation: a player action publishes a WorldEvent exactly like
- * a spirit fruit ripening or a sect declaring war, and every subscriber
- * (memory, rumor, chronicle, relationships, opportunities, dialogue)
- * derives its own consequences from that one fact.
+ * <p><b>Per user directive (2026-07-23 #2):</b>
+ * <pre>
+ *   "WorldEvent needs structured payloads.
+ *
+ *   metadata
+ *     gift
+ *       ↓ item id
+ *       quality
+ *       quantity
+ *
+ *   No string parsing ever again."
+ * </pre>
  *
  * <p>An event has:
  * <ul>
- *   <li><b>topic</b> — a dot-separated topic string for routing
- *       (e.g. "player.gift.given", "actor.combat.engaged",
- *       "semantic.act_of_mercy", "beast.migrate", "rumor.spread").
- *       Subscribers subscribe by topic prefix.</li>
- *   <li><b>energyType</b> — determines propagation radius and which
- *       subscribers are sensitive to it.</li>
- *   <li><b>pos</b> — the world position where the event originated.
- *       May be {@link BlockPos#ZERO} for global events.</li>
- *   <li><b>intensity</b> — 0.0 to 1.0. How strong the disturbance is.</li>
- *   <li><b>severity</b> — 0.0 to 1.0. How historically significant.
- *       Events with severity ≥ {@link WorldEventBus#LEDGER_SEVERITY_THRESHOLD}
- *       are written to {@link dev.ergenverse.history.WorldHistory}.</li>
- *   <li><b>description</b> — human-readable canon-faithful description.</li>
- *   <li><b>canonSource</b> — provenance citation (Art XV). e.g.
- *       "RI Ch.12 §3" or "INFERRED from RI Ch.7" or "SIMULATION".</li>
- *   <li><b>timestamp</b> — the server tick when the event was published.</li>
- *   <li><b>sourceActorId</b> — who performed the action. A player UUID
- *       or an NPC canon ID (e.g. "wang_lin", "old_chen"). Empty string
- *       for environmental events (spirit fruit ripening, beast migration).</li>
- *   <li><b>targetActorId</b> — who was affected. A player UUID or NPC
- *       canon ID. Empty string if the event has no specific target
- *       (e.g. a breakthrough affects the breaker, not a separate target).</li>
- *   <li><b>semanticTag</b> — a {@link SemanticTag} name (e.g. "GIFT_GIVEN",
- *       "ACT_OF_MERCY", "CULTIVATION_REVEALED"). Empty string for
- *       events that carry no semantic classification. This is the
- *       "meaning" layer: NPCs don't just react to "player interacted" —
- *       they react to "player revealed their cultivation publicly."</li>
+ *   <li><b>topic</b> — dot-separated routing string (e.g. "player.gift.given").</li>
+ *   <li><b>energyType</b> — propagation radius category (QI, SOCIAL, PHYSICAL, etc.).</li>
+ *   <li><b>pos</b> — world position. BlockPos.ZERO for global events.</li>
+ *   <li><b>intensity</b> — 0.0–1.0, how strong the disturbance is.</li>
+ *   <li><b>severity</b> — 0.0–1.0, how historically significant.</li>
+ *   <li><b>description</b> — human-readable canon-faithful description (for
+ *       chronicle entries, dialogue, NPC memories that are narrative text).</li>
+ *   <li><b>canonSource</b> — provenance citation (Art XV).</li>
+ *   <li><b>timestamp</b> — server tick when published.</li>
+ *   <li><b>sourceActorId</b> — who performed the action (player UUID or NPC canon ID).
+ *       Empty for environmental events.</li>
+ *   <li><b>targetActorId</b> — who was affected. Empty if no specific target.</li>
+ *   <li><b>semanticTag</b> — the meaning classification (e.g. "ACT_OF_MERCY").
+ *       Empty for events without semantic classification.</li>
+ *   <li><b>metadata</b> — structured key-value pairs for machine consumption.
+ *       Subscribers read this instead of parsing the description string.
+ *       Examples: {"item_name": "Restriction Flag", "item_quality": "rare",
+ *       "npc_name": "Wang Lin", "realm": "Nascent Soul",
+ *       "combat_outcome": "player_won", "from_realm": "Core Formation"}.
+ *       Empty for events without structured data.</li>
  * </ul>
  *
- * <p><b>Immutability:</b> WorldEvent is a record — all fields are final.
- * This allows safe concurrent dispatch to multiple subscribers.
+ * <p><b>Immutability:</b> record — all fields final. The metadata map is
+ * unmodifiable (either empty or wrapped via Collections.unmodifiableMap).
+ * Safe for concurrent dispatch.
  */
 public record WorldEvent(
         String topic,
@@ -65,52 +67,32 @@ public record WorldEvent(
         long timestamp,
         String sourceActorId,
         String targetActorId,
-        String semanticTag
+        String semanticTag,
+        Map<String, String> metadata
 ) {
     /**
-     * Compact factory for the common case: a positioned event with
-     * default severity (derived from intensity) and no actor metadata.
-     * Used by environmental events (spirit fruit, beast migration, etc.).
+     * Compact factory for environmental events — no actor metadata, no metadata.
+     * Severity defaults to intensity.
      */
     public static WorldEvent of(String topic, EnergyType type, BlockPos pos,
                                  float intensity, String desc, String canon, long tick) {
         return new WorldEvent(topic, type, pos, intensity, intensity, desc, canon, tick,
-                "", "", "");
+                "", "", "", Map.of());
     }
 
     /**
-     * Factory for a global (positionless) event. Uses BlockPos.ZERO as
-     * the origin — subscribers treat this as "everywhere".
+     * Factory for global (positionless) environmental events.
      */
     public static WorldEvent global(String topic, EnergyType type,
                                      float intensity, String desc, String canon, long tick) {
         return new WorldEvent(topic, type, BlockPos.ZERO, intensity, intensity, desc, canon, tick,
-                "", "", "");
+                "", "", "", Map.of());
     }
 
     /**
-     * Factory for a <b>simulation event</b> — a rich fact carrying actor
-     * metadata and a semantic classification. This is the factory used by
-     * {@link dev.ergenverse.simulation.action.SimulationActions} when the
-     * player or an NPC performs a meaningful action.
-     *
-     * <p>Unlike {@link #of}, this lets the caller set severity independently
-     * of intensity (a gift might have low intensity but high severity if
-     * it's a life-saving artifact), and carries the source/target actor IDs
-     * and semantic tag that downstream subscribers (RelationshipEngine,
-     * OpportunityGenerator, MemoryEventSubscriber) need.
-     *
-     * @param topic          the routing topic (e.g. "player.gift.given")
-     * @param type           the energy type (determines propagation radius)
-     * @param pos            the world position where the action occurred
-     * @param intensity      0.0–1.0, how strong the disturbance is
-     * @param severity       0.0–1.0, how historically significant
-     * @param desc           human-readable description
-     * @param canon          provenance citation
-     * @param tick           the server tick
-     * @param sourceActorId  who performed the action (player UUID or NPC canon ID)
-     * @param targetActorId  who was affected (player UUID or NPC canon ID, "" if none)
-     * @param semanticTag    a {@link SemanticTag} name, or "" for no classification
+     * Factory for a simulation event with actor metadata and semantic tag,
+     * but no structured metadata payload. Used for backward compatibility
+     * with callers that haven't migrated to metadata yet.
      */
     public static WorldEvent simulation(String topic, EnergyType type, BlockPos pos,
                                          float intensity, float severity,
@@ -120,7 +102,59 @@ public record WorldEvent(
         return new WorldEvent(topic, type, pos, intensity, severity, desc, canon, tick,
                 sourceActorId != null ? sourceActorId : "",
                 targetActorId != null ? targetActorId : "",
-                semanticTag != null ? semanticTag : "");
+                semanticTag != null ? semanticTag : "",
+                Map.of());
+    }
+
+    /**
+     * Factory for a simulation event with structured metadata.
+     *
+     * <p>This is the preferred factory for gameplay code. It carries
+     * structured data that subscribers read directly instead of
+     * parsing the description string. Example:
+     * <pre>
+     *   WorldEvent.of("player.gift.given", EnergyType.SOCIAL, pos,
+     *       0.4f, 0.4f, "Player gave Restriction Flag to Wang Lin.",
+     *       "SIMULATION", tick,
+     *       player.getUUID(), "wang_lin", "GIFT_GIVEN",
+     *       Map.of("item_name", "Restriction Flag",
+     *             "item_quality", "rare"));
+     * </pre>
+     *
+     * @param topic          routing topic
+     * @param type           energy type
+     * @param pos            position (or BlockPos.ZERO for global)
+     * @param intensity      0.0–1.0
+     * @param severity       0.0–1.0
+     * @param desc           human-readable description
+     * @param canon          provenance citation
+     * @param tick           server tick
+     * @param sourceActorId  who performed the action
+     * @param targetActorId  who was affected
+     * @param semanticTag    meaning classification
+     * @param metadata       structured key-value pairs (machine-readable)
+     */
+    public static WorldEvent of(String topic, EnergyType type, BlockPos pos,
+                                 float intensity, float severity,
+                                 String desc, String canon, long tick,
+                                 String sourceActorId, String targetActorId,
+                                 String semanticTag,
+                                 Map<String, String> metadata) {
+        return new WorldEvent(topic, type, pos, intensity, severity, desc, canon, tick,
+                sourceActorId != null ? sourceActorId : "",
+                targetActorId != null ? targetActorId : "",
+                semanticTag != null ? semanticTag : "",
+                metadata != null && !metadata.isEmpty()
+                        ? Collections.unmodifiableMap(metadata)
+                        : Map.of());
+    }
+
+    /**
+     * Convenience: get a metadata value, or fallback.
+     * Returns the fallback if the key is missing.
+     */
+    public String meta(String key, String fallback) {
+        return metadata.getOrDefault(key, fallback);
     }
 
     /** Whether this event is global (no specific position). */
@@ -128,14 +162,19 @@ public record WorldEvent(
         return pos.equals(BlockPos.ZERO);
     }
 
-    /** Whether this event carries actor metadata (is a simulation action). */
+    /** Whether this event carries actor metadata. */
     public boolean hasActors() {
         return !sourceActorId.isEmpty();
     }
 
-    /** Whether this event carries a semantic classification. */
+    /** Whether this event has a semantic classification. */
     public boolean hasSemanticTag() {
         return !semanticTag.isEmpty();
+    }
+
+    /** Whether this event has structured metadata. */
+    public boolean hasMetadata() {
+        return !metadata.isEmpty();
     }
 
     @Override
@@ -146,6 +185,7 @@ public record WorldEvent(
                 + (hasActors() ? " src=" + sourceActorId : "")
                 + (!targetActorId.isEmpty() ? " tgt=" + targetActorId : "")
                 + (hasSemanticTag() ? " sem=" + semanticTag : "")
+                + (hasMetadata() ? " meta=" + metadata.keySet() : "")
                 + "]";
     }
 }

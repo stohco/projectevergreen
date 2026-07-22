@@ -43,6 +43,9 @@ public final class SpiritBeastModelLayers {
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "stone_back_boar"), "main");
     public static final ModelLayerLocation CULTIVATOR_ROBE =
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "cultivator"), "main");
+    // CRON-COMPLETIONIST-21: Flying sword model layer
+    public static final ModelLayerLocation FLYING_SWORD =
+            new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "flying_sword"), "main");
 
     // ── Supplier mapping for RegisterLayerDefinitions ────────────────────
     // RegisterLayerDefinitions expects a Map<ModelLayerLocation, Supplier<LayerDefinition>>.
@@ -61,6 +64,7 @@ public final class SpiritBeastModelLayers {
         if (FIRE_BEAST_EYES.equals(location))   return SpiritFireBeastModel::createBodyLayer;
         if (STONE_BACK_BOAR.equals(location))     return StoneBackBoarModel::createBodyLayer;
         if (CULTIVATOR_ROBE.equals(location))     return CultivatorRobeModel::createBodyLayer;
+        if (FLYING_SWORD.equals(location))           return FlyingSwordModel::createBodyLayer;
         return null;
     }
 }

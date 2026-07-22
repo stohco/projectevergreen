@@ -346,9 +346,16 @@ public final class Ergenverse {
                     new dev.ergenverse.simulation.action.RelationshipEngine());
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.simulation.action.OpportunityGenerator());
+            // ── Belief layer (2026-07-23 round 2) ──
+            // The missing "belief" subscriber: same event → different beliefs by
+            // different NPC worldviews. Old Chen sees mercy → "courageous".
+            // Teng scout sees mercy → "dangerous". Beliefs drive behavior, not facts.
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.belief.BeliefFormationSubscriber());
             LOGGER.info("[Ergenverse] Registered WorldEventBus subscribers: QiDisturbance + BirdFlight "
                     + "+ ActivityInterruption + Memory + Chronicle + HistorySubscriber "
-                    + "+ RelationshipEngine + OpportunityGenerator (event-sourced architecture).");
+                    + "+ RelationshipEngine + OpportunityGenerator + BeliefFormation "
+                    + "(event-sourced + belief architecture).");
             // Art XLII/XLIII: seed the chronicle opening + canon divergence ledger on world load.
             // The chronicle's t₀ entry is the immutable "world at the moment the player arrives" record.
             dev.ergenverse.history.WorldChronicle chronicle =

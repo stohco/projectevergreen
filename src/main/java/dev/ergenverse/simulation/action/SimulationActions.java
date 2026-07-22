@@ -1,406 +1,503 @@
 package dev.ergenverse.simulation.action;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.simulation.event.ActionDescriptors;
 import dev.ergenverse.simulation.event.EnergyType;
 import dev.ergenverse.simulation.event.SemanticEventTopics;
 import dev.ergenverse.simulation.event.SemanticTag;
 import dev.ergenverse.simulation.event.WorldEvent;
 import dev.ergenverse.simulation.event.WorldEventBus;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
+
+import java.util.HashMap;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.Map;
+
 /**
- * SimulationActions — the single entry point through which the player
- * (and NPCs) act on the world. <b>This is where the player becomes a
- * first-class actor in the simulation.</b>
+ * SimulationActions — <b>pure factory methods</b> that build WorldEvents
+ * for player and NPC actions. Callers dispatch the event to the bus.
  *
- * <p>Per the user's architectural directive (2026-07-23):
+ * <p><b>Architectural evolution (2026-07-23, round 2):</b>
+ * The user's critique: "Why does SimulationActions exist? If it's just
+ * packaging a WorldEvent, then it's becoming another coordinator."
+ *
+ * <p>Resolved: SimulationActions is now a <b>factory</b>, not a coordinator.
+ * Every method returns a {@link WorldEvent} (or a list of them). The caller
+ * dispatches:
  * <pre>
- *   "Instead of:  Player → HistoryManager → Bus
- *    Do:          Player → WorldEventBus → EVERYTHING
- *
- *    HistoryManager shouldn't be the destination.
- *    It should be a subscriber.
- *
- *    The player should be another simulation source."
+ *   WorldEvent event = SimulationActions.interactionEvent(player, npcId, "RIGHT_CLICK", detail, tick);
+ *   WorldEventBus.dispatch(event);
  * </pre>
+ * The world only knows about events. Not who published them. The bus is
+ * the single coordinator.
  *
- * <p>Before this class existed, gameplay code called
- * {@code HistoryManager.onNpcInteraction(...)} which wrote directly to
- * siloed stores (PlayerHistory, NpcMemory, RelationshipHistory) and
- * <i>never reached the WorldEventBus</i>. The player was a special case
- * that bypassed the simulation. No NPC could remember what the player
- * did, no rumor could spread, the chronicle missed it entirely.
+ * <p>For backward compatibility, the old {@code player*} methods (called by
+ * the HistoryManager facade) still dispatch internally. New code should
+ * prefer the {@code *Event} factory methods and dispatch explicitly.
  *
- * <p>Now, gameplay code calls {@code SimulationActions.playerInteractedWithNpc(...)}.
- * This publishes a {@link WorldEvent} to the {@link WorldEventBus} with
- * full actor metadata (sourceActorId = player UUID, targetActorId = NPC
- * canon ID) and a semantic tag. Every subscriber then derives its own
- * consequences from that one fact:
+ * <h2>Compositional descriptors + structured metadata</h2>
+ * <p>Every event built here carries:
  * <ul>
- *   <li>{@code HistorySubscriber} records it in PlayerHistory, NpcMemory,
- *       WorldHistory.</li>
- *   <li>{@code RelationshipEngine} infers a relationship delta.</li>
- *   <li>{@code MemoryEventSubscriber} records cognitive memories for
- *       nearby NPCs who witnessed it.</li>
- *   <li>{@code RumorEngineEvents} (via MemoryEventSubscriber) seeds a
- *       rumor if the severity is high enough.</li>
- *   <li>{@code ChronicleSubscriber} compiles it into the WorldChronicle.</li>
- *   <li>{@code OpportunityGenerator} may create a new opportunity
- *       (escort request, recruitment offer, etc.).</li>
+ *   <li><b>{@link ActionDescriptors}</b> — intent, cost, beneficiary, risk,
+ *       visibility. Compositional, not enum-ossified. Subscribers infer
+ *       "this qualifies as mercy" from HELP+HIGH+OTHER+HIGH, rather than
+ *       reading a hardcoded ACT_OF_MERCY tag.</li>
+ *   <li><b>Metadata Map</b> — structured payload. e.g. for a gift:
+ *       {@code {"item"="Spirit Grass", "quality"="MEDIUM", "quantity"="1"}}.
+ *       Subscribers read from this instead of parsing the description string.
+ *       No string parsing ever again.</li>
  * </ul>
- *
- * <p><b>The player obeys the exact same rules as everyone else.</b>
- * A spirit fruit ripening publishes an event. A player giving a gift
- * publishes an event. An NPC giving a gift publishes an event. All
- * three flow through the same bus, to the same subscribers, with the
- * same cascade. The simulation doesn't know or care that the player
- * is special — the player is just another actor whose actions are facts.
- *
- * <h2>The semantic layer</h2>
- * <p>Besides the action-level events (gift, combat, interaction), this
- * class also publishes <b>semantic events</b> — the "meaning" layer.
- * When the player spares a defeated enemy, that's two events:
- * <ol>
- *   <li>{@code player.combat.engaged} (the action)</li>
- *   <li>{@code semantic.act_of_mercy} (the meaning)</li>
- * </ol>
- * The RelationshipEngine reacts to the semantic event (mercy → trust up,
- * fear down), while the HistorySubscriber reacts to the action event
- * (records the combat outcome). This separation lets NPCs reason about
- * <i>meaning</i>, not just physical actions.
  *
  * <h2>Actor IDs</h2>
- * <p>Actor IDs are strings that uniquely identify an actor in the
- * simulation:
  * <ul>
- *   <li>Players: their UUID string (e.g. "550e8400-e29b-...")</li>
- *   <li>NPCs: their canon ID (e.g. "wang_lin", "old_chen",
- *       "heng_yue_elder")</li>
- *   <li>Environmental: empty string "" (spirit fruit, beast migration)</li>
+ *   <li>Players: UUID string</li>
+ *   <li>NPCs: canon ID (e.g. "wang_lin", "old_chen")</li>
+ *   <li>Environmental: "" (empty)</li>
  * </ul>
- * The RelationshipEngine doesn't check "is this Wang Lin?" — it checks
- * "can these two actors have a relationship?" The answer is almost
- * always yes. The graph knows actors, not canon.
  */
 public final class SimulationActions {
 
     private SimulationActions() {}
 
     // ═══════════════════════════════════════════════════════════════════
-    //  Player actions — the player is the source actor
+    //  Player action EVENTS — factory methods returning WorldEvent
     // ═══════════════════════════════════════════════════════════════════
 
     /**
-     * The player interacted with an NPC (right-click, talk, etc.).
-     *
-     * @param player         the player who interacted
-     * @param npcCanonId     the canon ID of the NPC (e.g. "wang_lin")
-     * @param interactionType the type of interaction (e.g. "RIGHT_CLICK", "TALK")
-     * @param detail         human-readable detail
-     * @param tick           the server tick
+     * Build a player-interaction event. The player is the source actor.
      */
-    public static void playerInteractedWithNpc(ServerPlayer player, String npcCanonId,
-                                                String interactionType, String detail,
-                                                long tick) {
+    public static WorldEvent interactionEvent(ServerPlayer player, String npcCanonId,
+                                               String interactionType, String detail, long tick) {
         String desc = player.getName().getString() + " interacted with " + npcCanonId
                 + " (" + interactionType + "): " + detail;
-        publishPlayerAction(SemanticEventTopics.PLAYER_INTERACTION, EnergyType.SOCIAL,
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.NEUTRAL)
+                .cost(ActionDescriptors.Cost.NONE)
+                .beneficiary(ActionDescriptors.Beneficiary.OTHER)
+                .risk(ActionDescriptors.Risk.NONE)
+                .visibility(ActionDescriptors.Visibility.LOCAL)
+                .build();
+        Map<String,String> meta = Map.of(
+                "interaction_type", interactionType,
+                "detail", detail);
+        return buildPlayerEvent(SemanticEventTopics.PLAYER_INTERACTION, EnergyType.SOCIAL,
                 player, npcCanonId, SemanticTag.INTERACTION,
-                0.25f, 0.25f, desc, tick);
+                0.25f, 0.25f, desc, tick, desc_, meta);
     }
 
     /**
-     * The player gave a gift to an NPC.
-     *
-     * @param player     the player who gave the gift
-     * @param npcCanonId the canon ID of the NPC who received it
-     * @param itemName   the name of the gift
-     * @param tick       the server tick
+     * Build a player-gave-gift event.
      */
-    public static void playerGaveGift(ServerPlayer player, String npcCanonId,
-                                       String itemName, long tick) {
+    public static WorldEvent giftGivenEvent(ServerPlayer player, String npcCanonId,
+                                             String itemName, String quality, int quantity, long tick) {
         String desc = player.getName().getString() + " gave " + itemName
                 + " to " + npcCanonId + ".";
-        publishPlayerAction(SemanticEventTopics.PLAYER_GIFT_GIVEN, EnergyType.SOCIAL,
+        ActionDescriptors.Cost cost = mapQualityToCost(quality);
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.HELP)
+                .cost(cost)
+                .beneficiary(ActionDescriptors.Beneficiary.OTHER)
+                .risk(ActionDescriptors.Risk.NONE)
+                .visibility(ActionDescriptors.Visibility.PRIVATE)
+                .build();
+        Map<String,String> meta = Map.of(
+                "item", itemName,
+                "quality", quality != null ? quality : "UNKNOWN",
+                "quantity", String.valueOf(quantity));
+        return buildPlayerEvent(SemanticEventTopics.PLAYER_GIFT_GIVEN, EnergyType.SOCIAL,
                 player, npcCanonId, SemanticTag.GIFT_GIVEN,
-                0.4f, 0.4f, desc, tick);
+                0.4f, 0.4f, desc, tick, desc_, meta);
     }
 
     /**
-     * The player received a gift from an NPC. The NPC is the source actor;
-     * the player is the target.
-     *
-     * @param player     the player who received the gift
-     * @param npcCanonId the canon ID of the NPC who gave it
-     * @param itemName   the name of the gift
-     * @param tick       the server tick
+     * Build a player-received-gift event. The NPC is the source; the player
+     * is the target.
      */
-    public static void playerReceivedGift(ServerPlayer player, String npcCanonId,
-                                           String itemName, long tick) {
+    public static WorldEvent giftReceivedEvent(ServerPlayer player, String npcCanonId,
+                                                String itemName, String quality, int quantity, long tick) {
         String desc = npcCanonId + " gave " + itemName
                 + " to " + player.getName().getString() + ".";
-        // The NPC is the source; the player is the target.
-        WorldEvent event = WorldEvent.simulation(
+        ActionDescriptors.Cost cost = mapQualityToCost(quality);
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.HELP)
+                .cost(cost)
+                .beneficiary(ActionDescriptors.Beneficiary.OTHER)
+                .risk(ActionDescriptors.Risk.NONE)
+                .visibility(ActionDescriptors.Visibility.PRIVATE)
+                .build();
+        Map<String,String> meta = Map.of(
+                "item", itemName,
+                "quality", quality != null ? quality : "UNKNOWN",
+                "quantity", String.valueOf(quantity),
+                "giver", npcCanonId);
+        return WorldEvent.of(
                 SemanticEventTopics.PLAYER_GIFT_RECEIVED, EnergyType.SOCIAL,
                 player.blockPosition(), 0.5f, 0.5f, desc,
                 "SIMULATION", tick,
                 npcCanonId, player.getStringUUID(),
-                SemanticTag.GIFT_RECEIVED.name());
-        WorldEventBus.dispatch(event);
+                SemanticTag.GIFT_RECEIVED.name(), withDescriptors(desc_, meta));
     }
 
     /**
-     * The player engaged in combat with an NPC.
-     *
-     * @param player     the player
-     * @param npcCanonId the canon ID of the NPC
-     * @param npcName    the display name of the NPC
-     * @param playerWon  whether the player won (killed the NPC)
-     * @param tick       the server tick
+     * Build a player-combat event.
      */
-    public static void playerEngagedCombat(ServerPlayer player, String npcCanonId,
-                                            String npcName, boolean playerWon,
-                                            long tick) {
+    public static WorldEvent combatEvent(ServerPlayer player, String npcCanonId,
+                                          String npcName, boolean playerWon, long tick) {
         String outcome = playerWon
                 ? player.getName().getString() + " killed " + npcName + " (" + npcCanonId + ")."
                 : player.getName().getString() + " was defeated by " + npcName + ".";
         float severity = playerWon ? 0.7f : 0.5f;
-        publishPlayerAction(SemanticEventTopics.PLAYER_COMBAT_ENGAGED, EnergyType.PHYSICAL,
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.HARM)
+                .cost(playerWon ? ActionDescriptors.Cost.LOW : ActionDescriptors.Cost.HIGH)
+                .beneficiary(ActionDescriptors.Beneficiary.SELF)
+                .risk(playerWon ? ActionDescriptors.Risk.LOW : ActionDescriptors.Risk.HIGH)
+                .visibility(ActionDescriptors.Visibility.LOCAL)
+                .build();
+        Map<String,String> meta = Map.of(
+                "npc_id", npcCanonId,
+                "npc_name", npcName,
+                "outcome", playerWon ? "VICTORY" : "DEFEAT");
+        return buildPlayerEvent(SemanticEventTopics.PLAYER_COMBAT_ENGAGED, EnergyType.PHYSICAL,
                 player, npcCanonId, SemanticTag.COMBAT_ENGAGED,
-                0.6f, severity, outcome, tick);
+                0.6f, severity, outcome, tick, desc_, meta);
     }
 
     /**
-     * The player achieved a cultivation breakthrough.
-     *
-     * @param player      the player
-     * @param fromRealm   the realm they broke through FROM
-     * @param toRealm     the realm they broke through TO
-     * @param tick        the server tick
+     * Build a player-breakthrough event. Also returns the companion
+     * cultivation-revealed semantic event.
      */
-    public static void playerBreakthrough(ServerPlayer player, String fromRealm,
-                                           String toRealm, long tick) {
+    public static WorldEvent[] breakthroughEvents(ServerPlayer player, String fromRealm,
+                                                   String toRealm, long tick) {
         String desc = player.getName().getString() + " broke through from "
                 + fromRealm + " to " + toRealm + ".";
-        // Breakthroughs at notable realms are high-severity (detectable across regions).
         float severity = isNotableRealm(toRealm) ? 0.8f : 0.5f;
-        publishPlayerAction(SemanticEventTopics.PLAYER_BREAKTHROUGH, EnergyType.SPIRITUAL,
-                player, "", SemanticTag.BREAKTHROUGH,
-                0.7f, severity, desc, tick);
+        ActionDescriptors.Visibility vis = isNotableRealm(toRealm)
+                ? ActionDescriptors.Visibility.REGIONAL
+                : ActionDescriptors.Visibility.LOCAL;
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.SELF_GAIN)
+                .cost(ActionDescriptors.Cost.HIGH)
+                .beneficiary(ActionDescriptors.Beneficiary.SELF)
+                .risk(ActionDescriptors.Risk.HIGH)
+                .visibility(vis)
+                .build();
+        Map<String,String> meta = Map.of(
+                "from_realm", fromRealm,
+                "to_realm", toRealm,
+                "notable", String.valueOf(isNotableRealm(toRealm)));
 
-        // Also publish a semantic "cultivation revealed" event — a breakthrough
-        // is the most dramatic possible revelation of cultivation level.
-        publishSemantic(SemanticEventTopics.SEMANTIC_CULTIVATION_REVEALED,
-                EnergyType.SPIRITUAL, player, "",
-                SemanticTag.CULTIVATION_REVEALED,
-                0.7f, severity,
+        WorldEvent actionEvent = buildPlayerEvent(SemanticEventTopics.PLAYER_BREAKTHROUGH,
+                EnergyType.SPIRITUAL, player, "", SemanticTag.BREAKTHROUGH,
+                0.7f, severity, desc, tick, desc_, meta);
+
+        // Companion semantic event: cultivation revealed.
+        ActionDescriptors semDesc = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.SELF_GAIN)
+                .cost(ActionDescriptors.Cost.NONE)
+                .beneficiary(ActionDescriptors.Beneficiary.SELF)
+                .risk(ActionDescriptors.Risk.MEDIUM)
+                .visibility(vis)
+                .build();
+        WorldEvent semEvent = WorldEvent.of(
+                SemanticEventTopics.SEMANTIC_CULTIVATION_REVEALED, EnergyType.SPIRITUAL,
+                player.blockPosition(), 0.7f, severity,
                 player.getName().getString() + " revealed " + toRealm
-                        + " cultivation through a breakthrough.", tick);
+                        + " cultivation through a breakthrough.",
+                "SIMULATION", tick,
+                player.getStringUUID(), "",
+                SemanticTag.CULTIVATION_REVEALED.name(), withDescriptors(semDesc, meta));
+
+        return new WorldEvent[] { actionEvent, semEvent };
     }
 
     /**
-     * The player discovered something noteworthy.
-     *
-     * @param player  the player
-     * @param subject the subject of the discovery
-     * @param detail  human-readable detail
-     * @param tick    the server tick
+     * Build a player-discovery event.
      */
-    public static void playerDiscovered(ServerPlayer player, String subject,
-                                         String detail, long tick) {
+    public static WorldEvent discoveryEvent(ServerPlayer player, String subject,
+                                             String detail, long tick) {
         String desc = player.getName().getString() + " discovered " + subject
                 + ": " + detail;
-        publishPlayerAction(SemanticEventTopics.PLAYER_DISCOVERY, EnergyType.ACQUIRE,
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.SELF_GAIN)
+                .cost(ActionDescriptors.Cost.LOW)
+                .beneficiary(ActionDescriptors.Beneficiary.SELF)
+                .risk(ActionDescriptors.Risk.LOW)
+                .visibility(ActionDescriptors.Visibility.PRIVATE)
+                .build();
+        Map<String,String> meta = Map.of(
+                "subject", subject,
+                "detail", detail);
+        return buildPlayerEvent(SemanticEventTopics.PLAYER_DISCOVERY, EnergyType.ACQUIRE,
                 player, "", SemanticTag.DISCOVERY,
-                0.4f, 0.4f, desc, tick);
+                0.4f, 0.4f, desc, tick, desc_, meta);
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  NPC actions — an NPC is the source actor (same rules as player)
+    //  Semantic events — the "meaning" layer (factory methods)
     // ═══════════════════════════════════════════════════════════════════
 
     /**
-     * An NPC gave a gift to another actor (player or NPC).
-     * e.g. Wang Lin gives Li Muwan a flower.
-     *
-     * <p>This is the exact same event type as a player giving a gift —
-     * the simulation doesn't distinguish. The only difference is the
-     * sourceActorId is an NPC canon ID instead of a player UUID.
-     *
-     * @param sourceNpcCanonId  the canon ID of the NPC giving the gift
-     * @param targetActorId     the actor receiving (player UUID or NPC canon ID)
-     * @param itemName          the name of the gift
-     * @param pos               where the gift was given
-     * @param tick              the server tick
+     * Build an act-of-mercy semantic event.
      */
-    public static void actorGaveGift(String sourceNpcCanonId, String targetActorId,
-                                      String itemName, BlockPos pos, long tick) {
+    public static WorldEvent actOfMercyEvent(ServerPlayer actor, String targetActorId,
+                                              String detail, long tick) {
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.HELP)
+                .cost(ActionDescriptors.Cost.HIGH)
+                .beneficiary(ActionDescriptors.Beneficiary.OTHER)
+                .risk(ActionDescriptors.Risk.HIGH)
+                .visibility(ActionDescriptors.Visibility.PUBLIC)
+                .build();
+        Map<String,String> meta = Map.of("detail", detail);
+        return buildPlayerEvent(SemanticEventTopics.SEMANTIC_ACT_OF_MERCY,
+                EnergyType.SOCIAL, actor, targetActorId, SemanticTag.ACT_OF_MERCY,
+                0.6f, 0.6f,
+                actor.getName().getString() + " showed mercy to " + targetActorId
+                        + ": " + detail, tick, desc_, meta);
+    }
+
+    /**
+     * Build an act-of-cruelty semantic event.
+     */
+    public static WorldEvent actOfCrueltyEvent(ServerPlayer actor, String targetActorId,
+                                                String detail, long tick) {
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.HARM)
+                .cost(ActionDescriptors.Cost.NONE)
+                .beneficiary(ActionDescriptors.Beneficiary.NONE)
+                .risk(ActionDescriptors.Risk.NONE)
+                .visibility(ActionDescriptors.Visibility.PUBLIC)
+                .build();
+        Map<String,String> meta = Map.of("detail", detail);
+        return buildPlayerEvent(SemanticEventTopics.SEMANTIC_ACT_OF_CRUELTY,
+                EnergyType.KARMA, actor, targetActorId, SemanticTag.ACT_OF_CRUELTY,
+                0.7f, 0.7f,
+                actor.getName().getString() + " committed cruelty against " + targetActorId
+                        + ": " + detail, tick, desc_, meta);
+    }
+
+    /**
+     * Build a technique-displayed semantic event.
+     */
+    public static WorldEvent techniqueDisplayedEvent(ServerPlayer actor, String techniqueName,
+                                                      long tick) {
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.SELF_GAIN)
+                .cost(ActionDescriptors.Cost.NONE)
+                .beneficiary(ActionDescriptors.Beneficiary.SELF)
+                .risk(ActionDescriptors.Risk.MEDIUM)
+                .visibility(ActionDescriptors.Visibility.REGIONAL)
+                .build();
+        Map<String,String> meta = Map.of("technique", techniqueName);
+        return buildPlayerEvent(SemanticEventTopics.SEMANTIC_TECHNIQUE_DISPLAYED,
+                EnergyType.SPIRITUAL, actor, "", SemanticTag.TECHNIQUE_DISPLAYED,
+                0.6f, 0.6f,
+                actor.getName().getString() + " displayed technique: " + techniqueName,
+                tick, desc_, meta);
+    }
+
+    /**
+     * Build a promise-made semantic event.
+     */
+    public static WorldEvent promiseMadeEvent(ServerPlayer actor, String targetActorId,
+                                               String promiseDetail, long tick) {
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.HELP)
+                .cost(ActionDescriptors.Cost.NONE)
+                .beneficiary(ActionDescriptors.Beneficiary.OTHER)
+                .risk(ActionDescriptors.Risk.MEDIUM)
+                .visibility(ActionDescriptors.Visibility.PRIVATE)
+                .build();
+        Map<String,String> meta = Map.of("promise", promiseDetail);
+        return buildPlayerEvent(SemanticEventTopics.SEMANTIC_PROMISE_MADE,
+                EnergyType.SOCIAL, actor, targetActorId, SemanticTag.PROMISE_MADE,
+                0.5f, 0.5f,
+                actor.getName().getString() + " made a promise to " + targetActorId
+                        + ": " + promiseDetail, tick, desc_, meta);
+    }
+
+    /**
+     * Build a promise-broken semantic event.
+     */
+    public static WorldEvent promiseBrokenEvent(ServerPlayer actor, String targetActorId,
+                                                 String promiseDetail, long tick) {
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.HARM)
+                .cost(ActionDescriptors.Cost.NONE)
+                .beneficiary(ActionDescriptors.Beneficiary.SELF)
+                .risk(ActionDescriptors.Risk.MEDIUM)
+                .visibility(ActionDescriptors.Visibility.LOCAL)
+                .build();
+        Map<String,String> meta = Map.of("promise", promiseDetail);
+        return buildPlayerEvent(SemanticEventTopics.SEMANTIC_PROMISE_BROKEN,
+                EnergyType.KARMA, actor, targetActorId, SemanticTag.PROMISE_BROKEN,
+                0.7f, 0.7f,
+                actor.getName().getString() + " broke a promise to " + targetActorId
+                        + ": " + promiseDetail, tick, desc_, meta);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  NPC action EVENTS — same factory pattern, NPC is the source
+    // ═══════════════════════════════════════════════════════════════════
+
+    /**
+     * Build an NPC-gave-gift event. e.g. Wang Lin gives Li Muwan a flower.
+     */
+    public static WorldEvent actorGaveGiftEvent(String sourceNpcCanonId, String targetActorId,
+                                                 String itemName, String quality, int quantity,
+                                                 BlockPos pos, long tick) {
         String desc = sourceNpcCanonId + " gave " + itemName
                 + " to " + targetActorId + ".";
-        WorldEvent event = WorldEvent.simulation(
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.HELP)
+                .cost(mapQualityToCost(quality))
+                .beneficiary(ActionDescriptors.Beneficiary.OTHER)
+                .risk(ActionDescriptors.Risk.NONE)
+                .visibility(ActionDescriptors.Visibility.PRIVATE)
+                .build();
+        Map<String,String> meta = Map.of(
+                "item", itemName,
+                "quality", quality != null ? quality : "UNKNOWN",
+                "quantity", String.valueOf(quantity));
+        return WorldEvent.of(
                 SemanticEventTopics.ACTOR_GIFT_GIVEN, EnergyType.SOCIAL,
-                pos, 0.4f, 0.4f, desc,
-                "SIMULATION", tick,
+                pos, 0.4f, 0.4f, desc, "SIMULATION", tick,
                 sourceNpcCanonId, targetActorId,
-                SemanticTag.GIFT_GIVEN.name());
-        WorldEventBus.dispatch(event);
+                SemanticTag.GIFT_GIVEN.name(), withDescriptors(desc_, meta));
     }
 
-    /**
-     * An NPC engaged in combat with another actor.
-     *
-     * @param sourceNpcCanonId  the canon ID of the NPC
-     * @param targetActorId     the actor they fought
-     * @param pos               where the combat occurred
-     * @param tick              the server tick
-     */
+    // ═══════════════════════════════════════════════════════════════════
+    //  Backward-compatible dispatch methods (used by HistoryManager facade)
+    //  New code should prefer the *Event factory methods + explicit dispatch.
+    // ═══════════════════════════════════════════════════════════════════
+
+    public static void playerInteractedWithNpc(ServerPlayer player, String npcCanonId,
+                                                String interactionType, String detail, long tick) {
+        WorldEventBus.dispatch(interactionEvent(player, npcCanonId, interactionType, detail, tick));
+    }
+
+    public static void playerGaveGift(ServerPlayer player, String npcCanonId,
+                                       String itemName, long tick) {
+        WorldEventBus.dispatch(giftGivenEvent(player, npcCanonId, itemName, "UNKNOWN", 1, tick));
+    }
+
+    public static void playerReceivedGift(ServerPlayer player, String npcCanonId,
+                                           String itemName, long tick) {
+        WorldEventBus.dispatch(giftReceivedEvent(player, npcCanonId, itemName, "UNKNOWN", 1, tick));
+    }
+
+    public static void playerEngagedCombat(ServerPlayer player, String npcCanonId,
+                                            String npcName, boolean playerWon, long tick) {
+        WorldEventBus.dispatch(combatEvent(player, npcCanonId, npcName, playerWon, tick));
+    }
+
+    public static void playerBreakthrough(ServerPlayer player, String fromRealm,
+                                           String toRealm, long tick) {
+        for (WorldEvent e : breakthroughEvents(player, fromRealm, toRealm, tick)) {
+            WorldEventBus.dispatch(e);
+        }
+    }
+
+    public static void playerDiscovered(ServerPlayer player, String subject,
+                                         String detail, long tick) {
+        WorldEventBus.dispatch(discoveryEvent(player, subject, detail, tick));
+    }
+
+    public static void actOfMercy(ServerPlayer actor, String targetActorId,
+                                   String detail, long tick) {
+        WorldEventBus.dispatch(actOfMercyEvent(actor, targetActorId, detail, tick));
+    }
+
+    public static void actOfCruelty(ServerPlayer actor, String targetActorId,
+                                     String detail, long tick) {
+        WorldEventBus.dispatch(actOfCrueltyEvent(actor, targetActorId, detail, tick));
+    }
+
+    public static void techniqueDisplayed(ServerPlayer actor, String techniqueName, long tick) {
+        WorldEventBus.dispatch(techniqueDisplayedEvent(actor, techniqueName, tick));
+    }
+
+    public static void promiseMade(ServerPlayer actor, String targetActorId,
+                                    String promiseDetail, long tick) {
+        WorldEventBus.dispatch(promiseMadeEvent(actor, targetActorId, promiseDetail, tick));
+    }
+
+    public static void promiseBroken(ServerPlayer actor, String targetActorId,
+                                     String promiseDetail, long tick) {
+        WorldEventBus.dispatch(promiseBrokenEvent(actor, targetActorId, promiseDetail, tick));
+    }
+
+    public static void actorGaveGift(String sourceNpcCanonId, String targetActorId,
+                                      String itemName, BlockPos pos, long tick) {
+        WorldEventBus.dispatch(actorGaveGiftEvent(sourceNpcCanonId, targetActorId,
+                itemName, "UNKNOWN", 1, pos, tick));
+    }
+
     public static void actorEngagedCombat(String sourceNpcCanonId, String targetActorId,
                                            BlockPos pos, long tick) {
         String desc = sourceNpcCanonId + " engaged in combat with " + targetActorId + ".";
-        WorldEvent event = WorldEvent.simulation(
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.HARM)
+                .cost(ActionDescriptors.Cost.MEDIUM)
+                .beneficiary(ActionDescriptors.Beneficiary.SELF)
+                .risk(ActionDescriptors.Risk.HIGH)
+                .visibility(ActionDescriptors.Visibility.LOCAL)
+                .build();
+        WorldEvent event = WorldEvent.of(
                 SemanticEventTopics.ACTOR_COMBAT_ENGAGED, EnergyType.PHYSICAL,
-                pos, 0.6f, 0.6f, desc,
-                "SIMULATION", tick,
+                pos, 0.6f, 0.6f, desc, "SIMULATION", tick,
                 sourceNpcCanonId, targetActorId,
-                SemanticTag.COMBAT_ENGAGED.name());
+                SemanticTag.COMBAT_ENGAGED.name(), withDescriptors(desc_, Map.of()));
         WorldEventBus.dispatch(event);
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  Semantic events — the "meaning" layer
+    //  Internal helpers
     // ═══════════════════════════════════════════════════════════════════
 
-    /**
-     * An act of mercy was performed — e.g. sparing a defeated enemy,
-     * feeding the hungry, healing the wounded.
-     *
-     * <p>Effects on relationships (handled by RelationshipEngine):
-     * <ul>
-     *   <li>Target: trust +10, fear -5</li>
-     *   <li>Witnesses who value mercy: respect +3</li>
-     *   <li>Witnesses who value strength: respect -2</li>
-     * </ul>
-     */
-    public static void actOfMercy(ServerPlayer actor, String targetActorId,
-                                   String detail, long tick) {
-        publishSemantic(SemanticEventTopics.SEMANTIC_ACT_OF_MERCY,
-                EnergyType.SOCIAL, actor, targetActorId,
-                SemanticTag.ACT_OF_MERCY,
-                0.6f, 0.6f,
-                actor.getName().getString() + " showed mercy to " + targetActorId
-                        + ": " + detail, tick);
-    }
-
-    /**
-     * An act of cruelty was performed — e.g. killing a surrendered foe,
-     * destroying a home, torturing.
-     */
-    public static void actOfCruelty(ServerPlayer actor, String targetActorId,
-                                     String detail, long tick) {
-        publishSemantic(SemanticEventTopics.SEMANTIC_ACT_OF_CRUELTY,
-                EnergyType.KARMA, actor, targetActorId,
-                SemanticTag.ACT_OF_CRUELTY,
-                0.7f, 0.7f,
-                actor.getName().getString() + " committed cruelty against " + targetActorId
-                        + ": " + detail, tick);
-    }
-
-    /**
-     * A cultivation technique was displayed publicly — drawing attention.
-     * This is distinct from a breakthrough; it's a deliberate or accidental
-     * display of power.
-     */
-    public static void techniqueDisplayed(ServerPlayer actor, String techniqueName,
-                                           long tick) {
-        publishSemantic(SemanticEventTopics.SEMANTIC_TECHNIQUE_DISPLAYED,
-                EnergyType.SPIRITUAL, actor, "",
-                SemanticTag.TECHNIQUE_DISPLAYED,
-                0.6f, 0.6f,
-                actor.getName().getString() + " displayed technique: " + techniqueName, tick);
-    }
-
-    /**
-     * A cultivation level was revealed — changing how others perceive the actor.
-     */
-    public static void cultivationRevealed(ServerPlayer actor, String realm,
-                                            long tick) {
-        publishSemantic(SemanticEventTopics.SEMANTIC_CULTIVATION_REVEALED,
-                EnergyType.SPIRITUAL, actor, "",
-                SemanticTag.CULTIVATION_REVEALED,
-                0.6f, 0.6f,
-                actor.getName().getString() + " revealed cultivation: " + realm, tick);
-    }
-
-    /**
-     * A promise was made between two actors.
-     */
-    public static void promiseMade(ServerPlayer actor, String targetActorId,
-                                    String promiseDetail, long tick) {
-        publishSemantic(SemanticEventTopics.SEMANTIC_PROMISE_MADE,
-                EnergyType.SOCIAL, actor, targetActorId,
-                SemanticTag.PROMISE_MADE,
-                0.5f, 0.5f,
-                actor.getName().getString() + " made a promise to " + targetActorId
-                        + ": " + promiseDetail, tick);
-    }
-
-    /**
-     * A previously made promise was broken.
-     */
-    public static void promiseBroken(ServerPlayer actor, String targetActorId,
-                                     String promiseDetail, long tick) {
-        publishSemantic(SemanticEventTopics.SEMANTIC_PROMISE_BROKEN,
-                EnergyType.KARMA, actor, targetActorId,
-                SemanticTag.PROMISE_BROKEN,
-                0.7f, 0.7f,
-                actor.getName().getString() + " broke a promise to " + targetActorId
-                        + ": " + promiseDetail, tick);
-    }
-
-    // ═══════════════════════════════════════════════════════════════════
-    //  Internal publishing helpers
-    // ═══════════════════════════════════════════════════════════════════
-
-    /**
-     * Publish a player-sourced action event. The player is the source actor.
-     */
-    private static void publishPlayerAction(String topic, EnergyType energy,
-                                             ServerPlayer player, String targetActorId,
-                                             SemanticTag semanticTag,
-                                             float intensity, float severity,
-                                             String desc, long tick) {
-        WorldEvent event = WorldEvent.simulation(
+    private static WorldEvent buildPlayerEvent(String topic, EnergyType energy,
+                                                ServerPlayer player, String targetActorId,
+                                                SemanticTag semanticTag,
+                                                float intensity, float severity,
+                                                String desc, long tick,
+                                                ActionDescriptors descriptors,
+                                                Map<String,String> metadata) {
+        return WorldEvent.of(
                 topic, energy, player.blockPosition(),
                 intensity, severity, desc, "SIMULATION", tick,
                 player.getStringUUID(), targetActorId,
-                semanticTag.name());
-        WorldEventBus.dispatch(event);
-        Ergenverse.LOGGER.debug("[SimulationActions] Published {} from player {} → {}",
-                topic, player.getName().getString(),
-                targetActorId.isEmpty() ? "(no target)" : targetActorId);
+                semanticTag.name(), withDescriptors(descriptors, metadata));
     }
 
     /**
-     * Publish a semantic (meaning-layer) event. The player is the source actor.
+     * Merge ActionDescriptors fields into the metadata map so subscribers
+     * can reconstruct the descriptors from the WorldEvent's metadata.
      */
-    private static void publishSemantic(String topic, EnergyType energy,
-                                         ServerPlayer player, String targetActorId,
-                                         SemanticTag semanticTag,
-                                         float intensity, float severity,
-                                         String desc, long tick) {
-        WorldEvent event = WorldEvent.simulation(
-                topic, energy, player.blockPosition(),
-                intensity, severity, desc, "SIMULATION", tick,
-                player.getStringUUID(), targetActorId,
-                semanticTag.name());
-        WorldEventBus.dispatch(event);
+    private static Map<String, String> withDescriptors(ActionDescriptors desc,
+                                                      Map<String, String> meta) {
+        Map<String, String> merged = new HashMap<>(meta);
+        merged.put("_desc_intent", desc.intent().name());
+        merged.put("_desc_cost", desc.cost().name());
+        merged.put("_desc_beneficiary", desc.beneficiary().name());
+        merged.put("_desc_risk", desc.risk().name());
+        merged.put("_desc_visibility", desc.visibility().name());
+        return merged;
     }
 
-    // ─── Helper predicates ─────────────────────────────────────────────
+    private static ActionDescriptors.Cost mapQualityToCost(String quality) {
+        if (quality == null) return ActionDescriptors.Cost.LOW;
+        return switch (quality.toUpperCase()) {
+            case "NONE", "UNKNOWN" -> ActionDescriptors.Cost.NONE;
+            case "LOW", "COMMON" -> ActionDescriptors.Cost.LOW;
+            case "MEDIUM", "UNCOMMON" -> ActionDescriptors.Cost.MEDIUM;
+            case "HIGH", "RARE" -> ActionDescriptors.Cost.HIGH;
+            case "EXTREME", "LEGENDARY", "DIVINE" -> ActionDescriptors.Cost.EXTREME;
+            default -> ActionDescriptors.Cost.LOW;
+        };
+    }
 
-    /** Realms notable enough to be high-severity (detectable across regions). */
     private static boolean isNotableRealm(String realmName) {
         if (realmName == null) return false;
         String lower = realmName.toLowerCase();

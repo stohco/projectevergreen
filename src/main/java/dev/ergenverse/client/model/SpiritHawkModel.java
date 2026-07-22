@@ -6,7 +6,9 @@ package dev.ergenverse.client.model;
  *
  * ANATOMY:
  *   - body    : horizontal torso (6 x 4 x 6) at root, head at -Z, tail at +Z
+ *   - neck    : short 2x3x2 connector between body and head (CRON-COMPLETIONIST-21)
  *   - head    : skull (3x3x3) + beak (1x1x2, forward) + crest (2x1x1, on top)
+ *              NOW a child of neck (not root), so head follows neck rotation.
  *   - wings   : 3-segment chain (shoulder -> forearm -> hand) per side, each
  *               a thin chord box, plus 3 primary feather slabs at the hand
  *   - tail    : 3 feather slabs fanning from the rear pivot
@@ -42,6 +44,14 @@ package dev.ergenverse.client.model;
  *   - The hawk entity is a PathfinderMob that WALKS, but this model looks
  *     like it is flying. There is no ground-perched stance. Either the entity
  *     needs a FlyingMob parent or the model needs a perched pose branch.
+ *
+ * CRON-COMPLETIONIST-21 FIXES:
+ *   - Added neck part (2x3x2) as root child, head is NOW a child of neck.
+ *     This means head pitch/yaw follows the neck connector, fixing the
+ *     "floating head" problem where head was a root child at arbitrary offset.
+ *   - Banking animation (root.zRot) now SKIPS during death pose to fix
+ *     the "corpse sways in the breeze forever" bug.
+ *   - Added rear hallux toe on each leg (raptors have 3 forward + 1 hind toe).
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -55,6 +65,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
 
     private final ModelPart root;
+    private final ModelPart neck;
     private final ModelPart head;
     private final ModelPart leftWing;
     private final ModelPart rightWing;
@@ -68,7 +79,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
 
     public SpiritHawkModel(ModelPart root) {
         this.root = root;
-        this.head = root.getChild("head");
+        this.neck = root.getChild("neck");
+        this.head = this.neck.getChild("head");
         this.leftWing = root.getChild("left_wing");
         this.rightWing = root.getChild("right_wing");
         this.leftShoulder = leftWing.getChild("shoulder");
@@ -90,15 +102,21 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-3.0F, -2.0F, -3.0F, 6.0F, 4.0F, 6.0F),
                 PartPose.offset(0.0F, 10.0F, 0.0F));
 
-        // ── head : skull + beak + crest, at front of body (-Z) ───────────
-        root.addOrReplaceChild("head",
+        // ── CRON-COMPLETIONIST-21: neck — short connector between body and head ──
+        PartDefinition neck = root.addOrReplaceChild("neck",
+                CubeListBuilder.create().texOffs(0, 12)
+                        .addBox(-1.0F, -1.5F, -1.0F, 2.0F, 3.0F, 2.0F),
+                PartPose.offsetAndRotation(0.0F, 9.5F, -3.0F, -0.3F, 0.0F, 0.0F));
+
+        // ── head : skull + beak + crest, NOW child of neck ────────────────
+        PartDefinition head = neck.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(24, 0)
                         .addBox(-1.5F, -1.5F, -3.0F, 3.0F, 3.0F, 3.0F)   // skull
                         .texOffs(24, 8)
                         .addBox(-0.5F, -0.5F, -5.0F, 1.0F, 1.0F, 2.0F)    // beak forward
                         .texOffs(36, 0)
                         .addBox(-1.0F, -2.5F, -1.5F, 2.0F, 1.0F, 1.0F),  // crest on top
-                PartPose.offset(0.0F, 9.0F, -4.0F));
+                PartPose.offset(0.0F, -1.0F, -1.0F));
 
         // ── left wing : shoulder -> forearm -> hand -> 3 feathers ────────
         PartDefinition leftWing = root.addOrReplaceChild("left_wing",
@@ -176,7 +194,7 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 6.0F),
                 PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.3F, 0.0F));
 
-        // ── legs : thin shin + foot + 2 forward talons ───────────────────
+        // ── legs : thin shin + foot + 2 forward talons + rear hallux ─────
         root.addOrReplaceChild("left_leg",
                 CubeListBuilder.create().texOffs(50, 16)
                         .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F)    // shin
@@ -185,7 +203,9 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                         .texOffs(50, 26)
                         .addBox(-1.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F)    // toe 1
                         .texOffs(50, 30)
-                        .addBox(0.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F),    // toe 2
+                        .addBox(0.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F)    // toe 2
+                        .texOffs(56, 16)
+                        .addBox(0.0F, 3.0F, 0.5F, 1.0F, 1.0F, 1.0F),    // CRON-21: rear hallux
                 PartPose.offset(-1.5F, 12.0F, 0.0F));
         root.addOrReplaceChild("right_leg",
                 CubeListBuilder.create().texOffs(50, 36)
@@ -195,7 +215,9 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                         .texOffs(50, 46)
                         .addBox(-1.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F)
                         .texOffs(50, 50)
-                        .addBox(0.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F),
+                        .addBox(0.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F)
+                        .texOffs(56, 36)
+                        .addBox(-1.0F, 3.0F, 0.5F, 1.0F, 1.0F, 1.0F),    // CRON-21: rear hallux
                 PartPose.offset(1.5F, 12.0F, 0.0F));
 
         return LayerDefinition.create(mesh, 64, 64);
@@ -327,8 +349,10 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         }
         } // end wing/flight guard (!resting && !swimming)
 
-        // ── banking : gentle roll on the whole body ──────────────────────
-        this.root.zRot = (float) Math.sin(ageInTicks * 0.1F) * 0.15F;
+        // ── CRON-COMPLETIONIST-21: banking — SKIPS during death to fix corpse sway bug ──
+        if (entity.deathTime <= 0) {
+            this.root.zRot = (float) Math.sin(ageInTicks * 0.1F) * 0.15F;
+        }
 
         // ── tail fan sway ────────────────────────────────────────────────
         this.tail.yRot = (float) Math.sin(ageInTicks * 0.3F) * 0.2F;

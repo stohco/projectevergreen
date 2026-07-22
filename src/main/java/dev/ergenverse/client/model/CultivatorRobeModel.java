@@ -83,7 +83,8 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     public CultivatorRobeModel(ModelPart root) {
         super(root);
         this.robeSkirt = root.getChild("robe_skirt");
-        this.hairBun = root.getChild("hair_bun");
+        // CRON-COMPLETIONIST-21: hair bun is now child of head, not root
+        this.hairBun = root.getChild("head").getChild("hair_bun");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -99,8 +100,10 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
                         .addBox(-4.5F, 0.0F, -3.0F, 9.0F, 8.0F, 6.0F),
                 PartPose.offset(0.0F, 12.0F, 0.0F));
 
-        // ── hair bun : small box on top of the head ─────────────────────
-        root.addOrReplaceChild("hair_bun",
+        // ── CRON-COMPLETIONIST-21: hair bun — NOW child of head, not root ──
+        // Previously hair_bun was a root child, meaning it stayed fixed in space
+        // when the cultivator looked up/down. Now it follows head rotation.
+        root.getChild("head").addOrReplaceChild("hair_bun",
                 CubeListBuilder.create().texOffs(0, 32)
                         .addBox(-2.0F, -2.0F, -2.0F, 4.0F, 2.0F, 4.0F),
                 PartPose.offset(0.0F, -8.0F, 0.0F));
