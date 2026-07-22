@@ -86,6 +86,14 @@ public class EntityCultivator extends PathfinderMob {
     private static final EntityDataAccessor<String> DATA_CULTIVATION_REALM =
             SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.STRING);
 
+    /** Synced pose flag: 0=idle, 1=meditating, 2=casting/channeling.
+     *  The client renderer reads this to drive CultivatorRobeModel's
+     *  meditation and casting poses. Previously these were TODO flags
+     *  that were never set — now they are synced and the renderer uses them.
+     */
+    private static final EntityDataAccessor<Integer> DATA_POSE =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.INT);
+
     // ── Hibernation ─────────────────────────────────────────────────────
 
     /**
@@ -140,6 +148,7 @@ public class EntityCultivator extends PathfinderMob {
         this.entityData.define(DATA_CHARACTER_ID, "");
         this.entityData.define(DATA_DISPLAY_NAME, "Unknown Cultivator");
         this.entityData.define(DATA_CULTIVATION_REALM, "mortal");
+        this.entityData.define(DATA_POSE, 0);
     }
 
     public String getCharacterId() {
@@ -164,6 +173,27 @@ public class EntityCultivator extends PathfinderMob {
 
     public void setCultivationRealm(String realm) {
         this.entityData.set(DATA_CULTIVATION_REALM, realm);
+    }
+
+    /** Pose constants for {@link #DATA_POSE}. */
+    public static final int POSE_IDLE = 0;
+    public static final int POSE_MEDITATING = 1;
+    public static final int POSE_CASTING = 2;
+
+    public int getCultivatorPose() {
+        return this.entityData.get(DATA_POSE);
+    }
+
+    public void setCultivatorPose(int pose) {
+        this.entityData.set(DATA_POSE, pose);
+    }
+
+    public boolean isMeditating() {
+        return this.entityData.get(DATA_POSE) == POSE_MEDITATING;
+    }
+
+    public boolean isCasting() {
+        return this.entityData.get(DATA_POSE) == POSE_CASTING;
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -416,6 +446,7 @@ public class EntityCultivator extends PathfinderMob {
         compound.putString("DisplayName", this.getDisplayNameCn());
         compound.putString("CultivationRealm", this.getCultivationRealm());
         compound.putBoolean("Initialized", this.initialized);
+        compound.putInt("CultivatorPose", this.getCultivatorPose());
         // Sync to runtime layer on every NBT save (fires on chunk unload).
         // This is the dematerialization persistence hook.
         syncStateToRuntime();
@@ -438,6 +469,9 @@ public class EntityCultivator extends PathfinderMob {
             this.setCultivationRealm(compound.getString("CultivationRealm"));
         }
         this.initialized = compound.getBoolean("Initialized");
+        if (compound.contains("CultivatorPose")) {
+            this.setCultivatorPose(compound.getInt("CultivatorPose"));
+        }
         // Re-establish the ActorEntityLink on chunk reload.
         // The entity is materializing from NBT — link it back to its Actor.
         if (!this.level().isClientSide && this.initialized && !this.getCharacterId().isEmpty()) {

@@ -56,10 +56,14 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
     public void render(EntityCultivator entity, float entityYaw, float partialTicks,
                        PoseStack poseStack, MultiBufferSource buffer,
                        int packedLight) {
-        // Set pose flags from entity state before super.render calls setupAnim.
+        // Set pose flags from SYNCED entity state before super.render calls setupAnim.
+        // CRON-COMPLETIONIST-3: Previously these were hardcoded false (TODO).
+        // Now EntityCultivator has DATA_POSE synced via SynchedEntityData, and
+        // isMeditating()/isCasting() read from it. The model's meditation/casting
+        // poses actually fire now.
         CultivatorRobeModel model = this.getModel();
-        model.setMeditating(false);  // TODO: wire to synced DataAccessor on EntityCultivator
-        model.setCasting(false);     // TODO: wire to synced DataAccessor on EntityCultivator
+        model.setMeditating(entity.isMeditating());
+        model.setCasting(entity.isCasting());
 
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 

@@ -64,6 +64,9 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
 
     private final ModelPart root;
     private final ModelPart head;
+
+    /** Public accessor for the emissive renderer to re-render the head at fullbright. */
+    public ModelPart getHeadPart() { return this.head; }
     private final ModelPart jaw;
     private final ModelPart mane0;
     private final ModelPart mane1;
