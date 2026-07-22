@@ -263,21 +263,30 @@ public final class Ergenverse {
                 dev.ergenverse.entity.EntityCultivator.createAttributes().build());
         LOGGER.info("[Ergenverse] Registered EntityCultivator attributes.");
 
-        // ── Spirit Beast attributes (4 new entities). Without these, MC
-        //    throws "No attribute registry entry for ..." at spawn.
+        // ── Spirit Beast attributes — PER-SPECIES profiles.
+        // CRON-COMPLETIONIST-15: Previously all 6 beast types used createAttributes()
+        // (rabbit defaults: 4HP/0.35spd/1dmg). A fire beast spawned with rabbit
+        // stats. Now each type gets its canonically-correct profile via
+        // createBeastAttributes(BeastType).
         event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_RABBIT.get(),
-                dev.ergenverse.entity.SpiritBeastEntity.createAttributes().build());
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.RABBIT).build());
         event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_WOLF.get(),
-                dev.ergenverse.entity.SpiritBeastEntity.createAttributes().build());
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.WOLF).build());
         event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_DEER.get(),
-                dev.ergenverse.entity.SpiritBeastEntity.createAttributes().build());
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.DEER).build());
         event.put(dev.ergenverse.entity.EREntityTypes.FIRE_BEAST.get(),
-                dev.ergenverse.entity.SpiritBeastEntity.createAttributes().build());
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.FIRE_BEAST).build());
         event.put(dev.ergenverse.entity.EREntityTypes.STONE_BACK_BOAR.get(),
-                dev.ergenverse.entity.SpiritBeastEntity.createAttributes().build());
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.STONE_BACK_BOAR).build());
         event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_HAWK.get(),
-                dev.ergenverse.entity.SpiritBeastEntity.createAttributes().build());
-        LOGGER.info("[Ergenverse] Registered Spirit Beast attributes (rabbit/wolf/deer/hawk).");
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.HAWK).build());
+        LOGGER.info("[Ergenverse] Registered per-species Spirit Beast attributes.");
     }
 
     /**

@@ -50,10 +50,44 @@ public class SpiritBeastGrazeGoal extends Goal {
     public void start() {
         state = 1; // start grazing
         stateTimer = 60 + beast.getRandom().nextInt(60); // 3-6 seconds
-        // Pick a nearby grass block to look at
-        grazeTarget = beast.blockPosition().offset(
-                beast.getRandom().nextInt(5) - 2, 0, beast.getRandom().nextInt(5) - 2);
+        // CRON-COMPLETIONIST-15: Pick a nearby grass/vegetation block to graze.
+        // Previously picked any random block — beast would stare at dirt/stone.
+        grazeTarget = findNearbyGrass();
+        if (grazeTarget == null) {
+            // No grass nearby — cancel graze attempt
+            stop();
+            return;
+        }
         beast.getNavigation().stop();
+    }
+
+    /**
+     * Find a nearby grass or vegetation block within 3 blocks.
+     * Searches in a 5x5 area around the beast's position.
+     * Returns null if no suitable block found.
+     */
+    private net.minecraft.core.BlockPos findNearbyGrass() {
+        net.minecraft.core.BlockPos base = beast.blockPosition();
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                net.minecraft.core.BlockPos pos = base.offset(dx, 0, dz);
+                net.minecraft.world.level.block.state.BlockState bs = beast.level().getBlockState(pos);
+                // Check for grass-like blocks
+                if (bs.is(net.minecraft.tags.BlockTags.DIRT) ||
+                    bs.is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)) {
+                    return pos;
+                }
+                // Check block above for tall grass/flowers
+                net.minecraft.core.BlockPos above = pos.above();
+                net.minecraft.world.level.block.state.BlockState aboveBs = beast.level().getBlockState(above);
+                if (aboveBs.is(net.minecraft.tags.BlockTags.FLOWERS) ||
+                    aboveBs.is(net.minecraft.world.level.block.Blocks.TALL_GRASS) ||
+                    aboveBs.is(net.minecraft.world.level.block.Blocks.FERN)) {
+                    return above;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -68,7 +102,13 @@ public class SpiritBeastGrazeGoal extends Goal {
     public void tick() {
         stateTimer--;
 
-        // Look down at the grass
+        // Verify graze target still exists and is valid grass/vegetation
+        if (grazeTarget == null || !beast.level().hasChunkAt(grazeTarget)) {
+            stop();
+            return;
+        }
+
+        // Look down at the graze target
         beast.getLookControl().setLookAt(
                 grazeTarget.getX() + 0.5D, grazeTarget.getY(), grazeTarget.getZ() + 0.5D,
                 30.0F, 30.0F);

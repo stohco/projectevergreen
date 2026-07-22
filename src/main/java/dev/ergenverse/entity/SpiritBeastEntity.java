@@ -5,6 +5,7 @@ import dev.ergenverse.entity.control.SprintMoveControl;
 import dev.ergenverse.entity.control.WaterBoundMoveControl;
 import dev.ergenverse.entity.ai.SpiritBeastGrazeGoal;
 import dev.ergenverse.entity.ai.SpiritBeastHuntGoal;
+import dev.ergenverse.entity.ai.SpiritBeastRestGoal;
 import dev.ergenverse.entity.ai.SpiritBeastSwimGoal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -238,10 +239,12 @@ public class SpiritBeastEntity extends PathfinderMob {
     protected void registerGoals() {
         BeastType type = getBeastType();
 
-        // Common to all: float in water + swim goal (BUG FIX 4: SwimGoal was
-        // dead code — created but never registered for any beast type)
+        // Common to all: float in water + swim goal + rest goal
+        // BUG FIX 4: SwimGoal was dead code — created but never registered for any beast type
+        // CRON-COMPLETIONIST-15: RestGoal now registered for all beasts (POSE_RESTING gap)
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SpiritBeastSwimGoal(this));
+        this.goalSelector.addGoal(8, new SpiritBeastRestGoal(this));
 
         switch (type) {
             case WOLF -> {
