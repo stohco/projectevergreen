@@ -219,7 +219,6 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.tail.xRot = 0.5F + tailSway;
             this.earLeft.zRot  = -0.4F + earTwitch;
             this.earRight.zRot = 0.4F - earTwitch;
-            return;
         } else if (swimming) {
             // CRON-COMPLETIONIST-17: Added vertical bob synchronized with paddle.
             float paddle = ageInTicks * 1.0F;
@@ -239,7 +238,6 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.tail.xRot = 0.3F;
             this.earLeft.zRot  = -0.3F;
             this.earRight.zRot = 0.3F;
-            return;
         } else if (sprinting) {
             // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — deer gallop, stotting bounce ──
             float sprintPhase = limbSwing * 2.0F;

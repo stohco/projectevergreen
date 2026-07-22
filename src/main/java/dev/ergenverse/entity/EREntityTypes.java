@@ -85,7 +85,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_RABBIT =
             ENTITY_TYPES.register("spirit_rabbit", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.5F, 0.5F)
+                            .sized(0.4F, 0.4F)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("spirit_rabbit"));
@@ -94,7 +94,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_WOLF =
             ENTITY_TYPES.register("spirit_wolf", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.0F, 0.9F)
+                            .sized(0.6F, 0.7F)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("spirit_wolf"));
@@ -103,7 +103,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_DEER =
             ENTITY_TYPES.register("spirit_deer", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.8F, 1.6F)
+                            .sized(0.7F, 1.8F)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("spirit_deer"));
@@ -115,6 +115,7 @@ public class EREntityTypes {
                             .sized(1.2F, 1.2F)
                             .clientTrackingRange(12)
                             .updateInterval(2)
+                            .fireImmune()
                             .build("fire_beast"));
 
     // StoneBackBoarModel: body 5x5x10, stone plate adds width. Hitbox: ~1.2 wide, ~1.0 tall.
@@ -130,7 +131,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_HAWK =
             ENTITY_TYPES.register("spirit_hawk", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.0F, 0.8F)
+                            .sized(2.0F, 0.8F)
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build("spirit_hawk"));

@@ -254,6 +254,9 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
             // Ears with occasional twitch
             this.earLeft.zRot  = -0.2F + earTwitch;
             this.earRight.zRot = 0.2F - earTwitch;
+            // CRON-18: Reset spine flex so it doesn't leak from walk/run
+            this.bodyChest.xRot = 0.0F;
+            this.bodyHip.xRot = 0.0F;
         } else if (swimming) {
             // ── POSE_SWIMMING : wolf paddles through water ─────────────
             // CRON-COMPLETIONIST-17: Added vertical bob synchronized with paddle cycle.
@@ -283,6 +286,9 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
             this.jaw.xRot = 0.0F;
             this.earLeft.zRot  = -0.5F;
             this.earRight.zRot = 0.5F;
+            // CRON-18: Reset spine flex so it doesn't leak from walk/run
+            this.bodyChest.xRot = 0.0F;
+            this.bodyHip.xRot = 0.0F;
         } else if (sprinting) {
             // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — stretched gallop ──
             // Body lower and longer stride, head forward, ears pinned
@@ -315,6 +321,9 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
             this.tailBase.yRot = 0.0F;
             this.tailMid.yRot  = 0.0F;
             this.tailTip.yRot  = 0.0F;
+            // CRON-18: Reset spine flex so it doesn't leak from sprint
+            this.bodyChest.xRot = 0.0F;
+            this.bodyHip.xRot = 0.0F;
         } else {
             // ── walk / run gait : diagonal trot ──────────────────────────────
             boolean running = limbSwingAmount > 0.5F;
@@ -374,24 +383,27 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
                 this.backLeftThigh.xRot   -= lunge * 0.3F;
                 this.backRightThigh.xRot  -= lunge * 0.3F;
             }
+        }
 
-            // ── death collapse ─────────────────────────────────────────────
-            if (entity.deathTime > 0) {
-                float t = Math.min(entity.deathTime / 8.0F, 1.0F);
-                float collapse = t * t;
-                this.root.xRot = collapse * -0.4F;
-                this.root.zRot = collapse * 0.6F;
-                this.head.xRot = collapse * 0.8F;
-                this.head.zRot = collapse * 0.3F;
-                this.frontLeftThigh.zRot  = -collapse * 0.5F;
-                this.frontRightThigh.zRot =  collapse * 0.5F;
-                this.backLeftThigh.zRot   = -collapse * 0.4F;
-                this.backRightThigh.zRot  =  collapse * 0.4F;
-                this.tailBase.xRot = 0.3F + collapse * 1.2F;
-                this.tailMid.xRot  = collapse * 0.5F;
-                this.tailTip.xRot  = collapse * 0.3F;
-                this.jaw.xRot = collapse * 0.6F;
-            }
+        // ── CRON-COMPLETIONIST-18: Death collapse — runs AFTER all pose branches ──
+        // Previously death code was inside the walk/run else block and unreachable
+        // when entity died while resting, swimming, or sprinting. Now death
+        // always applies, overriding whatever pose was active.
+        if (entity.deathTime > 0) {
+            float t = Math.min(entity.deathTime / 8.0F, 1.0F);
+            float collapse = t * t;
+            this.root.xRot = collapse * -0.4F;
+            this.root.zRot = collapse * 0.6F;
+            this.head.xRot = collapse * 0.8F;
+            this.head.zRot = collapse * 0.3F;
+            this.frontLeftThigh.zRot  = -collapse * 0.5F;
+            this.frontRightThigh.zRot =  collapse * 0.5F;
+            this.backLeftThigh.zRot   = -collapse * 0.4F;
+            this.backRightThigh.zRot  =  collapse * 0.4F;
+            this.tailBase.xRot = 0.3F + collapse * 1.2F;
+            this.tailMid.xRot  = collapse * 0.5F;
+            this.tailTip.xRot  = collapse * 0.3F;
+            this.jaw.xRot = collapse * 0.6F;
         }
     }
 }

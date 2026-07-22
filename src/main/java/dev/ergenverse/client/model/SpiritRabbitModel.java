@@ -161,7 +161,6 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
             this.earLeft.xRot  = 0.3F;
             this.earRight.xRot = 0.3F;
             this.head.xRot = 0.1F + noseTwitch;
-            return;
         } else if (swimming) {
             // CRON-COMPLETIONIST-17: Added vertical bob synchronized with paddle.
             float paddle = ageInTicks * 1.5F;
@@ -177,7 +176,6 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
             this.earRight.xRot = -0.4F;
             this.earLeft.zRot  = 0.0F;
             this.earRight.zRot = 0.0F;
-            return;
         } else if (sprinting) {
             // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — panicked sprint, bigger hops ──
             float sprintHop = (float) Math.abs(Math.sin(limbSwing * 0.4F)) * 3.0F * limbSwingAmount;

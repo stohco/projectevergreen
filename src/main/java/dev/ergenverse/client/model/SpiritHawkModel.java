@@ -238,7 +238,6 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
             this.leftLeg.xRot = 0.0F;        // legs grip perch
             this.rightLeg.xRot = 0.0F;
             this.tail.xRot = 0.3F;
-            return;
         } else if (swimming) {
             // CRON-COMPLETIONIST-17: Added vertical bob synchronized with row cycle.
             float row = ageInTicks * 0.8F;
@@ -256,7 +255,6 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
             // Legs paddle behind
             this.leftLeg.xRot = (float) Math.cos(row) * 0.4F;
             this.rightLeg.xRot = (float) Math.cos(row + Math.PI) * 0.4F;
-            return;
         }
 
         // ── CRON-COMPLETIONIST-13: Perched stance via DATA_POSE ──

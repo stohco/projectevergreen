@@ -128,13 +128,7 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
                     PartPose.offset(0.0F, -3.0F, z));
         }
 
-        // ── neck : short thick connector ─────────────────────────────────
-        root.addOrReplaceChild("neck",
-                CubeListBuilder.create().texOffs(28, 0)
-                        .addBox(-1.5F, -1.5F, -2.0F, 3.0F, 3.0F, 3.0F),
-                PartPose.offsetAndRotation(0.0F, 4.0F, -5.0F, -0.4F, 0.0F, 0.0F));
-
-        // ── head : skull + jaw + eyes + horns (child of neck) ────────────
+        // ── head : skull + jaw + eyes + horns (at front of body) ────────────
         PartDefinition head = root.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 18)
                         .addBox(-1.5F, -1.5F, -1.5F, 3.0F, 3.0F, 3.0F)    // skull
@@ -261,7 +255,6 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
             }
             this.flameTip.yScale = 0.2F;
             this.tailBase.xRot = 0.5F;
-            return;
         } else if (swimming) {
             // Fire beast swims: body pitches, legs paddle, flames sputter
             // CRON-COMPLETIONIST-17: Added vertical bob
@@ -287,7 +280,6 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
             }
             this.flameTip.yScale = 0.3F;
             this.jaw.xRot = 0.0F;
-            return;
         } else if (sprinting) {
             // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — raging charge, flames flare high ──
             float sprintPhase = limbSwing * 2.0F;
@@ -316,7 +308,6 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
             this.head.xRot = -0.3F;
             this.jaw.xRot = 0.6F;
             this.tailBase.yRot = (float) Math.sin(ageInTicks * 0.5F) * 0.3F;
-            return;
         }
 
         // ── walk / run gait ──────────────────────────────────────────────

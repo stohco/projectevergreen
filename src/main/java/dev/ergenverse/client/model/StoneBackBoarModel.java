@@ -213,7 +213,6 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backRightShin.xRot   = -0.15F;
             this.head.xRot = 0.8F + snoutShift;
             this.tail.xRot = 0.3F;
-            return;
         } else if (swimming) {
             // CRON-COMPLETIONIST-17: Added vertical bob
             float paddle = ageInTicks * 0.9F;
@@ -230,7 +229,6 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backLeftShin.xRot    = -0.1F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.15F;
             this.backRightShin.xRot   = -0.1F + Math.abs((float) Math.cos(paddle)) * 0.15F;
             this.tail.xRot = 0.2F;
-            return;
         } else if (sprinting) {
             // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — heavy boar charge ──
             float sprintPhase = limbSwing * 1.8F;
@@ -251,7 +249,6 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             // Head LOW (boar charges head-down), tail straight
             this.head.xRot = 1.0F;
             this.tail.xRot = -0.1F;
-            return;
         }
 
         // ── walk / charge gait : slow & heavy by default ─────────────────
