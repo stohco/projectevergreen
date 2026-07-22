@@ -1408,3 +1408,280 @@ When in doubt: prove the experience before the architecture —
                one observed moment beats fifty schema files.
 When in doubt: the simulation is general —
                if a mechanism requires a character by name, it is wrong.
+
+---
+
+## Article XLII — The Four-Layer World Architecture
+
+The Er Gen Verse is not a game where the world is generated. It is a
+historical simulation. The player does not create Planet Suzaku. They
+arrive in it.
+
+The world is therefore separated into four immutable-by-policy layers,
+each answering a different question:
+
+### Layer 0 — Canon Knowledge
+
+Everything extracted from Renegade Immortal. Names. Relationships.
+History. Cultivation. Locations. Travel times. Events.
+
+**Question answered:** "What is true in the novels?"
+
+**Implemented by:** `data/ergenverse/canon_enriched/`,
+`data/ergenverse/npcs/`, `data/ergenverse/civilizations/`,
+`dev.ergenverse.wanglin.RICanonicalDatabase`,
+`dev.ergenverse.wanglin.RITimelineEngine` (108 canon events E01..E108),
+`dev.ergenverse.canon.CanonEngine`.
+
+**Immutability:** This layer is packaged inside the mod JAR and is
+read-only at runtime. It is never mutated by the simulation. Updates
+ship as mod releases.
+
+### Layer 1 — World Blueprint
+
+The authored geography of Planet Suzaku. Terrain, roads, cities,
+mountains, spirit veins, structures, biomes, restrictions.
+
+**Question answered:** "Where does it exist?"
+
+**Implemented by:** `data/ergenverse/worldgen/blueprint/planet_suzaku.json`
+(10 countries incl. Zhao, Chu, Vermilion Bird, Snow Domain, Fire Burn,
+Sky Demon, Fire Demon, Pilu, Xuan Wu, Qing Shui; 11 settlements incl.
+Wang Family Village, Heng Yue Sect, Teng City, Zhao Capital, Sea of
+Devils, Jue Ming Valley, Suzaku Tomb; mountain ranges, rivers, spirit
+veins, roads, restrictions), loaded by
+`dev.ergenverse.world.blueprint.WorldBlueprintManager`.
+
+**The Prime Directive of World Generation:** the simulation is the
+source of truth; Minecraft is the renderer. Minecraft's random seed
+does not determine the Er Gen universe — the World Blueprint does. The
+stage is fixed; the actors (NPCs, ecology, events, opportunities)
+vary per playthrough via the Simulation Seed. Large-scale geography is
+100% handcrafted. Like Whiterun, Wang Family Village does not randomly
+spawn somewhere else.
+
+**Immutability:** same as Layer 0. The blueprint never moves between
+playthroughs.
+
+### Layer 2 — Initial World Snapshot
+
+The exact state of the world at the moment the player arrives. NPC
+positions, economy, relationships, memories, inventories, weather,
+rumors, opportunities, cultivation levels.
+
+**Question answered:** "What is the exact state when the player arrives?"
+
+**Implemented by:** the canonical t0 archive — the canon JSON DB
+(`data/ergenverse/`) as the read-only starting state, plus the
+`living_chapters/chapter_1_wang_family_village/` schema seed (desire
+states, motivation states, relationship graph seeds, favor ledgers,
+economy, conflict, affordances), materialized at game-start by
+`dev.ergenverse.simulation.WorldStateDataLoader`,
+`dev.ergenverse.ecology.EcosystemSeeder`,
+`dev.ergenverse.simulation.actor.TerritorySeeder`, and
+`dev.ergenverse.simulation.ReificationScan`.
+
+**This is the "canon snapshot."** The game never starts at world
+creation. It starts at a historical moment — exactly like loading a
+save file from history. Year 0: Wang Lin is 15, his father is alive,
+he has not joined Heng Yue, the Teng grudge has not ignited. History
+is about to begin.
+
+**Immutability:** the snapshot is never mutated, never regenerated,
+never randomized. It is the canon branch-point.
+
+### Layer 3 — Simulation Delta
+
+Everything that changed after Tick 0. Every NPC death, every faction
+destroyed, every item that changed hands, every karma consequence, every
+player kill, every sect war.
+
+**Question answered:** "What has changed because time passed and
+because of player or NPC actions?"
+
+**Implemented by:** `dev.ergenverse.simulation.WorldRuntimeState`
+(extends Minecraft `SavedData`, persists to
+`<world>/data/ergenverse_runtime_state.dat`). Schema v1:
+`npcOverrides`, `factionOverrides`, `itemOwnershipOverrides`,
+`karmaResolutionState`, `playerMutations`, `caveWorldOwnershipOverrides`,
+`divergenceCounter`. The canon DB is never touched — reads consult
+canon first, runtime overrides layer on top, writes go only here.
+
+**This is exactly how source control works.** The save file is not the
+whole world — it is the delta. Blueprint + Snapshot + Player Save
+(where Player Save contains only changes). Old Chen: canonical = alive;
+save = dead, reason = wolf attack. Wang Lin: canonical = Qi
+Condensation 1; save = Qi Condensation 2, reason = player helped.
+
+**This solves multiplayer and updates.** Six months from now, if Heng
+Yue Sect is improved in the blueprint, existing saves keep their
+historical changes where they conflict and adopt new authored content
+where nothing has changed — because the simulation stores deltas, not
+world replacements.
+
+### Layer 3 also carries the narrative substrate
+
+Two sub-systems live in Layer 3 and make the delta readable:
+
+- **`dev.ergenverse.history.WorldHistory`** — the raw event log
+  (timestamp + eventType + regionId + description + canonSource +
+  topic + posX/posZ). Ring-buffered, persisted under the reserved key
+  `_world_history` in `WorldRuntimeState.playerMutations`.
+- **`dev.ergenverse.history.WorldChronicle`** (Art XLIII) — the prose
+  narrative layer that compiles WorldHistory events into readable
+  annals.
+- **`dev.ergenverse.history.CanonDivergenceRecorder`** (Art XLIII) —
+  the ledger comparing the 108 canon events (RITimelineEngine) against
+  this timeline's actual history.
+
+### Compliance
+
+Every system that reads world state MUST consult Layer 0/1/2 first and
+Layer 3 overrides second. Every system that writes world state MUST
+write only to Layer 3. A system that mutates Layer 0, 1, or 2 is a bug.
+
+---
+
+## Article XLIII — Single-Player Maximalism
+
+The Er Gen Verse is strictly single-player. This is not a limitation
+to work around. It is one of the project's biggest advantages, and
+the architecture leans into it fully.
+
+### §1 — The simulation owns 100% of the CPU
+
+There is no server to share with 300 players. The simulation asks only
+"what would actually happen?" If the answer is 4,300 NPCs cultivating,
+18,000 spirit beasts migrating, 2,000 merchants traveling, 700
+alchemists refining pills, 60 sects holding meetings, 400 rumors
+spreading — that is what the simulation does. No networking compromises.
+
+### §2 — No respawn. Permanence is absolute.
+
+If a wolf dies, it stays dead. If a spirit tree burns, it is gone. If
+Wang Lin destroys a mountain, the mountain is destroyed. Forever.
+
+**Implemented by:** `EntityCultivator.die()` writes `is_dead=true` to
+`WorldRuntimeState.npcOverrides`. `ReificationScan.materializeNpc()`
+checks `is_dead` and returns early — a dead NPC NEVER spawns again.
+`EntityCultivator.removeWhenFarAway()` returns false — canon entities
+never despawn due to distance. Death is a one-way door.
+
+### §3 — Memory can become absurdly deep
+
+An MMO cannot remember everything because of storage and scale. We can.
+
+Day 18: you saved an old farmer. Day 742: his granddaughter recognizes
+you — "You saved my grandfather." Not because of a scripted quest.
+Because the family remembered.
+
+**Implemented by:** the memory ledger
+(`living_chapters/.../memory_ledger_*`), `WorldHistory` (ring-buffered
+event log), and `NpcCognitiveMemory` (per-NPC memory with significance
+weighting and decay resistance).
+
+### §4 — NPCs never despawn mentally
+
+Most games fake life: NPC disappears, simulation stops, player returns,
+NPC respawns. Single-player does not fake it. Maybe the rendered entity
+unloads, but the simulation keeps advancing — even if Wang Lin is 40 km
+away.
+
+**Implemented by:** `EntityCultivator.aiStep()` hibernates (skips
+goalSelector/navigation) when no player is within `HIBERNATION_RANGE` —
+a performance optimization, NOT a despawn. The cognition pipeline
+(`ActorTickLoop`, `Planner`, `DecisionEngine`, `IntentEngine`) keeps
+running for off-screen actors.
+
+### §5 — Level-of-Simulation (LoS), not just Level-of-Detail
+
+Standing next to Wang Lin: full cognition. Wang Lin crossing Zhao
+Country 300 chunks away: abstract simulation into events and
+probabilities, still respecting his goals, personality, cultivation,
+and known obstacles. When you meet him again, there is a coherent
+history explaining how he got there.
+
+**Implemented by:** `dev.ergenverse.simulation.los.SimulationLevel` —
+six tiers: STATIC_DATA, HISTORICAL, TERRITORY, ACTIVE_ACTOR,
+FULL_COGNITION, STORY_IMPORTANCE. The world never stops; it just
+changes how much detail it uses.
+
+### §6 — Saves are historical records, not state snapshots
+
+Not "Save 1", "Save 2". More like "Planet Suzaku Year 0, Year 5, Year
+12, Year 18". You are saving history. Every save is its own timeline —
+Timeline Alpha (Wang Lin joined Heng Yue), Timeline Beta (player warned
+him, he waited two weeks), Timeline Gamma (player never met him,
+canonical events happened). You are not creating worlds. You are
+creating alternate histories.
+
+### §7 — Canon is never overwritten. History records deviations.
+
+The canon timeline (E01..E108) is immutable. The player's timeline is a
+fork. When the simulation causes a canon event to occur as-written, it
+is marked OCCURRED. When the player — or the simulation — changes the
+outcome, it is marked DIVERGED and the deviation is recorded
+permanently.
+
+> Canonical: Wang Lin killed Teng Huayuan.
+> This Timeline: Player distracted Teng Huayuan. Battle occurred three
+> days later. 523 civilians survived.
+
+**Implemented by:** `dev.ergenverse.history.CanonDivergenceRecorder`.
+Five statuses: PENDING, OCCURRED, DIVERGED, PREVENTED, DEFERRED.
+Persisted under `_canon_divergence` in `WorldRuntimeState`. Seeded with
+all 108 canon events as PENDING on first access. Inspectable via
+`/ergen divergence` and `/ergen divergence forks`.
+
+### §8 — Simulate between sessions
+
+When loading a save after weeks away, instead of pretending nothing
+happened, the game can advance the simulation. NPCs finish journeys,
+sect politics evolve, herbs mature, rumors spread, the world greets you
+in its new state. Because it is single-player, that is your choice alone
+— no server state to stay synchronized with.
+
+**Implemented by:** `dev.ergenverse.npc.worldsim.NpcWorldSimulation`
+— `onPlayerLogin` computes `offlineDelta = currentTick - lastPlayerOnlineTick`,
+capped at 30 MC days, advances NPC cognitive systems. (Future work:
+extend time-skip to cover the `WorldStateEngine` subsystem advances —
+time events, migrations, ecosystems, civilizations, opportunities,
+provenance, macro terrain — once those subsystems are fully implemented
+past their current stubs.)
+
+### §9 — The World Chronicle
+
+Not a quest log. Not a wiki. A living chronicle written by the
+simulation itself. It records every significant event that actually
+occurred in your timeline: when a sect rose or fell, when a legendary
+beast was born or slain, when a spirit vein was exhausted or
+discovered, when Wang Lin broke through to a new realm, when you repaid
+a life debt or created a blood feud, when a village was abandoned after
+repeated beast attacks.
+
+Centuries later in the same save, NPCs do not quote the novels — they
+reference your world's history. Scholars debate it. Storytellers
+exaggerate it. Children retell distorted versions of it. Because it is
+single-player, every line in that chronicle belongs uniquely to your
+universe.
+
+**Implemented by:** `dev.ergenverse.history.WorldChronicle`. Prose
+entries, tone-colored (TRIUMPHANT / TRAGIC / OMINOUS / MYSTERIOUS /
+MUNDANE / PROPHETIC). Append-only — the past is never edited.
+Persisted under `_world_chronicle` in `WorldRuntimeState`. Fed by
+`dev.ergenverse.simulation.event.ChronicleSubscriber` (a catch-all
+WorldEventBus subscriber that compiles every notable event into prose).
+Inspectable via `/ergen chronicle`, `/ergen chronicle era <era>`,
+`/ergen chronicle all`.
+
+### §10 — The reframe
+
+Stop thinking of this as "a Minecraft world." Think of it as "a
+serialized simulation." Minecraft is simply the renderer. The
+simulation is the game. The save file is the universe.
+
+### Compliance
+
+A system that despawns an NPC, respawns a dead beast, regenerates a
+destroyed structure, or overwrites canon is a bug — unless it is
+explicitly part of a Layer 3 delta that the player chose.

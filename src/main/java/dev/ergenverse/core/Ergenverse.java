@@ -214,6 +214,8 @@ public final class Ergenverse {
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.PerceptionCommand.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ManifestationGiftCommand.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.HistoryCommand.class);
+        // Art XLII/XLIII: WorldChronicle (living history) + CanonDivergenceRecorder (canon-vs-actual).
+        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ChronicleCommand.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.history.HistoryEvents.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.SectMissionInteraction.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.LectureInteraction.class);
@@ -314,7 +316,22 @@ public final class Ergenverse {
                     new dev.ergenverse.simulation.event.ActivityInterruptionSubscriber());
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.npc.memory.MemoryEventSubscriber());
-            LOGGER.info("[Ergenverse] Registered QiDisturbanceSubscriber + BirdFlightSubscriber + ActivityInterruptionSubscriber + MemoryEventSubscriber on WorldEventBus.");
+            // Art XLIII: the WorldChronicle — the simulation writes its own history.
+            // A catch-all subscriber that compiles every notable event into a permanent prose annal.
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.event.ChronicleSubscriber());
+            LOGGER.info("[Ergenverse] Registered QiDisturbanceSubscriber + BirdFlightSubscriber + ActivityInterruptionSubscriber + MemoryEventSubscriber + ChronicleSubscriber on WorldEventBus.");
+            // Art XLII/XLIII: seed the chronicle opening + canon divergence ledger on world load.
+            // The chronicle's t₀ entry is the immutable "world at the moment the player arrives" record.
+            dev.ergenverse.history.WorldChronicle chronicle =
+                    dev.ergenverse.history.WorldChronicle.get(overworld);
+            if (chronicle.size() == 0) {
+                chronicle.seedOpening(ticks);
+                dev.ergenverse.history.WorldChronicle.persist(overworld);
+                LOGGER.info("[Ergenverse] WorldChronicle seeded with t₀ opening entry.");
+            }
+            // The divergence recorder auto-seeds all 108 canon events as PENDING on first get().
+            dev.ergenverse.history.CanonDivergenceRecorder.get(overworld);
             // Initialize the NPC spawn registry — maps locations to canon NPCs.
             // Without this, only wang_tiangui would ever spawn.
             dev.ergenverse.simulation.NpcSpawnRegistry.initialize();
