@@ -2,7 +2,7 @@ package dev.ergenverse.client;
 
 import dev.ergenverse.client.render.EntityCultivatorRenderer;
 import dev.ergenverse.client.render.MosquitoSwarmRenderer;
-import dev.ergenverse.client.render.SpiritBeastRenderer;
+import dev.ergenverse.client.render.SpiritBeastRenderers;
 import dev.ergenverse.client.screen.AlchemyFurnaceScreen;
 import dev.ergenverse.client.screen.TalismanDeskScreen;
 import dev.ergenverse.client.screen.FormationPlatformScreen;
@@ -32,13 +32,15 @@ public class ClientEvents {
         // humanoid model; v2 will switch textures based on character_id.
         event.registerEntityRenderer(EREntityTypes.CULTIVATOR.get(), EntityCultivatorRenderer::new);
 
-        // ── Spirit Beast renderers (v1: all four use the unified
-        //    SpiritBeastRenderer; the texture is picked from the synced
-        //    BeastType).
-        event.registerEntityRenderer(EREntityTypes.SPIRIT_RABBIT.get(), SpiritBeastRenderer::new);
-        event.registerEntityRenderer(EREntityTypes.SPIRIT_WOLF.get(),   SpiritBeastRenderer::new);
-        event.registerEntityRenderer(EREntityTypes.SPIRIT_DEER.get(),   SpiritBeastRenderer::new);
-        event.registerEntityRenderer(EREntityTypes.SPIRIT_HAWK.get(),   SpiritBeastRenderer::new);
+        // ── Spirit Beast renderers — each beast type uses its own renderer
+        //    with the correct anatomical model (prior bug: all used WolfModel).
+        //    Article I: a Spirit Rabbit IS a rabbit; it uses RabbitModel.
+        event.registerEntityRenderer(EREntityTypes.SPIRIT_RABBIT.get(),    SpiritBeastRenderers.RabbitRenderer::new);
+        event.registerEntityRenderer(EREntityTypes.SPIRIT_WOLF.get(),      SpiritBeastRenderers.WolfRenderer::new);
+        event.registerEntityRenderer(EREntityTypes.SPIRIT_DEER.get(),      SpiritBeastRenderers.DeerRenderer::new);
+        event.registerEntityRenderer(EREntityTypes.SPIRIT_HAWK.get(),      SpiritBeastRenderers.HawkRenderer::new);
+        event.registerEntityRenderer(EREntityTypes.FIRE_BEAST.get(),       SpiritBeastRenderers.FireBeastRenderer::new);
+        event.registerEntityRenderer(EREntityTypes.STONE_BACK_BOAR.get(),  SpiritBeastRenderers.BoarRenderer::new);
     }
 
     /**
