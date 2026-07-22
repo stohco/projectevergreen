@@ -103,6 +103,10 @@ public class SpiritBeastHuntGoal extends Goal {
             // CHARGING: sprint toward prey
             beast.setSpiritPose(SpiritBeastEntity.POSE_CHARGING);
             beast.getLookControl().setLookAt(prey, 30.0F, 30.0F);
+            // BUG FIX 5: Trigger sprint burst via SprintMoveControl if available.
+            // Previously SprintMoveControl.startSprint() was never called by any goal.
+            var sprintCtrl = beast.getSprintMoveControl();
+            if (sprintCtrl != null) sprintCtrl.startSprint();
             beast.getNavigation().moveTo(prey, speed * 1.3D);
 
             if (stateTimer <= 0) {
