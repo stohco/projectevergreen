@@ -1,6 +1,7 @@
 package dev.ergenverse.item;
 
-import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -24,11 +25,11 @@ public enum TalismanType {
 
     private final String displayName;
     private final String description;
-    private final ParticleType<?> particle;
+    private final SimpleParticleType particle;
     private final SoundEvent sound;
     private final int color;
 
-    TalismanType(String displayName, String description, ParticleType<?> particle, SoundEvent sound, int color) {
+    TalismanType(String displayName, String description, SimpleParticleType particle, SoundEvent sound, int color) {
         this.displayName = displayName;
         this.description = description;
         this.particle = particle;
@@ -38,7 +39,7 @@ public enum TalismanType {
 
     public String getDisplayName() { return displayName; }
     public String getDescription() { return description; }
-    public ParticleType<?> getParticle() { return particle; }
+    public ParticleOptions getParticle() { return particle; }
     public SoundEvent getSound() { return sound; }
     public int getColor() { return color; }
 }

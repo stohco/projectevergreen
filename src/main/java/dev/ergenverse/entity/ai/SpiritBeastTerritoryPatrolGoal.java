@@ -87,7 +87,7 @@ public class SpiritBeastTerritoryPatrolGoal extends Goal {
             // ANCIENT+ intimidation roar
             if (tier.ordinal() >= BeastIntelligence.ANCIENT.ordinal() && roarCooldown <= 0) {
                 roarCooldown = 200; // 10s
-                mob.playSound(net.minecraft.sounds.SoundEvents.RAVENGER_ROAR, 2.0F, 0.7F);
+                mob.playSound(net.minecraft.sounds.SoundEvents.RAVAGER_ROAR, 2.0F, 0.7F);
                 if (mob.level() instanceof net.minecraft.server.level.ServerLevel sl) {
                     sl.sendParticles(net.minecraft.core.particles.ParticleTypes.ANGRY_VILLAGER,
                             mob.getX(), mob.getY() + 2, mob.getZ(), 8, 1, 1, 1, 0.1);

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * SpiritBeastAmbushGoal — CUNNING-tier beasts hide and leap at prey.
