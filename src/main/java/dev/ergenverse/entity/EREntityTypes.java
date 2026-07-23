@@ -135,4 +135,14 @@ public class EREntityTypes {
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build("spirit_hawk"));
+
+    // CRON-COMPLETIONIST-22/24: SpiritCraneModel — red-crowned crane, tall on long legs.
+    // Hitbox: ~0.6 wide, ~1.6 tall (standing height with long neck).
+    public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_CRANE =
+            ENTITY_TYPES.register("spirit_crane", () ->
+                    EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
+                            .sized(0.6F, 1.6F)
+                            .clientTrackingRange(8)
+                            .updateInterval(2)
+                            .build("spirit_crane"));
 }

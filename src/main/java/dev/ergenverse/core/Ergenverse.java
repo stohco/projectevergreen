@@ -286,6 +286,10 @@ public final class Ergenverse {
         event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_HAWK.get(),
                 dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
                         dev.ergenverse.entity.SpiritBeastEntity.BeastType.HAWK).build());
+        // CRON-COMPLETIONIST-24: Spirit crane attributes
+        event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_CRANE.get(),
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.CRANE).build());
         LOGGER.info("[Ergenverse] Registered per-species Spirit Beast attributes.");
     }
 

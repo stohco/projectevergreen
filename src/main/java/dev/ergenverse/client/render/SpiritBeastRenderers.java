@@ -6,6 +6,7 @@ import dev.ergenverse.client.model.SpiritRabbitModel;
 import dev.ergenverse.client.model.SpiritWolfModel;
 import dev.ergenverse.client.model.SpiritDeerModel;
 import dev.ergenverse.client.model.SpiritHawkModel;
+import dev.ergenverse.client.model.SpiritCraneModel;
 import dev.ergenverse.client.model.SpiritFireBeastModel;
 import dev.ergenverse.client.model.StoneBackBoarModel;
 import dev.ergenverse.core.Ergenverse;
@@ -85,6 +86,20 @@ public final class SpiritBeastRenderers {
 
         public HawkRenderer(EntityRendererProvider.Context context) {
             super(context, new SpiritHawkModel(context.bakeLayer(SpiritBeastModelLayers.SPIRIT_HAWK)), 0.5F);
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+    }
+
+    // ── Spirit Crane ───────────────────────────────────────
+    // CRON-COMPLETIONIST-22/24: 7th beast type — red-crowned crane with 4-segment neck
+    public static class CraneRenderer extends MobRenderer<SpiritBeastEntity, SpiritCraneModel> {
+        private static final ResourceLocation TEX =
+                new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/spirit_crane.png");
+
+        public CraneRenderer(EntityRendererProvider.Context context) {
+            super(context, new SpiritCraneModel(context.bakeLayer(SpiritBeastModelLayers.SPIRIT_CRANE)), 0.6F);
         }
 
         @Override

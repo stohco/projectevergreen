@@ -308,6 +308,7 @@ public final class WorldStateEngine {
         if (s.contains("hawk") || s.contains("bird") || s.contains("eagle")) return SpiritBeastEntity.BeastType.HAWK;
         if (s.contains("fire"))                           return SpiritBeastEntity.BeastType.FIRE_BEAST;
         if (s.contains("boar") || s.contains("pig"))     return SpiritBeastEntity.BeastType.STONE_BACK_BOAR;
+        if (s.contains("crane"))                         return SpiritBeastEntity.BeastType.CRANE;
         return SpiritBeastEntity.BeastType.WOLF;
     }
 
@@ -320,6 +321,7 @@ public final class WorldStateEngine {
             case HAWK -> EREntityTypes.SPIRIT_HAWK.get();
             case FIRE_BEAST -> EREntityTypes.FIRE_BEAST.get();
             case STONE_BACK_BOAR -> EREntityTypes.STONE_BACK_BOAR.get();
+            case CRANE -> EREntityTypes.SPIRIT_CRANE.get();
         };
     }
 

@@ -56,7 +56,8 @@ public class SpiritBeastEntity extends PathfinderMob {
         DEER("deer"),
         HAWK("hawk"),
         FIRE_BEAST("fire_beast"),
-        STONE_BACK_BOAR("stone_back_boar");
+        STONE_BACK_BOAR("stone_back_boar"),
+        CRANE("spirit_crane");
 
         public final String id;
         BeastType(String id) { this.id = id; }
@@ -172,6 +173,11 @@ public class SpiritBeastEntity extends PathfinderMob {
                     .add(Attributes.FOLLOW_RANGE, 16.0D)
                     .add(Attributes.KNOCKBACK_RESISTANCE, 0.6D)
                     .add(Attributes.ARMOR_TOUGHNESS, 2.0D);
+            case CRANE -> Mob.createMobAttributes()
+                    .add(Attributes.MAX_HEALTH, 14.0D)
+                    .add(Attributes.MOVEMENT_SPEED, 0.30D)
+                    .add(Attributes.ATTACK_DAMAGE, 3.0D)
+                    .add(Attributes.FOLLOW_RANGE, 20.0D);
         };
     }
 

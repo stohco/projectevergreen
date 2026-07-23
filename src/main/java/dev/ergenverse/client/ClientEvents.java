@@ -52,6 +52,7 @@ public class ClientEvents {
         event.registerLayerDefinition(SpiritBeastModelLayers.FIRE_BEAST_EYES, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.FIRE_BEAST_EYES));
         event.registerLayerDefinition(SpiritBeastModelLayers.STONE_BACK_BOAR, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.STONE_BACK_BOAR));
         event.registerLayerDefinition(SpiritBeastModelLayers.CULTIVATOR_ROBE, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.CULTIVATOR_ROBE));
+        event.registerLayerDefinition(SpiritBeastModelLayers.SPIRIT_CRANE, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SPIRIT_CRANE));
     }
 
     @SubscribeEvent
@@ -69,6 +70,8 @@ public class ClientEvents {
         event.registerEntityRenderer(EREntityTypes.SPIRIT_HAWK.get(),      SpiritBeastRenderers.HawkRenderer::new);
         event.registerEntityRenderer(EREntityTypes.FIRE_BEAST.get(),       SpiritBeastRenderers.FireBeastRenderer::new);
         event.registerEntityRenderer(EREntityTypes.STONE_BACK_BOAR.get(),  SpiritBeastRenderers.BoarRenderer::new);
+        // CRON-COMPLETIONIST-24: Spirit crane renderer (7th beast type)
+        event.registerEntityRenderer(EREntityTypes.SPIRIT_CRANE.get(),      SpiritBeastRenderers.CraneRenderer::new);
 
         // Flying sword projectile (launched by FlyingSwordItem). Invisible except
         // for its particle trail — the renderer is a no-op shell.
