@@ -98,6 +98,10 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     public boolean observing = false;
     /** Set by the renderer from DATA_POSE == POSE_GUARDING — combat-ready stance. */
     public boolean guarding = false;
+    /** CRON-COMPLETIONIST-44: Set by renderer from POSE_PURSUING — walking with purpose. */
+    public boolean pursuing = false;
+    /** CRON-COMPLETIONIST-44: Set by renderer from POSE_SOCIALIZING — relaxed, facing companion. */
+    public boolean socializing = false;
 
     private final ModelPart robeSkirt;
     private final ModelPart hairBun;
@@ -161,6 +165,16 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     /** CRON-COMPLETIONIST-31: Renderer-side toggle for the guarding pose. */
     public void setGuarding(boolean guarding) {
         this.guarding = guarding;
+    }
+
+    /** CRON-COMPLETIONIST-44: Renderer-side toggle for the pursuing pose. */
+    public void setPursuing(boolean pursuing) {
+        this.pursuing = pursuing;
+    }
+
+    /** CRON-COMPLETIONIST-44: Renderer-side toggle for the socializing pose. */
+    public void setSocializing(boolean socializing) {
+        this.socializing = socializing;
     }
 
     @Override
@@ -300,6 +314,77 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
 
             // Robe still — focused, no sway
             this.robeSkirt.xRot = idleSway * 0.3F;
+        }
+
+        // ── CRON-COMPLETIONIST-44: pursuing pose ─────────────────────
+        // Walking with deliberate purpose toward an opportunity. The cultivator
+        // strides forward purposefully — not running, not idle — a determined
+        // walk that says "I am going somewhere important." This is the pose
+        // CultivatorMind produces when PURSUING_OPPORTUNITY scores highest.
+        //
+        // Visual: Super walk cycle is preserved (arms swing opposite legs).
+        // Body leans very slightly forward (momentum). Head held up and
+        // forward (eyes on destination). Right hand slightly extended (reaching
+        // toward goal). Robe skirt has more pronounced sway from the faster walk.
+        if (this.pursuing) {
+            // Body leans slightly forward — purposeful momentum
+            this.body.xRot = -0.1F;
+            // Override idle breathing with slightly faster cadence
+            this.body.y = (float) Math.sin(ageInTicks * 0.15F) * 0.2F;
+
+            // Right arm slightly forward — reaching toward goal
+            // (only the right arm; left arm keeps vanilla walk swing for naturalism)
+            this.rightArm.xRot -= 0.3F;            // extend forward beyond walk
+            this.rightArm.yRot = -0.1F;            // very slightly toward center
+
+            // Head held high and forward — eyes on the destination
+            this.head.xRot = -0.1F;               // chin slightly up (looking ahead)
+
+            // Robe skirt sways more — the cultivator is walking faster
+            this.robeSkirt.xRot = walkSway * 1.5F + idleSway;
+            // Add lateral robe billow from faster movement
+            this.robeSkirt.zRot = (float) Math.sin(limbSwing * 0.3331F) * 0.06F * limbSwingAmount;
+        }
+
+        // ── CRON-COMPLETIONIST-44: socializing pose ─────────────────────
+        // Relaxed, turned toward a companion. The cultivator has stopped to
+        // interact — standing at ease, body angled toward the other person,
+        // one arm gesturing. This is the pose CultivatorMind produces when
+        // SOCIALIZING scores highest.
+        //
+        // Visual: Body slightly turned (weight shifted), head facing companion
+        // (head tracking works via vanilla netHeadYaw), one arm relaxed at side,
+        // other arm slightly raised in a conversational gesture, occasional
+        // subtle gesture animation. Relaxed breathing. Robe hangs naturally.
+        if (this.socializing) {
+            // Body relaxed — very slight lean (at ease, not rigid)
+            this.body.xRot = 0.03F;
+            this.body.y = (float) Math.sin(ageInTicks * 0.08F) * 0.2F; // slow breathing
+
+            // Left arm relaxed at side — slightly away from body (open posture)
+            this.leftArm.xRot = 0.1F + (float) Math.sin(ageInTicks * 0.1F) * 0.05F;
+            this.leftArm.zRot = 0.1F;             // arm away from body
+
+            // Right arm in conversational gesture — slightly raised, palm out
+            // Gesture oscillates slowly: arm lifts and lowers as if talking
+            float gesturePhase = (float) Math.sin(ageInTicks * 0.4F);
+            this.rightArm.xRot = -0.8F + gesturePhase * 0.2F;  // arm at chest height, bobbing
+            this.rightArm.yRot = -0.3F;            // slightly toward center (talking)
+            this.rightArm.zRot = 0.15F;            // palm-up tilt
+
+            // Legs relaxed — slight weight shift (standing at ease)
+            float weightShift = (float) Math.sin(ageInTicks * 0.06F) * 0.03F;
+            this.rightLeg.xRot = weightShift;
+            this.leftLeg.xRot = -weightShift;
+            this.rightLeg.yRot = -0.05F;
+            this.leftLeg.yRot = 0.05F;
+
+            // Head relaxed — slight nod animation (listening/acknowledging)
+            // Don't override netHeadYaw — the head still tracks the companion
+            this.head.xRot += (float) Math.sin(ageInTicks * 0.3F) * 0.04F;
+
+            // Robe hangs naturally — minimal sway, just breathing
+            this.robeSkirt.xRot = idleSway * 0.5F;
         }
     }
 }

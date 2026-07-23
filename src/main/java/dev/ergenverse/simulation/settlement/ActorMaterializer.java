@@ -316,6 +316,18 @@ public final class ActorMaterializer {
                     ? EntityCultivator.POSE_OBSERVING   // cultivator crouches
                     : EntityCultivator.POSE_IDLE;       // mortal stands still
             case GUARDING -> EntityCultivator.POSE_GUARDING;
+            // CRON-COMPLETIONIST-44: Investigating → crouch-observe for cultivators
+            // (same visual as OBSERVING_THREAT — crouching behind cover).
+            // Mortals stand still (can't comprehend the opportunity).
+            case INVESTIGATING -> isCultivator
+                    ? EntityCultivator.POSE_OBSERVING
+                    : EntityCultivator.POSE_IDLE;
+            // CRON-COMPLETIONIST-44: Pursuing → walk with purpose. Both
+            // cultivators and mortals move decisively toward the target.
+            case PURSUING_OPPORTUNITY -> EntityCultivator.POSE_PURSUING;
+            // CRON-COMPLETIONIST-44: Socializing → relaxed facing stance.
+            // Both cultivators and mortals turn to face their companion.
+            case SOCIALIZING -> EntityCultivator.POSE_SOCIALIZING;
             case SECURING_ASSETS -> EntityCultivator.POSE_IDLE;
             case FLEEING_HOME -> EntityCultivator.POSE_IDLE;
             case MEDITATING -> EntityCultivator.POSE_MEDITATING;

@@ -416,6 +416,46 @@ public class SpiritBeastEntity extends PathfinderMob {
         } else {
             this.moveControl = new SprintMoveControl(this);
         }
+        // CRON-COMPLETIONIST-44: Per-species bounding box sized to anatomy.
+        // Previously ALL beasts shared the default 0.6×1.8 hitbox — a soul fish
+        // (2HP, tiny) had the same collision box as a qilin (60HP, divine beast).
+        // Now each species has a bounding box matching its model geometry.
+        this.reassessDimensions();
+    }
+
+    // ── Per-species dimensions (bounding box) ──────────────────────────
+    // Each beast's dimensions match its model's visual footprint.
+    // Canon-based sizing from model geometry (box coordinates in model files).
+    // Stored as cached values; getDimensions() reads them.
+    private float beastWidth = 0.6F;
+    private float beastHeight = 1.8F;
+    private float beastEyeHeight = 1.6F;
+
+    private void reassessDimensions() {
+        switch (getBeastType()) {
+            case RABBIT -> { beastWidth = 0.4F; beastHeight = 0.5F; beastEyeHeight = 0.4F; }
+            case WOLF   -> { beastWidth = 0.7F; beastHeight = 1.0F; beastEyeHeight = 0.85F; }
+            case DEER   -> { beastWidth = 0.8F; beastHeight = 1.4F; beastEyeHeight = 1.2F; }
+            case HAWK   -> { beastWidth = 0.5F; beastHeight = 0.6F; beastEyeHeight = 0.45F; }
+            case FIRE_BEAST -> { beastWidth = 1.0F; beastHeight = 1.4F; beastEyeHeight = 1.1F; }
+            case STONE_BACK_BOAR -> { beastWidth = 1.0F; beastHeight = 1.0F; beastEyeHeight = 0.8F; }
+            case CRANE  -> { beastWidth = 0.6F; beastHeight = 1.6F; beastEyeHeight = 1.4F; }
+            case BAT    -> { beastWidth = 0.4F; beastHeight = 0.5F; beastEyeHeight = 0.35F; }
+            case QILIN  -> { beastWidth = 1.0F; beastHeight = 1.4F; beastEyeHeight = 1.2F; }
+            case SEA_SERPENT -> { beastWidth = 0.8F; beastHeight = 1.0F; beastEyeHeight = 0.8F; }
+            case SOUL_FISH -> { beastWidth = 0.3F; beastHeight = 0.3F; beastEyeHeight = 0.15F; }
+            default -> { beastWidth = 0.6F; beastHeight = 1.8F; beastEyeHeight = 1.6F; }
+        }
+    }
+
+    @Override
+    public float getEyeHeight(net.minecraft.world.entity.Pose pose) {
+        return this.beastEyeHeight;
+    }
+
+    @Override
+    public net.minecraft.world.entity.EntityDimensions getDimensions(net.minecraft.world.entity.Pose pose) {
+        return net.minecraft.world.entity.EntityDimensions.scalable(beastWidth, beastHeight);
     }
 
     // ── tick(): pose heuristic with goal-priority guard ──────────────────

@@ -183,6 +183,10 @@ public class EntityCultivator extends PathfinderMob {
     public static final int POSE_OBSERVING = 3;
     /** Combat-ready stance — the defender guarding the perimeter. */
     public static final int POSE_GUARDING = 4;
+    /** Walking with purpose toward a target — cultivator moves decisively. CRON-COMPLETIONIST-44. */
+    public static final int POSE_PURSUING = 5;
+    /** Relaxed stance, facing a companion — cultivator socializes. CRON-COMPLETIONIST-44. */
+    public static final int POSE_SOCIALIZING = 6;
 
     public int getCultivatorPose() {
         return this.entityData.get(DATA_POSE);
@@ -264,6 +268,16 @@ public class EntityCultivator extends PathfinderMob {
     /** CRON-COMPLETIONIST-30: True when the cultivator is in POSE_GUARDING (combat-ready stance). */
     public boolean isGuarding() {
         return this.entityData.get(DATA_POSE) == POSE_GUARDING;
+    }
+
+    /** CRON-COMPLETIONIST-44: True when in POSE_PURSUING (walking with purpose toward a target). */
+    public boolean isPursuing() {
+        return this.entityData.get(DATA_POSE) == POSE_PURSUING;
+    }
+
+    /** CRON-COMPLETIONIST-44: True when in POSE_SOCIALIZING (relaxed, facing a companion). */
+    public boolean isSocializing() {
+        return this.entityData.get(DATA_POSE) == POSE_SOCIALIZING;
     }
 
     // ═══════════════════════════════════════════════════════════════════

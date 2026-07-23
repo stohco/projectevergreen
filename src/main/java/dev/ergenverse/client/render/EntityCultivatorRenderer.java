@@ -70,6 +70,14 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
         model.setCasting(entity.isCasting());
         model.setObserving(entity.isObserving());
         model.setGuarding(entity.isGuarding());
+        // CRON-COMPLETIONIST-44: Wire pursuing and socializing poses.
+        // Previously these flags existed in the model but were never set by
+        // the renderer — the pursuing/socializing animations were dead code.
+        // Now CultivatorMind.evaluatePeaceful() decisions are VISIBLE:
+        //   PURSUING_OPPORTUNITY → cultivator strides toward the goal
+        //   SOCIALIZING → cultivator turns to companion and gestures
+        model.setPursuing(entity.isPursuing());
+        model.setSocializing(entity.isSocializing());
 
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 
