@@ -97,14 +97,21 @@ public final class ErgenverseItems {
 
     // ── Real-mechanic items (Constitution: items must have real mechanics, not generic stubs) ──
     // Flying swords: right-click launches a homing qi-blade projectile. Left-click = melee.
+    // CRON-COMPLETIONIST-55: each sword now carries a canon-faithful SwordEffectType.
+    //   Wealth Flying Sword    — no effect (basic qi blade)
+    //   Core Treasure Sword     — TELEPORT (displaces target on hit)
+    //   Blood Slaughter Sword  — LIFESTEAL (heals attacker 30% of damage)
     public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> WEALTH_FLYING_SWORD =
             ITEMS.register("wealth_flying_sword", () -> new dev.ergenverse.item.FlyingSwordItem(8.0F,
+                    dev.ergenverse.item.sword.SwordEffectType.NONE,
                     new Item.Properties().durability(500).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
     public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> CORE_TREASURE_SWORD =
             ITEMS.register("core_treasure_sword", () -> new dev.ergenverse.item.FlyingSwordItem(14.0F,
+                    dev.ergenverse.item.sword.SwordEffectType.TELEPORT,
                     new Item.Properties().durability(1200).rarity(net.minecraft.world.item.Rarity.RARE)));
     public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> BLOOD_SLAUGHTER_SWORD =
             ITEMS.register("blood_slaughter_sword", () -> new dev.ergenverse.item.FlyingSwordItem(20.0F,
+                    dev.ergenverse.item.sword.SwordEffectType.LIFESTEAL,
                     new Item.Properties().durability(2000).rarity(net.minecraft.world.item.Rarity.EPIC)));
 
     // Talismans: single-use, right-click deploys the effect, consumed on use.
