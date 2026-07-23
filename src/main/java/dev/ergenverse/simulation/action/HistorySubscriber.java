@@ -27,9 +27,9 @@ import java.util.UUID;
  * This subscriber reads the event's metadata map directly instead of
  * parsing the description string. For example:
  * <ul>
- *   <li>Gift event: reads {@code event.meta("item_name")} instead of
+ *   <li>Gift event: reads {@code event.meta("item")} instead of
  *       parsing "X gave Y to Z."</li>
- *   <li>Combat event: reads {@code event.meta("combat_outcome")} and
+ *   <li>Combat event: reads {@code event.meta("outcome")} and
  *       {@code event.meta("npc_name")} instead of parsing the description.</li>
  *   <li>Breakthrough event: reads {@code event.meta("from_realm")} and
  *       {@code event.meta("to_realm")}.</li>
@@ -71,7 +71,7 @@ public final class HistorySubscriber implements WorldEventSubscriber {
 
                 case SemanticEventTopics.PLAYER_GIFT_GIVEN -> {
                     String npcCanonId = event.targetActorId();
-                    String itemName = event.meta("item_name", "unknown item");
+                    String itemName = event.meta("item", "unknown item");
                     if (!npcCanonId.isEmpty()) {
                         NpcMemory.recordInteraction(player, npcCanonId,
                                 "GIFT_GIVEN: " + itemName, tick);
@@ -79,9 +79,9 @@ public final class HistorySubscriber implements WorldEventSubscriber {
                 }
 
                 case SemanticEventTopics.PLAYER_GIFT_RECEIVED -> {
-                    String npcCanonId = event.meta("source_npc_id",
+                    String npcCanonId = event.meta("giver",
                             event.sourceActorId());
-                    String itemName = event.meta("item_name", "unknown item");
+                    String itemName = event.meta("item", "unknown item");
                     PlayerHistory.recordGiftReceived(player, itemName, npcCanonId, tick);
                     NpcMemory.recordInteraction(player, npcCanonId,
                             "GIFT_RECEIVED: " + itemName, tick);
@@ -97,8 +97,8 @@ public final class HistorySubscriber implements WorldEventSubscriber {
                     String npcCanonId = event.targetActorId();
                     String npcName = event.meta("npc_name",
                             event.meta("npc_canon_id", "unknown"));
-                    boolean playerWon = "player_won".equals(
-                            event.meta("combat_outcome", ""));
+                    boolean playerWon = "VICTORY".equals(
+                            event.meta("outcome", ""));
 
                     NpcMemory.recordCombat(player, npcCanonId,
                             event.description(), playerWon, tick);

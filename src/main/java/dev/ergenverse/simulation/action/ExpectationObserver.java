@@ -2,6 +2,7 @@ package dev.ergenverse.simulation.action;
 
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.simulation.event.SemanticEventTopics;
+import dev.ergenverse.simulation.event.SemanticTag;
 import dev.ergenverse.simulation.event.WorldEvent;
 import dev.ergenverse.simulation.event.WorldEventBus;
 import dev.ergenverse.simulation.event.WorldEventSubscriber;
@@ -33,9 +34,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * <h2>How it works</h2>
  * <ul>
  *   <li>Track interaction counts per actor pair: "actorA|actorB" → count.</li>
- *   *li>After N interactions of a consistent type (default: 3), mark an
+ *   <li>After N interactions of a consistent type (default: 3), mark an
  *       expectation as formed. e.g. "I expect this actor to help."</li>
- *   *li>When a related event occurs that CONTRADICTS the expectation,
+ *   <li>When a related event occurs that CONTRADICTS the expectation,
  *       publish a {@code semantic.expectation_violation} event.
  *       The severity scales with how long the pattern held.</li>
  * </ul>
@@ -124,7 +125,7 @@ public final class ExpectationObserver implements WorldEventSubscriber {
                             event.energyType(), event.pos(),
                             0.6f, 0.6f, desc,
                             "SIMULATION:ExpectationObserver", event.timestamp(),
-                            sourceId, targetId, "EXPECTATION_VIOLATION",
+                            sourceId, targetId, SemanticTag.EXPECTATION_VIOLATION.name(),
                             java.util.Map.of(
                                     "violation_type", violationType,
                                     "expected_action", actionType,
@@ -204,7 +205,7 @@ public final class ExpectationObserver implements WorldEventSubscriber {
             case "protection" -> {
                 // Protection expectation violated when the protector
                 // is absent or the target is harmed again.
-                String outcome = event.meta("combat_outcome", "");
+                String outcome = event.meta("outcome", "");
                 // The protector (source of the original protection) was expected to
                 // defend the target. If the target was harmed and the protector was
                 // the source of the harm (or was absent), the expectation is violated.

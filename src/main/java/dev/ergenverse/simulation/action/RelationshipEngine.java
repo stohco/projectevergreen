@@ -61,10 +61,10 @@ import java.util.UUID;
  * <i>meaning</i> of the event (the descriptors), not the identity of the
  * actors.
  *
- * <h2>Current limitation: player-centric persistence</h2>
- * <p>The existing {@link RelationshipHistory} API is player-centric. NPC-to-NPC
- * relationships are logged but not persisted — requires a general
- * ActorRelationshipStore (next round's task).
+ * <h2>CRON-COMPLETIONIST-53: NPC-to-NPC persistence now via ActorRelationshipStore</h2>
+ * <p>NPC-to-NPC relationship changes are persisted via {@link ActorRelationshipStore#recordMultiAxis},
+ * using the full 6-axis relationship model (trust, respect, fear, familiarity, debt, grievance)
+ * instead of the legacy single-axis affinity.
  */
 public final class RelationshipEngine implements WorldEventSubscriber {
 
@@ -134,13 +134,43 @@ public final class RelationshipEngine implements WorldEventSubscriber {
 
         try {
             ActorRelationshipStore store = ActorRelationshipStore.get(level);
-            store.recordRelationship(
-                    event.sourceActorId(),
-                    event.targetActorId(),
-                    delta.affinity,
-                    delta.reason + ": " + event.description(),
-                    event.timestamp()
-            );
+            // CRON-COMPLETIONIST-53: Use recordMultiAxis instead of legacy recordRelationship.
+            // The old recordRelationship() only updated trust/grievance via a simple
+            // affinity-to-multi-axis mapping, losing the contextual nuance that this
+            // engine just computed from the compositional ActionDescriptors.
+            if (delta.affinity > 0) {
+                // Positive affinity: increase trust and familiarity proportionally
+                int trustDelta = Math.min(delta.affinity, 25); // trust caps at 100
+                int famDelta = Math.min(Math.abs(delta.affinity) / 2, 10); // familiarity grows slower
+                store.recordMultiAxis(
+                        event.sourceActorId(),
+                        event.targetActorId(),
+                        trustDelta,     // trust
+                        delta.affinity > 10 ? Math.min(delta.affinity / 3, 10) : null, // respect for major deeds
+                        null,           // fear unchanged
+                        famDelta,       // familiarity
+                        null,           // debt unchanged
+                        null,           // grievance unchanged
+                        delta.reason + ": " + event.description(),
+                        event.timestamp()
+                );
+            } else if (delta.affinity < 0) {
+                // Negative affinity: increase grievance and fear proportionally
+                int grievDelta = Math.min(Math.abs(delta.affinity), 25); // grievance caps at 100
+                int fearDelta = Math.min(Math.abs(delta.affinity) / 3, 15); // fear grows slower
+                store.recordMultiAxis(
+                        event.sourceActorId(),
+                        event.targetActorId(),
+                        null,           // trust unchanged (not directly reduced by events — trust decays naturally)
+                        delta.affinity < -15 ? 3 : null, // major harm earns grudging respect
+                        fearDelta,      // fear
+                        null,           // familiarity unchanged
+                        null,           // debt unchanged
+                        grievDelta,     // grievance
+                        delta.reason + ": " + event.description(),
+                        event.timestamp()
+                );
+            }
 
             Ergenverse.LOGGER.debug("[RelationshipEngine] NPC→NPC persisted: {} {} → {} (delta={}, reason='{}')",
                     event.semanticTag(), event.sourceActorId(), event.targetActorId(),

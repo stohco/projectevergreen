@@ -3,6 +3,7 @@ package dev.ergenverse.simulation.action;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.simulation.actor.Actor;
 import dev.ergenverse.simulation.actor.ActorRegistry;
+import dev.ergenverse.simulation.event.SemanticTag;
 import dev.ergenverse.simulation.event.WorldEvent;
 import dev.ergenverse.simulation.event.WorldEventBus;
 import dev.ergenverse.simulation.event.WorldEventSubscriber;
@@ -114,7 +115,7 @@ public final class OpportunityClaimSubscriber implements WorldEventSubscriber {
                     bestClaimer.id + " claimed opportunity: "
                             + event.description(),
                     "SIMULATION:OpportunityClaim", event.timestamp(),
-                    bestClaimer.id, playerUuid, "OPPORTUNITY_CLAIMED",
+                    bestClaimer.id, playerUuid, SemanticTag.OPPORTUNITY_CLAIMED.name(),
                     Map.of(
                             "opportunity_topic", topic,
                             "claimer_actor_id", bestClaimer.id,

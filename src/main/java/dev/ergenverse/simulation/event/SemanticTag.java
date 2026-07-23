@@ -77,7 +77,15 @@ public enum SemanticTag {
     /** A cultivation technique was displayed publicly — drawing attention. */
     TECHNIQUE_DISPLAYED,
     /** A cultivation level was revealed — changing how others perceive the actor. */
-    CULTIVATION_REVEALED;
+    CULTIVATION_REVEALED,
+
+    // ─── System-generated tags (from subscribers, not SimulationActions) ──
+    /** CRON-COMPLETIONIST-53: An expectation was violated — pattern broken. */
+    EXPECTATION_VIOLATION,
+    /** CRON-COMPLETIONIST-53: An opportunity has emerged — unowned, awaiting NPC claim. */
+    OPPORTUNITY_EMERGED,
+    /** CRON-COMPLETIONIST-53: An opportunity has been claimed by an NPC. */
+    OPPORTUNITY_CLAIMED;
 
     /**
      * Parse a semantic tag name, returning null if the string is empty

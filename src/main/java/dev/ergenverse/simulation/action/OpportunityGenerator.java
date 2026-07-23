@@ -2,6 +2,7 @@ package dev.ergenverse.simulation.action;
 
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.simulation.event.SemanticEventTopics;
+import dev.ergenverse.simulation.event.SemanticTag;
 import dev.ergenverse.simulation.event.WorldEvent;
 import dev.ergenverse.simulation.event.WorldEventBus;
 import dev.ergenverse.simulation.event.WorldEventSubscriber;
@@ -81,7 +82,7 @@ public final class OpportunityGenerator implements WorldEventSubscriber {
                 event.energyType(), event.pos(),
                 0.4f, 0.4f, desc,
                 "SIMULATION:OpportunityGenerator", event.timestamp(),
-                playerUuid, "", "OPPORTUNITY_EMERGED",
+                playerUuid, "", SemanticTag.OPPORTUNITY_EMERGED.name(),
                 java.util.Map.of(
                         "opportunity_type", oppType.name(),
                         "player_uuid", playerUuid,
@@ -105,19 +106,11 @@ public final class OpportunityGenerator implements WorldEventSubscriber {
         String topicSuffix() { return suffix; }
     }
 
-    private boolean isOpportunityTrigger(String topic) {
-        return SemanticEventTopics.PLAYER_COMBAT_ENGAGED.equals(topic)
-                || SemanticEventTopics.PLAYER_BREAKTHROUGH.equals(topic)
-                || SemanticEventTopics.SEMANTIC_ACT_OF_MERCY.equals(topic)
-                || SemanticEventTopics.SEMANTIC_TECHNIQUE_DISPLAYED.equals(topic)
-                || SemanticEventTopics.SEMANTIC_CULTIVATION_REVEALED.equals(topic);
-    }
-
     private OpportunityType mapToOpportunityType(WorldEvent event) {
         String topic = event.topic();
         if (SemanticEventTopics.PLAYER_COMBAT_ENGAGED.equals(topic)) {
-            String outcome = event.meta("combat_outcome", "");
-            if ("player_won".equals(outcome)) return OpportunityType.ESCORT_REQUEST;
+            String outcome = event.meta("outcome", "");
+            if ("VICTORY".equals(outcome)) return OpportunityType.ESCORT_REQUEST;
             return null;
         }
         if (SemanticEventTopics.PLAYER_BREAKTHROUGH.equals(topic))
