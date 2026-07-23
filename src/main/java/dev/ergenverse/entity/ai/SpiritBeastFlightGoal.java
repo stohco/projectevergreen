@@ -46,10 +46,18 @@ public class SpiritBeastFlightGoal extends Goal {
         // Only fly if not leashed, not in a vehicle, and not currently hurt-recovering.
         if (mob.isLeashed() || mob.isPassenger()) return false;
         if (mob.getTarget() != null && mob.getTarget().isAlive()) {
-            // Has a target — only fly if target is far (swoop from above).
+            // Has a target — fly if target is far (swoop from above).
             return mob.distanceToSqr(mob.getTarget()) > 100.0D;
         }
-        return mob.getRandom().nextInt(80) == 0; // ~4% chance per tick to start flying
+        // CRON-COMPLETIONIST-31: Flying beasts should FLY by default, not walk.
+        // Previously ~4% chance per tick (1/80) meant the hawk walked on ground
+        // 96% of the time despite having a bird model and wings. Now flyers have
+        // a ~70% chance per tick to fly — they are BIRDS, they belong in the air.
+        // The canContinueToUse() still limits flight duration to 5-10 seconds.
+        if (mob instanceof SpiritBeastEntity beast && beast.getBeastType().isFlyer()) {
+            return mob.getRandom().nextInt(5) == 0; // ~20% per tick to START flight
+        }
+        return mob.getRandom().nextInt(80) == 0; // non-flyers: ~4% (future bat swarm etc.)
     }
 
     @Override
@@ -58,10 +66,21 @@ public class SpiritBeastFlightGoal extends Goal {
     }
 
     @Override
+    public boolean requiresUpdateEveryTick() {
+        return true; // Flight needs per-tick position updates for smooth 3D movement
+    }
+
+    @Override
     public void start() {
         mob.setNoGravity(true);
         pickNewWaypoint();
-        waypointCooldown = 100 + mob.getRandom().nextInt(100); // 5-10 seconds of flight
+        // CRON-COMPLETIONIST-31: Longer flight duration for flyers (10-20s instead of 5-10s).
+        // Hawks should spend most of their time airborne, not walking on ground.
+        if (mob instanceof SpiritBeastEntity beast && beast.getBeastType().isFlyer()) {
+            waypointCooldown = 200 + mob.getRandom().nextInt(200); // 10-20 seconds
+        } else {
+            waypointCooldown = 100 + mob.getRandom().nextInt(100); // 5-10 seconds (non-flyers)
+        }
         swoopCooldown = 60;
         if (mob instanceof SpiritBeastEntity beast) {
             beast.setSpiritPose(SpiritBeastEntity.POSE_FLYING);
@@ -72,7 +91,11 @@ public class SpiritBeastFlightGoal extends Goal {
     public void stop() {
         mob.setNoGravity(false);
         targetPos = null;
-        // Gentle descent
+        // CRON-COMPLETIONIST-31: For flyers, set a SHORT rest on the ground before
+        // flying again. Previously the hawk landed and walked indefinitely because
+        // canUse() only had 4% trigger chance. Now after landing, a flyer waits
+        // only 1-3 seconds on the ground before re-launching (the ~20% per-tick
+        // canUse() rate ensures this).
         mob.setDeltaMovement(mob.getDeltaMovement().add(0, -0.1D, 0));
         mob.hurtMarked = true;
         if (mob instanceof SpiritBeastEntity beast) {

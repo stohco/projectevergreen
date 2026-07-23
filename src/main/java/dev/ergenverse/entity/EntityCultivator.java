@@ -256,6 +256,16 @@ public class EntityCultivator extends PathfinderMob {
         return this.entityData.get(DATA_POSE) == POSE_CASTING;
     }
 
+    /** CRON-COMPLETIONIST-30: True when the cultivator is in POSE_OBSERVING (crouched, watchful). */
+    public boolean isObserving() {
+        return this.entityData.get(DATA_POSE) == POSE_OBSERVING;
+    }
+
+    /** CRON-COMPLETIONIST-30: True when the cultivator is in POSE_GUARDING (combat-ready stance). */
+    public boolean isGuarding() {
+        return this.entityData.get(DATA_POSE) == POSE_GUARDING;
+    }
+
     // ═══════════════════════════════════════════════════════════════════
     //  Data-driven initialization
     // ═══════════════════════════════════════════════════════════════════

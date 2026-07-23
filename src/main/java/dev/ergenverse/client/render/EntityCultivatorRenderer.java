@@ -61,9 +61,15 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
         // Now EntityCultivator has DATA_POSE synced via SynchedEntityData, and
         // isMeditating()/isCasting() read from it. The model's meditation/casting
         // poses actually fire now.
+        // CRON-COMPLETIONIST-31: Added observing and guarding poses — the
+        // Cultivator Mind's scoring decisions are now VISIBLE. Wang Lin crouches
+        // at the treeline (POSE_OBSERVING) instead of standing idle. Da Niu
+        // stands combat-ready at the gate (POSE_GUARDING).
         CultivatorRobeModel model = this.getModel();
         model.setMeditating(entity.isMeditating());
         model.setCasting(entity.isCasting());
+        model.setObserving(entity.isObserving());
+        model.setGuarding(entity.isGuarding());
 
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 
