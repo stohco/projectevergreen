@@ -1502,6 +1502,30 @@
   "block.ergenverse.heart_calm_lily": "Heart Calm Lily",
   "block.ergenverse.underworld_mushroom": "Underworld Mushroom",
   "block.ergenverse.star_dust_grass": "Star Dust Grass",
+  "item.ergenverse.qi_gathering_scroll": "Qi Gathering Scroll",
+  "item.ergenverse.sword_technique_scroll": "Sword Technique Scroll",
+  "item.ergenverse.body_refinement_scroll": "Body Refinement Scroll",
+  "item.ergenverse.fire_control_scroll": "Fire Control Scroll",
+  "item.ergenverse.spiritual_sense_scroll": "Spiritual Sense Scroll",
+  "item.ergenverse.restriction_art_scroll": "Restriction Art Scroll",
+  "item.ergenverse.heng_yue_banner": "Heng Yue Sect Banner",
+  "item.ergenverse.teng_family_banner": "Teng Family Banner",
+  "item.ergenverse.tian_shui_banner": "Tian Shui Sect Banner",
+  "item.ergenverse.soul_refining_banner": "Soul Refining Sect Banner",
+  "item.ergenverse.xuan_dao_banner": "Xuan Dao Sect Banner",
+
   "entity.ergenverse.fire_beast": "Fire Beast",
-  "entity.ergenverse.stone_back_boar": "Stone-Back Boar"
+  "entity.ergenverse.stone_back_boar": "Stone-Back Boar",
+
+  "item.ergenverse.scroll_qi_gathering": "Qi Gathering Scroll",
+  "item.ergenverse.scroll_sword_technique": "Sword Technique Scroll",
+  "item.ergenverse.scroll_body_refinement": "Body Refinement Scroll",
+  "item.ergenverse.scroll_fire_control": "Fire Control Scroll",
+  "item.ergenverse.scroll_spiritual_sense": "Spiritual Sense Scroll",
+  "item.ergenverse.scroll_restriction_art": "Restriction Art Scroll",
+  "item.ergenverse.banner_heng_yue": "Heng Yue Sect Banner",
+  "item.ergenverse.banner_teng_family": "Teng Family Banner",
+  "item.ergenverse.banner_tian_shui": "Tian Shui City Banner",
+  "item.ergenverse.banner_soul_refining": "Soul Refining Sect Banner",
+  "item.ergenverse.banner_xuan_dao": "Xuan Dao Sect Banner"
 }

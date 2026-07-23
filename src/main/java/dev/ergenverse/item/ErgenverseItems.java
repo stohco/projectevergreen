@@ -173,6 +173,45 @@ public final class ErgenverseItems {
                     0x785032, 0x00C8DC,
                     new Item.Properties()));
 
+    // ── CRON-COMPLETIONIST-40: Canon Technique Scrolls ─────────────────────
+    // Right-click to study, consumes scroll, grants temporary cultivation buff.
+    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_QI_GATHERING =
+            ITEMS.register("scroll_qi_gathering", () -> new dev.ergenverse.item.TechniqueScrollItem(
+                    dev.ergenverse.item.ScrollType.QI_GATHERING, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_SWORD_TECHNIQUE =
+            ITEMS.register("scroll_sword_technique", () -> new dev.ergenverse.item.TechniqueScrollItem(
+                    dev.ergenverse.item.ScrollType.SWORD_TECHNIQUE, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_BODY_REFINEMENT =
+            ITEMS.register("scroll_body_refinement", () -> new dev.ergenverse.item.TechniqueScrollItem(
+                    dev.ergenverse.item.ScrollType.BODY_REFINEMENT, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_FIRE_CONTROL =
+            ITEMS.register("scroll_fire_control", () -> new dev.ergenverse.item.TechniqueScrollItem(
+                    dev.ergenverse.item.ScrollType.FIRE_CONTROL, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_SPIRITUAL_SENSE =
+            ITEMS.register("scroll_spiritual_sense", () -> new dev.ergenverse.item.TechniqueScrollItem(
+                    dev.ergenverse.item.ScrollType.SPIRITUAL_SENSE, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_RESTRICTION_ART =
+            ITEMS.register("scroll_restriction_art", () -> new dev.ergenverse.item.TechniqueScrollItem(
+                    dev.ergenverse.item.ScrollType.RESTRICTION_ART, new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)));
+
+    // ── CRON-COMPLETIONIST-40: Canon Sect Banners ─────────────────────────
+    // Right-click to plant, 16-block aura, buffs allies, consumed.
+    public static final RegistryObject<dev.ergenverse.item.SectBannerItem> BANNER_HENG_YUE =
+            ITEMS.register("banner_heng_yue", () -> new dev.ergenverse.item.SectBannerItem(
+                    dev.ergenverse.item.BannerType.HENG_YUE, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<dev.ergenverse.item.SectBannerItem> BANNER_TENG_FAMILY =
+            ITEMS.register("banner_teng_family", () -> new dev.ergenverse.item.SectBannerItem(
+                    dev.ergenverse.item.BannerType.TENG_FAMILY, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<dev.ergenverse.item.SectBannerItem> BANNER_TIAN_SHUI =
+            ITEMS.register("banner_tian_shui", () -> new dev.ergenverse.item.SectBannerItem(
+                    dev.ergenverse.item.BannerType.TIAN_SHUI, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.SectBannerItem> BANNER_SOUL_REFINING =
+            ITEMS.register("banner_soul_refining", () -> new dev.ergenverse.item.SectBannerItem(
+                    dev.ergenverse.item.BannerType.SOUL_REFINING, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<dev.ergenverse.item.SectBannerItem> BANNER_XUAN_DAO =
+            ITEMS.register("banner_xuan_dao", () -> new dev.ergenverse.item.SectBannerItem(
+                    dev.ergenverse.item.BannerType.XUAN_DAO, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.RARE)));
+
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
