@@ -13,15 +13,34 @@ import java.util.Map;
  * SettlementNpcAnchors — maps settlement IDs to fixed NPC spawn positions
  * within each settlement's footprint.
  *
- * <p><b>Problem solved:</b> The prior {@link ReificationScan} spawned NPCs at
- * a hash-derived offset from the PLAYER's position. This meant NPCs spawned
- * randomly throughout the biome, never at their canonical home. The player
- * arrived at Wang Family Village and found a ghost town.
+ * <h2>DEPRECATED — Constitution Article XLIV</h2>
+ * <p><b>This class is DEPRECATED.</b> Per Article XLIV (§5): "NPC positions
+ * shall not be fixed offsets... A system that hardcodes an NPC's position as
+ * a fixed (dx, dz) offset is a bug. An NPC's position is a derived fact
+ * about a living actor." This class is retained ONLY during the transition
+ * and WILL BE DELETED in a future cycle.
  *
- * <p><b>Solution:</b> Each settlement has a fixed center coordinate. This
- * registry stores per-NPC offsets from that center. When a player approaches
- * a settlement, ReificationScan spawns NPCs at their anchored positions
- * instead of random biome offsets.
+ * <p>The replacement is {@link dev.ergenverse.simulation.settlement.SettlementRegistry}
+ * + {@link dev.ergenverse.simulation.settlement.Residence} + {@link
+ * dev.ergenverse.simulation.settlement.ActorPresence}. Under the new model,
+ * an NPC's position is DERIVED from their life (residence + time-of-day +
+ * activity + context), not a fixed offset. The NPC is at home in the morning,
+ * at the meditation rock in the afternoon, at the market at midday — their
+ * position changes with their life, not with a hardcoded coordinate.
+ *
+ * <p>Do not add new anchors here. New NPCs should be registered as residents
+ * of a {@link dev.ergenverse.simulation.settlement.Residence} within a
+ * {@link dev.ergenverse.simulation.settlement.Settlement}.
+ *
+ * <p><b>Problem solved (legacy):</b> The prior {@link ReificationScan} spawned
+ * NPCs at a hash-derived offset from the PLAYER's position. This meant NPCs
+ * spawned randomly throughout the biome, never at their canonical home. The
+ * player arrived at Wang Family Village and found a ghost town.
+ *
+ * <p><b>Solution (legacy):</b> Each settlement has a fixed center coordinate.
+ * This registry stores per-NPC offsets from that center. When a player
+ * approaches a settlement, ReificationScan spawns NPCs at their anchored
+ * positions instead of random biome offsets.
  *
  * <p><b>Per Art. XXII:</b> "A canon entry that exists only as data, never as
  * experience, is a failure." This registry bridges the gap — NPCs become
@@ -39,6 +58,7 @@ import java.util.Map;
  * in WangFamilyVillageBuilder. Each NPC is placed at the doorway or center
  * of the building they canonically inhabit.
  */
+@Deprecated
 public final class SettlementNpcAnchors {
 
     /** An anchored NPC spawn point. */
