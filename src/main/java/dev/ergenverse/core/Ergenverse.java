@@ -399,6 +399,11 @@ public final class Ergenverse {
             // Initialize the NPC spawn registry — maps locations to canon NPCs.
             // Without this, only wang_tiangui would ever spawn.
             dev.ergenverse.simulation.NpcSpawnRegistry.initialize();
+            // Initialize settlement NPC anchors — fixed positions for village NPCs.
+            // Fixes the ghost-town bug where NPCs spawned randomly in biomes.
+            dev.ergenverse.simulation.SettlementNpcAnchors.initialize();
+            // Initialize ReificationScan settlement centers (reads builder constants).
+            dev.ergenverse.simulation.ReificationScan.initializeSettlements();
         }
 
         // Loop A: CausalEcology — every tick (existing system, unchanged)

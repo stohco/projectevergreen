@@ -3,10 +3,12 @@ package dev.ergenverse.simulation;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.entity.EREntityTypes;
+import dev.ergenverse.spawn.WangFamilyVillageBuilder;
+
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -15,10 +17,25 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * ReificationScan — the high-frequency proximity scanner that materializes
  * canon NPCs into the physical world when a player approaches.
+ *
+ * <h2>Two spawn modes (v2):</h2>
+ * <ol>
+ *   <li><b>Settlement-anchored:</b> If a player is near a known settlement
+ *       (Wang Family Village, Heng Yue Sect), NPCs registered with
+ *       {@link SettlementNpcAnchors} spawn at their fixed canonical
+ *       positions within the settlement. This is the primary mode — it
+ *       makes villages feel inhabited. Per Art. XXII: "A canon entry that
+ *       exists only as data, never as experience, is a failure."</li>
+ *   <li><b>Biome-offset fallback:</b> For NPCs without settlement anchors
+ *       (wandering cultivators, beast NPCs in the wild), the old
+ *       hash-derived offset from the player is used. These NPCs spawn
+ *       anywhere in their registered biome.</li>
+ * </ol>
  *
  * <h2>Why a separate scan (not ChunkEvent.Load)?</h2>
  * <p>The prior design hooked {@code ChunkEvent.Load} and spawned entities
@@ -52,23 +69,11 @@ import java.util.List;
  * <h2>Duplicate prevention</h2>
  * <p>Before spawning, we check whether an {@link EntityCultivator} with the
  * same {@code character_id} already exists within a small AABB around the
- * spawn point. The prior design used {@code level.getEntities().getAll()
- * .spliterator().estimateSize() > 0} — which returns {@code Long.MAX_VALUE}
- * for non-collection iterables and would always return true, preventing
- * ALL spawns. We use a proper typed entity scan with AABB.
- *
- * <h2>v1 scope</h2>
- * <p>Only {@code wang_tiangui} (Wang Lin's mortal father) is wired. He spawns
- * at a fixed surface heightmap position in {@code zhao_plains}. The spawn
- * coordinate is a placeholder — marked {@code TODO: structure anchor} — until
- * the Wang Family Village structure JSON (Task 3) provides a real anchor
- * point.
+ * spawn point.
  *
  * <h2>Prime Directive</h2>
  * <p>"Reality is objective." The NPC's stats come from the canon DB via
- * {@link WorldStateDataLoader#getEntry}, not from hardcoded values. The
- * simulation doesn't invent Wang Tiangui's HP — it reads it from
- * {@code data/ergenverse/npcs/wang_tiangui.json}.
+ * {@link WorldStateDataLoader#getEntry}, not from hardcoded values.
  */
 public final class ReificationScan {
 
@@ -83,6 +88,31 @@ public final class ReificationScan {
 
     /** AABB half-extent for the "already present" duplicate check. */
     public static final double DUPLICATE_CHECK_RADIUS = 32.0;
+
+    /** Range at which settlement-anchored NPCs activate (blocks from settlement center). */
+    public static final double SETTLEMENT_PROXIMITY_RANGE = 128.0;
+    public static final double SETTLEMENT_PROXIMITY_RANGE_SQ = SETTLEMENT_PROXIMITY_RANGE * SETTLEMENT_PROXIMITY_RANGE;
+
+    /**
+     * Known settlement centers: settlementId → (centerX, centerZ).
+     * Populated once at server start from builder constants.
+     */
+    private static final Map<String, int[]> SETTLEMENT_CENTERS = new java.util.HashMap<>();
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  Initialization
+    // ═══════════════════════════════════════════════════════════════════
+
+    /**
+     * Initialize settlement center coordinates. Called once on server start.
+     */
+    public static void initializeSettlements() {
+        SETTLEMENT_CENTERS.put("wang_family_village",
+                new int[]{WangFamilyVillageBuilder.VILLAGE_X, WangFamilyVillageBuilder.VILLAGE_Z});
+        SETTLEMENT_CENTERS.put("heng_yue_sect",
+                new int[]{5400, -1900});
+        Ergenverse.LOGGER.info("[ReificationScan] Settlement centers initialized: {}", SETTLEMENT_CENTERS.keySet());
+    }
 
     // ═══════════════════════════════════════════════════════════════════
     //  Main entry point — called from Ergenverse.onServerTick
@@ -121,15 +151,84 @@ public final class ReificationScan {
         String resolvedLocation = spatialIndex.resolveAndCacheChunk(level, chunk);
         if (resolvedLocation == null) return; // chunk not fully generated yet
 
-        // ── Data-driven spawn: query the NpcSpawnRegistry ────────────────
-        // Any location can have zero or more NPCs registered to spawn there.
-        // The registry maps locationId → List<characterId>.
+        // ── Settlement-anchored spawn check ─────────────────────────────
+        // Check if the player is near any known settlement. If so, spawn
+        // anchored NPCs at their fixed canonical positions. This takes
+        // priority over biome-offset spawning.
+        if (scanSettlementAnchors(level, player)) {
+            return; // Anchored NPCs handled; skip biome-offset for this tick.
+        }
+
+        // ── Biome-offset fallback: query the NpcSpawnRegistry ───────────
+        // For NPCs without settlement anchors (wandering cultivators, etc.).
+        // Also for NPCs that have anchors but the player is not near the
+        // settlement — they spawn via biome offset as before.
         java.util.List<String> npcsHere = NpcSpawnRegistry.getNpcsForLocation(resolvedLocation);
         if (npcsHere.isEmpty()) return;
 
         for (String characterId : npcsHere) {
-            handleNpcSpawn(level, player, characterId);
+            // Skip NPCs that have settlement anchors — they only spawn at
+            // their anchored position, not randomly in the biome.
+            if (SettlementNpcAnchors.hasAnchor(characterId)) continue;
+            handleBiomeOffsetSpawn(level, player, characterId);
         }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  Settlement-anchored spawning (v2 — fixes the ghost-town bug)
+    // ═══════════════════════════════════════════════════════════════════
+
+    /**
+     * Check if the player is near any known settlement and spawn anchored
+     * NPCs at their fixed canonical positions.
+     *
+     * @return true if any settlement anchors were processed (even if no
+     *         NPCs were actually spawned — just being near is enough to
+     *         suppress biome-offset spawning for anchored NPCs).
+     */
+    private static boolean scanSettlementAnchors(ServerLevel level, ServerPlayer player) {
+        boolean anyProcessed = false;
+        double playerX = player.getX();
+        double playerZ = player.getZ();
+
+        for (Map.Entry<String, int[]> entry : SETTLEMENT_CENTERS.entrySet()) {
+            String settlementId = entry.getKey();
+            int[] center = entry.getValue();
+
+            // Check if player is within settlement proximity range
+            double dx = playerX - (center[0] + 0.5);
+            double dz = playerZ - (center[1] + 0.5);
+            if (dx * dx + dz * dz > SETTLEMENT_PROXIMITY_RANGE_SQ) continue;
+
+            anyProcessed = true;
+
+            // Get anchored NPCs for this settlement
+            List<SettlementNpcAnchors.NpcAnchor> anchors =
+                    SettlementNpcAnchors.getAnchorsForSettlement(settlementId);
+            if (anchors.isEmpty()) continue;
+
+            int surfaceY = level.getHeightmapPos(
+                    Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    new BlockPos(center[0], 0, center[1])).getY();
+
+            for (SettlementNpcAnchors.NpcAnchor anchor : anchors) {
+                int anchorX = center[0] + anchor.offsetX();
+                int anchorZ = center[1] + anchor.offsetZ();
+                int anchorY = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, anchorX, anchorZ);
+                Vec3 anchorPos = new Vec3(anchorX + 0.5, anchorY, anchorZ + 0.5);
+
+                // Check if NPC already present
+                if (isCultivatorAlreadyPresent(level, anchor.characterId(), anchorPos)) continue;
+
+                // Check player proximity to this specific anchor
+                double distSq = player.position().distanceToSqr(anchorPos);
+                if (distSq > ACTIVATION_RANGE_SQ) continue;
+
+                // Materialize at anchored position
+                materializeAt(level, anchor.characterId(), anchorPos);
+            }
+        }
+        return anyProcessed;
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -137,25 +236,16 @@ public final class ReificationScan {
     // ═══════════════════════════════════════════════════════════════════
 
     /**
-     * Materialize a canon NPC if the player is near the spawn point and the
-     * NPC isn't already present or dead.
-     *
-     * <p>This is the generic version of the old {@code handleWangTiangui} —
-     * it works for ANY canon NPC registered in {@link NpcSpawnRegistry}.
-     * The spawn point is computed as a deterministic offset from the player's
-     * position (seeded by the character ID hash) so each NPC spawns at a
-     * consistent position relative to the player, not stacked on top of
-     * each other.
+     * Biome-offset fallback: spawn an NPC at a deterministic offset from the
+     * player. Used for NPCs without settlement anchors (wandering cultivators,
+     * traveling merchants, etc.).
      *
      * @param level       the server level
      * @param player      the player whose proximity triggered the scan
-     * @param characterId the NPC's canon character ID (e.g. "situ_nan")
+     * @param characterId the NPC's canon character ID
      */
-    private static void handleNpcSpawn(ServerLevel level, ServerPlayer player, String characterId) {
+    private static void handleBiomeOffsetSpawn(ServerLevel level, ServerPlayer player, String characterId) {
         // ── Compute spawn point: deterministic offset from player ────────
-        // Each NPC gets a unique offset (seeded by character ID hash) so
-        // multiple NPCs in the same location don't stack on the same block.
-        // Offset range: 8-48 blocks from the player, in a deterministic direction.
         int hash = characterId.hashCode();
         int angle = (hash & 0xFF) * 360 / 256;  // 0-359 degrees
         int dist = 8 + ((hash >> 8) & 0x3F);     // 8-71 blocks
@@ -168,9 +258,23 @@ public final class ReificationScan {
         double distSq = player.position().distanceToSqr(spawnPoint);
         if (distSq > ACTIVATION_RANGE_SQ) return;
 
-        // ── Duplicate check: is this NPC already spawned nearby? ────────
+        // ── Duplicate check ───────────────────────────────────────────────
         if (isCultivatorAlreadyPresent(level, characterId, spawnPoint)) return;
 
+        // Materialize at the computed position
+        materializeAt(level, characterId, spawnPoint);
+    }
+
+    /**
+     * Core materialization logic — shared by both anchored and offset spawns.
+     * Reads canon data, runtime overrides, checks for dead state, creates
+     * the entity, and adds it to the world.
+     *
+     * @param level       the server level
+     * @param characterId the NPC's canon character ID
+     * @param spawnPoint   the exact world position to spawn at
+     */
+    private static void materializeAt(ServerLevel level, String characterId, Vec3 spawnPoint) {
         // ── Read canon baseline ──────────────────────────────────────────
         var canonData = WorldStateDataLoader.getEntry("npcs", characterId);
         if (canonData == null) {
