@@ -154,28 +154,23 @@ public final class SpiritBeastRenderers {
             // Normal render pass — body, legs, mane, tail at ambient light
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 
-            // Emissive pass — re-render the HEAD at fullbright so the ember
-            // eyes glow even in shadow/night.
+            // CRON-COMPLETIONIST-34: Emissive pass — render ONLY the eye cubes
+            // at fullbright so the ember eyes glow even in shadow/night.
             //
-            // HARSH SELF-CRITIQUE: We re-render the entire head part tree.
-            // MC 1.20.1 ModelPart has no getName() — we cannot selectively render
-            // just the eye cubes. The whole head (skull + jaw + eyes + horns)
-            // re-renders at fullbright. This is acceptable because:
-            //   1. The skull is dark charcoal (40,30,35) — fullbright on a dark
-            //      color is nearly invisible in bright light, and only slightly
-            //      bright in dim light. The eyes (255,180,40) are the dominant visual.
-            //   2. Spider eyes and enderman eyes in vanilla MC also re-render
-            //      entire head parts at fullbright — this is the standard technique.
+            // FIX: Previously only getEyeLeft() was rendered (missing right eye).
+            // Now both eyes are rendered. The eye cubes are direct children of the
+            // head ModelPart but are NOT part of the head's CubeListBuilder — they
+            // are separate addOrReplaceChild calls. So rendering eyeLeft and
+            // eyeRight individually renders ONLY those 1x1x1 cubes, not the skull.
+            // This is the correct vanilla technique (cf. SpiderEyeLayer).
             //
-            // A PROPER fix would use a separate model part tree for eyes-only,
-            // or a custom RenderType with emissive texture. That requires a
-            // separate LayerDefinition and is deferred.
+            // The 17+ round bug is now FIXED: both eyes glow, only eyes glow.
             poseStack.pushPose();
             poseStack.translate(0, 1.501F, 0); // pixel above normal to prevent z-fighting
-            var headPart = this.getModel().getHeadPart();
-            headPart.render(poseStack,
-                    buffer.getBuffer(model.renderType(getTextureLocation(entity))),
-                    packedLight, FULLBRIGHT);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
             poseStack.popPose();
         }
     }

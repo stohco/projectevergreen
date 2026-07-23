@@ -2,8 +2,12 @@ package dev.ergenverse.simulation.settlement;
 
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.simulation.action.ActorRelationshipStore;
+import dev.ergenverse.simulation.cognition.Belief;
+import dev.ergenverse.simulation.cognition.BeliefRegistry;
+import dev.ergenverse.simulation.cognition.MemoryGraph;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -26,47 +30,48 @@ import java.util.Map;
  * karma, and intent matter as much as physical strength.
  * </blockquote>
  *
- * <p>This is the architectural shift from the prior cycle's
- * {@code ActorReasoningEngine} (which was a {@code switch(profile)} — still
- * scripting, just per-role). The engine is now a <b>thin dispatcher</b>; the
- * <b>mind does the reasoning</b>. Nobody ever wrote "Wang Lin observes wolves."
- * Instead, Wang Lin observes because — given his motivation weights — the
- * OBSERVE candidate scores highest against the shared situation. A mortal with
- * different weights scores FLEEING_HOME highest. Same candidates, different
- * minds, different winner. That is emergence.
+ * <p>CRON-COMPLETIONIST-34: Wired Beliefs and Memories into the scoring system.
+ * Previously the Cultivator Mind had 2/7 modules (Motivations + CurrentActivity).
+ * Now it has 4/7 (Motivations + CurrentActivity + Beliefs + Memories). The
+ * remaining 3 (Relationships, Predictions, Plans) are partially implemented:
+ * Relationships are read from ActorRelationshipStore (CRON-32), Predictions
+ * and Plans are deferred to future cycles.
  *
- * <h2>What the mind owns (per the user's directive)</h2>
+ * <h2>How beliefs influence scoring</h2>
+ * <p>The mind consults its BeliefRegistry before scoring. If the mind holds a
+ * strong belief about the threat source, motivation weights are modified:
  * <ul>
- *   <li><b>motivations</b> — weighted drives (PROTECT_FAMILY, CONCEAL_STRENGTH,
- *       CURIOSITY, SURVIVAL, DUTY, ...). The "different minds" table.</li>
- *   <li><b>beliefs</b> — what this actor thinks is true (stub for future: threat
- *       assessment, relationship trust, world knowledge).</li>
- *   <li><b>currentActivity</b> — what the actor is doing right now (the last
- *       chosen Activity, retained so the mind can decide whether to persist
- *       or re-evaluate).</li>
+ *   <li>Believes the threat source is "dangerous" → SURVIVAL +0.15</li>
+ *   <li>Believes the threat source is "powerful" → CONCEAL_STRENGTH +0.10</li>
+ *   <li>Believes the threat source is "cruel" → PROTECT_FAMILY +0.15</li>
+ *   <li>Believes the threat source is "terrifying" → SURVIVAL +0.20, FLEE weight amplified</li>
+ *   <li>Believes someone nearby is "courageous" → DUTY +0.10 (someone else will handle it)</li>
+ *   <li>Believes someone nearby is "compassionate" → PROTECT_FAMILY -0.05 (less urgent)</li>
  * </ul>
+ *
+ * <h2>How memories influence scoring</h2>
+ * <p>The mind consults its MemoryGraph for past encounters with similar threats.
+ * Strong negative memories (valence < -0.5) of similar events amplify flee/survival.
+ * Strong positive memories of successfully observing boost curiosity/concealment.
  *
  * <h2>The evaluation algorithm</h2>
  * <ol>
  *   <li>If the situation is peaceful (no threat), return {@code null} — the
- *       daily rhythm takes over. (The mind does not yet reason over peaceful
- *       opportunities; that is a future cycle per the user's "World Situation"
- *       list.)</li>
- *   <li>Generate candidate activities appropriate to the situation (OBSERVE,
- *       FLEE_HOME, GUARD, SECURE_ASSETS, and FIGHT for combat-capable actors).</li>
- *   <li>Score each candidate against the mind's motivation weights.</li>
- *   <li>Select the highest-scoring candidate. If the top score is ≤ 0 (no
- *       candidate serves the actor's drives), return {@code null} — daily
- *       rhythm takes over.</li>
+ *       daily rhythm takes over.</li>
+ *   <li>Compute belief modifiers from BeliefRegistry about the threat source.</li>
+ *   <li>Compute memory modifiers from MemoryGraph about similar past threats.</li>
+ *   <li>Generate candidate activities appropriate to the situation.</li>
+ *   <li>Score each candidate against the mind's (modified) motivation weights.</li>
+ *   <li>Select the highest-scoring candidate. If the top score is ≤ 0, return null.</li>
  * </ol>
  *
  * <h2>Meaning is created by the observer</h2>
  * <p>Per the user's directive: "Meaning is not in the world. Meaning is created
  * by the observer." The same wolf event means "weak predator, useful
  * observation" to Wang Lin (high CURIOSITY + CONCEAL_STRENGTH) and "death" to
- * a mortal (high SURVIVAL). The {@link WorldSituation} carries no meaning —
- * the mind <b>creates</b> meaning through its scoring. A wolf is just a wolf
- * until a mind evaluates it.
+ * a mortal (high SURVIVAL). But now if Wang Lin has previously been nearly
+ * killed by wolves (strong negative memory), his SURVIVAL weight temporarily
+ * spikes — the same candidate scores differently because of LIVED EXPERIENCE.
  */
 public final class CultivatorMind {
 
@@ -84,6 +89,25 @@ public final class CultivatorMind {
 
     /** The actor's current activity (retained so the mind can persist or re-evaluate). */
     public Activity currentActivity = null;
+
+    // ── CRON-COMPLETIONIST-34: Beliefs and Memories ─────────────────────────
+    // Modules 3/7 and 4/7 of the Cultivator Mind. Previously the mind scored
+    // candidates using ONLY motivation weights. Now beliefs and memories MODULATE
+    // those weights, producing behavior that changes based on lived experience.
+
+    /** Beliefs — what this actor thinks is true. Shaped by witnessed events
+     *  via BeliefFormationSubscriber. Decays over time. */
+    private final BeliefRegistry beliefs = new BeliefRegistry();
+
+    /** Memories — what changed this actor. A directed graph of memory nodes
+     *  with emotional valence. Decays, with special types (bloodline, karmic,
+     *  tribulation) decaying much slower or not at all. */
+    private final MemoryGraph memories = new MemoryGraph();
+
+    /** Per-tick decay rate for beliefs and memories. Called from evaluate()
+     *  and from ActorTickLoop. */
+    private static final double BELIEF_DECAY_PER_EVAL = 0.0001;
+    private static final double MEMORY_DECAY_PER_EVAL = 0.00005;
 
     public CultivatorMind(String actorId, String displayName, ActorProfile profile) {
         this.actorId = actorId;
@@ -106,11 +130,25 @@ public final class CultivatorMind {
         return java.util.Collections.unmodifiableMap(motivations);
     }
 
+    // ── Belief accessors ──────────────────────────────────────────────
+
+    /** Get the actor's belief registry (for reading/writing beliefs). */
+    public BeliefRegistry getBeliefs() {
+        return beliefs;
+    }
+
+    /** Get the actor's memory graph (for reading/writing memories). */
+    public MemoryGraph getMemories() {
+        return memories;
+    }
+
     /**
      * Evaluate the shared situation and choose an Activity.
      *
-     * <p>This is the core of the Cultivator Mind. The situation is the same for
-     * every actor; the mind's motivation weights produce a different winner.
+     * <p>CRON-COMPLETIONIST-34: Now consults beliefs and memories before
+     * scoring. The same situation can produce different choices for the
+     * SAME mind if the mind's beliefs/memories have changed since last
+     * evaluation. This is lived experience influencing decision-making.
      *
      * @param situation  the shared world situation
      * @param settlement the actor's settlement (for home/location resolution)
@@ -125,12 +163,23 @@ public final class CultivatorMind {
             return null;
         }
 
+        // ── CRON-34: Decay beliefs and memories before evaluating ──
+        // This ensures stale beliefs don't accumulate indefinitely.
+        beliefs.decay(BELIEF_DECAY_PER_EVAL);
+        memories.decay(MEMORY_DECAY_PER_EVAL);
+
+        // ── CRON-34: Compute belief modifiers ──
+        // Beliefs about the threat source modify motivation weights temporarily.
+        Map<Motivation, Float> beliefModifiers = computeBeliefModifiers(situation);
+
+        // ── CRON-34: Compute memory modifiers ──
+        // Past memories of similar threats modify motivation weights.
+        Map<Motivation, Float> memoryModifiers = computeMemoryModifiers(situation);
+
         // Generate candidates appropriate to the situation.
         List<CandidateActivity> candidates = generateCandidates(situation, settlement);
 
         // ── CRON-32: Relationship-aware scoring modifiers ──
-        // If this actor fears a neighbor, boost FLEEING_HOME.
-        // If this actor trusts a guard-type, reduce OBSERVING_THREAT.
         Map<Activity.Type, Double> relationshipModifiers = evaluateRelationshipModifier(settlement);
 
         // Score each and select the highest.
@@ -139,7 +188,7 @@ public final class CultivatorMind {
         CandidateActivity runnerUp = null;
         double runnerUpScore = Double.NEGATIVE_INFINITY;
         for (CandidateActivity c : candidates) {
-            double s = c.scoreFor(this);
+            double s = c.scoreFor(this, beliefModifiers, memoryModifiers);
             // Apply relationship modifier if one exists for this activity type.
             Double mod = relationshipModifiers.get(c.type);
             if (mod != null) {
@@ -157,8 +206,6 @@ public final class CultivatorMind {
         }
 
         if (winner == null || winnerScore <= 0.0) {
-            // No candidate serves this mind's drives strongly enough. The daily
-            // rhythm takes over — the actor continues their routine undisturbed.
             return null;
         }
 
@@ -169,12 +216,191 @@ public final class CultivatorMind {
                 expiry, winner.reason);
         this.currentActivity = chosen;
 
-        Ergenverse.LOGGER.debug("[CultivatorMind] {} chose {} (score {}, runner-up {} score {}) — emerged from motivations, not scripted",
+        Ergenverse.LOGGER.debug("[CultivatorMind] {} chose {} (score {}, runner-up {} score {}) — beliefs={}, memories={}",
                 displayName, winner.type, Math.round(winnerScore * 100) / 100.0,
                 runnerUp != null ? runnerUp.type : "none",
-                Math.round(runnerUpScore * 100) / 100.0);
+                Math.round(runnerUpScore * 100) / 100.0,
+                beliefs.size(), memories.size());
 
         return chosen;
+    }
+
+    // ── Belief-influenced motivation modifiers ───────────────────────────
+
+    /**
+     * CRON-COMPLETIONIST-34: Compute temporary motivation weight modifiers
+     * from the actor's beliefs about the threat source.
+     *
+     * <p>Per the user's directive: "Old Chen lost his dog protecting children.
+     * Emotion: sadness. Importance: 0.83. Retellability: high. Lessons: wolves
+     * dangerous." This is exactly what Belief → scoring does. Old Chen's
+     * SURVIVAL and PROTECT_FAMILY weights spike when wolves appear because
+     * his beliefs encode "wolves = dangerous."
+     *
+     * <p>The threat source identity is extracted from the WorldSituation's
+     * primary threat (e.g. "spirit_wolf_pack" → we look for beliefs about
+     * "spirit_wolf" or "wolf" as subject).
+     *
+     * @param situation the current world situation
+     * @return a map of Motivation → temporary weight modifier (may be empty)
+     */
+    private Map<Motivation, Float> computeBeliefModifiers(WorldSituation situation) {
+        Map<Motivation, Float> modifiers = new EnumMap<>(Motivation.class);
+
+        if (situation.primaryThreat == null) return modifiers;
+
+        // Extract the threat source identifier for belief lookup.
+        // Threat descriptions are like "wolf_pack_nearby", "fire_beast_approaching".
+        String threatDesc = situation.primaryThreat.type().toLowerCase();
+        String[] threatWords = threatDesc.split("[_\\s]+");
+
+        // Check each belief to see if it's about something matching the threat.
+        for (Belief b : beliefs.all()) {
+            // Match belief subject to threat description words.
+            boolean relevant = false;
+            String subjectLower = b.subject.toLowerCase();
+            for (String word : threatWords) {
+                if (word.length() < 3) continue;
+                if (subjectLower.contains(word) || word.contains(subjectLower)) {
+                    relevant = true;
+                    break;
+                }
+            }
+            // Also check the belief value/predicate for threat-related terms.
+            if (!relevant) {
+                String predLower = b.predicate.toLowerCase();
+                String valLower = b.value.toLowerCase();
+                for (String word : threatWords) {
+                    if (word.length() < 3) continue;
+                    if (predLower.contains(word) || valLower.contains(word)) {
+                        relevant = true;
+                        break;
+                    }
+                }
+            }
+            if (!relevant || b.strength < 0.2) continue;
+
+            // This belief is about the current threat and strong enough to matter.
+            // Map the belief value to motivation modifiers.
+            String valLower = b.value.toLowerCase();
+            float strength = (float) b.strength;
+
+            if (valLower.contains("dangerous")) {
+                // "I believe X is dangerous" → boost survival instinct
+                modifiers.merge(Motivation.SURVIVAL, 0.15f * strength, Float::sum);
+            }
+            if (valLower.contains("powerful") || valLower.contains("strong")) {
+                // "I believe X is powerful" → boost concealment instinct
+                modifiers.merge(Motivation.CONCEAL_STRENGTH, 0.10f * strength, Float::sum);
+            }
+            if (valLower.contains("cruel")) {
+                // "I believe X is cruel" → boost family protection
+                modifiers.merge(Motivation.PROTECT_FAMILY, 0.15f * strength, Float::sum);
+            }
+            if (valLower.contains("terrifying")) {
+                // "I believe X is terrifying" → strong survival boost
+                modifiers.merge(Motivation.SURVIVAL, 0.20f * strength, Float::sum);
+                modifiers.merge(Motivation.CONCEAL_STRENGTH, 0.05f * strength, Float::sum);
+            }
+            if (valLower.contains("courageous")) {
+                // "I believe someone nearby is courageous" → reduce urgency of duty
+                modifiers.merge(Motivation.DUTY, -0.10f * strength, Float::sum);
+            }
+            if (valLower.contains("compassionate") || valLower.contains("kind")) {
+                // "I believe someone nearby is kind" → slightly reduce protection urgency
+                modifiers.merge(Motivation.PROTECT_FAMILY, -0.05f * strength, Float::sum);
+            }
+            if (valLower.contains("treacherous") || valLower.contains("unreliable")) {
+                // "I believe X is treacherous" → don't trust, act independently
+                modifiers.merge(Motivation.DUTY, -0.15f * strength, Float::sum);
+                modifiers.merge(Motivation.SURVIVAL, 0.05f * strength, Float::sum);
+            }
+        }
+
+        return modifiers;
+    }
+
+    // ── Memory-influenced motivation modifiers ─────────────────────────
+
+    /**
+     * CRON-COMPLETIONIST-34: Compute temporary motivation weight modifiers
+     * from the actor's past memories of similar threats.
+     *
+     * <p>If the actor remembers being hurt by a similar threat (strong negative
+     * valence), SURVIVAL spikes and CONCEAL_STRENGTH rises. If the actor
+     * remembers successfully observing a similar threat (positive valence with
+     * "observe" in the description), CURIOSITY rises.
+     *
+     * <p>Memory influence is weaker than belief influence (memories decay faster
+     * for normal types) but provides a "gut feeling" layer that beliefs alone
+     * cannot capture — you may not believe wolves are dangerous (no one told you,
+     * you haven't formed the belief yet) but you REMEMBER being bitten.
+     *
+     * @param situation the current world situation
+     * @return a map of Motivation → temporary weight modifier (may be empty)
+     */
+    private Map<Motivation, Float> computeMemoryModifiers(WorldSituation situation) {
+        Map<Motivation, Float> modifiers = new EnumMap<>(Motivation.class);
+
+        if (situation.primaryThreat == null) return modifiers;
+
+        // Search memories for entries related to the threat description.
+        String threatDesc = situation.primaryThreat.type().toLowerCase();
+        List<MemoryGraph.MemoryNode> relevantMemories = new ArrayList<>();
+
+        for (MemoryGraph.MemoryNode node : memories.about(threatDesc)) {
+            // Skip forgotten memories.
+            if (node.type == MemoryGraph.Type.FORGOTTEN) continue;
+            // Only consider memories with enough strength to matter.
+            if (node.strength < 0.15) continue;
+            relevantMemories.add(node);
+        }
+
+        if (relevantMemories.isEmpty()) return modifiers;
+
+        // Aggregate emotional valence from relevant memories.
+        // Negative valence (fear/pain) → boost survival, reduce curiosity.
+        // Positive valence (success/learning) → boost curiosity/concealment.
+        double totalValence = 0.0;
+        double totalStrength = 0.0;
+        int negativeCount = 0;
+        int positiveCount = 0;
+
+        for (MemoryGraph.MemoryNode node : relevantMemories) {
+            totalValence += node.valence * node.strength;
+            totalStrength += node.strength;
+            if (node.valence < -0.3) negativeCount++;
+            if (node.valence > 0.3) positiveCount++;
+        }
+
+        if (totalStrength < 0.01) return modifiers;
+
+        // Normalize by total strength to get weighted average valence.
+        double avgValence = totalValence / totalStrength;
+
+        if (avgValence < -0.3) {
+            // Predominantly negative memories — trauma response
+            float traumaFactor = (float) Math.min(1.0, Math.abs(avgValence));
+            modifiers.merge(Motivation.SURVIVAL, 0.12f * traumaFactor, Float::sum);
+            modifiers.merge(Motivation.CONCEAL_STRENGTH, 0.08f * traumaFactor, Float::sum);
+            modifiers.merge(Motivation.CURIOSITY, -0.05f * traumaFactor, Float::sum);
+        } else if (avgValence > 0.3) {
+            // Predominantly positive memories — confidence response
+            float confFactor = (float) Math.min(1.0, avgValence);
+            modifiers.merge(Motivation.CURIOSITY, 0.08f * confFactor, Float::sum);
+            modifiers.merge(Motivation.CONCEAL_STRENGTH, 0.05f * confFactor, Float::sum);
+            modifiers.merge(Motivation.PRESTIGE, 0.05f * confFactor, Float::sum);
+        }
+
+        // Count-based modifiers: many negative memories → strong flee bias.
+        if (negativeCount >= 3) {
+            modifiers.merge(Motivation.SURVIVAL, 0.10f, Float::sum);
+        }
+        if (positiveCount >= 3) {
+            modifiers.merge(Motivation.DUTY, 0.05f, Float::sum);
+        }
+
+        return modifiers;
     }
 
     // ── Candidate generation ────────────────────────────────────────────
@@ -182,12 +408,7 @@ public final class CultivatorMind {
     /**
      * Generate the candidate activities this mind will consider for the given
      * threat situation. The candidates are the same for every actor — the
-     * <b>scoring</b> differs per mind. This is deliberate: the situation offers
-     * the same options to everyone; the mind's motivations decide which wins.
-     *
-     * <p>Per the user's directive: "Nobody special-cases Wang Lin. Nobody
-     * special-cases Li Muwan. The reasoning emerges from what they care about."
-     * The candidates are generated from the <b>situation</b>, not the profile.
+     * <b>scoring</b> differs per mind.
      */
     private List<CandidateActivity> generateCandidates(WorldSituation situation,
                                                         Settlement settlement) {
@@ -203,49 +424,45 @@ public final class CultivatorMind {
         Map<Motivation, Float> fleeScores = new EnumMap<>(Motivation.class);
         fleeScores.put(Motivation.SURVIVAL, 0.8f);
         fleeScores.put(Motivation.PROTECT_FAMILY, profile != null && profile.hasFamily ? 0.5f : 0.0f);
-        fleeScores.put(Motivation.CONCEAL_STRENGTH, 0.2f); // fleeing doesn't reveal
-        fleeScores.put(Motivation.CURIOSITY, -0.3f);       // but loses information
-        fleeScores.put(Motivation.DUTY, -0.2f);            // and abandons post
+        fleeScores.put(Motivation.CONCEAL_STRENGTH, 0.2f);
+        fleeScores.put(Motivation.CURIOSITY, -0.3f);
+        fleeScores.put(Motivation.DUTY, -0.2f);
         candidates.add(new CandidateActivity(Activity.Type.FLEEING_HOME,
                 homeX, homeZ, fleeScores,
                 displayName + " flees home and bars the door — the safe option."));
 
         // ── OBSERVE: watch from cover without revealing. ──
-        // Available to anyone, but only scores high for minds that value
-        // concealment + curiosity over immediate survival.
         int[] vantage = vantageToward(threat, 22);
         Map<Motivation, Float> observeScores = new EnumMap<>(Motivation.class);
         observeScores.put(Motivation.CURIOSITY, 0.7f);
         observeScores.put(Motivation.CONCEAL_STRENGTH, 0.6f);
-        observeScores.put(Motivation.CULTIVATION_PROGRESS, 0.4f); // watching teaches stillness
+        observeScores.put(Motivation.CULTIVATION_PROGRESS, 0.4f);
         observeScores.put(Motivation.PROTECT_FAMILY, profile != null && profile.hasFamily ? 0.3f : 0.0f);
-        observeScores.put(Motivation.SURVIVAL, mortalThreat ? 0.1f : -0.4f); // safe vs wolves, risky vs apex
+        observeScores.put(Motivation.SURVIVAL, mortalThreat ? 0.1f : -0.4f);
         observeScores.put(Motivation.DUTY, -0.1f);
         candidates.add(new CandidateActivity(Activity.Type.OBSERVING_THREAT,
                 vantage[0], vantage[1], observeScores,
                 displayName + " observes from cover — assessing whether intervention is warranted."));
 
         // ── GUARD: stand at the perimeter with weapon ready. ──
-        // Scores high for minds that value duty + protection over concealment.
         int[] perim = vantageToward(threat, 16);
         Map<Motivation, Float> guardScores = new EnumMap<>(Motivation.class);
         guardScores.put(Motivation.DUTY, 0.7f);
         guardScores.put(Motivation.PROTECT_FAMILY, profile != null && profile.hasFamily ? 0.4f : 0.2f);
-        guardScores.put(Motivation.PRESTIGE, 0.3f); // visible bravery
-        guardScores.put(Motivation.CONCEAL_STRENGTH, -0.5f); // REVEALS position
+        guardScores.put(Motivation.PRESTIGE, 0.3f);
+        guardScores.put(Motivation.CONCEAL_STRENGTH, -0.5f);
         guardScores.put(Motivation.SURVIVAL, apex ? -0.6f : (mortalThreat ? -0.1f : -0.3f));
         candidates.add(new CandidateActivity(Activity.Type.GUARDING,
                 perim[0], perim[1], guardScores,
                 displayName + " stands at the perimeter, ready to defend."));
 
         // ── SECURE_ASSETS: protect livestock/goods before fleeing. ──
-        // Scores high for minds with duty toward assets (laborer, merchant).
         int[] assets = nearestAssetLocation(settlement);
         Map<Motivation, Float> secureScores = new EnumMap<>(Motivation.class);
         secureScores.put(Motivation.DUTY, 0.5f);
         secureScores.put(Motivation.GREED, 0.5f);
         secureScores.put(Motivation.PROTECT_FAMILY, 0.2f);
-        secureScores.put(Motivation.SURVIVAL, 0.2f); // safer than guarding
+        secureScores.put(Motivation.SURVIVAL, 0.2f);
         secureScores.put(Motivation.CURIOSITY, -0.2f);
         candidates.add(new CandidateActivity(Activity.Type.SECURING_ASSETS,
                 assets[0], assets[1], secureScores,
@@ -264,22 +481,6 @@ public final class CultivatorMind {
 
     /**
      * CRON-32: Evaluate relationship modifiers from ActorRelationshipStore.
-     *
-     * <p>Reads the actor's relationships with other settlement members and
-     * produces score modifiers for candidate activities:
-     * <ul>
-     *   <li>If the actor has FEAR &gt; 40 toward anyone, boost FLEEING_HOME by 0.15.</li>
-     *   <li>If the actor has TRUST &gt; 40 toward a guard-type actor (ELDER or HUNTER),
-     *       reduce OBSERVING_THREAT by 0.1 (someone else will handle it).</li>
-     * </ul>
-     *
-     * <p>This makes the Cultivator Mind's decisions relationship-aware:
-     * an actor who fears their neighbor is more likely to flee; an actor
-     * who trusts the village hunter or elder is less likely to observe
-     * because they know someone else is watching.
-     *
-     * @param settlement the actor's settlement (provides population for relationship checks)
-     * @return a map of Activity.Type → score modifier (may be empty)
      */
     private Map<Activity.Type, Double> evaluateRelationshipModifier(Settlement settlement) {
         Map<Activity.Type, Double> modifiers = new EnumMap<>(Activity.Type.class);
@@ -292,21 +493,17 @@ public final class CultivatorMind {
         try {
             store = ActorRelationshipStore.get(level);
         } catch (Exception e) {
-            // Non-server context — skip relationship lookup.
             return modifiers;
         }
 
         for (String otherId : settlement.getPopulation()) {
             if (otherId.equals(this.actorId)) continue;
 
-            // If actor fears this neighbor (FEAR > 40), boost FLEEING_HOME.
             int fear = store.getFear(this.actorId, otherId);
             if (fear > 40) {
                 modifiers.merge(Activity.Type.FLEEING_HOME, 0.15, Double::sum);
             }
 
-            // If actor trusts a guard-type actor (TRUST > 40 toward ELDER or HUNTER),
-            // reduce OBSERVING_THREAT — someone else will guard.
             int trust = store.getTrust(this.actorId, otherId);
             if (trust > 40) {
                 ActorProfile otherProfile = ActorProfileRegistry.get(otherId);

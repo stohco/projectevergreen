@@ -1,7 +1,9 @@
 package dev.ergenverse.entity.control;
 
 import dev.ergenverse.entity.SpiritBeastEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * FlightMoveControl — 3D aerial movement for flying beasts (Hawk).
@@ -14,6 +16,10 @@ import net.minecraft.world.entity.ai.control.MoveControl;
  * gravity effectively, and the onGround() check caused the hawk to "fall
  * into walk mode" whenever it touched the ground during landing. Now flyers
  * maintain altitude more aggressively when noGravity is set.
+ *
+ * <p>Obstacle avoidance: Before horizontal movement, check if the next
+ * position at head height has a solid block. If blocked, add upward impulse
+ * to vault over obstacles.
  */
 public class FlightMoveControl extends MoveControl {
 
@@ -34,6 +40,30 @@ public class FlightMoveControl extends MoveControl {
         if (!inFlight && this.beast.getDeltaMovement().y <= 0.0D) {
             super.tick();
             return;
+        }
+
+        // Obstacle avoidance: check if horizontal movement is blocked at head height
+        if (inFlight && this.operation == Operation.MOVE_TO) {
+            double dx = this.wantedX - this.beast.getX();
+            double dz = this.wantedZ - this.beast.getZ();
+            double dist = Math.sqrt(dx * dx + dz * dz);
+            if (dist > 0.1D) {
+                // Normalize horizontal direction
+                double nx = dx / dist;
+                double nz = dz / dist;
+                // Check 1 block ahead at head height (entity Y + 1 block)
+                double lookAhead = 1.0D;
+                double checkX = this.beast.getX() + nx * lookAhead;
+                double checkY = this.beast.getY() + 1.0D;
+                double checkZ = this.beast.getZ() + nz * lookAhead;
+                BlockPos checkPos = BlockPos.containing(checkX, checkY, checkZ);
+                BlockState state = this.beast.level().getBlockState(checkPos);
+                if (state.isSolidRender(this.beast.level(), checkPos)) {
+                    // Blocked: add upward impulse to vault over
+                    this.beast.setDeltaMovement(
+                            this.beast.getDeltaMovement().add(0, 0.15D, 0));
+                }
+            }
         }
 
         // In flight: delegate to standard MoveControl for ground-plane movement,

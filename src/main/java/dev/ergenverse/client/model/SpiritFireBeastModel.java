@@ -68,6 +68,12 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
     /** Public accessor for the emissive renderer to re-render the head at fullbright. */
     public ModelPart getHeadPart() { return this.head; }
     private final ModelPart jaw;
+    private final ModelPart eyeLeft;
+    private final ModelPart eyeRight;
+
+    public ModelPart getEyeLeft() { return this.eyeLeft; }
+
+    public ModelPart getEyeRight() { return this.eyeRight; }
     private final ModelPart mane0;
     private final ModelPart mane1;
     private final ModelPart mane2;
@@ -88,6 +94,8 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
         this.root = root;
         this.head = root.getChild("head");
         this.jaw = this.head.getChild("jaw");
+        this.eyeLeft = this.head.getChild("eye_left");
+        this.eyeRight = this.head.getChild("eye_right");
         // mane segments are children of the body (attached to the spine),
         // so fetch the body first, then its mane children.
         ModelPart body = root.getChild("body");
