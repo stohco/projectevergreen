@@ -415,6 +415,16 @@ public final class Ergenverse {
             }
             // The divergence recorder auto-seeds all 108 canon events as PENDING on first get().
             dev.ergenverse.history.CanonDivergenceRecorder.get(overworld);
+            // ── CRON-COMPLETIONIST-46: Seed canon NPC-to-NPC relationships ──
+            // The ActorRelationshipStore starts empty. Without canonically-accurate
+            // seeds (Wang Lin→Li Muwan trust=90, Teng Clan→Wang Lin grievance=90, etc.),
+            // all event-driven relationship changes (NpcSemanticRelationshipSubscriber,
+            // RelationshipEngine, WangLinSemanticSubscriber) operate on blank slates.
+            // This seeder provides the foundation. Article X: NPCs reason, not script.
+            // Article XXXIV: Relationships are multi-axis graphs with history.
+            // Article XLIII §2: Relationships persist across server restart.
+            // Idempotent — only seeds when store has 0 relationships.
+            dev.ergenverse.simulation.action.CanonRelationshipSeeder.seedIfEmpty(overworld);
             // Initialize the NPC spawn registry — maps locations to canon NPCs.
             // Without this, only wang_tiangui would ever spawn.
             // DEPRECATED (Article XLIV): the spawn-registry model is being replaced
