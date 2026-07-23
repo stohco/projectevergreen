@@ -123,7 +123,18 @@ public final class CanonGeographyPlacer {
                         dev.ergenverse.spawn.HengYueSectBuilder.build(level, center);
                     }
                 }
-                case "teng_city" -> buildTengCityMarker(level, x, z, settlement);
+                case "teng_city" -> {
+                    // Full hand-built Teng Family City (滕城) — largest city in Zhao Country.
+                    // Constitution: the world is completely hand-crafted, NOT a block-swap script.
+                    // Every block placed intentionally in Java via TengFamilyCityBuilder.
+                    int tengY = level.getHeightmapPos(
+                            net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                            new BlockPos(x, 0, z)).getY();
+                    BlockPos tengCenter = new BlockPos(x, tengY, z);
+                    if (!dev.ergenverse.spawn.TengFamilyCityBuilder.isAlreadyBuilt(level, tengCenter)) {
+                        dev.ergenverse.spawn.TengFamilyCityBuilder.build(level, tengCenter);
+                    }
+                }
                 case "zhao_capital" -> buildZhaoCapitalMarker(level, x, z, settlement);
                 default -> buildSettlementMarker(level, x, z, settlement);
             }
@@ -137,6 +148,9 @@ public final class CanonGeographyPlacer {
     // The marker establishes the canonical location with a visible landmark
     // so the player (and developer) can verify the blueprint is working.
 
+    // NOTE: buildHengYueSectMarker is now dead code — Heng Yue Sect uses the full builder.
+    // Retained for reference. Do NOT call from new code.
+    @SuppressWarnings("unused")
     private static void buildHengYueSectMarker(ServerLevel level, int x, int z, com.google.gson.JsonObject s) {
         int y = level.getHeightmapPos(
                 net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
