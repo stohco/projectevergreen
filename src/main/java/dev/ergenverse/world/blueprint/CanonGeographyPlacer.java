@@ -161,6 +161,7 @@ public final class CanonGeographyPlacer {
                     }
                 }
                 case "zhao_capital" -> buildZhaoCapitalMarker(level, x, z, settlement);
+                case "nan_dou_city" -> buildNanDouCity(level, x, z, settlement);
                 default -> buildSettlementMarker(level, x, z, settlement);
             }
         } catch (Exception e) {
@@ -247,6 +248,16 @@ public final class CanonGeographyPlacer {
 
         Ergenverse.LOGGER.info("[Ergenverse] Zhao Capital marker placed at ({}, {}, {}) — full capital builder TODO.",
                 x, y, z);
+    }
+
+    private static void buildNanDouCity(ServerLevel level, int x, int z, com.google.gson.JsonObject settlement) {
+        int y = level.getHeightmapPos(
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                new BlockPos(x, 0, z)).getY();
+        BlockPos center = new BlockPos(x, y, z);
+        if (!dev.ergenverse.spawn.NanDouCityBuilder.isAlreadyBuilt(level, center)) {
+            dev.ergenverse.spawn.NanDouCityBuilder.build(level, center);
+        }
     }
 
     private static void buildSettlementMarker(ServerLevel level, int x, int z, com.google.gson.JsonObject s) {

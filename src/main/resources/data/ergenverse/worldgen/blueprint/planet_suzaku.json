@@ -319,6 +319,21 @@
         "is_restriction_zone": true
       },
       {
+        "id": "nan_dou_city",
+        "name": "Nan Dou City",
+        "canon_name": "Nan Dou Cheng / 南斗城",
+        "canon_confidence": "EXPLICIT — capital of the Nan Dou region on Planet Suzaku",
+        "type": "cultivation_capital",
+        "x": 8000,
+        "z": -2200,
+        "country": "nan_dou",
+        "population": 300000,
+        "description": "The capital of the Nan Dou region. A massive ancient city housing the regional cultivation authority, major merchant guilds, the Temple of the Heavenly Dao, and hundreds of thousands of mortals and cultivators. The city lord is a late Nascent Soul cultivator. A political nexus where sects negotiate, merchants trade spirit stones, and mortals live in the shadow of immortals.",
+        "chapter": 3,
+        "radius": 150,
+        "builder_class": "dev.ergenverse.spawn.NanDouCityBuilder"
+      },
+      {
         "id": "suzaku_tomb",
         "name": "Suzaku Tomb",
         "canon_name": "Zhuque Mu / 朱雀墓",

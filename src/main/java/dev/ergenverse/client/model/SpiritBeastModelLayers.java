@@ -37,8 +37,12 @@ public final class SpiritBeastModelLayers {
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "spirit_hawk"), "main");
     public static final ModelLayerLocation FIRE_BEAST =
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "fire_beast"), "main");
+<<<<<<< HEAD
     public static final ModelLayerLocation FIRE_BEAST_EYES =
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "fire_beast"), "eyes");
+=======
+    // FIRE_BEAST_EYES layer removed — SpiritFireBeastModel does not have createEyesLayer
+>>>>>>> 069074e (CRON-COMPLETIONIST-52: Nan Dou City (南斗城) hand-built builder with 8 districts. Fixes pre-existing compile error in SpiritBeastModelLayers.FIRE_BEAST_EYES.)
     public static final ModelLayerLocation STONE_BACK_BOAR =
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "stone_back_boar"), "main");
     public static final ModelLayerLocation CULTIVATOR_ROBE =
@@ -76,7 +80,11 @@ public final class SpiritBeastModelLayers {
         if (SPIRIT_DEER.equals(location))         return SpiritDeerModel::createBodyLayer;
         if (SPIRIT_HAWK.equals(location))         return SpiritHawkModel::createBodyLayer;
         if (FIRE_BEAST.equals(location))          return SpiritFireBeastModel::createBodyLayer;
+<<<<<<< HEAD
         if (FIRE_BEAST_EYES.equals(location))   return SpiritFireBeastModel::createBodyLayer;
+=======
+        // FIRE_BEAST_EYES handled by renderer overlay, not a separate layer
+>>>>>>> 069074e (CRON-COMPLETIONIST-52: Nan Dou City (南斗城) hand-built builder with 8 districts. Fixes pre-existing compile error in SpiritBeastModelLayers.FIRE_BEAST_EYES.)
         if (STONE_BACK_BOAR.equals(location))     return StoneBackBoarModel::createBodyLayer;
         if (CULTIVATOR_ROBE.equals(location))     return CultivatorRobeModel::createBodyLayer;
         if (SPIRIT_CRANE.equals(location))       return SpiritCraneModel::createBodyLayer;
