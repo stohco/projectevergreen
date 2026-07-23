@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "ergenverse:block/spirit_wood_planks",
+    "top": "ergenverse:block/spirit_wood_planks",
+    "side": "ergenverse:block/spirit_wood_planks"
+  }
+}

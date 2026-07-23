@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "ergenverse:block/spirit_stone_slab"
+    },
+    "type=top": {
+      "model": "ergenverse:block/spirit_stone_slab_top"
+    },
+    "type=double": {
+      "model": "ergenverse:block/spirit_stone"
+    }
+  }
+}

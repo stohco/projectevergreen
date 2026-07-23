@@ -1,5 +1,6 @@
 package dev.ergenverse.spawn;
 
+import dev.ergenverse.block.ErgenverseBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -22,8 +23,11 @@ import net.minecraft.world.level.block.state.properties.BedPart;
  * pagoda), alchemy courtyard, sword peak, ancestor hall, spirit spring, sword
  * tomb entrance, seclusion caves, dormitories, lanterns, defensive walls.
  *
- * <p>Block palette: vanilla stand-ins for custom blocks (documented below).
- * Spirit stone → SMOOTH_STONE, spirit wood → SPRUCE_LOG, formation core → LAPIS_BLOCK.
+ * <p>CRON-COMPLETIONIST-26: Block palette now uses ErgenverseBlocks — all primary
+ * structure materials are canon-correct spirit stone, spirit wood, ancient spirit log,
+ * formation core stone, restriction stone, scorched stone, and blood stone.
+ * Path/functional blocks (cobblestone, iron bars, water, lanterns) remain vanilla
+ * where no custom equivalent exists.
  *
  * <h2>Harsh Self-Critique</h2>
  * <ul>
@@ -32,43 +36,45 @@ import net.minecraft.world.level.block.state.properties.BedPart;
  *       compound, not a mountain sect.</li>
  *   <li>Roofs are flat or single-layer stair eaves — not the curved, upturned-eave
  *       xianxia pagoda silhouette. No dougong brackets, no ridge tiles.</li>
- *   <li>All materials are vanilla stand-ins — SMOOTH_STONE ≠ spirit stone,
- *       GOLD_BLOCK ≠ a real 恒岳派 plaque. Needs ErgenverseBlocks wired in.</li>
  *   <li>Symmetry and repetition dominate — identical caves/dorms/pillars/gates,
  *       no weathering (mossy/cracked scatter) or ruined variation.</li>
  *   <li>Tomb/caves are carved into manually-piled stone outcrops rather than
  *       real terrain; the CHEST is empty (no loot table).</li>
+ *   <li>STONE_BRICK, MOSSY_BRICK, CRACKED_BRICK all map to SPIRIT_STONE_BLOCK —
+ *       no distinct cracked/mossy spirit stone variant exists yet. Weathering
+ *       reads as uniform. Needs separate weathered spirit stone blocks.</li>
  * </ul>
  */
 public final class HengYueSectBuilder {
 
     private HengYueSectBuilder() {}
 
-    // ── Block palette (vanilla stand-ins; swap for ErgenverseBlocks when confirmed) ──
-    private static final BlockState SPIRIT_STONE   = Blocks.SMOOTH_STONE.defaultBlockState();
-    private static final BlockState SPIRIT_STONE_SLAB = Blocks.SMOOTH_STONE_SLAB.defaultBlockState();
-    private static final BlockState STONE_BRICK    = Blocks.STONE_BRICKS.defaultBlockState();
-    private static final BlockState MOSSY_BRICK    = Blocks.MOSSY_STONE_BRICKS.defaultBlockState();
-    private static final BlockState CRACKED_BRICK  = Blocks.CRACKED_STONE_BRICKS.defaultBlockState();
-    private static final BlockState BRICK_WALL     = Blocks.STONE_BRICK_WALL.defaultBlockState();
-    private static final BlockState COBBLE         = Blocks.COBBLESTONE.defaultBlockState();
-    private static final BlockState DEEPSLATE_BRICK = Blocks.DEEPSLATE_BRICKS.defaultBlockState();
-    private static final BlockState SPRUCE_PLANK   = Blocks.SPRUCE_PLANKS.defaultBlockState();
-    private static final BlockState SPRUCE_LOG     = Blocks.SPRUCE_LOG.defaultBlockState();
-    private static final BlockState DARK_OAK_PLANK = Blocks.DARK_OAK_PLANKS.defaultBlockState();
-    private static final BlockState DARK_OAK_LOG   = Blocks.DARK_OAK_LOG.defaultBlockState();
-    private static final BlockState DARK_OAK_STAIR = Blocks.DARK_OAK_STAIRS.defaultBlockState();
-    private static final BlockState SPRUCE_STAIR   = Blocks.SPRUCE_STAIRS.defaultBlockState();
-    private static final BlockState BRICK_STAIR    = Blocks.STONE_BRICK_STAIRS.defaultBlockState();
-    private static final BlockState LANTERN        = Blocks.LANTERN.defaultBlockState();
-    private static final BlockState END_ROD        = Blocks.END_ROD.defaultBlockState();
-    private static final BlockState SEA_LANTERN    = Blocks.SEA_LANTERN.defaultBlockState();
-    private static final BlockState GLOWSTONE      = Blocks.GLOWSTONE.defaultBlockState();
-    private static final BlockState LAPIS          = Blocks.LAPIS_BLOCK.defaultBlockState();
-    private static final BlockState GOLD           = Blocks.GOLD_BLOCK.defaultBlockState();
-    private static final BlockState AMETHYST       = Blocks.AMETHYST_BLOCK.defaultBlockState();
-    private static final BlockState OBSIDIAN       = Blocks.OBSIDIAN.defaultBlockState();
-    private static final BlockState REDSTONE_BLOCK = Blocks.REDSTONE_BLOCK.defaultBlockState();
+    // ── Block palette (ErgenverseBlocks — canon-correct spirit materials) ──
+    // CRON-COMPLETIONIST-26: Replaced all vanilla stand-ins with custom blocks.
+    private static final BlockState SPIRIT_STONE   = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+    private static final BlockState SPIRIT_STONE_SLAB = ErgenverseBlocks.SPIRIT_STONE_SLAB.get().defaultBlockState();
+    private static final BlockState STONE_BRICK    = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+    private static final BlockState MOSSY_BRICK    = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+    private static final BlockState CRACKED_BRICK  = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+    private static final BlockState BRICK_WALL     = ErgenverseBlocks.SPIRIT_STONE_WALL.get().defaultBlockState();
+    private static final BlockState COBBLE         = Blocks.COBBLESTONE.defaultBlockState(); // path material — vanilla
+    private static final BlockState DEEPSLATE_BRICK = ErgenverseBlocks.SCORCHED_STONE.get().defaultBlockState();
+    private static final BlockState SPRUCE_PLANK   = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
+    private static final BlockState SPRUCE_LOG     = ErgenverseBlocks.SPIRIT_WOOD_LOG.get().defaultBlockState();
+    private static final BlockState DARK_OAK_PLANK = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
+    private static final BlockState DARK_OAK_LOG   = ErgenverseBlocks.ANCIENT_SPIRIT_LOG.get().defaultBlockState();
+    private static final BlockState DARK_OAK_STAIR = ErgenverseBlocks.ANCIENT_SPIRIT_STAIRS.get().defaultBlockState();
+    private static final BlockState SPRUCE_STAIR   = ErgenverseBlocks.SPIRIT_WOOD_PLANKS_STAIRS.get().defaultBlockState();
+    private static final BlockState BRICK_STAIR    = ErgenverseBlocks.SPIRIT_STONE_STAIRS.get().defaultBlockState();
+    private static final BlockState LANTERN        = Blocks.LANTERN.defaultBlockState(); // keep vanilla
+    private static final BlockState END_ROD        = Blocks.END_ROD.defaultBlockState(); // keep vanilla
+    private static final BlockState SEA_LANTERN    = Blocks.SEA_LANTERN.defaultBlockState(); // keep vanilla
+    private static final BlockState GLOWSTONE      = Blocks.GLOWSTONE.defaultBlockState(); // keep vanilla
+    private static final BlockState LAPIS          = ErgenverseBlocks.FORMATION_CORE_STONE.get().defaultBlockState();
+    private static final BlockState GOLD           = Blocks.GOLD_BLOCK.defaultBlockState(); // sect plaque — vanilla
+    private static final BlockState AMETHYST       = Blocks.AMETHYST_BLOCK.defaultBlockState(); // keep vanilla
+    private static final BlockState OBSIDIAN       = ErgenverseBlocks.RESTRICTION_STONE.get().defaultBlockState();
+    private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.get().defaultBlockState();
     private static final BlockState IRON_BARS      = Blocks.IRON_BARS.defaultBlockState();
     private static final BlockState WATER          = Blocks.WATER.defaultBlockState();
     private static final BlockState BOOKSHELF      = Blocks.BOOKSHELF.defaultBlockState();

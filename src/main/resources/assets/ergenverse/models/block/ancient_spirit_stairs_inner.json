@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "ergenverse:block/ancient_spirit_log",
+    "top": "ergenverse:block/ancient_spirit_log",
+    "side": "ergenverse:block/ancient_spirit_log"
+  }
+}

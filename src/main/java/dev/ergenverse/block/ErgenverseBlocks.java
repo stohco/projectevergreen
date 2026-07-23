@@ -10,6 +10,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FlowerBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.effect.MobEffects;
@@ -257,6 +260,38 @@ public final class ErgenverseBlocks {
     }
 
 
+    // ── Variant Blocks (stairs, slabs, walls) ─────────────────────────────
+    // CRON-COMPLETIONIST-26: Stairs, slabs, walls for custom blocks so structures
+    // can be built entirely from canon materials, not vanilla stand-ins.
+
+    public static final RegistryObject<Block> SPIRIT_STONE_STAIRS = BLOCKS.register("spirit_stone_stairs",
+        () -> new StairBlock(SPIRIT_STONE_BLOCK.get().defaultBlockState(),
+            BlockBehaviour.Properties.of()
+                .strength(1.5F, 6.0F)
+                .sound(SoundType.STONE)));
+
+    public static final RegistryObject<Block> SPIRIT_STONE_SLAB = BLOCKS.register("spirit_stone_slab",
+        () -> new SlabBlock(BlockBehaviour.Properties.of()
+                .strength(1.5F, 6.0F)
+                .sound(SoundType.STONE)));
+
+    public static final RegistryObject<Block> SPIRIT_STONE_WALL = BLOCKS.register("spirit_stone_wall",
+        () -> new WallBlock(BlockBehaviour.Properties.of()
+                .strength(1.5F, 6.0F)
+                .sound(SoundType.STONE)));
+
+    public static final RegistryObject<Block> SPIRIT_WOOD_PLANKS_STAIRS = BLOCKS.register("spirit_wood_planks_stairs",
+        () -> new StairBlock(SPIRIT_WOOD_PLANKS.get().defaultBlockState(),
+            BlockBehaviour.Properties.of()
+                .strength(2.0F, 2.0F)
+                .sound(SoundType.WOOD)));
+
+    public static final RegistryObject<Block> ANCIENT_SPIRIT_STAIRS = BLOCKS.register("ancient_spirit_stairs",
+        () -> new StairBlock(ANCIENT_SPIRIT_LOG.get().defaultBlockState(),
+            BlockBehaviour.Properties.of()
+                .strength(2.5F, 2.5F)
+                .sound(SoundType.WOOD)));
+
     // ── Talisman Desk Block ────────────────────────────────────────────
     public static final RegistryObject<Block> TALISMAN_DESK = registerSimple("talisman_desk", 2.0F, 2.0F);
 
@@ -331,6 +366,12 @@ public final class ErgenverseBlocks {
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
+        // CRON-COMPLETIONIST-26: Variant block items
+        BLOCK_ITEMS.register("spirit_stone_stairs", () -> new BlockItem(SPIRIT_STONE_STAIRS.get(), new Item.Properties()));
+        BLOCK_ITEMS.register("spirit_stone_slab", () -> new BlockItem(SPIRIT_STONE_SLAB.get(), new Item.Properties()));
+        BLOCK_ITEMS.register("spirit_stone_wall", () -> new BlockItem(SPIRIT_STONE_WALL.get(), new Item.Properties()));
+        BLOCK_ITEMS.register("spirit_wood_planks_stairs", () -> new BlockItem(SPIRIT_WOOD_PLANKS_STAIRS.get(), new Item.Properties()));
+        BLOCK_ITEMS.register("ancient_spirit_stairs", () -> new BlockItem(ANCIENT_SPIRIT_STAIRS.get(), new Item.Properties()));
         // NOTE: FormationPlatformBlockEntity.TYPE and TalismanDeskBlockEntity.TYPE
         // are already registered via BLOCK_ENTITIES above (FORMATION_PLATFORM_ENTITY
         // at line 326 with name "formation_platform_craft", and TALISMAN_DESK_ENTITY
