@@ -46,6 +46,7 @@ public final class ActorProfileRegistry {
         seedWangFamilyVillage();
         seedHengYueSect();
         seedTengFamilyCity();
+        seedTianShuiCity();
         Ergenverse.LOGGER.info("[ActorProfileRegistry] Registered {} actor profiles (the 'different minds' table).",
                 BY_ID.size());
     }
@@ -354,6 +355,161 @@ public final class ActorProfileRegistry {
                 ActorProfile.Role.ELDER,
                 false, true,
                 0.05f,           // combatConfidence — beggar, no fight
+                false));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  Tian Shui City (天水城) — 13 NPCs (2 INFERRED canon + 11 simulation)
+    //  Major trade hub of Zhao Country, 100,000 population.
+    //  Per Article XLI: no character is special-cased. These profiles
+    //  produce the city's social dynamics through the ActorReasoningEngine.
+    //  The city's unique politics: merchant guild vs cultivator guild,
+    //  governor's reliance on divination.
+    // ═══════════════════════════════════════════════════════════════════
+    private static void seedTianShuiCity() {
+
+        // ── INFERRED Canon NPCs ────────────────────────────────────────
+
+        // GOVERNOR BAI — INFERRED canon. Early Foundation Establishment.
+        // Calculating, believes in fate, delegates to diviners. Runs the
+        // city as a businessman, not a warrior. Against threats: assesses
+        // whether it affects commerce; if yes, mobilizes guard; if not,
+        // consults Gao Qiming for auspicious timing.
+        register(new ActorProfile("npc_tianshui_governor_bai", "Governor Bai",
+                ActorProfile.CultivationTier.FOUNDATION,
+                0.50f,          // courage — moderate (calculating, not brave)
+                ActorProfile.Role.CULTIVATOR,
+                true,            // has family (mortal granny in mansion)
+                true,            // revealedStrength — governor's authority is visible
+                0.40f,           // combatConfidence — early Foundation, relies on guards
+                true));          // INFERRED canon
+
+        // GAO QIMING — INFERRED canon. Qi Condensation diviner.
+        // Mysterious, observant, speaks in riddles. Serves as the
+        // governor's advisor. Against threats: observes from safety,
+        // provides cryptic advice. Never fights directly.
+        register(new ActorProfile("npc_gao_qiming", "Gao Qiming",
+                ActorProfile.CultivationTier.QI_CONDENSATION,
+                0.35f,          // courage — low (seer, not warrior)
+                ActorProfile.Role.CULTIVATOR,
+                false,           // no family bonds
+                true,            // revealedStrength — openly practices divination
+                0.15f,           // combatConfidence — avoids combat
+                true));          // INFERRED canon
+
+        // ── Simulation NPCs ──────────────────────────────────────────
+
+        // GUARD CAPTAIN ZHAO — mid Foundation Establishment. Disciplined,
+        // professional. Leads the city guard under Governor Bai's orders.
+        // Against threats: mobilizes guards, coordinates defense, calls
+        // for cultivator guild support if needed. Never flees post.
+        register(new ActorProfile("npc_tianshui_guard_zhao", "Guard Captain Zhao",
+                ActorProfile.CultivationTier.FOUNDATION,
+                0.70f,          // courage — high (professional soldier)
+                ActorProfile.Role.CULTIVATOR,
+                false, true,
+                0.60f,           // combatConfidence — trained and equipped
+                false));
+
+        // CULTIVATOR YE — Core Formation. The cultivator guild enforcer.
+        // Arrogant toward mortals, respects power. Patrols the guild district.
+        // Against threats: attacks immediately if within guild territory;
+        // otherwise, reports to guild master and Governor Bai.
+        register(new ActorProfile("npc_tianshui_cultivator_ye", "Cultivator Ye",
+                ActorProfile.CultivationTier.CORE,
+                0.60f,          // courage — moderate-high (Core Formation strength)
+                ActorProfile.Role.CULTIVATOR,
+                false, true,
+                0.65f,           // combatConfidence — strongest fighter in the city guard
+                false));
+
+        // MERCHANT LIU — mortal. Shrewd, opportunistic, networked.
+        // Runs a shop in the merchant quarter. Knows every trade secret.
+        // Against threats: hides valuables, locks shop, evacuates
+        // via smuggler tunnels if desperate.
+        register(new ActorProfile("npc_tianshui_merchant_liu", "Merchant Liu",
+                ActorProfile.CultivationTier.MORTAL,
+                0.35f,          // courage — moderate (calculating merchant)
+                ActorProfile.Role.MERCHANT,
+                true, true,
+                0.10f,           // combatConfidence — merchant, no fight
+                false));
+
+        // TAVERN KEEPER — mortal. Warm, gossipy, knows everyone's business.
+        // The Drunk Dragon Inn is the city's social hub. Against threats:
+        // locks doors, protects patrons, gossips about the aftermath.
+        register(new ActorProfile("npc_tianshui_tavern_keeper", "Tavern Keeper",
+                ActorProfile.CultivationTier.MORTAL,
+                0.35f,          // courage — moderate-low (protects business)
+                ActorProfile.Role.MERCHANT,
+                true, true,
+                0.15f,           // combatConfidence — kitchen knife at best
+                false));
+
+        // TEMPLE PRIEST FENG — mortal. Pious, serene, connected to the
+        // temple's fortune-telling traditions. Performs ceremonies at dawn
+        // and dusk. Against threats: protects the temple relics, prays,
+        // nonviolent. The temple is neutral ground.
+        register(new ActorProfile("npc_tianshui_temple_feng", "Temple Priest Feng",
+                ActorProfile.CultivationTier.MORTAL,
+                0.40f,          // courage — moderate (quietly defiant)
+                ActorProfile.Role.ELDER,
+                false, true,
+                0.10f,           // combatConfidence — priest, not a fighter
+                false));
+
+        // WAREHOUSE FENG — mortal. Gruff, organized, controls the port
+        // warehouse district. Against threats: secures goods, barricades
+        // warehouse, coordinates with dock foreman.
+        register(new ActorProfile("npc_tianshui_warehouse_feng", "Warehouse Feng",
+                ActorProfile.CultivationTier.MORTAL,
+                0.45f,          // courage — moderate (laborer toughness)
+                ActorProfile.Role.LABORER,
+                false, true,
+                0.20f,           // combatConfidence — has tools and strength
+                false));
+
+        // SMUGGLER HEI — late Qi Condensation. Cunning, paranoid, operates
+        // underground. The dark underbelly of a trade city. Against threats:
+        // escapes via tunnels, fights only if cornered. Knows every
+        // secret passage in the city.
+        register(new ActorProfile("npc_tianshui_smuggler_hei", "Smuggler Hei",
+                ActorProfile.CultivationTier.QI_CONDENSATION,
+                0.35f,          // courage — low (survives by hiding)
+                ActorProfile.Role.MERCHANT,
+                false, true,
+                0.40f,           // combatConfidence — can fight but prefers escape
+                false));
+
+        // DOCK ZHOU — mortal. Gruff, overworked, manages the port piers.
+        // Against threats: secures cargo, coordinates with warehouse.
+        register(new ActorProfile("npc_tianshui_dock_zhou", "Dock Zhou",
+                ActorProfile.CultivationTier.MORTAL,
+                0.50f,          // courage — moderate (dock worker toughness)
+                ActorProfile.Role.LABORER,
+                true, true,
+                0.25f,           // combatConfidence — dock tools
+                false));
+
+        // BEGGAR SUN — mortal. Silent, watchful, surprisingly perceptive.
+        // Hears everything in the streets. Knows the city's secrets.
+        // Against threats: flees, but remembers everything for gossip.
+        register(new ActorProfile("npc_tianshui_beggar_sun", "Beggar Sun",
+                ActorProfile.CultivationTier.MORTAL,
+                0.20f,          // courage — very low (beggar survival instinct)
+                ActorProfile.Role.ELDER,
+                false, true,
+                0.05f,           // combatConfidence — beggar, no fight
+                false));
+
+        // MORTAL GRANNY — mortal. Elderly woman, gossipy, knows the
+        // city's history. Lives in the governor's mansion as attendant.
+        register(new ActorProfile("npc_tianshui_mortal_granny", "Mortal Granny",
+                ActorProfile.CultivationTier.MORTAL,
+                0.15f,          // courage — very low (elderly woman)
+                ActorProfile.Role.HOMEMAKER,
+                false, true,
+                0.05f,           // combatConfidence — elderly, no fight
                 false));
     }
 }

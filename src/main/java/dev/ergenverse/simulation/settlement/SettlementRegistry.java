@@ -49,6 +49,7 @@ public final class SettlementRegistry {
         seedWangFamilyVillage();
         seedHengYueSect();
         seedTengFamilyCity();
+        seedTianShuiCity();
 
         int totalResidences = BY_ID.values().stream().mapToInt(s -> s.getResidences().size()).sum();
         int totalPopulation = BY_ID.values().stream().mapToInt(s -> s.getPopulation().size()).sum();
@@ -526,5 +527,235 @@ public final class SettlementRegistry {
         w.put(TimeOfDay.DAWN, 0.5f);
         w.put(TimeOfDay.NIGHT, 0.4f);
         return new PresenceLocation("meditation_platform", "Meditation Platform", 8, 12, w);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  Tian Shui City (天水城) — Major trade hub in Zhao Country
+    //  Canonical center: (5200, 600) from planet_suzaku.json.
+    //  Canon NPCs: npc_tianshui_governor_bai (Governor, Foundation Establishment),
+    //              npc_gao_qiming (INFERRED diviner).
+    //  Simulation NPCs: npc_tianshui_guard_zhao, npc_tianshui_merchant_liu,
+    //              npc_tianshui_tavern_keeper, npc_tianshui_temple_feng,
+    //              npc_tianshui_cultivator_ye, npc_tianshui_warehouse_feng,
+    //              npc_tianshui_smuggler_hei, npc_tianshui_dock_zhou,
+    //              npc_tianshui_beggar_sun, npc_tianshui_mortal_granny.
+    //
+    //  Per CRON-39 self-critique: Tian Shui City had 11 hand-built districts
+    //  but ZERO population registered. This is the exact same ghost-town
+    //  problem that CRON-38 solved for Teng Family City.
+    //  Per Articles XXIII/XXV/XLIV: A location is not complete until NPCs
+    //  exist and can initiate gameplay.
+    //
+    //  The TianShuiCityBuilder (CRON-39, 1162 lines, 11 districts) places
+    //  blocks at this center. This seeding gives the city LIFE.
+    // ═══════════════════════════════════════════════════════════════════
+    private static void seedTianShuiCity() {
+        // Blueprint coordinate from planet_suzaku.json
+        int cx = 5200;
+        int cz = 600;
+        Settlement s = new Settlement("tian_shui_city",
+                "Tian Shui Cheng / 天水城", "city", cx, cz);
+        s.primaryEconomy = "river_trade_hub_merchant_guild_cultivator_guild";
+        s.governance = "governor_merchant_cultivator_council";
+        s.trend = "prosperous_expansion";
+        s.addSpiritVein("spirit_vein_tian_shui");
+
+        // ── Residences (NPCs own buildings) ──────────────────────────
+        // Offsets derived from TianShuiCityBuilder district placement.
+        // Mansion: mx=cx-18, mz=cz-60. Merchant: cx+10, cz-30.
+        // South Gate: cx, cz+65. Port: cx, cz+75. Temple: cx+20, cz-20.
+        // Tavern: cx-10, cz+35. Mortal: cx-40, cz-10. Residential: cx-40, cz-40.
+        // Cultivator Guild: cx+30, cz-40. Warehouse: cx+40, cz+20.
+
+        // City Lord's Mansion: Governor Bai's residence. North of city.
+        // Builder places mansion at mx=cx-18, mz=cz-60. Main hall at mx-7..+8, mz-5..+5.
+        s.addResidence(new Residence("governor_mansion", s.id, "City Lord's Mansion",
+                -25, -65, -11, -55, "npc_tianshui_governor_bai", 0L));
+
+        // Private Chambers: Governor's quarters within mansion compound.
+        s.getResidence("governor_mansion").addResident("npc_tianshui_mortal_granny");
+
+        // Guard Captain's Post: Near south gate.
+        s.addResidence(new Residence("guard_barracks", s.id, "Guard Captain's Barracks",
+                -4, 58, 4, 66, "npc_tianshui_guard_zhao", 0L));
+        s.getResidence("guard_barracks").addResident("npc_tianshui_cultivator_ye");
+
+        // Merchant's Shop House: In the merchant quarter (east).
+        // Builder: startX=cx+10, startZ=cz-30.
+        s.addResidence(new Residence("merchant_house", s.id, "Merchant Liu's Shop",
+                14, -34, 22, -26, "npc_tianshui_merchant_liu", 0L));
+
+        // Dock Foreman's Office: In the port district (south, outside walls).
+        s.addResidence(new Residence("dock_office", s.id, "Dock Foreman's Office",
+                36, 70, 46, 78, "npc_tianshui_dock_zhou", 0L));
+
+        // Warehouse Feng: In warehouse area.
+        s.getResidence("dock_office").addResident("npc_tianshui_warehouse_feng");
+
+        // Tavern Inn: In the tavern district (south-central).
+        s.addResidence(new Residence("tavern_inn", s.id, "Drunk Dragon Inn",
+                -14, 32, -6, 42, "npc_tianshui_tavern_keeper", 0L));
+
+        // Temple Priest's Quarters: In the temple district (central-east).
+        // Builder places temple at approximately cx+20, cz-20.
+        s.addResidence(new Residence("temple_quarters", s.id, "Temple Priest's Quarters",
+                16, -26, 28, -16, "npc_tianshui_temple_feng", 0L));
+
+        // Cultivator Guild Master's Office: In the cultivator guild (northeast).
+        // Builder places guild at approximately cx+30, cz-40.
+        s.addResidence(new Residence("guild_master_office", s.id, "Guild Master's Office",
+                26, -46, 38, -36, "npc_gao_qiming", 0L));
+
+        // Smuggler's Den: Hidden, in the underground district.
+        s.addResidence(new Residence("smuggler_den", s.id, "Smuggler's Den",
+                -30, 10, -22, 18, "npc_tianshui_smuggler_hei", 0L));
+
+        // Beggar's Corner: In the mortal quarter (west).
+        // Builder places mortal quarter at approximately cx-40, cz-10.
+        s.addResidence(new Residence("beggar_corner", s.id, "Beggar's Corner",
+                -44, -16, -36, -6, "npc_tianshui_beggar_sun", 0L));
+
+        // ── Shared presence locations ─────────────────────────────────
+        s.addSharedLocation(tianCentralPlaza());
+        s.addSharedLocation(tianSouthGate());
+        s.addSharedLocation(tianMerchantAuction());
+        s.addSharedLocation(tianMarketFountain());
+        s.addSharedLocation(tianMansionApproach());
+        s.addSharedLocation(tianTempleAltar());
+        s.addSharedLocation(tianTavernCommonRoom());
+        s.addSharedLocation(tianPortDocks());
+        s.addSharedLocation(tianCultivatorYard());
+        s.addSharedLocation(tianMortalQuarterWell());
+        s.addSharedLocation(tianTeaHouse());
+
+        // ── Population (11 simulation + 1 INFERRED canon) ──────────
+        s.registerPopulation("npc_tianshui_governor_bai");     // INFERRED canon — Governor
+        s.registerPopulation("npc_gao_qiming");                // INFERRED canon — diviner
+        s.registerPopulation("npc_tianshui_guard_zhao");       // simulation — city guard captain
+        s.registerPopulation("npc_tianshui_cultivator_ye");    // simulation — cultivator guild enforcer
+        s.registerPopulation("npc_tianshui_merchant_liu");      // simulation — shrewd merchant
+        s.registerPopulation("npc_tianshui_tavern_keeper");   // simulation — gossipy innkeeper
+        s.registerPopulation("npc_tianshui_temple_feng");     // simulation — temple priest
+        s.registerPopulation("npc_tianshui_warehouse_feng");   // simulation — warehouse boss
+        s.registerPopulation("npc_tianshui_smuggler_hei");     // simulation — underground dealer
+        s.registerPopulation("npc_tianshui_dock_zhou");         // simulation — dock foreman
+        s.registerPopulation("npc_tianshui_beggar_sun");       // simulation — broken beggar
+        s.registerPopulation("npc_tianshui_mortal_granny");    // simulation — gossiping elder
+
+        // ── Settlement personality ───────────────────────────────────
+        // Tian Shui City: prosperous, trade-driven, political intrigue.
+        // Wealthy, but tense — merchant guild vs cultivator guild,
+        // and the governor's reliance on divination creates unusual politics.
+        s.personality = new SettlementPersonality(
+                SettlementPersonality.Mood.COMPETITIVE,
+                SettlementPersonality.Identity.COUNTY_SEAT,
+                SettlementPersonality.SettlementCultivationLevel.FOUNDATION,
+                "merchant guild vs cultivator guild tension; governor's reliance on divination",
+                0.80f,    // prosperity — high (Zhao's trade hub, 100K population)
+                0.65f,    // security — moderate (city guard + cultivator guild)
+                "Tian Shui City has been the crossroads of Zhao commerce for centuries.",
+                "The governor consults Gao Qiming before every major decision.");
+
+        BY_ID.put(s.id, s);
+    }
+
+    // ── Tian Shui City shared locations (settlement-local offsets) ──
+
+    private static PresenceLocation tianCentralPlaza() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.DAWN, 0.2f);
+        w.put(TimeOfDay.MORNING, 0.3f);
+        w.put(TimeOfDay.MIDDAY, 0.65f);
+        w.put(TimeOfDay.AFTERNOON, 0.55f);
+        w.put(TimeOfDay.DUSK, 0.4f);
+        w.put(TimeOfDay.EVENING, 0.25f);
+        return new PresenceLocation("central_plaza", "Central Circular Plaza", 0, 0, w);
+    }
+
+    private static PresenceLocation tianSouthGate() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.DAWN, 0.25f);
+        w.put(TimeOfDay.MORNING, 0.6f);
+        w.put(TimeOfDay.MIDDAY, 0.45f);
+        w.put(TimeOfDay.AFTERNOON, 0.5f);
+        w.put(TimeOfDay.DUSK, 0.35f);
+        return new PresenceLocation("south_gate", "South Gate", 0, 60, w);
+    }
+
+    private static PresenceLocation tianMerchantAuction() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.MORNING, 0.5f);
+        w.put(TimeOfDay.MIDDAY, 0.75f);
+        w.put(TimeOfDay.AFTERNOON, 0.6f);
+        w.put(TimeOfDay.DUSK, 0.15f);
+        return new PresenceLocation("auction_house", "Auction House", 20, -5, w);
+    }
+
+    private static PresenceLocation tianMarketFountain() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.MIDDAY, 0.4f);
+        w.put(TimeOfDay.AFTERNOON, 0.35f);
+        w.put(TimeOfDay.DUSK, 0.25f);
+        return new PresenceLocation("market_fountain", "Market Square Fountain", 50, -20, w);
+    }
+
+    private static PresenceLocation tianMansionApproach() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.MORNING, 0.25f);
+        w.put(TimeOfDay.MIDDAY, 0.35f);
+        w.put(TimeOfDay.AFTERNOON, 0.3f);
+        return new PresenceLocation("mansion_approach", "Mansion Approach", -18, -50, w);
+    }
+
+    private static PresenceLocation tianTempleAltar() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.DAWN, 0.6f);
+        w.put(TimeOfDay.MORNING, 0.4f);
+        w.put(TimeOfDay.DUSK, 0.45f);
+        w.put(TimeOfDay.NIGHT, 0.2f);
+        return new PresenceLocation("temple_altar", "Temple Altar", 22, -20, w);
+    }
+
+    private static PresenceLocation tianTavernCommonRoom() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.AFTERNOON, 0.25f);
+        w.put(TimeOfDay.DUSK, 0.6f);
+        w.put(TimeOfDay.EVENING, 0.85f);
+        w.put(TimeOfDay.NIGHT, 0.5f);
+        return new PresenceLocation("tavern_common", "Tavern Common Room", -10, 36, w);
+    }
+
+    private static PresenceLocation tianPortDocks() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.DAWN, 0.4f);
+        w.put(TimeOfDay.MORNING, 0.7f);
+        w.put(TimeOfDay.AFTERNOON, 0.5f);
+        return new PresenceLocation("port_docks", "Port Docks", 30, 75, w);
+    }
+
+    private static PresenceLocation tianCultivatorYard() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.DAWN, 0.6f);
+        w.put(TimeOfDay.MORNING, 0.5f);
+        w.put(TimeOfDay.AFTERNOON, 0.45f);
+        w.put(TimeOfDay.EVENING, 0.2f);
+        return new PresenceLocation("cultivator_yard", "Cultivator Training Yard", 32, -38, w);
+    }
+
+    private static PresenceLocation tianMortalQuarterWell() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.MORNING, 0.45f);
+        w.put(TimeOfDay.MIDDAY, 0.55f);
+        w.put(TimeOfDay.AFTERNOON, 0.4f);
+        return new PresenceLocation("mortal_well", "Communal Well", -38, -8, w);
+    }
+
+    private static PresenceLocation tianTeaHouse() {
+        Map<TimeOfDay, Float> w = new EnumMap<>(TimeOfDay.class);
+        w.put(TimeOfDay.MORNING, 0.3f);
+        w.put(TimeOfDay.AFTERNOON, 0.5f);
+        w.put(TimeOfDay.DUSK, 0.35f);
+        w.put(TimeOfDay.EVENING, 0.2f);
+        return new PresenceLocation("tea_house", "Tea House", -6, 38, w);
     }
 }
