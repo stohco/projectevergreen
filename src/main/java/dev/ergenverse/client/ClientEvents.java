@@ -56,6 +56,10 @@ public class ClientEvents {
         event.registerLayerDefinition(SpiritBeastModelLayers.SPIRIT_BAT, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SPIRIT_BAT));
         event.registerLayerDefinition(SpiritBeastModelLayers.QILIN, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.QILIN));
         event.registerLayerDefinition(SpiritBeastModelLayers.SEA_SERPENT, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SEA_SERPENT));
+        // CRON-COMPLETIONIST-45: Soul fish model layer (was missing — would crash at init)
+        event.registerLayerDefinition(SpiritBeastModelLayers.SOUL_FISH, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SOUL_FISH));
+        // CRON-COMPLETIONIST-45: Flying sword model layer (was missing — would crash at init)
+        event.registerLayerDefinition(SpiritBeastModelLayers.FLYING_SWORD, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.FLYING_SWORD));
     }
 
     @SubscribeEvent

@@ -62,6 +62,12 @@ public class FlyingSwordModel extends HierarchicalModel<Entity> {
         this.tassel = this.pommel.getChild("tassel");
     }
 
+    /** CRON-COMPLETIONIST-45: Expose blade for emissive glow pass in renderer. */
+    public ModelPart getBlade() { return this.blade; }
+
+    /** CRON-COMPLETIONIST-45: Expose tassel for trail physics in renderer. */
+    public ModelPart getTassel() { return this.tassel; }
+
     public static LayerDefinition createBodyLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
