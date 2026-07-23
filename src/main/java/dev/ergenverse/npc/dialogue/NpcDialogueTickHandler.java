@@ -276,6 +276,11 @@ public final class NpcDialogueTickHandler {
                         recentWorldEvent, recentObservation, hasRecentWorldMemory,
                         recentRumor, hasRecentRumor);
 
+        // ── CRON-32: Enrich with belief and relationship data (CRON-23) ──
+        // The player performed deeds → events were published → beliefs were formed
+        // → dialogue now reflects those beliefs. The full event-sourced cascade.
+        ctx = NpcDialogueGenerator.NpcDialogueContext.withBeliefs(ctx);
+
         // Generate using world random seed
         long seed = serverLevel.getRandom().nextLong();
         return NpcDialogueGenerator.generate(ctx, seed);

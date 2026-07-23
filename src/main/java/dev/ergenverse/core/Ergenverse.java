@@ -377,6 +377,12 @@ public final class Ergenverse {
             // is general) and Art XXXIV (relationships are graphs, not numbers).
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.simulation.action.NpcSemanticRelationshipSubscriber());
+            // ── CRON-32: Opportunity Carrier — NPC awareness of emerging opportunities ──
+            // When an opportunity.*.emerged event fires, the nearest NPC becomes AWARE
+            // of it (pushes an INVESTIGATE goal). The NPC doesn't automatically act —
+            // their Cultivator Mind's scoring decides whether to pursue it.
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.opportunity.OpportunityCarrierSubscriber());
             // Load persisted reputation from disk on world start.
             dev.ergenverse.simulation.action.ReputationObserver.loadFromDisk(overworld);
             LOGGER.info("[Ergenverse] Registered WorldEventBus subscribers: QiDisturbance + BirdFlight "
@@ -384,7 +390,8 @@ public final class Ergenverse {
                     + "+ RelationshipEngine + OpportunityGenerator + BeliefFormation "
                     + "+ ExpectationObserver + ReputationObserver + OpportunityClaimSubscriber "
                     + "+ WangLinSemanticSubscriber + NpcSemanticRelationshipSubscriber "
-                    + "(event-sourced + belief + expectation + reputation + opportunity-claim + wang-lin-cognition + general-npc-relationship).");
+                    + "+ OpportunityCarrierSubscriber "
+                    + "(event-sourced + belief + expectation + reputation + opportunity-claim + wang-lin-cognition + general-npc-relationship + opportunity-carrier).");
             // Art XLII/XLIII: seed the chronicle opening + canon divergence ledger on world load.
             // The chronicle's t₀ entry is the immutable "world at the moment the player arrives" record.
             dev.ergenverse.history.WorldChronicle chronicle =

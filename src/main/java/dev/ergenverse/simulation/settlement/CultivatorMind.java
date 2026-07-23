@@ -1,6 +1,7 @@
 package dev.ergenverse.simulation.settlement;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.simulation.action.ActorRelationshipStore;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -127,6 +128,11 @@ public final class CultivatorMind {
         // Generate candidates appropriate to the situation.
         List<CandidateActivity> candidates = generateCandidates(situation, settlement);
 
+        // ── CRON-32: Relationship-aware scoring modifiers ──
+        // If this actor fears a neighbor, boost FLEEING_HOME.
+        // If this actor trusts a guard-type, reduce OBSERVING_THREAT.
+        Map<Activity.Type, Double> relationshipModifiers = evaluateRelationshipModifier(settlement);
+
         // Score each and select the highest.
         CandidateActivity winner = null;
         double winnerScore = Double.NEGATIVE_INFINITY;
@@ -134,6 +140,11 @@ public final class CultivatorMind {
         double runnerUpScore = Double.NEGATIVE_INFINITY;
         for (CandidateActivity c : candidates) {
             double s = c.scoreFor(this);
+            // Apply relationship modifier if one exists for this activity type.
+            Double mod = relationshipModifiers.get(c.type);
+            if (mod != null) {
+                s += mod;
+            }
             if (s > winnerScore) {
                 runnerUp = winner;
                 runnerUpScore = winnerScore;
@@ -249,6 +260,65 @@ public final class CultivatorMind {
         int dx = Math.round(threat.directionX() * distance);
         int dz = Math.round(threat.directionZ() * distance);
         return new int[]{dx, dz};
+    }
+
+    /**
+     * CRON-32: Evaluate relationship modifiers from ActorRelationshipStore.
+     *
+     * <p>Reads the actor's relationships with other settlement members and
+     * produces score modifiers for candidate activities:
+     * <ul>
+     *   <li>If the actor has FEAR &gt; 40 toward anyone, boost FLEEING_HOME by 0.15.</li>
+     *   <li>If the actor has TRUST &gt; 40 toward a guard-type actor (ELDER or HUNTER),
+     *       reduce OBSERVING_THREAT by 0.1 (someone else will handle it).</li>
+     * </ul>
+     *
+     * <p>This makes the Cultivator Mind's decisions relationship-aware:
+     * an actor who fears their neighbor is more likely to flee; an actor
+     * who trusts the village hunter or elder is less likely to observe
+     * because they know someone else is watching.
+     *
+     * @param settlement the actor's settlement (provides population for relationship checks)
+     * @return a map of Activity.Type → score modifier (may be empty)
+     */
+    private Map<Activity.Type, Double> evaluateRelationshipModifier(Settlement settlement) {
+        Map<Activity.Type, Double> modifiers = new EnumMap<>(Activity.Type.class);
+
+        net.minecraft.server.level.ServerLevel level =
+                dev.ergenverse.simulation.event.WorldEventBus.currentLevel();
+        if (level == null || settlement == null) return modifiers;
+
+        ActorRelationshipStore store;
+        try {
+            store = ActorRelationshipStore.get(level);
+        } catch (Exception e) {
+            // Non-server context — skip relationship lookup.
+            return modifiers;
+        }
+
+        for (String otherId : settlement.getPopulation()) {
+            if (otherId.equals(this.actorId)) continue;
+
+            // If actor fears this neighbor (FEAR > 40), boost FLEEING_HOME.
+            int fear = store.getFear(this.actorId, otherId);
+            if (fear > 40) {
+                modifiers.merge(Activity.Type.FLEEING_HOME, 0.15, Double::sum);
+            }
+
+            // If actor trusts a guard-type actor (TRUST > 40 toward ELDER or HUNTER),
+            // reduce OBSERVING_THREAT — someone else will guard.
+            int trust = store.getTrust(this.actorId, otherId);
+            if (trust > 40) {
+                ActorProfile otherProfile = ActorProfileRegistry.get(otherId);
+                if (otherProfile != null
+                        && (otherProfile.role == ActorProfile.Role.ELDER
+                        || otherProfile.role == ActorProfile.Role.HUNTER)) {
+                    modifiers.merge(Activity.Type.OBSERVING_THREAT, -0.1, Double::sum);
+                }
+            }
+        }
+
+        return modifiers;
     }
 
     private static int[] nearestAssetLocation(Settlement s) {
