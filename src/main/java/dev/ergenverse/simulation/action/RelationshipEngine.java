@@ -89,11 +89,8 @@ public final class RelationshipEngine implements WorldEventSubscriber {
 
         ServerPlayer player = resolvePlayer(event);
         if (player == null) {
-            // NPC-to-NPC — log for now.
-            Ergenverse.LOGGER.debug("[RelationshipEngine] NPC→NPC: {} {} → {} (delta={}, reason='{}') "
-                            + "[not persisted — requires general relationship store]",
-                    event.semanticTag(), event.sourceActorId(), event.targetActorId(),
-                    delta.affinity, delta.reason);
+            // NPC-to-NPC — persist via ActorRelationshipStore.
+            persistNpcRelationship(event, delta);
             return;
         }
 
@@ -122,6 +119,35 @@ public final class RelationshipEngine implements WorldEventSubscriber {
         } catch (Exception e) {
             Ergenverse.LOGGER.error("[RelationshipEngine] failed to record relationship "
                     + "change for event {}", event.topic(), e);
+        }
+    }
+
+    // ─── NPC-to-NPC persistence ──────────────────────────────────────────
+
+    /**
+     * Persist an NPC-to-NPC relationship change to ActorRelationshipStore.
+     * Called when no player is involved in the event.
+     */
+    private void persistNpcRelationship(WorldEvent event, InferredDelta delta) {
+        ServerLevel level = WorldEventBus.currentLevel();
+        if (level == null) return;
+
+        try {
+            ActorRelationshipStore store = ActorRelationshipStore.get(level);
+            store.recordRelationship(
+                    event.sourceActorId(),
+                    event.targetActorId(),
+                    delta.affinity,
+                    delta.reason + ": " + event.description(),
+                    event.timestamp()
+            );
+
+            Ergenverse.LOGGER.debug("[RelationshipEngine] NPC→NPC persisted: {} {} → {} (delta={}, reason='{}')",
+                    event.semanticTag(), event.sourceActorId(), event.targetActorId(),
+                    delta.affinity, delta.reason);
+        } catch (Exception e) {
+            Ergenverse.LOGGER.error("[RelationshipEngine] failed to persist NPC→NPC relationship: {}",
+                    e.getMessage());
         }
     }
 

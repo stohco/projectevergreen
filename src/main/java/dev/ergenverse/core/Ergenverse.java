@@ -352,10 +352,27 @@ public final class Ergenverse {
             // Teng scout sees mercy → "dangerous". Beliefs drive behavior, not facts.
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.simulation.belief.BeliefFormationSubscriber());
+            // ── Event-Sourced Architecture Wiring (CRON-COMPLETIONIST option f) ──
+            // Register the remaining subscribers created by the architectural pivot
+            // but not yet wired into the bus:
+            //   ExpectationObserver     — detects expectation violations from repeated patterns
+            //   ReputationObserver      — localized reputation that spreads physically
+            //   OpportunityClaimSubscriber — NPCs claim opportunities (inverted ownership)
+            //   WangLinSemanticSubscriber   — Wang Lin observes semantic events, updates opinion
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.action.ExpectationObserver());
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.action.ReputationObserver());
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.action.OpportunityClaimSubscriber());
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.wanglin.ai.reasoning.WangLinSemanticSubscriber());
             LOGGER.info("[Ergenverse] Registered WorldEventBus subscribers: QiDisturbance + BirdFlight "
                     + "+ ActivityInterruption + Memory + Chronicle + HistorySubscriber "
                     + "+ RelationshipEngine + OpportunityGenerator + BeliefFormation "
-                    + "(event-sourced + belief architecture).");
+                    + "+ ExpectationObserver + ReputationObserver + OpportunityClaimSubscriber "
+                    + "+ WangLinSemanticSubscriber "
+                    + "(event-sourced + belief + expectation + reputation + opportunity-claim + wang-lin-cognition).");
             // Art XLII/XLIII: seed the chronicle opening + canon divergence ledger on world load.
             // The chronicle's t₀ entry is the immutable "world at the moment the player arrives" record.
             dev.ergenverse.history.WorldChronicle chronicle =
