@@ -60,7 +60,8 @@ public class SpiritBeastEntity extends PathfinderMob {
         CRANE("spirit_crane"),
         BAT("spirit_bat"),
         QILIN("qilin"),
-        SEA_SERPENT("sea_serpent");
+        SEA_SERPENT("sea_serpent"),
+        SOUL_FISH("soul_fish");
 
         public final String id;
         BeastType(String id) { this.id = id; }
@@ -72,7 +73,7 @@ public class SpiritBeastEntity extends PathfinderMob {
 
         /** Movement category for MoveControl selection. */
         public boolean isFlyer()    { return this == HAWK || this == BAT; }
-        public boolean isAquatic()  { return this == SEA_SERPENT; /* future: SOUL_FISH */ }
+        public boolean isAquatic()  { return this == SEA_SERPENT || this == SOUL_FISH; }
         public boolean isGround()   { return !isFlyer() && !isAquatic(); }
     }
 
@@ -198,6 +199,11 @@ public class SpiritBeastEntity extends PathfinderMob {
                     .add(Attributes.MOVEMENT_SPEED, 0.28D)
                     .add(Attributes.ATTACK_DAMAGE, 6.0D)
                     .add(Attributes.FOLLOW_RANGE, 16.0D);
+            case SOUL_FISH -> Mob.createMobAttributes()
+                    .add(Attributes.MAX_HEALTH, 2.0D)
+                    .add(Attributes.MOVEMENT_SPEED, 0.45D)
+                    .add(Attributes.ATTACK_DAMAGE, 0.0D)
+                    .add(Attributes.FOLLOW_RANGE, 8.0D);
         };
     }
 
@@ -346,6 +352,14 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
                 this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
+            }
+            case SOUL_FISH -> {
+                // Soul fish: small aquatic, schools, flees (non-aggressive)
+                this.goalSelector.addGoal(4, new SpiritBeastSwimGoal(this));
+                this.goalSelector.addGoal(5, new PanicGoal(this, 1.5D));
+                this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.8));
+                this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
             }
         }
 

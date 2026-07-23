@@ -58,6 +58,9 @@ public final class SpiritBeastModelLayers {
     // CRON-COMPLETIONIST-33: Sea serpent (10th beast type — aquatic swimmer)
     public static final ModelLayerLocation SEA_SERPENT =
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "sea_serpent"), "main");
+    // CRON-COMPLETIONIST-36: Soul fish (11th beast type — small aquatic swimmer)
+    public static final ModelLayerLocation SOUL_FISH =
+            new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "soul_fish"), "main");
 
     // ── Supplier mapping for RegisterLayerDefinitions ────────────────────
     // RegisterLayerDefinitions expects a Map<ModelLayerLocation, Supplier<LayerDefinition>>.
@@ -81,6 +84,7 @@ public final class SpiritBeastModelLayers {
         if (SPIRIT_BAT.equals(location))           return SpiritBatModel::createBodyLayer;
         if (QILIN.equals(location))                return QilinModel::createBodyLayer;
         if (SEA_SERPENT.equals(location))          return SeaSerpentModel::createBodyLayer;
+        if (SOUL_FISH.equals(location))            return SoulFishModel::createBodyLayer;
         return null;
     }
 }

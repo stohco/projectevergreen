@@ -12,6 +12,7 @@ import dev.ergenverse.client.model.StoneBackBoarModel;
 import dev.ergenverse.client.model.SpiritBatModel;
 import dev.ergenverse.client.model.QilinModel;
 import dev.ergenverse.client.model.SeaSerpentModel;
+import dev.ergenverse.client.model.SoulFishModel;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -225,6 +226,22 @@ public final class SpiritBeastRenderers {
 
         public SeaSerpentRenderer(EntityRendererProvider.Context context) {
             super(context, new SeaSerpentModel(context.bakeLayer(SpiritBeastModelLayers.SEA_SERPENT)), 0.5F);
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+    }
+
+    // ── Soul Fish (CRON-COMPLETIONIST-36) ──────────────────────
+    // Small qi-infused fish with bioluminescent glow.
+    // Renderer uses a slightly larger shadow radius for visibility at small scale.
+
+    public static class SoulFishRenderer extends MobRenderer<SpiritBeastEntity, SoulFishModel> {
+        private static final ResourceLocation TEX =
+                new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/soul_fish.png");
+
+        public SoulFishRenderer(EntityRendererProvider.Context context) {
+            super(context, new SoulFishModel(context.bakeLayer(SpiritBeastModelLayers.SOUL_FISH)), 0.3F);
         }
 
         @Override

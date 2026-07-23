@@ -81,6 +81,8 @@ public class ClientEvents {
         event.registerEntityRenderer(EREntityTypes.QILIN.get(),             SpiritBeastRenderers.QilinRenderer::new);
         // CRON-COMPLETIONIST-33: Sea serpent (10th beast type)
         event.registerEntityRenderer(EREntityTypes.SEA_SERPENT.get(),       SpiritBeastRenderers.SeaSerpentRenderer::new);
+        // CRON-COMPLETIONIST-36: Soul fish (11th beast type — small aquatic)
+        event.registerEntityRenderer(EREntityTypes.SOUL_FISH.get(),         SpiritBeastRenderers.SoulFishRenderer::new);
 
         // Flying sword projectile (launched by FlyingSwordItem). Invisible except
         // for its particle trail — the renderer is a no-op shell.

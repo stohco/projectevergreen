@@ -325,6 +325,7 @@ public final class WorldStateEngine {
             case BAT -> EREntityTypes.SPIRIT_BAT.get();
             case QILIN -> EREntityTypes.QILIN.get();
             case SEA_SERPENT -> EREntityTypes.SEA_SERPENT.get();
+            case SOUL_FISH -> EREntityTypes.SOUL_FISH.get();
         };
     }
 
