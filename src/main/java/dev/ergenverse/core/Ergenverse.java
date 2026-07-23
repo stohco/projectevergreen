@@ -424,14 +424,21 @@ public final class Ergenverse {
             // "If wolves appear, everything changes."
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.simulation.settlement.SettlementThreatIndex());
-            // ActorProfileRegistry — the "different minds" table. Per-actor
-            // traits (cultivation tier, courage, role, secrets) that turn one
-            // shared WorldSituation into N different Activity decisions.
+            // ActorProfileRegistry — the per-actor traits (cultivation tier,
+            // courage, role). Retained for location logic; the CultivatorMind
+            // supersedes the role-based reasoning.
             dev.ergenverse.simulation.settlement.ActorProfileRegistry.initialize();
-            // GoldenPathVerifier — records the mandated golden-path scenario:
-            // spawn → walk → wolf → different reactions → Wang Lin unique →
-            // memory → village remembers. Runs once at startup; output appears
-            // in dev.log and golden_path_verification.log.
+            // CultivatorMindRegistry — the "different minds" table. Per-actor
+            // motivation weights (CONCEAL_STRENGTH, CURIOSITY, SURVIVAL, DUTY...)
+            // that turn one shared WorldSituation into N different Activity
+            // decisions via candidate scoring. Nobody wrote "if Wang Lin" —
+            // the decision emerges from what each actor cares about.
+            dev.ergenverse.simulation.settlement.CultivatorMindRegistry.initialize();
+            // GoldenPathVerifier — records the unforgettable sequence as an
+            // EXPERIENCE (Article XL: prove living moments), not an architecture
+            // check. Wang Lin meditating → wolf stalks → he observes → villagers
+            // react differently → he never intervenes → village remembers.
+            // Runs once at startup; output in dev.log + golden_path_verification.log.
             dev.ergenverse.simulation.settlement.GoldenPathVerifier.runOnce(ticks);
         }
 

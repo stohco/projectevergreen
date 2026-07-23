@@ -144,19 +144,19 @@ public final class ActorMaterializer {
             WorldSituation situation = new WorldSituation(threat, tod, mood, gameTime);
 
             for (String actorId : settlement.getPopulation()) {
-                // ── Reason over the shared situation through this actor's mind ──
+                // ── The actor's mind reasons over the shared situation ──
+                // The mind scores candidate activities against the actor's
+                // motivation weights. Nobody wrote "if Wang Lin" — the decision
+                // emerges from what each actor cares about.
                 Activity activity = ActorReasoningEngine.reason(actorId, situation, settlement);
 
                 int offX, offZ;
-                String poseTag = "idle";
                 long lockExpiry = 0L;
                 if (activity != null) {
-                    // The reasoning engine produced a decision. Use the
-                    // activity's location + pose, and lock the entity so it
-                    // visibly holds this behavior.
+                    // The mind produced a decision. Use the activity's location
+                    // and lock the entity so it visibly holds this behavior.
                     offX = activity.offsetX;
                     offZ = activity.offsetZ;
-                    poseTag = activity.poseTag;
                     lockExpiry = activity.expiryTick;
                 } else {
                     // Peaceful — fall back to the daily-rhythm presence.
@@ -178,13 +178,18 @@ public final class ActorMaterializer {
                 // (the threat may have started or ended since last scan).
                 EntityCultivator existing = findPresent(level, actorId, presencePos);
                 if (existing != null) {
-                    updateActivityLock(existing, activity, lockExpiry, poseTag, gameTime,
+                    updateActivityLock(existing, activity, lockExpiry, gameTime,
                             settlement, actorId);
                     continue;
                 }
 
-                // Materialize at the reasoning-derived (or daily-rhythm) position.
-                materialize(level, actorId, presencePos, poseTag, lockExpiry);
+                // Materialize at the mind-derived (or daily-rhythm) position.
+                // The pose is DERIVED by the renderer from (activity.type +
+                // actor role) — the activity does not carry a poseTag. Per the
+                // user: "The renderer decides. Same activity. Different
+                // presentation." A cultivator observing crouches; a mortal
+                // observing stands still.
+                materialize(level, actorId, presencePos, activity, lockExpiry);
 
                 // ── Memory: record the threat-response to settlement history ──
                 // This is the "village remembers" half of the golden path. When
@@ -198,7 +203,7 @@ public final class ActorMaterializer {
                     if (settlement.personality != null) {
                         settlement.personality.remember(memory);
                     }
-                    Ergenverse.LOGGER.info("[ActorMaterializer] {} → {} (reasoning-derived)",
+                    Ergenverse.LOGGER.info("[ActorMaterializer] {} → {} (emerged from motivations)",
                             actorId, activity.type);
                 }
             }
@@ -220,17 +225,22 @@ public final class ActorMaterializer {
 
     /**
      * Update an already-materialized entity's activity-lock state. If a threat
-     * is active, lock the entity to its reasoning-derived pose. If the threat
-     * has expired, release the lock so the entity resumes daily rhythm.
+     * is active, lock the entity to its mind-derived pose. If the threat has
+     * expired, release the lock so the entity resumes daily rhythm.
+     *
+     * <p>The pose is DERIVED from (activity.type + actor role) — the renderer
+     * decides, not the activity. Per the user: same activity, different
+     * presentation per actor.
      */
     private static void updateActivityLock(EntityCultivator entity, Activity activity,
-                                           long lockExpiry, String poseTag, long gameTime,
+                                           long lockExpiry, long gameTime,
                                            Settlement settlement, String actorId) {
         if (activity != null && lockExpiry > gameTime) {
             // Threat still active — ensure the entity is locked to its pose.
             if (!entity.isActivityLocked()) {
-                entity.lockToActivity(poseToId(poseTag), lockExpiry);
-                Ergenverse.LOGGER.info("[ActorMaterializer] {} locked to {} (threat active)",
+                int pose = derivePose(activity, actorId);
+                entity.lockToActivity(pose, lockExpiry);
+                Ergenverse.LOGGER.info("[ActorMaterializer] {} locked to {} (threat active, pose derived)",
                         actorId, activity.type);
             }
         } else {
@@ -243,14 +253,32 @@ public final class ActorMaterializer {
         }
     }
 
-    /** Map a pose tag string to the EntityCultivator POSE_* constant. */
-    private static int poseToId(String poseTag) {
-        if (poseTag == null) return EntityCultivator.POSE_IDLE;
-        return switch (poseTag) {
-            case "meditating" -> EntityCultivator.POSE_MEDITATING;
-            case "observing" -> EntityCultivator.POSE_OBSERVING;
-            case "guarding" -> EntityCultivator.POSE_GUARDING;
-            case "casting" -> EntityCultivator.POSE_CASTING;
+    /**
+     * Derive the renderer pose from the activity type + the actor's role.
+     *
+     * <p>Per the user's directive: "Activity doesn't specify crouch. The
+     * renderer decides: cultivator → crouch behind tree, while mortal →
+     * stand still. Same activity. Different presentation."
+     *
+     * <p>This is the Activity → Intent → Animation Selection → Renderer
+     * pipeline. The activity carries the intent (OBSERVING); the renderer
+     * (here, the materializer acting as the animation-selector) maps intent +
+     * actor type to the concrete pose constant the entity will hold.
+     */
+    private static int derivePose(Activity activity, String actorId) {
+        if (activity == null) return EntityCultivator.POSE_IDLE;
+        ActorProfile profile = ActorProfileRegistry.get(actorId);
+        boolean isCultivator = profile != null
+                && (profile.role == ActorProfile.Role.HIDDEN_CULTIVATOR
+                    || profile.role == ActorProfile.Role.CULTIVATOR);
+        return switch (activity.type) {
+            case OBSERVING_THREAT -> isCultivator
+                    ? EntityCultivator.POSE_OBSERVING   // cultivator crouches
+                    : EntityCultivator.POSE_IDLE;       // mortal stands still
+            case GUARDING -> EntityCultivator.POSE_GUARDING;
+            case SECURING_ASSETS -> EntityCultivator.POSE_IDLE;
+            case FLEEING_HOME -> EntityCultivator.POSE_IDLE;
+            case MEDITATING -> EntityCultivator.POSE_MEDITATING;
             default -> EntityCultivator.POSE_IDLE;
         };
     }
@@ -263,11 +291,11 @@ public final class ActorMaterializer {
      * a <b>render shell</b> — the actor (in the SettlementRegistry) is the
      * source of truth; the entity just renders them.
      *
-     * @param poseTag    the reasoning-derived pose ("idle", "observing", "guarding", ...)
+     * @param activity   the mind-derived activity (for pose derivation), or null for peaceful
      * @param lockExpiry the activity-lock expiry tick (>0 to lock, 0 for peaceful)
      */
     private static void materialize(ServerLevel level, String characterId, Vec3 pos,
-                                     String poseTag, long lockExpiry) {
+                                     Activity activity, long lockExpiry) {
         var canonData = WorldStateDataLoader.getEntry("npcs", characterId);
         if (canonData == null) {
             Ergenverse.LOGGER.debug("[ActorMaterializer] No canon data for {} — skipping", characterId);
@@ -288,16 +316,20 @@ public final class ActorMaterializer {
         cultivator.moveTo(pos.x, pos.y, pos.z, level.random.nextFloat() * 360.0F, 0.0F);
         cultivator.initializeFromData(characterId, override);
 
-        // If a threat is active, lock the entity to its reasoning-derived pose.
-        // This makes the differentiated behavior OBSERVABLE — Wang Lin frozen
-        // at the treeline observing, the patriarch at the gate guarding.
-        if (lockExpiry > 0L) {
-            cultivator.lockToActivity(poseToId(poseTag), lockExpiry);
+        // If a threat is active, lock the entity to its mind-derived pose.
+        // The pose is DERIVED from (activity.type + actor role) — the renderer
+        // decides, not the activity. This makes the differentiated behavior
+        // OBSERVABLE: Wang Lin crouched at the treeline observing, the
+        // patriarch in combat stance at the gate guarding.
+        if (lockExpiry > 0L && activity != null) {
+            int pose = derivePose(activity, characterId);
+            cultivator.lockToActivity(pose, lockExpiry);
         }
 
         level.addFreshEntity(cultivator);
 
-        Ergenverse.LOGGER.info("[ActorMaterializer] Materialized {} at ({}, {}, {}) pose={} lock={} — Article XLIV actor-as-source-of-truth",
-                characterId, pos.x, pos.y, pos.z, poseTag, lockExpiry > 0L);
+        Ergenverse.LOGGER.info("[ActorMaterializer] Materialized {} at ({}, {}, {}) activity={} lock={} — Article XLIV actor-as-source-of-truth",
+                characterId, pos.x, pos.y, pos.z,
+                activity != null ? activity.type : "daily-rhythm", lockExpiry > 0L);
     }
 }
