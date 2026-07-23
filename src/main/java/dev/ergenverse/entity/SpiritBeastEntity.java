@@ -57,7 +57,10 @@ public class SpiritBeastEntity extends PathfinderMob {
         HAWK("hawk"),
         FIRE_BEAST("fire_beast"),
         STONE_BACK_BOAR("stone_back_boar"),
-        CRANE("spirit_crane");
+        CRANE("spirit_crane"),
+        BAT("spirit_bat"),
+        QILIN("qilin"),
+        SEA_SERPENT("sea_serpent");
 
         public final String id;
         BeastType(String id) { this.id = id; }
@@ -68,8 +71,8 @@ public class SpiritBeastEntity extends PathfinderMob {
         }
 
         /** Movement category for MoveControl selection. */
-        public boolean isFlyer()    { return this == HAWK; }
-        public boolean isAquatic()  { return false; /* future: SEA_SERPENT, SOUL_FISH */ }
+        public boolean isFlyer()    { return this == HAWK || this == BAT; }
+        public boolean isAquatic()  { return this == SEA_SERPENT; /* future: SOUL_FISH */ }
         public boolean isGround()   { return !isFlyer() && !isAquatic(); }
     }
 
@@ -178,6 +181,23 @@ public class SpiritBeastEntity extends PathfinderMob {
                     .add(Attributes.MOVEMENT_SPEED, 0.30D)
                     .add(Attributes.ATTACK_DAMAGE, 3.0D)
                     .add(Attributes.FOLLOW_RANGE, 20.0D);
+            case BAT -> Mob.createMobAttributes()
+                    .add(Attributes.MAX_HEALTH, 6.0D)
+                    .add(Attributes.MOVEMENT_SPEED, 0.40D)
+                    .add(Attributes.ATTACK_DAMAGE, 1.0D)
+                    .add(Attributes.FOLLOW_RANGE, 10.0D);
+            case QILIN -> Mob.createMobAttributes()
+                    .add(Attributes.MAX_HEALTH, 60.0D)
+                    .add(Attributes.MOVEMENT_SPEED, 0.35D)
+                    .add(Attributes.ATTACK_DAMAGE, 10.0D)
+                    .add(Attributes.FOLLOW_RANGE, 24.0D)
+                    .add(Attributes.KNOCKBACK_RESISTANCE, 0.5D)
+                    .add(Attributes.ARMOR_TOUGHNESS, 3.0D);
+            case SEA_SERPENT -> Mob.createMobAttributes()
+                    .add(Attributes.MAX_HEALTH, 30.0D)
+                    .add(Attributes.MOVEMENT_SPEED, 0.28D)
+                    .add(Attributes.ATTACK_DAMAGE, 6.0D)
+                    .add(Attributes.FOLLOW_RANGE, 16.0D);
         };
     }
 
@@ -297,6 +317,32 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.goalSelector.addGoal(2, new SpiritBeastHuntGoal(this, 1.0D));
                 this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0, true));
                 this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8));
+                this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+                this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
+            }
+            case BAT -> {
+                // Bat: flies, roosts, fast agile movement
+                this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.SpiritBeastFlightGoal(this, 0.8D));
+                this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.2));
+                this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+            }
+            case QILIN -> {
+                // Qilin: divine beast, territorial, powerful
+                this.goalSelector.addGoal(2, new SpiritBeastHuntGoal(this, 1.3D));
+                this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.3, true));
+                this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.SpiritBeastFlightGoal(this, 1.0D));
+                this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.9));
+                this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+            }
+            case SEA_SERPENT -> {
+                // Sea serpent: aquatic predator, swims
+                this.goalSelector.addGoal(2, new SpiritBeastHuntGoal(this, 1.1D));
+                this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.1, true));
+                this.goalSelector.addGoal(4, new SpiritBeastSwimGoal(this));
+                this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.7));
                 this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
                 this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));

@@ -322,6 +322,9 @@ public final class WorldStateEngine {
             case FIRE_BEAST -> EREntityTypes.FIRE_BEAST.get();
             case STONE_BACK_BOAR -> EREntityTypes.STONE_BACK_BOAR.get();
             case CRANE -> EREntityTypes.SPIRIT_CRANE.get();
+            case BAT -> EREntityTypes.SPIRIT_BAT.get();
+            case QILIN -> EREntityTypes.QILIN.get();
+            case SEA_SERPENT -> EREntityTypes.SEA_SERPENT.get();
         };
     }
 

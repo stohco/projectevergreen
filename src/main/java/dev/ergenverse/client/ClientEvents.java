@@ -53,6 +53,9 @@ public class ClientEvents {
         event.registerLayerDefinition(SpiritBeastModelLayers.STONE_BACK_BOAR, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.STONE_BACK_BOAR));
         event.registerLayerDefinition(SpiritBeastModelLayers.CULTIVATOR_ROBE, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.CULTIVATOR_ROBE));
         event.registerLayerDefinition(SpiritBeastModelLayers.SPIRIT_CRANE, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SPIRIT_CRANE));
+        event.registerLayerDefinition(SpiritBeastModelLayers.SPIRIT_BAT, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SPIRIT_BAT));
+        event.registerLayerDefinition(SpiritBeastModelLayers.QILIN, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.QILIN));
+        event.registerLayerDefinition(SpiritBeastModelLayers.SEA_SERPENT, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SEA_SERPENT));
     }
 
     @SubscribeEvent
@@ -72,6 +75,12 @@ public class ClientEvents {
         event.registerEntityRenderer(EREntityTypes.STONE_BACK_BOAR.get(),  SpiritBeastRenderers.BoarRenderer::new);
         // CRON-COMPLETIONIST-24: Spirit crane renderer (7th beast type)
         event.registerEntityRenderer(EREntityTypes.SPIRIT_CRANE.get(),      SpiritBeastRenderers.CraneRenderer::new);
+        // CRON-COMPLETIONIST-33: Spirit bat (8th beast type)
+        event.registerEntityRenderer(EREntityTypes.SPIRIT_BAT.get(),        SpiritBeastRenderers.BatRenderer::new);
+        // CRON-COMPLETIONIST-33: Qilin (9th beast type)
+        event.registerEntityRenderer(EREntityTypes.QILIN.get(),             SpiritBeastRenderers.QilinRenderer::new);
+        // CRON-COMPLETIONIST-33: Sea serpent (10th beast type)
+        event.registerEntityRenderer(EREntityTypes.SEA_SERPENT.get(),       SpiritBeastRenderers.SeaSerpentRenderer::new);
 
         // Flying sword projectile (launched by FlyingSwordItem). Invisible except
         // for its particle trail — the renderer is a no-op shell.

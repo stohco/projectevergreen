@@ -145,4 +145,35 @@ public class EREntityTypes {
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build("spirit_crane"));
+
+    // CRON-COMPLETIONIST-33: SpiritBatModel — small aerial insectivore.
+    // Hitbox: ~0.4 wide, ~0.4 tall (compact body, wings visual only).
+    public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_BAT =
+            ENTITY_TYPES.register("spirit_bat", () ->
+                    EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
+                            .sized(0.4F, 0.4F)
+                            .clientTrackingRange(5)
+                            .updateInterval(2)
+                            .build("spirit_bat"));
+
+    // CRON-COMPLETIONIST-33: QilinModel — winged wolf-quadruped with antlers.
+    // Hitbox: ~1.0 wide, ~1.2 tall (similar to wolf but slightly larger).
+    public static final RegistryObject<EntityType<SpiritBeastEntity>> QILIN =
+            ENTITY_TYPES.register("qilin", () ->
+                    EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
+                            .sized(1.0F, 1.2F)
+                            .clientTrackingRange(10)
+                            .updateInterval(2)
+                            .fireImmune()
+                            .build("qilin"));
+
+    // CRON-COMPLETIONIST-33: SeaSerpentModel — undulating aquatic predator.
+    // Hitbox: ~0.8 wide, ~0.8 tall (cylindrical body, visual segments extend).
+    public static final RegistryObject<EntityType<SpiritBeastEntity>> SEA_SERPENT =
+            ENTITY_TYPES.register("sea_serpent", () ->
+                    EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
+                            .sized(0.8F, 0.8F)
+                            .clientTrackingRange(8)
+                            .updateInterval(2)
+                            .build("sea_serpent"));
 }

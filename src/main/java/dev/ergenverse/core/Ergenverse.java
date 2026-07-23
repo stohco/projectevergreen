@@ -290,6 +290,18 @@ public final class Ergenverse {
         event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_CRANE.get(),
                 dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
                         dev.ergenverse.entity.SpiritBeastEntity.BeastType.CRANE).build());
+        // CRON-COMPLETIONIST-33: Spirit bat attributes
+        event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_BAT.get(),
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.BAT).build());
+        // CRON-COMPLETIONIST-33: Qilin attributes (divine beast, powerful)
+        event.put(dev.ergenverse.entity.EREntityTypes.QILIN.get(),
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.QILIN).build());
+        // CRON-COMPLETIONIST-33: Sea serpent attributes (aquatic predator)
+        event.put(dev.ergenverse.entity.EREntityTypes.SEA_SERPENT.get(),
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.SEA_SERPENT).build());
         LOGGER.info("[Ergenverse] Registered per-species Spirit Beast attributes.");
     }
 

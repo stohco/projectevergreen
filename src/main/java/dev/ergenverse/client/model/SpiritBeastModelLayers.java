@@ -49,6 +49,15 @@ public final class SpiritBeastModelLayers {
     // CRON-COMPLETIONIST-21: Flying sword model layer
     public static final ModelLayerLocation FLYING_SWORD =
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "flying_sword"), "main");
+    // CRON-COMPLETIONIST-33: Spirit bat (8th beast type — sky flier)
+    public static final ModelLayerLocation SPIRIT_BAT =
+            new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "spirit_bat"), "main");
+    // CRON-COMPLETIONIST-33: Qilin (9th beast type — winged wolf quadruped)
+    public static final ModelLayerLocation QILIN =
+            new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "qilin"), "main");
+    // CRON-COMPLETIONIST-33: Sea serpent (10th beast type — aquatic swimmer)
+    public static final ModelLayerLocation SEA_SERPENT =
+            new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "sea_serpent"), "main");
 
     // ── Supplier mapping for RegisterLayerDefinitions ────────────────────
     // RegisterLayerDefinitions expects a Map<ModelLayerLocation, Supplier<LayerDefinition>>.
@@ -69,6 +78,9 @@ public final class SpiritBeastModelLayers {
         if (CULTIVATOR_ROBE.equals(location))     return CultivatorRobeModel::createBodyLayer;
         if (SPIRIT_CRANE.equals(location))       return SpiritCraneModel::createBodyLayer;
         if (FLYING_SWORD.equals(location))           return FlyingSwordModel::createBodyLayer;
+        if (SPIRIT_BAT.equals(location))           return SpiritBatModel::createBodyLayer;
+        if (QILIN.equals(location))                return QilinModel::createBodyLayer;
+        if (SEA_SERPENT.equals(location))          return SeaSerpentModel::createBodyLayer;
         return null;
     }
 }

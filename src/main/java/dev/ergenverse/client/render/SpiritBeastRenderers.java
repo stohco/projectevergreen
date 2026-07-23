@@ -9,6 +9,9 @@ import dev.ergenverse.client.model.SpiritHawkModel;
 import dev.ergenverse.client.model.SpiritCraneModel;
 import dev.ergenverse.client.model.SpiritFireBeastModel;
 import dev.ergenverse.client.model.StoneBackBoarModel;
+import dev.ergenverse.client.model.SpiritBatModel;
+import dev.ergenverse.client.model.QilinModel;
+import dev.ergenverse.client.model.SeaSerpentModel;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -185,6 +188,48 @@ public final class SpiritBeastRenderers {
 
         public BoarRenderer(EntityRendererProvider.Context context) {
             super(context, new StoneBackBoarModel(context.bakeLayer(SpiritBeastModelLayers.STONE_BACK_BOAR)), 0.6F);
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+    }
+
+    // ── Spirit Bat (CRON-COMPLETIONIST-33) ──────────────────────
+
+    public static class BatRenderer extends MobRenderer<SpiritBeastEntity, SpiritBatModel> {
+        private static final ResourceLocation TEX =
+                new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/spirit_bat.png");
+
+        public BatRenderer(EntityRendererProvider.Context context) {
+            super(context, new SpiritBatModel(context.bakeLayer(SpiritBeastModelLayers.SPIRIT_BAT)), 0.3F);
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+    }
+
+    // ── Qilin (CRON-COMPLETIONIST-33) ──────────────────────
+
+    public static class QilinRenderer extends MobRenderer<SpiritBeastEntity, QilinModel> {
+        private static final ResourceLocation TEX =
+                new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/qilin.png");
+
+        public QilinRenderer(EntityRendererProvider.Context context) {
+            super(context, new QilinModel(context.bakeLayer(SpiritBeastModelLayers.QILIN)), 0.7F);
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+    }
+
+    // ── Sea Serpent (CRON-COMPLETIONIST-33) ──────────────────────
+
+    public static class SeaSerpentRenderer extends MobRenderer<SpiritBeastEntity, SeaSerpentModel> {
+        private static final ResourceLocation TEX =
+                new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/sea_serpent.png");
+
+        public SeaSerpentRenderer(EntityRendererProvider.Context context) {
+            super(context, new SeaSerpentModel(context.bakeLayer(SpiritBeastModelLayers.SEA_SERPENT)), 0.5F);
         }
 
         @Override
