@@ -45,6 +45,7 @@ public final class ActorProfileRegistry {
     public static void initialize() {
         seedWangFamilyVillage();
         seedHengYueSect();
+        seedTengFamilyCity();
         Ergenverse.LOGGER.info("[ActorProfileRegistry] Registered {} actor profiles (the 'different minds' table).",
                 BY_ID.size());
     }
@@ -198,5 +199,161 @@ public final class ActorProfileRegistry {
 
     private static void register(ActorProfile profile) {
         BY_ID.put(profile.actorId, profile);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  Teng Family City (滕城) — 12 NPCs (3 canon + 9 simulation)
+    //  The largest city in Zhao Country. Teng Huayuan rules here.
+    //  Per Article XLI: no character is special-cased. These profiles
+    //  produce the city's social dynamics through the ActorReasoningEngine.
+    // ═══════════════════════════════════════════════════════════════════
+    private static void seedTengFamilyCity() {
+
+        // ── Canon NPCs ──────────────────────────────────────────────
+
+        // TENG HUAYUAN — the patriarch. Half-Step Deity Transformation —
+        // the most powerful being in Zhao Country. Arrogant, ruthless,
+        // vengeful. Destroyed the Wang family. Against any threat near his
+        // city: assesses whether it's worth his attention; if trivial, ignores;
+        // if interesting, observes; if threatening, annihilates.
+        // Canon (RI Ch.1-3): main antagonist of Wang Lin's early arc.
+        register(new ActorProfile("npc_teng_huayuan", "Teng Huayuan",
+                ActorProfile.CultivationTier.SOUL_FORMATION,  // Half-Step Deity Transformation ≈ Soul Formation tier
+                0.85f,          // courage — extremely high; he has the power to back it
+                ActorProfile.Role.CULTIVATOR,
+                false,           // no family bonds (he sacrificed them for power)
+                true,            // revealedStrength — everyone knows his power
+                0.95f,           // combatConfidence — he can destroy anything in Zhao Country
+                true));          // canon
+
+        // TENG LI — arrogant young master. Late Foundation Establishment.
+        // Bullies weaker cultivators and mortals. Cruel, entitled.
+        // Against threats: overconfident, attacks aggressively, may flee
+        // if clearly outmatched (but rarely admits being outmatched).
+        // Canon (RI Ch.1): the young master who persecutes Wang Lin.
+        register(new ActorProfile("npc_teng_li", "Teng Li",
+                ActorProfile.CultivationTier.FOUNDATION,
+                0.70f,          // courage — high from arrogance, not actual bravery
+                ActorProfile.Role.CULTIVATOR,
+                false, true,
+                0.55f,           // combatConfidence — overestimates himself
+                true));
+
+        // TENG XIUXIU — conflicted family member. Low-tier cultivator.
+        // Torn between loyalty to the Teng family and disgust at their
+        // cruelty. Quietly sympathetic to the oppressed. Against threats:
+        // guards defensively, protects weaker people first.
+        // Canon: unique personality — the one Teng who questions the family.
+        register(new ActorProfile("npc_teng_xiuxiu", "Teng Xiuxiu",
+                ActorProfile.CultivationTier.QI_CONDENSATION,
+                0.45f,          // courage — moderate (conflicted, not bold)
+                ActorProfile.Role.CULTIVATOR,
+                false, true,
+                0.30f,           // combatConfidence — knows she is weak
+                true));
+
+        // ── Simulation NPCs ────────────────────────────────────────
+
+        // TENG GUARD CAPTAIN — mid Foundation Establishment. Stern,
+        // disciplined, loyal to Teng Huayuan. Commands the city guard.
+        // Against threats: guards his post, coordinates defense, calls
+        // for reinforcements. Never flees.
+        register(new ActorProfile("npc_teng_guard_captain", "Teng Guard Captain",
+                ActorProfile.CultivationTier.FOUNDATION,
+                0.75f,          // courage — high (disciplined soldier)
+                ActorProfile.Role.CULTIVATOR,
+                false, true,
+                0.60f,           // combatConfidence — trained and equipped
+                false));
+
+        // TENG CULTIVATOR GUARD — early Core Formation. Arrogant,
+        // condescending, paranoid. The Teng family's elite enforcer.
+        // Patrols the cultivator quarter. Against threats: attacks
+        // immediately, paranoid about hidden cultivators.
+        register(new ActorProfile("npc_teng_cultivator_guard", "Teng Cultivator Guard",
+                ActorProfile.CultivationTier.CORE,
+                0.65f,          // courage — high (elite enforcer)
+                ActorProfile.Role.CULTIVATOR,
+                false, true,
+                0.70f,           // combatConfidence — Core Formation vs most threats
+                false));
+
+        // TENG MERCHANT — mortal. Shrewd, opportunistic, respectful
+        // to power. Runs the market stall. Against threats: hides
+        // goods first, then seeks shelter. Never fights.
+        register(new ActorProfile("npc_teng_merchant", "Teng Family Merchant",
+                ActorProfile.CultivationTier.MORTAL,
+                0.30f,          // courage — low (merchant mentality)
+                ActorProfile.Role.MERCHANT,
+                true, true,
+                0.10f,           // combatConfidence — no combat ability
+                false));
+
+        // TENG SERVANT — mortal. Obedient, fearful, secretly observant.
+        // Serves in the governor's keep. Hears everything. Against threats:
+        // obeys Teng Huayuan's orders. If no orders, hides.
+        register(new ActorProfile("npc_teng_servant", "Teng Family Servant",
+                ActorProfile.CultivationTier.MORTAL,
+                0.20f,          // courage — very low (conditioned obedience)
+                ActorProfile.Role.HOMEMAKER,
+                false, true,
+                0.05f,           // combatConfidence — servant, no training
+                false));
+
+        // TEMPLE PRIEST LIU — mortal. Pious, haunted, quietly defiant.
+        // Tends the temple. Knows the city's secrets. Against threats:
+        // protects the temple first, then civilians. Nonviolent.
+        register(new ActorProfile("npc_teng_temple_priest", "Temple Priest Liu",
+                ActorProfile.CultivationTier.MORTAL,
+                0.40f,          // courage — moderate (quietly defiant)
+                ActorProfile.Role.ELDER,
+                false, true,
+                0.10f,           // combatConfidence — priest, not a fighter
+                false));
+
+        // TAVEN KEEPER MEI — mortal. Warm, gossipy, perceptive.
+        // Knows everyone's business. Against threats: locks the tavern,
+        // protects patrons, gossips about the threat afterward.
+        register(new ActorProfile("npc_teng_tavern_keeper", "Tavern Keeper Mei",
+                ActorProfile.CultivationTier.MORTAL,
+                0.35f,          // courage — moderate-low (protects her business)
+                ActorProfile.Role.MERCHANT,
+                true, true,
+                0.15f,           // combatConfidence — keeps a kitchen knife
+                false));
+
+        // ONE-EARED ZHOU (smuggler) — late Qi Condensation. Cunning,
+        // paranoid, mercenary. Operates the smuggler tunnels. Against
+        // threats: assesses profit, fights only if cornered, prefers
+        // to escape via tunnels.
+        register(new ActorProfile("npc_teng_smuggler", "One-Eared Zhou",
+                ActorProfile.CultivationTier.QI_CONDENSATION,
+                0.40f,          // courage — moderate (mercenary, not brave)
+                ActorProfile.Role.MERCHANT,
+                false, true,
+                0.35f,           // combatConfidence — can fight but prefers not to
+                false));
+
+        // DOCK FOREMAN CHEN — mortal. Gruff, overworked, honest.
+        // Manages the warehouse district. Against threats: secures
+        // cargo, then helps with defense if capable.
+        register(new ActorProfile("npc_teng_dock_foreman", "Dock Foreman Chen",
+                ActorProfile.CultivationTier.MORTAL,
+                0.50f,          // courage — moderate (laborer toughness)
+                ActorProfile.Role.LABORER,
+                true, true,
+                0.25f,           // combatConfidence — has tools and strength
+                false));
+
+        // OLD WEI THE BEGGAR — mortal. Broken, bitter, surprisingly
+        // observant. A failed cultivator. Hears everything in the
+        // streets. Against threats: flees, but remembers everything.
+        register(new ActorProfile("npc_teng_beggar", "Old Wei the Beggar",
+                ActorProfile.CultivationTier.MORTAL,
+                0.15f,          // courage — very low (broken by life)
+                ActorProfile.Role.ELDER,
+                false, true,
+                0.05f,           // combatConfidence — beggar, no fight
+                false));
     }
 }
