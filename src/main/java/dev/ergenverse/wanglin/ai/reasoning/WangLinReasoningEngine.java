@@ -227,15 +227,26 @@ public final class WangLinReasoningEngine {
      * <p>Low if item's required realm &gt; player's realm + 2 (too much power
      * too fast = dangerous). High (safe) otherwise.
      *
-     * <p>CRON-COMPLETIONIST-47: Now influenced by Wang Lin's multi-axis
-     * relationship with the player:
+     * <p>CRON-COMPLETIONIST-48: Relationship modifiers now use CONTINUOUS CURVES
+     * instead of binary thresholds (fixing CRON-47 critique item 2).:
      * <ul>
-     *   <li>High grievance (&gt;60): safety is LESS conservative (-0.15 penalty) —
-     *       Wang Lin is less concerned about a player who has wronged him.
-     *   <li>High trust (&gt;60): safety is LESS conservative (-0.10 penalty) —
-     *       Wang Lin trusts the player can handle powerful items.
+     *   <li>Grievance penalty scales linearly: grievance/100 * -0.20. At grievance=30
+     *       the penalty is -0.06 (negligible); at 60 it's -0.12; at 100 it's -0.20.
+     *       This prevents gaming by staying just under the old threshold of 60.
+     *   <li>Trust bonus scales linearly: trust/100 * -0.15. At trust=30 the bonus
+     *       is -0.045; at 60 it's -0.09; at 100 it's -0.15. Negative because LOWER
+     *       safety score = MORE willing to give dangerous items. Wang Lin trusts the
+     *       player can handle powerful items, so he is less conservative.
+     *   <li>Debt axis: if the player OWES Wang Lin (debt < 0, player in debt to Wang Lin),
+     *       safety is LESS conservative by |debt|/50 * -0.05 (max -0.10). Wang Lin
+     *       is lenient with indebted players — they owe him, so he can afford risk.
+     *   <li>If the player is CREDITED (debt > 0, Wang Lin owes player), safety is
+     *       MORE conservative by debt/50 * 0.05 (max +0.10). Wang Lin doesn't want
+     *       to give dangerous items to someone he owes — it could look like
+     *       manipulation.
      * </ul>
-     * This is canon: Wang Lin gives stronger items to those he trusts.
+     * This is canon: Wang Lin gives stronger items to those he trusts, and
+     * debt relationships create asymmetrical caution.
      */
     static GiftingDecision evaluateSafety(RealmId playerRealm, ItemMeta meta,
                                                   ActorRelationshipStore.RelationshipSnapshot rel) {
@@ -259,17 +270,35 @@ public final class WangLinReasoningEngine {
                     + "would crack under the weight. Refusing on safety grounds.";
         }
 
-        // CRON-COMPLETIONIST-47: Relationship modifiers.
+        // CRON-COMPLETIONIST-48: Continuous relationship curves (replacing binary thresholds).
         if (rel != null) {
-            if (rel.grievance > 60) {
-                score -= 0.15;
-                reasoning += " Wang Lin's grievance toward the player is high ("
-                        + rel.grievance + ") — he is less concerned about consequences.";
-            }
-            if (rel.trust > 60) {
-                score -= 0.10;
-                reasoning += " Wang Lin trusts the player (trust=" + rel.trust
-                        + ") — believes they can handle power.";
+            // Grievance: continuous penalty. Higher grievance → less safety concern.
+            double grievancePenalty = (rel.grievance / 100.0) * -0.20;
+            score += grievancePenalty;
+            reasoning += String.format(" Grievance curve: %d/100 * -0.20 = %.3f.",
+                    rel.grievance, grievancePenalty);
+
+            // Trust: continuous bonus. Higher trust → less conservative (score goes DOWN).
+            double trustBonus = (rel.trust / 100.0) * -0.15;
+            score += trustBonus;
+            reasoning += String.format(" Trust curve: %d/100 * -0.15 = %.3f.",
+                    rel.trust, trustBonus);
+
+            // CRON-48/49: Debt axis. Direction matches ActorRelationshipStore convention:
+            // Positive = Wang Lin owes player (caution). Negative = player owes Wang Lin (leniency).
+            // Verified CRON-49: SAFETY and JUDGMENT now use the same direction convention.
+            if (rel.debt < 0) {
+                double debtLeniency = (Math.abs(rel.debt) / 50.0) * -0.05;
+                debtLeniency = Math.max(-0.10, debtLeniency); // cap at -0.10
+                score += debtLeniency;
+                reasoning += String.format(" Player owes Wang Lin (debt=%d): leniency %.3f.",
+                        rel.debt, debtLeniency);
+            } else if (rel.debt > 0) {
+                double debtCaution = (rel.debt / 50.0) * 0.05;
+                debtCaution = Math.min(0.10, debtCaution); // cap at +0.10
+                score += debtCaution;
+                reasoning += String.format(" Wang Lin owes player (debt=%d): caution %.3f.",
+                        rel.debt, debtCaution);
             }
         }
 
@@ -364,11 +393,36 @@ public final class WangLinReasoningEngine {
      * <p>Integrates {@link ExpectationModel}. High if model's top predictions
      * align with the item's purpose.
      *
-     * <p>CRON-COMPLETIONIST-47: Now also reads ActorRelationshipStore to add
-     * a "relationship modifier" to the judgment score. The modifier is:
-     * {@code (trust * 0.3 + respect * 0.2 - fear * 0.1 - grievance * 0.3) / 100.0}
-     * This means high trust/respect IMPROVES judgment (Wang Lin is more willing
-     * to give), while high fear/grievance LOWERS it.
+     * <p>CRON-COMPLETIONIST-48: Relationship modifier now uses a 2D TRUST×GRIEVANCE
+     * INTERACTION MATRIX (replacing CRON-47's simple linear formula). The matrix
+     * captures relationship QUALITY that a linear formula cannot:
+     * <ul>
+     *   <li>High trust + low grievance = "trusted ally" → +0.25 (Wang Lin gives freely)
+     *   <li>High trust + high grievance = "fearful respect" → +0.05 (respects power
+     *       but is wary; Wang Lin relates to this from his own canon relationships)
+     *   <li>Low trust + high grievance = "active threat" → -0.25 (Wang Lin is
+     *       cold and cautious; this player has wronged him repeatedly)
+     *   <li>Low trust + low grievance = "stranger" → 0.00 (neutral baseline)
+     *   <li>Medium trust + high respect = "respected junior" → +0.15
+     * </ul>
+     * The matrix is computed via bilinear interpolation across 4 quadrants.
+     * Additionally:
+     * <ul>
+     *   <li>FAMILIARITY (CRON-47 critique item 3): if familiarity > 40, the "no
+     *       strong alignment" penalty is reduced by 0.10. Wang Lin gives more
+     *       easily to people he knows, even without strong alignment.
+     *   <li>DEBT (CRON-47/49): Direction fixed to match ActorRelationshipStore convention.
+     *       Positive debt = Wang Lin owes player (caution). Negative debt = player owes
+     *       Wang Lin (filial leniency). Logarithmic scaling — first 20 points matter most
+     *       (CRON-48 critique item 3). Threshold at ±10 to avoid noise.
+     *   <li>FEAR (CRON-COMPLETIONIST-49): Fear now consumed in JUDGMENT. Canon (Art III):
+     *       "A cultivator who fears everything cultivates nothing." High fear + low trust =
+     *       "terrified subordinate" → penalty up to -0.15. High fear + high trust =
+     *       "fearful loyalty" → small bonus up to +0.05 (like Lei Ji, who feared but was useful).
+     *       Low fear (< 30) → no modification (normal wariness).
+     *   <li>RESPECT still contributes independently: high respect amplifies the
+     *       trust-grievance matrix by up to 0.05.
+     * </ul>
      *
      * <p><b>HOARDING CORRECTION:</b> if "hoarding_path" prediction is
      * high-confidence, this factor looks at what the player NEEDS MOST.
@@ -456,24 +510,133 @@ public final class WangLinReasoningEngine {
         if (score > 1.0) score = 1.0;
         if (score < 0.0) score = 0.0;
 
-        // CRON-COMPLETIONIST-47: Apply relationship modifier from ActorRelationshipStore.
-        // This makes Wang Lin's opinion of the player DIRECTLY influence his
-        // willingness to give. Before this, the reasoning engine was purely
-        // based on item fit + ExpectationModel — it ignored the accumulated
-        // relationship history.
+        // CRON-COMPLETIONIST-48: 2D Trust×Grievance interaction matrix + familiarity + debt.
+        // Replaces CRON-47's simple linear formula. The matrix captures relationship
+        // QUALITY — high trust + high grievance = "fearful respect" (very different
+        // from high trust + low grievance = "trusted ally").
         if (rel != null) {
-            double relationshipModifier = (rel.trust * 0.3 + rel.respect * 0.2
-                    - rel.fear * 0.1 - rel.grievance * 0.3) / 100.0;
-            // Clamp modifier to avoid extreme swings
-            relationshipModifier = Math.max(-0.25, Math.min(0.25, relationshipModifier));
-            score += relationshipModifier;
+            double trustNorm = rel.trust / 100.0;   // 0.0 to 1.0
+            double grievNorm = rel.grievance / 100.0; // 0.0 to 1.0
+
+            // Bilinear interpolation across 4 quadrant anchor values:
+            //   Q0 (trust=0, griev=0) = stranger        →  0.00
+            //   Q1 (trust=1, griev=0) = trusted ally      → +0.25
+            //   Q2 (trust=0, griev=1) = active threat     → -0.25
+            //   Q3 (trust=1, griev=1) = fearful respect   → +0.05
+            double q0 = 0.00;  // stranger
+            double q1 = 0.25;  // trusted ally
+            double q2 = -0.25; // active threat
+            double q3 = 0.05;  // fearful respect (respects power but wary)
+
+            // Interpolate: first along trust axis, then along grievance axis.
+            double lowTrust = q0 + (q2 - q0) * grievNorm;  // trust=0 line
+            double highTrust = q1 + (q3 - q1) * grievNorm; // trust=1 line
+            double matrixModifier = lowTrust + (highTrust - lowTrust) * trustNorm;
+
+            // Respect amplification: high respect slightly amplifies the matrix result.
+            double respectNorm = rel.respect / 100.0;
+            double respectAmp = respectNorm * 0.05;
+            matrixModifier += matrixModifier >= 0 ? respectAmp : -respectAmp;
+
+            matrixModifier = Math.max(-0.25, Math.min(0.25, matrixModifier));
+            score += matrixModifier;
+
+            reasoning.append(" T×G matrix: trust=").append(rel.trust)
+                    .append(" griev=").append(rel.grievance)
+                    .append(" → quadrant modifier ")
+                    .append(String.format("%.3f", matrixModifier))
+                    .append(".");
+
+            // CRON-48: FAMILIARITY — if > 40, reduce "no alignment" penalty.
+            // Canon: Wang Lin gives more easily to people he knows.
+            if (rel.familiarity > 40 && !aligned) {
+                double famBonus = 0.10 * ((rel.familiarity - 40) / 60.0); // scales 0.0→0.10
+                score += famBonus;
+                reasoning.append(" Familiarity (")
+                        .append(rel.familiarity).append(") reduces no-alignment penalty by ")
+                        .append(String.format("%.3f", famBonus)).append(".");
+            } else if (rel.familiarity > 40) {
+                double famBonus = 0.05 * ((rel.familiarity - 40) / 60.0); // smaller boost if aligned
+                score += famBonus;
+                reasoning.append(" Familiarity (")
+                        .append(rel.familiarity).append(") adds ")
+                        .append(String.format("%.3f", famBonus)).append(".");
+            }
+
+            // CRON-COMPLETIONIST-49: DEBT — FIXED direction convention + logarithmic scaling.
+            //
+            // BUG FIX (CRON-48 critique item 6): The old code had debt direction REVERSED.
+            // ActorRelationshipStore docstring: "Positive = actorA owes actorB".
+            // Key "wang_lin|playerUUID" → actorA=wang_lin, actorB=player.
+            //   debt > 0 → Wang Lin owes player → player has leverage → Wang Lin cautious
+            //   debt < 0 → player owes Wang Lin → filial respect → Wang Lin lenient
+            //
+            // The old JUDGMENT code treated debt > 0 as "player owes Wang Lin" — WRONG.
+            // SAFETY was correct; JUDGMENT was inverted. Now both match the docstring.
+            //
+            // LOGARITHMIC SCALING (CRON-48 critique item 3): Old linear scaling (debt/-200)
+            // meant debt=-200 and debt=-500 had the same capped penalty. Log scaling means
+            // the first 20 points of debt matter more than the 200th. This matches canon:
+            // a small favor owed (debt=-20) is meaningful; massive debt (debt=-500) is just
+            // "they owe me a lot" — the marginal impact diminishes.
+            if (rel.debt < -10) {
+                // Player owes Wang Lin (debt < 0 per store convention) → filial respect
+                double debtMagnitude = Math.abs(rel.debt);
+                // log10(10+1)=1.0 at debt=-20, log10(50+1)≈1.71 at debt=-50, log10(100+1)≈2.0 at debt=-100
+                double filialBonus = Math.min(0.10, 0.05 * Math.log10(debtMagnitude / 10.0 + 1.0));
+                score += filialBonus;
+                reasoning.append(" Player owes Wang Lin (debt=")
+                        .append(rel.debt).append("): filial leniency ")
+                        .append(String.format("%.3f", filialBonus)).append(".");
+            } else if (rel.debt > 10) {
+                // Wang Lin owes player (debt > 0 per store convention) → caution about buying loyalty
+                double debtMagnitude = rel.debt;
+                double cautionPenalty = Math.min(-0.10, -0.05 * Math.log10(debtMagnitude / 10.0 + 1.0));
+                score += cautionPenalty;
+                reasoning.append(" Wang Lin owes player (debt=")
+                        .append(rel.debt).append("): caution ")
+                        .append(String.format("%.3f", cautionPenalty)).append(".");
+            }
+
+            // CRON-COMPLETIONIST-49: FEAR axis consumption in JUDGMENT.
+            // Canon (Art III): "A cultivator who fears everything cultivates nothing."
+            // Wang Lin despises fearful subordinates — they're useless to him.
+            // Fear interacts with trust to create distinct relationship flavors:
+            //   - High fear + low trust = "terrified subordinate" → PENALTY
+            //     This player cowers before Wang Lin without earning his trust.
+            //     Wang Lin sees them as a burden, not an asset. Penalty up to -0.15.
+            //   - High fear + high trust = "fearful loyalty" → SMALL BONUS
+            //     This player fears Wang Lin but has PROVEN their worth through deeds.
+            //     Wang Lin tolerates and slightly rewards this — it's proper respect.
+            //     Think Lei Ji (thunder beast mount) — feared Wang Lin but was useful.
+            //   - Low fear (< 30/100) → NO modification.
+            //     Below 30 is normal wariness — even allies feel some caution.
+            //     This threshold prevents every slightly-wary NPC from being penalized.
+            //   - At zero fear → pure trust-grievance matrix, no fear overlay.
+            //
+            // FORMULA: fearModifier = fearNorm * (-0.15) + trustNorm * 0.20
+            //   fearNorm=1.0, trustNorm=0.0 → -0.15 (terrified subordinate)
+            //   fearNorm=1.0, trustNorm=1.0 → +0.05 (fearful loyalty)
+            //   fearNorm=0.5, trustNorm=0.5 → -0.025 (still net negative — fear dominates at 50/50)
+            //   fearNorm=0.5, trustNorm=1.0 → +0.025 (trusted enough to offset fear)
+            //   fearNorm=0.3, trustNorm=0.0 → -0.045 (at threshold)
+            //   fearNorm=0.0 → 0.0 (no modification)
+            double fearNorm = rel.fear / 100.0;
+            if (fearNorm > 0.3F) {
+                double fearPenaltyBase = fearNorm * -0.15;
+                double trustMitigation = trustNorm * 0.20; // trust reduces fear penalty
+                double fearModifier = fearPenaltyBase + trustMitigation;
+                fearModifier = Math.max(-0.15, Math.min(0.05, fearModifier));
+                score += fearModifier;
+                reasoning.append(" Fear axis: fear=").append(rel.fear)
+                        .append("/100 trust=").append(rel.trust)
+                        .append("/100 → modifier ")
+                        .append(String.format("%.3f", fearModifier))
+                        .append(".");
+            }
+
             if (score > 1.0) score = 1.0;
             if (score < 0.0) score = 0.0;
-            reasoning.append(" Relationship modifier: trust=").append(rel.trust)
-                    .append(" respect=").append(rel.respect)
-                    .append(" fear=").append(rel.fear)
-                    .append(" grievance=").append(rel.grievance)
-                    .append(" → ").append(String.format("%.3f", relationshipModifier)).append(".");
         }
 
         return new GiftingDecision(GiftingFactor.JUDGMENT, score, reasoning.toString());

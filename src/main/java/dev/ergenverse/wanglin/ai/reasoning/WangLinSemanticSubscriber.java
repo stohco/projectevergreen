@@ -386,21 +386,73 @@ public final class WangLinSemanticSubscriber implements WorldEventSubscriber {
     }
 
     /**
-     * Heuristic: is the target likely an "innocent" (mortal, child, non-combatant)?
-     * In the full system, this would query the target's Actor type and capabilities.
-     * For now, we use canon IDs and keywords.
+     * Determine whether the target is an "innocent" (mortal, child, non-combatant).
+     *
+     * <p>CRON-COMPLETIONIST-48: Upgraded from keyword-only matching to also
+     * check ActorRegistry. The logic now has three tiers:
+     * <ol>
+     *   <li><b>ActorRegistry check:</b> If the target actor exists in the registry:
+     *       <ul>
+     *         <li>BEAST or ANCIENT_BEAST type → NOT innocent (predators, not victims)</li>
+     *         <li>Actor has ANY combat capability (MELEE_COMBAT, RANGED_COMBAT,
+     *             SPELL_COMBAT, FORMATION_COMBAT) → NOT innocent (can fight back)</li>
+     *         <li>NPC with provenance containing "mortal" → innocent</li>
+     *         <li>SETTLEMENT type → innocent (settlements are not combatants)</li>
+     *       </ul>
+     *   <li><b>Keyword check:</b> Known canon IDs (wang_ping, child, elder,
+     *       villager, mortal) → innocent. Known hostiles (teng, demon, enemy,
+     *       bandit, corpse_yin, soul_refining) → NOT innocent.
+     *   <li><b>Default:</b> unknown = NOT innocent (Wang Lin doesn't assume innocence).
+     *       This is canon: Wang Lin is cautious by nature.
+     * </ol>
      */
     private boolean isInnocent(String targetId) {
         if (targetId == null || targetId.isEmpty()) return false;
         String lower = targetId.toLowerCase();
-        // Known canon innocents
+
+        // Tier 1: ActorRegistry check — structural, not keyword-based.
+        var actor = dev.ergenverse.simulation.actor.ActorRegistry.get(targetId);
+        if (actor != null) {
+            // Beasts are never innocents — they are predators by nature.
+            if (actor.type == dev.ergenverse.simulation.actor.ActorType.BEAST
+                    || actor.type == dev.ergenverse.simulation.actor.ActorType.ANCIENT_BEAST) {
+                return false;
+            }
+            // Anyone with combat capability is not an innocent.
+            if (actor.hasCapability(dev.ergenverse.simulation.actor.Capability.MELEE_COMBAT)
+                    || actor.hasCapability(dev.ergenverse.simulation.actor.Capability.RANGED_COMBAT)
+                    || actor.hasCapability(dev.ergenverse.simulation.actor.Capability.SPELL_COMBAT)
+                    || actor.hasCapability(dev.ergenverse.simulation.actor.Capability.FORMATION_COMBAT)) {
+                return false;
+            }
+            // Settlements, herb fields, spirit veins — non-combatant infrastructure.
+            if (actor.type == dev.ergenverse.simulation.actor.ActorType.SETTLEMENT
+                    || actor.type == dev.ergenverse.simulation.actor.ActorType.HERB_FIELD
+                    || actor.type == dev.ergenverse.simulation.actor.ActorType.SPIRIT_VEIN
+                    || actor.type == dev.ergenverse.simulation.actor.ActorType.INHERITANCE) {
+                return true;
+            }
+            // NPC with mortal provenance — explicitly marked as non-combatant.
+            if (actor.type == dev.ergenverse.simulation.actor.ActorType.NPC
+                    && actor.provenance != null && actor.provenance.contains("mortal")) {
+                return true;
+            }
+            // If we reach here, the actor exists but doesn't match any pattern.
+            // Fall through to keyword check for additional canon ID matching.
+        }
+
+        // Tier 2: Keyword check — known canon IDs.
         if (lower.contains("wang_ping") || lower.contains("child")
                 || lower.contains("elder") || lower.contains("villager")
                 || lower.contains("mortal")) return true;
-        // NPCs with combat capability are not innocents
+
+        // Tier 3: Known hostiles — never innocent.
         if (lower.contains("teng") || lower.contains("demon")
-                || lower.contains("enemy") || lower.contains("bandit")) return false;
-        // Default: unknown = not innocent (Wang Lin doesn't assume innocence)
+                || lower.contains("enemy") || lower.contains("bandit")
+                || lower.contains("corpse_yin") || lower.contains("soul_refining")
+                || lower.contains("blood_ancestor") || lower.contains("slaughter")) return false;
+
+        // Default: unknown = not innocent (Wang Lin is cautious).
         return false;
     }
 
