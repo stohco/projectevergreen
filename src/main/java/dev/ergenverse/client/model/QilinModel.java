@@ -292,6 +292,10 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
         return this.root;
     }
 
+    /** CRON-COMPLETIONIST-47: Expose antler tips for emissive divine glow. */
+    public ModelPart getAntlerLeftTip() { return this.antlerLeftTip; }
+    public ModelPart getAntlerRightTip() { return this.antlerRightTip; }
+
     @Override
     public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
                           float ageInTicks, float netHeadYaw, float headPitch) {

@@ -328,6 +328,9 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
         return this.root;
     }
 
+    /** CRON-COMPLETIONIST-47: Expose crown for emissive rendering in CraneRenderer. */
+    public ModelPart getCrown() { return this.crown; }
+
     @Override
     public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
                           float ageInTicks, float netHeadYaw, float headPitch) {

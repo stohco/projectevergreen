@@ -191,6 +191,12 @@ public class SoulFishModel extends HierarchicalModel<SpiritBeastEntity> {
         return this.root;
     }
 
+    /** CRON-COMPLETIONIST-47: Expose body/eyes/qi-glow for emissive rendering. */
+    public ModelPart getBody() { return this.body; }
+    public ModelPart getEyeLeft() { return this.eyeLeft; }
+    public ModelPart getEyeRight() { return this.eyeRight; }
+    public ModelPart getQiGlow() { return this.qiGlow; }
+
     @Override
     public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
                           float ageInTicks, float netHeadYaw, float headPitch) {

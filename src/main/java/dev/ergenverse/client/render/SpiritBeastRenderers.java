@@ -2,6 +2,11 @@ package dev.ergenverse.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.ergenverse.client.model.SpiritBeastModelLayers;
+import dev.ergenverse.client.model.SpiritCraneModel;
+import dev.ergenverse.client.model.SeaSerpentModel;
+import dev.ergenverse.client.model.SoulFishModel;
+import dev.ergenverse.client.model.SpiritBatModel;
+import dev.ergenverse.client.model.QilinModel;
 import dev.ergenverse.client.model.SpiritRabbitModel;
 import dev.ergenverse.client.model.SpiritWolfModel;
 import dev.ergenverse.client.model.SpiritDeerModel;
@@ -98,9 +103,14 @@ public final class SpiritBeastRenderers {
 
     // ── Spirit Crane ───────────────────────────────────────
     // CRON-COMPLETIONIST-22/24: 7th beast type — red-crowned crane with 4-segment neck
+    // CRON-COMPLETIONIST-47: Emissive crown — the red bare skin patch on top
+    // of a crane's head (the 丹顶鹤 namesake) glows with faint spiritual
+    // light. Canon: cranes "trail spirit-light" from their wings and crown.
+
     public static class CraneRenderer extends MobRenderer<SpiritBeastEntity, SpiritCraneModel> {
         private static final ResourceLocation TEX =
                 new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/spirit_crane.png");
+        private static final int FULLBRIGHT = 15728880;
 
         public CraneRenderer(EntityRendererProvider.Context context) {
             super(context, new SpiritCraneModel(context.bakeLayer(SpiritBeastModelLayers.SPIRIT_CRANE)), 0.6F);
@@ -108,6 +118,19 @@ public final class SpiritBeastRenderers {
 
         @Override
         public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            // Emissive crown — red spiritual glow on the 丹顶 (red crown)
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getCrown().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
     }
 
     // ── Fire Beast ──────────────────────────────────────
@@ -191,10 +214,13 @@ public final class SpiritBeastRenderers {
     }
 
     // ── Spirit Bat (CRON-COMPLETIONIST-33) ──────────────────────
+    // CRON-COMPLETIONIST-47: Emissive ear tips — bat ears have faint qi-glow
+    // visible in dark caves. Canon: spirit bats have faintly luminescent ears.
 
     public static class BatRenderer extends MobRenderer<SpiritBeastEntity, SpiritBatModel> {
         private static final ResourceLocation TEX =
                 new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/spirit_bat.png");
+        private static final int FULLBRIGHT = 15728880;
 
         public BatRenderer(EntityRendererProvider.Context context) {
             super(context, new SpiritBatModel(context.bakeLayer(SpiritBeastModelLayers.SPIRIT_BAT)), 0.3F);
@@ -202,13 +228,31 @@ public final class SpiritBeastRenderers {
 
         @Override
         public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            // Emissive ear tips — faint qi-glow
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getEarLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEarRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
     }
 
     // ── Qilin (CRON-COMPLETIONIST-33) ──────────────────────
+    // CRON-COMPLETIONIST-47: Emissive antler tips — qilin antlers radiate divine
+    // spiritual light at the tips. Canon: qilin are divine beasts of extreme rarity,
+    // their antlers carry spiritual authority.
 
     public static class QilinRenderer extends MobRenderer<SpiritBeastEntity, QilinModel> {
         private static final ResourceLocation TEX =
                 new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/qilin.png");
+        private static final int FULLBRIGHT = 15728880;
 
         public QilinRenderer(EntityRendererProvider.Context context) {
             super(context, new QilinModel(context.bakeLayer(SpiritBeastModelLayers.QILIN)), 0.7F);
@@ -216,13 +260,32 @@ public final class SpiritBeastRenderers {
 
         @Override
         public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            // Emissive antler tips — divine spiritual glow
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getAntlerLeftTip().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getAntlerRightTip().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
     }
 
     // ── Sea Serpent (CRON-COMPLETIONIST-33) ──────────────────────
+    // CRON-COMPLETIONIST-47: Emissive eyes — sea serpent eyes glow with predatory
+    // bioluminescence in deep water, making them visible from a distance.
+    // Canon: sea serpents are ancient predators whose eyes pierce through
+    // murky spiritual waters.
 
     public static class SeaSerpentRenderer extends MobRenderer<SpiritBeastEntity, SeaSerpentModel> {
         private static final ResourceLocation TEX =
                 new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/sea_serpent.png");
+        private static final int FULLBRIGHT = 15728880;
 
         public SeaSerpentRenderer(EntityRendererProvider.Context context) {
             super(context, new SeaSerpentModel(context.bakeLayer(SpiritBeastModelLayers.SEA_SERPENT)), 0.5F);
@@ -230,15 +293,33 @@ public final class SpiritBeastRenderers {
 
         @Override
         public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            // Emissive eyes — bioluminescent predatory glow in deep water
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
     }
 
     // ── Soul Fish (CRON-COMPLETIONIST-36) ──────────────────────
     // Small qi-infused fish with bioluminescent glow.
-    // Renderer uses a slightly larger shadow radius for visibility at small scale.
+    // CRON-COMPLETIONIST-47: FULL emissive pass — soul fish are canonically
+    // bioluminescent. The entire body AND qi-glow aura render at fullbright.
+    // Eyes additionally glow brighter. This makes soul fish visible in dark
+    // spiritual waters — their primary canon function.
 
     public static class SoulFishRenderer extends MobRenderer<SpiritBeastEntity, SoulFishModel> {
         private static final ResourceLocation TEX =
                 new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/soul_fish.png");
+        private static final int FULLBRIGHT = 15728880;
 
         public SoulFishRenderer(EntityRendererProvider.Context context) {
             super(context, new SoulFishModel(context.bakeLayer(SpiritBeastModelLayers.SOUL_FISH)), 0.3F);
@@ -246,5 +327,22 @@ public final class SpiritBeastRenderers {
 
         @Override
         public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            // Full emissive: body, qi-glow aura, AND eyes at fullbright.
+            // Soul fish are canonically bioluminescent — this IS their identity.
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getBody().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getQiGlow().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
     }
 }

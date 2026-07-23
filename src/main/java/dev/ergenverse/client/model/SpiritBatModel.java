@@ -174,6 +174,10 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
         return this.root;
     }
 
+    /** CRON-COMPLETIONIST-47: Expose ears for emissive qi-glow rendering. */
+    public ModelPart getEarLeft() { return this.earLeft; }
+    public ModelPart getEarRight() { return this.earRight; }
+
     @Override
     public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
                           float ageInTicks, float netHeadYaw, float headPitch) {

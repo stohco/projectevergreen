@@ -230,6 +230,10 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
         return this.root;
     }
 
+    /** CRON-COMPLETIONIST-47: Expose eyes for emissive rendering in SeaSerpentRenderer. */
+    public ModelPart getEyeLeft() { return this.eyeLeft; }
+    public ModelPart getEyeRight() { return this.eyeRight; }
+
     @Override
     public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
                           float ageInTicks, float netHeadYaw, float headPitch) {
