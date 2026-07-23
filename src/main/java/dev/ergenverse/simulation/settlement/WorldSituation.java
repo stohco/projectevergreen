@@ -1,5 +1,7 @@
 package dev.ergenverse.simulation.settlement;
 
+import java.util.Collections;
+import java.util.List;
 /**
  * WorldSituation — a unified snapshot of the world state that <b>every actor
  * reasons over</b>.
@@ -55,23 +57,78 @@ public final class WorldSituation {
     /** The current game tick (for expiry calculations). */
     public final long gameTime;
 
+    /**
+     * Known opportunities near the settlement (immutable snapshot).
+     * Populated by the ActorMaterializer from OpportunityRegistry.
+     * Empty when no opportunities exist nearby. The CultivatorMind uses
+     * this to generate INVESTIGATE / PURSUE candidates in peaceful situations.
+     *
+     * <p>Per CRON-COMPLETIONIST-43: before this field, CultivatorMind.evaluate()
+     * returned null for ALL peaceful situations, even when opportunities had
+     * emerged nearby. The OpportunityCarrierSubscriber pushed INVESTIGATE goals
+     * to NpcGoalQueues, but the mind never reasoned over them. Now the mind
+     * can choose to pursue an opportunity — the decision emerges from motivation
+     * weights, not from a hardcoded behavior.
+     */
+    public final List<OpportunitySnapshot> nearbyOpportunities;
+
     public WorldSituation(Threat primaryThreat, TimeOfDay timeOfDay,
-                          SettlementPersonality.Mood settlementMood, long gameTime) {
+                          SettlementPersonality.Mood settlementMood, long gameTime,
+                          List<OpportunitySnapshot> nearbyOpportunities) {
         this.primaryThreat = primaryThreat;
         this.timeOfDay = timeOfDay;
         this.settlementMood = settlementMood;
         this.gameTime = gameTime;
+        this.nearbyOpportunities = nearbyOpportunities != null
+                ? Collections.unmodifiableList(nearbyOpportunities)
+                : List.of();
     }
 
-    /** A peaceful situation (no threat). */
+    /** Constructor without opportunity data (backward-compatible). */
+    public WorldSituation(Threat primaryThreat, TimeOfDay timeOfDay,
+                          SettlementPersonality.Mood settlementMood, long gameTime) {
+        this(primaryThreat, timeOfDay, settlementMood, gameTime, null);
+    }
+
+    /** A peaceful situation (no threat, no opportunities). */
     public static WorldSituation peaceful(TimeOfDay tod,
                                           SettlementPersonality.Mood mood, long gameTime) {
-        return new WorldSituation(null, tod, mood, gameTime);
+        return new WorldSituation(null, tod, mood, gameTime, List.of());
     }
 
     /** Is any threat active? */
     public boolean hasThreat() {
         return primaryThreat != null;
+    }
+
+    /** Are any opportunities known nearby? */
+    public boolean hasOpportunities() {
+        return !nearbyOpportunities.isEmpty();
+    }
+
+    /**
+     * A lightweight snapshot of a nearby opportunity for the WorldSituation.
+     *
+     * <p>Extracted from OpportunityState by the ActorMaterializer. Carries
+     * only the fields the CultivatorMind needs to reason over — not the full
+     * FSM state machine.
+     *
+     * @param opportunityId the registry key
+     * @param topic          the event topic (e.g. "opportunity.spirit_fruit.ripe")
+     * @param category       the classification (SPIRIT_FRUIT, RESTRICTION_CAVE, etc.)
+     * @param x              block X
+     * @param z              block Z
+     * @param intensity      0.0–1.0
+     */
+    public record OpportunitySnapshot(String opportunityId, String topic,
+                                       String category, int x, int z,
+                                       float intensity) {
+        /** Distance from a given block position. */
+        public double distanceFrom(int bx, int bz) {
+            double dx = x - bx;
+            double dz = z - bz;
+            return Math.sqrt(dx * dx + dz * dz);
+        }
     }
 
     /**

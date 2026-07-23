@@ -88,7 +88,10 @@ public final class Activity {
          * only if family is truly endangered.
          * Location: a vantage point at the settlement edge toward the threat.
          */
-        OBSERVING_THREAT,
+        INVESTIGATING,
+    PURSUING_OPPORTUNITY,
+    SOCIALIZING,
+    OBSERVING_THREAT,
         /**
          * Standing guard at the settlement perimeter or a valued asset.
          * The defender's response: weapon ready, position between threat and

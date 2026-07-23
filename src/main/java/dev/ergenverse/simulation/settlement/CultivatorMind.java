@@ -8,6 +8,7 @@ import dev.ergenverse.simulation.cognition.MemoryGraph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import dev.ergenverse.simulation.settlement.WorldSituation.OpportunitySnapshot;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -185,11 +186,14 @@ public final class CultivatorMind {
         beliefs.decay(BELIEF_DECAY_PER_EVAL);
         memories.decay(MEMORY_DECAY_PER_EVAL);
 
-        // ── CRON-COMPLETIONIST-34: Return null if no threat exists ──
-        // The mind only activates when there is a threat to evaluate.
-        // Peaceful moments are handled by the daily rhythm system.
+        // ── CRON-COMPLETIONIST-34/43: Threat evaluation ──
+        // The mind activates when there is a threat OR an opportunity.
+        // CRON-43 FIX: Previously returned null for ALL peaceful situations,
+        // even when opportunities had emerged nearby. The OpportunityCarrierSubscriber
+        // pushed INVESTIGATE goals to NpcGoalQueues, but the mind never reasoned
+        // over them. Now the mind generates candidates from opportunities.
         if (!situation.hasThreat()) {
-            return null;
+            return evaluatePeaceful(situation, settlement);
         }
 
         Map<Motivation, Float> beliefModifiers = computeBeliefModifiers(situation);
@@ -232,6 +236,137 @@ public final class CultivatorMind {
                 runnerUp != null ? runnerUp.type : "none",
                 Math.round(runnerUpScore * 100) / 100.0,
                 beliefs.size(), memories.size());
+
+        return chosen;
+    }
+
+    // ── CRON-COMPLETIONIST-43: Peaceful evaluation with opportunities ──────
+    /**
+     * Evaluate a peaceful (no-threat) situation. If opportunities exist nearby,
+     * generate INVESTIGATE / PURSUE_OPPORTUNITY candidates. If no opportunities,
+     * generate social candidates based on relationships. Return the best
+     * candidate scored against motivations, or null (daily rhythm fallback).
+     *
+     * <p>This completes the event-sourced loop: OpportunityCarrierSubscriber
+     * makes NPCs AWARE of opportunities → this method lets the NPC's mind
+     * DECIDE whether to act on that awareness. The decision emerges from
+     * motivation weights, not hardcoded behavior.
+     *
+     * <p>Per the user's directive: "Meaning is not in the world. Meaning is
+     * created by the observer." An opportunity is just data. Wang Lin sees
+     * a spirit fruit ripening and scores PURSUE high (CULTIVATION_PROGRESS +
+     * CURIOSITY). A mortal villager sees the same fruit and scores INVESTIGATE
+     * low (no CULTIVATION_PROGRESS, high SURVIVAL instinct keeping them home).
+     */
+    private Activity evaluatePeaceful(WorldSituation situation, Settlement settlement) {
+        if (situation == null || settlement == null) return null;
+
+        // Decay beliefs and memories even in peaceful moments.
+        beliefs.decay(BELIEF_DECAY_PER_EVAL);
+        memories.decay(MEMORY_DECAY_PER_EVAL);
+
+        List<CandidateActivity> candidates = new ArrayList<>();
+
+        // ── Opportunity candidates ──
+        if (situation.hasOpportunities()) {
+            for (OpportunitySnapshot opp : situation.nearbyOpportunities) {
+                // INVESTIGATE: go look at the opportunity from a safe distance.
+                // Serves CURIOSITY (learning), CULTIVATION_PROGRESS (resources),
+                // GREED (valuable items), DUTY (if sect-related).
+                int[] vantage = vantageToward(
+                        new WorldSituation.Threat(opp.topic(), opp.intensity(),
+                                (float) opp.distanceFrom(settlement.centerX, settlement.centerZ),
+                                0, 0, situation.gameTime + 2400L),
+                        16);
+                Map<Motivation, Float> investigateScores = new EnumMap<>(Motivation.class);
+                investigateScores.put(Motivation.CURIOSITY, 0.6f);
+                investigateScores.put(Motivation.CULTIVATION_PROGRESS, 0.5f);
+                investigateScores.put(Motivation.GREED, 0.3f);
+                investigateScores.put(Motivation.DUTY, 0.2f);
+                investigateScores.put(Motivation.CONCEAL_STRENGTH, 0.3f);
+                investigateScores.put(Motivation.SURVIVAL, -0.2f);
+                investigateScores.put(Motivation.PRESTIGE, 0.1f);
+                candidates.add(new CandidateActivity(Activity.Type.INVESTIGATING,
+                        vantage[0], vantage[1], investigateScores,
+                        displayName + " investigates emerging opportunity: " + opp.topic()
+                                + " at (" + opp.x() + ", " + opp.z() + ")."));
+
+                // PURSUE_OPPORTUNITY: directly go for the opportunity.
+                // Higher risk, higher reward. Serves GREED + CULTIVATION_PROGRESS
+                // but costs CONCEAL_STRENGTH + SURVIVAL (leaving safety).
+                Map<Motivation, Float> pursueScores = new EnumMap<>(Motivation.class);
+                pursueScores.put(Motivation.CULTIVATION_PROGRESS, 0.8f);
+                pursueScores.put(Motivation.GREED, 0.6f);
+                pursueScores.put(Motivation.CURIOSITY, 0.5f);
+                pursueScores.put(Motivation.CONCEAL_STRENGTH, -0.4f); // leaving safe zone
+                pursueScores.put(Motivation.SURVIVAL, -0.3f);        // venturing out
+                pursueScores.put(Motivation.DUTY, -0.1f);            // neglecting post
+                candidates.add(new CandidateActivity(Activity.Type.PURSUING_OPPORTUNITY,
+                        opp.x() - settlement.centerX, opp.z() - settlement.centerZ,
+                        pursueScores,
+                        displayName + " pursues opportunity: " + opp.topic() + "."));
+            }
+        }
+
+        // ── Relationship-based social candidates ──
+        // In peaceful moments, actors with high COMPASSION or DUTY might
+        // seek out allies with low trust (building relationships).
+        net.minecraft.server.level.ServerLevel level =
+                dev.ergenverse.simulation.event.WorldEventBus.currentLevel();
+        if (level != null) {
+            try {
+                dev.ergenverse.simulation.action.ActorRelationshipStore relStore =
+                        dev.ergenverse.simulation.action.ActorRelationshipStore.get(level);
+                for (String otherId : settlement.getPopulation()) {
+                    if (otherId.equals(this.actorId)) continue;
+                    int familiarity = relStore.getFamiliarity(this.actorId, otherId);
+                    int trust = relStore.getTrust(this.actorId, otherId);
+                    // Only consider socializing with actors we know but don't fully trust.
+                    if (familiarity >= 10 && trust < 50) {
+                        Residence otherHome = settlement.residenceFor(otherId);
+                        int ox = (otherHome != null && !otherHome.isDestroyed())
+                                ? otherHome.centerX() - settlement.centerX : 0;
+                        int oz = (otherHome != null && !otherHome.isDestroyed())
+                                ? otherHome.centerZ() - settlement.centerZ : 0;
+                        Map<Motivation, Float> socialScores = new EnumMap<>(Motivation.class);
+                        socialScores.put(Motivation.COMPASSION, 0.4f);
+                        socialScores.put(Motivation.DUTY, 0.3f);
+                        socialScores.put(Motivation.CURIOSITY, 0.2f);
+                        socialScores.put(Motivation.PRESTIGE, 0.1f);
+                        socialScores.put(Motivation.CONCEAL_STRENGTH, -0.2f);
+                        candidates.add(new CandidateActivity(Activity.Type.SOCIALIZING,
+                                ox, oz, socialScores,
+                                displayName + " socializes with " + otherId + "."));
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
+        if (candidates.isEmpty()) return null;
+
+        // Score each and select the highest.
+        Map<Motivation, Float> beliefModifiers = computeBeliefModifiers(situation);
+        Map<Motivation, Float> memoryModifiers = computeMemoryModifiers(situation);
+
+        CandidateActivity winner = null;
+        double winnerScore = Double.NEGATIVE_INFINITY;
+        for (CandidateActivity c : candidates) {
+            double s = c.scoreFor(this, beliefModifiers, memoryModifiers);
+            if (s > winnerScore) {
+                winner = c;
+                winnerScore = s;
+            }
+        }
+
+        if (winner == null || winnerScore <= 0.0) return null;
+
+        Activity chosen = new Activity(winner.type, winner.offsetX, winner.offsetZ,
+                situation.gameTime + 2400L, winner.reason);
+        this.currentActivity = chosen;
+
+        Ergenverse.LOGGER.debug("[CultivatorMind] {} chose {} (peaceful, score {}) — {} opportunity(ies) nearby",
+                displayName, winner.type, Math.round(winnerScore * 100) / 100.0,
+                situation.nearbyOpportunities.size());
 
         return chosen;
     }

@@ -5,6 +5,9 @@ import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.entity.EREntityTypes;
 import dev.ergenverse.simulation.WorldRuntimeState;
 import dev.ergenverse.simulation.WorldStateDataLoader;
+import dev.ergenverse.simulation.opportunity.OpportunityRegistry;
+import dev.ergenverse.simulation.opportunity.OpportunityState;
+import dev.ergenverse.simulation.settlement.WorldSituation.OpportunitySnapshot;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -13,6 +16,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -141,7 +145,43 @@ public final class ActorMaterializer {
             TimeOfDay tod = TimeOfDay.fromGameTime(gameTime);
             SettlementPersonality.Mood mood = settlement.personality != null
                     ? settlement.personality.mood : SettlementPersonality.Mood.PEACEFUL;
-            WorldSituation situation = new WorldSituation(threat, tod, mood, gameTime);
+            WorldSituation situation;
+            // CRON-COMPLETIONIST-43: Populate WorldSituation with nearby opportunity data.
+            // The CultivatorMind needs to know what opportunities exist nearby so it
+            // can decide whether to investigate or pursue them (or ignore them).
+            // This bridges the gap between OpportunityCarrierSubscriber (which makes
+            // NPCs aware) and CultivatorMind.evaluate() (which decides what to do).
+            try {
+                List<OpportunitySnapshot> oppSnapshots = new ArrayList<>();
+                OpportunityRegistry oppRegistry = OpportunityRegistry.get(level);
+                net.minecraft.core.BlockPos settlementCenter = new net.minecraft.core.BlockPos(
+                        settlement.centerX, 64, settlement.centerZ);
+                for (OpportunityState oppState : oppRegistry.getLiveOpportunitiesNear(
+                        settlementCenter, 128.0)) {
+                    // OpportunityState carries: opportunityId, pos, lifecycle, driverType.
+                    // We derive topic/category from the opportunityId (e.g. "spirit_fruit_ripe")
+                    // and use lifecycle ordinal as a proxy for intensity (EMERGED=active=0.5).
+                    String oppId = oppState.getOpportunityId();
+                    String topic = "opportunity." + oppId;
+                    // FORMING/CONTESTED = active and perceptible (intensity 0.6);
+                    // DORMANT = not yet perceptible (intensity 0.3, less interesting).
+                    float intensity = (oppState.getLifecycle() ==
+                            dev.ergenverse.simulation.opportunity.OpportunityLifecycle.FORMING
+                            || oppState.getLifecycle() ==
+                            dev.ergenverse.simulation.opportunity.OpportunityLifecycle.CONTESTED)
+                            ? 0.6f : 0.3f;
+                    oppSnapshots.add(new OpportunitySnapshot(
+                            oppId, topic, oppId,
+                            oppState.getPosX(),
+                            oppState.getPosZ(),
+                            intensity
+                    ));
+                }
+                situation = new WorldSituation(threat, tod, mood, gameTime, oppSnapshots);
+            } catch (Exception e) {
+                // OpportunityRegistry may not be initialized yet — fall back to no opportunities.
+                situation = new WorldSituation(threat, tod, mood, gameTime);
+            }
 
             for (String actorId : settlement.getPopulation()) {
                 // ── The actor's mind reasons over the shared situation ──
