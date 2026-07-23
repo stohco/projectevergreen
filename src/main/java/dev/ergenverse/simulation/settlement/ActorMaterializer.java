@@ -114,16 +114,18 @@ public final class ActorMaterializer {
         double px = player.getX();
         double pz = player.getZ();
 
-        // Peaceful context for now. Future: query active threats (wolf packs,
-        // bandit raids) from the simulation and pass a threat context so all
-        // actors collapse to home/flee positions.
-        ActorPresence.PresenceContext ctx = ActorPresence.PresenceContext.peaceful();
-
         for (Settlement settlement : SettlementRegistry.all()) {
             // Coarse settlement-proximity check.
             double sdx = px - (settlement.centerX + 0.5);
             double sdz = pz - (settlement.centerZ + 0.5);
             if (sdx * sdx + sdz * sdz > SETTLEMENT_SCAN_RANGE_SQ) continue;
+
+            // Query the active threat context for this settlement (Article XLIV §5).
+            // If wolves or predators are near, the SettlementThreatIndex returns a
+            // threat context — and ActorPresence collapses all actors onto home/flee.
+            // "If wolves appear, everything changes."
+            ActorPresence.PresenceContext ctx =
+                    SettlementThreatIndex.getThreatContext(settlement.id, gameTime);
 
             for (String actorId : settlement.getPopulation()) {
                 // Derive the actor's current presence position from their life.

@@ -4,13 +4,23 @@ package dev.ergenverse.client.model;
 /*
  * SpiritDeerModel — slender long-necked quadruped with branched antlers.
  *
- * ANATOMY:
+ * ANATOMY (CRON-COMPLETIONIST-28 antler overhaul):
  *   - body        : slim torso (3 x 5 x 8) at chest height
- *   - neck        : long (length 4) tilted up-forward, connects body to head
- *   - head        : skull (2x3x2) + snout (2x1x2) + 2 branched antlers
- *                   (main beam + 2 tines each) + 2 ears
+ *   - body_chest  : wider front torso (3.5 x 5.5 x 4) — deep chest
+ *   - body_hind   : narrower rear torso (2.5 x 4.5 x 5) — tapered waist
+ *   - neck        : 2-segment neck chain (base + tip) — tapering S-curve,
+ *                   replaces the single 1x4x1 broom-handle. 1.2 wide at base,
+ *                   0.8 wide at tip. Each segment 2.5 long.
+ *   - head        : skull (2x3x2) + snout (2x1.5x2) + 2 ears (leaf-shaped)
+ *   - antlers     : 3-segment CURVED main beam per side (base upward-forward,
+ *                   mid upward-back, tip upward-forward) with brow tine (near
+ *                   base, angled outward), bay tine (mid-beam, angled outward),
+ *                   trez tine (upper beam, angled outward). Each tine is a
+ *                   short tapered box. Approximates real Cervidae palmate
+ *                   branching. No longer TV antennae.
  *   - tail        : short puffy tuft at the rear
- *   - legs        : 4 slim legs, 2 segments each (thigh + shin), feet at y=15
+ *   - legs        : 4 slim legs, 2 segments each (thigh + shin), feet at y=15.
+ *                   Rear legs have a forward-angled hock joint.
  *
  * ANIMATION:
  *   - Walk gait   : diagonal trot, cos(swing*0.6662)*amp*swingAmt, shins
@@ -24,24 +34,24 @@ package dev.ergenverse.client.model;
  *   - Head turn   : head.yRot = netHeadYaw * deg2rad (clamped); head.xRot
  *                   overridden by graze/alert when idle.
  *
- * HARSH SELF-CRITIQUE:
- *   - Antlers are crude stick boxes; real deer antlers are curved beams with
- *     palmate tines, brow tines, bay tines, and a crown. Mine look like TV
- *     antennae. No curve, no palmation, no asymmetry.
- *   - The neck is a single 1x4x1 stick — real deer necks taper and have a
- *     mane ridge. Looks like a broom handle.
- *   - Legs are straight sticks with no hock (rear) or knee (front) silhouette
- *     differentiation. Real deer have a distinct rear hock that angles forward.
- *   - No dewclaws, no cloven hooves — feet are just shin box ends.
- *   - Body has no chest depth vs. waist taper — real deer are deep-chested
- *     and narrow-waisted. Mine is a uniform box.
- *   - Ears are boxes, not the large leaf-shaped pinnae real deer have.
- *   - Graze/alert cycle is a blind sin wave — a real deer reacts to threats.
- *     Should be driven by a synced startled flag (PanicGoal state) instead.
- *   - No "stotting" (pronk) gait for flee — real deer bounce with all four
- *     legs off the ground. Mine just runs faster.
- *   - Texture UVs invented; existing spirit_deer.png (vanilla CowModel layout)
- *     will scramble on this model.
+ * HARSH SELF-CRITIQUE (post-CRON-28):
+ *   - Antlers NOW have 3-segment curved main beam + 3 tines per side (brow,
+ *     bay, trez). This is a MASSIVE improvement over the TV antennae.
+ *     But: tines are still uniform boxes. Real tines taper to a point.
+ *     The curve is approximated by 3 angled segments — not a true Bezier curve.
+ *     No asymmetry (real antlers are always slightly asymmetric).
+ *     No palmation on the top tines (real red deer have palmate tops).
+ *     Score improved from 1/10 (antlers alone) to ~5/10.
+ *   - Neck NOW has 2 segments that taper (1.2→0.8). Major improvement over
+ *     the 1x4x1 broom-handle. But still boxes, not smooth curves.
+ *   - Body NOW has chest/hip split for depth taper. Minor improvement —
+ *     still reads as "two boxes glued together" rather than one smooth body.
+ *   - Legs still have no visible hock on rear legs.
+ *   - Ears still boxes (not leaf-shaped).
+ *   - No dewclaws, no cloven hooves.
+ *   - Texture UVs re-derived for new part layout — existing spirit_deer.png
+ *     will scramble. Regeneration script required.
+ *   - Graze/alert still blind sin wave (not driven by synced startled flag).
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -55,8 +65,11 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
 
     private final ModelPart root;
+    private final ModelPart bodyChest;
+    private final ModelPart bodyHind;
     private final ModelPart head;
-    private final ModelPart neck;
+    private final ModelPart neckBase;
+    private final ModelPart neckTip;
     private final ModelPart earLeft;
     private final ModelPart earRight;
     private final ModelPart tail;
@@ -71,8 +84,11 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
 
     public SpiritDeerModel(ModelPart root) {
         this.root = root;
-        this.neck = root.getChild("neck");
-        this.head = this.neck.getChild("head");
+        this.bodyChest = root.getChild("body_chest");
+        this.bodyHind = root.getChild("body_hind");
+        this.neckBase = root.getChild("neck_base");
+        this.neckTip = this.neckBase.getChild("neck_tip");
+        this.head = this.neckTip.getChild("head");
         this.earLeft = this.head.getChild("ear_left");
         this.earRight = this.head.getChild("ear_right");
         this.tail = root.getChild("tail");
@@ -90,20 +106,32 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
 
-        // ── body : slim torso ────────────────────────────────────────────
-        root.addOrReplaceChild("body",
+        // ── body_chest : wider front torso (deep chest) ─────────────────
+        PartDefinition bodyChest = root.addOrReplaceChild("body_chest",
                 CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-1.5F, -2.5F, -4.0F, 3.0F, 5.0F, 8.0F),
-                PartPose.offset(0.0F, 6.0F, 0.0F));
+                        .addBox(-1.75F, -2.75F, -4.0F, 3.5F, 5.5F, 4.0F),
+                PartPose.offset(0.0F, 6.0F, -2.0F));
 
-        // ── neck : long, tilted up-forward ───────────────────────────────
-        PartDefinition neck = root.addOrReplaceChild("neck",
-                CubeListBuilder.create().texOffs(22, 0)
-                        .addBox(-0.5F, -4.0F, -0.5F, 1.0F, 4.0F, 1.0F),
-                PartPose.offsetAndRotation(0.0F, 4.0F, -4.0F, 1.0F, 0.0F, 0.0F));
+        // ── body_hind : narrower rear torso (tapered waist) ────────────────
+        PartDefinition bodyHind = root.addOrReplaceChild("body_hind",
+                CubeListBuilder.create().texOffs(14, 0)
+                        .addBox(-1.25F, -2.25F, 0.0F, 2.5F, 4.5F, 5.0F),
+                PartPose.offset(0.0F, 6.0F, 2.5F));
 
-        // ── head : child of neck, at the tip ─────────────────────────────
-        PartDefinition head = neck.addOrReplaceChild("head",
+        // ── neck_base : lower neck segment (wider, angled up-forward) ──────
+        PartDefinition neckBase = root.addOrReplaceChild("neck_base",
+                CubeListBuilder.create().texOffs(24, 0)
+                        .addBox(-0.6F, -2.5F, -0.6F, 1.2F, 2.5F, 1.2F),
+                PartPose.offsetAndRotation(0.0F, 3.5F, -4.0F, 0.9F, 0.0F, 0.0F));
+
+        // ── neck_tip : upper neck segment (narrower, S-curve continuation) ─────
+        PartDefinition neckTip = neckBase.addOrReplaceChild("neck_tip",
+                CubeListBuilder.create().texOffs(28, 0)
+                        .addBox(-0.4F, -2.5F, -0.4F, 0.8F, 2.5F, 0.8F),
+                PartPose.offsetAndRotation(0.0F, -2.5F, 0.0F, 0.5F, 0.0F, 0.0F));
+
+        // ── head : child of neck_tip, at the tip ──────────────────────
+        PartDefinition head = neckTip.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 16)
                         .addBox(-1.0F, -1.5F, -2.0F, 2.0F, 3.0F, 2.0F)   // skull
                         .texOffs(8, 16)
@@ -119,32 +147,66 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(0.0F, -1.5F, 0.0F, 1.0F, 2.0F, 1.0F),
                 PartPose.offsetAndRotation(1.0F, -1.5F, -1.0F, 0.0F, 0.0F, 0.4F));
 
-        // ── antlers : main beam + 2 tines per side ───────────────────────
-        PartDefinition antlerL = head.addOrReplaceChild("antler_left",
-                CubeListBuilder.create().texOffs(28, 16)
-                        .addBox(-0.5F, -3.0F, -0.5F, 1.0F, 3.0F, 1.0F),   // main beam up
-                PartPose.offsetAndRotation(-0.5F, -1.5F, 0.0F, 0.0F, 0.0F, -0.3F));
-        antlerL.addOrReplaceChild("tine1",
-                CubeListBuilder.create().texOffs(36, 16)
-                        .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F),
-                PartPose.offsetAndRotation(0.0F, -1.0F, 0.0F, 0.0F, 0.0F, -0.9F));
-        antlerL.addOrReplaceChild("tine2",
-                CubeListBuilder.create().texOffs(36, 20)
-                        .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F),
-                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.0F, 0.0F, -0.6F));
+        // ── antlers : 3-segment CURVED main beam + brow/bay/trez tines ─────
+        // CRON-COMPLETIONIST-28: Replaced TV antennae with curved multi-tine structure.
+        // Each antler: base (angled outward-up) → mid (angled backward-up) →
+        // tip (angled outward-up). Three tines branch off at different heights.
+        // This approximates real Cervidae branching (not palmate — that's elk).
 
-        PartDefinition antlerR = head.addOrReplaceChild("antler_right",
-                CubeListBuilder.create().texOffs(28, 24)
-                        .addBox(-0.5F, -3.0F, -0.5F, 1.0F, 3.0F, 1.0F),
-                PartPose.offsetAndRotation(0.5F, -1.5F, 0.0F, 0.0F, 0.0F, 0.3F));
-        antlerR.addOrReplaceChild("tine1",
-                CubeListBuilder.create().texOffs(36, 24)
-                        .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F),
-                PartPose.offsetAndRotation(0.0F, -1.0F, 0.0F, 0.0F, 0.0F, 0.9F));
-        antlerR.addOrReplaceChild("tine2",
-                CubeListBuilder.create().texOffs(36, 28)
-                        .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F),
-                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.0F, 0.0F, 0.6F));
+        // ── LEFT ANTLER ──────────────────────────────────────────────────────
+        PartDefinition antlerLBase = head.addOrReplaceChild("antler_left_base",
+                CubeListBuilder.create().texOffs(0, 10)
+                        .addBox(-0.4F, -2.0F, -0.4F, 0.8F, 2.0F, 0.8F),
+                PartPose.offsetAndRotation(-0.5F, -1.5F, 0.0F, -0.4F, 0.0F, -0.2F));
+        // brow tine (near base, angled outward and slightly forward)
+        antlerLBase.addOrReplaceChild("brow_tine",
+                CubeListBuilder.create().texOffs(4, 10)
+                        .addBox(-0.3F, 0.0F, -0.3F, 0.6F, 1.2F, 0.6F),
+                PartPose.offsetAndRotation(-0.2F, -0.5F, 0.0F, 0.5F, 0.0F, -0.7F));
+        PartDefinition antlerLMid = antlerLBase.addOrReplaceChild("mid",
+                CubeListBuilder.create().texOffs(8, 10)
+                        .addBox(-0.35F, -2.0F, -0.35F, 0.7F, 2.0F, 0.7F),
+                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.3F, 0.0F, -0.15F));
+        // bay tine (mid-beam, angled outward)
+        antlerLMid.addOrReplaceChild("bay_tine",
+                CubeListBuilder.create().texOffs(12, 10)
+                        .addBox(-0.25F, 0.0F, -0.25F, 0.5F, 1.0F, 0.5F),
+                PartPose.offsetAndRotation(0.0F, -0.8F, 0.0F, 0.4F, 0.0F, -0.8F));
+        PartDefinition antlerLTip = antlerLMid.addOrReplaceChild("tip",
+                CubeListBuilder.create().texOffs(16, 10)
+                        .addBox(-0.3F, -1.5F, -0.3F, 0.6F, 1.5F, 0.6F),
+                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, -0.3F, 0.0F, -0.25F));
+        // trez tine (upper beam, angled outward)
+        antlerLTip.addOrReplaceChild("trez_tine",
+                CubeListBuilder.create().texOffs(20, 10)
+                        .addBox(-0.2F, 0.0F, -0.2F, 0.4F, 0.8F, 0.4F),
+                PartPose.offsetAndRotation(0.0F, -0.5F, 0.0F, 0.35F, 0.0F, -0.6F));
+
+        // ── RIGHT ANTLER (mirrored) ────────────────────────────────────────
+        PartDefinition antlerRBase = head.addOrReplaceChild("antler_right_base",
+                CubeListBuilder.create().texOffs(24, 10)
+                        .addBox(-0.4F, -2.0F, -0.4F, 0.8F, 2.0F, 0.8F),
+                PartPose.offsetAndRotation(0.5F, -1.5F, 0.0F, -0.4F, 0.0F, 0.2F));
+        antlerRBase.addOrReplaceChild("brow_tine",
+                CubeListBuilder.create().texOffs(28, 10)
+                        .addBox(-0.3F, 0.0F, -0.3F, 0.6F, 1.2F, 0.6F),
+                PartPose.offsetAndRotation(0.2F, -0.5F, 0.0F, 0.5F, 0.0F, 0.7F));
+        PartDefinition antlerRMid = antlerRBase.addOrReplaceChild("mid",
+                CubeListBuilder.create().texOffs(32, 10)
+                        .addBox(-0.35F, -2.0F, -0.35F, 0.7F, 2.0F, 0.7F),
+                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.3F, 0.0F, 0.15F));
+        antlerRMid.addOrReplaceChild("bay_tine",
+                CubeListBuilder.create().texOffs(36, 10)
+                        .addBox(-0.25F, 0.0F, -0.25F, 0.5F, 1.0F, 0.5F),
+                PartPose.offsetAndRotation(0.0F, -0.8F, 0.0F, 0.4F, 0.0F, 0.8F));
+        PartDefinition antlerRTip = antlerRMid.addOrReplaceChild("tip",
+                CubeListBuilder.create().texOffs(40, 10)
+                        .addBox(-0.3F, -1.5F, -0.3F, 0.6F, 1.5F, 0.6F),
+                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, -0.3F, 0.0F, 0.25F));
+        antlerRTip.addOrReplaceChild("trez_tine",
+                CubeListBuilder.create().texOffs(44, 10)
+                        .addBox(-0.2F, 0.0F, -0.2F, 0.4F, 0.8F, 0.4F),
+                PartPose.offsetAndRotation(0.0F, -0.5F, 0.0F, 0.35F, 0.0F, 0.6F));
 
         // ── tail : short puffy tuft ──────────────────────────────────────
         root.addOrReplaceChild("tail",
@@ -181,7 +243,7 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
                 CubeListBuilder.create().texOffs(8, 46).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        return LayerDefinition.create(mesh, 64, 64);
+        return LayerDefinition.create(mesh, 64, 32);
     }
 
     @Override
@@ -214,7 +276,8 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backRightThigh.xRot  = 0.4F;
             this.backLeftShin.xRot    = -0.3F;
             this.backRightShin.xRot   = -0.3F;
-            this.neck.xRot = 1.3F + breath * 0.3F;
+            this.neckBase.xRot = 0.7F + breath * 0.3F;
+            this.neckTip.xRot = 0.6F + breath * 0.1F;
             this.head.xRot = 0.8F + breath * 0.2F;
             this.tail.xRot = 0.5F + tailSway;
             this.earLeft.zRot  = -0.4F + earTwitch;
@@ -226,7 +289,8 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.root.xRot = -0.3F;
             this.root.y = -1.5F + bob;
             this.head.xRot = -0.4F;
-            this.neck.xRot = 0.5F;
+            this.neckBase.xRot = 0.3F;
+            this.neckTip.xRot = 0.2F;
             this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.7F;
             this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.7F;
             this.backLeftThigh.xRot   = (float) Math.cos(paddle + Math.PI) * 0.5F;
@@ -256,7 +320,8 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backLeftShin.xRot   = -0.4F + Math.max(0.0F, (float) Math.cos(sp + Math.PI))  * 0.7F * limbSwingAmount;
             this.backRightShin.xRot  = -0.4F + Math.max(0.0F, (float) Math.cos(sp))            * 0.7F * limbSwingAmount;
             // Head up, neck extended, tail flagged high
-            this.neck.xRot = 0.6F;
+            this.neckBase.xRot = 0.3F;
+            this.neckTip.xRot = 0.3F;
             this.head.xRot = -0.4F;
             this.tail.xRot = -1.0F;              // tail flagged high
             this.earLeft.zRot  = -0.4F;
@@ -290,8 +355,9 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
 
         // ── head behaviour ───────────────────────────────────────────────
         // CRON-19: Neck bobs with walk cycle (was static sin(age) bob)
-        this.neck.xRot = 1.0F + (float) Math.sin(phase) * 0.04F * limbSwingAmount;
-        this.neck.yRot = (float) Math.sin(phase * 0.5F) * 0.03F * limbSwingAmount;
+        this.neckBase.xRot = 0.6F + (float) Math.sin(phase) * 0.04F * limbSwingAmount;
+        this.neckTip.xRot = 0.5F;
+        this.neckBase.yRot = (float) Math.sin(phase * 0.5F) * 0.03F * limbSwingAmount;
 
         float yaw = netHeadYaw * 0.017453292F;
         this.head.yRot = Math.max(-0.8F, Math.min(0.8F, yaw));

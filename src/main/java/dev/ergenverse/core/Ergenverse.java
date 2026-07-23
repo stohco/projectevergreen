@@ -416,6 +416,13 @@ public final class Ergenverse {
             // ActorMaterializer renders those intersecting loaded chunks.
             // Wang Lin never "spawns" — he already existed; Minecraft catches up.
             dev.ergenverse.simulation.settlement.SettlementRegistry.initialize();
+            // SettlementThreatIndex — the threat context feeder (Article XLIV §5).
+            // Subscribes to "beast." events and records threats against nearby
+            // settlements. When wolves appear near Wang Family Village, the
+            // ActorMaterializer collapses all villagers onto home/flee positions.
+            // "If wolves appear, everything changes."
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.settlement.SettlementThreatIndex());
         }
 
         // Loop A: CausalEcology — every tick (existing system, unchanged)
