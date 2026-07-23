@@ -4,6 +4,7 @@ import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.core.Ergenverse;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -225,7 +226,15 @@ public final class WangFamilyVillageBuilder {
         // ── 12. Path light markers (spirit vein stones along roads) ──
         buildPathLights(level, cx, cy, cz);
 
-        // ── 13. Alchemy Furnace in Wang family home ──────────────────
+        // ── 14. Loot chests for key buildings ──────────────────────
+        // Storage shed warehouse chest
+        ChestHelper.placeChestWithLoot(level, new BlockPos(cx - 30 + 1, cy + 1, cz - 28 + 1),
+                new ResourceLocation("ergenverse", "chests/wang_family_village_warehouse"));
+        // Tavern chest near village center
+        ChestHelper.placeChestWithLoot(level, new BlockPos(cx + 10, cy + 1, cz + 5),
+                new ResourceLocation("ergenverse", "chests/wang_family_village_tavern"));
+
+        // ── 15. Alchemy Furnace in Wang family home ──────────────────
         // Already placed inside buildWangFamilyHome
 
         Ergenverse.LOGGER.info("[Ergenverse] Wang Family Village v2 construction complete.");
@@ -394,6 +403,9 @@ public final class WangFamilyVillageBuilder {
                 ErgenverseBlocks.ALCHEMY_FURNACE.get().defaultBlockState(), 3);
         // Herb pot outside the door
         level.setBlock(new BlockPos(x + 5, y + 1, z + 5), QI_GRASS, 3);
+        // Chest with family keepsakes
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, y + 1, z + 1),
+                new ResourceLocation("ergenverse", "chests/wang_family_village_main"));
     }
 
     // ── Elder's Home ────────────────────────────────────────────────────
@@ -452,6 +464,9 @@ public final class WangFamilyVillageBuilder {
                 ErgenverseBlocks.FORMATION_FLAG_BASE.get().defaultBlockState(), 3);
         // Jade stone decoration outside
         level.setBlock(new BlockPos(x + 3, y + 1, z + 7), JADE_STONE, 3);
+        // Chest with elder's valuables
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 5, y + 1, z + 1),
+                new ResourceLocation("ergenverse", "chests/wang_family_village_governor_mansion"));
     }
 
     // ── Commoner Homes ──────────────────────────────────────────────────
@@ -497,6 +512,9 @@ public final class WangFamilyVillageBuilder {
                 VERMILION_GINSENG};
         level.setBlock(new BlockPos(x + 2, y + 1, z + 5),
                 herbs[(x * 7 + z) % herbs.length], 3);
+        // Chest inside for personal belongings
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, y + 1, z + 1),
+                new ResourceLocation("ergenverse", "chests/wang_family_village_residential"));
     }
 
     // ── Farm Plots ──────────────────────────────────────────────────────

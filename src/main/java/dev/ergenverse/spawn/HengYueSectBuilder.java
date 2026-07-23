@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.BedPart;
 
 /**
@@ -410,7 +411,8 @@ public final class HengYueSectBuilder {
         setBlock(level, chamber.offset(0, 1, 2), SKELETON_SKULL);
         setBlock(level, chamber.offset(3, 1, 4), SKELETON_SKULL);
         // Chest at the back wall center
-        setBlock(level, chamber.offset(0, 1, 5), CHEST);
+        ChestHelper.placeChestWithLoot(level, chamber.offset(0, 1, 5),
+                new ResourceLocation("ergenverse", "chests/heng_yue_sect_mountain_cave"));
         // Sea lantern lights in corners
         setBlock(level, chamber.offset(-4, 1, 1), SEA_LANTERN);
         setBlock(level, chamber.offset(4, 1, 1), SEA_LANTERN);

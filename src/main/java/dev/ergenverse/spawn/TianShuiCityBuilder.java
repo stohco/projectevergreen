@@ -4,6 +4,7 @@ import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.core.Ergenverse;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -401,7 +402,8 @@ public final class TianShuiCityBuilder {
         if (col % 3 == 0) level.setBlock(new BlockPos(x + 1, baseY + 1, z + 3), BARREL, 2);
         if (col % 3 == 1) level.setBlock(new BlockPos(x + 4, baseY + 1, z + 3), BARREL, 2);
         // Chest
-        if (col % 2 == 0) level.setBlock(new BlockPos(x + 1, baseY + 1, z + 1), CHEST, 2);
+        if (col % 2 == 0) ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 1),
+                new ResourceLocation("ergenverse", "chests/tian_shui_city_market_district"));
     }
 
     private static void buildAuctionHouse(ServerLevel level, int x, int baseY, int z) {
@@ -459,8 +461,10 @@ public final class TianShuiCityBuilder {
             level.setBlock(new BlockPos(x + dx, baseY + 1, z + 3), SPRUCE_PLANK, 2);
         }
         // Storage chests
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 1), CHEST, 2);
-        level.setBlock(new BlockPos(x + 5, baseY + 1, z + 1), CHEST, 2);
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 1),
+                new ResourceLocation("ergenverse", "chests/tian_shui_market"));
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 5, baseY + 1, z + 1),
+                new ResourceLocation("ergenverse", "chests/tian_shui_market"));
         // Roof
         for (int dx = 0; dx < 7; dx++) {
             for (int dz = 0; dz < 5; dz++) {
@@ -508,7 +512,8 @@ public final class TianShuiCityBuilder {
                 level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), BIRCH_STAIRS, 2);
             }
         }
-        level.setBlock(new BlockPos(x + 2, baseY + 1, z + 2), CHEST, 2);
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 2, baseY + 1, z + 2),
+                new ResourceLocation("ergenverse", "chests/tian_shui_city_port_docks"));
         level.setBlock(new BlockPos(x + 5, baseY + 1, z + 3), BARREL, 2);
         level.setBlock(new BlockPos(x + 6, baseY + 1, z + 4), BARREL, 2);
     }
@@ -536,7 +541,8 @@ public final class TianShuiCityBuilder {
             level.setBlock(new BlockPos(x + dx, baseY + 1, z + 3), BIRCH_PLANK, 2);
         }
         // Chest for confiscated goods
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 1), CHEST, 2);
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 1),
+                new ResourceLocation("ergenverse", "chests/tian_shui_city_port_docks"));
         // Roof
         for (int dx = 0; dx < 7; dx++) {
             for (int dz = 0; dz < 5; dz++) {
@@ -659,7 +665,8 @@ public final class TianShuiCityBuilder {
         // Carpet
         level.setBlock(new BlockPos(x + 3, baseY + 1, z + 4), WHITE_CARPET, 2);
         // Chest
-        if (idx % 3 == 0) level.setBlock(new BlockPos(x + 1, baseY + 1, z + 1), CHEST, 2);
+        if (idx % 3 == 0) ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 1),
+                new ResourceLocation("ergenverse", "chests/tian_shui_city_residential_district"));
     }
 
     private static void buildMerchantMansion(ServerLevel level, int x, int baseY, int z) {
@@ -704,8 +711,10 @@ public final class TianShuiCityBuilder {
         level.setBlock(new BlockPos(x + 1, baseY + 1, z + 8), BOOKSHELF, 2);
         level.setBlock(new BlockPos(x + 8, baseY + 1, z + 8), BOOKSHELF, 2);
         // Chests
-        level.setBlock(new BlockPos(x + 2, baseY + 1, z + 5), CHEST, 2);
-        level.setBlock(new BlockPos(x + 7, baseY + 1, z + 5), CHEST, 2);
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 2, baseY + 1, z + 5),
+                new ResourceLocation("ergenverse", "chests/tian_shui_merchant"));
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 7, baseY + 1, z + 5),
+                new ResourceLocation("ergenverse", "chests/tian_shui_merchant"));
         // Staircase to 2nd floor
         for (int sy = 0; sy < 4; sy++) {
             level.setBlock(new BlockPos(x + 8 - sy, baseY + sy + 1, z + 8), OAK_STAIRS, 2);
@@ -819,7 +828,8 @@ public final class TianShuiCityBuilder {
         }
         for (int dx = 0; dx < 6; dx++) for (int dz = 0; dz < 5; dz++) level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), BIRCH_STAIRS, 2);
         level.setBlock(new BlockPos(x + 3, baseY + 1, z + 3), RED_CARPET, 2);
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 2), CHEST, 2);
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 2),
+                new ResourceLocation("ergenverse", "chests/tian_shui_city_governor_mansion"));
     }
 
     private static void buildWarRoom(ServerLevel level, int x, int baseY, int z) {
@@ -859,8 +869,10 @@ public final class TianShuiCityBuilder {
         level.setBlock(new BlockPos(x + 2, baseY + 1, z), IRON_DOOR, 2);
         level.setBlock(new BlockPos(x + 3, baseY + 1, z), AIR, 2);
         // Chests
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 2), CHEST, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 3), CHEST, 2);
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 2),
+                new ResourceLocation("ergenverse", "chests/tian_shui_city_governor_mansion"));
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 3, baseY + 1, z + 3),
+                new ResourceLocation("ergenverse", "chests/tian_shui_city_governor_mansion"));
         // Lantern
         level.setBlock(new BlockPos(x + 2, baseY + 3, z + 2), GLOWSTONE, 2);
     }
@@ -972,7 +984,8 @@ public final class TianShuiCityBuilder {
         for (int dx = 0; dx < 6; dx++) for (int dz = 0; dz < 5; dz++) level.setBlock(new BlockPos(x + dx, baseY + 4, z + dz), BIRCH_STAIRS, 2);
         level.setBlock(new BlockPos(x + 3, baseY + 1, z + 3), RED_CARPET, 2);
         level.setBlock(new BlockPos(x + 1, baseY + 1, z + 1), BOOKSHELF, 2);
-        level.setBlock(new BlockPos(x + 4, baseY + 1, z + 1), CHEST, 2);
+        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 4, baseY + 1, z + 1),
+                new ResourceLocation("ergenverse", "chests/tian_shui_city_cultivator_quarter"));
     }
 
     private static void buildTempleDistrict(ServerLevel level, int cx, int baseY, int cz) {

@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -399,7 +400,13 @@ public final class TengFamilyCityBuilder {
                 }
                 // Goods on counter
                 setBlock(level, stallBase.offset(1, 1, 1), BARREL);
-                setBlock(level, stallBase.offset(2, 1, 1), (col % 3 == 0) ? BOOKSHELF : CHEST);
+                BlockPos stallChestPos = stallBase.offset(2, 1, 1);
+                if (col % 3 == 0) {
+                    setBlock(level, stallChestPos, BOOKSHELF);
+                } else {
+                    ChestHelper.placeChestWithLoot(level, stallChestPos,
+                            new ResourceLocation("ergenverse", "chests/teng_family_city_market_district"));
+                }
             }
         }
 
@@ -427,8 +434,10 @@ public final class TengFamilyCityBuilder {
         setBlock(level, warehouse.offset(1, 1, 1), BARREL);
         setBlock(level, warehouse.offset(1, 1, 2), BARREL);
         setBlock(level, warehouse.offset(3, 1, 1), BARREL);
-        setBlock(level, warehouse.offset(1, 1, 3), CHEST);
-        setBlock(level, warehouse.offset(3, 1, 3), CHEST);
+        ChestHelper.placeChestWithLoot(level, warehouse.offset(1, 1, 3),
+                new ResourceLocation("ergenverse", "chests/teng_family_city_warehouse_district"));
+        ChestHelper.placeChestWithLoot(level, warehouse.offset(3, 1, 3),
+                new ResourceLocation("ergenverse", "chests/teng_family_city_warehouse_district"));
         setBlock(level, warehouse.offset(2, 1, 2), HAY);
         setBlock(level, warehouse.offset(2, 3, 2), TORCH);
     }
@@ -514,7 +523,8 @@ public final class TengFamilyCityBuilder {
                 setBlock(level, houseBase.offset(2, 1, 3), RED_CARPET);
                 setBlock(level, houseBase.offset(3, 1, 3), RED_CARPET);
                 setBlock(level, houseBase.offset(1, 1, 1), BOOKSHELF);
-                setBlock(level, houseBase.offset(4, 1, 1), CHEST);
+                ChestHelper.placeChestWithLoot(level, houseBase.offset(4, 1, 1),
+                        new ResourceLocation("ergenverse", "chests/teng_family_city_residential_district"));
                 setBlock(level, houseBase.offset(1, 3, 2), TORCH);
                 setBlock(level, houseBase.offset(4, 3, 2), TORCH);
                 // Fence around courtyard
@@ -556,7 +566,8 @@ public final class TengFamilyCityBuilder {
                 for (int col = 0; col < 4; col++) {
                     setBlock(level, warehouseBase.offset(1 + col * 2, 1, 1 + row * 2), BARREL);
                     if (row == 0 && col == 3) {
-                        setBlock(level, warehouseBase.offset(1 + col * 2, 1, 1 + row * 2), CHEST);
+                        ChestHelper.placeChestWithLoot(level, warehouseBase.offset(1 + col * 2, 1, 1 + row * 2),
+                                new ResourceLocation("ergenverse", "chests/teng_family_city_warehouse_district"));
                     }
                 }
             }
@@ -573,7 +584,8 @@ public final class TengFamilyCityBuilder {
         wallBox(level, office, 5, 3, 4, STONE_BRICK, COBBLE);
         placeDoor(level, office.offset(2, 1, 3), OAK_DOOR);
         setBlock(level, office.offset(1, 1, 1), CRAFTING_TABLE);
-        setBlock(level, office.offset(3, 1, 1), CHEST);
+        ChestHelper.placeChestWithLoot(level, office.offset(3, 1, 1),
+                new ResourceLocation("ergenverse", "chests/teng_family_keep"));
         setBlock(level, office.offset(2, 2, 1), TORCH);
     }
 
@@ -630,8 +642,10 @@ public final class TengFamilyCityBuilder {
         }
         setBlock(level, chambers.offset(1, 0, 1), BOOKSHELF);
         setBlock(level, chambers.offset(4, 0, 1), BOOKSHELF);
-        setBlock(level, chambers.offset(2, 0, 3), CHEST);
-        setBlock(level, chambers.offset(3, 0, 3), CHEST);
+        ChestHelper.placeChestWithLoot(level, chambers.offset(2, 0, 3),
+                new ResourceLocation("ergenverse", "chests/teng_family_keep"));
+        ChestHelper.placeChestWithLoot(level, chambers.offset(3, 0, 3),
+                new ResourceLocation("ergenverse", "chests/teng_family_keep"));
         // Guard presence indicator
         setBlock(level, chambers.offset(0, 0, 4), IRON_BARS);
         setBlock(level, chambers.offset(5, 0, 4), IRON_BARS);
@@ -678,7 +692,8 @@ public final class TengFamilyCityBuilder {
             placeDoor(level, cabin.offset(1, 1, 1), SPRUCE_DOOR);
             // Interior: bed, chest
             setBlock(level, cabin.offset(1, 1, 0), WHITE_WOOL);
-            setBlock(level, cabin.offset(2, 1, 0), CHEST);
+            ChestHelper.placeChestWithLoot(level, cabin.offset(2, 1, 0),
+                    new ResourceLocation("ergenverse", "chests/teng_family_city_smuggler_tunnels"));
             setBlock(level, cabin.offset(2, 3, 0), TORCH);
         }
 
@@ -795,7 +810,8 @@ public final class TengFamilyCityBuilder {
         setBlock(level, tavern.offset(9, 1, 0), BARREL);
         setBlock(level, tavern.offset(9, 1, 6), BARREL);
         // Chests
-        setBlock(level, tavern.offset(8, 1, 5), CHEST);
+        ChestHelper.placeChestWithLoot(level, tavern.offset(8, 1, 5),
+                new ResourceLocation("ergenverse", "chests/teng_family_city_tavern_district"));
         // Lighting
         setBlock(level, tavern.offset(3, 3, 1), TORCH);
         setBlock(level, tavern.offset(7, 3, 1), TORCH);
@@ -860,9 +876,12 @@ public final class TengFamilyCityBuilder {
             }
         }
         // Hidden chests (contraband)
-        setBlock(level, cacheRoom.offset(-1, 1, 2), CHEST);
-        setBlock(level, cacheRoom.offset(0, 1, 2), CHEST);
-        setBlock(level, cacheRoom.offset(1, 1, 2), CHEST);
+        ChestHelper.placeChestWithLoot(level, cacheRoom.offset(-1, 1, 2),
+                new ResourceLocation("ergenverse", "chests/teng_family_city_smuggler_tunnels"));
+        ChestHelper.placeChestWithLoot(level, cacheRoom.offset(0, 1, 2),
+                new ResourceLocation("ergenverse", "chests/teng_family_city_smuggler_tunnels"));
+        ChestHelper.placeChestWithLoot(level, cacheRoom.offset(1, 1, 2),
+                new ResourceLocation("ergenverse", "chests/teng_family_city_smuggler_tunnels"));
         // Glowstone for lighting (smugglers need to see)
         setBlock(level, cacheRoom.offset(0, 2, 3), GLOWSTONE);
 
@@ -877,8 +896,10 @@ public final class TengFamilyCityBuilder {
                 }
             }
         }
-        setBlock(level, cache2.offset(1, 1, 0), CHEST);
-        setBlock(level, cache2.offset(2, 1, 0), CHEST);
+        ChestHelper.placeChestWithLoot(level, cache2.offset(1, 1, 0),
+                new ResourceLocation("ergenverse", "chests/teng_family_city_smuggler_tunnels"));
+        ChestHelper.placeChestWithLoot(level, cache2.offset(2, 1, 0),
+                new ResourceLocation("ergenverse", "chests/teng_family_city_smuggler_tunnels"));
         setBlock(level, cache2.offset(1, 2, 0), GLOWSTONE);
     }
 
