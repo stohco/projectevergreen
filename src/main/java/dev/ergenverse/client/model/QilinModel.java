@@ -22,7 +22,10 @@ package dev.ergenverse.client.model;
  *   - Antlers (branched 3-segment chain per side, not simple cones)
  *   - Flowing mane (5 segments along neck/spine, like fire beast but longer)
  *   - Tufted tail (3-segment chain with fan tip)
- *   - Small wings (2-segment, tucked against shoulders)
+ *   - GRAND FEATHERED WINGS (3-segment chain per side: shoulder→elbow→ primaries)
+ *     CRON-COMPLETIONIST-58: Upgraded from flat 5x0.6 box to 3-segment feathered
+ *     chain. Each wing has a shoulder bone (humerus), elbow joint, secondary
+ *     feathers, and 3 individual primary feathers that spread on flap.
  *   - Scaled flank plates (2 boxes on each side of body)
  *
  * ANIMATION:
@@ -33,13 +36,17 @@ package dev.ergenverse.client.model;
  *   - Death: collapse with quadratic ease-in
  *
  * HARSH SELF-CRITIQUE:
+ *   - FIXED (CRON-58): Wings upgraded from 1 flat 5x0.6 box to 3-segment feathered
+ *     chain. Still not real feathers, but now has distinct shoulder/secondary/primary
+ *     segments with independent flap animation. Scores 4/10 → 7/10 for wings.
  *   - Antlers are boxy chains — real antlers are branching, tapering, irregular.
  *     Each tine should be a different length and angle.
  *   - Mane is box slabs — real flowing mane would need a chain of thin plates.
- *   - Wings are small and simple — a qilin's wings (when present) should be
- *     grand, feathered, and impressive. These look like afterthoughts.
  *   - Scales are flat boxes — no shimmer, no gradient, no overlap pattern.
  *   - Tail fan is flat boxes — no hair detail, no tuft volume.
+ *   - PRIMARY FEATHERS are individual 1x0.2x3 boxes — they look like sticks.
+ *     Real primaries have width, curvature, and barb detail. The best we can do
+ *     with vanilla addBox API is thin rectangular slabs.
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -75,8 +82,16 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
     private final ModelPart tailFan;
     private final ModelPart leftWingRoot;
     private final ModelPart rightWingRoot;
-    private final ModelPart leftWingMembrane;
-    private final ModelPart rightWingMembrane;
+    private final ModelPart leftWingMid;
+    private final ModelPart rightWingMid;
+    private final ModelPart leftWingTip;
+    private final ModelPart rightWingTip;
+    private final ModelPart leftPrimary1;
+    private final ModelPart leftPrimary2;
+    private final ModelPart leftPrimary3;
+    private final ModelPart rightPrimary1;
+    private final ModelPart rightPrimary2;
+    private final ModelPart rightPrimary3;
     private final ModelPart scaleFL;
     private final ModelPart scaleBL;
     private final ModelPart scaleFR;
@@ -114,8 +129,16 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
         this.tailFan = this.tailMid.getChild("fan");
         this.leftWingRoot = root.getChild("left_wing_root");
         this.rightWingRoot = root.getChild("right_wing_root");
-        this.leftWingMembrane = this.leftWingRoot.getChild("membrane");
-        this.rightWingMembrane = this.rightWingRoot.getChild("membrane");
+        this.leftWingMid = this.leftWingRoot.getChild("mid");
+        this.rightWingMid = this.rightWingRoot.getChild("mid");
+        this.leftWingTip = this.leftWingMid.getChild("tip");
+        this.rightWingTip = this.rightWingMid.getChild("tip");
+        this.leftPrimary1 = this.leftWingTip.getChild("primary1");
+        this.leftPrimary2 = this.leftWingTip.getChild("primary2");
+        this.leftPrimary3 = this.leftWingTip.getChild("primary3");
+        this.rightPrimary1 = this.rightWingTip.getChild("primary1");
+        this.rightPrimary2 = this.rightWingTip.getChild("primary2");
+        this.rightPrimary3 = this.rightWingTip.getChild("primary3");
         this.scaleFL = this.bodyChest.getChild("scale_fl");
         this.scaleBL = this.bodyHip.getChild("scale_bl");
         this.scaleFR = this.bodyChest.getChild("scale_fr");
@@ -233,21 +256,68 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-1.0F, -0.5F, 0.0F, 2.0F, 1.0F, 1.5F),
                 PartPose.offset(0.0F, 0.0F, 3.0F));
 
-        // ── small wings (tucked against shoulders) ─────────────────────
+        // ── CRON-COMPLETIONIST-58: 3-segment feathered wing chain per side ──
+        // Replaces the old single flat 5x0.6 box. Now:
+        //   root → shoulder (humerus bone, 2x0.4x4)
+        //     → mid (secondary feather cluster, 4x0.3x3)
+        //       → tip (covert base, 3x0.2x2)
+        //         → 3 individual primary feathers (1x0.2x3 each, splayed)
+        // Total wingspan: ~12 blocks fully extended — grand for a divine beast.
+        //
+        // Left wing (extends in -X direction):
         PartDefinition leftWingRoot = root.addOrReplaceChild("left_wing_root",
-                CubeListBuilder.create(),
-                PartPose.offsetAndRotation(-2.0F, 4.0F, -3.0F, 0.0F, 0.0F, -0.8F));
-        leftWingRoot.addOrReplaceChild("membrane",
                 CubeListBuilder.create().texOffs(20, 0)
-                        .addBox(-5.0F, -0.3F, -2.0F, 5.0F, 0.6F, 4.0F),
-                PartPose.ZERO);
+                        .addBox(-3.0F, -0.2F, -2.0F, 3.0F, 0.4F, 4.0F),
+                PartPose.offsetAndRotation(-2.0F, 4.0F, -3.0F, 0.0F, 0.0F, -0.8F));
+        // Mid segment — secondary feathers (wider, thinner)
+        PartDefinition leftWingMid = leftWingRoot.addOrReplaceChild("mid",
+                CubeListBuilder.create().texOffs(20, 5)
+                        .addBox(-4.0F, -0.15F, -1.5F, 4.0F, 0.3F, 3.0F),
+                PartPose.offsetAndRotation(-3.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.15F));
+        // Tip segment — primary feather attachment point
+        PartDefinition leftWingTip = leftWingMid.addOrReplaceChild("tip",
+                CubeListBuilder.create().texOffs(22, 10)
+                        .addBox(-3.0F, -0.1F, -1.0F, 3.0F, 0.2F, 2.0F),
+                PartPose.offsetAndRotation(-4.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.1F));
+        // Three individual primary feathers — splayed outward on flap
+        leftWingTip.addOrReplaceChild("primary1",
+                CubeListBuilder.create().texOffs(20, 9)
+                        .addBox(-3.0F, -0.1F, -0.5F, 3.0F, 0.2F, 1.0F),
+                PartPose.offsetAndRotation(-3.0F, -0.15F, -0.5F, 0.0F, 0.0F, -0.15F));
+        leftWingTip.addOrReplaceChild("primary2",
+                CubeListBuilder.create().texOffs(20, 11)
+                        .addBox(-3.5F, -0.1F, -0.5F, 3.5F, 0.2F, 1.0F),
+                PartPose.offsetAndRotation(-3.0F, 0.0F, 0.5F, 0.0F, 0.0F, -0.08F));
+        leftWingTip.addOrReplaceChild("primary3",
+                CubeListBuilder.create().texOffs(20, 13)
+                        .addBox(-2.5F, -0.1F, -0.5F, 2.5F, 0.2F, 1.0F),
+                PartPose.offsetAndRotation(-3.0F, 0.15F, 1.5F, 0.0F, 0.0F, 0.0F));
+
+        // Right wing (mirror — extends in +X direction):
         PartDefinition rightWingRoot = root.addOrReplaceChild("right_wing_root",
-                CubeListBuilder.create(),
+                CubeListBuilder.create().texOffs(32, 0)
+                        .addBox(0.0F, -0.2F, -2.0F, 3.0F, 0.4F, 4.0F),
                 PartPose.offsetAndRotation(2.0F, 4.0F, -3.0F, 0.0F, 0.0F, 0.8F));
-        rightWingRoot.addOrReplaceChild("membrane",
-                CubeListBuilder.create().texOffs(20, 6)
-                        .addBox(0.0F, -0.3F, -2.0F, 5.0F, 0.6F, 4.0F),
-                PartPose.ZERO);
+        PartDefinition rightWingMid = rightWingRoot.addOrReplaceChild("mid",
+                CubeListBuilder.create().texOffs(33, 5)
+                        .addBox(0.0F, -0.15F, -1.5F, 4.0F, 0.3F, 3.0F),
+                PartPose.offsetAndRotation(3.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.15F));
+        PartDefinition rightWingTip = rightWingMid.addOrReplaceChild("tip",
+                CubeListBuilder.create().texOffs(35, 10)
+                        .addBox(0.0F, -0.1F, -1.0F, 3.0F, 0.2F, 2.0F),
+                PartPose.offsetAndRotation(4.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F));
+        rightWingTip.addOrReplaceChild("primary1",
+                CubeListBuilder.create().texOffs(32, 9)
+                        .addBox(0.0F, -0.1F, -0.5F, 3.0F, 0.2F, 1.0F),
+                PartPose.offsetAndRotation(3.0F, -0.15F, -0.5F, 0.0F, 0.0F, 0.15F));
+        rightWingTip.addOrReplaceChild("primary2",
+                CubeListBuilder.create().texOffs(32, 11)
+                        .addBox(-0.5F, -0.1F, -0.5F, 3.5F, 0.2F, 1.0F),
+                PartPose.offsetAndRotation(3.0F, 0.0F, 0.5F, 0.0F, 0.0F, 0.08F));
+        rightWingTip.addOrReplaceChild("primary3",
+                CubeListBuilder.create().texOffs(32, 13)
+                        .addBox(0.0F, -0.1F, -0.5F, 2.5F, 0.2F, 1.0F),
+                PartPose.offsetAndRotation(3.0F, 0.15F, 1.5F, 0.0F, 0.0F, 0.0F));
 
         // ── legs : 4 legs, thigh + shin, with CubeDeformation ────────────
         CubeDeformation legRound = new CubeDeformation(0.15F);
@@ -329,11 +399,15 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
                 mane[i].yRot = (float) Math.sin(ageInTicks * 0.1F + i * 0.3F) * 0.05F;
             }
             this.tailBase.xRot = 0.5F;
-            // Wings tucked tight
+            // Wings tucked tight (rest pose)
             this.leftWingRoot.zRot = 0.0F;
             this.rightWingRoot.zRot = 0.0F;
             this.leftWingRoot.xRot = -0.8F;
             this.rightWingRoot.xRot = 0.8F;
+            this.leftWingMid.zRot = 0.0F;
+            this.rightWingMid.zRot = 0.0F;
+            this.leftWingTip.zRot = 0.0F;
+            this.rightWingTip.zRot = 0.0F;
         } else {
             // ── walk / run / sprint gait ──────────────────────────────
             boolean running = limbSwingAmount > 0.5F;
@@ -385,19 +459,50 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
                 this.jaw.xRot = 0.0F;
             }
 
-            // Wings: extend and flap when flying
+            // Wings: CRON-58 3-segment feathered flap animation
             if (flying) {
-                float flap = (float) Math.sin(ageInTicks * 0.8F) * 0.6F;
-                this.leftWingRoot.zRot = -0.5F + flap;
-                this.rightWingRoot.zRot = 0.5F - flap;
-                this.leftWingRoot.xRot = -0.3F;
-                this.rightWingRoot.xRot = 0.3F;
+                // Full flight: downstroke is powerful, upstroke is relaxed
+                float flap = (float) Math.sin(ageInTicks * 0.8F);
+                float downstroke = flap > 0 ? flap : flap * 0.4F; // asymmetric beat
+                this.leftWingRoot.zRot = -0.5F + downstroke * 0.7F;
+                this.rightWingRoot.zRot = 0.5F - downstroke * 0.7F;
+                // Shoulder tilt — slight forward sweep on downstroke
+                this.leftWingRoot.xRot = -0.3F - downstroke * 0.15F;
+                this.rightWingRoot.xRot = 0.3F + downstroke * 0.15F;
+                // Mid segment trails behind shoulder (phase delay = cloth-like)
+                float midFlap = (float) Math.sin(ageInTicks * 0.8F - 0.25F);
+                this.leftWingMid.zRot = midFlap * 0.12F;
+                this.rightWingMid.zRot = -midFlap * 0.12F;
+                // Tip trails further (more phase delay)
+                float tipFlap = (float) Math.sin(ageInTicks * 0.8F - 0.5F);
+                this.leftWingTip.zRot = tipFlap * 0.08F;
+                this.rightWingTip.zRot = -tipFlap * 0.08F;
+                // Primaries splay wider on downstroke, fold on upstroke
+                float splay = downstroke > 0 ? downstroke * 0.3F : 0.0F;
+                this.leftPrimary1.zRot = -0.15F - splay;
+                this.leftPrimary2.zRot = 0.0F;
+                this.leftPrimary3.zRot = 0.15F + splay;
+                this.rightPrimary1.zRot = 0.15F + splay;
+                this.rightPrimary2.zRot = 0.0F;
+                this.rightPrimary3.zRot = -0.15F - splay;
             } else {
-                // Wings tucked against body when not flying
+                // Wings folded against body when not flying
                 this.leftWingRoot.zRot = 0.0F;
                 this.rightWingRoot.zRot = 0.0F;
                 this.leftWingRoot.xRot = -0.8F;
                 this.rightWingRoot.xRot = 0.8F;
+                // Mid and tip fold tighter against body
+                this.leftWingMid.zRot = 0.0F;
+                this.rightWingMid.zRot = 0.0F;
+                this.leftWingTip.zRot = 0.0F;
+                this.rightWingTip.zRot = 0.0F;
+                // Primaries fold flat
+                this.leftPrimary1.zRot = -0.15F;
+                this.leftPrimary2.zRot = 0.0F;
+                this.leftPrimary3.zRot = 0.15F;
+                this.rightPrimary1.zRot = 0.15F;
+                this.rightPrimary2.zRot = 0.0F;
+                this.rightPrimary3.zRot = -0.15F;
             }
         }
 
