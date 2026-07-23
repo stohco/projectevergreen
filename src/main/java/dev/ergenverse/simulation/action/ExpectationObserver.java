@@ -148,27 +148,37 @@ public final class ExpectationObserver implements WorldEventSubscriber {
      * sense of "I expect this to continue being negative."
      */
     private String mapToActionType(WorldEvent event) {
+        String topic = event.topic();
         String tag = event.semanticTag();
+
+        // ── Primary path: infer from the semantic tag (set by SimulationActions). ──
+        // Only POSITIVE/constructive actions form expectations.
+        // Cruelty, broken promises, etc. don't form "I expect this to continue being negative."
         if (!tag.isEmpty()) {
-            // Infer from topic for action-level events.
-            if (SemanticEventTopics.PLAYER_GIFT_GIVEN.equals(event.topic())
-                    || SemanticEventTopics.ACTOR_GIFT_GIVEN.equals(event.topic()))
-                return "generosity";
-            return null;
+            return switch (tag) {
+                case "ACT_OF_MERCY" -> "mercy";
+                case "GIFT_GIVEN", "GIFT_RECEIVED" -> "generosity";
+                case "PROMISE_MADE" -> "reliability";
+                case "COMBAT_ENGAGED" -> "protection";
+                case "TECHNIQUE_DISPLAYED" -> "protection"; // displayed technique = defending capability
+                case "DEBT_REPAID" -> "reliability";
+                default -> null; // cruelty, broken promises, humiliation don't form expectations
+            };
         }
-        return switch (tag) {
-            case "ACT_OF_MERCY" -> "mercy";
-            case "GIFT_GIVEN" -> "generosity";
-            case "GIFT_RECEIVED" -> "generosity";
-            case "PROMISE_MADE" -> "reliability";
-            case "COMBAT_ENGAGED" -> {
-                // Only forms an expectation of protection if the source
-                // consistently defends the target.
-                String outcome = event.meta("combat_outcome", "");
-                yield "protection";
-            }
-            default -> null; // cruelty, broken promises, etc. don't form expectations
-        };
+
+        // ── Secondary path: infer from topic when no semantic tag is set. ──
+        if (SemanticEventTopics.PLAYER_GIFT_GIVEN.equals(topic)
+                || SemanticEventTopics.ACTOR_GIFT_GIVEN.equals(topic)
+                || SemanticEventTopics.PLAYER_GIFT_RECEIVED.equals(topic))
+            return "generosity";
+        if (SemanticEventTopics.PLAYER_COMBAT_ENGAGED.equals(topic)
+                || SemanticEventTopics.ACTOR_COMBAT_ENGAGED.equals(topic))
+            return "protection";
+        if (SemanticEventTopics.PLAYER_BREAKTHROUGH.equals(topic)
+                || SemanticEventTopics.ACTOR_BREAKTHROUGH.equals(topic))
+            return "reliability";
+
+        return null;
     }
 
     /**

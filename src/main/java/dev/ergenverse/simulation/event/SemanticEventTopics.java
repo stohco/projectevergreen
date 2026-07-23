@@ -138,6 +138,9 @@ public final class SemanticEventTopics {
     /** A cultivation level was revealed. */
     public static final String SEMANTIC_CULTIVATION_REVEALED = "semantic.cultivation.revealed";
 
+    /** An expectation was violated — a repeated pattern was broken. */
+    public static final String SEMANTIC_EXPECTATION_VIOLATION = "semantic.expectation_violation";
+
     // ─── Prefix helpers ──────────────────────────────────────
 
     /** Prefix matching all player-sourced events. */

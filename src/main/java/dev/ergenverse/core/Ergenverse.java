@@ -371,12 +371,20 @@ public final class Ergenverse {
                     new dev.ergenverse.simulation.action.OpportunityClaimSubscriber());
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.wanglin.ai.reasoning.WangLinSemanticSubscriber());
+            // ── General NPC Semantic Relationship Wiring (CRON-COMPLETIONIST) ──
+            // All NPCs (not just Wang Lin) now update their multi-axis relationship
+            // graphs when they witness semantic events. Per Art XLI §2 (simulation
+            // is general) and Art XXXIV (relationships are graphs, not numbers).
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.simulation.action.NpcSemanticRelationshipSubscriber());
+            // Load persisted reputation from disk on world start.
+            dev.ergenverse.simulation.action.ReputationObserver.loadFromDisk(overworld);
             LOGGER.info("[Ergenverse] Registered WorldEventBus subscribers: QiDisturbance + BirdFlight "
                     + "+ ActivityInterruption + Memory + Chronicle + HistorySubscriber "
                     + "+ RelationshipEngine + OpportunityGenerator + BeliefFormation "
                     + "+ ExpectationObserver + ReputationObserver + OpportunityClaimSubscriber "
-                    + "+ WangLinSemanticSubscriber "
-                    + "(event-sourced + belief + expectation + reputation + opportunity-claim + wang-lin-cognition).");
+                    + "+ WangLinSemanticSubscriber + NpcSemanticRelationshipSubscriber "
+                    + "(event-sourced + belief + expectation + reputation + opportunity-claim + wang-lin-cognition + general-npc-relationship).");
             // Art XLII/XLIII: seed the chronicle opening + canon divergence ledger on world load.
             // The chronicle's t₀ entry is the immutable "world at the moment the player arrives" record.
             dev.ergenverse.history.WorldChronicle chronicle =
@@ -412,6 +420,8 @@ public final class Ergenverse {
             }
             // ReputationObserver decay: localized reputation atrophies.
             dev.ergenverse.simulation.action.ReputationObserver.decayAll(ticks);
+            // ReputationObserver persistence: flush to SavedData every game-day.
+            dev.ergenverse.simulation.action.ReputationObserver.flushToDisk(overworld);
         }
 
         // Loop C: ReificationScan — every 100 ticks (5 sec proximity scan)

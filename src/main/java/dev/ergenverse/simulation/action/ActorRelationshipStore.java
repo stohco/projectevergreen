@@ -14,35 +14,32 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * ActorRelationshipStore — persistent NPC-to-NPC relationship storage.
+ * ActorRelationshipStore — multi-axis NPC-to-NPC relationship storage.
  *
- * <p>Per the user's directive (2026-07-23, option f):
- * <pre>
- *   "Create a general ActorRelationshipStore for NPC-to-NPC relationships.
- *    This unblocks Wang Lin → Li Muwan, elder → disciple, etc."
- * </pre>
+ * <p>Per Constitution Articles XXXIV and XLI §4: a relationship is not a
+ * number. A relationship is a graph of distinct, independently-variable
+ * dimensions. "Friendship > 50" is forbidden. NPCs maintain structured
+ * relationship state.
  *
- * <p>Before this store, the simulation could only persist player-centric
- * relationships (via {@code RelationshipHistory} which requires a ServerPlayer).
- * NPC-to-NPC relationships (Wang Lin ↔ Li Muwan, elder ↔ disciple, rival ↔
- * rival) were logged at DEBUG level but never persisted. They vanished on
- * server restart.
+ * <h2>Multi-axis relationship dimensions</h2>
+ * <ul>
+ *   <li>{@code trust} (0–100) — does the NPC believe the target's words?</li>
+ *   <li>{@code respect} (0–100) — does the NPC esteem the target's capability?</li>
+ *   <li>{@code fear} (0–100) — does the NPC fear the target?</li>
+ *   <li>{@code familiarity} (0–100) — repeated exposure; not friendship,
+ *       not trust. Simply: "I know who this person is."</li>
+ *   <li>{@code debt} (signed int) — outstanding favors owed.
+ *       Positive = NPC owes target, negative = target owes NPC.</li>
+ *   <li>{@code grievance} (0–100) — accumulated resentment from wrongs.</li>
+ * </ul>
  *
- * <p>This store persists ALL actor-to-actor relationships as a SavedData
- * instance. It stores an affinity score and a list of relationship events
- * (reason + tick) for each actor pair.
+ * <p>Additionally, a legacy {@code affinity} field is maintained for backward
+ * compatibility with existing call sites. The affinity is a computed value:
+ * {@code affinity = (trust * 0.4 + respect * 0.2 - fear * 0.3 - grievance * 0.5 + debt * 0.1) * sign}.
  *
  * <h2>Storage model</h2>
  * <p>Key: {@code "actorA|actorB"} (always lexicographically ordered).
- * Value: A {@code CompoundTag} containing:
- * <ul>
- *   <li>{@code affinity} (int) — the cumulative relationship score.
- *       Positive = friendly/loyal. Negative = hostile/distrustful.</li>
- *   <li>{@code lastEvent} (String) — the most recent event that changed
- *       the relationship.</li>
- *   <li>{@code lastEventTick} (long) — when the last event occurred.</li>
- *   <li>{@code eventCount} (int) — total number of events recorded.</li>
- * </ul>
+ * Value: A {@code CompoundTag} containing all six axis values plus metadata.
  *
  * <h2>Thread safety</h2>
  * <p>Uses ConcurrentHashMap. All getters return copies or primitives.
@@ -54,17 +51,24 @@ import java.util.concurrent.ConcurrentHashMap;
  *   <li><b>Article V:</b> Everything exists without the player. Wang Lin
  *       and Li Muwan's relationship deepens even if the player never
  *       observes it.</li>
+ *   <li><b>Article XXXIV:</b> Trust, Respect, Fear, Familiarity, Debt,
+ *       and Grievance are independently-variable dimensions. Two NPCs
+ *       can have completely different graphs for the same player.</li>
+ *   <li><b>Article XLI §4:</b> Familiarity is a required dimension —
+ *       "I know who this person is" from repeated exposure, separate
+ *       from trust or respect.</li>
  *   <li><b>Not a new Engine (Art XXVI):</b> This is a data store, not an
- *       event-processing system. The RelationshipEngine writes to it;
- *       other systems read from it.</li>
+ *       event-processing system. The RelationshipEngine and
+ *       NpcSemanticRelationshipSubscriber write to it; other systems
+ *       read from it.</li>
  * </ul>
  */
 public class ActorRelationshipStore extends SavedData {
 
     private static final String DATA_NAME = "ergenverse_actor_relationships";
-    private static final int CURRENT_VERSION = 1;
+    private static final int CURRENT_VERSION = 2;
 
-    /** All relationships: "actorA|actorB" → CompoundTag(affinity, lastEvent, ...). */
+    /** All relationships: "actorA|actorB" → CompoundTag(trust, respect, ...). */
     private final ConcurrentHashMap<String, CompoundTag> relationships = new ConcurrentHashMap<>();
 
     // ─── Singleton access ──────────────────────────────────────────────
@@ -81,27 +85,51 @@ public class ActorRelationshipStore extends SavedData {
         return storage.computeIfAbsent(ActorRelationshipStore::load, ActorRelationshipStore::new, DATA_NAME);
     }
 
-    // ─── Public API ───────────────────────────────────────────────────
+    // ─── Multi-Axis Public API ─────────────────────────────────────────
 
     /**
-     * Record a relationship change between two actors.
+     * Record a multi-axis relationship change between two actors.
+     * Each delta is independently applied. Zero or null values are ignored.
      *
-     * @param actorA      first actor ID (canon ID like "wang_lin" or player UUID)
-     * @param actorB      second actor ID
-     * @param affinityDelta  the change amount (+5, -15, etc.)
-     * @param reason      human-readable description of why the change occurred
-     * @param tick        the server tick when this event occurred
+     * @param actorA            first actor ID (canon ID like "wang_lin" or player UUID)
+     * @param actorB            second actor ID
+     * @param trustDelta         change to trust (0-100, clamped)
+     * @param respectDelta       change to respect (0-100, clamped)
+     * @param fearDelta          change to fear (0-100, clamped)
+     * @param familiarityDelta   change to familiarity (0-100, clamped)
+     * @param debtDelta          change to debt (signed, positive = NPC A owes B)
+     * @param grievanceDelta     change to grievance (0-100, clamped)
+     * @param reason             human-readable description
+     * @param tick               the server tick
      */
-    public void recordRelationship(String actorA, String actorB,
-                                    int affinityDelta, String reason, long tick) {
+    public void recordMultiAxis(String actorA, String actorB,
+                                  @Nullable Integer trustDelta,
+                                  @Nullable Integer respectDelta,
+                                  @Nullable Integer fearDelta,
+                                  @Nullable Integer familiarityDelta,
+                                  @Nullable Integer debtDelta,
+                                  @Nullable Integer grievanceDelta,
+                                  String reason, long tick) {
         if (actorA == null || actorB == null || actorA.isEmpty() || actorB.isEmpty()) return;
-        if (affinityDelta == 0) return;
+        boolean anyChange = trustDelta != null && trustDelta != 0
+                || respectDelta != null && respectDelta != 0
+                || fearDelta != null && fearDelta != 0
+                || familiarityDelta != null && familiarityDelta != 0
+                || debtDelta != null && debtDelta != 0
+                || grievanceDelta != null && grievanceDelta != 0;
+        if (!anyChange) return;
 
         String key = normalizeKey(actorA, actorB);
         CompoundTag existing = relationships.get(key);
 
         if (existing == null) {
             existing = new CompoundTag();
+            existing.putInt("trust", 0);
+            existing.putInt("respect", 0);
+            existing.putInt("fear", 0);
+            existing.putInt("familiarity", 0);
+            existing.putInt("debt", 0);
+            existing.putInt("grievance", 0);
             existing.putInt("affinity", 0);
             existing.putString("lastEvent", "");
             existing.putLong("lastEventTick", 0);
@@ -110,8 +138,23 @@ public class ActorRelationshipStore extends SavedData {
 
         // Copy on write (defensive).
         CompoundTag updated = existing.copy();
-        int currentAffinity = updated.getInt("affinity");
-        updated.putInt("affinity", currentAffinity + affinityDelta);
+
+        if (trustDelta != null && trustDelta != 0)
+            updated.putInt("trust", clampAxis(updated.getInt("trust") + trustDelta));
+        if (respectDelta != null && respectDelta != 0)
+            updated.putInt("respect", clampAxis(updated.getInt("respect") + respectDelta));
+        if (fearDelta != null && fearDelta != 0)
+            updated.putInt("fear", clampAxis(updated.getInt("fear") + fearDelta));
+        if (familiarityDelta != null && familiarityDelta != 0)
+            updated.putInt("familiarity", clampAxis(updated.getInt("familiarity") + familiarityDelta));
+        if (debtDelta != null && debtDelta != 0)
+            updated.putInt("debt", updated.getInt("debt") + debtDelta);
+        if (grievanceDelta != null && grievanceDelta != 0)
+            updated.putInt("grievance", clampAxis(updated.getInt("grievance") + grievanceDelta));
+
+        // Recompute legacy affinity from multi-axis values.
+        updated.putInt("affinity", computeAffinity(updated));
+
         updated.putString("lastEvent", reason);
         updated.putLong("lastEventTick", tick);
         updated.putInt("eventCount", updated.getInt("eventCount") + 1);
@@ -119,25 +162,74 @@ public class ActorRelationshipStore extends SavedData {
         relationships.put(key, updated);
         this.setDirty();
 
-        Ergenverse.LOGGER.debug("[ActorRelStore] {} ↔ {}: {} (total={})",
+        Ergenverse.LOGGER.debug("[ActorRelStore] {} ↔ {}: trust={}/respect={}/fear={}/fam={}/debt={}/griev={}",
                 actorA, actorB,
-                affinityDelta > 0 ? "+" + affinityDelta : affinityDelta,
-                currentAffinity + affinityDelta);
+                updated.getInt("trust"), updated.getInt("respect"),
+                updated.getInt("fear"), updated.getInt("familiarity"),
+                updated.getInt("debt"), updated.getInt("grievance"));
     }
 
     /**
-     * Get the cumulative affinity between two actors.
-     * Returns 0 if no relationship exists.
+     * Legacy API: record a simple affinity change.
+     * Maps affinity delta to trust delta for backward compatibility.
      */
+    public void recordRelationship(String actorA, String actorB,
+                                    int affinityDelta, String reason, long tick) {
+        // Map legacy affinity to multi-axis: positive affinity → trust boost,
+        // negative affinity → grievance boost. This preserves the spirit of
+        // the old system while using the new multi-axis structure.
+        int trustDelta = affinityDelta > 0 ? Math.min(affinityDelta, 5) : 0;
+        int grievanceDelta = affinityDelta < 0 ? Math.min(-affinityDelta, 5) : 0;
+        int familiarityDelta = Math.abs(affinityDelta) > 0 ? 1 : 0;
+        recordMultiAxis(actorA, actorB, trustDelta, 0, 0, familiarityDelta,
+                0, grievanceDelta, reason, tick);
+    }
+
+    // ─── Multi-Axis Getters ───────────────────────────────────────────
+
+    /** Get the trust value (0-100) between two actors. Returns 0 if no relationship. */
+    public int getTrust(String actorA, String actorB) {
+        return getAxis(actorA, actorB, "trust");
+    }
+
+    /** Get the respect value (0-100) between two actors. Returns 0 if no relationship. */
+    public int getRespect(String actorA, String actorB) {
+        return getAxis(actorA, actorB, "respect");
+    }
+
+    /** Get the fear value (0-100) between two actors. Returns 0 if no relationship. */
+    public int getFear(String actorA, String actorB) {
+        return getAxis(actorA, actorB, "fear");
+    }
+
+    /** Get the familiarity value (0-100) between two actors. Returns 0 if no relationship. */
+    public int getFamiliarity(String actorA, String actorB) {
+        return getAxis(actorA, actorB, "familiarity");
+    }
+
+    /** Get the debt value (signed) between two actors. Returns 0 if no relationship. */
+    public int getDebt(String actorA, String actorB) {
+        return getAxis(actorA, actorB, "debt");
+    }
+
+    /** Get the grievance value (0-100) between two actors. Returns 0 if no relationship. */
+    public int getGrievance(String actorA, String actorB) {
+        return getAxis(actorA, actorB, "grievance");
+    }
+
+    /** Get the legacy affinity (computed from multi-axis). Returns 0 if no relationship. */
     public int getAffinity(String actorA, String actorB) {
         if (actorA == null || actorB == null) return 0;
         String key = normalizeKey(actorA, actorB);
         CompoundTag data = relationships.get(key);
-        return data != null ? data.getInt("affinity") : 0;
+        if (data == null) return 0;
+        // If legacy data has affinity but no multi-axis fields, return the stored value.
+        if (!data.contains("trust") && data.contains("affinity")) return data.getInt("affinity");
+        return computeAffinity(data);
     }
 
     /**
-     * Get the relationship data for two actors, or null if none exists.
+     * Get the full relationship data for two actors, or null if none exists.
      * Returns a defensive copy.
      */
     @Nullable
@@ -148,9 +240,7 @@ public class ActorRelationshipStore extends SavedData {
         return data != null ? data.copy() : null;
     }
 
-    /**
-     * Check whether any relationship exists between two actors.
-     */
+    /** Check whether any relationship exists between two actors. */
     public boolean hasRelationship(String actorA, String actorB) {
         if (actorA == null || actorB == null) return false;
         return relationships.containsKey(normalizeKey(actorA, actorB));
@@ -163,10 +253,10 @@ public class ActorRelationshipStore extends SavedData {
 
     /**
      * Get all relationships involving a specific actor.
-     * Returns a map of otherActorId → affinity.
+     * Returns a map of otherActorId → CompoundTag (defensive copies).
      */
-    public Map<String, Integer> getRelationshipsForActor(String actorId) {
-        Map<String, Integer> result = new ConcurrentHashMap<>();
+    public Map<String, CompoundTag> getRelationshipsForActor(String actorId) {
+        Map<String, CompoundTag> result = new ConcurrentHashMap<>();
         if (actorId == null || actorId.isEmpty()) return result;
         String suffix = "|" + actorId;
         String prefix = actorId + "|";
@@ -179,7 +269,7 @@ public class ActorRelationshipStore extends SavedData {
                 otherId = key.substring(0, key.length() - suffix.length());
             }
             if (otherId != null && !otherId.isEmpty()) {
-                result.put(otherId, entry.getValue().getInt("affinity"));
+                result.put(otherId, entry.getValue().copy());
             }
         }
         return result;
@@ -206,7 +296,6 @@ public class ActorRelationshipStore extends SavedData {
 
         int version = compound.getInt("data_version");
         if (version < 1) {
-            // v0 = no data — empty store.
             return store;
         }
 
@@ -215,20 +304,62 @@ public class ActorRelationshipStore extends SavedData {
             CompoundTag entryTag = list.getCompound(i);
             String key = entryTag.getString("key");
             CompoundTag data = entryTag.getCompound("data");
+
+            // Migrate v1 (affinity-only) to v2 (multi-axis).
+            if (version == 1) {
+                if (!data.contains("trust")) data.putInt("trust", 0);
+                if (!data.contains("respect")) data.putInt("respect", 0);
+                if (!data.contains("fear")) data.putInt("fear", 0);
+                if (!data.contains("familiarity")) data.putInt("familiarity", 0);
+                if (!data.contains("debt")) data.putInt("debt", 0);
+                if (!data.contains("grievance")) data.putInt("grievance", 0);
+                // Recompute affinity from original value if multi-axis is all zero.
+                int oldAffinity = data.getInt("affinity");
+                if (oldAffinity != 0 && data.getInt("trust") == 0) {
+                    if (oldAffinity > 0) data.putInt("trust", Math.min(oldAffinity * 2, 100));
+                    else data.putInt("grievance", Math.min(-oldAffinity * 2, 100));
+                    data.putInt("familiarity", Math.min(Math.abs(oldAffinity), 50));
+                    data.putInt("affinity", store.computeAffinity(data));
+                }
+            }
+
             store.relationships.put(key, data);
         }
 
-        Ergenverse.LOGGER.info("[ActorRelStore] Loaded {} NPC-to-NPC relationships",
-                store.relationships.size());
+        Ergenverse.LOGGER.info("[ActorRelStore] Loaded {} NPC-to-NPC relationships (v{})",
+                store.relationships.size(), version);
         return store;
     }
 
-    // ─── Key normalization ────────────────────────────────────────────
+    // ─── Internal helpers ─────────────────────────────────────────────
+
+    private int getAxis(String actorA, String actorB, String axis) {
+        if (actorA == null || actorB == null) return 0;
+        String key = normalizeKey(actorA, actorB);
+        CompoundTag data = relationships.get(key);
+        return data != null ? data.getInt(axis) : 0;
+    }
 
     /**
-     * Normalize a pair key so that "A|B" and "B|A" map to the same entry.
-     * Uses lexicographic ordering.
+     * Compute a legacy affinity score from multi-axis values.
+     * Formula: (trust * 0.4 + respect * 0.2 - fear * 0.3 - grievance * 0.5 + debt * 0.1) * scale
+     * This gives a value roughly in the -50 to +50 range, matching the old affinity scale.
      */
+    private int computeAffinity(CompoundTag data) {
+        int trust = data.getInt("trust");
+        int respect = data.getInt("respect");
+        int fear = data.getInt("fear");
+        int grievance = data.getInt("grievance");
+        int debt = data.getInt("debt");
+        double score = (trust * 0.4 + respect * 0.2 - fear * 0.3 - grievance * 0.5 + Math.min(debt, 10) * 0.1);
+        return (int) Math.round(score);
+    }
+
+    /** Clamp an axis value to [0, 100]. */
+    private static int clampAxis(int value) {
+        return Math.max(0, Math.min(100, value));
+    }
+
     private static String normalizeKey(String a, String b) {
         return a.compareTo(b) <= 0 ? a + "|" + b : b + "|" + a;
     }
@@ -241,9 +372,14 @@ public class ActorRelationshipStore extends SavedData {
         for (var entry : relationships.entrySet()) {
             CompoundTag data = entry.getValue();
             sb.append("  ").append(entry.getKey())
-                    .append(": affinity=").append(data.getInt("affinity"))
+                    .append(": T=").append(data.getInt("trust"))
+                    .append(" R=").append(data.getInt("respect"))
+                    .append(" F=").append(data.getInt("fear"))
+                    .append(" Fam=").append(data.getInt("familiarity"))
+                    .append(" D=").append(data.getInt("debt"))
+                    .append(" G=").append(data.getInt("grievance"))
+                    .append(", affinity=").append(data.getInt("affinity"))
                     .append(", events=").append(data.getInt("eventCount"))
-                    .append(", last=").append(data.contains("lastEvent") ? data.getString("lastEvent") : "none")
                     .append("\n");
         }
         return sb.toString();

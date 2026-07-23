@@ -1,18 +1,23 @@
 package dev.ergenverse.simulation.action;
 
 import dev.ergenverse.core.Ergenverse;
-import dev.ergenverse.simulation.event.SemanticEventTopics;
 import dev.ergenverse.simulation.event.WorldEvent;
 import dev.ergenverse.simulation.event.WorldEventBus;
 import dev.ergenverse.simulation.event.WorldEventSubscriber;
-import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * ReputationObserver — localized reputation that spreads physically.
+ * ReputationObserver — localized, persistent reputation that spreads physically.
  *
  * <p>Per the user's directive (2026-07-23 #2):
  * <pre>
@@ -32,23 +37,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * in a distant region — unless rumors, chronicles, or travelers carry
  * information between them.
  *
- * <h2>How reputation forms</h2>
- * <ul>
- *   <li>High-severity player.* events (combat victories, notable breakthroughs)
- *       contribute positive reputation to the local region.</li>
- *   <li>Negative semantic events (ACT_OF_CRUELTY, PROMISE_BROKEN)
- *       contribute negative reputation to the local region.</li>
- *   <li>Mercy, gifts, and positive semantic events add positive
- *       reputation to the local region.</li>
- *   <li>Reputation decays over time (default: -1 per game-day) if not
- *       reinforced by new deeds.</li>
- * </ul>
+ * <p><b>Persistent (Art XLIII §2):</b> Reputation is stored as SavedData
+ * and survives server restart. A player who spent weeks building reputation
+ * keeps it after logging out.
  *
  * <h2>Reputation spread</h2>
  * <p>Reputation does NOT auto-propagate between regions. It spreads
  * only through:
  * <ul>
- *   <li><b>Rumors</b> — when the RumorEngineEvents propagates a rumor
+ *   <li><b>Rumors</b> — when the RumorEngine propagates a rumor
  *       about a deed, the ReputationObserver picks up the rumor and
  *       adds a fraction of the original reputation to the rumor's region.</li>
  *   <li><b>Travelers</b> — when an NPC migrates between regions, they carry
@@ -56,16 +53,14 @@ import java.util.concurrent.ConcurrentHashMap;
  *   <li><b>Chronicle</b> — long-term chronicle entries can slowly seed
  *       reputation in new regions over time. (Future: tie to chronicle.)</li>
  * </ul>
- * This means a player can be beloved in Zhao Country but unknown in
- * the Sea of Devils — exactly as it should be in the Er Gen universe.
  *
  * <p><b>Not a new Engine (Art XXVI):</b> WorldEventSubscriber that
- * maintains a reputation map. No new bus, no new infrastructure.
+ * maintains a persistent reputation map. No new bus, no new infrastructure.
  */
 public final class ReputationObserver implements WorldEventSubscriber {
 
-    /** Reputation per region+actor: "regionX_Z|actorId" → score. */
-    private static final ConcurrentHashMap<String, Float> reputation = new ConcurrentHashMap<>();
+    private static final String DATA_NAME = "ergenverse_reputation";
+    private static final int CURRENT_VERSION = 1;
 
     /** Decay amount per game-day (24000 ticks). Reputation atrophies. */
     private static final float DAILY_DECAY = 1.0f;
@@ -75,6 +70,12 @@ public final class ReputationObserver implements WorldEventSubscriber {
 
     /** Minimum reputation magnitude. */
     private static final float MIN_REPUTATION = -100.0f;
+
+    /** In-memory cache: "regionX_Z|actorId" → score. Flushed to SavedData periodically. */
+    private static final ConcurrentHashMap<String, Float> reputation = new ConcurrentHashMap<>();
+
+    /** Dirty flag: true when in-memory state needs to be persisted. */
+    private static boolean dirty = false;
 
     @Override
     public String topicPrefix() {
@@ -110,11 +111,72 @@ public final class ReputationObserver implements WorldEventSubscriber {
         float current = reputation.getOrDefault(key, 0f);
         float updated = clampReputation(current + delta);
         reputation.put(key, updated);
+        dirty = true;
 
         Ergenverse.LOGGER.debug("[ReputationObserver] {} in {}: {} ({} → {})",
                 actorId, region, delta > 0 ? "+" + delta : delta,
                 current, updated);
     }
+
+    // ─── Persistence ─────────────────────────────────────────────────
+
+    /**
+     * Get the persistent reputation data for the world. Used by
+     * ReputationObserver internally and by diagnostic commands.
+     */
+    public static ReputationData get(ServerLevel level) {
+        DimensionDataStorage storage = level.getServer().overworld().getDataStorage();
+        return storage.computeIfAbsent(ReputationData::load, ReputationData::new, DATA_NAME);
+    }
+
+    /**
+     * Save in-memory reputation to SavedData. Called periodically from
+     * the server tick loop (every 6000 ticks = 5 minutes) and on world save.
+     */
+    public static void flushToDisk(ServerLevel level) {
+        if (!dirty) return;
+        ReputationData data = get(level);
+        data.replaceAll(reputation);
+        data.setDirty();
+        dirty = false;
+        Ergenverse.LOGGER.debug("[ReputationObserver] Flushed {} reputation entries to disk",
+                reputation.size());
+    }
+
+    /**
+     * Load reputation from SavedData into the in-memory cache.
+     * Called on world load / tick 1.
+     */
+    public static void loadFromDisk(ServerLevel level) {
+        ReputationData data = get(level);
+        reputation.clear();
+        reputation.putAll(data.snapshot());
+        Ergenverse.LOGGER.info("[ReputationObserver] Loaded {} reputation entries from disk",
+                reputation.size());
+    }
+
+    // ─── Decay ───────────────────────────────────────────────────────
+
+    /**
+     * Decay all reputation by the daily amount. Called from server tick.
+     * Reputation atrophies if not reinforced by new deeds.
+     */
+    public static void decayAll(long tick) {
+        if (tick % 24000L != 0) return; // once per game-day
+        for (var entry : reputation.entrySet()) {
+            float current = entry.getValue();
+            if (current > 0 && current > DAILY_DECAY) {
+                entry.setValue(current - DAILY_DECAY);
+            } else if (current < 0 && current < -DAILY_DECAY) {
+                entry.setValue(current + DAILY_DECAY);
+            } else {
+                entry.setValue(0f);
+            }
+        }
+        dirty = true;
+    }
+
+    // ─── Computation ──────────────────────────────────────────────────
 
     /**
      * Compute the reputation delta from an event.
@@ -139,19 +201,19 @@ public final class ReputationObserver implements WorldEventSubscriber {
                 case "TECHNIQUE_DISPLAYED" -> 0.3f;
                 case "CULTIVATION_REVEALED" -> 0.2f;
                 case "FORBIDDEN_KNOWLEDGE_WITNESSED" -> -0.5f;
+                case "EXPECTATION_VIOLATION" -> -0.7f;
                 default -> 0.0f;
             };
         } else if (topic.startsWith("player.")) {
             sign = switch (topic) {
-                case SemanticEventTopics.PLAYER_COMBAT_ENGAGED -> {
+                case "player.combat.engaged" -> {
                     String outcome = event.meta("combat_outcome", "");
                     yield "player_won".equals(outcome) ? severity : -severity * 0.5f;
                 }
-                case SemanticEventTopics.PLAYER_BREAKTHROUGH -> 1.0f;
-                case SemanticEventTopics.PLAYER_GIFT_RECEIVED,
-                     SemanticEventTopics.PLAYER_GIFT_GIVEN -> 0.5f;
-                case SemanticEventTopics.PLAYER_DISCOVERY -> 0.3f;
-                case SemanticEventTopics.PLAYER_INTERACTION -> 0.1f;
+                case "player.breakthrough" -> 1.0f;
+                case "player.gift.given", "player.gift.received" -> 0.5f;
+                case "player.discovery" -> 0.3f;
+                case "player.interaction" -> 0.1f;
                 default -> 0.0f;
             };
         }
@@ -174,30 +236,12 @@ public final class ReputationObserver implements WorldEventSubscriber {
         catch (IllegalArgumentException e) { return false; }
     }
 
-    private static String regionKey(BlockPos pos) {
+    private static String regionKey(net.minecraft.core.BlockPos pos) {
         return "r_" + (pos.getX() / 128) + "_" + (pos.getZ() / 128);
     }
 
     private static float clampReputation(float v) {
         return Math.max(MIN_REPUTATION, Math.min(MAX_REPUTATION, v));
-    }
-
-    /**
-     * Decay all reputation by the daily amount. Called from server tick.
-     * Reputation atrophies if not reinforced by new deeds.
-     */
-    public static void decayAll(long tick) {
-        if (tick % 24000L != 0) return; // once per game-day
-        for (var entry : reputation.entrySet()) {
-            float current = entry.getValue();
-            if (current > 0 && current > DAILY_DECAY) {
-                entry.setValue(current - DAILY_DECAY);
-            } else if (current < 0 && current < -DAILY_DECAY) {
-                entry.setValue(current + DAILY_DECAY);
-            } else {
-                entry.setValue(0f);
-            }
-        }
     }
 
     /** Get the player's reputation in a specific region. Returns 0 if unknown. */
@@ -208,5 +252,55 @@ public final class ReputationObserver implements WorldEventSubscriber {
     /** Get a diagnostic snapshot. */
     public static int reputationCount() { return reputation.size(); }
 
-    public static void clearAll() { reputation.clear(); }
+    public static void clearAll() { reputation.clear(); dirty = false; }
+
+    // ─── SavedData Container ─────────────────────────────────────────
+
+    /**
+     * SavedData container for reputation persistence.
+     * Wraps the reputation map in a SavedData instance so it survives
+     * server restarts per Article XLIII §2.
+     */
+    public static class ReputationData extends SavedData {
+        private final ConcurrentHashMap<String, Float> stored = new ConcurrentHashMap<>();
+
+        public ReputationData() {}
+
+        /** Take a snapshot of the current in-memory state. */
+        public void replaceAll(ConcurrentHashMap<String, Float> source) {
+            stored.clear();
+            stored.putAll(source);
+        }
+
+        /** Get a copy of all stored reputation entries. */
+        public Map<String, Float> snapshot() {
+            return new ConcurrentHashMap<>(stored);
+        }
+
+        @Override
+        public @NotNull CompoundTag save(@NotNull CompoundTag compound) {
+            compound.putInt("data_version", CURRENT_VERSION);
+            ListTag list = new ListTag();
+            for (var entry : stored.entrySet()) {
+                CompoundTag entryTag = new CompoundTag();
+                entryTag.putString("key", entry.getKey());
+                entryTag.putFloat("value", entry.getValue());
+                list.add(entryTag);
+            }
+            compound.put("entries", list);
+            return compound;
+        }
+
+        public static ReputationData load(CompoundTag compound) {
+            ReputationData data = new ReputationData();
+            int version = compound.getInt("data_version");
+            if (version < 1) return data;
+            ListTag list = compound.getList("entries", Tag.TAG_COMPOUND);
+            for (int i = 0; i < list.size(); i++) {
+                CompoundTag entryTag = list.getCompound(i);
+                data.stored.put(entryTag.getString("key"), entryTag.getFloat("value"));
+            }
+            return data;
+        }
+    }
 }
