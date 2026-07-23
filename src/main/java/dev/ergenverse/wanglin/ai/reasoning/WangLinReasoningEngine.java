@@ -1,6 +1,7 @@
 package dev.ergenverse.wanglin.ai.reasoning;
 
 import dev.ergenverse.cultivation.RealmId;
+import dev.ergenverse.simulation.action.ActorRelationshipStore;
 import dev.ergenverse.simulation.affinity.ManifestationGiftSystem;
 import dev.ergenverse.simulation.opportunity.PlayerObserverRealm;
 import dev.ergenverse.wanglin.ai.WangLinSpeechPatterns;
@@ -119,17 +120,24 @@ public final class WangLinReasoningEngine {
         Map<String, Double> playerDao = ExpectationModelObserver.getPlayerDaoMap(player);
         long worldTick = player.level().getGameTime();
 
+        // CRON-COMPLETIONIST-47: Look up Wang Lin's multi-axis relationship with
+        // the player from ActorRelationshipStore. This relationship, seeded by
+        // CanonRelationshipSeeder and evolved by WangLinSemanticSubscriber, now
+        // directly influences Wang Lin's JUDGMENT and SAFETY factors.
+        ActorRelationshipStore.RelationshipSnapshot wangLinRelationship =
+                ActorRelationshipStore.getRelationshipSnapshot(player);
+
         // Resolve item metadata from the existing gift registry (best-effort).
         ItemMeta meta = resolveItemMeta(requestedItemId);
 
         // Run all six factors in canonical order.
         List<GiftingDecision> decisions = new ArrayList<>(6);
         decisions.add(evaluateNecessity(playerRealm, playerDao, meta, requestedItemId));
-        decisions.add(evaluateSafety(playerRealm, meta));
+        decisions.add(evaluateSafety(playerRealm, meta, wangLinRelationship));
         decisions.add(evaluateUsefulness(playerRealm, meta));
         decisions.add(evaluateUniqueness(meta));
         decisions.add(evaluateCurrentNeed(requestedItemId));
-        decisions.add(evaluateJudgment(model, meta, requestedItemId, worldTick));
+        decisions.add(evaluateJudgment(model, meta, requestedItemId, worldTick, wangLinRelationship));
 
         // Aggregate: weighted average.
         double aggregateScore = aggregateWeighted(decisions);
@@ -218,8 +226,19 @@ public final class WangLinReasoningEngine {
      *
      * <p>Low if item's required realm &gt; player's realm + 2 (too much power
      * too fast = dangerous). High (safe) otherwise.
+     *
+     * <p>CRON-COMPLETIONIST-47: Now influenced by Wang Lin's multi-axis
+     * relationship with the player:
+     * <ul>
+     *   <li>High grievance (&gt;60): safety is LESS conservative (-0.15 penalty) —
+     *       Wang Lin is less concerned about a player who has wronged him.
+     *   <li>High trust (&gt;60): safety is LESS conservative (-0.10 penalty) —
+     *       Wang Lin trusts the player can handle powerful items.
+     * </ul>
+     * This is canon: Wang Lin gives stronger items to those he trusts.
      */
-    static GiftingDecision evaluateSafety(RealmId playerRealm, ItemMeta meta) {
+    static GiftingDecision evaluateSafety(RealmId playerRealm, ItemMeta meta,
+                                                  ActorRelationshipStore.RelationshipSnapshot rel) {
         int playerTier = playerRealm.order;
         int itemTier = meta.realmGate;
         double score;
@@ -239,6 +258,24 @@ public final class WangLinReasoningEngine {
                     + playerTier + " — too much power too fast. The player's dao foundation "
                     + "would crack under the weight. Refusing on safety grounds.";
         }
+
+        // CRON-COMPLETIONIST-47: Relationship modifiers.
+        if (rel != null) {
+            if (rel.grievance > 60) {
+                score -= 0.15;
+                reasoning += " Wang Lin's grievance toward the player is high ("
+                        + rel.grievance + ") — he is less concerned about consequences.";
+            }
+            if (rel.trust > 60) {
+                score -= 0.10;
+                reasoning += " Wang Lin trusts the player (trust=" + rel.trust
+                        + ") — believes they can handle power.";
+            }
+        }
+
+        if (score > 1.0) score = 1.0;
+        if (score < 0.0) score = 0.0;
+
         return new GiftingDecision(GiftingFactor.SAFETY, score, reasoning);
     }
 
@@ -321,20 +358,24 @@ public final class WangLinReasoningEngine {
     }
 
     /**
-     * JUDGMENT — Based on the Expectation Model, is this the right time?
+     * JUDGMENT — Based on the Expectation Model AND Wang Lin's multi-axis
+     * relationship with the player, is this the right time?
      *
      * <p>Integrates {@link ExpectationModel}. High if model's top predictions
-     * align with the item's purpose (e.g., pursuing_restriction_dao +
-     * restriction jade slip = high judgment).
+     * align with the item's purpose.
+     *
+     * <p>CRON-COMPLETIONIST-47: Now also reads ActorRelationshipStore to add
+     * a "relationship modifier" to the judgment score. The modifier is:
+     * {@code (trust * 0.3 + respect * 0.2 - fear * 0.1 - grievance * 0.3) / 100.0}
+     * This means high trust/respect IMPROVES judgment (Wang Lin is more willing
+     * to give), while high fear/grievance LOWERS it.
      *
      * <p><b>HOARDING CORRECTION:</b> if "hoarding_path" prediction is
-     * high-confidence, this factor looks at what the player NEEDS MOST (e.g.,
-     * a hoarding player probably needs a breakthrough catalyst more than
-     * another treasure). The hoarding prediction NEVER lowers the score — it
-     * only redirects the alignment bonus.
+     * high-confidence, this factor looks at what the player NEEDS MOST.
      */
     static GiftingDecision evaluateJudgment(ExpectationModel model, ItemMeta meta,
-                                             String requestedItemId, long worldTick) {
+                                             String requestedItemId, long worldTick,
+                                             ActorRelationshipStore.RelationshipSnapshot rel) {
         double score = 0.5; // Neutral baseline
         StringBuilder reasoning = new StringBuilder();
         reasoning.append("Judgment integrates the Expectation Model. ");
@@ -414,6 +455,26 @@ public final class WangLinReasoningEngine {
         // Clamp.
         if (score > 1.0) score = 1.0;
         if (score < 0.0) score = 0.0;
+
+        // CRON-COMPLETIONIST-47: Apply relationship modifier from ActorRelationshipStore.
+        // This makes Wang Lin's opinion of the player DIRECTLY influence his
+        // willingness to give. Before this, the reasoning engine was purely
+        // based on item fit + ExpectationModel — it ignored the accumulated
+        // relationship history.
+        if (rel != null) {
+            double relationshipModifier = (rel.trust * 0.3 + rel.respect * 0.2
+                    - rel.fear * 0.1 - rel.grievance * 0.3) / 100.0;
+            // Clamp modifier to avoid extreme swings
+            relationshipModifier = Math.max(-0.25, Math.min(0.25, relationshipModifier));
+            score += relationshipModifier;
+            if (score > 1.0) score = 1.0;
+            if (score < 0.0) score = 0.0;
+            reasoning.append(" Relationship modifier: trust=").append(rel.trust)
+                    .append(" respect=").append(rel.respect)
+                    .append(" fear=").append(rel.fear)
+                    .append(" grievance=").append(rel.grievance)
+                    .append(" → ").append(String.format("%.3f", relationshipModifier)).append(".");
+        }
 
         return new GiftingDecision(GiftingFactor.JUDGMENT, score, reasoning.toString());
     }

@@ -2,6 +2,7 @@ package dev.ergenverse.wanglin.ai.reasoning;
 
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.history.RelationshipHistory;
+import dev.ergenverse.simulation.action.ActorRelationshipStore;
 import dev.ergenverse.simulation.event.SemanticEventTopics;
 import dev.ergenverse.simulation.event.WorldEvent;
 import dev.ergenverse.simulation.event.WorldEventSubscriber;
@@ -172,6 +173,15 @@ public final class WangLinSemanticSubscriber implements WorldEventSubscriber {
         if (player != null) {
             updateRelationshipHistory(player, event, semanticTag);
         }
+
+        // ── 3. Update ActorRelationshipStore (6-axis per Article XXXIV) ──
+        // CRON-COMPLETIONIST-47: Previously, Wang Lin's semantic subscriber only
+        // wrote to RelationshipHistory but NOT to ActorRelationshipStore. This meant
+        // Wang Lin's seeded 6-axis relationships (trust, respect, fear, familiarity,
+        // debt, grievance) from CanonRelationshipSeeder never evolved from observed
+        // events. Now, every semantic event updates the multi-axis relationship store,
+        // so Wang Lin's opinions actually change based on what he witnesses.
+        updateActorRelationshipStore(event, otherActorId, semanticTag);
 
         Ergenverse.LOGGER.debug("[WangLinSemantic] Observed: {} by {} → opinion updated",
                 semanticTag, otherActorId);
@@ -392,6 +402,111 @@ public final class WangLinSemanticSubscriber implements WorldEventSubscriber {
                 || lower.contains("enemy") || lower.contains("bandit")) return false;
         // Default: unknown = not innocent (Wang Lin doesn't assume innocence)
         return false;
+    }
+
+    /**
+     * Update the ActorRelationshipStore with Wang-Lin-specific multi-axis deltas.
+     * This is the CRON-COMPLETIONIST-47 gap fix: without this, Wang Lin's 6-axis
+     * relationships from CanonRelationshipSeeder are static and never change.
+     *
+     * <p>Uses Wang-Lin-specific weights that reflect his canon personality:
+     * he values mercy (parents killed), despises betrayal (Situ Nan), honors
+     * debts (filial/piety), respects ruthless efficiency against enemies.
+     */
+    private void updateActorRelationshipStore(WorldEvent event, String otherActorId,
+                                                String semanticTag) {
+        ServerLevel level = dev.ergenverse.simulation.event.WorldEventBus.currentLevel();
+        if (level == null) return;
+        ActorRelationshipStore store = ActorRelationshipStore.get(level);
+        long tick = level.getGameTime();
+
+        float s = Math.min(event.severity(), 1.0f);
+        int trustDelta = 0, respectDelta = 0, fearDelta = 0;
+        int familiarityDelta = 2; // base familiarity gain for witnessing anything
+        int debtDelta = 0, grievanceDelta = 0;
+
+        switch (semanticTag) {
+            case "ACT_OF_MERCY" -> {
+                trustDelta = round(4 * s);
+                respectDelta = round(3 * s);
+                grievanceDelta = round(-2 * s);
+            }
+            case "ACT_OF_CRUELTY" -> {
+                String target = event.targetActorId();
+                if (isInnocent(target)) {
+                    // Cruelty to innocents: mirrors Teng Clan parallel
+                    trustDelta = round(-8 * s);
+                    respectDelta = round(-5 * s);
+                    fearDelta = round(2 * s);
+                    grievanceDelta = round(10 * s);
+                } else {
+                    // Cruelty to enemies: Wang Lin understands
+                    respectDelta = round(2 * s);
+                }
+            }
+            case "PROMISE_MADE" -> {
+                trustDelta = round(3 * s);
+                respectDelta = round(1 * s);
+            }
+            case "PROMISE_BROKEN" -> {
+                // Mirrors Situ Nan betrayal parallel
+                trustDelta = round(-10 * s);
+                respectDelta = round(-3 * s);
+                grievanceDelta = round(8 * s);
+            }
+            case "DEBT_REPAID" -> {
+                // Filial/piety values
+                trustDelta = round(6 * s);
+                respectDelta = round(4 * s);
+            }
+            case "DEBT_IGNORED" -> {
+                trustDelta = round(-6 * s);
+                grievanceDelta = round(6 * s);
+            }
+            case "TECHNIQUE_DISPLAYED" -> {
+                respectDelta = round(2 * s);
+            }
+            case "CULTIVATION_REVEALED" -> {
+                // Wang Lin believes in concealment
+                respectDelta = round(-1 * s);
+                fearDelta = round(-1 * s);
+            }
+            case "GIFT_GIVEN", "GIFT_RECEIVED" -> {
+                trustDelta = round(1 * s);
+            }
+            case "PUBLIC_HUMILIATION" -> {
+                respectDelta = round(-3 * s);
+                grievanceDelta = round(5 * s);
+            }
+            case "COMBAT_ENGAGED" -> {
+                String outcome = event.meta("outcome", "");
+                if ("VICTORY".equals(outcome) || "player_won".equals(outcome)) {
+                    respectDelta = round(1 * s);
+                }
+            }
+            case "FORBIDDEN_KNOWLEDGE_WITNESSED" -> {
+                // curiosity is neutral-positive for Wang Lin
+            }
+            case "EXPECTATION_VIOLATION" -> {
+                trustDelta = round(-3 * s);
+                grievanceDelta = round(3 * s);
+            }
+            default -> { /* no deltas */ }
+        }
+
+        if (trustDelta == 0 && respectDelta == 0 && fearDelta == 0
+                && familiarityDelta == 0 && debtDelta == 0 && grievanceDelta == 0) return;
+
+        store.recordMultiAxis(
+                WANG_LIN_ID, otherActorId,
+                trustDelta, respectDelta, fearDelta,
+                familiarityDelta, debtDelta, grievanceDelta,
+                "Wang Lin observed: " + event.description(),
+                tick);
+    }
+
+    private int round(float value) {
+        return Math.max(-100, Math.min(100, Math.round(value)));
     }
 
     private ServerPlayer resolvePlayer(String actorId) {

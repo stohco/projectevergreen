@@ -364,6 +364,65 @@ public class ActorRelationshipStore extends SavedData {
         return a.compareTo(b) <= 0 ? a + "|" + b : b + "|" + a;
     }
 
+    // ─── CRON-COMPLETIONIST-47: Snapshot for ReasoningEngine integration ──
+
+    /**
+     * Immutable snapshot of a relationship's 6-axis values.
+     * Used by WangLinReasoningEngine to incorporate relationship state into
+     * JUDGMENT and SAFETY factor computations without holding a store reference.
+     *
+     * <p>Null fields indicate "no relationship exists" — the ReasoningEngine
+     * treats this as neutral (all zeros).
+     */
+    public static class RelationshipSnapshot {
+        public final int trust;
+        public final int respect;
+        public final int fear;
+        public final int familiarity;
+        public final int debt;
+        public final int grievance;
+
+        public RelationshipSnapshot(int trust, int respect, int fear,
+                                     int familiarity, int debt, int grievance) {
+            this.trust = trust;
+            this.respect = respect;
+            this.fear = fear;
+            this.familiarity = familiarity;
+            this.debt = debt;
+            this.grievance = grievance;
+        }
+
+        /** Create a null/neutral snapshot (no relationship). */
+        public static RelationshipSnapshot neutral() {
+            return new RelationshipSnapshot(0, 0, 0, 0, 0, 0);
+        }
+    }
+
+    /**
+     * Convenience: get Wang Lin's relationship snapshot with a player.
+     * Looks up "wang_lin|{playerUUID}" in the store. Returns neutral
+     * snapshot if no relationship exists.
+     *
+     * @param player the player to look up Wang Lin's relationship with
+     * @return snapshot of Wang Lin's 6-axis values, or neutral if none
+     */
+    public static RelationshipSnapshot getRelationshipSnapshot(net.minecraft.server.level.ServerPlayer player) {
+        ServerLevel level = dev.ergenverse.simulation.event.WorldEventBus.currentLevel();
+        if (level == null || player == null) return RelationshipSnapshot.neutral();
+        ActorRelationshipStore store = get(level);
+        String playerKey = player.getStringUUID();
+        int trust = store.getTrust(WANG_LIN_ID, playerKey);
+        int respect = store.getRespect(WANG_LIN_ID, playerKey);
+        int fear = store.getFear(WANG_LIN_ID, playerKey);
+        int familiarity = store.getFamiliarity(WANG_LIN_ID, playerKey);
+        int debt = store.getDebt(WANG_LIN_ID, playerKey);
+        int grievance = store.getGrievance(WANG_LIN_ID, playerKey);
+        return new RelationshipSnapshot(trust, respect, fear, familiarity, debt, grievance);
+    }
+
+    /** Wang Lin's canon actor ID — used by getRelationshipSnapshot. */
+    private static final String WANG_LIN_ID = "wang_lin";
+
     // ─── Diagnostics ──────────────────────────────────────────────────
 
     public String getStatusReport() {
