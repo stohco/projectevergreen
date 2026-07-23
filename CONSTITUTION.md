@@ -1685,3 +1685,192 @@ simulation is the game. The save file is the universe.
 A system that despawns an NPC, respawns a dead beast, regenerates a
 destroyed structure, or overwrites canon is a bug — unless it is
 explicitly part of a Layer 3 delta that the player chose.
+
+
+---
+
+## Article XLIV — The Actor Is Primary; The Spawn Is Deprecated
+
+The simulation has outgrown Minecraft's spawn model. This Article
+codifies the inversion and retires the legacy spawn-registry concept.
+
+### §1 — The Inversion
+
+The prior architecture was implicitly Minecraft:
+
+```
+chunk loads → spawn NPC → NPC exists
+```
+
+This is backwards for this project. An NPC does not come into existence
+because a chunk loaded. The NPC already existed. They were already
+cultivating. Already thinking. Already planning. Already somewhere.
+Minecraft is simply catching up to reality.
+
+The correct flow is:
+
+```
+NPC exists (alive, simulating)
+  → NPC currently happens to be here (presence, derived from their life)
+    → renderer asks: which actors intersect loaded chunks?
+      → those become entities (materialize)
+        → when distant, dematerialize (keep simulating)
+```
+
+Wang Lin never "spawns." When you load a save, he does not pop into
+existence. He was already mid-cultivation. The renderer materializes
+him because his current presence intersects a loaded chunk — not
+because a spawn event fired.
+
+### §2 — The Spawn Registry Is Deprecated
+
+There shall be no spawn registry. The concept of "register this NPC to
+spawn at this location" is retired. The existing `NpcSpawnRegistry`,
+`SettlementNpcAnchors`, and the spawn-driven `ReificationScan` are
+DEPRECATED. They are retained only during the transition and will be
+deleted in a future cycle.
+
+The replacement is:
+- **SettlementRegistry** — settlements own populations (§3).
+- **Residence** — actors own buildings; buildings do not own actors (§4).
+- **ActorPresence** — an actor's position is derived from their life,
+  not from a fixed offset (§5).
+- **ActorMaterializer** — the renderer asks which actors' presence
+  intersects loaded chunks, and materializes those.
+
+A system that treats an NPC as something to be "spawned" is a bug. An
+NPC is a living actor who happens to be renderable when nearby.
+
+### §3 — The Settlement Object
+
+A Settlement is the simulation-owned object for an inhabited place. It
+is NOT a Minecraft structure. Minecraft renders it (via builders); the
+simulation owns it. The player arriving does not cause a settlement to
+exist — it already existed. The player merely intersects it.
+
+A Settlement owns:
+
+```
+Name, Canonical Location, Buildings, Residences, Road Graph,
+Population, Visitors, Economy, Ecology, Spirit Veins,
+History, Relationships, Events
+```
+
+The flow is:
+
+```
+Settlement → Population → Actors → Materialization → Minecraft
+```
+
+NOT:
+
+```
+Chunk → Spawn NPC
+```
+
+Wang Family Village is never "filled with NPCs." Instead the engine
+asks: "Who currently lives here?" The answer depends on the time of
+day, the actors' current activities, and the context. Morning: mother,
+father, children, merchant, farmer, elder. Noon: merchant gone, hunter
+left, children at the river, elder visiting the shrine. Night: most
+indoors, one guard awake, merchant asleep. Nobody is spawned. They are
+living.
+
+### §4 — Residences: NPCs Own Buildings
+
+Buildings do not own NPCs. NPCs own buildings. This is a subtle but
+important inversion.
+
+A Residence is:
+
+```
+Owner
+Residents
+Storage
+History
+Visitors
+Security
+Rooms
+Current occupants
+```
+
+Wang Lin happens to live in the Wang Family Home. His mother lives
+there. His father lives there. The home does not "contain" them; they
+own it.
+
+Residences can change. Wang Lin leaves forever. Years pass. His
+parents die. The house is abandoned. Another family moves in. Or the
+village burns. The house is destroyed. The house is rebuilt. Same
+coordinate. Different history. The Residence object carries the full
+ownership + lifecycle history (founding, transfers, abandonment,
+destruction, rebuild) as an append-only Layer 3 record.
+
+### §5 — Presence Is Derived From Life, Not Fixed
+
+NPC positions shall not be fixed offsets. Instead, an actor has
+weighted presence locations: Home, Meditation Spot, Favorite Tree,
+Restriction Cave, Marketplace, Spirit Spring. Each location has a
+per-time-of-day weight. Morning: 90% Home. Afternoon: Meditation Rock.
+Night: Home. If wolves appear, everything changes — the context
+collapses all actors onto home/flee positions.
+
+The ActorPresence engine combines an actor's home (from their
+Residence) with the settlement's shared locations, applies the
+time-of-day weights, applies contextual modifiers, and produces the
+actor's current position. The pick is deterministic per (actorId, day,
+phase) so the actor does not teleport-flicker between scans.
+
+A system that hardcodes an NPC's position as a fixed (dx, dz) offset
+is a bug. An NPC's position is a derived fact about a living actor.
+
+### §6 — Canon NPCs vs Simulation NPCs
+
+The Constitution distinguishes two categories of NPC:
+
+- **Canon NPCs** — Wang Lin, Li Muwan, Situ Nan, Wang Tianshui, Wang
+  Zhou. Sourced from the novels. Immutable. Their existence, identity,
+  and canon relationships are non-negotiable.
+- **Simulation NPCs** — Farmer Chen, Disciple Zhao, Merchant Xu, Hunter
+  Luo. Generated to fill the spaces between canon. They are allowed;
+  otherwise the world will always feel tiny. The important rule: they
+  must never contradict canon. They fill the spaces between canon.
+
+Both live in the same Settlement population set. The distinction is
+carried on the Actor provenance field ("canon:..." vs "simulation:...").
+Canon NPCs are never deleted, never renamed, never re-roled. Simulation
+NPCs may be added, may die, may move — as the simulation dictates.
+
+### §7 — The Sect Is Not A Structure
+
+A sect is not architected as a structure. It is architected as a sect.
+A sect has: political hierarchy, cultivation districts, supply routes,
+disciple housing, punishment halls, alchemy economy, lectures, patrol
+schedules, elder residences, training grounds, formation maintenance,
+recruitment.
+
+If those systems exist, the buildings almost design themselves. A
+Heng Yue Sect built only as a block layout — even with canon-correct
+blocks — is a diorama, not a sect. The Settlement object for a sect
+must carry the sect's organizational structure, not just its geometry.
+
+### Compliance
+
+A system that "spawns" an NPC (rather than materializing an already-
+existing actor whose presence intersects a loaded chunk) is a bug —
+unless it is the deprecated transition path explicitly marked as such.
+
+A system that hardcodes an NPC's position as a fixed offset (rather
+than deriving it from the actor's residence + time-of-day + context)
+is a bug.
+
+A system that treats a building as owning an NPC (rather than an NPC
+owning a residence) is a bug.
+
+A Simulation NPC that contradicts canon (claims to be Wang Lin, claims
+to hold a canon artifact, claims canon relationships they do not have)
+is a bug.
+
+When in doubt: the actor already existed. Minecraft is catching up.
+When in doubt: the settlement owns the people. The people own the
+residences. Minecraft owns only the rendering.
+

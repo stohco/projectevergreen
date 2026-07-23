@@ -16,7 +16,23 @@ import java.util.Map;
  * check in {@link ReificationScan} with a registry lookup. Any location
  * can have zero or more NPCs registered to spawn there.
  *
- * <h2>Why this matters</h2>
+ * <h2>DEPRECATED — Constitution Article XLIV</h2>
+ * <p><b>This class is DEPRECATED.</b> Per Article XLIV (§2): "There shall be
+ * no spawn registry. The concept of 'register this NPC to spawn at this
+ * location' is retired." This class is retained ONLY during the transition
+ * to the actor-as-source-of-truth model and WILL BE DELETED in a future
+ * cycle.
+ *
+ * <p>The replacement is {@link dev.ergenverse.simulation.settlement.SettlementRegistry}
+ * (settlements own populations) + {@link dev.ergenverse.simulation.settlement.ActorMaterializer}
+ * (the renderer asks which actors' presence intersects loaded chunks, and
+ * materializes those). Under the new model, an NPC never "spawns" — they
+ * already existed; Minecraft is catching up to reality.
+ *
+ * <p>Do not add new entries to this registry. New NPCs should be registered
+ * as population members of a {@link dev.ergenverse.simulation.settlement.Settlement}.
+ *
+ * <h2>Why this matters (legacy)</h2>
  * <p>Per Constitution Article XXII: "A canon entry that exists only as data,
  * never as experience, is a failure." This registry bridges NPC data files
  * to actual in-world spawning via {@link ReificationScan}.
@@ -46,6 +62,7 @@ import java.util.Map;
  * <p><b>Provenance: INFERRED.</b> Spawn locations inferred from NPC data
  * files' "location" field, mapped to the nearest resolvable biome region.
  */
+@Deprecated
 public final class NpcSpawnRegistry {
 
     /** Map: locationId → list of NPC character IDs that spawn there. */

@@ -398,12 +398,24 @@ public final class Ergenverse {
             dev.ergenverse.history.CanonDivergenceRecorder.get(overworld);
             // Initialize the NPC spawn registry — maps locations to canon NPCs.
             // Without this, only wang_tiangui would ever spawn.
+            // DEPRECATED (Article XLIV): the spawn-registry model is being replaced
+            // by the actor-as-source-of-truth SettlementRegistry + ActorMaterializer.
+            // Retained during the transition; will be deleted in a future cycle.
             dev.ergenverse.simulation.NpcSpawnRegistry.initialize();
             // Initialize settlement NPC anchors — fixed positions for village NPCs.
             // Fixes the ghost-town bug where NPCs spawned randomly in biomes.
+            // DEPRECATED (Article XLIV): replaced by SettlementRegistry residences,
+            // whose presence is derived from life (time-of-day + activity), not
+            // fixed offsets. Retained during the transition.
             dev.ergenverse.simulation.SettlementNpcAnchors.initialize();
             // Initialize ReificationScan settlement centers (reads builder constants).
             dev.ergenverse.simulation.ReificationScan.initializeSettlements();
+            // ── Article XLIV: the actor-as-source-of-truth model ──
+            // The NEW primary index for "who lives where." Settlements own
+            // populations; actors have presence derived from their life; the
+            // ActorMaterializer renders those intersecting loaded chunks.
+            // Wang Lin never "spawns" — he already existed; Minecraft catches up.
+            dev.ergenverse.simulation.settlement.SettlementRegistry.initialize();
         }
 
         // Loop A: CausalEcology — every tick (existing system, unchanged)
@@ -431,9 +443,21 @@ public final class Ergenverse {
 
         // Loop C: ReificationScan — every 100 ticks (5 sec proximity scan)
         // Materializes canon NPCs when players approach their spawn anchors.
+        // DEPRECATED (Article XLIV): the spawn-driven model is being replaced by
+        // the actor-as-source-of-truth ActorMaterializer (Loop C2). Retained
+        // during the transition; both use the same duplicate-detection so they
+        // never double-spawn. Eventually this loop + NpcSpawnRegistry +
+        // SettlementNpcAnchors will be deleted.
         dev.ergenverse.simulation.ReificationScan.executeTick(
                 overworld, ticks,
                 dev.ergenverse.simulation.SpatialBiomeCacheIndex.getInstance());
+
+        // Loop C2: ActorMaterializer — every 100 ticks (Article XLIV)
+        // The INVERTED renderer query. Instead of "chunk loads → spawn NPC,"
+        // this asks "which actors' current presence intersects loaded chunks?"
+        // and materializes those. Actors already exist (alive, simulating);
+        // Minecraft is simply catching up to reality. Wang Lin never "spawns."
+        dev.ergenverse.simulation.settlement.ActorMaterializer.executeTick(overworld, ticks);
 
         // Loop D: WorldHistory — every 24000 ticks (daily checkpoint + future timeline advance)
         // Also ticks on every call; tickWorldHistory internally gates to daily.
