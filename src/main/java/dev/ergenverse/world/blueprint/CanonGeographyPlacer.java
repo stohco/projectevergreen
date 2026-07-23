@@ -29,8 +29,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>Currently builds:
  * <ul>
  *   <li>Wang Family Village (via WangFamilyVillageBuilder — already implemented)</li>
- *   <li>Heng Yue Sect marker (placeholder structure until full sect builder)</li>
- *   <li>Teng City marker (placeholder structure until full city builder)</li>
+ *   <li>Heng Yue Sect (via HengYueSectBuilder — full sect builder)</li>
+ *   <li>Teng City (via TengFamilyCityBuilder — full city builder)</li>
+ *   <li>Tian Shui City (via TianShuiCityBuilder — full city builder)</li>
  *   <li>Zhao Capital marker (placeholder)</li>
  *   <li>Canonical spirit vein stone markers at each spirit vein location</li>
  *   <li>Restriction zone boundary markers</li>
@@ -133,6 +134,18 @@ public final class CanonGeographyPlacer {
                     BlockPos tengCenter = new BlockPos(x, tengY, z);
                     if (!dev.ergenverse.spawn.TengFamilyCityBuilder.isAlreadyBuilt(level, tengCenter)) {
                         dev.ergenverse.spawn.TengFamilyCityBuilder.build(level, tengCenter);
+                    }
+                }
+                case "tian_shui_city" -> {
+                    // Full hand-built Tian Shui City (天水城) — greatest trade hub in Zhao Country.
+                    // Constitution: the world is completely hand-crafted, NOT a block-swap script.
+                    // Every block placed intentionally in Java via TianShuiCityBuilder.
+                    int tsY = level.getHeightmapPos(
+                            net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                            new BlockPos(x, 0, z)).getY();
+                    BlockPos tsCenter = new BlockPos(x, tsY, z);
+                    if (!dev.ergenverse.spawn.TianShuiCityBuilder.isAlreadyBuilt(level, tsCenter)) {
+                        dev.ergenverse.spawn.TianShuiCityBuilder.build(level, tsCenter);
                     }
                 }
                 case "zhao_capital" -> buildZhaoCapitalMarker(level, x, z, settlement);

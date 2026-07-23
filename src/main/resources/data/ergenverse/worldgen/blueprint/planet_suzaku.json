@@ -230,6 +230,21 @@
         "_distance_comment": "~2 days travel."
       },
       {
+        "id": "tian_shui_city",
+        "name": "Tian Shui City",
+        "canon_name": "Tian Shui Cheng / 天水城",
+        "canon_confidence": "EXPLICIT — major trade hub in Zhao Country, on the central river",
+        "type": "mortal_city",
+        "x": 5200,
+        "z": 600,
+        "country": "zhao",
+        "population": 100000,
+        "description": "The greatest trade city in Zhao Country. Situated on the central river, Tian Shui City is where merchants, cultivators, and mortals converge. The city lord is Core Formation. Home to the merchant guild, cultivator guild, and the city guard. Known for its elegant white-stone architecture and bustling river port.",
+        "chapter": 1,
+        "distance_from_wang_village": 2200,
+        "_distance_comment": "~3 days travel by river barge."
+      },
+      {
         "id": "zhao_capital",
         "name": "Zhao Capital",
         "canon_name": "Zhao Guo Du / 赵国都",
