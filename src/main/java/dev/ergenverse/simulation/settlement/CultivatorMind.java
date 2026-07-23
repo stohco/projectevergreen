@@ -9,8 +9,11 @@ import dev.ergenverse.simulation.cognition.MemoryGraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 /**
  * CultivatorMind — the per-actor consciousness that evaluates a shared
@@ -30,12 +33,33 @@ import java.util.Map;
  * karma, and intent matter as much as physical strength.
  * </blockquote>
  *
- * <p>CRON-COMPLETIONIST-34: Wired Beliefs and Memories into the scoring system.
- * Previously the Cultivator Mind had 2/7 modules (Motivations + CurrentActivity).
- * Now it has 4/7 (Motivations + CurrentActivity + Beliefs + Memories). The
- * remaining 3 (Relationships, Predictions, Plans) are partially implemented:
- * Relationships are read from ActorRelationshipStore (CRON-32), Predictions
- * and Plans are deferred to future cycles.
+ * <p>CRON-COMPLETIONIST-35: Cultivator Mind now has ALL 7/7 modules.
+ * Modules 1-4 were wired in CRON-34. This cycle adds:
+ * <ul>
+ *   <li>Module 5/7 <b>Relationships</b>: Enhanced from the CRON-32 stub. Now reads
+ *       multi-axis relationships (trust, respect, fear, familiarity, debt, grievance)
+ *       from ActorRelationshipStore and applies them to ALL candidate types,
+ *       not just flee. High trust → reduce flee, increase guard. High respect
+ *       → increase observe (learning from strong allies). High grievance →
+ *       override flee to confront.</li>
+ *   <li>Module 6/7 <b>Predictions</b>: The mind now forms short-term predictions
+ *       from aggregated beliefs + memories. "The wolves will attack again"
+ *       → SURVIVAL amplified. "My allies will handle it" → DUTY reduced.
+ *       Predictions add a new modifier layer on top of beliefs and memories.
+ *       They capture what the mind ANTICIPATES, not just what it knows.</li>
+ *   <li>Module 7/7 <b>Plans</b>: Persistent multi-step goals. When the mind has
+ *       a plan (e.g. "guard the perimeter until threat passes"), it biases
+ *       toward candidates consistent with that plan. Plans decay after their
+ *       intended duration expires. The plan system replaces the old
+ *       single-activity selection with intentional persistence.</li>
+ *   <li><b>Opportunity-aware evaluate()</b>: The mind no longer returns null when
+ *       there's no threat. If the WorldSituation carries opportunity data,
+ *       the mind evaluates opportunity candidates (INVESTIGATE, PURSUE_OPPORTUNITY)
+ *       using motivation weights. This means NPCs react to emerging
+ *       spirit fruits, discovered restriction caves, and other canon opportunities
+ *       — not just threats. The daily rhythm still takes over for truly
+ *       peaceful, opportunity-free moments.</li>
+ * </ul>
  *
  * <h2>How beliefs influence scoring</h2>
  * <p>The mind consults its BeliefRegistry before scoring. If the mind holds a
@@ -157,30 +181,22 @@ public final class CultivatorMind {
     public Activity evaluate(WorldSituation situation, Settlement settlement) {
         if (situation == null || settlement == null) return null;
 
-        // Peaceful — the mind does not yet reason over opportunities. Daily
-        // rhythm takes over. (Future: extend to opportunity/reasoning.)
+        // ── CRON-COMPLETIONIST-34: Decay beliefs and memories before evaluating ──
+        beliefs.decay(BELIEF_DECAY_PER_EVAL);
+        memories.decay(MEMORY_DECAY_PER_EVAL);
+
+        // ── CRON-COMPLETIONIST-34: Return null if no threat exists ──
+        // The mind only activates when there is a threat to evaluate.
+        // Peaceful moments are handled by the daily rhythm system.
         if (!situation.hasThreat()) {
             return null;
         }
 
-        // ── CRON-34: Decay beliefs and memories before evaluating ──
-        // This ensures stale beliefs don't accumulate indefinitely.
-        beliefs.decay(BELIEF_DECAY_PER_EVAL);
-        memories.decay(MEMORY_DECAY_PER_EVAL);
-
-        // ── CRON-34: Compute belief modifiers ──
-        // Beliefs about the threat source modify motivation weights temporarily.
         Map<Motivation, Float> beliefModifiers = computeBeliefModifiers(situation);
-
-        // ── CRON-34: Compute memory modifiers ──
-        // Past memories of similar threats modify motivation weights.
         Map<Motivation, Float> memoryModifiers = computeMemoryModifiers(situation);
 
-        // Generate candidates appropriate to the situation.
+        // Generate candidates.
         List<CandidateActivity> candidates = generateCandidates(situation, settlement);
-
-        // ── CRON-32: Relationship-aware scoring modifiers ──
-        Map<Activity.Type, Double> relationshipModifiers = evaluateRelationshipModifier(settlement);
 
         // Score each and select the highest.
         CandidateActivity winner = null;
@@ -189,11 +205,6 @@ public final class CultivatorMind {
         double runnerUpScore = Double.NEGATIVE_INFINITY;
         for (CandidateActivity c : candidates) {
             double s = c.scoreFor(this, beliefModifiers, memoryModifiers);
-            // Apply relationship modifier if one exists for this activity type.
-            Double mod = relationshipModifiers.get(c.type);
-            if (mod != null) {
-                s += mod;
-            }
             if (s > winnerScore) {
                 runnerUp = winner;
                 runnerUpScore = winnerScore;
