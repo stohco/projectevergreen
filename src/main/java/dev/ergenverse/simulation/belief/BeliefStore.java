@@ -5,10 +5,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -75,7 +77,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * is a singleton per server level, loaded on first access and persisted
  * on every mutation.
  */
-public final class BeliefStore {
+public class BeliefStore extends SavedData {
+
+    private static final String DATA_NAME = "ergenverse_beliefs";
+    private static final int CURRENT_VERSION = 1;
 
     // ─── NBT keys ─────────────────────────────────────────────────
     private static final String TAG_BELIEFS = "beliefs";
@@ -113,29 +118,28 @@ public final class BeliefStore {
     // Key: "subject|object" → list of beliefs (one per trait)
     private final Map<String, List<Belief>> beliefs = new ConcurrentHashMap<>();
 
-    private static volatile BeliefStore instance;
-
     private BeliefStore() {}
 
-    /** Get the singleton instance (creates if necessary). */
+    /**
+     * Get the world-global belief store. Attached to the overworld's
+     * DimensionDataStorage so it persists across server restarts.
+     * Lazy-creates on first access.
+     */
     public static BeliefStore get() {
-        if (instance == null) {
-            synchronized (BeliefStore.class) {
-                if (instance == null) {
-                    instance = new BeliefStore();
-                    Ergenverse.LOGGER.info("[BeliefStore] Initialized.");
-                }
-            }
+        // Try to get the persisted instance if we have a ServerLevel.
+        net.minecraft.server.level.ServerLevel level =
+                dev.ergenverse.simulation.event.WorldEventBus.currentLevel();
+        if (level != null) {
+            DimensionDataStorage storage = level.getServer().overworld().getDataStorage();
+            return storage.computeIfAbsent(BeliefStore::load, BeliefStore::new, DATA_NAME);
         }
-        return instance;
+        // Fallback for non-server context: create an in-memory instance.
+        return new BeliefStore();
     }
 
     /** Clear the singleton (called on world unload). */
     public static void clear() {
-        if (instance != null) {
-            instance.beliefs.clear();
-        }
-        instance = null;
+        // No-op: persistence is handled by SavedData.
     }
 
     // ─── Recording ────────────────────────────────────────────────
@@ -168,6 +172,7 @@ public final class BeliefStore {
                 newConf = Math.min(1f, newConf + 0.05f); // small boost for reinforcement
                 list.set(i, new Belief(subject, object, trait,
                         newConf, tick, b.evidenceCount + 1));
+                this.setDirty();
                 return;
             }
         }
@@ -186,6 +191,7 @@ public final class BeliefStore {
             }
             list.remove(weakestIdx);
         }
+        this.setDirty();
     }
 
     /**
@@ -208,6 +214,7 @@ public final class BeliefStore {
                     list.set(i, new Belief(subject, object, trait,
                             newConf, tick, b.evidenceCount));
                 }
+                this.setDirty();
                 return;
             }
         }
@@ -282,12 +289,16 @@ public final class BeliefStore {
                         b.confidence - reduction, b.formedAt, b.evidenceCount));
             }
         }
+        if (!beliefs.isEmpty()) {
+            this.setDirty();
+        }
     }
 
-    // ─── Serialization ────────────────────────────────────────────
+    // ─── Serialization (SavedData contract) ──────────────────────
 
-    public CompoundTag save() {
-        CompoundTag tag = new CompoundTag();
+    @Override
+    public @NotNull CompoundTag save(@NotNull CompoundTag compound) {
+        compound.putInt("data_version", CURRENT_VERSION);
         ListTag list = new ListTag();
         for (var entry : beliefs.values()) {
             for (Belief b : entry) {
@@ -301,14 +312,16 @@ public final class BeliefStore {
                 list.add(bt);
             }
         }
-        tag.put(TAG_BELIEFS, list);
-        return tag;
+        compound.put(TAG_BELIEFS, list);
+        return compound;
     }
 
-    public void load(CompoundTag tag) {
-        beliefs.clear();
-        if (tag == null) return;
-        ListTag list = tag.getList(TAG_BELIEFS, Tag.TAG_COMPOUND);
+    public static BeliefStore load(CompoundTag compound) {
+        BeliefStore store = new BeliefStore();
+        if (compound == null) return store;
+        int version = compound.getInt("data_version");
+        if (version < 1) return store;
+        ListTag list = compound.getList(TAG_BELIEFS, Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {
             CompoundTag bt = list.getCompound(i);
             String subject = bt.getString(TAG_SUBJECT);
@@ -318,9 +331,10 @@ public final class BeliefStore {
             long formed = bt.getLong(TAG_FORMED_AT);
             int evid = bt.getInt(TAG_EVIDENCE);
             String key = subject + "|" + object;
-            beliefs.computeIfAbsent(key, k -> new ArrayList<>())
+            store.beliefs.computeIfAbsent(key, k -> new ArrayList<>())
                     .add(new Belief(subject, object, trait, conf, formed, evid));
         }
-        Ergenverse.LOGGER.info("[BeliefStore] Loaded {} beliefs.", size());
+        Ergenverse.LOGGER.info("[BeliefStore] Loaded {} beliefs.", store.size());
+        return store;
     }
 }

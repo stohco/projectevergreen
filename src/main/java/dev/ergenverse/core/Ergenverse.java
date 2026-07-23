@@ -398,6 +398,16 @@ public final class Ergenverse {
         // All advances fire events on the WorldEventBus → auto-chronicled + observable.
         if (ticks % 24000 == 0) {
             dev.ergenverse.simulation.WorldStateEngine.tick(overworld);
+            // BeliefStore decay: beliefs atrophy without reinforcement.
+            // Decay of 0.02 per day means a belief at 0.5 takes ~20 days to fade.
+            // Canon: memories in the cultivation world persist — but weaker beliefs fade.
+            try {
+                dev.ergenverse.simulation.belief.BeliefStore.get().decayAll(0.02f);
+            } catch (Exception e) {
+                LOGGER.error("[Ergenverse] BeliefStore decay failed", e);
+            }
+            // ReputationObserver decay: localized reputation atrophies.
+            dev.ergenverse.simulation.action.ReputationObserver.decayAll(ticks);
         }
 
         // Loop C: ReificationScan — every 100 ticks (5 sec proximity scan)

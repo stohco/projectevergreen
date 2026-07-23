@@ -2,8 +2,11 @@ package dev.ergenverse.npc.dialogue;
 
 import dev.ergenverse.npc.goals.NpcGoalQueue;
 import dev.ergenverse.npc.monologue.NpcInternalMonologue;
+import dev.ergenverse.simulation.belief.BeliefStore;
+import dev.ergenverse.simulation.action.ActorRelationshipStore;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * NpcDialogueGenerator — thought-driven dialogue generation (PROJECT_MASTER.md 6.7).
@@ -156,6 +159,19 @@ public final class NpcDialogueGenerator {
         /** Whether the NPC has any RUMOR memory from the last 7 MC days. */
         public final boolean hasRecentRumor;
 
+        // ── Belief-driven dialogue (2026-07-23 belief wiring) ──
+        /** The dominant belief this NPC holds about the player (e.g. "dangerous", "compassionate"), or null. */
+        @Nullable
+        public final String dominantBeliefTrait;
+        /** Confidence of the dominant belief (0.0–1.0), or 0 if no belief. */
+        public final float dominantBeliefConfidence;
+        /** All beliefs this NPC holds about the player (for template insertion). */
+        public final java.util.List<BeliefStore.Belief> beliefsAboutPlayer;
+
+        // ── Relationship-driven dialogue ──
+        /** Cumulative affinity this NPC has with the player, or 0 if no relationship recorded. */
+        public final int playerAffinity;
+
         public NpcDialogueContext(String npcId, String targetPlayerUuid,
                                   @Nullable NpcInternalMonologue.MonologueSnapshot monologue,
                                   double trustConfidence, double hostileConfidence,
@@ -167,6 +183,29 @@ public final class NpcDialogueGenerator {
                                   boolean hasRecentWorldMemory,
                                   @Nullable String recentRumor,
                                   boolean hasRecentRumor) {
+            this(npcId, targetPlayerUuid, monologue, trustConfidence, hostileConfidence,
+                    dangerConfidence, hasActiveUrgentGoal, decisionStyle, interactionCount,
+                    recentWorldEvent, recentObservation, hasRecentWorldMemory,
+                    recentRumor, hasRecentRumor,
+                    null, 0f, java.util.Collections.emptyList(), 0);
+        }
+
+        /** Full constructor including belief and relationship data. */
+        public NpcDialogueContext(String npcId, String targetPlayerUuid,
+                                  @Nullable NpcInternalMonologue.MonologueSnapshot monologue,
+                                  double trustConfidence, double hostileConfidence,
+                                  double dangerConfidence, boolean hasActiveUrgentGoal,
+                                  NpcGoalQueue.DecisionStyle decisionStyle,
+                                  int interactionCount,
+                                  @Nullable String recentWorldEvent,
+                                  @Nullable String recentObservation,
+                                  boolean hasRecentWorldMemory,
+                                  @Nullable String recentRumor,
+                                  boolean hasRecentRumor,
+                                  @Nullable String dominantBeliefTrait,
+                                  float dominantBeliefConfidence,
+                                  java.util.List<BeliefStore.Belief> beliefsAboutPlayer,
+                                  int playerAffinity) {
             this.npcId = npcId;
             this.targetPlayerUuid = targetPlayerUuid;
             this.monologue = monologue;
@@ -181,6 +220,67 @@ public final class NpcDialogueGenerator {
             this.hasRecentWorldMemory = hasRecentWorldMemory;
             this.recentRumor = recentRumor;
             this.hasRecentRumor = hasRecentRumor;
+            this.dominantBeliefTrait = dominantBeliefTrait;
+            this.dominantBeliefConfidence = dominantBeliefConfidence;
+            this.beliefsAboutPlayer = beliefsAboutPlayer != null
+                    ? beliefsAboutPlayer : java.util.Collections.emptyList();
+            this.playerAffinity = playerAffinity;
+        }
+
+        /**
+         * Enrich an existing NpcDialogueContext with belief and relationship data
+         * from BeliefStore and ActorRelationshipStore. Call this before passing
+         * the context to generate().
+         *
+         * <p>This is the consumption point where the event-sourced architecture
+         * becomes visible: beliefs formed from observed events now modulate dialogue.
+         * The player performed deeds → events were published → beliefs were formed
+         * → dialogue reflects those beliefs. The full cascade.
+         *
+         * @param base the existing context without belief/relationship data
+         * @return a NEW context with belief and relationship data populated
+         */
+        public static NpcDialogueContext withBeliefs(NpcDialogueContext base) {
+            String npcId = base.npcId;
+            String playerUuid = base.targetPlayerUuid;
+            if (npcId == null || npcId.isEmpty() || playerUuid == null || playerUuid.isEmpty()) {
+                return base; // no belief enrichment possible
+            }
+
+            // ── Read beliefs from BeliefStore ──
+            BeliefStore store = BeliefStore.get();
+            List<BeliefStore.Belief> beliefs = store.beliefsAbout(npcId, playerUuid);
+
+            String dominantTrait = null;
+            float dominantConf = 0f;
+            for (BeliefStore.Belief b : beliefs) {
+                if (b.confidence() > dominantConf) {
+                    dominantConf = b.confidence();
+                    dominantTrait = b.trait();
+                }
+            }
+
+            // ── Read relationship affinity from ActorRelationshipStore ──
+            // (Requires a ServerLevel; if unavailable, affinity defaults to 0)
+            int affinity = 0;
+            try {
+                net.minecraft.server.level.ServerLevel level =
+                    dev.ergenverse.simulation.event.WorldEventBus.currentLevel();
+                if (level != null) {
+                    ActorRelationshipStore relStore = ActorRelationshipStore.get(level);
+                    affinity = relStore.getAffinity(npcId, playerUuid);
+                }
+            } catch (Exception ignored) {
+                // Non-server context (e.g., unit test) — skip relationship lookup.
+            }
+
+            return new NpcDialogueContext(
+                    npcId, playerUuid, base.monologue,
+                    base.trustConfidence, base.hostileConfidence, base.dangerConfidence,
+                    base.hasActiveUrgentGoal, base.decisionStyle, base.interactionCount,
+                    base.recentWorldEvent, base.recentObservation, base.hasRecentWorldMemory,
+                    base.recentRumor, base.hasRecentRumor,
+                    dominantTrait, dominantConf, beliefs, affinity);
         }
     }
 
@@ -225,11 +325,50 @@ public final class NpcDialogueGenerator {
      * Priority cascade per the class Javadoc.
      */
     public static DialogueTone selectTone(NpcDialogueContext ctx) {
+        // ── Belief modulation: adjust trust/hostile based on NPC's beliefs about the player ──
+        // Beliefs are the NPC's SUBJECTIVE interpretation — they override objective predictions.
+        // If an NPC believes the player is "dangerous", that's more powerful than a generic
+        // hostileConfidence prediction. This is the "same event, different beliefs" principle.
+        double effectiveTrust = ctx.trustConfidence;
+        double effectiveHostile = ctx.hostileConfidence;
+
+        if (ctx.dominantBeliefTrait != null && ctx.dominantBeliefConfidence >= 0.4f) {
+            String trait = ctx.dominantBeliefTrait;
+            float conf = ctx.dominantBeliefConfidence;
+            // Positive beliefs boost trust; negative beliefs boost hostility.
+            // The modulation scales with confidence: a strong belief overrides predictions.
+            switch (trait) {
+                case "compassionate", "kind", "courageous", "reliable",
+                     "generous", "trustworthy", "powerful" ->
+                    effectiveTrust = Math.max(effectiveTrust, conf * 0.8);
+                case "dangerous", "cruel", "ruthless", "ruthless_toward_innocents",
+                     "treacherous", "threatening", "arrogant" ->
+                    effectiveHostile = Math.max(effectiveHostile, conf * 0.8);
+                case "naive" -> {
+                    // NPCs who think the player is naive may be condescending.
+                    // No modulation — let the base predictions determine tone.
+                }
+                case "ambitious", "noteworthy" -> {
+                    // Ambition can be respected or threatening depending on NPC type.
+                    // No modulation — let the base predictions determine tone.
+                }
+            }
+        }
+
+        // ── Relationship affinity modulation ──
+        // A deeply negative relationship (≤ -20) amplifies hostility.
+        // A strongly positive relationship (≥ 20) amplifies warmth.
+        if (ctx.playerAffinity <= -20) {
+            effectiveHostile = Math.max(effectiveHostile, 0.7);
+        } else if (ctx.playerAffinity >= 20) {
+            effectiveTrust = Math.max(effectiveTrust, 0.7);
+        }
+
         // 1. High hostility → HOSTILE
-        if (ctx.hostileConfidence >= 0.6) return DialogueTone.HOSTILE;
+        if (effectiveHostile >= 0.6) return DialogueTone.HOSTILE;
 
         // 2. High trust + positive mood → WARM
-        if (ctx.trustConfidence >= 0.6 && ctx.monologue != null) {
+        if (effectiveTrust >= 0.6 && ctx.monologue != null) {
             String mood = ctx.monologue.moodLabel;
             if (mood.equals("Elated") || mood.equals("Pleased")
                     || mood.equals("Content") || mood.equals("Calm")) {
@@ -238,7 +377,7 @@ public final class NpcDialogueGenerator {
         }
 
         // 3. Low trust (stranger) → COLD
-        if (ctx.trustConfidence < 0.2 && ctx.interactionCount <= 1) {
+        if (effectiveTrust < 0.2 && ctx.interactionCount <= 1) {
             return DialogueTone.COLD;
         }
 
@@ -319,6 +458,13 @@ public final class NpcDialogueGenerator {
         // Art XXXI.5: ~12% chance to reference a rumor (secondhand info, rarer).
         if (ctx.hasRecentRumor && ctx.recentRumor != null && idx < 12) {
             return generateRumorLine(tone, ctx.recentRumor, idx);
+        }
+
+        // 2026-07-23 belief wiring: ~18% chance to reference a belief about the player.
+        // This makes the event-sourced architecture VISIBLE to the player:
+        // "I've seen your cruelty" or "People say you're compassionate."
+        if (shouldReferenceBelief(ctx, idx)) {
+            return generateBeliefLine(tone, ctx, idx);
         }
 
         // Art XXXI.5: ~25% chance to reference a memory when one exists.
@@ -585,6 +731,101 @@ public final class NpcDialogueGenerator {
 
     // ─── Thought summary (debug) ─────────────────────────────────────
 
+    /**
+     * Whether to use a belief-referencing template.
+     * Only activates when the NPC has beliefs about the player with sufficient confidence.
+     * Uses idx to make it occasional (~18% chance).
+     */
+    private static boolean shouldReferenceBelief(NpcDialogueContext ctx, int idx) {
+        return ctx.dominantBeliefTrait != null
+                && ctx.dominantBeliefConfidence >= 0.4f
+                && !ctx.beliefsAboutPlayer.isEmpty()
+                && idx < 18;
+    }
+
+    /**
+     * Generate a belief-referencing line for the given tone.
+     * The NPC expresses their subjective belief about the player.
+     * This is the visible manifestation of the event-sourced architecture:
+     * the player sees NPCs react to deeds the player performed in the past.
+     */
+    private static String generateBeliefLine(DialogueTone tone, NpcDialogueContext ctx, int idx) {
+        String trait = ctx.dominantBeliefTrait;
+        float conf = ctx.dominantBeliefConfidence;
+
+        // Map belief traits to natural-language phrases.
+        // Each trait produces different dialogue depending on the NPC's
+        // existing tone — a WARM NPC mentions beliefs more kindly than a COLD NPC.
+        String beliefPhrase = beliefToPhrase(trait);
+        String confidenceHedge = conf >= 0.7 ? "" : "I'm beginning to think ";
+
+        return switch (tone) {
+            case FORMAL -> {
+                if (idx < 3) yield "Word of your deeds has reached me. " + confidenceHedge + beliefPhrase.toLowerCase() + ".";
+                if (idx < 6) yield "I've formed my own assessment. " + beliefPhrase + ". Make of that what you will.";
+                yield "Let me be direct. " + beliefPhrase + ". I hope my judgment is wrong.";
+            }
+            case WARM -> {
+                if (idx < 3) yield "I've seen what you've done. " + beliefPhrase.toLowerCase() + ". That speaks well of you.";
+                if (idx < 6) yield "People talk, but I judge with my own eyes. " + beliefPhrase.toLowerCase() + ".";
+                yield "Between us — " + confidenceHedge.toLowerCase() + beliefPhrase.toLowerCase() + ". I'm glad for it.";
+            }
+            case TERSE -> {
+                if (idx < 5) yield "I know what you are. " + beliefPhrase + ". End of discussion.";
+                yield beliefPhrase + ". Remember that.";
+            }
+            case COLD -> {
+                if (idx < 3) yield "... " + beliefPhrase + ". Don't expect me to forget.";
+                if (idx < 6) yield "I've observed you. " + beliefPhrase.toLowerCase() + ". That is all.";
+                yield beliefPhrase + ". Whether that matters to you is not my concern.";
+            }
+            case HOSTILE -> {
+                if (idx < 3) yield "Don't play innocent. " + beliefPhrase.toLowerCase() + ". I know exactly what you are.";
+                if (idx < 6) yield "Your reputation precedes you. " + beliefPhrase.toLowerCase() + ". And I don't forgive easily.";
+                yield beliefPhrase + ". That's why I'm telling you to leave. Now.";
+            }
+            case URGENT -> {
+                if (idx < 5) yield "No time for pleasantries, but know this: " + beliefPhrase.toLowerCase() + ". Act accordingly.";
+                yield "I'll remember what I know about you. " + beliefPhrase + ". Now move!";
+            }
+            case MYSTERIOUS -> {
+                if (idx < 3) yield "Interesting. " + confidenceHedge.toLowerCase() + beliefPhrase.toLowerCase() + ". The dao reveals character through action.";
+                yield "I've watched you. " + beliefPhrase.toLowerCase() + ". Whether that's a strength or weakness... time will tell.";
+            }
+            case CONDESCENDING -> {
+                yield "How quaint. " + beliefPhrase.toLowerCase() + ". As if that matters to one such as myself.";
+            }
+        };
+    }
+
+    /**
+     * Map a belief trait to a first-person attribution phrase.
+     * E.g. "dangerous" → "I believe you are a dangerous person".
+     */
+    private static String beliefToPhrase(String trait) {
+        return switch (trait) {
+            case "compassionate" -> "I believe you have a compassionate heart";
+            case "courageous" -> "I believe you possess true courage";
+            case "kind" -> "I believe you are fundamentally kind";
+            case "reliable" -> "I believe you honor your commitments";
+            case "generous" -> "I believe you are generous";
+            case "trustworthy" -> "I believe you are trustworthy";
+            case "powerful" -> "I believe you possess real power";
+            case "naive" -> "I believe you are dangerously naive";
+            case "ambitious" -> "I believe you are ambitious";
+            case "noteworthy" -> "I believe you are someone worth watching";
+            case "dangerous" -> "I believe you are a dangerous person";
+            case "cruel" -> "I believe you are cruel";
+            case "ruthless" -> "I believe you are utterly ruthless";
+            case "ruthless_toward_innocents" -> "I believe you harm those who cannot defend themselves";
+            case "treacherous" -> "I believe you are treacherous";
+            case "threatening" -> "I believe you are a threat";
+            case "terrifying" -> "I believe you are terrifying";
+            case "arrogant" -> "I believe you are arrogant";
+            default -> "I believe you are " + trait;
+        };
+    }
+
     private static String buildThoughtSummary(NpcDialogueContext ctx, DialogueTone tone) {
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(tone.name()).append("] ");
@@ -598,6 +839,14 @@ public final class NpcDialogueGenerator {
         }
         sb.append("Trust:").append(Math.round(ctx.trustConfidence * 100)).append("% ");
         sb.append("Hostile:").append(Math.round(ctx.hostileConfidence * 100)).append("%");
+        if (ctx.dominantBeliefTrait != null) {
+            sb.append(" Belief:").append(ctx.dominantBeliefTrait)
+              .append("(").append(Math.round(ctx.dominantBeliefConfidence * 100)).append("%)");
+        }
+        if (ctx.playerAffinity != 0) {
+            sb.append(" Affinity:").append(ctx.playerAffinity > 0 ? "+" : "")
+              .append(ctx.playerAffinity);
+        }
         return sb.toString();
     }
 }

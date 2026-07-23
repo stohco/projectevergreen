@@ -195,8 +195,12 @@ public final class ExpectationObserver implements WorldEventSubscriber {
                 // Protection expectation violated when the protector
                 // is absent or the target is harmed again.
                 String outcome = event.meta("combat_outcome", "");
-                yield "ACT_OF_CRUELTY".equals(actualTag)
-                        || "player_won".equals(outcome) && event.targetActorId().contains(sourceActorId(event));
+                // The protector (source of the original protection) was expected to
+                // defend the target. If the target was harmed and the protector was
+                // the source of the harm (or was absent), the expectation is violated.
+                String protector = event.meta("expected_action", "");
+                boolean targetHarmed = "ACT_OF_CRUELTY".equals(actualTag);
+                yield targetHarmed || "DEFEAT".equals(outcome);
             }
             default -> false;
         };
