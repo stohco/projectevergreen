@@ -98,14 +98,25 @@ public class FlyingSwordProjectileEntity extends ThrowableProjectile {
 
     /**
      * Build the ItemStack that will be returned to the owner.
-     * The return item preserves the sword's NBT data (effect, spirit name).
+     * CRON-COMPLETIONIST-57: Uses stored SwordRegistryName to recreate the CORRECT
+     * sword type. Previously hardcoded wealth_flying_sword, meaning launching a
+     * Core Treasure Sword returned a Wealth Flying Sword.
      */
     private ItemStack buildReturnItem() {
-        // Use the owner's current flying sword item if possible, otherwise create a generic one
-        ItemStack toReturn = new ItemStack(
-                net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(
-                        new net.minecraft.resources.ResourceLocation("ergenverse", "wealth_flying_sword")),
-                1);
+        // Determine the correct item from stored registry name
+        net.minecraft.world.item.Item swordItem = null;
+        if (swordData != null && swordData.contains("SwordRegistryName")) {
+            String regName = swordData.getString("SwordRegistryName");
+            swordItem = net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(
+                    new net.minecraft.resources.ResourceLocation(regName));
+        }
+        // Fallback to wealth_flying_sword if registry lookup fails
+        if (swordItem == null) {
+            swordItem = net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(
+                    new net.minecraft.resources.ResourceLocation("ergenverse", "wealth_flying_sword"));
+        }
+        ItemStack toReturn = new ItemStack(swordItem != null ? swordItem
+                : net.minecraft.world.item.Items.AIR, 1);
         if (swordData != null) {
             toReturn.getOrCreateTag().put("SwordData", swordData.copy());
         }

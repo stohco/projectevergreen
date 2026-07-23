@@ -140,6 +140,10 @@ public class FlyingSwordItem extends SwordItem {
             // Persist effect type from the item definition
             SwordEffectType primary = getPrimaryEffect();
             swordData.putString("SwordEffect", primary.getName());
+            // CRON-COMPLETIONIST-57: Persist registry name so buildReturnItem recreates
+            // the CORRECT sword type (not always wealth_flying_sword).
+            swordData.putString("SwordRegistryName",
+                    net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(this).toString());
             // Persist spirit name from item NBT if present
             if (stack.hasTag() && stack.getTag().contains("SwordSpirit")) {
                 swordData.putString("SwordSpirit", stack.getTag().getString("SwordSpirit"));

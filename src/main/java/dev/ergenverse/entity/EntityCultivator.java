@@ -470,6 +470,11 @@ public class EntityCultivator extends PathfinderMob {
         // to the WorldEventBus on "beast.*" topics. Priority 5 (below
         // CognitionDrivenGoal so intent-based behavior takes precedence).
         this.goalSelector.addGoal(5, new dev.ergenverse.entity.ai.NpcReactToWorldGoal(this));
+        // CRON-COMPLETIONIST-57: CultivatorMeditationGoal — cultivator meditates when idle.
+        // Priority 6 (above RandomStroll=7, below NpcReactToWorld=5). Fires organically:
+        // sets POSE_MEDITATING → triggers CultivatorRobeModel zhan zhuang animation.
+        // Previously a dead stub; now fully functional with random duration + cooldown.
+        this.goalSelector.addGoal(6, new dev.ergenverse.entity.ai.CultivatorMeditationGoal(this));
         this.goalSelector.addGoal(7, new net.minecraft.world.entity.ai.goal.RandomStrollGoal(this, 0.35D));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 

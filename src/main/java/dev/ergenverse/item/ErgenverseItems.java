@@ -82,14 +82,31 @@ public final class ErgenverseItems {
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
 
     // ── Pills ──────────────────────────────────────────────────────────
-    public static final RegistryObject<Item> QI_GATHERING_PILL = ITEMS.register("qi_gathering_pill",
-            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
-    public static final RegistryObject<Item> FOUNDATION_PILL = ITEMS.register("foundation_pill",
-            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
-    public static final RegistryObject<Item> PURIFICATION_PILL = ITEMS.register("purification_pill",
-            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
-    public static final RegistryObject<Item> SOUL_MENDING_PILL = ITEMS.register("soul_mending_pill",
-            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    // CRON-COMPLETIONIST-57: Replaced generic Item pills with SpiritPillItem (real mechanics).
+    // Constitution Article III: "Never design progression. Design reality."
+    // A pill is not a generic item — it is a substance with specific pharmacological effects.
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> QI_GATHERING_PILL =
+            ITEMS.register("qi_gathering_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.QI_GATHERING,
+                    new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> FOUNDATION_PILL =
+            ITEMS.register("foundation_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.FOUNDATION,
+                    new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> PURIFICATION_PILL =
+            ITEMS.register("purification_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.PURIFICATION,
+                    new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> SOUL_MENDING_PILL =
+            ITEMS.register("soul_mending_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.SOUL_MENDING,
+                    new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+    // CRON-COMPLETIONIST-57: WASTE_PILL — failed alchemy product (Nausea + Poison)
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> WASTE_PILL =
+            ITEMS.register("waste_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.WASTE_PILL,
+                    new Item.Properties().stacksTo(16)));
+
 
     // ── Blank Jade Slip (for inscription) ──────────────────────────────
     public static final RegistryObject<Item> JADE_SLIP_BLANK = ITEMS.register("jade_slip_blank",
@@ -113,6 +130,18 @@ public final class ErgenverseItems {
             ITEMS.register("blood_slaughter_sword", () -> new dev.ergenverse.item.FlyingSwordItem(20.0F,
                     dev.ergenverse.item.sword.SwordEffectType.LIFESTEAL,
                     new Item.Properties().durability(2000).rarity(net.minecraft.world.item.Rarity.EPIC)));
+    // CRON-COMPLETIONIST-57: Dark Green Flying Sword (墨绿飞剑) — POISON effect (Wither II 3s)
+    // Canon: Wang Lin's fourth flying sword, corrupt energy, drains life force.
+    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> DARK_GREEN_FLYING_SWORD =
+            ITEMS.register("dark_green_flying_sword", () -> new dev.ergenverse.item.FlyingSwordItem(17.0F,
+                    dev.ergenverse.item.sword.SwordEffectType.POISON,
+                    new Item.Properties().durability(1500).rarity(net.minecraft.world.item.Rarity.EPIC)));
+    // CRON-COMPLETIONIST-57: God-Slaying Sword (诛仙剑) — RESTRICTION effect (armor-bypass magic damage)
+    // Canon: one of the Seven Swords of Star Heaven, ignores defensive formations.
+    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> GOD_SLAYING_SWORD =
+            ITEMS.register("god_slaying_sword", () -> new dev.ergenverse.item.FlyingSwordItem(28.0F,
+                    dev.ergenverse.item.sword.SwordEffectType.RESTRICTION,
+                    new Item.Properties().durability(3000).rarity(net.minecraft.world.item.Rarity.EPIC)));
 
     // Talismans: single-use, right-click deploys the effect, consumed on use.
     public static final RegistryObject<dev.ergenverse.item.TalismanItem> FIREBALL_TALISMAN =
@@ -138,6 +167,8 @@ public final class ErgenverseItems {
                     dev.ergenverse.item.TalismanType.LIGHT, new Item.Properties().stacksTo(16)));
 
     // Spirit pills: consumed via eat animation, apply realm-appropriate buffs.
+    // CRON-COMPLETIONIST-57: _REAL suffix pills now alias the base names.
+    // Kept as separate registrations for backward compatibility with saved-item NBT.
     public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> QI_GATHERING_PILL_REAL =
             ITEMS.register("qi_gathering_pill_real", () -> new dev.ergenverse.item.SpiritPillItem(
                     dev.ergenverse.item.PillType.QI_GATHERING, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
@@ -227,7 +258,60 @@ public final class ErgenverseItems {
                         .title(Component.literal("Ergenverse Items"))
                         .icon(() -> new ItemStack(JADE_SLIP.get()))
                         .displayItems((params, output) -> {
+                            // CRON-COMPLETIONIST-57: Populate creative tab with ALL items
                             output.accept(JADE_SLIP.get());
+                            output.accept(JADE_SLIP_BLANK.get());
+                            output.accept(MEDITATION_MAT.get());
+                            // Crafting materials
+                            output.accept(SPIRIT_STONE.get());
+                            output.accept(SPIRIT_STONE_FRAGMENT.get());
+                            output.accept(IRON_SAND.get());
+                            output.accept(COLD_IRON_INGOT.get());
+                            output.accept(SPIRIT_IRON_INGOT.get());
+                            output.accept(BEAST_BONE.get());
+                            output.accept(BEAST_CORE.get());
+                            output.accept(WOLF_CORE.get());
+                            output.accept(RABBIT_BLOOD_ESSENCE.get());
+                            output.accept(SPIRIT_HERB_SEED.get());
+                            output.accept(SPIRIT_INK.get());
+                            output.accept(FORMATION_FLAG_BLANK.get());
+                            output.accept(TALISMAN_PAPER_BLANK.get());
+                            output.accept(CAVE_DWELLING_CORE.get());
+                            // Pills
+                            output.accept(QI_GATHERING_PILL.get());
+                            output.accept(FOUNDATION_PILL.get());
+                            output.accept(PURIFICATION_PILL.get());
+                            output.accept(SOUL_MENDING_PILL.get());
+                            output.accept(BLOOD_SOUL_PILL.get());
+                            output.accept(MINOR_HEALING_PILL.get());
+                            output.accept(WASTE_PILL.get());
+                            // Flying swords
+                            output.accept(WEALTH_FLYING_SWORD.get());
+                            output.accept(CORE_TREASURE_SWORD.get());
+                            output.accept(BLOOD_SLAUGHTER_SWORD.get());
+                            output.accept(DARK_GREEN_FLYING_SWORD.get());
+                            output.accept(GOD_SLAYING_SWORD.get());
+                            // Talismans
+                            output.accept(FIREBALL_TALISMAN.get());
+                            output.accept(BARRIER_TALISMAN.get());
+                            output.accept(LIGHTNING_TALISMAN.get());
+                            output.accept(SHIELD_TALISMAN.get());
+                            output.accept(SWORD_QI_TALISMAN.get());
+                            output.accept(SPEED_BOOST_TALISMAN.get());
+                            output.accept(LIGHT_TALISMAN.get());
+                            // Scrolls
+                            output.accept(SCROLL_QI_GATHERING.get());
+                            output.accept(SCROLL_SWORD_TECHNIQUE.get());
+                            output.accept(SCROLL_BODY_REFINEMENT.get());
+                            output.accept(SCROLL_FIRE_CONTROL.get());
+                            output.accept(SCROLL_SPIRITUAL_SENSE.get());
+                            output.accept(SCROLL_RESTRICTION_ART.get());
+                            // Banners
+                            output.accept(BANNER_HENG_YUE.get());
+                            output.accept(BANNER_TENG_FAMILY.get());
+                            output.accept(BANNER_TIAN_SHUI.get());
+                            output.accept(BANNER_SOUL_REFINING.get());
+                            output.accept(BANNER_XUAN_DAO.get());
                         })
                         .build());
         Ergenverse.LOGGER.info("[Ergenverse] ErgenverseItems: registered jade_slip utility item.");
