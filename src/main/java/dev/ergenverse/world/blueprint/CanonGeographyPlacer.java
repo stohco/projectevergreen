@@ -148,6 +148,18 @@ public final class CanonGeographyPlacer {
                         dev.ergenverse.spawn.TianShuiCityBuilder.build(level, tsCenter);
                     }
                 }
+                case "soul_refining_sect" -> {
+                    // Full hand-built Soul Refining Sect (炼魂宗) — dark, sinister sect
+                    // specializing in soul refinement. Canon: one of the most dangerous
+                    // locations in Zhao Country. Constitution: every block hand-authored.
+                    int srY = level.getHeightmapPos(
+                            net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                            new BlockPos(x, 0, z)).getY();
+                    BlockPos srCenter = new BlockPos(x, srY, z);
+                    if (!dev.ergenverse.spawn.SoulRefiningSectBuilder.isAlreadyBuilt(level, srCenter)) {
+                        dev.ergenverse.spawn.SoulRefiningSectBuilder.build(level, srCenter);
+                    }
+                }
                 case "zhao_capital" -> buildZhaoCapitalMarker(level, x, z, settlement);
                 default -> buildSettlementMarker(level, x, z, settlement);
             }

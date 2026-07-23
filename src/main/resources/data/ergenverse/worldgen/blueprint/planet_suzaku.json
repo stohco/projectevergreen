@@ -259,6 +259,23 @@
         "distance_from_wang_village": 1400
       },
       {
+        "id": "soul_refining_sect",
+        "name": "Soul Refining Sect",
+        "canon_name": "Lian Hun Zong / 炼魂宗",
+        "canon_confidence": "EXPLICIT — dark sect specializing in soul refinement, one of the most dangerous locations in Zhao Country",
+        "type": "cultivation_sect",
+        "x": 3200,
+        "z": -2800,
+        "country": "zhao",
+        "population": 300,
+        "description": "A sinister, dark valley sect that specializes in refining souls. Surrounded by dead trees and perpetual mist, the Soul Refining Sect is feared by all cultivators in Zhao Country. Their techniques are forbidden — they capture spirit beasts and refine their souls for power. The central Furnace Hall contains the sect's prize artifact. The atmosphere is oppressive: black stone, soul lanterns, bone altars, and the ever-present ghost-blue glow of soul fire. This is where Wang Lin encounters one of his most dangerous adversaries.",
+        "tier": "minor_sect",
+        "cultivation_range": "foundation_establishment_to_core_formation",
+        "chapter": 2,
+        "distance_from_wang_village": 2400,
+        "_distance_comment": "~2 days travel through dangerous terrain. Located in the dark valley region northwest of the village."
+      },
+      {
         "id": "forest_of_distorted_sense",
         "name": "Forest of Distorted Divine Sense",
         "canon_name": "Shen Nian Cuo Luan Zhi Sen / 神念错乱之森",
