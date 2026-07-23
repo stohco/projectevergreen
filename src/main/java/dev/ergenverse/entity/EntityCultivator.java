@@ -179,6 +179,10 @@ public class EntityCultivator extends PathfinderMob {
     public static final int POSE_IDLE = 0;
     public static final int POSE_MEDITATING = 1;
     public static final int POSE_CASTING = 2;
+    /** Crouched, watchful — the hidden-cultivator observing pose (Wang Lin watching wolves). */
+    public static final int POSE_OBSERVING = 3;
+    /** Combat-ready stance — the defender guarding the perimeter. */
+    public static final int POSE_GUARDING = 4;
 
     public int getCultivatorPose() {
         return this.entityData.get(DATA_POSE);
@@ -186,6 +190,62 @@ public class EntityCultivator extends PathfinderMob {
 
     public void setCultivatorPose(int pose) {
         this.entityData.set(DATA_POSE, pose);
+    }
+
+    // ── Activity lock (reasoning-engine cycle) ──────────────────────────
+
+    /**
+     * When non-zero, the entity is <b>activity-locked</b> — its AI is suppressed
+     * and it holds its current position + pose. This is how the
+     * {@link dev.ergenverse.simulation.settlement.ActorReasoningEngine} makes
+     * an entity visibly BEHAVE its reasoning: Wang Lin freezes at the treeline
+     * in POSE_OBSERVING, the patriarch freezes at the gate in POSE_GUARDING,
+     * while the others flee home. The lock expires at this tick; the
+     * {@link dev.ergenverse.simulation.settlement.ActorMaterializer} clears it
+     * when the threat expires, resuming normal AI.
+     *
+     * <p>Per the user's directive: the same wolf event should produce visibly
+     * different behavior. Without this lock, the entity's RandomStrollGoal
+     * would wander Wang Lin away from his observing vantage immediately. The
+     * lock makes the reasoning-derived position + pose <b>observable</b>.
+     */
+    private long activityLockExpiryTick = 0L;
+
+    /** True if the entity is currently activity-locked (AI suppressed, holding pose). */
+    public boolean isActivityLocked() {
+        return activityLockExpiryTick > 0L;
+    }
+
+    /**
+     * Lock the entity to a reasoning-derived activity: suppress AI, set the
+     * pose, hold position until the expiry tick.
+     */
+    public void lockToActivity(int pose, long expiryTick) {
+        this.entityData.set(DATA_POSE, pose);
+        this.activityLockExpiryTick = expiryTick;
+        // AI suppression happens in {@link #aiStep()} (checking
+        // isActivityLocked). We deliberately do NOT use setNoAi(true) because
+        // that flag persists to NBT — if the chunk unloaded while locked, the
+        // entity would be stuck frozen on reload. The transient field approach
+        // means the lock clears on reload (the threat will have expired or the
+        // materializer will re-evaluate).
+    }
+
+    /**
+     * Release the activity lock: resume normal AI. Called by the
+     * {@link dev.ergenverse.simulation.settlement.ActorMaterializer} when the
+     * threat has expired and the actor should return to daily rhythm.
+     */
+    public void releaseActivityLock() {
+        if (activityLockExpiryTick > 0L) {
+            this.activityLockExpiryTick = 0L;
+            this.entityData.set(DATA_POSE, POSE_IDLE);
+        }
+    }
+
+    /** The tick at which the current activity lock expires (0 if not locked). */
+    public long getActivityLockExpiryTick() {
+        return activityLockExpiryTick;
     }
 
     public boolean isMeditating() {
@@ -393,6 +453,16 @@ public class EntityCultivator extends PathfinderMob {
     public void aiStep() {
         if (this.level().isClientSide) {
             // Client: always animate (rendering layer handles LOD)
+            super.aiStep();
+            return;
+        }
+        // Activity lock: the reasoning engine has placed this entity at a
+        // specific position with a specific pose (Wang Lin observing at the
+        // treeline, the patriarch guarding the gate). Suppress all goal AI so
+        // the entity holds its reasoning-derived state and the player can SEE
+        // the differentiated behavior. Gravity/drowning still apply via super.
+        if (isActivityLocked()) {
+            this.goalSelector.getRunningGoals().forEach(g -> g.stop());
             super.aiStep();
             return;
         }

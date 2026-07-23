@@ -68,7 +68,8 @@ public final class SettlementThreatIndex implements WorldEventSubscriber {
     public SettlementThreatIndex() {}
 
     /** An active threat against a settlement. */
-    private record Threat(String settlementId, String threatType, long expiryTick, float intensity) {}
+    private record Threat(String settlementId, String threatType, long expiryTick,
+                          float intensity, int eventX, int eventZ) {}
 
     /** settlementId → list of active threats. */
     private static final Map<String, List<Threat>> THREATS = new ConcurrentHashMap<>();
@@ -93,7 +94,8 @@ public final class SettlementThreatIndex implements WorldEventSubscriber {
         long duration = "apex".equals(threatType) ? APEX_THREAT_DURATION_TICKS : THREAT_DURATION_TICKS;
         long expiry = event.timestamp() + duration;
 
-        Threat t = new Threat(nearest.id, threatType, expiry, event.intensity());
+        Threat t = new Threat(nearest.id, threatType, expiry, event.intensity(),
+                event.pos().getX(), event.pos().getZ());
         THREATS.computeIfAbsent(nearest.id, k -> new ArrayList<>()).add(t);
 
         Ergenverse.LOGGER.debug("[SettlementThreatIndex] Threat {} recorded for {} (expiry tick {}, intensity {})",
@@ -110,15 +112,47 @@ public final class SettlementThreatIndex implements WorldEventSubscriber {
      * @return a PresenceContext (threat or peaceful)
      */
     public static ActorPresence.PresenceContext getThreatContext(String settlementId, long currentTick) {
-        List<Threat> list = THREATS.get(settlementId);
-        if (list == null || list.isEmpty()) {
-            return ActorPresence.PresenceContext.peaceful();
-        }
+        Threat strongest = strongestActiveThreat(settlementId, currentTick);
+        if (strongest == null) return ActorPresence.PresenceContext.peaceful();
+        return ActorPresence.PresenceContext.threat(strongest.threatType, strongest.expiryTick);
+    }
 
-        // Opportunistic cleanup of expired threats.
+    /**
+     * Get the strongest active threat as a {@link WorldSituation.Threat}, with
+     * direction and distance relative to the settlement center. This is the
+     * feeder for the {@link ActorReasoningEngine} — it describes the world, the
+     * reasoning engine decides what each actor does about it.
+     *
+     * @param settlementId    the settlement to query
+     * @param settlementCX    the settlement's absolute center X
+     * @param settlementCZ    the settlement's absolute center Z
+     * @param currentTick     the current game tick
+     * @return the strongest active threat (with direction/distance), or null if peaceful
+     */
+    public static WorldSituation.Threat getSituationThreat(String settlementId,
+                                                            int settlementCX, int settlementCZ,
+                                                            long currentTick) {
+        Threat strongest = strongestActiveThreat(settlementId, currentTick);
+        if (strongest == null) return null;
+
+        double dx = strongest.eventX - settlementCX;
+        double dz = strongest.eventZ - settlementCZ;
+        double dist = Math.sqrt(dx * dx + dz * dz);
+        float dirX = dist > 0.001 ? (float) (dx / dist) : 0f;
+        float dirZ = dist > 0.001 ? (float) (dz / dist) : 0f;
+        float distF = (float) dist;
+
+        return new WorldSituation.Threat(strongest.threatType, strongest.intensity,
+                distF, dirX, dirZ, strongest.expiryTick);
+    }
+
+    /** Internal: find the strongest non-expired threat, cleaning up expired ones. */
+    private static Threat strongestActiveThreat(String settlementId, long currentTick) {
+        List<Threat> list = THREATS.get(settlementId);
+        if (list == null || list.isEmpty()) return null;
+
         Iterator<Threat> it = list.iterator();
-        String strongestType = null;
-        long strongestTick = 0;
+        Threat strongest = null;
         float strongestIntensity = 0f;
         boolean anyActive = false;
         while (it.hasNext()) {
@@ -128,20 +162,13 @@ public final class SettlementThreatIndex implements WorldEventSubscriber {
                 continue;
             }
             anyActive = true;
-            // Pick the strongest active threat (highest intensity).
             if (t.intensity >= strongestIntensity) {
                 strongestIntensity = t.intensity;
-                strongestType = t.threatType;
-                strongestTick = t.expiryTick;
+                strongest = t;
             }
         }
-
-        if (!anyActive) {
-            THREATS.remove(settlementId); // all expired — drop the key
-            return ActorPresence.PresenceContext.peaceful();
-        }
-
-        return ActorPresence.PresenceContext.threat(strongestType, strongestTick);
+        if (!anyActive) THREATS.remove(settlementId);
+        return strongest;
     }
 
     /**

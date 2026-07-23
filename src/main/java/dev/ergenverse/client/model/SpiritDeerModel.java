@@ -365,7 +365,8 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         if (fleeing) {
             // FLEE : head up, tail flagged
             this.head.xRot = -0.3F;
-            this.neck.xRot = 0.7F;                  // neck more upright to raise head
+            this.neckBase.xRot = 0.4F;
+            this.neckTip.xRot = 0.3F;                  // neck more upright to raise head
             this.tail.xRot = -0.8F;                 // tail flagged up
             this.earLeft.zRot  = -0.4F;
             this.earRight.zRot = 0.4F;
@@ -380,12 +381,14 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             if (poseGrazing) {
                 // GRAZE : head dips toward the ground (driven by GrazeGoal)
                 this.head.xRot = 1.2F;
-                this.neck.xRot = 1.3F;
+                this.neckBase.xRot = 0.8F;
+                this.neckTip.xRot = 0.5F;
                 this.tail.xRot = 0.3F;
             } else if (poseAlert) {
                 // ALERT : head snaps up, ears forward, tail flicks
                 this.head.xRot = -0.3F;
-                this.neck.xRot = 0.8F;
+                this.neckBase.xRot = 0.5F;
+                this.neckTip.xRot = 0.3F;
                 this.tail.xRot = -0.5F + (float) Math.sin(ageInTicks * 1.5F) * 0.3F;
                 this.earLeft.zRot  = -0.2F;
                 this.earRight.zRot = 0.2F;
@@ -394,11 +397,13 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
                 float cycle = (float) Math.sin(ageInTicks * 0.05F);
                 if (cycle > 0.0F) {
                     this.head.xRot = 1.2F * cycle;
-                    this.neck.xRot = 1.3F;
+                    this.neckBase.xRot = 0.8F;
+                    this.neckTip.xRot = 0.5F;
                     this.tail.xRot = 0.3F;
                 } else {
                     this.head.xRot = -0.3F;
-                    this.neck.xRot = 0.8F;
+                    this.neckBase.xRot = 0.5F;
+                    this.neckTip.xRot = 0.3F;
                     this.tail.xRot = -0.5F + (float) Math.sin(ageInTicks * 1.5F) * 0.3F;
                     this.earLeft.zRot  = -0.2F;
                     this.earRight.zRot = 0.2F;
@@ -419,7 +424,8 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backLeftThigh.xRot   += lunge * 0.2F;   // back legs anchor
             this.backRightThigh.xRot  += lunge * 0.2F;
             this.root.xRot = lunge * 0.3F;               // body tilts back
-            this.neck.xRot -= lunge * 0.3F;             // neck raises
+            this.neckBase.xRot -= lunge * 0.3F;
+            this.neckTip.xRot -= lunge * 0.15F;             // neck raises
             this.head.xRot -= lunge * 0.5F;             // head throws back
         }
 
@@ -429,7 +435,8 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             float collapse = t * t;
             this.root.xRot = collapse * -0.3F;
             this.root.zRot = collapse * 0.5F;
-            this.neck.xRot = 1.0F + collapse * 0.5F;       // neck folds down
+            this.neckBase.xRot = 0.5F + collapse * 0.3F;
+            this.neckTip.xRot = 0.3F + collapse * 0.2F;       // neck folds down
             this.head.xRot = collapse * 0.6F;                  // head droops to ground
             // legs fold under the body (deer crumples)
             this.frontLeftThigh.xRot  = collapse * 0.8F;

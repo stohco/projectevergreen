@@ -52,26 +52,45 @@ public final class ActorPresence {
      * Compute the actor's current presence position as a settlement-local
      * offset [offsetX, offsetZ].
      *
+     * <p><b>Architectural note (reasoning-engine cycle):</b> the threat
+     * override that used to live here ("if threat, everyone home") has been
+     * <b>removed</b>. That was a scripted switch — everyone reacted identically
+     * to the same wolf. It has been replaced by the
+     * {@link ActorReasoningEngine}, which produces a different {@link Activity}
+     * per actor (Wang Lin observes, the patriarch guards, others flee).
+     *
+     * <p>This method now computes only the <b>peaceful daily rhythm</b> — the
+     * time-of-day weighted pick from home + shared locations. When a threat is
+     * active, the {@link ActorMaterializer} calls the reasoning engine FIRST;
+     * if reasoning returns an Activity, that Activity's location overrides
+     * this method's output. If reasoning returns null (peaceful, or no
+     * profile), this method's daily-rhythm position is used.
+     *
+     * <p>The {@code context} parameter is retained for backward compatibility
+     * but no longer triggers a threat override here. Threat response is the
+     * reasoning engine's job.
+     *
      * @param actorId    the actor's id
      * @param settlement the settlement the actor lives in
      * @param gameTime   the level's gameTime (ticks)
-     * @param context    contextual modifiers (threats, events), or null for peaceful
+     * @param context    contextual modifiers (retained for API compat; ignored)
      * @return a 2-element array [offsetX, offsetZ] relative to settlement center
      */
     public static int[] computePosition(String actorId, Settlement settlement,
                                         long gameTime, PresenceContext context) {
-        TimeOfDay tod = TimeOfDay.fromGameTime(gameTime);
+        return computeDailyRhythm(actorId, settlement, gameTime);
+    }
 
-        // ── Threat override: if a threat is active, everyone collapses to home ──
-        // Per the user's directive: "If wolves appear, everything changes."
-        if (context != null && context.threatActive) {
-            Residence home = settlement.residenceFor(actorId);
-            if (home != null && !home.isDestroyed()) {
-                return new int[]{home.centerX(), home.centerZ()};
-            }
-            // No home — flee to the settlement center (plaza / meeting point).
-            return new int[]{0, 0};
-        }
+    /**
+     * Compute the actor's peaceful daily-rhythm position (time-of-day weighted
+     * pick from home + shared locations). No threat override — that is the
+     * reasoning engine's job.
+     *
+     * @return a 2-element array [offsetX, offsetZ] relative to settlement center
+     */
+    public static int[] computeDailyRhythm(String actorId, Settlement settlement,
+                                           long gameTime) {
+        TimeOfDay tod = TimeOfDay.fromGameTime(gameTime);
 
         // ── Gather this actor's presence locations ──
         List<PresenceLocation> locations = new ArrayList<>();

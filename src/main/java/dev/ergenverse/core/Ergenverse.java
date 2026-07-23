@@ -419,10 +419,20 @@ public final class Ergenverse {
             // SettlementThreatIndex — the threat context feeder (Article XLIV §5).
             // Subscribes to "beast." events and records threats against nearby
             // settlements. When wolves appear near Wang Family Village, the
-            // ActorMaterializer collapses all villagers onto home/flee positions.
+            // ActorReasoningEngine produces different decisions per actor —
+            // Wang Lin observes, the patriarch guards, others flee.
             // "If wolves appear, everything changes."
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.simulation.settlement.SettlementThreatIndex());
+            // ActorProfileRegistry — the "different minds" table. Per-actor
+            // traits (cultivation tier, courage, role, secrets) that turn one
+            // shared WorldSituation into N different Activity decisions.
+            dev.ergenverse.simulation.settlement.ActorProfileRegistry.initialize();
+            // GoldenPathVerifier — records the mandated golden-path scenario:
+            // spawn → walk → wolf → different reactions → Wang Lin unique →
+            // memory → village remembers. Runs once at startup; output appears
+            // in dev.log and golden_path_verification.log.
+            dev.ergenverse.simulation.settlement.GoldenPathVerifier.runOnce(ticks);
         }
 
         // Loop A: CausalEcology — every tick (existing system, unchanged)

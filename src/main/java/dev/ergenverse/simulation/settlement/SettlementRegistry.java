@@ -99,6 +99,10 @@ public final class SettlementRegistry {
         s.addResidence(new Residence("wang_family_home", s.id, "Wang Family Home",
                 -18, -18, -11, -13, "npc_wang_tianshui", 0L));
         s.getResidence("wang_family_home").addResident("npc_wang_qingyue");
+        // Wang Lin lives here with his parents (canon). He is the keystone
+        // HIDDEN_CULTIVATOR whose reasoning against a wolf pack produces
+        // OBSERVING_THREAT — the unique reaction the golden path demands.
+        s.getResidence("wang_family_home").addResident("npc_wang_lin");
 
         // Elder Home: 7x7 at (cx+10, cz-18). Owner: Wang Zhou (village elder).
         s.addResidence(new Residence("elder_home", s.id, "Elder's Home",
@@ -138,6 +142,7 @@ public final class SettlementRegistry {
         s.addSharedLocation(shrine());
 
         // ── Population (Canon + Simulation NPCs) ──
+        s.registerPopulation("npc_wang_lin");         // canon — protagonist (HIDDEN_CULTIVATOR)
         s.registerPopulation("npc_wang_tianshui");   // canon — patriarch
         s.registerPopulation("npc_wang_qingyue");     // canon — Wang Lin's mother
         s.registerPopulation("npc_wang_zhou");        // canon — village elder
@@ -147,6 +152,20 @@ public final class SettlementRegistry {
         s.registerPopulation("npc_wang_tianshan");    // simulation — extended family
         s.registerPopulation("npc_zhou_tingsu");      // simulation — married into village
         s.registerPopulation("npc_da_niu");           // simulation — village laborer
+
+        // ── Settlement personality (the place-level lens) ──
+        // Per the user's directive: "Wang Family Village: Mood Peaceful, Fear
+        // Teng Family taxes, Identity Poor farming village, Prosperity Low,
+        // Security Weak, Cultivation Level Mortal."
+        s.personality = new SettlementPersonality(
+                SettlementPersonality.Mood.PEACEFUL,
+                SettlementPersonality.Identity.POOR_FARMING_VILLAGE,
+                SettlementPersonality.SettlementCultivationLevel.MORTAL,
+                "Teng Family taxes",
+                0.20f,    // prosperity — low
+                0.15f,    // security — weak
+                "The village was founded generations ago by the Wang family.",
+                "");     // no rumor yet
 
         BY_ID.put(s.id, s);
     }
@@ -247,6 +266,20 @@ public final class SettlementRegistry {
         s.registerPopulation("npc_wang_zhuo");
         s.registerPopulation("npc_wang_hao");
         s.registerPopulation("npc_sun_dazhu");
+
+        // ── Settlement personality ──
+        // Per the user's directive: "Heng Yue Sect: Mood Competitive, Identity
+        // Cultivation sect, Politics Factional, Danger Medium, Prestige High,
+        // Recruitment Active."
+        s.personality = new SettlementPersonality(
+                SettlementPersonality.Mood.COMPETITIVE,
+                SettlementPersonality.Identity.CULTIVATION_SECT,
+                SettlementPersonality.SettlementCultivationLevel.QI_CONDENSATION,
+                "factional politics among the elders",
+                0.55f,    // prosperity — moderate (a sect has resources)
+                0.50f,    // security — medium (formation-defended)
+                "Heng Yue Sect has stood for centuries on the mountain.",
+                "A recruiter from a larger sect was seen on the road.");
 
         BY_ID.put(s.id, s);
     }

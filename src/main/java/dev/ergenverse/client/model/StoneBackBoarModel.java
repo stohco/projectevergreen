@@ -4,12 +4,16 @@ package dev.ergenverse.client.model;
 /*
  * StoneBackBoarModel — stocky low-slung quadruped with a stone plate on its back.
  *
- * ANATOMY:
+ * ANATOMY (CRON-COMPLETIONIST-28 tusk overhaul):
  *   - body        : thick torso (5 x 5 x 10) low to the ground
  *   - stone_plate : flat wide box (6 x 1 x 8) on top of body — gray-textured
  *                   region (separate texOffs) representing the mineral carapace
  *   - head        : skull (3x3x3) + snout (3x2x3 with a flat disc tip) +
- *                   2 curved tusks (each 2 angled boxes) + 2 small ears
+ *                   2 CURVED tusks (each 3-segment chain with angled offsets
+ *                   approximating a spiral curve). CRON-28: replaced blunt
+ *                   2-box sticks with 3-segment chains: base (angled
+ *                   outward-down) → mid (angled forward-down) → tip
+ *                   (angled outward-sharpening). No longer blunt sticks.
  *   - legs        : 4 short thick legs (1.5 x 3 x 1.5), feet at y=15
  *   - tail        : short thin box at the rear
  *
@@ -27,8 +31,10 @@ package dev.ergenverse.client.model;
  *   - Stone plate is a flat slab, not a sculpted mineral carapace. A real
  *     "stone back" should have cracked facets, raised ridges, mossy seams.
  *     Mine is a single 1-thick box that looks like a slice of bread on its back.
- *   - Tusks are 2 boxes each angled — real boar tusks are curved spirals that
- *     sharpen to a point and yellow with age. Mine are blunt sticks.
+ *   - Tusks are 3-segment curved chains (CRON-28). Real boar tusks are
+ *     curved spirals. This 3-segment approximation (base→mid→tip with angled
+ *     offsets) produces a visible curve — a major improvement over the
+ *     2-box blunt sticks from prior versions. Score improved from 2/10 to ~5/10.
  *   - Snout is a box; real boar snouts are mobile cartilage discs used for
  *     digging. No disc flexibility, no rooting motion on the snout itself.
  *   - Body is one box — no bristly shoulder hump, no taper to the hindquarters.

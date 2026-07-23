@@ -109,6 +109,19 @@ public final class ActorMaterializer {
     /**
      * For one player, find nearby settlements and materialize their population
      * actors whose current presence intersects the player's activation range.
+     *
+     * <p><b>Reasoning-engine cycle:</b> for each actor, this now calls the
+     * {@link ActorReasoningEngine} FIRST. If the engine returns an
+     * {@link Activity} (because a threat is active), the actor is materialized
+     * at the activity's location with the activity's pose, and the entity is
+     * activity-locked so it visibly HOLDS that reasoning-derived state. If the
+     * engine returns null (peaceful), the actor falls back to the daily-rhythm
+     * presence and materializes normally (wandering AI).
+     *
+     * <p>This is where the user's vision becomes observable: the same wolf
+     * event produces Wang Lin at the treeline (observing), the patriarch at
+     * the gate (guarding), and the others at home (fleeing) — all from one
+     * shared {@link WorldSituation}.
      */
     private static void materializeAroundPlayer(ServerLevel level, ServerPlayer player, long gameTime) {
         double px = player.getX();
@@ -120,18 +133,40 @@ public final class ActorMaterializer {
             double sdz = pz - (settlement.centerZ + 0.5);
             if (sdx * sdx + sdz * sdz > SETTLEMENT_SCAN_RANGE_SQ) continue;
 
-            // Query the active threat context for this settlement (Article XLIV §5).
-            // If wolves or predators are near, the SettlementThreatIndex returns a
-            // threat context — and ActorPresence collapses all actors onto home/flee.
-            // "If wolves appear, everything changes."
-            ActorPresence.PresenceContext ctx =
-                    SettlementThreatIndex.getThreatContext(settlement.id, gameTime);
+            // ── Build the shared WorldSituation for this settlement ──
+            // One situation, shared by every actor. Different minds reach
+            // different conclusions. (The user's core directive.)
+            WorldSituation.Threat threat = SettlementThreatIndex.getSituationThreat(
+                    settlement.id, settlement.centerX, settlement.centerZ, gameTime);
+            TimeOfDay tod = TimeOfDay.fromGameTime(gameTime);
+            SettlementPersonality.Mood mood = settlement.personality != null
+                    ? settlement.personality.mood : SettlementPersonality.Mood.PEACEFUL;
+            WorldSituation situation = new WorldSituation(threat, tod, mood, gameTime);
 
             for (String actorId : settlement.getPopulation()) {
-                // Derive the actor's current presence position from their life.
-                int[] off = ActorPresence.computePosition(actorId, settlement, gameTime, ctx);
-                int wx = settlement.centerX + off[0];
-                int wz = settlement.centerZ + off[1];
+                // ── Reason over the shared situation through this actor's mind ──
+                Activity activity = ActorReasoningEngine.reason(actorId, situation, settlement);
+
+                int offX, offZ;
+                String poseTag = "idle";
+                long lockExpiry = 0L;
+                if (activity != null) {
+                    // The reasoning engine produced a decision. Use the
+                    // activity's location + pose, and lock the entity so it
+                    // visibly holds this behavior.
+                    offX = activity.offsetX;
+                    offZ = activity.offsetZ;
+                    poseTag = activity.poseTag;
+                    lockExpiry = activity.expiryTick;
+                } else {
+                    // Peaceful — fall back to the daily-rhythm presence.
+                    int[] off = ActorPresence.computeDailyRhythm(actorId, settlement, gameTime);
+                    offX = off[0];
+                    offZ = off[1];
+                }
+
+                int wx = settlement.centerX + offX;
+                int wz = settlement.centerZ + offZ;
                 int wy = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, wx, wz);
                 Vec3 presencePos = new Vec3(wx + 0.5, wy, wz + 0.5);
 
@@ -139,25 +174,85 @@ public final class ActorMaterializer {
                 double distSq = player.position().distanceToSqr(presencePos);
                 if (distSq > ACTIVATION_RANGE_SQ) continue;
 
-                // Don't double-materialize (legacy ReificationScan may have done it).
-                if (isAlreadyPresent(level, actorId, presencePos)) continue;
+                // If already materialized, update its activity lock state
+                // (the threat may have started or ended since last scan).
+                EntityCultivator existing = findPresent(level, actorId, presencePos);
+                if (existing != null) {
+                    updateActivityLock(existing, activity, lockExpiry, poseTag, gameTime,
+                            settlement, actorId);
+                    continue;
+                }
 
-                materialize(level, actorId, presencePos);
+                // Materialize at the reasoning-derived (or daily-rhythm) position.
+                materialize(level, actorId, presencePos, poseTag, lockExpiry);
+
+                // ── Memory: record the threat-response to settlement history ──
+                // This is the "village remembers" half of the golden path. When
+                // the player returns later, the settlement's history carries
+                // who did what during the wolf event.
+                if (activity != null && activity.type != Activity.Type.MEDITATING) {
+                    String memory = activity.reason;
+                    settlement.recordEvent(gameTime,
+                            "threat_response:" + activity.type.name().toLowerCase(),
+                            memory);
+                    if (settlement.personality != null) {
+                        settlement.personality.remember(memory);
+                    }
+                    Ergenverse.LOGGER.info("[ActorMaterializer] {} → {} (reasoning-derived)",
+                            actorId, activity.type);
+                }
             }
         }
     }
 
     /**
-     * Check whether an EntityCultivator with the given character_id already
-     * exists within {@link #DUPLICATE_CHECK_RADIUS} blocks. Shared with the
-     * legacy ReificationScan's logic so the two paths never double-spawn.
+     * Find an existing EntityCultivator with the given character_id within
+     * {@link #DUPLICATE_CHECK_RADIUS} blocks. Returns null if none. Used for
+     * duplicate detection (shared with the legacy ReificationScan's pattern).
      */
-    private static boolean isAlreadyPresent(ServerLevel level, String characterId, Vec3 near) {
+    private static EntityCultivator findPresent(ServerLevel level, String characterId, Vec3 near) {
         AABB box = AABB.ofSize(near,
                 DUPLICATE_CHECK_RADIUS * 2, DUPLICATE_CHECK_RADIUS * 2, DUPLICATE_CHECK_RADIUS * 2);
         List<EntityCultivator> nearby = level.getEntitiesOfClass(EntityCultivator.class, box,
                 c -> characterId.equals(c.getCharacterId()));
-        return !nearby.isEmpty();
+        return nearby.isEmpty() ? null : nearby.get(0);
+    }
+
+    /**
+     * Update an already-materialized entity's activity-lock state. If a threat
+     * is active, lock the entity to its reasoning-derived pose. If the threat
+     * has expired, release the lock so the entity resumes daily rhythm.
+     */
+    private static void updateActivityLock(EntityCultivator entity, Activity activity,
+                                           long lockExpiry, String poseTag, long gameTime,
+                                           Settlement settlement, String actorId) {
+        if (activity != null && lockExpiry > gameTime) {
+            // Threat still active — ensure the entity is locked to its pose.
+            if (!entity.isActivityLocked()) {
+                entity.lockToActivity(poseToId(poseTag), lockExpiry);
+                Ergenverse.LOGGER.info("[ActorMaterializer] {} locked to {} (threat active)",
+                        actorId, activity.type);
+            }
+        } else {
+            // Threat expired (or peaceful) — release the lock.
+            if (entity.isActivityLocked()) {
+                entity.releaseActivityLock();
+                Ergenverse.LOGGER.info("[ActorMaterializer] {} released from activity lock (threat ended)",
+                        actorId);
+            }
+        }
+    }
+
+    /** Map a pose tag string to the EntityCultivator POSE_* constant. */
+    private static int poseToId(String poseTag) {
+        if (poseTag == null) return EntityCultivator.POSE_IDLE;
+        return switch (poseTag) {
+            case "meditating" -> EntityCultivator.POSE_MEDITATING;
+            case "observing" -> EntityCultivator.POSE_OBSERVING;
+            case "guarding" -> EntityCultivator.POSE_GUARDING;
+            case "casting" -> EntityCultivator.POSE_CASTING;
+            default -> EntityCultivator.POSE_IDLE;
+        };
     }
 
     /**
@@ -167,8 +262,12 @@ public final class ActorMaterializer {
      * actor is runtime-dead, never materializes (Art XLIII §2). The entity is
      * a <b>render shell</b> — the actor (in the SettlementRegistry) is the
      * source of truth; the entity just renders them.
+     *
+     * @param poseTag    the reasoning-derived pose ("idle", "observing", "guarding", ...)
+     * @param lockExpiry the activity-lock expiry tick (>0 to lock, 0 for peaceful)
      */
-    private static void materialize(ServerLevel level, String characterId, Vec3 pos) {
+    private static void materialize(ServerLevel level, String characterId, Vec3 pos,
+                                     String poseTag, long lockExpiry) {
         var canonData = WorldStateDataLoader.getEntry("npcs", characterId);
         if (canonData == null) {
             Ergenverse.LOGGER.debug("[ActorMaterializer] No canon data for {} — skipping", characterId);
@@ -188,9 +287,17 @@ public final class ActorMaterializer {
         }
         cultivator.moveTo(pos.x, pos.y, pos.z, level.random.nextFloat() * 360.0F, 0.0F);
         cultivator.initializeFromData(characterId, override);
+
+        // If a threat is active, lock the entity to its reasoning-derived pose.
+        // This makes the differentiated behavior OBSERVABLE — Wang Lin frozen
+        // at the treeline observing, the patriarch at the gate guarding.
+        if (lockExpiry > 0L) {
+            cultivator.lockToActivity(poseToId(poseTag), lockExpiry);
+        }
+
         level.addFreshEntity(cultivator);
 
-        Ergenverse.LOGGER.info("[ActorMaterializer] Materialized {} (presence-derived) at ({}, {}, {}) — Article XLIV actor-as-source-of-truth",
-                characterId, pos.x, pos.y, pos.z);
+        Ergenverse.LOGGER.info("[ActorMaterializer] Materialized {} at ({}, {}, {}) pose={} lock={} — Article XLIV actor-as-source-of-truth",
+                characterId, pos.x, pos.y, pos.z, poseTag, lockExpiry > 0L);
     }
 }

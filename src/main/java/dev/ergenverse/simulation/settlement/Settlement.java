@@ -106,6 +106,18 @@ public final class Settlement {
     /** Decline/ascent trend (e.g. "slow_decline", "thriving"). */
     public String trend = "stable";
 
+    /**
+     * The settlement's collective personality (mood, identity, fears,
+     * prosperity, security, cultivation level, recent memory).
+     *
+     * <p>Per the user's directive: "Settlements should have personalities. Not
+     * just NPCs." This shapes every embedded actor's reasoning — a fearful
+     * village lowers everyone's effective courage; a competitive sect raises
+     * it. Read by {@link ActorReasoningEngine} via
+     * {@link ActorProfile#effectiveCourage(SettlementPersonality)}.
+     */
+    public SettlementPersonality personality;
+
     public Settlement(String id, String canonName, String settlementClass,
                       int centerX, int centerZ) {
         this.id = id;
