@@ -94,6 +94,14 @@ public class EntityCultivator extends PathfinderMob {
     private static final EntityDataAccessor<Integer> DATA_POSE =
             SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.INT);
 
+    /** Synced sect/faction ID (e.g. "heng_yue_sect", "teng_family", "independent").
+     *  The client renderer reads this to select per-sect cultivator textures.
+     *  CRON-COMPLETIONIST-50: This closes the 30+ round visual deficit where
+     *  ALL 151+ NPCs shared one default.png texture.
+     */
+    private static final EntityDataAccessor<String> DATA_SECT =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.STRING);
+
     // ── Hibernation ─────────────────────────────────────────────────────
 
     /**
@@ -149,6 +157,7 @@ public class EntityCultivator extends PathfinderMob {
         this.entityData.define(DATA_DISPLAY_NAME, "Unknown Cultivator");
         this.entityData.define(DATA_CULTIVATION_REALM, "mortal");
         this.entityData.define(DATA_POSE, 0);
+        this.entityData.define(DATA_SECT, "independent");
     }
 
     public String getCharacterId() {
@@ -157,6 +166,16 @@ public class EntityCultivator extends PathfinderMob {
 
     public void setCharacterId(String id) {
         this.entityData.set(DATA_CHARACTER_ID, id);
+    }
+
+    /** CRON-COMPLETIONIST-50: Returns the synced sect/faction ID for texture selection. */
+    public String getSectId() {
+        return this.entityData.get(DATA_SECT);
+    }
+
+    /** CRON-COMPLETIONIST-50: Sets the sect/faction ID (called during initialization). */
+    public void setSectId(String sectId) {
+        this.entityData.set(DATA_SECT, sectId);
     }
 
     public String getDisplayNameCn() {
@@ -354,6 +373,24 @@ public class EntityCultivator extends PathfinderMob {
             float maxHp = data.get("max_hp").getAsFloat();
             this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(maxHp);
             this.setHealth(maxHp);
+        }
+
+        // CRON-COMPLETIONIST-50: Sect/faction — read from "sect", "faction", or "affiliation"
+        String sectId = null;
+        if (hasString(data, "sect")) {
+            sectId = data.get("sect").getAsString();
+        } else if (hasString(data, "faction")) {
+            sectId = data.get("faction").getAsString();
+        } else if (hasString(data, "affiliation")) {
+            sectId = data.get("affiliation").getAsString();
+        }
+        // Normalize: lowercase, spaces to underscores, strip parentheticals
+        if (sectId != null && !sectId.isEmpty()) {
+            sectId = sectId.toLowerCase().replaceAll("\\s+", "_")
+                    .replaceAll("[()]", "").replaceAll("_+", "_");
+            // Strip trailing underscore if any
+            if (sectId.endsWith("_")) sectId = sectId.substring(0, sectId.length() - 1);
+            this.setSectId(sectId);
         }
         // v1: mortal default (20 HP) applies via createAttributes() if canon silent
     }
