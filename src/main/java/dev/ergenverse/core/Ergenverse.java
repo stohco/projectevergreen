@@ -226,6 +226,11 @@ public final class Ergenverse {
         // Registered at HIGHEST priority (before HistoryEvents) so the bus dispatch
         // happens before existing handlers process the raw Forge event.
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.simulation.action.PlayerActionBridge.class);
+        // CRON-COMPLETIONIST-74: PlayerCombatBridge — player combat flows through WorldEventBus.
+        // When the player damages or kills an EntityCultivator or SpiritBeastEntity,
+        // a combat event is published. NPC kills also publish semantic act_of_cruelty
+        // if the target was severely weakened. Per the 2026-07-23 event-sourced pivot.
+        MinecraftForge.EVENT_BUS.register(dev.ergenverse.simulation.action.PlayerCombatBridge.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.SectMissionInteraction.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.LectureInteraction.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.advanced.AdvancedMechanicsCommand.class);
