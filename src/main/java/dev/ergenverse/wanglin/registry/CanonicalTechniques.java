@@ -2206,21 +2206,9 @@ public final class CanonicalTechniques extends AbstractSubRegistry {
         ));
 
 
-        register(CanonicalEntry.of(
-                "AT07_store_all_ji_thunder", "Store All Ji Thunder", "储极雷",
-                CanonicalCategory.TECHNIQUES,
-                Provenance.explicit("Renegade Immortal", List.of("Ch. ~1400"), 4),
-                OwnershipState.WANG_LIN_OWNED,
-                Transferability.selfCreated("Wang Lin developed or obtained this technique during his cultivation."),
-                Demonstrability.CAN_DEMONSTRATE_FULLY,
-                "The 7th accompanying thunder — stores all Ji Realm thunder energy. The culmination of the 9-thunder series.",
-                List.of(
-                        "7th of 9 accompanying thunders",
-                        "Stores all Ji thunder energy",
-                        "Culmination of thunder series"
-                ),
-                List.of("thunder", "accompanying", "ji_realm", "storage")
-        ));
+        // AT07_store_all_ji_thunder is registered above in the JI_REALM section (Ch. 1368, confidence 5).
+        // The duplicate registration here (TECHNIQUES category, Ch. ~1400, confidence 4) was removed
+        // to fix the runtime crash: IllegalStateException: Duplicate CanonicalEntry id 'AT07_store_all_ji_thunder'.
 
 
         register(CanonicalEntry.of(

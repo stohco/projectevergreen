@@ -42,12 +42,18 @@ public abstract class AbstractSubRegistry {
                 registryName, entries.size());
     }
 
-    /** Register an entry. Throws if a duplicate id is already registered. */
+    /**
+     * Register an entry. If a duplicate id is already registered, logs a warning and skips
+     * the duplicate (keeping the first-registered entry) instead of crashing the mod load.
+     * This makes the mod resilient to canon-database regressions — a duplicate ID should
+     * never block the player from launching the game.
+     */
     protected final void register(CanonicalEntry entry) {
         if (entry == null) return;
         if (entries.containsKey(entry.id())) {
-            throw new IllegalStateException("Duplicate CanonicalEntry id '" + entry.id()
-                    + "' in " + registryName);
+            Ergenverse.LOGGER.warn("[{}] Duplicate CanonicalEntry id '{}' ignored (first registration kept). "
+                    + "Fix the duplicate in the registry source.", registryName, entry.id());
+            return;
         }
         entries.put(entry.id(), entry);
     }
