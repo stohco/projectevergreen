@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.item.FlyingSwordItem;
+import dev.ergenverse.item.sword.SwordEffectType;
 import dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -508,14 +510,50 @@ public final class WangLinItems {
         // for items with explicitly documented canon transformations.
         ItemEvolutionRegistry.bootstrap();
 
-        // SPECIAL CASE: The Heaven-Defying Bead gets its own Item subclass
-        // with NBT-backed interior state, storage menu, and dimension entry.
-        // (HeavenDefyingBeadItem's super constructor already hard-codes
-        // canonId="heaven_defying_bead", so it bypasses the MANIFEST_TO_REGISTRY lookup.)
+        // SPECIAL CASES: Items that need their own Item subclass with real mechanics.
+        // These are canon-critical items where WangLinItem's tooltip-only behavior
+        // is insufficient — the player must be able to LAUNCH a flying sword,
+        // STORE items in a ring, or CAPTURE souls with the gourd.
+        //
+        // CRON-COMPLETIONIST-67: Wired 4 flying swords from WangLinItem (display-only)
+        // to FlyingSwordItem (launchable projectile with cultivation-scaled damage
+        // and per-sword supernatural effects).
         final RegistryObject<Item> ro;
         if ("heaven_defying_bead".equals(registryName)) {
             ro = ITEMS.register(registryName, () -> new HeavenDefyingBeadItem(
                     new Item.Properties()));
+        } else if ("wealth_flying_sword".equals(registryName)) {
+            // Wang Lin's FIRST flying sword — the iconic Wealth Sword.
+            // Canon: basic qi blade, no special effect, but reliable.
+            // Damage: 8.0 (low — it's his weakest sword). Effect: NONE.
+            ro = ITEMS.register(registryName, () -> new FlyingSwordItem(
+                    8.0F, SwordEffectType.NONE,
+                    new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)
+            ));
+        } else if ("core_treasure_sword".equals(registryName)) {
+            // Core Treasure Sword — can teleport targets on hit.
+            // Canon: a refined treasure-tier sword that displaces enemies.
+            // Damage: 12.0 (mid-tier). Effect: TELEPORT.
+            ro = ITEMS.register(registryName, () -> new FlyingSwordItem(
+                    12.0F, SwordEffectType.TELEPORT,
+                    new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)
+            ));
+        } else if ("dark_green_flying_sword".equals(registryName)) {
+            // Dark Green Flying Sword — seeps poison into wounds.
+            // Canon: a sinister sword that poisons those it cuts.
+            // Damage: 10.0 (mid-tier). Effect: POISON (Wither II, 3s).
+            ro = ITEMS.register(registryName, () -> new FlyingSwordItem(
+                    10.0F, SwordEffectType.POISON,
+                    new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)
+            ));
+        } else if ("blood_slaughter_sword".equals(registryName)) {
+            // Blood Slaughter Sword — drains life force from those it cuts.
+            // Canon: one of the Seven Swords of the Ancient Dao, absorbs blood qi.
+            // Damage: 15.0 (high-tier). Effect: LIFESTEAL (30% damage healed).
+            ro = ITEMS.register(registryName, () -> new FlyingSwordItem(
+                    15.0F, SwordEffectType.LIFESTEAL,
+                    new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)
+            ));
         } else {
             ro = ITEMS.register(registryName, () -> new WangLinItem(
                     new Item.Properties(),

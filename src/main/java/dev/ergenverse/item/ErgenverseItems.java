@@ -63,7 +63,7 @@ public final class ErgenverseItems {
     public static final RegistryObject<Item> BEAST_BONE = ITEMS.register("beast_bone",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> BEAST_CORE = ITEMS.register("beast_core",
-            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+            () -> new BeastCoreItem(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
     public static final RegistryObject<Item> WOLF_CORE = ITEMS.register("wolf_core",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
     public static final RegistryObject<Item> RABBIT_BLOOD_ESSENCE = ITEMS.register("rabbit_blood_essence",
@@ -167,6 +167,20 @@ public final class ErgenverseItems {
             ITEMS.register("minor_healing_pill", () -> new dev.ergenverse.item.SpiritPillItem(
                     dev.ergenverse.item.PillType.MINOR_HEALING, new Item.Properties().stacksTo(16)));
 
+
+    // ── CRON-COMPLETIONIST-67: Canon Storage Ring & Soul Gourd ─────────────────
+    // Storage Ring: 9-slot pocket-dimension inventory, persists across death.
+    // Canon: THE standard storage tool for every cultivator above Qi Condensation.
+    public static final RegistryObject<Item> STORAGE_RING = ITEMS.register("storage_ring",
+            () -> new StorageRingItem(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    // Soul Gourd: captures souls from slain entities, releases as area attack.
+    // Canon: feared soul-capturing treasure, prevents reincarnation.
+    public static final RegistryObject<Item> SOUL_GOURD = ITEMS.register("soul_gourd",
+            () -> new SoulGourdItem(new Item.Properties().durability(500).rarity(net.minecraft.world.item.Rarity.RARE)));
+    // Cultivation Journal: records observations, persists across death.
+    // Canon: cultivators keep detailed journals of insights.
+    public static final RegistryObject<Item> CULTIVATION_JOURNAL = ITEMS.register("cultivation_journal",
+            () -> new JournalItem(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
 
     // ── Spawn Eggs ────────────────────────────────────────────────────
     // Uses DeferredSpawnEggItem because SpawnEggItem requires EntityType at
@@ -289,6 +303,10 @@ public final class ErgenverseItems {
                             output.accept(BANNER_TIAN_SHUI.get());
                             output.accept(BANNER_SOUL_REFINING.get());
                             output.accept(BANNER_XUAN_DAO.get());
+                            // CRON-COMPLETIONIST-67: Canon items
+                            output.accept(STORAGE_RING.get());
+                            output.accept(SOUL_GOURD.get());
+                            output.accept(CULTIVATION_JOURNAL.get());
                         })
                         .build());
         Ergenverse.LOGGER.info("[Ergenverse] ErgenverseItems: registered jade_slip utility item.");
