@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:luo_he_sect_puppet_workshop/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "minecraft:nether_fortress/corridor_3",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

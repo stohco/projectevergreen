@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:luo_he_sect_alchemy_courtyard",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 180,
+    "separation": 45,
+    "salt": 30916
+  }
+}

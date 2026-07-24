@@ -1,0 +1,10 @@
+{
+  "_comment": "Qi-Gathering Grass placed in Zhao Country (mountains + plains). Rarity 4 — common low-tier herb, the most basic spirit herb. Surface only.",
+  "feature": "ergenverse:qi_gathering_grass",
+  "placement": [
+    { "type": "minecraft:rarity_filter", "chance": 4 },
+    { "type": "minecraft:in_square" },
+    { "type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG" },
+    { "type": "minecraft:biome" }
+  ]
+}

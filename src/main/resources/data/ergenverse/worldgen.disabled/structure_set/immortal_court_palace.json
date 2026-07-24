@@ -1,0 +1,12 @@
+{
+  "_comment": "Structure set for immortal_court_palace. Canon-accurate placement.",
+  "structures": [
+    { "structure": "ergenverse:immortal_court_palace", "weight": 1 }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 200,
+    "separation": 60,
+    "salt": 42
+  }
+}

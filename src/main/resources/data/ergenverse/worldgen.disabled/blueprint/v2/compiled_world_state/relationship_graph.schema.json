@@ -1,0 +1,51 @@
+{
+  "_schema": "compiled_relationship_graph",
+  "_schema_version": 1,
+  "_article": "XXXIV — Relationships Are Graphs. XXXIX.7 — the simulation queries a world database including a Relationship Graph, not raw JSON.",
+  "_description": "Schema for the COMPILED Relationship Graph — the master graph of all directed, typed edges between entities, produced by the World Compiler from the DSL's relationship declarations (dsl_specification §3). This is the graph the simulation traverses to answer 'if the wolves disappear, what changes?' or 'who protects Wang Village?' or 'what does Wang Village depend on?'.",
+  "_design_notes": {
+    "query_patterns": [
+      "outgoing(entity_id, type?) -> [edge] — what does this entity relate to (optionally of a type)",
+      "incoming(entity_id, type?) -> [edge] — what relates TO this entity",
+      "cascade(entity_id, type, depth) -> subgraph — traverse N hops of a relationship type (e.g. 'what does Wang Village depend on, transitively?')",
+      "path(entity_a, entity_b, edge_type?) -> [edge] — is there a relationship path between two entities"
+    ],
+    "sub_graphs": "The Travel, Spirit, Hydrology, Settlement, and Influence graphs are PROJECTIONS of this master graph (filtered by edge type). They are compiled separately for O(1) queries in their domains, but they share entity ids with this graph."
+  },
+  "schema": {
+    "nodes": [
+      {
+        "entity_id": "string",
+        "entity_type": "enum — from dsl_specification §2",
+        "compiled_state_ref": "string — reference to full compiled state"
+      }
+    ],
+    "edges": [
+      {
+        "edge_id": "string — stable compiled edge id",
+        "from": "string — entity id",
+        "to": "string — entity id",
+        "type": "enum — from dsl_specification §3 (located_in, fed_by, protected_by, threatened_by, connected_to, drains_into, preys_on, governs, allied_with, at_war_with, owes, grudge_against, recruits_from, origin_of, spread_to, witnessed_by, known_by, ...)",
+        "since": "int — tick the relationship began (canon tick or historical event id)",
+        "strength": "float 0.0–1.0 — for soft relationships (allied_with, spread_to); omitted for hard structural relationships (located_in, drains_into)",
+        "canon_ref": "enum — EXPLICIT | INFERRED (Art XV) | AUTHORED",
+        "momentum_ref": "string|null — reference to a live momentum in momentum_registry if the relationship itself has a trajectory (e.g. a decaying alliance, a festering grudge)",
+        "properties": "object — type-specific properties (e.g. a connected_to edge carries the RoadSegment id; a grudge_against edge carries the Grudge entity id)"
+      }
+    ],
+    "indices": {
+      "by_from_type": "map<from_entity, map<edge_type, [edge_id]>> — for outgoing queries",
+      "by_to_type": "map<to_entity, map<edge_type, [edge_id]>> — for incoming queries",
+      "by_type": "map<edge_type, [edge_id]> — for 'all threats', 'all supply routes', etc."
+    },
+    "queries_supported": [
+      "outgoing(entity_id, type?) -> [edge]",
+      "incoming(entity_id, type?) -> [edge]",
+      "cascade(entity_id, type, max_depth) -> subgraph",
+      "path(entity_a, entity_b, type?) -> [edge] | null",
+      "all_of_type(type) -> [edge]"
+    ]
+  },
+  "_compile_source": "World Blueprint DSL v2 — all relationship declarations in entities' `relationships` blocks",
+  "_runtime_consumers": ["DecisionEngine (cascade queries for consequence reasoning)", "IntentEngine (who can help / who is in the way)", "PerceptionEngine (what relationships are perceivable)", "Conflict system (grudge/threat edges)"]
+}

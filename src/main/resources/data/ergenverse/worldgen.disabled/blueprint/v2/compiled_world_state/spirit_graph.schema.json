@@ -1,0 +1,45 @@
+{
+  "_schema": "compiled_spirit_graph",
+  "_schema_version": 1,
+  "_article": "XXXIX.7 — Spirit Graph is a first-class compiled artifact. User directive: 'Spirit veins should be an electrical grid. Everything hangs off them.'",
+  "_description": "Schema for the COMPILED Spirit Graph — the qi-flow graph where nodes are SpiritVeins, Settlements, Sects, Formations, Mines, and FloraPatches, and edges are qi-flow relationships (fed_by, drains, recharges, depends_on). This is THE GRID. The simulation queries this graph to answer 'if this vein depletes, what suffers?' or 'where does this sect's cultivation power come from?' or 'will this herb patch ripen or wither?'.",
+  "_design_notes": {
+    "why_central": "The user's directive is explicit: spirit veins are the electrical grid. Herb growth, beasts, cultivators, trade, road usage, bandits, and history all hang off them. This graph is the substrate. Every momentum that depends on qi density (spirit_vein, herb, sect, elder_breakthrough) reads from this graph.",
+    "cascade_example": "If spirit_vein_wang_village depletes: settlement_graph marks wang_family_village as cultivation-impoverished; dependent FloraPatches wither (herb_momentum); dependent cultivators progress slower (elder_breakthrough slows); the sect recruiting from the village finds fewer spirit-rooted children (sect_momentum); the village's economy shifts (economy_momentum). All from one graph query."
+  },
+  "schema": {
+    "nodes": [
+      {
+        "node_id": "string — entity id (SpiritVein | Settlement | Sect | Formation | Mine | FloraPatch)",
+        "node_type": "enum — vein | settlement | sect | formation | mine | flora_patch",
+        "qi_role": "enum — source | consumer | conduit | storage | modifier",
+        "compiled_state_ref": "string — reference to full compiled state",
+        "momentum_ref": "string|null — spirit_vein_momentum for veins; relevant for consumers too"
+      }
+    ],
+    "edges": [
+      {
+        "edge_id": "string",
+        "from": "string — entity id (source)",
+        "to": "string — entity id (consumer/conduit/modifier)",
+        "type": "enum — fed_by | drains | recharges | depends_on | conducts (vein-to-vein conduction through geology)",
+        "flow_rate": "float — qi units per tick flowing along this edge (positive = from source to consumer; negative = recharge flowing back)",
+        "flow_class": "enum — natural | extracted | channeled | forced — natural = ambient; extracted = mine/draw; channeled = formation-routed; forced = canon-grade",
+        "canon_ref": "enum"
+      }
+    ],
+    "indices": {
+      "by_source": "map<vein_id, [edge_id]> — what does this vein feed?",
+      "by_consumer": "map<consumer_id, [edge_id]> — what does this consumer depend on?",
+      "by_flow_class": "map<flow_class, [edge_id]> — for 'all extraction points' queries"
+    },
+    "queries_supported": [
+      "dependents(vein_id) -> [entity_id] — what suffers if this vein depletes (cascade)",
+      "sources(consumer_id) -> [vein_id] — where does this consumer's qi come from",
+      "qi_density_at(x, z) -> float — interpolated ambient qi density at a point (for herb growth, cultivator progress, beast density)",
+      "extraction_load(vein_id) -> float — sum of all extraction edges (drives spirit_vein_momentum over_extraction threshold)"
+    ]
+  },
+  "_compile_source": "World Blueprint DSL v2 — SpiritVein entities + fed_by/drains/recharges/depends_on relationships",
+  "_runtime_consumers": ["SpiritVeinMomentum (extraction_load)", "HerbMomentum (qi_density_at for growth)", "ElderBreakthroughMomentum (accumulation rate)", "BeastPopulation (spirit beasts concentrate near dense veins)", "SectMomentum (resource_pressure)", "ChunkRenderer (spirit-rich biomes render differently — LAST)"]
+}

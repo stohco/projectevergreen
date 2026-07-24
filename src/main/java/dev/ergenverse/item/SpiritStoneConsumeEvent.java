@@ -1,5 +1,6 @@
 package dev.ergenverse.item;
 
+import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.cultivation.CultivationCapability;
 import dev.ergenverse.cultivation.CultivationState;
 import dev.ergenverse.cultivation.RealmId;
@@ -38,7 +39,7 @@ public class SpiritStoneConsumeEvent {
         ItemStack stack = event.getItemStack();
 
         // Only react to spirit_stone
-        if (stack.getItem() != ErgenverseItems.SPIRIT_STONE.get()) {
+        if (stack.getItem() != ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().asItem()) {
             return;
         }
 

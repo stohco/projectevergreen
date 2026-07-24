@@ -1,0 +1,16 @@
+{
+  "_comment": "Heng Yue Sect — Spirit Herb Garden. Where medicinal spirit herbs are cultivated for alchemy. Canon: Wang Lin would have been assigned to tend herbs here as an outer disciple. The garden contains the sect's supply of spirit grasses, spirit flowers, and other ingredients for pill refinement. Replaces the vanilla taiga placeholder (Article XXII).",
+  "name": "ergenverse:heng_yue_sect_spirit_herb_garden/start_pool",
+  "fallback": "minecraft:village/taiga/terminators",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "ergenverse:heng_yue_sect/herb_garden",
+        "projection": "rigid",
+        "processors": "minecraft:empty"
+      }
+    }
+  ]
+}

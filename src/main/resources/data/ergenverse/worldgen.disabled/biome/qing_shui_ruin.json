@@ -1,0 +1,67 @@
+{
+  "_comment": "Qing Shui Kingdom ruin (\u6e05\u6c34\u56fd) \u2014 a destroyed mortal kingdom on Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L33): destroyed before main story. Its annihilation 'seeded Qing Shui's slaughter essence.' Wang Lin's slaughter essence originated from the karmic residue of this genocide. Ruin ecology (CANON_RI_ECOLOGY.md Law G4): massacre site generates slaughter-aspect spirit beasts and herbs. The land is barren, haunted, and permeated with residual slaughter Qi. Prime Directive: the slaughter residue is objective \u2014 it exists whether the player perceives it or not. A mortal walking here feels unease without knowing why; a cultivator at Soul Formation+ can perceive the slaughter-essence Qi that saturates the soil.",
+  "temperature": 0.1,
+  "downfall": 0.1,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 3815990,
+    "fog_color": 3815990,
+    "water_color": 3145784,
+    "water_fog_color": 270131,
+    "mood_sound": "minecraft:ambient.basalt_deltas",
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold_lower",
+      "minecraft:ore_redstone",
+      "minecraft:ore_lapis",
+      "minecraft:ore_diamond",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [
+      "minecraft:forest_rocks"
+    ],
+    [
+      "ergenverse:joss_flame_source"
+    ],
+    [
+      "minecraft:patch_dead_bush",
+      "minecraft:patch_gravel_badlands",
+      "ergenverse:demon_corpse_mushroom",
+      "ergenverse:reincarnation_lily",
+      "ergenverse:void_nether_grass"
+    ],
+    []
+  ]
+}

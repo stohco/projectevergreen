@@ -1,0 +1,21 @@
+{
+  "_comment": "Void-Nether Grass (虚冥草) — void-cultivation herb. Canon: a grass that grows in void-touched (虚冥) areas where the fabric of reality has been worn thin; aids void-attribute (虚) cultivation techniques. Found in Qing Shui Ruin (reality scarred by the massacre's aftermath) and Fire Demon Country (void-leak around the sealed ancient demon's prison). Custom block: ergenverse:void_nether_grass
+  "type": "minecraft:flower",
+  "config": {
+    "feature": {
+      "type": "minecraft:simple_block",
+      "config": {
+        "to_place": {
+          "type": "minecraft:simple_state_provider",
+          "state": {
+            "Name": "ergenverse:void_nether_grass"
+          }
+        }
+      }
+    },
+    "tries": 1,
+    "xz_spread": 2,
+    "y_spread": 0,
+    "need_red_to_survive": false
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "ergenverse:zhao_mountains",
+    "ergenverse:vermilion_bird_country",
+    "ergenverse:fire_burn_country"
+  ],
+  "spawners": [
+    {
+      "type": "ergenverse:spirit_hawk",
+      "weight": 4,
+      "minCount": 1,
+      "maxCount": 2
+    }
+  ]
+}

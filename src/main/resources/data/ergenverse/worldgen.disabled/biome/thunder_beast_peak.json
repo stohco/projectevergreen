@@ -1,0 +1,49 @@
+{
+  "_comment": "Thunder Beast Peak (\u96f7\u517d\u5cf0) \u2014 mountainous region where thunder-attribute beasts nest, guarding thunder-essence herbs. Canon: a sub-region of the Ancient Thunder Realm (\u53e4\u96f7\u754c). Cooler than the rest of the realm \u2014 the peaks rise above the perpetual storm clouds, and thunder-attribute spirit beasts nest in the high crags. These beasts are fiercely territorial and guard rare thunder-essence herbs that grow only here. Wang Lin hunted thunder beasts here to refine his Ji Realm and to harvest their inner cores (thunder essence). Wolves, ravagers, and hoglins stand in as the thunder-beast ecosystem. Nether fossils in the peaks are the bones of ancient thunder beasts that fell in eons past. Prime Directive: the beasts and herbs exist objectively as the realm's native ecology \u2014 their behavior is driven by thunder-aspect Qi, not by the player's presence.",
+  "precipitation": "none",
+  "effects": {
+    "sky_color": 4474181,
+    "fog_color": 4474181,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none",
+    "mood_sound": "minecraft:ambient.crimson_forest.mood"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:nether_cave"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_quartz",
+      "minecraft:ore_gold",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [
+      "minecraft:crimson_fungus",
+      "minecraft:weeping_vines",
+      "minecraft:nether_fossil"
+    ],
+    []
+  ]
+}

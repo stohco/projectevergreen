@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:teng_family_city_port_docks/start_pool",
+  "fallback": "minecraft:village/taiga/terminators",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "ergenverse:teng_family_city/port_docks",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

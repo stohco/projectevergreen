@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:heavenly_fate_sect_hidden_treasury",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 180,
+    "separation": 45,
+    "salt": 63279
+  }
+}

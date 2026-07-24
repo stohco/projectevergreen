@@ -1,0 +1,79 @@
+{
+  "_schema": "sect_momentum",
+  "_schema_version": 1,
+  "_article": "XXXIX.2 — sects continue to recruit, resource pressure shifts, factions drift.",
+  "_description": "Momentum schema for a Sect entity. A sect is not a static building. It is an institution with a trajectory: recruitment rising or falling, resource pressure mounting or easing, internal factions drifting toward schism or unity, doctrine evolving, the sect ascending or declining relative to its rivals. This momentum declares that trajectory.",
+  "_design_notes": {
+    "why_this_matters": "Heng Yue Sect is not just 'a sect near Wang Village'. It is a sect under resource pressure (its spirit vein is adequate but not rich), recruiting aggressively in mortal villages (including Wang Village), with an internal factional tension between the patriarch's orthodox line and younger elders pushing for aggressive expansion. When the player arrives, the Heng Yue recruiter is already en route — that IS the sect's recruitment momentum made visible.",
+    "coupling": "Feeds: TravelGraph (recruiter and patrol routes), SettlementGraph (which villages are recruitment targets), InfluenceMap (sect influence radius). Fed by: SpiritVeinMomentum (resource pressure), FactionGrudgeMomentum (rivalries).",
+    "perceivable_without_notification_examples": [
+      "A wandering cultivator (the recruiter) passes through the village asking after children with spirit roots — no quest, just a person doing their job.",
+      "Villagers discuss whether to send a child to the sect — the conversation has history and disagreement.",
+      "The sect's patrol is seen on the road at a frequency that implies a staffing shortage (less frequent than a healthy sect).",
+      "A sect disciple passed through a week ago and bought supplies — the merchant mentions it in passing."
+    ]
+  },
+  "schema": {
+    "sect_id": "string — matches a Sect entity id in the blueprint",
+    "system": "sect",
+    "current_state": {
+      "headcount_class": "enum — handful | small | medium | large | sprawling",
+      "recruitment_status": "enum — dormant | passive | active | aggressive | desperate",
+      "resource_pressure": "float 0.0–1.0 — 0 = abundant, 1 = crisis (driven by spirit vein qi density vs headcount)",
+      "internal_faction_tension": "float 0.0–1.0 — 0 = unified, 1 = schism imminent",
+      "doctrine_drift": "enum — orthodox | drifting | contested | schismatic",
+      "ascent_decline_trend": "enum — ascending | stable | stagnating | declining | collapsing",
+      "rivalry_state": "object — per-rival: {rival_sect_id, hostility 0-1, flashpoint_proximity 0-1}"
+    },
+    "rate_of_change": {
+      "headcount_per_tick": "int — signed. Positive = recruiting faster than attrition. Negative = attrition outpaces recruitment.",
+      "resource_pressure_per_tick": "float — driven by (headcount growth vs spirit vein qi density trend)",
+      "faction_tension_per_tick": "float — driven by internal events, doctrine disputes, succession anxiety",
+      "components": {
+        "recruitment_rate": "int per tick — disciples recruited (driven by recruitment_status and target villages)",
+        "attrition_rate": "int per tick — disciples lost (deaths, defections, completions, expulsions)",
+        "resource_draw": "float — total cultivation draw on dependent spirit veins (feeds SpiritVeinMomentum extraction_drain)",
+        "faction_drift": "float — per-faction ideological shift"
+      }
+    },
+    "drivers": [
+      "string — e.g. 'Heng Yue recruiter route active: visits wang_family_village every 60 days', 'spirit_vein_heng_yue qi_density trend -0.005/tick (slow decline) raises resource_pressure', 'succession anxiety: patriarch aging, no clear heir, raises faction_tension'"
+    ],
+    "thresholds": [
+      {
+        "name": "recruitment_blitz",
+        "condition": "resource_pressure > 0.6 AND headcount declining",
+        "consequence": "sect enters aggressive/desperate recruitment; recruiters visit more villages more often; standards lower; this is perceivable as recruiters appearing in villages they previously ignored.",
+        "irreversible": false
+      },
+      {
+        "name": "schism",
+        "condition": "internal_faction_tension > 0.85 for sustained period",
+        "consequence": "sect splits; one faction departs (may found a new sect, may become a rogue faction, may join a rival); the remaining sect is weakened; regional influence map reshapes.",
+        "irreversible": true
+      },
+      {
+        "name": "decline_spiral",
+        "condition": "ascent_decline_trend = declining AND resource_pressure > 0.7 AND headcount_class declining",
+        "consequence": "sect enters terminal decline; disciples leave; formations decay; the sect may be abandoned within a generation. This is how sects die in Er Gen canon.",
+        "irreversible": "true once headcount drops below sustainability threshold"
+      },
+      {
+        "name": "ascension",
+        "condition": "resource_pressure < 0.3 AND headcount stable AND a canon breakthrough event occurs at the patriarch level",
+        "consequence": "sect ascends a tier; influence expands; new territory claimed; may absorb a weaker sect. This is rare and canon-driven.",
+        "irreversible": true
+      }
+    ],
+    "interruptible_by": [
+      "New spirit vein discovered or formation installed (lowers resource_pressure)",
+      "Successful breakthrough by patriarch or elder (resets succession anxiety, may ascend the sect)",
+      "External threat unifies factions (lowers tension)",
+      "Schism averted by mediation (NPC or player intervention; Art XXXIV favor/debt may apply)",
+      "War with a rival sect (may end the trajectory one way or another)"
+    ],
+    "perceivable_without_notification": "string — REQUIRED (Art XXXIX.5). e.g. 'A Heng Yue disciple passed through three days ago buying grain — more than usual. The village head mentions, unsolicited, that the sect has been asking after children again. The recruiter's last visit was two months ago; the next is expected within the month.' If empty, FAILS the Momentum Test.",
+    "compiled_into": "settlement_graph (sect as a settlement-class node); influence_map (sect influence radius); travel_graph (recruiter/patrol routes); feeds faction_grudge_momentum",
+    "canon_ref": "EXPLICIT — Heng Yue Sect's recruitment of Wang Lin is canon; INFERRED (Art XV) for specific pressure values and faction tension"
+  }
+}

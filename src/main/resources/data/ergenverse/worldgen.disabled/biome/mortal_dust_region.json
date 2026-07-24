@@ -1,0 +1,68 @@
+{
+  "_comment": "Mortal Dust Region (\u51e1\u5c18\u57df) \u2014 humble frontier of the Immortal Astral Continent where newly-ascended cultivators first arrive from the Cave World. Wind-swept, dusty, sparse vegetation. Spirit energy is dense (like the rest of the Continent) but the land is humble \u2014 its name refers to cultivators leaving behind 'mortal dust' to ascend. Stand-in spawns: husk=lost mortals who failed to ascend properly, spider/zombie=frontier hazards, donkey=pack animals of arriving cultivators. Desert village structures stand in for frontier outposts. Prime Directive: the dusty wind and humble landscape exist objectively; they are not illusions. New arrivals must build their foundation here before venturing inward.",
+  "temperature": 0.7,
+  "downfall": 0.1,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 11184810,
+    "fog_color": 12434877,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:village_desert"
+    ],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_granite_upper",
+      "minecraft:ore_granite_lower",
+      "minecraft:ore_diorite_upper",
+      "minecraft:ore_diorite_lower",
+      "minecraft:ore_andesite_upper",
+      "minecraft:ore_andesite_lower",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold",
+      "minecraft:ore_copper",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [
+      "minecraft:patch_dead_bush",
+      "minecraft:patch_grass"
+    ],
+    []
+  ],
+  "structures": [
+    "ergenverse:mortal_dust_outpost"
+  ]
+}

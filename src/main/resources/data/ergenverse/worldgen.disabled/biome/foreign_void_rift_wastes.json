@@ -1,0 +1,67 @@
+{
+  "_comment": "Foreign Void Rift Wastes (\u5916\u57df\u865a\u7a7a\u88c2\u75d5\u8352\u539f) \u2014 the unstable boundary region of the Foreign Battleground where the void bleeds through and outsiders invade. Canon: a shattered wasteland where the dimensional boundary is thin, terrain is broken and floating, and the purple void fog never clears. This is the invasion corridor used by outsiders; endermen stand in for void walkers, phantoms for the winged outsiders, and vexes for the void invaders that slip through the rifts. End gateways serve as stand-ins for the void rifts themselves; patch_fire represents the chaotic energy bleeding through the boundary. Prime Directive: the void rifts and the outsider invasion are objective phenomena \u2014 the boundary was objectively damaged during the ancient war and has never healed regardless of the player's perception.",
+  "temperature": 0.9,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 3355443,
+    "fog_color": 5052901,
+    "water_color": 3618331,
+    "water_fog_color": 2236962,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:canyon"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [
+      "minecraft:end_gateway"
+    ],
+    [],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_granite_upper",
+      "minecraft:ore_granite_lower",
+      "minecraft:ore_diorite_upper",
+      "minecraft:ore_diorite_lower",
+      "minecraft:ore_andesite_upper",
+      "minecraft:ore_andesite_lower",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold",
+      "minecraft:ore_copper",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [
+      "minecraft:patch_fire"
+    ],
+    []
+  ],
+  "structures": [
+    "ergenverse:foreign_void_rift"
+  ]
+}

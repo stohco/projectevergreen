@@ -1,0 +1,10 @@
+{
+  "_comment": "Reincarnation Lily (轮回花) placed in Qing Shui Ruin, Jue Ming Valley, and Sea of Devils. Rarity 80 — extremely rare Samsara Dao herb, found only where the boundary between life and death is thin. Surface only.",
+  "feature": "ergenverse:reincarnation_lily",
+  "placement": [
+    { "type": "minecraft:rarity_filter", "chance": 80 },
+    { "type": "minecraft:in_square" },
+    { "type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG" },
+    { "type": "minecraft:biome" }
+  ]
+}

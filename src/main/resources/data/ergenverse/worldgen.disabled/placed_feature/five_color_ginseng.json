@@ -1,0 +1,10 @@
+{
+  "_comment": "Five-Color Ginseng (五彩人参) placed in Vermilion Bird Country and Zhao Mountains. Rarity 40 — rare five-element balancing herb, gathered only where elemental Qi intermingles. Surface only.",
+  "feature": "ergenverse:five_color_ginseng",
+  "placement": [
+    { "type": "minecraft:rarity_filter", "chance": 40 },
+    { "type": "minecraft:in_square" },
+    { "type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG" },
+    { "type": "minecraft:biome" }
+  ]
+}

@@ -2,7 +2,7 @@ package dev.ergenverse.starry_sky;
 
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.EntityCultivator;
-import dev.ergenverse.item.ErgenverseItems;
+import dev.ergenverse.block.ErgenverseBlocks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -101,7 +101,7 @@ public final class StarrySkyEvents {
             if (characterId != null && characterId.startsWith("starry_sky_wandering_")) {
                 // Drop 1-3 spirit stones (the cultivator's travel funds)
                 int dropCount = 1 + serverLevel.random.nextInt(3);
-                ItemStack stack = new ItemStack(ErgenverseItems.SPIRIT_STONE.get(), dropCount);
+                ItemStack stack = new ItemStack(ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().asItem(), dropCount);
                 cultivator.spawnAtLocation(stack);
                 // Notify killer if a player
                 if (event.getSource().getEntity() instanceof ServerPlayer killer) {
@@ -124,7 +124,7 @@ public final class StarrySkyEvents {
                 // Drop 3-7 spirit stones (the beast's accumulated hoard
                 // from consumed cultivators)
                 int dropCount = 3 + serverLevel.random.nextInt(5);
-                ItemStack stack = new ItemStack(ErgenverseItems.SPIRIT_STONE.get(), dropCount);
+                ItemStack stack = new ItemStack(ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().asItem(), dropCount);
                 enderMan.spawnAtLocation(stack);
                 if (event.getSource().getEntity() instanceof ServerPlayer killer) {
                     killer.sendSystemMessage(Component.literal(

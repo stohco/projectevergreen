@@ -1,0 +1,100 @@
+{
+  "_comment": "Ancient Thunder Realm (古雷界 / Gu Lei Jie) dimension — the source of thunder-attribute spiritual energy in Renegade Immortal canon. Accessed via a specific teleportation restriction/spell. Wang Lin enters it to cultivate his thunder essence and Ji Realm (a thunder-based killing technique). Three sub-regions mapped via multi_noise on the temperature/continent axes: thunderstorm_sea (hot, vast ocean of crackling thunder clouds where lightning beasts roam — temperature 0.8-1.0, continents -1.0-0.0), scorched_glass_plains (hot/arid, lightning-blasted obsidian flats where Wang Lin cultivated Ji Realm — temperature 0.6-1.0, continents 0.0-0.7), thunder_beast_peak (cooler mountainous region where thunder-attribute beasts nest, guarding thunder-essence herbs — temperature -0.3-0.3, continents 0.3-1.0). Uses minecraft:nether noise settings for chaotic vertical terrain (matching the Ancient God Land template — pocket dimensions have chaotic, non-surface terrain). Prime Directive: the Ancient Thunder Realm exists objectively as a thunder-saturated pocket dimension; its perpetual storms, lightning beasts, and scorched glass are real regardless of who perceives them.",
+  "type": "ergenverse:ancient_thunder_realm_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "minecraft:nether",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "ergenverse:thunderstorm_sea",
+          "parameters": {
+            "temperature": [
+              0.8,
+              1.0
+            ],
+            "humidity": [
+              0.5,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              0.0
+            ],
+            "depth": [
+              -1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "biome": "ergenverse:scorched_glass_plains",
+          "parameters": {
+            "temperature": [
+              0.6,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              -0.3
+            ],
+            "continentalness": [
+              0.0,
+              0.7
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              -0.3,
+              0.3
+            ],
+            "depth": [
+              -1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "biome": "ergenverse:thunder_beast_peak",
+          "parameters": {
+            "temperature": [
+              -0.3,
+              0.3
+            ],
+            "humidity": [
+              -0.5,
+              0.3
+            ],
+            "continentalness": [
+              0.3,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              0.3,
+              1.0
+            ],
+            "depth": [
+              -1.0,
+              1.0
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

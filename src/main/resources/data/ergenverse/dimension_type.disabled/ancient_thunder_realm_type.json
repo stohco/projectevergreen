@@ -1,0 +1,25 @@
+{
+  "_comment": "Ancient Thunder Realm (古雷界 / Gu Lei Jie) dimension type — a pocket dimension in Renegade Immortal canon that is the source of thunder-attribute spiritual energy. Wang Lin enters it to cultivate his thunder essence and Ji Realm (a thunder-based killing technique). Perpetually storm-wreathed: lightning strikes constantly, sky is roiling black-purple clouds, ground is scorched glass-like obsidian. Non-thunder cultivators are damaged by merely being here — spirit energy is purely thunder-aspected. Per canon: beds would ignite (bed_works=false), no natural light (perpetual storm), no raids, no piglin safety. monster_spawn_light_level allows spawns at any light level (0-15) because the storm obscures everything. Prime Directive: these properties are objective — the Ancient Thunder Realm exists as a thunder-saturated pocket dimension independent of perception.",
+  "ultrawarm": false,
+  "natural": false,
+  "piglin_safe": false,
+  "respawn_anchor_works": false,
+  "bed_works": false,
+  "has_raids": false,
+  "has_skylight": false,
+  "has_ceiling": false,
+  "coordinate_scale": 1.0,
+  "ambient_light": 0.0,
+  "logical_height": 384,
+  "min_y": -64,
+  "height": 448,
+  "infiniburn": "#minecraft:infiniburn_overworld",
+  "effects": "minecraft:overworld",
+  "monster_spawn_light_level": {
+    "type": "minecraft:uniform",
+    "value_in_clamped_range": true,
+    "min_inclusive": 0,
+    "max_inclusive": 15
+  },
+  "monster_spawn_block_light_limit": 0
+}

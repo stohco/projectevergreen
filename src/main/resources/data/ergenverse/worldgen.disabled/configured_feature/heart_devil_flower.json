@@ -1,0 +1,21 @@
+{
+  "_comment": "Heart-Devil Flower (心魔花) — heart-devil tribulation herb. Canon: a crimson-black flower that induces heart-devil (心魔) visions; consumed in controlled doses by cultivators undergoing tribulation to force confrontation with inner demons. Dangerous — handling without preparation causes Qi deviation. Found in Fire Demon Country (sealed demon's blood-soaked earth), Sea of Devils (demonic-aspect ruins), and Jue Ming Valley (space-aspect death boundary). Custom block: ergenverse:heart_devil_flower
+  "type": "minecraft:flower",
+  "config": {
+    "feature": {
+      "type": "minecraft:simple_block",
+      "config": {
+        "to_place": {
+          "type": "minecraft:simple_state_provider",
+          "state": {
+            "Name": "ergenverse:heart_devil_flower"
+          }
+        }
+      }
+    },
+    "tries": 1,
+    "xz_spread": 2,
+    "y_spread": 0,
+    "need_red_to_survive": false
+  }
+}

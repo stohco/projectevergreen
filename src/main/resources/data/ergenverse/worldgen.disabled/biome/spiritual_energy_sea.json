@@ -1,0 +1,42 @@
+{
+  "_comment": "Spiritual Energy Sea (\u7075\u6c14\u4e4b\u6d77) \u2014 regions of pure condensed spiritual energy forming a luminous sea within the Cave World. Canon: between cultivation planets, spiritual energy condenses into vast luminous oceans. Cultivators can absorb energy from these seas (similar to meditation near spirit veins). The 'water' is actually liquid spiritual energy \u2014 glowing cyan-white. The ground beneath is smooth, polished stone (formation-created). Temperature is mild. Features: sea_pickle stand-ins for luminous energy clusters on the 'seabed'. No structures \u2014 this is raw energy, not settled territory.",
+  "temperature": 0.4,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 10066329,
+    "fog_color": 13421772,
+    "water_color": 13421772,
+    "water_fog_color": 16777215,
+    "mood_sound": {
+      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": []
+  },
+  "spawn_costs": {},
+  "player_spawn_friendly": true,
+  "generation_settings": {
+    "dimension": "ergenverse:cave_world",
+    "generator": {
+      "type": "minecraft:noise",
+      "settings": "minecraft:end",
+      "biome_source": {
+        "type": "minecraft:fixed",
+        "biome": "ergenverse:spiritual_energy_sea"
+      }
+    }
+  },
+  "carvers": {},
+  "features": []
+}

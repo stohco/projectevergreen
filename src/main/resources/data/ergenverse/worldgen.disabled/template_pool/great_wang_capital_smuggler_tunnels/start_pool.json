@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:great_wang_capital_smuggler_tunnels/start_pool",
+  "fallback": "minecraft:village/plains/terminators",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "ergenverse:great_wang_capital/smuggler_tunnels",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

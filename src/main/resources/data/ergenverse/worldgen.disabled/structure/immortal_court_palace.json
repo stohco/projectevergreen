@@ -1,0 +1,16 @@
+{
+  "_comment": "Immortal Court Central Palace (仙庭中宫) — the seat of the Immortal Sovereigns on the Immortal Astral Continent. Canon: the ruling body of the IAC resides in a magnificent palace complex at the center of the continent. The palace is vast, with jade pillars, spirit beast guardians, and formation-protected halls. This is where the Nine Suns (Grand Empyreans) hold court. Wang Lin arrives here in the final arcs. Stand-in: village town_center + structures for palace feel. Biome: immortal_court.",
+  "type": "minecraft:jigsaw",
+  "biomes": "ergenverse:immortal_court",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "start_pool": "ergenverse:immortal_court_palace/start_pool",
+  "size": 7,
+  "start_height": {
+    "type": "minecraft:constant",
+    "value": 0
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "max_distance_from_center": 116,
+  "use_expansion_hack": false
+}

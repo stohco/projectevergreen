@@ -1,0 +1,15 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "ergenverse:zhao_mountains",
+    "ergenverse:forest_of_distorted_sense"
+  ],
+  "spawners": [
+    {
+      "type": "ergenverse:spirit_wolf",
+      "weight": 6,
+      "minCount": 1,
+      "maxCount": 3
+    }
+  ]
+}

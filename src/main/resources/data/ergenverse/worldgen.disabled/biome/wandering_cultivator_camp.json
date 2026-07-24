@@ -1,0 +1,43 @@
+{
+  "_comment": "Wandering Cultivator Camp (\u6e38\u65b9\u4fee\u58eb\u8425\u5730) \u2014 biome where wandering cultivators gather in the Starry Sky dimension. Canon: cultivators traversing the starry sky between planets sometimes establish temporary camps on large asteroids to rest, trade, and exchange news. These camps are gathering points for rogue cultivators (\u6e38\u65b9\u4fee\u58eb) outside the major sects. The simulation spawns simulated wandering cultivator NPCs that fly between these camps and teleportation arrays. Features: structure ergenverse:wandering_cultivator_camp (jigsaw with end_city piece as stand-in for tents/platforms). Mobs: empty (the simulation handles cultivator NPCs as actual entities near players).",
+  "temperature": 0.6,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 1315860,
+    "fog_color": 2631720,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "mood_sound": {
+      "sound": "minecraft:ambient.warped_forest.mood",
+      "tick_delay": 9000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": []
+  },
+  "spawn_costs": {},
+  "player_spawn_friendly": false,
+  "carvers": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ]
+}

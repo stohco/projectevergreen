@@ -1,0 +1,25 @@
+{
+  "_comment": "Foreign Battleground (外域战场 / Waiyu Zhanchang) — a vast, war-scarred battlefield dimension outside the Sealed Cave World where cultivators from cultivation planets go to fight for their planet's ranking and survival against outsiders. Canon: reached via teleportation arrays from cultivation planets; littered with fallen cultivators' corpses, shattered weapons, and soul crystals (the reward currency). The sky is perpetually blood-tinged or dark, spirit energy is dense but chaotic, and soul storms gather from accumulated resentment. Not a natural spawn world (natural=false); beds do not work (bed_works=false). Prime Directive: the battlefield exists objectively — the war was fought and the corpses are real regardless of the player's perception.",
+  "ultrawarm": false,
+  "natural": false,
+  "piglin_safe": false,
+  "respawn_anchor_works": false,
+  "bed_works": false,
+  "has_raids": false,
+  "has_skylight": true,
+  "has_ceiling": false,
+  "coordinate_scale": 1.0,
+  "ambient_light": 0.1,
+  "logical_height": 384,
+  "min_y": -64,
+  "height": 448,
+  "infiniburn": "#minecraft:infiniburn_overworld",
+  "effects": "minecraft:overworld",
+  "monster_spawn_light_level": {
+    "type": "minecraft:uniform",
+    "value_in_clamped_range": true,
+    "min_inclusive": 0,
+    "max_inclusive": 7
+  },
+  "monster_spawn_block_light_limit": 0
+}

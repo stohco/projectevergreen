@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:teng_family_city_warehouse_district/start_pool",
+  "fallback": "minecraft:village/taiga/terminators",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "ergenverse:teng_family_city/warehouse_district",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

@@ -1,0 +1,373 @@
+{
+  "_comment": "Sky Realm dimension — floating islands, cloud layer, sky ecology. Uses end noise settings for floating-island terrain generation. 12 sky biomes mapped by temperature/depth axes.",
+  "type": "ergenverse:sky_realm_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "minecraft:end",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "ergenverse:cloud_sea_low",
+          "parameters": {
+            "temperature": [
+              0.2,
+              0.5
+            ],
+            "humidity": [
+              0.5,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              0.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              -1.0,
+              0.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:floating_island_low",
+          "parameters": {
+            "temperature": [
+              0.3,
+              0.6
+            ],
+            "humidity": [
+              0.3,
+              0.7
+            ],
+            "continentalness": [
+              0.0,
+              0.5
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.5
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:floating_island_high",
+          "parameters": {
+            "temperature": [
+              0.1,
+              0.4
+            ],
+            "humidity": [
+              0.4,
+              0.8
+            ],
+            "continentalness": [
+              0.5,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.5,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:sword_cultivator_airspace",
+          "parameters": {
+            "temperature": [
+              0.2,
+              0.5
+            ],
+            "humidity": [
+              0.2,
+              0.5
+            ],
+            "continentalness": [
+              -0.5,
+              0.3
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              0.3,
+              1.0
+            ],
+            "depth": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:cloud_whale_territory",
+          "parameters": {
+            "temperature": [
+              0.1,
+              0.4
+            ],
+            "humidity": [
+              0.5,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              -0.3
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              0.0
+            ],
+            "depth": [
+              0.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:thunder_bird_nesting",
+          "parameters": {
+            "temperature": [
+              -0.2,
+              0.2
+            ],
+            "humidity": [
+              0.3,
+              0.6
+            ],
+            "continentalness": [
+              0.3,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              0.0
+            ],
+            "weirdness": [
+              0.0,
+              1.0
+            ],
+            "depth": [
+              0.5,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:ancient_sky_battlefield",
+          "parameters": {
+            "temperature": [
+              0.2,
+              0.5
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              0.0,
+              0.6
+            ],
+            "erosion": [
+              0.5,
+              1.0
+            ],
+            "weirdness": [
+              0.5,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.7
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:meteor_stream_zone",
+          "parameters": {
+            "temperature": [
+              -0.3,
+              0.1
+            ],
+            "humidity": [
+              -1.0,
+              -0.3
+            ],
+            "continentalness": [
+              -0.5,
+              0.5
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              -0.3
+            ],
+            "depth": [
+              0.3,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:spatial_crack_region",
+          "parameters": {
+            "temperature": [
+              0.0,
+              0.3
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              -0.3,
+              0.3
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              0.7,
+              1.0
+            ],
+            "depth": [
+              -1.0,
+              0.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:celestial_observation_peak",
+          "parameters": {
+            "temperature": [
+              -0.6,
+              -0.2
+            ],
+            "humidity": [
+              0.2,
+              0.5
+            ],
+            "continentalness": [
+              0.5,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              0.0
+            ],
+            "depth": [
+              0.7,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:spirit_crane_migration",
+          "parameters": {
+            "temperature": [
+              0.3,
+              0.6
+            ],
+            "humidity": [
+              0.4,
+              0.8
+            ],
+            "continentalness": [
+              -0.5,
+              0.0
+            ],
+            "erosion": [
+              0.0,
+              1.0
+            ],
+            "weirdness": [
+              -0.3,
+              0.3
+            ],
+            "depth": [
+              0.0,
+              0.5
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "ergenverse:flying_sect_airspace",
+          "parameters": {
+            "temperature": [
+              0.2,
+              0.5
+            ],
+            "humidity": [
+              0.3,
+              0.6
+            ],
+            "continentalness": [
+              0.2,
+              0.7
+            ],
+            "erosion": [
+              -0.5,
+              0.5
+            ],
+            "weirdness": [
+              -0.3,
+              0.3
+            ],
+            "depth": [
+              0.3,
+              0.8
+            ],
+            "offset": 0.0
+          }
+        }
+      ]
+    }
+  }
+}

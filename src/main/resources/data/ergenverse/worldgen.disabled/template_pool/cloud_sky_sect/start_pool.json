@@ -1,0 +1,15 @@
+{
+  "name": "ergenverse:cloud_sky_sect/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 5,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "ergenverse:cloud_sky_sect/main_plaza",
+        "projection": "rigid",
+        "processors": "ergenverse:structure_degradation"
+      }
+    }
+  ]
+}

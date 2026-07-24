@@ -1,0 +1,24 @@
+
+#Ergenverse — Living Cultivation World configuration
+[general]
+	#Ticks between world-pulse updates (20 ticks = 1 second).
+	#Default: 24000 (one Minecraft day). The world evolves independently
+	#of the player at this interval.
+	#Range: 200 ~ 72000
+	worldPulseIntervalTicks = 24000
+	#Whether Wang Lin's arsenal items are registered.
+	#Default: true. Disable only for debugging world-gen without items.
+	enableWangLinArsenal = true
+	#Whether every item evolution chain is fully walkable (no dead ends).
+	#Default: true. This is a USER DIRECTIVE — do not disable.
+	#When true, every item has a path to peak state via bridging alternatives
+	#(typically Manifestation Gift substitutes).
+	noLockedUpgrades = true
+	#Whether canon-strict mode is enforced (Level 0 filler forbidden in canon regions).
+	#Default: true. Disable only for sandbox/experimental play.
+	canonStrictMode = true
+	#Maximum evolution stages to show in item tooltips before truncating.
+	#Default: 5.
+	#Range: 1 ~ 20
+	maxEvolutionStageDisplay = 5
+

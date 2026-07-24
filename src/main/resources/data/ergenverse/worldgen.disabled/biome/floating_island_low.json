@@ -1,0 +1,51 @@
+{
+  "_comment": "Low Floating Islands \u2014 small floating landmasses at mid-altitude. Ancient cultivators carved these from mountains using restrictions. Home to minor spirit beasts and hermit cultivators. Prime Directive: the islands were lifted by ancient array formations \u2014 they are objective geological features held aloft by active restrictions.",
+  "temperature": 0.4,
+  "downfall": 0.5,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 12694940,
+    "fog_color": 13421772,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_iron_upper",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [
+      "minecraft:forest_rocks"
+    ],
+    [],
+    [
+      "minecraft:patch_taiga_grass",
+      "minecraft:forest_flowers"
+    ],
+    []
+  ]
+}

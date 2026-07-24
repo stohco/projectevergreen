@@ -1,0 +1,16 @@
+{
+  "_comment": "Start pool for Xuan Dao Sect. Stand-in: vanilla plains village fountain (scholarly pavilion aesthetic). Final: custom Xuan Dao sect-complex NBT templates with formation halls and talisman scriptoriums.",
+  "name": "ergenverse:xuan_dao_sect/start_pool",
+  "fallback": "minecraft:village/plains/terminators",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "projection": "rigid",
+        "location": "minecraft:village/plains/town_centers/plains_fountain_01",
+        "processors": "minecraft:empty"
+      }
+    }
+  ]
+}

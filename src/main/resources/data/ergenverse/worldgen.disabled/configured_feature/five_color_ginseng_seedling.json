@@ -1,0 +1,40 @@
+{
+  "_comment": "five_color_ginseng — seedling variant. Early growth stage — common, low potency. Auto-generated ecological variant. Prime Directive: the variant is an objective growth state of the herb.",
+  "type": "minecraft:flower",
+  "config": {
+    "features": [
+      {
+        "feature": "minecraft:simple_block",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:all_of",
+              "predicates": [
+                {
+                  "type": "minecraft:matching_blocks",
+                  "offset": [
+                    0,
+                    -1,
+                    0
+                  ],
+                  "blocks": [
+                    "minecraft:grass_block",
+                    "minecraft:dirt",
+                    "minecraft:podzol",
+                    "minecraft:coarse_dirt",
+                    "minecraft:moss_block"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "tries": 1,
+    "xz_spread": 16,
+    "y_spread": 2,
+    "need_red_to_survive": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "feature": "ergenverse:spirit_vein_concealed",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 20
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "min": {
+        "absolute": -48
+      },
+      "max": {
+        "absolute": 32
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

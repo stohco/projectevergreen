@@ -1,0 +1,43 @@
+{
+  "_comment": "Starlight Void (\u661f\u8f89\u865a\u7a7a) \u2014 the default biome of the Starry Sky dimension's inter-planetary space. Canon: the vast darkness between cultivation planets in the Alliance Star System. Dark sky (color 0 \u2014 pure black, full night). No precipitation (vacuum). No creatures spawn via vanilla \u2014 the dangers here are simulated void beasts, not vanilla mobs. The ground consists of sparse end_stone asteroids (floating islands from the_end noise settings). Features: very sparse \u2014 just floating end_stone fragments. Mobs: empty (the simulation handles NPC cultivators and void beasts). Category: THEEND.",
+  "temperature": 0.1,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 0,
+    "fog_color": 0,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "mood_sound": {
+      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "tick_delay": 12000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": []
+  },
+  "spawn_costs": {},
+  "player_spawn_friendly": false,
+  "carvers": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ]
+}

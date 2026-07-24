@@ -1,0 +1,71 @@
+{
+  "_comment": "Forest of Distorted Divine Sense \u2014 Core (\u5e7b\u89c9\u68ee\u6797\u6838\u5fc3) \u2014 the heart of the forest where divine sense is completely non-functional (90% reduction). Canon: only the Heaven-Defying Bead or equivalent perception-artifact can function here. The trees are sentient and hostile. Ancient restrictions linger from a forgotten era. Soul Formation cultivators have perished here. Prime Directive: this is objectively the most perception-hostile region on Planet Suzaku.",
+  "temperature": 0.4,
+  "downfall": 0.7,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 4210752,
+    "fog_color": 2105376,
+    "water_color": 131584,
+    "water_fog_color": 131072,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": [],
+    "axolotls": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:canyon",
+      "minecraft:nether_cave"
+    ]
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [
+      "minecraft:forest_rock",
+      "minecraft:mushroom_island",
+      "minecraft:desert_well"
+    ],
+    [],
+    [
+      "minecraft:dark_forest_trees",
+      "minecraft:trees_jungle"
+    ],
+    [
+      "minecraft:ore_diamond",
+      "minecraft:ore_emerald",
+      "minecraft:ore_ancient_debris_large"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:dao_trace_vine",
+      "ergenverse:heart_devil_flower",
+      "ergenverse:void_nether_grass",
+      "ergenverse:reincarnation_lily"
+    ],
+    [
+      "ergenverse:joss_flame_source"
+    ]
+  ],
+  "structures": {
+    "ergenverse:wandering_cultivator_camp": {
+      "spacing": 100,
+      "separation": 40,
+      "salt": 12345
+    }
+  }
+}

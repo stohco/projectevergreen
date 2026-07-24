@@ -1,0 +1,66 @@
+{
+  "_comment": "Foreign Soul Crystal Flats (\u5916\u57df\u9b42\u6676\u5e73\u539f) \u2014 the pale, luminous flats of the Foreign Battleground where soul crystals (the battleground's reward currency) can be mined. Canon: a cold, flat region where the dense chaotic spirit energy has crystallized into soul crystals over eons of cultivator deaths. The ground is pale and luminous from accumulated crystal deposits; lost souls (skeletons/strays) wander the flats as remnants of cultivators who died seeking the crystals. Ice spikes serve as stand-ins for crystal formations erupting from the ground; spirit_vein_quartz_ore stands in for the minable soul crystals. Prime Directive: the soul crystals were objectively deposited by the deaths of countless cultivators \u2014 they exist whether or not the player can perceive their value.",
+  "temperature": 0.2,
+  "downfall": 0.3,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 13421772,
+    "fog_color": 15066597,
+    "water_color": 6710886,
+    "water_fog_color": 2236962,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:canyon"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_granite_upper",
+      "minecraft:ore_granite_lower",
+      "minecraft:ore_diorite_upper",
+      "minecraft:ore_diorite_lower",
+      "minecraft:ore_andesite_upper",
+      "minecraft:ore_andesite_lower",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold",
+      "minecraft:ore_copper",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [
+      "minecraft:patch_grass",
+      "minecraft:ice_spike"
+    ],
+    []
+  ],
+  "structures": [
+    "ergenverse:foreign_soul_crystal_deposit"
+  ]
+}

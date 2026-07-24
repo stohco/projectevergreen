@@ -302,6 +302,10 @@ public final class Ergenverse {
         event.put(dev.ergenverse.entity.EREntityTypes.SEA_SERPENT.get(),
                 dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
                         dev.ergenverse.entity.SpiritBeastEntity.BeastType.SEA_SERPENT).build());
+        // CRON-COMPLETIONIST-36: Soul fish attributes (tiny qi-infused fish)
+        event.put(dev.ergenverse.entity.EREntityTypes.SOUL_FISH.get(),
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.SOUL_FISH).build());
         LOGGER.info("[Ergenverse] Registered per-species Spirit Beast attributes.");
     }
 

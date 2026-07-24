@@ -1,0 +1,28 @@
+{
+  "_comment": "Spirit Vein Ore — the physical manifestation of a minor spirit vein underground. Canon (CANON_RI_ECOLOGY.md 2.2, Type C conf 3): ~200-400 minor spirit veins across Planet Suzaku. Vanilla stand-in: nether_quartz_ore (mineral-looking, common enough for hundreds of placements). When custom blocks are added, this will become spirit_stone_ore (glowing, emits light 15). Prime Directive: the spirit vein exists objectively; only cultivators can perceive its Qi.",
+  "type": "minecraft:ore",
+  "config": {
+    "size": 8,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "minecraft:stone_ore_replaceables"
+        },
+        "state": {
+          "Name": "minecraft:nether_quartz_ore"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "minecraft:deepslate_ore_replaceables"
+        },
+        "state": {
+          "Name": "minecraft:nether_quartz_ore"
+        }
+      }
+    ]
+  }
+}

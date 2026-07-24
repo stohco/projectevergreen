@@ -1,0 +1,21 @@
+{
+  "_comment": "Soul-Nourishing Lotus (养魂莲) — soul cultivation herb. Canon: a lotus that nourishes the soul, prized by Soul Formation cultivators; grows near water in misty, spirit-saturated regions. Found in the Forest of Distorted Sense (illusion-drenched mists) and Jue Ming Valley (space-aspect damp hollows). Custom block: ergenverse:soul_nourishing_lotus
+  "type": "minecraft:flower",
+  "config": {
+    "feature": {
+      "type": "minecraft:simple_block",
+      "config": {
+        "to_place": {
+          "type": "minecraft:simple_state_provider",
+          "state": {
+            "Name": "ergenverse:soul_nourishing_lotus"
+          }
+        }
+      }
+    },
+    "tries": 1,
+    "xz_spread": 4,
+    "y_spread": 1,
+    "need_red_to_survive": false
+  }
+}

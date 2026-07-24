@@ -1,0 +1,46 @@
+{
+  "_comment": "Meteor Field (\u9668\u77f3\u5e26) \u2014 asteroid cluster biome of the Starry Sky dimension. Canon: cultivators fly through dense meteor fields between planets \u2014 sometimes harvesting iron meteorites for crafting, sometimes ambushed by void beasts lurking among the asteroids. Slightly more terrain than Starlight Void (denser floating islands). Sky is dark but with dim reddish fog from meteor dust. Features: dense end_stone asteroids (minecraft:end_island generates floating islands, matching asteroid clusters), occasional end_gateway rifts. Mobs: empty (handled by simulation).",
+  "temperature": 0.3,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 263172,
+    "fog_color": 5197640,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "mood_sound": {
+      "sound": "minecraft:ambient.basalt_deltas.mood",
+      "tick_delay": 8000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": []
+  },
+  "spawn_costs": {},
+  "player_spawn_friendly": false,
+  "carvers": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:end_island",
+      "minecraft:end_gateway_return"
+    ]
+  ]
+}

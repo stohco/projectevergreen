@@ -1,0 +1,47 @@
+{
+  "_schema": "compiled_spatial_index",
+  "_schema_version": 1,
+  "_article": "XXXIX.7 — chunks render a world that already exists in the compiled state; the chunk asks the Spatial Index 'what entities intersect my bounding box?' and renders them. Chunks are stateless renderers.",
+  "_description": "Schema for the COMPILED Spatial Index — an R-tree (or equivalent) the World Compiler produces from the World Blueprint DSL. The simulation and the chunk renderer query this index in O(log n) to answer 'what entities are at/near (x,z)?' or 'what entities intersect this bounding box?'. The DSL is never queried at runtime for spatial questions; this index is.",
+  "_design_notes": {
+    "query_patterns": [
+      "chunk_load(bbox) -> [entity_id, ...] — what the chunk must render",
+      "perception_query(npc, radius) -> [entity_id, ...] — what an NPC can perceive",
+      "nearest(settlement_id, type, k) -> [entity_id, ...] — nearest k entities of a type (e.g. nearest spirit vein)",
+      "point_in_country(x, z) -> country_id — delegated to country_lookup (but seeded from this index)"
+    ],
+    "invariants": [
+      "Every entity with a spatial extent (point, polygon, or region) appears in the index.",
+      "Entities WITHOUT spatial extent (pure relationships, rumors in transit) do NOT appear — they live in the relationship_graph or their own trajectory index.",
+      "The index is REBUILT on compile; it is not mutated at runtime (except by trajectory entities updating their position, which updates the index entry)."
+    ]
+  },
+  "schema": {
+    "index_type": "r_tree | quadtree | grid_hash — compiler-selected based on world scale",
+    "world_bounds": { "min_x": "int", "min_z": "int", "max_x": "int", "max_z": "int" },
+    "entries": [
+      {
+        "entity_id": "string — canonical entity id from the blueprint",
+        "entity_type": "enum — one of the entity types in dsl_specification §2",
+        "geometry": {
+          "type": "enum — point | polygon | region_ref | line_string | bbox",
+          "point": { "x": "int", "z": "int", "y_band": "string (surface | underground | sky)" },
+          "polygon_id": "string — reference to a polygon in country_lookup (for countries, territories)",
+          "line_string_id": "string — reference to a path (for roads, rivers)",
+          "bbox": { "min_x": "int", "min_z": "int", "max_x": "int", "max_z": "int" }
+        },
+        "lod_fidelity": "enum — distant | medium | near | full — which LOD regions include this entity at what fidelity (see lod_regions.schema.json)",
+        "compiled_state_ref": "string — path/reference to this entity's full compiled state (in the relevant sub-graph: settlement_graph, spirit_graph, etc.)",
+        "momentum_ref": "string|null — reference to this entity's live momentum in the momentum_registry (null if the entity has no momentum — pure decoration)"
+      }
+    ],
+    "queries_supported": [
+      "bbox_intersection(bbox) -> [entity_id]",
+      "nearest_k(point, k, type_filter) -> [entity_id]",
+      "within_radius(point, radius) -> [entity_id]",
+      "point_in_region(point) -> region_id"
+    ]
+  },
+  "_compile_source": "World Blueprint DSL v2 — all entities with a `facts.origin` or polygon/lane geometry",
+  "_runtime_consumers": ["ChunkRenderer (Minecraft adapter)", "PerceptionEngine", "NPC pathing (initial target selection)", "Player affordance discovery"]
+}

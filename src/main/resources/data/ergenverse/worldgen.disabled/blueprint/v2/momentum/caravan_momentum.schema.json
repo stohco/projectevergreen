@@ -1,0 +1,81 @@
+{
+  "_schema": "caravan_momentum",
+  "_schema_version": 1,
+  "_article": "XXXIX.2 — caravans continue to travel. XXXIX.3 — the player intersects trajectories (a caravan is halfway through its route when the player arrives).",
+  "_description": "Momentum schema for a Caravan (or Patrol) trajectory entity. A caravan is not a scheduled event — it is a live body moving along the travel graph, with supplies depleting, morale shifting, threat exposure varying by segment, and an ETA that the simulation can query at any tick. When the player arrives, caravans are already mid-route.",
+  "_design_notes": {
+    "why_this_matters": "The user's canonical example: 'Merchant caravan halfway through its route.' This is THE perceivable-momentum example. A caravan visible in the distance, already moving, already mid-journey, is the purest expression of Article XXXIX. The player did not start it. The player sees it.",
+    "coupling": "Advances travel_graph (position update). Feeds: economy_momentum (cargo arrival shifts supply), settlement_graph (caravan arrival is a supply event), rumor_momentum (caravans carry rumors between settlements). Fed by: threat entities along the route (bandits, beasts, weather).",
+    "perceivable_without_notification_examples": [
+      "Wagon tracks on the road, fresher than a week, older than a day — someone passed recently and will return.",
+      "A caravan visible in the distance along the road, moving — no marker, no quest, just commerce happening.",
+      "The village merchant has new goods that weren't there last week — the caravan came and went.",
+      "A wounded guard resting in the village — the caravan was attacked on the road; he's the survivor."
+    ]
+  },
+  "schema": {
+    "caravan_id": "string — matches a Caravan entity id in the blueprint",
+    "system": "caravan",
+    "current_state": {
+      "route_id": "string — the Road entity id this caravan travels",
+      "position_along_route": "float 0.0–1.0 — 0 = origin, 1 = destination",
+      "current_segment_id": "string — the RoadSegment entity id the caravan is currently on",
+      "supplies_remaining": "float 0.0–1.0 — food/water/fuel for the caravan and draft animals",
+      "morale": "float 0.0–1.0 — guard and merchant morale (affects willingness to continue through danger)",
+      "threat_exposure": "float 0.0–1.0 — current segment's danger (driven by bandit/beast presence, terrain, weather, time of day)",
+      "cargo": "object — {item_id: quantity} — what the caravan is carrying (affects economy on arrival)",
+      "direction": "enum — outbound | return",
+      "eta_ticks": "int — estimated ticks to destination at current speed, barring interruption"
+    },
+    "rate_of_change": {
+      "position_per_tick": "float — derived from (base_speed * terrain_modifier * threat_caution_modifier * weather_modifier)",
+      "supplies_per_tick": "float — consumption rate (higher when moving, highest when moving fast through danger)",
+      "morale_per_tick": "float — driven by recent events (attack lowers, safe progress raises, arrival raises)",
+      "components": {
+        "base_speed": "float — wagons/foot/horses",
+        "terrain_modifier": "float — plains fast, mountains slow, river crossing slowest",
+        "threat_caution_modifier": "float — slows when threat_exposure high (guards alert, scouts sent)",
+        "weather_modifier": "float — rain/snow slows; storm halts"
+      }
+    },
+    "drivers": [
+      "string — e.g. 'route zhao_to_chu_road: 14 segments, current segment 6 (mountain_pass), threat_exposure 0.4 (bandit_group_south active)', 'supplies at 0.72, morale 0.65 (slight dip after a scout reported tracks two segments ago)', 'destination chu_market, eta 18000 ticks'"
+    ],
+    "thresholds": [
+      {
+        "name": "arrival",
+        "condition": "position_along_route >= 1.0",
+        "consequence": "caravan arrives at destination; cargo delivered (economy_momentum supply event); rumor_momentum seeds (caravan carries news); supplies restocked; morale resets; caravan may begin return trip or dissolve into the destination's population.",
+        "irreversible": true
+      },
+      {
+        "name": "supply_crisis",
+        "condition": "supplies_remaining < 0.2",
+        "consequence": "caravan must forage (slows, raises threat_exposure) or raid a nearby settlement (becomes a threat itself) or send a rider ahead. Morale drops sharply. If unresolved, caravan starves and disperses — cargo lost, guards may become bandits.",
+        "irreversible": false
+      },
+      {
+        "name": "ambush",
+        "condition": "threat_exposure > 0.8 AND bandit_group proximity < ambush_range",
+        "consequence": "caravan is ambushed; combat resolves per the conflict system; outcome ranges from successful defense (morale rises, threat reduced) to total loss (cargo taken, guards dead or fled, the destination settlement begins a scarcity trajectory because its supply caravan never arrived).",
+        "irreversible": "true if caravan destroyed"
+      },
+      {
+        "name": "morale_break",
+        "condition": "morale < 0.15",
+        "consequence": "guards desert; merchant may abandon cargo; caravan fragments. This is how trade routes quietly die — not from one catastrophe but from accumulated attrition.",
+        "irreversible": false
+      }
+    ],
+    "interruptible_by": [
+      "Player or NPC escort (lowers threat_exposure, raises morale)",
+      "Road repair / bandit clearance (lowers segment threat_exposure permanently)",
+      "Weather change (storm clears, speed resumes)",
+      "Raid (ends the trajectory; the destination's scarcity trajectory begins)",
+      "Player trade (buying cargo early may redirect or shorten the route)"
+    ],
+    "perceivable_without_notification": "string — REQUIRED (Art XXXIX.5). e.g. 'Fresh wagon tracks on the road to Chu, heading northeast, less than a day old. A villager mentions the Zhao merchant is due back within the week. Dust on the horizon at midday — a caravan, moving.' If empty, FAILS the Momentum Test.",
+    "compiled_into": "travel_graph (position update every tick); feeds economy_momentum, settlement_graph (arrival events), rumor_momentum (news carried)",
+    "canon_ref": "INFERRED (Art XV) — trade caravans are implicit in Er Gen's mortal economies; specific routes and cadences authored for simulation coherence"
+  }
+}

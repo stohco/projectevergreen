@@ -166,7 +166,7 @@ public final class ErgenverseCommand {
             src.sendFailure(Component.literal("Run this command as a player."));
             return 0;
         }
-        giveItem(player, dev.ergenverse.item.ErgenverseItems.SPIRIT_STONE.get(), 8);
+        giveItem(player, dev.ergenverse.block.ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().asItem(), 8);
         giveItem(player, dev.ergenverse.item.ErgenverseItems.JADE_SLIP.get(), 1);
         giveItem(player, dev.ergenverse.item.ErgenverseItems.QI_GATHERING_PILL.get(), 4);
         giveItem(player, dev.ergenverse.item.ErgenverseItems.MEDITATION_MAT.get(), 1);

@@ -1,0 +1,16 @@
+{
+  "_comment": "Wang Family Village — Ancestral Hall (祠堂). Per PROJECT_MASTER.md §5.1: 'ancestral hall, elders who speak of the lost generation.' Honors the Wang family lineage predating the Teng Huayuan massacre. Architecture: mossy stone bricks, dark oak logs, tile roof. Interior: spirit tablets (soul_sand + custom_name NBT), memorial plaques for the massacred Wang family members, central altar (chiseled_stone_bricks + soul_lantern).",
+  "name": "ergenverse:wang_family_village_ancestral_hall/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "element": {
+        "location": "ergenverse:wang_family_village/ancestral_hall",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      },
+      "weight": 1
+    }
+  ]
+}

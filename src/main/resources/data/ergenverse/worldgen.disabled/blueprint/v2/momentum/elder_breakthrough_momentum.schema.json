@@ -1,0 +1,77 @@
+{
+  "_schema": "elder_breakthrough_momentum",
+  "_schema_version": 1,
+  "_article": "XXXIX.2 — cultivators approaching breakthrough. XXXIX.3 — the player intersects trajectories (an elder is nearing breakthrough when the player arrives).",
+  "_description": "Momentum schema for a cultivator (typically an elder or sect head) approaching a realm breakthrough. This is the canonical 'something is about to happen' trajectory. The cultivator accumulates qi/spirit toward the breakthrough, the backlash risk rises, a window of vulnerability opens (the cultivator cannot be disturbed), and if the breakthrough succeeds the regional balance shifts. If it fails, the cultivator may die or be crippled — and the sect/family dependent on them begins a decline trajectory.",
+  "_design_notes": {
+    "why_this_matters": "Wang Lin's own breakthroughs are canon. But the canonical 'elder nearing breakthrough' for Chapter 1 is the Heng Yue patriarch (or a senior elder) whose breakthrough window creates political opportunity (factions maneuver) and danger (the sect is briefly vulnerable). This is perceivable: the elder is in seclusion, the sect is tense, disciples are on high alert, rumors circulate.",
+    "coupling": "Feeds: sect_momentum (a successful patriarch breakthrough may ascend the sect; a failed one may trigger decline_spiral), faction_grudge_momentum (succession anxiety), rumor_momentum (the seclusion is rumored). Fed by: spirit_vein_momentum (qi density affects accumulation rate and backlash risk).",
+    "perceivable_without_notification_examples": [
+      "The sect's main hall is quieter than usual — the patriarch is in seclusion, disciples whisper.",
+      "A disciple on the road is turning away visitors 'for the next month' without explaining why.",
+      "Spirit density around the sect's peak is noticeably higher (perceivable by a cultivator player's spiritual sense, not a UI bar).",
+      "An unusual number of rare herbs have been purchased in the village market — breakthrough preparation."
+    ]
+  },
+  "schema": {
+    "cultivator_id": "string — matches an NPC id (the elder/patriarch)",
+    "system": "elder_breakthrough",
+    "current_state": {
+      "target_realm": "string — the realm being approached (e.g. 'core_formation_late', 'nascent_soul_early')",
+      "progress": "float 0.0–1.0 — accumulation toward the breakthrough threshold",
+      "accumulation_rate_per_tick": "float — how fast progress is rising (driven by spirit vein qi density, meditation quality, supplements)",
+      "backlash_risk": "float 0.0–1.0 — probability the breakthrough will fail catastrophically (driven by progress quality, interruptions, mental state, karmic load)",
+      "vulnerability_window": "object — {open: bool, ticks_remaining: int} — when in the final approach, the cultivator cannot be disturbed without risking catastrophic failure",
+      "seclusion_location": "string — entity id of the CaveDwelling / hall where the cultivator is sealed",
+      "supplements_remaining": "float 0.0–1.0 — pills/herbs/array power supporting the breakthrough"
+    },
+    "rate_of_change": {
+      "progress_per_tick": "float — primary driver; rises with qi density, falls if supplements run out, halts if interrupted",
+      "backlash_risk_per_tick": "float — rises as progress approaches 1.0 (the closer, the more dangerous); rises sharply if interrupted during vulnerability_window; falls slightly with each successful meditation cycle",
+      "components": {
+        "qi_accumulation": "float — from spirit_vein (primary), supplements (secondary), formation (tertiary)",
+        "mental_state": "float — meditation quality; disturbed by interruptions, sect anxiety, karmic disturbances",
+        "supplement_burn": "float — supplements consumed per tick; when depleted, accumulation_rate drops and backlash_risk rises"
+      }
+    },
+    "drivers": [
+      "string — e.g. 'heng_yue_patriarch targeting nascent_soul_early, progress 0.78, backlash_risk 0.31, vulnerability_window opens at progress 0.9 (~6000 ticks), supplements at 0.45 (will deplete before completion unless resupplied)'"
+    ],
+    "thresholds": [
+      {
+        "name": "vulnerability_window_open",
+        "condition": "progress >= 0.9",
+        "consequence": "cultivator enters seclusion lockout; cannot be disturbed; the sect is briefly under-stewarded; factions maneuver; external threats are more dangerous (the sect's strongest defender is unavailable). This window is the political opportunity.",
+        "irreversible": false
+      },
+      {
+        "name": "breakthrough_success",
+        "condition": "progress >= 1.0 AND backlash_risk resolved in cultivator's favor",
+        "consequence": "cultivator advances a realm; sect_momentum may trigger ascension; influence_map expands; the cultivator's capability_score rises; a canon-grade memory_ledger entry is written; regional balance shifts.",
+        "irreversible": true
+      },
+      {
+        "name": "breakthrough_failure",
+        "condition": "progress >= 1.0 AND backlash_risk resolved against cultivator OR interruption during vulnerability_window",
+        "consequence": "cultivator is crippled or killed; sect_momentum may trigger decline_spiral or schism (succession crisis); faction_grudge_momentum may ignite; the region's power balance shifts the other way. This is how sects fall in Er Gen canon.",
+        "irreversible": true
+      },
+      {
+        "name": "supplement_exhaustion",
+        "condition": "supplements_remaining < 0.1 AND progress < 0.9",
+        "consequence": "accumulation_rate drops sharply; backlash_risk rises; the cultivator must either resupply (delaying, requiring the seclusion to break — dangerous) or push through under-supported (raises failure risk). This is the perceivable 'rare herbs being bought in the market' cue.",
+        "irreversible": false
+      }
+    ],
+    "interruptible_by": [
+      "Player or NPC delivers rare supplements (lowers backlash_risk, raises accumulation_rate)",
+      "Player or NPC guards the seclusion (prevents interruption during vulnerability_window)",
+      "Player or NPC causes interruption (raises backlash_risk sharply; may trigger failure — this is a canon-grade intervention with consequences)",
+      "Canon event: karmic disturbance, restriction rupture, ancient god influence (may help or hinder)",
+      "Sect faction sabotage (interruption intended to trigger failure — the succession play)"
+    ],
+    "perceivable_without_notification": "string — REQUIRED (Art XXXIX.5). e.g. 'The Heng Yue patriarch has not been seen in the sect's main hall for weeks. A disciple at the gate turns visitors away with a strained face. The village herbalist mentions, unprompted, that the sect bought three times the usual spirit-replenishing herbs last month. The air on the sect's peak feels heavier — to a cultivator, unmistakable.' If empty, FAILS the Momentum Test.",
+    "compiled_into": "settlement_graph (sect node state); feeds sect_momentum, faction_grudge_momentum, rumor_momentum",
+    "canon_ref": "EXPLICIT — cultivator breakthroughs and their backlash are central Er Gen canon; the specific elder and timing INFERRED (Art XV) for Chapter 1"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "_comment": "Sword-Edge Moss — grows on sword-aligned spirit veins in mountains. Canon (CANON_RI_ECOLOGY.md 1.3, Type C conf 3): 'grows on sword-aligned spirit veins; Heng Yue Sect's sword-arts specialization implies this.' Custom block: ergenverse:sword_edge_moss
+  "type": "minecraft:flower",
+  "config": {
+    "feature": {
+      "type": "minecraft:simple_block",
+      "config": {
+        "to_place": {
+          "type": "minecraft:simple_state_provider",
+          "state": {
+            "Name": "ergenverse:sword_edge_moss",
+            "Properties": {
+              "half": "lower",
+              "waterlogged": "false"
+            }
+          }
+        }
+      }
+    },
+    "tries": 1,
+    "xz_spread": 2,
+    "y_spread": 0,
+    "need_red_to_survive": false
+  }
+}

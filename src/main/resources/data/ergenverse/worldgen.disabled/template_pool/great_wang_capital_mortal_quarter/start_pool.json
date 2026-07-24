@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:great_wang_capital_mortal_quarter/start_pool",
+  "fallback": "minecraft:village/plains/terminators",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "ergenverse:great_wang_capital/mortal_quarter",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

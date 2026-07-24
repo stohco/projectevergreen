@@ -1,0 +1,16 @@
+{
+  "_comment": "Heng Yue Sect \u2014 Library. Custom structure generated for canon fidelity (Article XXII). Replaces vanilla Minecraft placeholder.",
+  "name": "ergenverse:heng_yue_sect_library/start_pool",
+  "fallback": "minecraft:village/plains/terminators",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "projection": "rigid",
+        "location": "ergenverse:heng_yue_sect/library",
+        "processors": "minecraft:empty"
+      }
+    }
+  ]
+}

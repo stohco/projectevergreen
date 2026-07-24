@@ -1,0 +1,18 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:heavenly_fate_sect",
+      "weight": 1
+    },
+    {
+      "structure": "ergenverse:heavenly_fate_main",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 250,
+    "separation": 60,
+    "salt": 73192
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "_comment": "High Floating Islands \u2014 large floating continents at extreme altitude. Ancient sect headquarters that ascended. Dense spirit energy. Only accessible to Foundation Establishment+ cultivators who can fly. Prime Directive: the islands exist because ancient arrays still function \u2014 the arrays are objective technology.",
+  "temperature": 0.2,
+  "downfall": 0.6,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 7907327,
+    "fog_color": 13421772,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:canyon"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_gold_upper",
+      "minecraft:ore_diamond",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [
+      "minecraft:forest_rocks"
+    ],
+    [],
+    [
+      "minecraft:patch_taiga_grass",
+      "minecraft:forest_flowers",
+      "minecraft:brown_mushroom_normal",
+      "minecraft:red_mushroom_normal"
+    ],
+    []
+  ]
+}

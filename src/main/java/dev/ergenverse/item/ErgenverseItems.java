@@ -50,8 +50,8 @@ public final class ErgenverseItems {
 
 
     // ── Crafting Materials ─────────────────────────────────────────────
-    public static final RegistryObject<Item> SPIRIT_STONE = ITEMS.register("spirit_stone",
-            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    // NOTE: spirit_stone item is provided by ErgenverseBlocks.registerSimple("spirit_stone")
+    // which auto-creates a block item. Do NOT register a duplicate here.
     public static final RegistryObject<Item> SPIRIT_STONE_FRAGMENT = ITEMS.register("spirit_stone_fragment",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> IRON_SAND = ITEMS.register("iron_sand",
@@ -112,32 +112,11 @@ public final class ErgenverseItems {
     public static final RegistryObject<Item> JADE_SLIP_BLANK = ITEMS.register("jade_slip_blank",
             () -> new Item(new Item.Properties()));
 
-    // ── Real-mechanic items (Constitution: items must have real mechanics, not generic stubs) ──
-    // Flying swords: right-click launches a homing qi-blade projectile. Left-click = melee.
-    // CRON-COMPLETIONIST-55: each sword now carries a canon-faithful SwordEffectType.
-    //   Wealth Flying Sword    — no effect (basic qi blade)
-    //   Core Treasure Sword     — TELEPORT (displaces target on hit)
-    //   Blood Slaughter Sword  — LIFESTEAL (heals attacker 30% of damage)
-    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> WEALTH_FLYING_SWORD =
-            ITEMS.register("wealth_flying_sword", () -> new dev.ergenverse.item.FlyingSwordItem(8.0F,
-                    dev.ergenverse.item.sword.SwordEffectType.NONE,
-                    new Item.Properties().durability(500).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
-    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> CORE_TREASURE_SWORD =
-            ITEMS.register("core_treasure_sword", () -> new dev.ergenverse.item.FlyingSwordItem(14.0F,
-                    dev.ergenverse.item.sword.SwordEffectType.TELEPORT,
-                    new Item.Properties().durability(1200).rarity(net.minecraft.world.item.Rarity.RARE)));
-    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> BLOOD_SLAUGHTER_SWORD =
-            ITEMS.register("blood_slaughter_sword", () -> new dev.ergenverse.item.FlyingSwordItem(20.0F,
-                    dev.ergenverse.item.sword.SwordEffectType.LIFESTEAL,
-                    new Item.Properties().durability(2000).rarity(net.minecraft.world.item.Rarity.EPIC)));
-    // CRON-COMPLETIONIST-57: Dark Green Flying Sword (墨绿飞剑) — POISON effect (Wither II 3s)
-    // Canon: Wang Lin's fourth flying sword, corrupt energy, drains life force.
-    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> DARK_GREEN_FLYING_SWORD =
-            ITEMS.register("dark_green_flying_sword", () -> new dev.ergenverse.item.FlyingSwordItem(17.0F,
-                    dev.ergenverse.item.sword.SwordEffectType.POISON,
-                    new Item.Properties().durability(1500).rarity(net.minecraft.world.item.Rarity.EPIC)));
-    // CRON-COMPLETIONIST-57: God-Slaying Sword (诛仙剑) — RESTRICTION effect (armor-bypass magic damage)
-    // Canon: one of the Seven Swords of Star Heaven, ignores defensive formations.
+    // ── Flying Swords (CRON-COMPLETIONIST-55/57) ───────────────────────────
+    // NOTE: wealth_flying_sword, core_treasure_sword, blood_slaughter_sword, and
+    // dark_green_flying_sword are registered by WangLinItems from the arsenal manifest.
+    // Do NOT register them here to avoid duplicate item name crashes.
+    // Only god_slaying_sword is exclusive to ErgenverseItems (not in the manifest).
     public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> GOD_SLAYING_SWORD =
             ITEMS.register("god_slaying_sword", () -> new dev.ergenverse.item.FlyingSwordItem(28.0F,
                     dev.ergenverse.item.sword.SwordEffectType.RESTRICTION,
@@ -190,24 +169,26 @@ public final class ErgenverseItems {
 
 
     // ── Spawn Eggs ────────────────────────────────────────────────────
+    // Uses DeferredSpawnEggItem because SpawnEggItem requires EntityType at
+    // construction time, but ITEM registry fires BEFORE ENTITY_TYPE registry.
     public static final RegistryObject<Item> SPIRIT_RABBIT_SPAWN_EGG = ITEMS.register("spirit_rabbit_spawn_egg",
-            () -> new net.minecraft.world.item.SpawnEggItem(
-                    dev.ergenverse.entity.EREntityTypes.SPIRIT_RABBIT.get(),
+            () -> new dev.ergenverse.item.DeferredSpawnEggItem(
+                    () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_RABBIT.get(),
                     0xFFFFFF, 0xC0C0C0,
                     new Item.Properties()));
     public static final RegistryObject<Item> SPIRIT_WOLF_SPAWN_EGG = ITEMS.register("spirit_wolf_spawn_egg",
-            () -> new net.minecraft.world.item.SpawnEggItem(
-                    dev.ergenverse.entity.EREntityTypes.SPIRIT_WOLF.get(),
+            () -> new dev.ergenverse.item.DeferredSpawnEggItem(
+                    () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_WOLF.get(),
                     0x5A6E82, 0x00C8DC,
                     new Item.Properties()));
     public static final RegistryObject<Item> SPIRIT_DEER_SPAWN_EGG = ITEMS.register("spirit_deer_spawn_egg",
-            () -> new net.minecraft.world.item.SpawnEggItem(
-                    dev.ergenverse.entity.EREntityTypes.SPIRIT_DEER.get(),
+            () -> new dev.ergenverse.item.DeferredSpawnEggItem(
+                    () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_DEER.get(),
                     0x8C643C, 0xFFC832,
                     new Item.Properties()));
     public static final RegistryObject<Item> SPIRIT_HAWK_SPAWN_EGG = ITEMS.register("spirit_hawk_spawn_egg",
-            () -> new net.minecraft.world.item.SpawnEggItem(
-                    dev.ergenverse.entity.EREntityTypes.SPIRIT_HAWK.get(),
+            () -> new dev.ergenverse.item.DeferredSpawnEggItem(
+                    () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_HAWK.get(),
                     0x785032, 0x00C8DC,
                     new Item.Properties()));
 
@@ -263,7 +244,7 @@ public final class ErgenverseItems {
                             output.accept(JADE_SLIP_BLANK.get());
                             output.accept(MEDITATION_MAT.get());
                             // Crafting materials
-                            output.accept(SPIRIT_STONE.get());
+                            output.accept(dev.ergenverse.block.ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().asItem());
                             output.accept(SPIRIT_STONE_FRAGMENT.get());
                             output.accept(IRON_SAND.get());
                             output.accept(COLD_IRON_INGOT.get());
@@ -285,11 +266,7 @@ public final class ErgenverseItems {
                             output.accept(BLOOD_SOUL_PILL.get());
                             output.accept(MINOR_HEALING_PILL.get());
                             output.accept(WASTE_PILL.get());
-                            // Flying swords
-                            output.accept(WEALTH_FLYING_SWORD.get());
-                            output.accept(CORE_TREASURE_SWORD.get());
-                            output.accept(BLOOD_SLAUGHTER_SWORD.get());
-                            output.accept(DARK_GREEN_FLYING_SWORD.get());
+                            // Flying swords (registered by WangLinItems, not here)
                             output.accept(GOD_SLAYING_SWORD.get());
                             // Talismans
                             output.accept(FIREBALL_TALISMAN.get());

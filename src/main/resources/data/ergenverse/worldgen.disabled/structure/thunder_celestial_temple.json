@@ -1,0 +1,16 @@
+{
+  "_comment": "Thunder Celestial Temple (雷仙殿) — the seat of the Thunder Celestial title within the Thunder Celestial Realm. Canon (CANON_RI_COMPLETE_WORLD.md L54; CANON_RI_TIMELINE.md E24, E94): Site of Wang Lin's Thunder Celestial Tournament victory; he kills Russell here and becomes the Thunder Celestial of the Thunder Celestial Temple. The Blood Ancestor is slain here (E94). Wang Lin obtains the God-Slaying War Chariot, the Celestial Emperor Crown, and Bai Fan's Collection Pavilion inheritance here. The Temple is a vast lightning-wreathed complex with the Thunder Lake trial grounds, the Collection Pavilion, and the Celestial Slaughter Art trap site (All-Seer's tainted transmission). Stand-in: village town_center + woodland mansion (lightning-aspect grand complex). Final: custom Thunder Celestial Temple NBT templates with thunder-aspect halls, Collection Pavilion, and Thunder Lake. Biome: thunder_celestial_realm.",
+  "type": "minecraft:jigsaw",
+  "biomes": "ergenverse:thunder_celestial_realm",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "start_pool": "ergenverse:thunder_celestial_temple/start_pool",
+  "size": 7,
+  "start_height": {
+    "type": "minecraft:constant",
+    "value": 0
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "max_distance_from_center": 116,
+  "use_expansion_hack": false
+}

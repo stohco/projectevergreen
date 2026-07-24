@@ -1,0 +1,46 @@
+{
+  "_comment": "Cloud Whale Territory \u2014 migration route of the legendary Cloud Whales. These massive spirit beasts swim through the cloud layer. Their passage leaves spirit energy condensation trails. Prime Directive: cloud whales are objective ecological fauna \u2014 their migration routes are as real as any terrestrial animal's.",
+  "temperature": 0.25,
+  "downfall": 0.7,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 16777215,
+    "fog_color": 16777215,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [
+      "minecraft:patch_grass_normal"
+    ],
+    []
+  ]
+}

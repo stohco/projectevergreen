@@ -1,0 +1,44 @@
+{
+  "_comment": "Sword Cultivator Airspace \u2014 a sky region frequently patrolled by flying sword cultivators. Residual sword Qi saturates the air. Spirit cranes avoid this region. Prime Directive: the sword Qi is objective residual energy from centuries of cultivator traffic.",
+  "temperature": 0.35,
+  "downfall": 0.3,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 8947848,
+    "fog_color": 13421772,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}

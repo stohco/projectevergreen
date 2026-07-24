@@ -1,0 +1,65 @@
+{
+  "_comment": "Fire Demon Country \u2014 Old Caravan Road. Auto-generated sub-region from canon location L30 (\u706b\u9b54\u56fd). Parent world-law tier: low. Spirit veins: Fire/demonic spiritual energy; a fragmented ancient demon sealed beneath. Prime Directive: this region exists objectively as part of Fire Demon Country; cultivation determines perception, not existence.",
+  "temperature": 0.9500000000000001,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 12694940,
+    "fog_color": 12694940,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_granite_upper",
+      "minecraft:ore_granite_lower",
+      "minecraft:ore_diorite_upper",
+      "minecraft:ore_diorite_lower",
+      "minecraft:ore_andesite_upper",
+      "minecraft:ore_andesite_lower",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold_upper",
+      "minecraft:ore_gold_lower",
+      "minecraft:ore_copper",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [
+      "minecraft:forest_rocks"
+    ],
+    [],
+    [
+      "minecraft:patch_grass_normal"
+    ],
+    []
+  ]
+}

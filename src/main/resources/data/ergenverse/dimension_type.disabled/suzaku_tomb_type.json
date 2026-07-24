@@ -1,0 +1,25 @@
+{
+  "_comment": "Suzaku Tomb dimension type — underground tomb. Canon (CANON_RI_COMPLETE_WORLD.md L52): completely enclosed underground space. No sky, no weather, no natural light. The Cultivation Planet Crystal (planet's seal mechanism) is here. Fixed dim lighting from residual seal energy. Ceiling: yes (underground tomb). Bed doesn't work (you're in a tomb). Prime Directive: the tomb's enclosed nature is objective — it is a physical structure beneath Planet Suzaku's surface.",
+  "ultrawarm": false,
+  "natural": false,
+  "piglin_safe": false,
+  "respawn_anchor_works": false,
+  "bed_works": false,
+  "has_raids": false,
+  "has_skylight": false,
+  "has_ceiling": true,
+  "coordinate_scale": 1.0,
+  "ambient_light": 0.0,
+  "logical_height": 256,
+  "min_y": 0,
+  "height": 256,
+  "infiniburn": "#minecraft:infiniburn_overworld",
+  "effects": "minecraft:the_end",
+  "monster_spawn_light_level": {
+    "type": "minecraft:uniform",
+    "value_in_clamped_range": true,
+    "min_inclusive": 0,
+    "max_inclusive": 7
+  },
+  "monster_spawn_block_light_limit": 0
+}

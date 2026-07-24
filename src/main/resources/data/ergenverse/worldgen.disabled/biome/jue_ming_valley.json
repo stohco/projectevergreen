@@ -1,0 +1,85 @@
+{
+  "_comment": "Jue Ming Valley / Jueming Valley (\u7edd\u547d\u8c37) \u2014 a valley on Planet Suzaku. Canon (CANON_RI_COMPLETE_WORLD.md L46): the Jue Ming Valley tokens grant access to the Foreign Battleground / Extraterrestrial Battlefield (\u57df\u5916\u6218\u573a), a sealed battlefield outside normal Suzaku geography. The valley is a gateway region \u2014 its geography is defined by the ancient tokens and the sealed rift to the Foreign Battleground. World-law tier: low (Core Formation ceiling) at the surface, but the rift to the Foreign Battleground exposes higher-tier Qi in pockets. Prime Directive: the valley's geography exists independently of the rift; the rift exists independently of the tokens. The tokens are the only safe way through; without one, a cultivator who enters the rift is lost.",
+  "temperature": 0.1,
+  "downfall": 0.3,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 4140954,
+    "fog_color": 4140954,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "mood_sound": "minecraft:ambient.soul_sand_valley",
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_granite_upper",
+      "minecraft:ore_granite_lower",
+      "minecraft:ore_diorite_upper",
+      "minecraft:ore_diorite_lower",
+      "minecraft:ore_andesite_upper",
+      "minecraft:ore_andesite_lower",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold_lower",
+      "minecraft:ore_copper",
+      "minecraft:ore_emerald",
+      "minecraft:ore_redstone",
+      "minecraft:ore_lapis",
+      "minecraft:ore_diamond",
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [
+      "minecraft:forest_rocks",
+      "minecraft:fossil_underground"
+    ],
+    [
+      "ergenverse:joss_flame_source"
+    ],
+    [
+      "minecraft:patch_dead_bush",
+      "minecraft:patch_gravel_badlands",
+      "minecraft:brown_mushroom_normal",
+      "minecraft:red_mushroom_normal",
+      "ergenverse:foundation_root_vine",
+      "ergenverse:demon_corpse_mushroom",
+      "ergenverse:soul_nourishing_lotus",
+      "ergenverse:blood_forgetting_grass",
+      "ergenverse:heart_devil_flower",
+      "ergenverse:reincarnation_lily"
+    ],
+    []
+  ],
+  "structures": {
+    "ergenverse:ancient_god_cave": {}
+  }
+}
