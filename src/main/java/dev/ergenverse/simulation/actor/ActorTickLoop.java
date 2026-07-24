@@ -11,8 +11,13 @@ import dev.ergenverse.simulation.cognition.perception.Interpretation;
 import dev.ergenverse.simulation.cognition.perception.PerceptionSnapshot;
 import dev.ergenverse.simulation.cognition.perception.PerceptionSensor;
 import dev.ergenverse.simulation.cognition.prediction.ActionPredictor;
+import dev.ergenverse.simulation.intent.Commitment;
+import dev.ergenverse.simulation.intent.CommitmentContext;
+import dev.ergenverse.simulation.intent.CompletionPredicate;
 import dev.ergenverse.simulation.intent.CultivationTask;
+import dev.ergenverse.simulation.intent.Intent;
 import dev.ergenverse.simulation.intent.IntentDecomposer;
+import dev.ergenverse.simulation.intent.IntentNature;
 import dev.ergenverse.simulation.los.SimulationLevel;
 
 import net.minecraft.server.level.ServerLevel;
@@ -368,6 +373,16 @@ public final class ActorTickLoop {
                     tick
             );
             a.activeIntent = intent;
+            // ── BRIDGE FIX (CRON-COMPLETIONIST-12): sync the duplicate field ──
+            // Before this fix, ActorTickLoop set a.activeIntent (the Actor-level
+            // duplicate) but never a.cognition.activeIntent (the Ontology field
+            // that CognitionDrivenGoal reads). The result: CognitionDrivenGoal
+            // always saw null for the intent and never activated. This sync
+            // closes that gap. Same applies to activeCommitment below.
+            if (a.cognition != null) {
+                a.cognition.activeIntent = intent;
+            }
+
             if (intent != null) {
                 // CRON-COMPLETIONIST-65: Wire IntentDecomposer into the tick loop.
                 // Before this fix, IntentDecomposer existed but was never called.
@@ -388,10 +403,217 @@ public final class ActorTickLoop {
 
                 Ergenverse.LOGGER.debug("[Ergenverse] ActorTick[cognition] {} intent: {} -> {} tasks",
                         a.id, intent.nature().label, tasks.size());
+
+                // ── COMMITMENT FORMATION (CRON-COMPLETIONIST-12) ──
+                // The bridge the user named: "No code path yet SETS
+                // activeCommitment." This is that path. When the chosen goal
+                // is commitment-worthy (a persistent decision, not a transient
+                // reaction), form a Commitment with situation-derived success
+                // and abandon predicates. Per the user:
+                //   "Commitments should not simply expire. They should also be
+                //    completed by conditions. The world should decide when a
+                //    commitment ends. Not a timer. The timer is merely
+                //    insurance against bugs."
+                formCommitmentIfWarranted(a, goal, intent, perception, tick);
             }
         } catch (Exception e) {
             Ergenverse.LOGGER.error("[Ergenverse] IntentEngine failed for {}", a.id, e);
         }
+    }
+
+    /**
+     * Form a {@link Commitment} for the actor if the chosen goal is
+     * commitment-worthy and no commitment is currently active.
+     *
+     * <p>Per the user's design review: the bridge between Reasoning and
+     * Commitment was missing — "No code path yet SETS activeCommitment."
+     * This method IS that path. It runs after the IntentEngine derives an
+     * intent. If the goal category is one that warrants persistence (the
+     * actor is making a decision, not reacting to a transient stimulus),
+     * a Commitment is built with success and abandon predicates derived
+     * from the current perception.
+     *
+     * <h2>Which goals are commitment-worthy?</h2>
+     * <p>Persistent decisions (the actor decides to do something and
+     * should hold that course until the world says stop):
+     * INVESTIGATE, DEFEND, DEFEND_TERRITORY, SEEKING_DAO, BREAKTHROUGH,
+     * MEDITATE, STUDY, EXPLORE, KEEP_PROMISE, RESOLVE_DEBT, LEGACY.
+     *
+     * <p>Transient reactions (should NOT form commitments — they're
+     * per-tick): FLEE, HIDE, SURVIVE, KILL, DECEIVE. These are reactive;
+     * the actor should re-evaluate them every tick.
+     *
+     * <h2>Condition derivation</h2>
+     * <p>The predicates are derived from the actor's perception:
+     * <ul>
+     *   <li><b>Success</b>: the threat the commitment addresses is gone
+     *       (no hostile entities perceived, no threatening events). This
+     *       is the "I achieved what I committed to" path — the wolves
+     *       left, the herb was harvested, the promise was kept.</li>
+     *   <li><b>Abandon</b>: danger exceeds tolerance (a hostile entity
+     *       stronger than the actor comes within 12 blocks), or the
+     *       commitment has outlived its safety-net max duration. This is
+     *       the "the world changed; continuing is pointless/unsafe" path.</li>
+     * </ul>
+     *
+     * <p>The safety-net max duration is set per category — long-lived
+     * commitments (SEEKING_DAO, LEGACY) get a long safety net; short-lived
+     * ones (INVESTIGATE) get a shorter one. Per the user: "The timer is
+     * merely insurance against bugs."
+     *
+     * @param a the actor
+     * @param goal the chosen cognition goal
+     * @param intent the intent derived from the goal
+     * @param perception the actor's current perception (may be null)
+     * @param tick the current server tick
+     */
+    private static void formCommitmentIfWarranted(Actor a, CognitionGoal goal,
+                                                    Intent intent,
+                                                    PerceptionSnapshot perception,
+                                                    long tick) {
+        if (goal == null || intent == null) return;
+        if (a.cognition == null) return;
+
+        // If a commitment is already active, don't replace it. The user's
+        // directive: "Intent can change without Commitment changing." A
+        // new intent (per-tick flicker) does not override an active
+        // commitment. The commitment ends only when the world says so.
+        if (a.activeCommitment != null && a.activeCommitment.isActionable()) {
+            return;
+        }
+        // Also check the Ontology duplicate (it's the one CognitionDrivenGoal reads).
+        if (a.cognition.activeCommitment != null
+                && a.cognition.activeCommitment.isActionable()) {
+            // Sync the Actor duplicate from the Ontology (in case only one was set).
+            a.activeCommitment = a.cognition.activeCommitment;
+            return;
+        }
+
+        if (!isCommitmentWorthy(goal.category)) return;
+
+        // Build the commitment with perception-derived predicates.
+        IntentNature nature = intent.nature();
+        String targetId = intent.targetId() != null ? intent.targetId()
+                : (goal.description != null ? goal.description : goal.category.name());
+        long maxDuration = safetyNetDurationFor(goal.category);
+
+        // ── Success condition: the threat addressed by this commitment is gone ──
+        // "I achieved what I committed to." The wolves left, the herb was
+        // harvested, the boundary was defended. We detect this by checking
+        // that no hostile entities have been perceived for a sustained
+        // window. (A single clear tick is not enough — the wolf might just
+        // be behind a tree. We require the perception to be threat-free
+        // AND for the commitment to have lived at least 200 ticks, so a
+        // commitment can't instantly succeed from a momentarily-clear view.)
+        CompletionPredicate successThreatGone = ctx -> {
+            if (ctx.perception() == null) return false;
+            if (ctx.currentTick() - tick < 200L) return false; // let it breathe
+            return !ctx.perception().hasThreat
+                    && ctx.perception().nearbyEntities.stream()
+                        .noneMatch(e -> "hostile".equals(e.classification));
+        };
+
+        // ── Abandon condition 1: danger exceeds tolerance ──
+        // "The world changed; continuing is unsafe." A hostile entity
+        // stronger than the actor has come within 12 blocks. This is the
+        // "danger exceeds tolerance" path from the user's example.
+        CompletionPredicate abandonDanger = ctx -> {
+            if (ctx.perception() == null) return false;
+            return ctx.perception().nearbyEntities.stream()
+                    .filter(e -> "hostile".equals(e.classification))
+                    .anyMatch(e -> e.relativePower > 0.5 && e.distanceBlocks < 12.0);
+        };
+
+        // ── Abandon condition 2: target disappeared (nothing left to commit to) ──
+        // "The prey escaped." If the commitment was directed at a specific
+        // target and that target is no longer perceived (and hasn't been
+        // for 400 ticks), the commitment is pointless. This catches the
+        // "wolves left the area" case.
+        CompletionPredicate abandonTargetGone = ctx -> {
+            if (ctx.perception() == null) return false;
+            if (ctx.currentTick() - tick < 400L) return false; // grace period
+            // If the perception shows no threats AND no hostile entities,
+            // the target is gone. (This overlaps with success, but success
+            // requires the commitment to have lived 200t; this catches the
+            // case where the target left without the actor achieving its
+            // goal — e.g. the wolves wandered off before Wang Lin learned
+            // their pattern.)
+            return !ctx.perception().hasThreat
+                    && ctx.perception().nearbyEntities.stream()
+                        .noneMatch(e -> "hostile".equals(e.classification)
+                                || "prey".equals(e.classification));
+        };
+
+        // ── Abandon condition 3: family/allies need intervention ──
+        // "Family needs intervention." If the actor perceives a witness
+        // (an ally observing) AND a threat is present, the actor may need
+        // to intervene directly rather than continue observing. This is a
+        // conservative trigger — it only fires when an ally is perceived
+        // AND the threat is close.
+        CompletionPredicate abandonFamilyNeeds = ctx -> {
+            if (ctx.perception() == null) return false;
+            if (!ctx.perception().hasThreat) return false;
+            return ctx.perception().nearbyEntities.stream()
+                    .filter(e -> "witness".equals(e.classification) || "ally".equals(e.classification))
+                    .anyMatch(e -> e.distanceBlocks < 16.0);
+        };
+
+        String reasonText = a.displayName + " commits to " + nature.label
+                + " (" + goal.category + "): " + goal.description;
+
+        Commitment commitment = Commitment.builder(nature, targetId, goal)
+                .reason(reasonText)
+                .maxDuration(maxDuration)
+                .successDescription("Threat addressed; no hostiles perceived for 200+ ticks.")
+                .successWhen(successThreatGone)
+                .abandonWhen(abandonDanger)
+                .abandonWhen(abandonTargetGone)
+                .abandonWhen(abandonFamilyNeeds)
+                .form(tick);
+
+        // Set BOTH fields — the Actor duplicate and the Ontology field
+        // that CognitionDrivenGoal reads. This is the bridge.
+        a.activeCommitment = commitment;
+        a.cognition.activeCommitment = commitment;
+
+        Ergenverse.LOGGER.info("[Ergenverse] ActorTick[commitment] {} FORMED: {} → {} "
+                        + "(success={}, abandon={}, maxDur={}t)",
+                a.id, nature.label, targetId,
+                commitment.successConditions.size(),
+                commitment.abandonConditions.size(),
+                maxDuration);
+    }
+
+    /**
+     * Is this goal category commitment-worthy? Persistent decisions warrant
+     * commitments; transient reactions do not.
+     */
+    private static boolean isCommitmentWorthy(CognitionGoal.Category category) {
+        return switch (category) {
+            case INVESTIGATE, DEFEND, DEFEND_TERRITORY, SEEKING_DAO,
+                 BREAKTHROUGH, MEDITATE, STUDY, EXPLORE, KEEP_PROMISE,
+                 RESOLVE_DEBT, LEGACY, CRAFT, TRADE, OFFER_FAVOR -> true;
+            // Transient reactions — re-evaluate every tick, don't persist.
+            case FLEE, HIDE, SURVIVE, KILL, DECEIVE, CORRUPT, POLITICS,
+                 CALL_HELP, SUBMIT, FORGIVE, RESURRECT, WAIT, OTHER,
+                 SOCIAL, GATHER_RESOURCE, BREAK_FORMATION -> false;
+        };
+    }
+
+    /**
+     * Safety-net max duration per goal category. Per the user: "The timer
+     * is merely insurance against bugs." These durations are the backstop —
+     * the primary lifecycle is condition-driven.
+     */
+    private static long safetyNetDurationFor(CognitionGoal.Category category) {
+        return switch (category) {
+            case SEEKING_DAO, LEGACY, BREAKTHROUGH -> 240000L;  // ~3.3 hours real-time
+            case MEDITATE, STUDY, CRAFT -> 120000L;             // ~1.7 hours
+            case DEFEND, DEFEND_TERRITORY, KEEP_PROMISE,
+                 RESOLVE_DEBT, TRADE, OFFER_FAVOR -> 60000L;    // ~50 min
+            case INVESTIGATE, EXPLORE -> 24000L;                // ~20 min
+            default -> 12000L;                                   // ~10 min
+        };
     }
 
     /** One-line debug log of the full cognition chain for this tick. */

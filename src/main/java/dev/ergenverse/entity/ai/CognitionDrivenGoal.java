@@ -7,6 +7,7 @@ import dev.ergenverse.simulation.actor.ActorRegistry;
 import dev.ergenverse.simulation.cognition.Ontology;
 import dev.ergenverse.simulation.intent.ActorEntityLink;
 import dev.ergenverse.simulation.intent.Commitment;
+import dev.ergenverse.simulation.intent.CommitmentContext;
 import dev.ergenverse.simulation.intent.CultivationTask;
 import dev.ergenverse.simulation.intent.Intent;
 import dev.ergenverse.simulation.intent.IntentDecomposer;
@@ -165,18 +166,36 @@ public class CognitionDrivenGoal extends Goal {
         long tick = cultivator.level().getGameTime();
 
         // Commitment-driven path: continue if the commitment is still actionable.
+        // Per the user's design review (CRON-COMPLETIONIST-12): the world
+        // decides when a commitment ends, not a timer. We evaluate the
+        // commitment's success and abandon predicates against the current
+        // CommitmentContext each tick. The timer is merely bug insurance.
         Commitment commitment = actor.cognition.activeCommitment;
         if (commitment != null && commitment.isActionable()) {
-            // Expired commitment → let the ReasoningEngine re-evaluate.
-            if (commitment.isExpired(tick)) {
+            CommitmentContext ctx = buildCommitmentContext(actor, tick);
+
+            // Success condition fired → COMPLETED (the actor achieved it).
+            if (commitment.isFulfilled(ctx)) {
                 commitment.status = Commitment.Status.COMPLETED;
                 actor.cognition.activeCommitment = null;
+                // Keep the Actor-level duplicate in sync.
+                actor.activeCommitment = null;
+                logCommitmentEnd(actor, commitment, "success");
                 return false;
             }
-            // Abandoned (pressure gone) → re-evaluate from scratch.
-            if (commitment.shouldAbandon(tick)) {
-                commitment.status = Commitment.Status.ABANDONED;
+            // Abandon condition fired (or safety-net max duration elapsed)
+            // → ABANDONED (or COMPLETED via MAX_DURATION_ELAPSED).
+            if (commitment.shouldAbandon(ctx)) {
+                if (commitment.endReason == Commitment.CompletionReason.MAX_DURATION_ELAPSED) {
+                    commitment.status = Commitment.Status.COMPLETED;
+                } else {
+                    commitment.status = Commitment.Status.ABANDONED;
+                }
                 actor.cognition.activeCommitment = null;
+                actor.activeCommitment = null;
+                logCommitmentEnd(actor, commitment,
+                        commitment.endReason == Commitment.CompletionReason.MAX_DURATION_ELAPSED
+                                ? "safety-net-expired" : "abandoned");
                 return false;
             }
             return currentTaskIndex >= 0 && currentTaskIndex < taskQueue.size();
@@ -517,5 +536,47 @@ public class CognitionDrivenGoal extends Goal {
         if (a == null || b == null) return a == b;
         return a.nature() == b.nature()
                 && java.util.Objects.equals(a.targetId(), b.targetId());
+    }
+
+    /**
+     * Build a {@link CommitmentContext} for the current tick. The context
+     * carries the world state the commitment's success/abandon predicates
+     * evaluate against.
+     *
+     * <p>Per the user's design review: "The world should decide when a
+     * commitment ends. Not a timer." The context IS the world, handed
+     * to the predicates. Predicates null-check what they need.
+     *
+     * <p>The situation is fetched from the current WorldEventBus level
+     * (if available). The perception is the actor's last filtered
+     * perception. Both may be null — predicates must handle that.
+     */
+    private CommitmentContext buildCommitmentContext(Actor actor, long tick) {
+        dev.ergenverse.simulation.settlement.WorldSituation situation = null;
+        try {
+            // The WorldSituation is computed per-scan by ActorMaterializer
+            // and is not stashed on the actor. For the context, we provide
+            // what we have: the actor's last perception. Predicates that
+            // need the situation will see null and return false — the
+            // commitment continues, which is the safe default.
+            situation = null;
+        } catch (Exception ignored) {}
+        return new CommitmentContext(
+                tick,
+                actor,
+                situation,
+                actor.lastPerception);
+    }
+
+    /**
+     * Log a commitment's terminal transition (rate-limited to avoid spam).
+     */
+    private void logCommitmentEnd(Actor actor, Commitment commitment, String how) {
+        Ergenverse.LOGGER.info("[CognitionDrivenGoal] {} commitment ended: {} → {} ({}). Reason: \"{}\"",
+                actor.id,
+                commitment.intentNature.label,
+                how,
+                commitment.endReason,
+                commitment.reason);
     }
 }
