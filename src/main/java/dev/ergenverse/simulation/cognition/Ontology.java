@@ -71,6 +71,24 @@ public final class Ontology {
      */
     public dev.ergenverse.simulation.intent.Intent activeIntent = null;
 
+    /**
+     * Currently active commitment (Article XLV §3). Persists across ticks.
+     *
+     * <p>Unlike {@link #activeIntent} (which is re-derived each cognition
+     * tick and may flicker), a commitment holds for minutes to hours.
+     * When non-null and actionable, {@link dev.ergenverse.entity.ai.CognitionDrivenGoal}
+     * honors the commitment and derives its per-tick Intent from
+     * {@link dev.ergenverse.simulation.intent.Commitment#toIntent} rather
+     * than re-running the IntentEngine. This is the difference between an
+     * NPC that dithers (per-tick re-evaluation) and an NPC that holds its
+     * course (commitment-driven execution).
+     *
+     * <p>Set by the ReasoningEngine when a pressure crosses a threshold
+     * and the actor's motivations favor responding. Cleared when the
+     * commitment is COMPLETED, ABANDONED, or expired without renewal.
+     */
+    public dev.ergenverse.simulation.intent.Commitment activeCommitment = null;
+
     /** Currently active plan (set by the Planner when a goal is chosen). */
     public Plan activePlan = null;
 

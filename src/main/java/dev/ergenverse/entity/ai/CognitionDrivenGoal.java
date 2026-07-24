@@ -6,6 +6,7 @@ import dev.ergenverse.simulation.actor.Actor;
 import dev.ergenverse.simulation.actor.ActorRegistry;
 import dev.ergenverse.simulation.cognition.Ontology;
 import dev.ergenverse.simulation.intent.ActorEntityLink;
+import dev.ergenverse.simulation.intent.Commitment;
 import dev.ergenverse.simulation.intent.CultivationTask;
 import dev.ergenverse.simulation.intent.Intent;
 import dev.ergenverse.simulation.intent.IntentDecomposer;
@@ -105,11 +106,20 @@ public class CognitionDrivenGoal extends Goal {
     // ═══════════════════════════════════════════════════════════════════
 
     /**
-     * Can this goal run? Yes, IF there is a linked Actor with an active Intent.
+     * Can this goal run? Yes, IF there is a linked Actor with an active
+     * Intent OR an actionable Commitment.
      *
-     * <p>If no Actor is linked (entity just spawned, not yet registered) or
-     * the Actor has no active Intent, this goal yields to lower-priority
-     * goals (RandomStroll, RandomLookAround).
+     * <p>Article XLV §3: when a Commitment is active (FORMED or ACTIVE
+     * status), this goal honors the commitment and derives its Intent
+     * from {@link Commitment#toIntent}. The commitment persists across
+     * ticks — the NPC does not re-evaluate every tick. This is the
+     * difference between an NPC that dithers and an NPC that holds its
+     * course.
+     *
+     * <p>If no Actor is linked, or the Actor has neither a commitment
+     * nor an Intent, this goal yields to lower-priority goals
+     * (RandomStroll, RandomLookAround, and the deprecated
+     * NpcScheduleGoal).
      */
     @Override
     public boolean canUse() {
@@ -120,13 +130,28 @@ public class CognitionDrivenGoal extends Goal {
         Actor actor = ActorRegistry.get(actorId);
         if (actor == null || actor.cognition == null) return false;
 
+        // Honor an active commitment first — it persists across ticks.
+        Commitment commitment = actor.cognition.activeCommitment;
+        if (commitment != null && commitment.isActionable()) {
+            return true;
+        }
+
+        // Fall back to per-tick Intent (flickers, but better than nothing).
         Intent intent = actor.cognition.activeIntent;
         return intent != null;
     }
 
     /**
-     * Can this goal keep running? Yes, if the Intent is still active and
-     * not expired, and there are tasks remaining.
+     * Can this goal keep running? Yes, if the Commitment is still
+     * actionable OR the Intent is still active and not expired, and
+     * there are tasks remaining.
+     *
+     * <p>Commitment-driven continuation: if a commitment is active, the
+     * goal continues as long as the commitment is not expired, abandoned,
+     * or fulfilled. The per-tick Intent may flicker (e.g. AVOID_PLAYER
+     * when a player walks past), but the commitment holds — the goal
+     * does NOT re-decompose on every Intent change, only on commitment
+     * expiry/abandonment.
      */
     @Override
     public boolean canContinueToUse() {
@@ -137,6 +162,27 @@ public class CognitionDrivenGoal extends Goal {
         Actor actor = ActorRegistry.get(actorId);
         if (actor == null || actor.cognition == null) return false;
 
+        long tick = cultivator.level().getGameTime();
+
+        // Commitment-driven path: continue if the commitment is still actionable.
+        Commitment commitment = actor.cognition.activeCommitment;
+        if (commitment != null && commitment.isActionable()) {
+            // Expired commitment → let the ReasoningEngine re-evaluate.
+            if (commitment.isExpired(tick)) {
+                commitment.status = Commitment.Status.COMPLETED;
+                actor.cognition.activeCommitment = null;
+                return false;
+            }
+            // Abandoned (pressure gone) → re-evaluate from scratch.
+            if (commitment.shouldAbandon(tick)) {
+                commitment.status = Commitment.Status.ABANDONED;
+                actor.cognition.activeCommitment = null;
+                return false;
+            }
+            return currentTaskIndex >= 0 && currentTaskIndex < taskQueue.size();
+        }
+
+        // Intent-driven fallback path (per-tick flicker).
         Intent currentIntent = actor.cognition.activeIntent;
         if (currentIntent == null) return false;
 
@@ -146,7 +192,6 @@ public class CognitionDrivenGoal extends Goal {
         }
 
         // Check if Intent expired
-        long tick = cultivator.level().getGameTime();
         if (currentIntent.isExpired(tick)) return false;
 
         // Check if we have tasks remaining
@@ -154,7 +199,15 @@ public class CognitionDrivenGoal extends Goal {
     }
 
     /**
-     * Start the goal — decompose the current Intent into tasks.
+     * Start the goal — derive the effective Intent (from Commitment if
+     * active, else from activeIntent) and decompose it into tasks.
+     *
+     * <p>Commitment-driven start: if a commitment is actionable, mark
+     * it ACTIVE and derive the per-tick Intent from
+     * {@link Commitment#toIntent}. This Intent has a duration equal to
+     * the commitment's remaining persistence, so it will NOT expire
+     * before the commitment does. The goal then decomposes this Intent
+     * as usual.
      */
     @Override
     public void start() {
@@ -162,10 +215,23 @@ public class CognitionDrivenGoal extends Goal {
         Actor actor = ActorRegistry.get(actorId);
         if (actor == null || actor.cognition == null) return;
 
-        Intent intent = actor.cognition.activeIntent;
+        long tick = cultivator.level().getGameTime();
+
+        // Derive the effective Intent — commitment takes precedence.
+        Commitment commitment = actor.cognition.activeCommitment;
+        Intent intent;
+        boolean fromCommitment = false;
+        if (commitment != null && commitment.isActionable()) {
+            if (commitment.status == Commitment.Status.FORMED) {
+                commitment.status = Commitment.Status.ACTIVE;
+            }
+            intent = commitment.toIntent(tick);
+            fromCommitment = true;
+        } else {
+            intent = actor.cognition.activeIntent;
+        }
         if (intent == null) return;
 
-        long tick = cultivator.level().getGameTime();
         BlockPos entityPos = cultivator.blockPosition();
 
         // Find nearest player for AVOID_REVEALING_STRENGTH etc.
@@ -204,8 +270,10 @@ public class CognitionDrivenGoal extends Goal {
 
         // Log (rate-limited — only when intent label changes)
         if (!intent.nature().label.equals(lastLoggedIntent)) {
-            Ergenverse.LOGGER.info("[CognitionDrivenGoal] {} starting intent '{}' → {} tasks",
-                    actorId, intent.nature().label, taskQueue.size());
+            Ergenverse.LOGGER.info("[CognitionDrivenGoal] {} starting {} '{}' → {} tasks",
+                    actorId,
+                    fromCommitment ? "commitment-driven intent" : "intent",
+                    intent.nature().label, taskQueue.size());
             lastLoggedIntent = intent.nature().label;
         }
     }

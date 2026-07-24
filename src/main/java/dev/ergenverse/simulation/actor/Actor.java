@@ -77,8 +77,16 @@ public final class Actor {
     public Interpretation lastInterpretation = null;
     /** Last action-outcome prediction for the chosen action (null until first cognition tick). */
     public ActionPredictor.Outcome lastPrediction = null;
-    /** Current active intent (derived by IntentEngine). */
+    /** Current active intent (derived by IntentEngine). Per-tick, flickers. */
     public Intent activeIntent = null;
+    /**
+     * Current active commitment (Article XLV §3). Persists across ticks.
+     * The commitment is the decision the per-tick Intent serves. When a
+     * commitment is active, the CognitionDrivenGoal honors it instead of
+     * re-decomposing the Intent every tick. This is the difference
+     * between an NPC that dithers and an NPC that holds its course.
+     */
+    public dev.ergenverse.simulation.intent.Commitment activeCommitment = null;
     /** Current task queue from IntentDecomposer (ordered steps). */
     public final List<CultivationTask> activeTasks = new ArrayList<>();
     /** Index of the currently executing task in the queue (-1 if idle). */

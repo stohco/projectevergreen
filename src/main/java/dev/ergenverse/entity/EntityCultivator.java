@@ -456,13 +456,23 @@ public class EntityCultivator extends PathfinderMob {
         // NpcInitiationGoal and NpcSectMissionGoal; all use Flag.LOOK and
         // are one-shot with cooldowns, so MC scheduler alternates).
         this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcLectureGoal(this));
-        // NpcScheduleGoal: Article XXIII — NPCs follow a canon-faithful daily
-        // schedule (cultivate at dawn, lecture at midday, sleep at night).
-        // Priority 3 (below NpcInitiationGoal=2, above CognitionDrivenGoal=4).
-        // The schedule is the DEFAULT; CognitionDrivenGoal (intent-based)
-        // overrides it for situational responses (spirit fruit, player nearby).
-        this.goalSelector.addGoal(3, new dev.ergenverse.entity.ai.NpcScheduleGoal(this));
-        // CognitionDrivenGoal: intent-based responses override schedule.
+        // NpcScheduleGoal: DEPRECATED per Article XLV §3. A daily schedule
+        // authored as a timetable (time-windowed patrol entries not downstream
+        // of a named pressure) is a bug. Retained only as the transition path
+        // until the commitment pipeline (pressures → Mind → Reasoning →
+        // Commitment → Execution) is fully wired. When commitments are wired,
+        // this line is deleted and CognitionDrivenGoal moves to priority 3.
+        // The @SuppressWarnings("deprecation") is intentional: we know it's
+        // deprecated; we are calling it deliberately during the transition.
+        @SuppressWarnings("deprecation")
+        dev.ergenverse.entity.ai.NpcScheduleGoal scheduleGoal =
+                new dev.ergenverse.entity.ai.NpcScheduleGoal(this);
+        this.goalSelector.addGoal(3, scheduleGoal);
+        // CognitionDrivenGoal: Article XLV §3 — honors an active Commitment
+        // (persistent across ticks) if one is set by the ReasoningEngine;
+        // otherwise falls back to the per-tick Intent. This is the replacement
+        // for the deprecated schedule above. Priority 4 today; will become 3
+        // when NpcScheduleGoal is removed.
         this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.CognitionDrivenGoal(this));
         // NpcReactToWorldGoal: Living Moments bridge — NPCs observe beast events
         // (hunts, flees, rests) and react with contextual dialogue, look-at

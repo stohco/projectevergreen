@@ -15,6 +15,26 @@ import java.util.List;
 /**
  * NpcScheduleGoal - Article XXIII (Vertical Slice Completion).
  *
+ * <p><b>DEPRECATED per Article XLV §3.</b> A daily schedule authored as a
+ * timetable (time-windowed patrol entries not downstream of a named
+ * pressure) is a bug. This goal is the deprecated transition path. It
+ * must be replaced by a commitment-driven goal: the world owns
+ * pressures, the NPC owns priorities, and a {@link
+ * dev.ergenverse.simulation.intent.Commitment} (set by the
+ * ReasoningEngine when a pressure crosses a threshold) directs the
+ * {@link CognitionDrivenGoal} to persist across ticks rather than
+ * re-evaluate every tick.
+ *
+ * <p>This class is retained only because removing it in a single cycle
+ * would leave NPCs with no default behavior until the ReasoningEngine
+ * wiring is complete. It is marked {@code @Deprecated} to signal that
+ * all new NPC behavior work should go through the commitment pipeline,
+ * not through new schedule entries. When the commitment pipeline is
+ * fully wired (pressures → Mind → Reasoning → Commitment → Execution),
+ * this class will be removed and the {@code goalSelector.addGoal(3, new
+ * NpcScheduleGoal(this))} line in {@link EntityCultivator#registerGoals}
+ * will be deleted.
+ *
  * <h2>What this does</h2>
  * <p>Makes Heng Yue Sect NPCs follow a daily schedule defined in their
  * NPC JSON data. At dawn they cultivate at Sword Peak, at noon they eat
@@ -39,12 +59,15 @@ import java.util.List;
  * <h2>Priority design</h2>
  * <p>Priority 3 (below NpcInitiationGoal=2, above CognitionDrivenGoal=4).
  * The schedule is the DEFAULT behavior. CognitionDrivenGoal can override
- * it for situational responses.
+ * it for situational responses. <b>This priority ordering is itself
+ * deprecated</b> — once commitments are wired, CognitionDrivenGoal
+ * should be the default (priority 3) and this goal should be removed.
  *
  * <h2>Article XXVI compliance</h2>
  * <p>NO new Engine/Bus/Subscriber. Single Goal class reusing
  * WorldStateDataLoader for JSON access.
  */
+@Deprecated
 public class NpcScheduleGoal extends Goal {
 
     /** MC day = 24000 ticks = 20 minutes real time. */
