@@ -162,6 +162,27 @@ public final class CanonGeographyPlacer {
                 }
                 case "zhao_capital" -> buildZhaoCapitalMarker(level, x, z, settlement);
                 case "nan_dou_city" -> buildNanDouCity(level, x, z, settlement);
+                case "snow_domain_capital" -> {
+                    // Full hand-built Snow Domain Capital (雪国都城) — frozen fortress-city.
+                    // Constitution: every block hand-authored.
+                    if (!dev.ergenverse.spawn.SnowDomainCapitalBuilder.isAlreadyBuilt(level)) {
+                        dev.ergenverse.spawn.SnowDomainCapitalBuilder.build(level);
+                    }
+                }
+                case "vermilion_bird_imperial_city" -> {
+                    // Full hand-built Vermilion Bird Imperial City (朱雀皇城) — planetary capital.
+                    // Constitution: every block hand-authored.
+                    if (!dev.ergenverse.spawn.VermilionBirdImperialCityBuilder.isAlreadyBuilt(level)) {
+                        dev.ergenverse.spawn.VermilionBirdImperialCityBuilder.build(level);
+                    }
+                }
+                case "luo_he_sect" -> {
+                    // Full hand-built Luo He Sect (罗河宗) — water cultivation sect.
+                    // Constitution: every block hand-authored.
+                    if (!dev.ergenverse.spawn.LuoHeSectBuilder.isAlreadyBuilt(level)) {
+                        dev.ergenverse.spawn.LuoHeSectBuilder.build(level);
+                    }
+                }
                 default -> buildSettlementMarker(level, x, z, settlement);
             }
         } catch (Exception e) {
