@@ -10,7 +10,10 @@
     },
     {
       "when": {
-        "north": "true"
+        "OR": [
+          { "north": "low" },
+          { "north": "tall" }
+        ]
       },
       "apply": {
         "model": "ergenverse:block/spirit_stone_wall_side",
@@ -19,7 +22,10 @@
     },
     {
       "when": {
-        "east": "true"
+        "OR": [
+          { "east": "low" },
+          { "east": "tall" }
+        ]
       },
       "apply": {
         "model": "ergenverse:block/spirit_stone_wall_side",
@@ -29,7 +35,10 @@
     },
     {
       "when": {
-        "south": "true"
+        "OR": [
+          { "south": "low" },
+          { "south": "tall" }
+        ]
       },
       "apply": {
         "model": "ergenverse:block/spirit_stone_wall_side",
@@ -39,7 +48,10 @@
     },
     {
       "when": {
-        "west": "true"
+        "OR": [
+          { "west": "low" },
+          { "west": "tall" }
+        ]
       },
       "apply": {
         "model": "ergenverse:block/spirit_stone_wall_side",
