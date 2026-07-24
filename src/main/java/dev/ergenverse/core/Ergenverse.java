@@ -232,6 +232,8 @@ public final class Ergenverse {
         //    The SpawnEventHandler is @Mod.EventBusSubscriber (auto-registered),
         //    but the command needs explicit registration on the FORGE bus.
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.spawn.ErgenverseCommand.class);
+        // ── Unified debug console: one command to inspect everything.
+        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ErgenDebugCommand.class);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ErgenConfig.SPEC);
         LOGGER.info("[Ergenverse] The world has existed for ten thousand years before you arrived.");

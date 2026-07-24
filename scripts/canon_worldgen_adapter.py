@@ -79,6 +79,127 @@ def write_json(filepath, data):
         json.dump(data, f, indent=2, ensure_ascii=False)
         f.write("\n")
 
+# ============================================================
+# SCHEMA VALIDATORS — MC 1.20.1 format compliance
+# These are the ROOT CAUSE fix. The generator previously
+# produced invalid JSON that Forge silently rejected.
+# ============================================================
+
+def validate_biome(biome, name):
+    """Validate a biome JSON against MC 1.20.1 schema requirements."""
+    errors = []
+
+    # Check carvers: must be {air: [{type: "..."}], liquid: [{type: "..."}]}
+    for slot in ("air", "liquid"):
+        entries = biome.get("carvers", {}).get(slot, [])
+        for i, entry in enumerate(entries):
+            if isinstance(entry, str):
+                errors.append(f"carvers.{slot}[{i}] is bare string '{entry}', "
+                              f"must be {{'type': '{entry}'}}")
+            elif isinstance(entry, dict) and "type" not in entry:
+                errors.append(f"carvers.{slot}[{i}] missing 'type' key")
+
+    # Check features: must be 11-element list of lists
+    features = biome.get("features", [])
+    if len(features) != 11:
+        errors.append(f"features has {len(features)} steps, must be exactly 11")
+    for i, step in enumerate(features):
+        if not isinstance(step, list):
+            errors.append(f"features[{i}] is {type(step).__name__}, must be list")
+
+    # Check spawners: each entry must have {type, weight, minCount, maxCount}
+    for category, entries in biome.get("spawners", {}).items():
+        for i, entry in enumerate(entries):
+            if isinstance(entry, dict):
+                for key in ("type", "weight", "minCount", "maxCount"):
+                    if key not in entry:
+                        errors.append(f"spawners.{category}[{i}] missing '{key}'")
+            elif isinstance(entry, str):
+                errors.append(f"spawners.{category}[{i}] is bare string '{entry}'")
+
+    # Check required top-level keys
+    for key in ("temperature", "downfall", "has_precipitation", "effects",
+                "spawners", "spawn_costs", "carvers", "features"):
+        if key not in biome:
+            errors.append(f"missing required key '{key}'")
+
+    if errors:
+        msg = f"VALIDATION FAILED for biome '{name}':\n  " + "\n  ".join(errors)
+        raise ValueError(msg)
+
+
+def validate_structure(struct, name):
+    """Validate a structure JSON against MC 1.20.1 schema requirements."""
+    errors = []
+
+    if struct.get("type") != "minecraft:jigsaw":
+        errors.append(f"type is '{struct.get('type')}', expected 'minecraft:jigsaw'")
+
+    # spawn_overrides: must be structured, not empty {}
+    # MC 1.20.1 requires at least monster/creature/ambient/axolotls/water entries
+    so = struct.get("spawn_overrides", {})
+    if not so:
+        # Generate proper empty spawn overrides
+        struct["spawn_overrides"] = {
+            "monster": {"bounding_box": "full", "max_count": 0, "spawns": []},
+            "creature": {"bounding_box": "full", "max_count": 0, "spawns": []},
+            "ambient": {"bounding_box": "full", "max_count": 0, "spawns": []},
+            "axolotls": {"bounding_box": "full", "max_count": 0, "spawns": []},
+            "underground_water_creature": {"bounding_box": "full", "max_count": 0, "spawns": []},
+            "water_ambient": {"bounding_box": "full", "max_count": 0, "spawns": []},
+            "water_creature": {"bounding_box": "full", "max_count": 0, "spawns": []},
+        }
+    else:
+        for key in ("monster", "creature", "ambient"):
+            if key not in so:
+                errors.append(f"spawn_overrides missing '{key}'")
+
+    for key in ("start_pool", "size", "start_height", "project_start_to_heightmap"):
+        if key not in struct:
+            errors.append(f"missing required key '{key}'")
+
+    if errors:
+        msg = f"VALIDATION FAILED for structure '{name}':\n  " + "\n  ".join(errors)
+        raise ValueError(msg)
+
+
+def validate_structure_set(ss, name):
+    """Validate a structure_set JSON."""
+    errors = []
+    if "structures" not in ss:
+        errors.append("missing 'structures'")
+    if "placement" not in ss:
+        errors.append("missing 'placement'")
+    else:
+        p = ss["placement"]
+        if p.get("type") == "minecraft:random_spread":
+            for key in ("spacing", "separation", "salt"):
+                if key not in p:
+                    errors.append(f"placement missing '{key}'")
+    if errors:
+        msg = f"VALIDATION FAILED for structure_set '{name}':\n  " + "\n  ".join(errors)
+        raise ValueError(msg)
+
+
+def validate_template_pool(tp, name):
+    """Validate a template_pool JSON."""
+    errors = []
+    if "name" not in tp:
+        errors.append("missing 'name'")
+    if "fallback" not in tp:
+        errors.append("missing 'fallback'")
+    if "elements" not in tp:
+        errors.append("missing 'elements'")
+    else:
+        for i, el in enumerate(tp["elements"]):
+            if "element_type" not in el:
+                errors.append(f"elements[{i}] missing 'element_type'")
+            if "weight" not in el:
+                errors.append(f"elements[{i}] missing 'weight'")
+    if errors:
+        msg = f"VALIDATION FAILED for template_pool '{name}':\n  " + "\n  ".join(errors)
+        raise ValueError(msg)
+
 def make_11_step_features(step_map):
     """Build 11-step list-of-lists from {step_idx: [features]}."""
     steps = [[] for _ in range(11)]
@@ -248,10 +369,11 @@ def generate_sub_region_biomes(canon, report):
                     {"type": "minecraft:creeper", "weight": 15, "minCount": 1, "maxCount": 1},
                 ]
 
-            # Carvers
-            carvers = ["minecraft:cave", "minecraft:cave_extra_underground"]
+            # Carvers — MC 1.20.1 format: list of {"type": "minecraft:carver_name"}
+            # NOT bare strings (that was Bug #1 of the 1504-file failure)
+            carvers = [{"type": "minecraft:cave"}, {"type": "minecraft:cave_extra_underground"}]
             if region_key in ("canyon", "hills", "plateau", "broken_restriction_valley", "hidden_cave_network"):
-                carvers.append("minecraft:canyon")
+                carvers.append({"type": "minecraft:canyon"})
 
             biome = {
                 "_comment": f"{country['name']} — {region_key.replace('_', ' ').title()}. Auto-generated sub-region from canon location {country['id']} ({country['nameCn']}). Parent world-law tier: {tier}. Spirit veins: {country.get('spiritVeins', 'unknown')}. Prime Directive: this region exists objectively as part of {country['name']}; cultivation determines perception, not existence.",
@@ -278,6 +400,9 @@ def generate_sub_region_biomes(canon, report):
                 "carvers": {"air": carvers, "liquid": []},
                 "features": features,
             }
+
+            # ── Schema validation: fail fast if format is wrong ──
+            validate_biome(biome, biome_name)
 
             filepath = f"{BIOME_DIR}/{biome_name}.json"
             # Don't overwrite existing hand-tuned biomes
@@ -436,6 +561,9 @@ def generate_structure_components(canon, report):
                 "max_distance_from_center": 80,
                 "use_expansion_hack": False,
             }
+            # ── Validate structure before writing ──
+            validate_structure(struct, struct_name)
+
             struct_path = f"{STRUCT_DIR}/{struct_name}.json"
             if not os.path.exists(struct_path):
                 write_json(struct_path, struct)
@@ -451,6 +579,7 @@ def generate_structure_components(canon, report):
                     "salt": salt_for(struct_name),
                 },
             }
+            validate_structure_set(ss, struct_name)
             ss_path = f"{SS_DIR}/{struct_name}.json"
             if not os.path.exists(ss_path):
                 write_json(ss_path, ss)
@@ -468,6 +597,7 @@ def generate_structure_components(canon, report):
                     "weight": 1,
                 }],
             }
+            validate_template_pool(tp, struct_name)
             tp_path = f"{TP_DIR}/{struct_name}/start_pool.json"
             if not os.path.exists(tp_path):
                 write_json(tp_path, tp)
@@ -507,6 +637,7 @@ def generate_structure_components(canon, report):
                 "max_distance_from_center": 80,
                 "use_expansion_hack": False,
             }
+            validate_structure(struct, struct_name)
             struct_path = f"{STRUCT_DIR}/{struct_name}.json"
             if not os.path.exists(struct_path):
                 write_json(struct_path, struct)
@@ -521,6 +652,7 @@ def generate_structure_components(canon, report):
                     "salt": salt_for(struct_name),
                 },
             }
+            validate_structure_set(ss, struct_name)
             ss_path = f"{SS_DIR}/{struct_name}.json"
             if not os.path.exists(ss_path):
                 write_json(ss_path, ss)
@@ -537,6 +669,7 @@ def generate_structure_components(canon, report):
                     "weight": 1,
                 }],
             }
+            validate_template_pool(tp, struct_name)
             tp_path = f"{TP_DIR}/{struct_name}/start_pool.json"
             if not os.path.exists(tp_path):
                 write_json(tp_path, tp)
@@ -803,7 +936,8 @@ def generate_ocean_layers(canon, report):
                 "water_creature": [{"type": "minecraft:squid", "weight": 10, "minCount": 1, "maxCount": 4}] if layer_data["temp"] > 0.3 else [],
             },
             "spawn_costs": {},
-            "carvers": {"air": ["minecraft:cave"], "liquid": []},
+            # Carvers — MC 1.20.1 format: list of {"type": "..."}
+            "carvers": {"air": [{"type": "minecraft:cave"}], "liquid": []},
             "features": make_11_step_features({
                 6: ["minecraft:ore_dirt", "minecraft:ore_gravel", "minecraft:ore_coal_upper",
                     "minecraft:ore_iron_upper", "minecraft:ore_iron_middle",
@@ -908,11 +1042,80 @@ def main():
     print(report.summary())
     print("=" * 60)
 
+    # ── POST-GENERATION VALIDATION: scan all output ──
+    print("\n--- Post-Generation Validation Sweep ---")
+    validate_existing_files(report)
+    print("  All existing files pass schema validation.")
+
     # Write provenance report
     prov_path = f"{FORGE}/scripts/_adapter_provenance.json"
     with open(prov_path, "w") as f:
         json.dump(report.provenance, f, indent=2)
     print(f"\nProvenance report: {prov_path}")
+
+
+def validate_existing_files(report):
+    """Scan all existing worldgen JSONs and validate them.
+    Catches bugs from prior runs where no validation existed."""
+    import glob
+
+    errors_found = 0
+    files_checked = 0
+
+    # Validate all biomes
+    for filepath in sorted(glob.glob(f"{BIOME_DIR}/*.json")):
+        files_checked += 1
+        try:
+            with open(filepath) as f:
+                biome = json.load(f)
+            name = os.path.basename(filepath)[:-5]
+            validate_biome(biome, name)
+        except Exception as e:
+            errors_found += 1
+            print(f"  ERROR: {filepath}: {e}")
+
+    # Validate all structures
+    for filepath in sorted(glob.glob(f"{STRUCT_DIR}/*.json")):
+        files_checked += 1
+        try:
+            with open(filepath) as f:
+                struct = json.load(f)
+            name = os.path.basename(filepath)[:-5]
+            validate_structure(struct, name)
+        except Exception as e:
+            errors_found += 1
+            print(f"  ERROR: {filepath}: {e}")
+
+    # Validate all structure_sets
+    for filepath in sorted(glob.glob(f"{SS_DIR}/*.json")):
+        files_checked += 1
+        try:
+            with open(filepath) as f:
+                ss = json.load(f)
+            name = os.path.basename(filepath)[:-5]
+            validate_structure_set(ss, name)
+        except Exception as e:
+            errors_found += 1
+            print(f"  ERROR: {filepath}: {e}")
+
+    # Validate all template_pools
+    for filepath in sorted(glob.glob(f"{TP_DIR}/*/start_pool.json")):
+        files_checked += 1
+        try:
+            with open(filepath) as f:
+                tp = json.load(f)
+            name = os.path.basename(os.path.dirname(filepath))
+            validate_template_pool(tp, name)
+        except Exception as e:
+            errors_found += 1
+            print(f"  ERROR: {filepath}: {e}")
+
+    print(f"  Checked {files_checked} files, found {errors_found} errors.")
+    if errors_found > 0:
+        raise RuntimeError(
+            f"{errors_found} files failed validation. Fix the generator, "
+            f"not the files. The generator must produce valid MC 1.20.1 JSON."
+        )
 
 if __name__ == "__main__":
     main()

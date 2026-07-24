@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:fighting_evil_sect_ancestor_hall",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 44,
+    "separation": 8,
+    "salt": 96117176
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "_comment": "Cloud Sky Sect — Mountain Cave. Auto-generated structure component from canon faction reference. Part of Cloud Sky Sect (). Prime Directive: this structure exists as part of the sect's physical grounds.",
+  "type": "minecraft:jigsaw",
+  "biomes": "ergenverse:chu_country",
+  "step": "surface_structures",
+  "spawn_overrides": {
+    "monster": {
+      "bounding_box": "full",
+      "max_count": 0,
+      "spawns": []
+    },
+    "creature": {
+      "bounding_box": "full",
+      "max_count": 0,
+      "spawns": []
+    },
+    "ambient": {
+      "bounding_box": "full",
+      "max_count": 0,
+      "spawns": []
+    },
+    "axolotls": {
+      "bounding_box": "full",
+      "max_count": 0,
+      "spawns": []
+    },
+    "underground_water_creature": {
+      "bounding_box": "full",
+      "max_count": 0,
+      "spawns": []
+    },
+    "water_ambient": {
+      "bounding_box": "full",
+      "max_count": 0,
+      "spawns": []
+    },
+    "water_creature": {
+      "bounding_box": "full",
+      "max_count": 0,
+      "spawns": []
+    }
+  },
+  "start_pool": "ergenverse:cloud_sky_sect_mountain_cave/start_pool",
+  "size": 4,
+  "start_height": {
+    "type": "minecraft:constant",
+    "value": 0
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "max_distance_from_center": 80,
+  "use_expansion_hack": false
+}

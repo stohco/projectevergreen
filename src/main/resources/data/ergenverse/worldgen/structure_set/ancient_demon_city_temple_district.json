@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:ancient_demon_city_temple_district",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 34,
+    "separation": 6,
+    "salt": 38053051
+  }
+}

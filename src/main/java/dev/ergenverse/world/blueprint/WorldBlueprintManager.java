@@ -72,13 +72,27 @@ public final class WorldBlueprintManager {
     /**
      * Loads the World Blueprint from the mod's bundled resources.
      * Called once during server startup. Idempotent.
+     *
+     * <p><b>MANDATORY</b> (per user directive — "World Blueprint not found"
+     * should NEVER be considered a warning. That's almost equivalent to
+     * "Canon not found." The blueprint is the authoritative geography.
+     * If it fails, the game should refuse to create a world.)
+     *
+     * @throws IllegalStateException if the blueprint cannot be loaded.
      */
     public static synchronized void load() {
         if (loaded) return;
         try (InputStream is = WorldBlueprintManager.class.getResourceAsStream(BLUEPRINT_PATH)) {
             if (is == null) {
-                Ergenverse.LOGGER.error("[Ergenverse] World Blueprint not found at {}", BLUEPRINT_PATH);
-                return;
+                Ergenverse.LOGGER.error("[Ergenverse] *** WORLD BLUEPRINT NOT FOUND AT {} ***", BLUEPRINT_PATH);
+                Ergenverse.LOGGER.error("[Ergenverse] The blueprint is the authoritative geography of Planet Suzaku.");
+                Ergenverse.LOGGER.error("[Ergenverse] Without it, the simulation has no canonical geography.");
+                Ergenverse.LOGGER.error("[Ergenverse] This is equivalent to 'Canon not found.' Halting world load.");
+                throw new IllegalStateException(
+                    "World Blueprint not found at " + BLUEPRINT_PATH
+                    + ". The Er Gen simulation REQUIRES the blueprint to function. "
+                    + "Without it, the world has no canonical geography. "
+                    + "Ensure the file exists at /data/ergenverse/worldgen/blueprint/planet_suzaku.json");
             }
             JsonObject root = GSON.fromJson(
                     new InputStreamReader(is, StandardCharsets.UTF_8), JsonObject.class);
@@ -87,12 +101,15 @@ public final class WorldBlueprintManager {
 
             int countries = blueprint.getAsJsonArray("countries").size();
             int settlements = blueprint.getAsJsonArray("settlements").size();
-            Ergenverse.LOGGER.info("[Ergenverse] World Blueprint loaded: {} countries, {} settlements.",
+            Ergenverse.LOGGER.info("[Ergenverse] *** WORLD BLUEPRINT LOADED *** {} countries, {} settlements.",
                     countries, settlements);
             Ergenverse.LOGGER.info("[Ergenverse] Canon Seed: {} (terrain is deterministic — same every playthrough).",
                     CANON_SEED);
+        } catch (IllegalStateException e) {
+            throw e; // Re-throw the blueprint-not-found error
         } catch (Exception e) {
             Ergenverse.LOGGER.error("[Ergenverse] Failed to load World Blueprint: {}", e.getMessage(), e);
+            throw new IllegalStateException("Failed to load World Blueprint: " + e.getMessage(), e);
         }
     }
 

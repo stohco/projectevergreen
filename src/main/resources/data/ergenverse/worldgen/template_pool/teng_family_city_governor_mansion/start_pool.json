@@ -1,0 +1,13 @@
+{
+  "name": "ergenverse:teng_family_city_governor_mansion/start_pool",
+  "fallback": "minecraft:village/taiga/terminators",
+  "elements": [
+    {
+      "element_type": "minecraft:single_pool_element",
+      "location": "minecraft:village/taiga/houses/taiga_medium_house_1",
+      "projection": "rigid",
+      "processors": "minecraft:empty",
+      "weight": 1
+    }
+  ]
+}

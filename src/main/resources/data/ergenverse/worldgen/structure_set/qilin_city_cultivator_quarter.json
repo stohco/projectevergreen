@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:qilin_city_cultivator_quarter",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 22,
+    "separation": 6,
+    "salt": 94249959
+  }
+}

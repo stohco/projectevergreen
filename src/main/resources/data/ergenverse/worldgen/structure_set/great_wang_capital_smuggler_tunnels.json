@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:great_wang_capital_smuggler_tunnels",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 36,
+    "separation": 6,
+    "salt": 41765363
+  }
+}

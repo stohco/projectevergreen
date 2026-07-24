@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:luo_he_sect_mountain_cave",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 42,
+    "separation": 8,
+    "salt": 61011739
+  }
+}

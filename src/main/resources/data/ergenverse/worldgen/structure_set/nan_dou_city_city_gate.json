@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:nan_dou_city_city_gate",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 16,
+    "separation": 6,
+    "salt": 86172461
+  }
+}

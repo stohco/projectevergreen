@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:heavenly_fate_sect_sword_peak",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 26,
+    "separation": 8,
+    "salt": 7036462
+  }
+}

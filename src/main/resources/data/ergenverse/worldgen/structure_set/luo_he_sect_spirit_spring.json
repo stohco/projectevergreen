@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:luo_he_sect_spirit_spring",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 48,
+    "separation": 8,
+    "salt": 97828715
+  }
+}

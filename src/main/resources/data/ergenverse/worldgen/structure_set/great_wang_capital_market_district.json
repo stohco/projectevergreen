@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:great_wang_capital_market_district",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 18,
+    "separation": 6,
+    "salt": 50374327
+  }
+}

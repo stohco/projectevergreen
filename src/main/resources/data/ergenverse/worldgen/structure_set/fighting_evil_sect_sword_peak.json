@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:fighting_evil_sect_sword_peak",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 26,
+    "separation": 8,
+    "salt": 86938702
+  }
+}

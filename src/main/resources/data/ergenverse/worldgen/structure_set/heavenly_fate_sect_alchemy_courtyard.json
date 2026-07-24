@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:heavenly_fate_sect_alchemy_courtyard",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 58,
+    "separation": 8,
+    "salt": 17663888
+  }
+}

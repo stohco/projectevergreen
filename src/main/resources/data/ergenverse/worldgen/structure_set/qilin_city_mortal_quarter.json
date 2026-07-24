@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:qilin_city_mortal_quarter",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 24,
+    "separation": 6,
+    "salt": 5164624
+  }
+}

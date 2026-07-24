@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:fighting_evil_sect_mountain_cave",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 42,
+    "separation": 8,
+    "salt": 18015402
+  }
+}

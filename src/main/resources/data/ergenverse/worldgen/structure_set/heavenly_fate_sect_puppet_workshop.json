@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ergenverse:heavenly_fate_sect_puppet_workshop",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 56,
+    "separation": 8,
+    "salt": 68740774
+  }
+}
