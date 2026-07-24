@@ -234,6 +234,60 @@ public final class SimulationActions {
                 0.4f, 0.4f, desc, tick, desc_, meta);
     }
 
+    /**
+     * CRON-COMPLETIONIST-7: Build a player-spell-cast event.
+     *
+     * <p>Per the 2026-07-23 event-sourced pivot: every spirit-artifact activation
+     * (flying sword launch, talisman activation, soul bead discharge, etc.) flows
+     * through this factory so that the WangLinReasoningEngine, CanonDivergenceRecorder,
+     * QiDisturbanceSubscriber, and ChronicleSubscriber can react. The player is a
+     * first-class actor — never write to a siloed store directly.
+     *
+     * @param player        the player casting the spell
+     * @param spellName     human-readable name (e.g. "Flying Sword", "Teleport Talisman")
+     * @param spellSchool   category tag (e.g. "sword_art", "talisman", "pill", "soul_art")
+     * @param qiCost        spiritual qi expended (drives qi-disturbance intensity)
+     * @param visibility    how observable the spell was (LOCAL, REGIONAL, PUBLIC)
+     * @param tick          server tick
+     * @return the constructed WorldEvent (caller dispatches via {@link WorldEventBus#dispatch})
+     */
+    public static WorldEvent spellCastEvent(ServerPlayer player, String spellName,
+                                             String spellSchool, float qiCost,
+                                             ActionDescriptors.Visibility visibility,
+                                             long tick) {
+        String desc = player.getName().getString() + " cast " + spellName
+                + " (" + spellSchool + ").";
+        float intensity = Math.min(1.0f, 0.3f + qiCost * 0.1f);
+        float severity = Math.min(0.85f, 0.4f + qiCost * 0.05f);
+        ActionDescriptors desc_ = ActionDescriptors.builder()
+                .intent(ActionDescriptors.Intent.SELF_GAIN)
+                .cost(qiCost >= 5.0f ? ActionDescriptors.Cost.HIGH
+                        : qiCost >= 2.0f ? ActionDescriptors.Cost.MEDIUM
+                        : ActionDescriptors.Cost.LOW)
+                .beneficiary(ActionDescriptors.Beneficiary.SELF)
+                .risk(qiCost >= 5.0f ? ActionDescriptors.Risk.MEDIUM
+                        : ActionDescriptors.Risk.LOW)
+                .visibility(visibility)
+                .build();
+        Map<String,String> meta = new HashMap<>();
+        meta.put("spell_name", spellName);
+        meta.put("spell_school", spellSchool);
+        meta.put("qi_cost", String.valueOf(qiCost));
+        return buildPlayerEvent(SemanticEventTopics.PLAYER_SPELL_CAST, EnergyType.QI,
+                player, "", SemanticTag.SPELL_CAST,
+                intensity, severity, desc, tick, desc_, meta);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-7: Convenience dispatcher — build AND dispatch a spell-cast event.
+     * Use this from item right-click handlers so the wiring is uniform across all artifacts.
+     */
+    public static void spellCast(ServerPlayer player, String spellName, String spellSchool,
+                                  float qiCost, ActionDescriptors.Visibility visibility) {
+        WorldEventBus.dispatch(spellCastEvent(player, spellName, spellSchool, qiCost,
+                visibility, player.serverLevel().getGameTime()));
+    }
+
     // ═══════════════════════════════════════════════════════════════════
     //  Semantic events — the "meaning" layer (factory methods)
     // ═══════════════════════════════════════════════════════════════════

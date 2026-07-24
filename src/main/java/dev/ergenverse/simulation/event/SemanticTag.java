@@ -79,6 +79,16 @@ public enum SemanticTag {
     /** A cultivation level was revealed — changing how others perceive the actor. */
     CULTIVATION_REVEALED,
 
+    // ─── Spell-casting tag (CRON-COMPLETIONIST-7) ────────────
+    /**
+     * A cultivation spell or technique was cast — flying sword launch, talisman
+     * activation, pill consumption, soul bead discharge, etc. The WangLinReasoningEngine
+     * and CanonDivergenceRecorder react to this to track spirit-qi expenditure and
+     * canon divergence. Per the 2026-07-23 event-sourced pivot, all player-cast
+     * spells publish this tag so subscribers can infer qi disturbance.
+     */
+    SPELL_CAST,
+
     // ─── System-generated tags (from subscribers, not SimulationActions) ──
     /** CRON-COMPLETIONIST-53: An expectation was violated — pattern broken. */
     EXPECTATION_VIOLATION,

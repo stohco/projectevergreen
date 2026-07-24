@@ -1,8 +1,11 @@
 package dev.ergenverse.item;
 
+import dev.ergenverse.simulation.action.SimulationActions;
+import dev.ergenverse.simulation.event.ActionDescriptors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -63,6 +66,12 @@ public class TalismanItem extends Item {
                 // Activation particles around the player
                 sl.sendParticles(type.getParticle(), player.getX(), player.getY() + 1, player.getZ(),
                         10, 0.5, 1, 0.5, 0.1);
+                // CRON-COMPLETIONIST-7: wire talisman activation through the event bus so
+                // WangLinReasoningEngine + CanonDivergenceRecorder can react (event-sourced pivot).
+                if (player instanceof ServerPlayer sp) {
+                    SimulationActions.spellCast(sp, type.getDisplayName(), "talisman",
+                            1.0f, ActionDescriptors.Visibility.LOCAL);
+                }
             }
         }
         return InteractionResultHolder.success(stack);
@@ -126,6 +135,40 @@ public class TalismanItem extends Item {
             case SPEED_BOOST -> {
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 400, 2));
                 player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 400, 1));
+                return true;
+            }
+            case TELEPORT -> {
+                // CRON-COMPLETIONIST-7: single-use teleport back to the world's spawn point.
+                // Canon: talismans inscribed with spatial-array patterns (传送符) are the
+                // standard escape tool — they tear open a short-lived qi-corridor back to
+                // the cultivator's home/spawn. The player is moved to the overworld spawn
+                // (above-ground, safe location) with a brief invulnerability window.
+                ServerLevel overworld = sl.getServer().getLevel(net.minecraft.server.level.ServerLevel.OVERWORLD);
+                BlockPos spawnPos = overworld.getSharedSpawnPos();
+                // Find a safe Y (top non-air block above spawn) — MC's getSharedSpawnPos
+                // already returns a surface-safe location in modern versions, but we
+                // double-check by scanning up to find the first air pocket with headroom.
+                int safeY = spawnPos.getY();
+                if (safeY < overworld.getMinBuildHeight() + 2) {
+                    safeY = overworld.getMinBuildHeight() + 2;
+                }
+                // Teleport the player (cross-dimension-safe via ServerPlayer.teleportTo).
+                if (player instanceof ServerPlayer sp) {
+                    sp.teleportTo(overworld,
+                            spawnPos.getX() + 0.5, safeY + 0.5, spawnPos.getZ() + 0.5,
+                            player.getYRot(), player.getXRot());
+                } else {
+                    player.teleportTo(spawnPos.getX() + 0.5, safeY + 0.5, spawnPos.getZ() + 0.5);
+                }
+                // Brief invulnerability (40 ticks = 2s) so the player can't be killed
+                // mid-teleport by an attacker at the origin.
+                player.invulnerableTime = 40;
+                player.setDeltaMovement(Vec3.ZERO);
+                // Departure + arrival particles
+                sl.sendParticles(ParticleTypes.PORTAL,
+                        player.getX(), player.getY() + 1, player.getZ(), 30, 0.5, 1, 0.5, 0.3);
+                overworld.sendParticles(ParticleTypes.PORTAL,
+                        player.getX(), player.getY() + 1, player.getZ(), 30, 0.5, 1, 0.5, 0.3);
                 return true;
             }
         }

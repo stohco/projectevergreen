@@ -21,7 +21,8 @@ public enum TalismanType {
     LIGHT        ("Light Talisman",        "Grants Night Vision and illuminates the area.",         ParticleTypes.END_ROD,      SoundEvents.AMETHYST_BLOCK_CHIME,0xFFFFFF),
     SHIELD       ("Shield Talisman",       "Grants Absorption (absorbs the next hits).",            ParticleTypes.HEART,        SoundEvents.SHIELD_BLOCK,      0x9999FF),
     SWORD_QI     ("Sword Qi Talisman",    "Fires a piercing sword-qi ray that damages all in path.",ParticleTypes.SWEEP_ATTACK, SoundEvents.PLAYER_ATTACK_SWEEP,0xCCFFFF),
-    SPEED_BOOST  ("Speed Boost Talisman",  "Grants Speed III + Haste II for 20 seconds.",           ParticleTypes.CLOUD,        SoundEvents.EXPERIENCE_ORB_PICKUP,0x66FF66);
+    SPEED_BOOST  ("Speed Boost Talisman",  "Grants Speed III + Haste II for 20 seconds.",           ParticleTypes.CLOUD,        SoundEvents.EXPERIENCE_ORB_PICKUP,0x66FF66),
+    TELEPORT     ("Teleport Talisman",     "Single-use warp back to the world's spawn point.",      ParticleTypes.PORTAL,       SoundEvents.ENDERMAN_TELEPORT, 0xCC66FF);
 
     private final String displayName;
     private final String description;

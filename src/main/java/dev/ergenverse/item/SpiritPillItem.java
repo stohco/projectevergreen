@@ -1,6 +1,9 @@
 package dev.ergenverse.item;
 
+import dev.ergenverse.simulation.action.SimulationActions;
+import dev.ergenverse.simulation.event.ActionDescriptors;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffect;
@@ -80,6 +83,17 @@ public class SpiritPillItem extends Item {
                         player.getX(), player.getY() + 1, player.getZ(), 5, 0.5, 0.5, 0.5, 0.1);
             }
             player.playSound(net.minecraft.sounds.SoundEvents.PLAYER_BURP, 0.5F, 1.0F);
+            // CRON-COMPLETIONIST-7: 60-tick (3s) cooldown prevents pill-spam.
+            // Canon: pill refinement takes time to assimilate; rapid consumption
+            // of multiple pills causes qi deviation (a future system will add this).
+            player.getCooldowns().addCooldown(this, 60);
+            // CRON-COMPLETIONIST-7: wire pill consumption through the event bus.
+            // Pill-taking is a spiritual qi-disturbance — nearby cultivators and
+            // the WangLinReasoningEngine should observe it.
+            if (player instanceof ServerPlayer sp) {
+                SimulationActions.spellCast(sp, type.getDisplayName(), "pill",
+                        0.8f, ActionDescriptors.Visibility.LOCAL);
+            }
         }
         // Consume 1 pill
         stack.shrink(1);

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ergenverse:item/teleport_talisman"
+    "layer0": "ergenverse:item/soul_bead"
   }
 }

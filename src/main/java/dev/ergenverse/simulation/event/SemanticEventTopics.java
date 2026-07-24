@@ -95,6 +95,15 @@ public final class SemanticEventTopics {
     /** Player discovered something noteworthy. */
     public static final String PLAYER_DISCOVERY = "player.discovery";
 
+    /**
+     * CRON-COMPLETIONIST-7: Player cast a cultivation spell or activated a spirit
+     * artifact (flying sword launch, talisman activation, soul bead discharge, etc.).
+     * Routes to WangLinReasoningEngine, CanonDivergenceRecorder, and QiDisturbanceSubscriber
+     * so that spell casting is treated as a first-class world disturbance, not a silent
+     * player-only action. Per the 2026-07-23 event-sourced pivot.
+     */
+    public static final String PLAYER_SPELL_CAST = "player.spell.cast";
+
     // ─── Actor action topics (source = any actor: NPC or player) ────
 
     /** An actor (NPC) gave a gift to another actor. e.g. Wang Lin gives Li Muwan a flower. */

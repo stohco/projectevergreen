@@ -144,6 +144,17 @@ public final class ErgenverseItems {
     public static final RegistryObject<dev.ergenverse.item.TalismanItem> LIGHT_TALISMAN =
             ITEMS.register("light_talisman", () -> new dev.ergenverse.item.TalismanItem(
                     dev.ergenverse.item.TalismanType.LIGHT, new Item.Properties().stacksTo(16)));
+    // CRON-COMPLETIONIST-7: Teleport Talisman — single-use warp back to world spawn.
+    // Canon: spatial-array talismans (传送符) are the standard escape tool.
+    public static final RegistryObject<dev.ergenverse.item.TalismanItem> TELEPORT_TALISMAN =
+            ITEMS.register("teleport_talisman", () -> new dev.ergenverse.item.TalismanItem(
+                    dev.ergenverse.item.TalismanType.TELEPORT, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+
+    // CRON-COMPLETIONIST-7: Soul Bead — reusable soul-power accumulator.
+    // Canon: cultivators carry soul beads as a reserve of spiritual qi.
+    public static final RegistryObject<dev.ergenverse.item.SoulBeadItem> SOUL_BEAD =
+            ITEMS.register("soul_bead", () -> new dev.ergenverse.item.SoulBeadItem(
+                    new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
 
     // Spirit pills: consumed via eat animation, apply realm-appropriate buffs.
     // CRON-COMPLETIONIST-57: _REAL suffix pills now alias the base names.
@@ -367,6 +378,9 @@ public final class ErgenverseItems {
                             output.accept(SWORD_QI_TALISMAN.get());
                             output.accept(SPEED_BOOST_TALISMAN.get());
                             output.accept(LIGHT_TALISMAN.get());
+                            output.accept(TELEPORT_TALISMAN.get());
+                            // CRON-COMPLETIONIST-7: Soul Bead
+                            output.accept(SOUL_BEAD.get());
                             // Scrolls
                             output.accept(SCROLL_QI_GATHERING.get());
                             output.accept(SCROLL_SWORD_TECHNIQUE.get());

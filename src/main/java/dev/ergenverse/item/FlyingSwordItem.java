@@ -5,6 +5,8 @@ import dev.ergenverse.cultivation.CultivationState;
 import dev.ergenverse.cultivation.RealmId;
 import dev.ergenverse.entity.FlyingSwordProjectileEntity;
 import dev.ergenverse.item.sword.SwordEffectType;
+import dev.ergenverse.simulation.action.SimulationActions;
+import dev.ergenverse.simulation.event.ActionDescriptors;
 import dev.ergenverse.simulation.event.EnergyType;
 import dev.ergenverse.simulation.event.WorldEventBus;
 import net.minecraft.nbt.CompoundTag;
@@ -159,10 +161,25 @@ public class FlyingSwordItem extends SwordItem {
             // Play sword-swish sound
             player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0F, 1.5F);
 
-            // ── Wire sword launch through WorldEventBus ──
+            // ── CRON-COMPLETIONIST-7: wire sword launch through SimulationActions ──
+            // Per the 2026-07-23 event-sourced pivot: the player is a first-class
+            // actor — every flying-sword launch publishes a structured player.spell.cast
+            // WorldEvent so WangLinReasoningEngine, CanonDivergenceRecorder,
+            // QiDisturbanceSubscriber, and ChronicleSubscriber can react.
             String swordName = stack.hasCustomHoverName()
                     ? stack.getHoverName().getString()
                     : "Flying Sword";
+            if (player instanceof ServerPlayer sp) {
+                // qi cost scales with cultivation realm — higher realms expend more qi
+                float qiCost = 1.5f + realmStage * 0.5f;
+                // visibility escalates at higher realms (qi disturbance is felt further)
+                ActionDescriptors.Visibility vis = realmStage >= 4
+                        ? ActionDescriptors.Visibility.REGIONAL
+                        : ActionDescriptors.Visibility.LOCAL;
+                SimulationActions.spellCast(sp, swordName, "sword_art", qiCost, vis);
+            }
+            // Legacy topic preserved for backward compatibility with any older
+            // subscribers wired to the pre-event-sourced "player.sword_launched" topic.
             WorldEventBus.publish("player.sword_launched",
                     EnergyType.QI, player.blockPosition(),
                     0.5f, player.getName().getString() + " launched " + swordName,
