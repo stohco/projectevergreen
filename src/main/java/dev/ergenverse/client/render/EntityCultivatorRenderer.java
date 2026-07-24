@@ -192,6 +192,22 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
                 entity.getCognitiveLookTargetY(),
                 entity.getCognitiveLookTargetZ());
 
+        // CRON-COMPLETIONIST-21: pass the seven Performance channels from the
+        // synced entity data to the model. The model's applyPerformance()
+        // drives head lerp-speed, saccade amplitude, glance-away frequency,
+        // torso tension, breathing rate, weight shift, and hand position
+        // INDEPENDENTLY from these channels — producing hundreds of emergent
+        // silhouettes instead of 5 fixed poses. When all are NaN, no
+        // Commitment is active and the model falls back to pose/vanilla.
+        model.setPerformance(
+                entity.getPerfFocus(),
+                entity.getPerfUrgency(),
+                entity.getPerfConfidence(),
+                entity.getPerfConcealment(),
+                entity.getPerfTension(),
+                entity.getPerfPatience(),
+                entity.getPerfFatigue());
+
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 
         // Only render aura if the client has cultivation data

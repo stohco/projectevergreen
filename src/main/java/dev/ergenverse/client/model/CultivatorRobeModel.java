@@ -127,6 +127,34 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     public float cognitiveLookY = Float.NaN;
     /** Cognitive look-target Z (world coord). NaN = no target. */
     public float cognitiveLookZ = Float.NaN;
+
+    // ── CRON-COMPLETIONIST-21: Acting Layer — Performance channels ──────
+    // The user's 2026-07-26 review: "instead of thinking in poses, think in
+    // independent channels — Head, Torso, Shoulders, Hands, Feet, Eyes,
+    // Breathing, Attention, Weight. Each channel updates independently."
+    //
+    // These seven floats are the acting directions. The renderer sets them
+    // from the entity's synced Performance data each frame. When all are NaN,
+    // no Commitment is active and the model falls back to pose/vanilla. When
+    // set, applyPerformance() drives each body part INDEPENDENTLY from the
+    // channels — modulating head lerp-speed, saccade amplitude, glance-away
+    // frequency, torso tension, breathing rate, weight shift, and hand
+    // position. Same pose + different channels → different acting.
+    /** Performance channel: focus (concentration). NaN = no performance. */
+    public float perfFocus = Float.NaN;
+    /** Performance channel: urgency (time pressure). */
+    public float perfUrgency = Float.NaN;
+    /** Performance channel: confidence (trust in one's read). */
+    public float perfConfidence = Float.NaN;
+    /** Performance channel: concealment (importance of staying hidden). */
+    public float perfConcealment = Float.NaN;
+    /** Performance channel: tension (physical readiness). */
+    public float perfTension = Float.NaN;
+    /** Performance channel: patience (willingness to hold still). */
+    public float perfPatience = Float.NaN;
+    /** Performance channel: fatigue (accumulated tiredness). */
+    public float perfFatigue = Float.NaN;
+
     /** Entity X last frame (for computing relative yaw delta). */
     private double lastEntityX = Double.NaN;
     /** Entity Y last frame. */
@@ -143,6 +171,9 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     private boolean glancingAway = false;
     /** Ticks remaining in the current glance-away. */
     private int glanceAwayTicks = 0;
+    /** CRON-COMPLETIONIST-21: glance direction (-1 or +1), picked ONCE at glance-start.
+     *  Fixes the per-tick direction jitter bug from CRON-19's self-critique. */
+    private float glanceDirection = 1.0F;
 
     // CRON-COMPLETIONIST-54: 3-bone robe skirt chain
     private final ModelPart robeWaist;
@@ -265,6 +296,24 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
         this.cognitiveLookX = x;
         this.cognitiveLookY = y;
         this.cognitiveLookZ = z;
+    }
+
+    /**
+     * CRON-COMPLETIONIST-21: Set the seven Performance channels from the
+     * entity's synced data. Called by the renderer each frame before
+     * super.render invokes setupAnim. When all are NaN, no Commitment is
+     * active and the model falls back to pose/vanilla animation.
+     */
+    public void setPerformance(float focus, float urgency, float confidence,
+                               float concealment, float tension, float patience,
+                               float fatigue) {
+        this.perfFocus = focus;
+        this.perfUrgency = urgency;
+        this.perfConfidence = confidence;
+        this.perfConcealment = concealment;
+        this.perfTension = tension;
+        this.perfPatience = patience;
+        this.perfFatigue = fatigue;
     }
 
     @Override
@@ -533,132 +582,234 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
         // netHeadYaw/headPitch (set by super.setupAnim) and our interpolation
         // state decays toward zero so the next time a target appears, we
         // start from a clean baseline.
-        applyCognitiveLookTarget(entity, ageInTicks);
+        //
+        // CRON-COMPLETIONIST-21: this now dispatches to applyPerformance,
+        // which consumes the seven acting-direction channels INDEPENDENTLY.
+        // The look-target is still used (to compute desired head yaw/pitch),
+        // but the channels modulate HOW the head moves, breathing, torso,
+        // weight, and hands. Same look-target + different channels → different
+        // acting. This is the "communicate the current thought" layer.
+        applyPerformance(entity, ageInTicks);
     }
 
+    // ═══════════════════════════════════════════════════════════════════
+    //  CRON-COMPLETIONIST-21: The Acting Layer
+    // ═══════════════════════════════════════════════════════════════════
+
     /**
-     * Apply the cognitive look-target to the head with smooth interpolation
-     * and micro-saccade noise. Called at the end of setupAnim.
+     * Apply the Performance channels to the body INDEPENDENTLY.
      *
-     * <p>When a look-target is set (Wang Lin observing wolves), the head
-     * yaw/pitch is OVERRIDDEN with an interpolated value that lerps toward
-     * the target. Max rotation per tick is capped to prevent snap-rotation.
-     * A micro-saccade noise term is added so the head subtly drifts, and
-     * every ~60 ticks a brief glance-away fires (~10 ticks offset).
+     * <p>This is the core of the Acting Layer. The user's 2026-07-26 review:
+     * "instead of thinking in poses, think in independent channels — Head,
+     * Torso, Shoulders, Hands, Feet, Eyes, Breathing, Attention, Weight. Each
+     * channel updates independently. You suddenly get hundreds of combinations
+     * instead of five fixed poses."
      *
-     * <p>When no look-target is set, the head uses the vanilla
-     * netHeadYaw/headPitch (already applied by super.setupAnim to
-     * {@code this.head.yRot} / {@code this.head.xRot}). Our interpolation
-     * state decays toward zero so the next target starts clean.
+     * <p>Each body part is driven by a COMBINATION of channels:
+     * <ul>
+     *   <li><b>Head</b> — tracks the look-target (if set), but lerp SPEED scales
+     *       with focus (high focus = slow, deliberate; low focus = quick).
+     *       Saccade amplitude scales inversely with focus. Glance-away
+     *       frequency scales inversely with focus; duration scales with
+     *       patience. Direction picked ONCE per glance (fixes CRON-19 jitter).</li>
+     *   <li><b>Torso</b> — body.yRot follow scales with (1 - tension) (tense =
+     *       rigid, less follow). Forward lean scales with urgency; backward
+     *       lean scales with concealment (ready to retreat).</li>
+     *   <li><b>Breathing</b> — speed scales with urgency (high urgency = faster
+     *       breath). Amplitude scales with (1 - tension) (tense = shallow).
+     *       Applied to body.y as a sin offset.</li>
+     *   <li><b>Weight shift</b> — slow sin offset on body.x, amplitude scales
+     *       with (1 - patience) (impatient = fidgety). High patience = planted.</li>
+     *   <li><b>Hands</b> — when concealment AND urgency are both high, the
+     *       right arm drifts inward (hand nearer weapon). The user's "hand
+     *       nearer weapon" cue for the unknown-cultivator case.</li>
+     * </ul>
+     *
+     * <p>When no Performance is set (all channels NaN), this decays the
+     * interpolation state and falls back to the pose/vanilla head pose —
+     * identical to CRON-19's no-target behavior.
      */
-    private void applyCognitiveLookTarget(EntityCultivator entity, float ageInTicks) {
-        if (Float.isNaN(cognitiveLookX) || Float.isNaN(cognitiveLookY)
-                || Float.isNaN(cognitiveLookZ)) {
-            // No cognitive target — decay our interpolation state toward the
-            // vanilla head pose so the next target starts from a clean baseline.
+    private void applyPerformance(EntityCultivator entity, float ageInTicks) {
+        // ── No Performance active → fall back to vanilla / pose ──
+        if (Float.isNaN(perfFocus)) {
             currentHeadYaw *= 0.5F;
             currentHeadPitch *= 0.5F;
-            // Reset saccade state
             saccadePhase = 0.0F;
             glancingAway = false;
             glanceAwayTicks = 0;
             return;
         }
 
-        // Compute desired head yaw/pitch from the look-target.
-        // The target is in world coords; we need the relative angle from the
-        // entity's head position to the target.
-        double ex = entity.getX();
-        double ey = entity.getEyeY();
-        double ez = entity.getZ();
-        double dx = cognitiveLookX - ex;
-        double dy = cognitiveLookY - ey;
-        double dz = cognitiveLookZ - ez;
+        // Channel reads (clamped defensively — synced data should already be [0,1])
+        float focus = clamp01(perfFocus);
+        float urgency = clamp01(perfUrgency);
+        float confidence = clamp01(perfConfidence);
+        float concealment = clamp01(perfConcealment);
+        float tension = clamp01(perfTension);
+        float patience = clamp01(perfPatience);
+        float fatigue = clamp01(perfFatigue);
 
-        // Horizontal distance (avoid divide-by-zero)
-        double horizDist = Math.sqrt(dx * dx + dz * dz);
-        if (horizDist < 0.001) {
-            // Target is directly above/below — just look up/down
-            return;
-        }
+        // ═══════════════════════════════════════════════════════════════
+        //  HEAD CHANNEL
+        // ═══════════════════════════════════════════════════════════════
+        if (!Float.isNaN(cognitiveLookX) && !Float.isNaN(cognitiveLookY)
+                && !Float.isNaN(cognitiveLookZ)) {
+            // Compute desired head yaw/pitch from the look-target (world coords).
+            double ex = entity.getX();
+            double ey = entity.getEyeY();
+            double ez = entity.getZ();
+            double dx = cognitiveLookX - ex;
+            double dy = cognitiveLookY - ey;
+            double dz = cognitiveLookZ - ez;
+            double horizDist = Math.sqrt(dx * dx + dz * dz);
+            if (horizDist >= 0.001) {
+                float entityBodyYawRad = (float) Math.toRadians(entity.yBodyRot);
+                float desiredYawAbs = (float) Math.atan2(dx, dz);
+                float desiredYaw = desiredYawAbs - entityBodyYawRad;
+                desiredYaw = wrapAngle(desiredYaw);
+                float maxYaw = (float) Math.toRadians(75.0);
+                desiredYaw = Math.max(-maxYaw, Math.min(maxYaw, desiredYaw));
 
-        // Desired yaw: atan2 of (dx, dz) — but we need it RELATIVE to the
-        // entity's body yaw. Minecraft's head.yRot is relative to body yaw.
-        float entityBodyYawRad = (float) Math.toRadians(entity.yBodyRot);
-        float desiredYawAbs = (float) Math.atan2(dx, dz);
-        // Relative yaw: subtract body yaw, wrap to [-PI, PI]
-        float desiredYaw = desiredYawAbs - entityBodyYawRad;
-        // Wrap to [-PI, PI]
-        while (desiredYaw > Math.PI) desiredYaw -= (float) (2 * Math.PI);
-        while (desiredYaw < -Math.PI) desiredYaw += (float) (2 * Math.PI);
-        // Clamp to human neck range (~±75°) — a cultivator observing won't
-        // crane his head 180° backward; he turns his body. (Body turn is
-        // handled by the pathfinding/look control, not here.)
-        float maxYaw = (float) Math.toRadians(75.0);
-        desiredYaw = Math.max(-maxYaw, Math.min(maxYaw, desiredYaw));
+                float desiredPitch = (float) Math.atan2(-dy, horizDist);
+                float maxPitch = (float) Math.toRadians(60.0);
+                desiredPitch = Math.max(-maxPitch, Math.min(maxPitch, desiredPitch));
 
-        // Desired pitch: atan2(dy, horizDist). Positive = looking down.
-        float desiredPitch = (float) Math.atan2(-dy, horizDist);
-        float maxPitch = (float) Math.toRadians(60.0);
-        desiredPitch = Math.max(-maxPitch, Math.min(maxPitch, desiredPitch));
+                // ── Lerp speed scales with focus ──
+                // High focus (0.95) → slow, deliberate lerp (0.08) — the
+                // wolf-observer tracks smoothly. Low focus (0.6) → quicker
+                // lerp (0.25) — the anxious NPC snaps attention around.
+                // This is the user's "smooth head tracking" vs "quicker head turns."
+                float lerpFactor = 0.25F - focus * 0.17F; // focus 1.0 → 0.08, focus 0.0 → 0.25
+                currentHeadYaw += (desiredYaw - currentHeadYaw) * lerpFactor;
+                currentHeadPitch += (desiredPitch - currentHeadPitch) * lerpFactor;
 
-        // ── Micro-saccade noise ──
-        // The head subtly drifts even when locked on target. This prevents
-        // the "robotic freeze" that would otherwise reveal the simulation.
-        // Frequency: ~3 Hz, amplitude: ~0.01 rad (just enough to be alive).
-        float saccadeNoiseYaw = (float) Math.sin(ageInTicks * 0.9F) * 0.008F
-                + (float) Math.sin(ageInTicks * 2.3F) * 0.004F;
-        float saccadeNoisePitch = (float) Math.sin(ageInTicks * 1.1F + 0.5F) * 0.006F;
+                // ── Saccade amplitude scales inversely with focus ──
+                // High focus → tiny saccades (deeply concentrated, eyes locked).
+                // Low focus → larger drift (distracted, scanning).
+                float saccadeAmp = 0.015F * (1.0F - focus * 0.8F);
+                float saccadeNoiseYaw = (float) Math.sin(ageInTicks * 0.9F) * saccadeAmp
+                        + (float) Math.sin(ageInTicks * 2.3F) * (saccadeAmp * 0.5F);
+                float saccadeNoisePitch = (float) Math.sin(ageInTicks * 1.1F + 0.5F)
+                        * (saccadeAmp * 0.7F);
 
-        // ── Glance-away cadence ──
-        // Every ~60 ticks of continuous observation, the NPC briefly glances
-        // away for ~10 ticks. This is the user's "after 30 seconds glances
-        // away briefly → looks back" — the principle (don't stare without
-        // breaking) is what matters; the cadence is faster than the directive's
-        // 30s because NPC observation commitments here are measured in minutes.
-        saccadePhase += 1.0F;
-        if (!glancingAway && saccadePhase > 60.0F) {
-            glancingAway = true;
-            glanceAwayTicks = 8 + (int) (Math.random() * 6); // 8-13 ticks
-            saccadePhase = 0.0F;
-        }
-        float glanceYawOffset = 0.0F;
-        float glancePitchOffset = 0.0F;
-        if (glancingAway) {
-            // Glance ~0.2 rad to the side (random direction)
-            float glanceDir = (Math.random() < 0.5) ? -1.0F : 1.0F;
-            glanceYawOffset = glanceDir * 0.2F;
-            glancePitchOffset = -0.05F; // slightly up (thinking)
-            glanceAwayTicks--;
-            if (glanceAwayTicks <= 0) {
-                glancingAway = false;
+                // ── Glance-away: frequency ∝ 1/focus, duration ∝ patience ──
+                // High focus → rare glances (every ~120 ticks). Low focus →
+                // frequent (every ~40 ticks). Duration scales with patience
+                // (patient NPC holds the glance longer). Direction picked ONCE
+                // at glance-start (fixes the CRON-19 per-tick jitter bug).
+                float glanceThreshold = 40.0F + focus * 80.0F; // 40..120 ticks
+                saccadePhase += 1.0F;
+                if (!glancingAway && saccadePhase > glanceThreshold) {
+                    glancingAway = true;
+                    // Duration scales with patience: 6..16 ticks
+                    glanceAwayTicks = 6 + (int) (patience * 10.0F);
+                    saccadePhase = 0.0F;
+                    // Pick direction ONCE — hold it for the whole glance.
+                    glanceDirection = (Math.random() < 0.5) ? -1.0F : 1.0F;
+                }
+                float glanceYawOffset = 0.0F;
+                float glancePitchOffset = 0.0F;
+                if (glancingAway) {
+                    glanceYawOffset = glanceDirection * 0.2F;
+                    glancePitchOffset = -0.05F; // slightly up (thinking)
+                    glanceAwayTicks--;
+                    if (glanceAwayTicks <= 0) {
+                        glancingAway = false;
+                    }
+                }
+
+                this.head.yRot = currentHeadYaw + saccadeNoiseYaw + glanceYawOffset;
+                this.head.xRot = currentHeadPitch + saccadeNoisePitch + glancePitchOffset;
             }
+        } else {
+            // No look-target but Performance active — decay head toward neutral.
+            currentHeadYaw *= 0.8F;
+            currentHeadPitch *= 0.8F;
         }
 
-        // ── Smooth interpolation toward the desired yaw/pitch ──
-        // Max rotation per tick: ~0.08 rad (~4.6°). At 20 tps, this means a
-        // full 75° head turn takes ~16 ticks (~0.8s). This is the "no snap
-        // rotation" rule. The lerp factor 0.15 gives an exponential approach
-        // that feels natural (fast at first, slows as it approaches target).
-        float lerpFactor = 0.15F;
-        currentHeadYaw += (desiredYaw - currentHeadYaw) * lerpFactor;
-        currentHeadPitch += (desiredPitch - currentHeadPitch) * lerpFactor;
+        // ═══════════════════════════════════════════════════════════════
+        //  BREATHING CHANNEL
+        // ═══════════════════════════════════════════════════════════════
+        // Speed scales with urgency (calm = slow 0.1Hz, urgent = fast 0.4Hz).
+        // Amplitude scales with (1 - tension) (tense = shallow breath).
+        // Applied to body.y as a sin offset. This is the user's "very slow
+        // breathing" for the wolf-observer vs rapid shallow breath for the
+        // tense unknown-cultivator observer.
+        float breathSpeed = 0.1F + urgency * 0.3F;
+        float breathAmp = 0.3F * (1.0F - tension * 0.5F);
+        float breathOffset = (float) Math.sin(ageInTicks * breathSpeed) * breathAmp;
+        this.body.y = breathOffset;
 
-        // Apply the interpolated head pose, with saccade noise and glance offset.
-        // This OVERRIDES whatever super.setupAnim set (which was based on the
-        // entity's look control — irrelevant when cognition owns the head).
-        this.head.yRot = currentHeadYaw + saccadeNoiseYaw + glanceYawOffset;
-        this.head.xRot = currentHeadPitch + saccadeNoisePitch + glancePitchOffset;
+        // ═══════════════════════════════════════════════════════════════
+        //  TORSO CHANNEL
+        // ═══════════════════════════════════════════════════════════════
+        // body.yRot follow scales with (1 - tension): tense torso is rigid
+        // (less follow), relaxed torso flows with the head. Capped ±15°.
+        // The user: "slight torso tension" for the high-urgency case means
+        // the torso DOESN'T flow — it holds rigid while the head turns.
+        float torsoFollow = currentHeadYaw * 0.15F * (1.0F - tension * 0.6F);
+        float maxTorsoFollow = (float) Math.toRadians(15.0);
+        torsoFollow = Math.max(-maxTorsoFollow, Math.min(maxTorsoFollow, torsoFollow));
+        this.body.yRot = torsoFollow;
 
-        // ── Body follows head slightly (subtle torso rotation) ──
-        // The user's directive: "body rotates slightly." When the head turns
-        // far, the torso leans into the turn. We rotate the body by a fraction
-        // of the head yaw — capped so the body never fully turns (that's the
-        // pathfinder's job).
-        float bodyFollow = currentHeadYaw * 0.15F;
-        // Cap body follow to ±15° so the body doesn't spin
-        float maxBodyFollow = (float) Math.toRadians(15.0);
-        bodyFollow = Math.max(-maxBodyFollow, Math.min(maxBodyFollow, bodyFollow));
-        this.body.yRot = bodyFollow;
+        // Forward lean scales with urgency (leaning into the situation).
+        // Backward lean scales with concealment (ready to retreat/hide).
+        // Net: body.xRot += (urgency * 0.08) - (concealment * 0.05).
+        // The user's "subtle backward weight shift" for the concealed case.
+        float torsoLean = urgency * 0.08F - concealment * 0.05F;
+        this.body.xRot += torsoLean;
+
+        // ═══════════════════════════════════════════════════════════════
+        //  WEIGHT-SHIFT CHANNEL
+        // ═══════════════════════════════════════════════════════════════
+        // Slow sin offset on body.x position. Amplitude scales with
+        // (1 - patience): patient NPC is planted (no shift); impatient NPC
+        // fidgets. Frequency is slow (~0.03Hz) — weight shifts are gradual.
+        // The user's "weight shifts" cue for sustained observation.
+        float weightAmp = 0.4F * (1.0F - patience);
+        float weightShift = (float) Math.sin(ageInTicks * 0.03F) * weightAmp;
+        this.body.x += weightShift;
+
+        // ═══════════════════════════════════════════════════════════════
+        //  HANDS CHANNEL
+        // ═══════════════════════════════════════════════════════════════
+        // When concealment AND urgency are both high, the right arm drifts
+        // inward (hand nearer weapon / belt). This is the user's "hand
+        // nearer weapon" cue for the unknown-cultivator observation case.
+        // The product concealment*urgency is high only when BOTH are high —
+        // a calm concealed NPC (low urgency) keeps hands relaxed; a panicked
+        // un concealed NPC (low concealment) flails. Only the tense-hidden
+        // case draws the hand toward the weapon.
+        float weaponReadiness = concealment * urgency; // 0..1, high only if both high
+        if (weaponReadiness > 0.3F) {
+            // Right arm drifts inward (toward center/hip where a weapon sits).
+            // Applied as an ADDITIVE offset so it layers on top of the pose.
+            this.rightArm.yRot += -0.25F * weaponReadiness;
+            this.rightArm.xRot += 0.15F * weaponReadiness; // arm lowers slightly toward belt
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  FATIGUE CHANNEL
+        // ═══════════════════════════════════════════════════════════════
+        // High fatigue → drooped posture (head pitches down slightly) and
+        // slower breathing amplitude. Applied subtly so short commitments
+        // show no fatigue; long ones (cultivation marathons) sag.
+        if (fatigue > 0.3F) {
+            this.head.xRot += fatigue * 0.15F; // head droops
+            this.body.xRot += fatigue * 0.05F; // shoulders round
+        }
+    }
+
+    /** Clamp a float to [0,1], preserving NaN. */
+    private static float clamp01(float v) {
+        if (Float.isNaN(v)) return 0.0F;
+        return Math.max(0.0F, Math.min(1.0F, v));
+    }
+
+    /** Wrap an angle (radians) to [-PI, PI]. */
+    private static float wrapAngle(float angle) {
+        while (angle > Math.PI) angle -= (float) (2 * Math.PI);
+        while (angle < -Math.PI) angle += (float) (2 * Math.PI);
+        return angle;
     }
 }

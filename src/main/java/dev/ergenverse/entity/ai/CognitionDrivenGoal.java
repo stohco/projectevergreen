@@ -13,6 +13,7 @@ import dev.ergenverse.simulation.intent.CultivationTask;
 import dev.ergenverse.simulation.intent.Intent;
 import dev.ergenverse.simulation.intent.IntentDecomposer;
 import dev.ergenverse.simulation.intent.IntentNature;
+import dev.ergenverse.simulation.intent.Performance;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -301,13 +302,49 @@ public class CognitionDrivenGoal extends Goal {
         // suppressed (the user: "doesn't respond immediately to player").
         // The look-target is initialized from the actor's last perception and
         // updated each tick in tick().
+        //
+        // ── CRON-COMPLETIONIST-21: Acting Layer ──
+        // The pose is still set (as a coarse fallback), but the PRIMARY driver
+        // is now the Performance channel bundle. The user's 2026-07-26 review:
+        // "instead of thinking in poses, think in independent channels." Same
+        // IntentNature + different context → different Performance → different
+        // acting. The renderer consumes the seven channels independently.
         if (fromCommitment) {
             int pose = poseForIntent(intent.nature());
             cultivator.setCultivatorPose(pose);
             cultivator.setCognitiveAttentionLock(true);
+
+            // Compute the Performance from the commitment + context. The
+            // threat/concealment scalars are read from the actor's last
+            // perception/situation (0 if absent — neutral modulation).
+            float threatIntensity = deriveThreatIntensity(actor);
+            float concealmentPressure = deriveConcealmentPressure(actor, intent.nature());
+            Performance perf = Performance.interpret(
+                    intent.nature(), commitment.targetId,
+                    threatIntensity, concealmentPressure);
+            cultivator.setPerformance(
+                    perf.focus, perf.urgency, perf.confidence,
+                    perf.concealment, perf.tension, perf.patience, perf.fatigue);
+
+            // CRON-COMPLETIONIST-21: pin the attention object at commitment
+            // start. The look-target resolver will track THIS entity across
+            // ticks (nearest to the pin, not nearest to the NPC) so Wang Lin
+            // keeps watching the alpha wolf even if a lesser wolf wanders
+            // closer. The user: "that tiny detail makes the NPC appear to have
+            // intention rather than a targeting heuristic."
+            PerceptionSnapshot.PerceivedEntity initialTarget = pickAttentionObject(actor, null);
+            if (initialTarget != null) {
+                cultivator.pinAttentionObject(
+                        (float) initialTarget.posX,
+                        (float) (initialTarget.posY + 1.0),
+                        (float) initialTarget.posZ);
+            } else {
+                cultivator.clearAttentionPin();
+            }
+
             updateCognitiveLookTarget(actor);
-            Ergenverse.LOGGER.info("[CognitionDrivenGoal] {} body-language: pose={} (from {})",
-                    actorId, poseName(pose), intent.nature().label);
+            Ergenverse.LOGGER.info("[CognitionDrivenGoal] {} acting: pose={} perf={} (from {})",
+                    actorId, poseName(pose), perf, intent.nature().label);
         }
 
         // Log (rate-limited — only when intent label changes)
@@ -337,6 +374,12 @@ public class CognitionDrivenGoal extends Goal {
         // CRON-COMPLETIONIST-19: release body-language state.
         cultivator.setCognitiveAttentionLock(false);
         cultivator.clearCognitiveLookTarget();
+        // CRON-COMPLETIONIST-21: release the Acting Layer state too. The
+        // Performance channels go NaN (renderer falls back to pose/vanilla),
+        // and the attention-object pin is released so the next commitment
+        // starts fresh.
+        cultivator.clearPerformance();
+        cultivator.clearAttentionPin();
         // Restore idle pose only if we were cognition-driven. If the entity
         // is activity-locked (settlement-scan pose), leave the pose alone —
         // the materializer owns it in that case.
@@ -699,41 +742,128 @@ public class CognitionDrivenGoal extends Goal {
     /**
      * Update the cognitive look-target from the actor's latest perception.
      *
-     * <p>Picks the most important entity to look at: prefer the nearest
-     * hostile (the wolves Wang Lin is observing), then the nearest prey,
-     * then the nearest witness/ally (for social commitments). The look
-     * target is set as world coordinates so the client-side renderer can
-     * lerp the head toward it.
+     * <p>CRON-COMPLETIONIST-21: Attention Object ownership. If an attention
+     * pin is held (set at commitment start), the resolver prefers the
+     * perceived entity NEAREST THE PINNED POSITION — not the nearest to the
+     * NPC. This is the user's directive: "Wang Lin keeps watching THAT wolf
+     * even if another wolf walks slightly closer. That tiny detail makes the
+     * NPC appear to have intention rather than a targeting heuristic." The
+     * pin updates as the tracked entity moves (re-sighted each tick). If the
+     * pinned entity vanishes from perception for too long, the pin releases
+     * and the resolver falls back to nearest-hostile.
      *
-     * <p>If no perceived entity is available, the look-target is cleared
-     * (the NPC's head returns to vanilla look control). This is correct:
-     * an observing NPC with no wolves in sight shouldn't stare at a fixed
-     * point in the void — he should look around naturally until the wolves
-     * reappear.
+     * <p>If no pin is held (or it was just released), pick the highest-priority
+     * perceived entity (hostile > prey > ally > witness) and establish a new
+     * pin from it. This is the CRON-19 behavior, preserved as the fallback.
      *
-     * <p>The user's directive: "head turns → body rotates slightly →
-     * weight shifts → breathing slows → eyes remain fixed → doesn't
-     * respond immediately to player → after 30 seconds glances away
-     * briefly → looks back." The head-turn is THIS method (setting the
-     * target). The breathing-slow / weight-shift / micro-saccade are
-     * implemented in CultivatorRobeModel.setupAnim (client-side, using
-     * the synced pose + look-target).
+     * <p>If no perceived entity is available at all, the look-target is cleared
+     * (the NPC's head returns to vanilla look control) AND the pin ages. This
+     * is correct: an observing NPC with no wolves in sight shouldn't stare at
+     * a fixed point in the void — but he REMEMBERS which wolf he was watching,
+     * so if it reappears within the staleness window, he snaps back to it
+     * rather than re-pinning to a different wolf.
      */
     private void updateCognitiveLookTarget(Actor actor) {
         PerceptionSnapshot perception = actor.lastPerception;
         if (perception == null || perception.nearbyEntities == null
                 || perception.nearbyEntities.isEmpty()) {
             // No perception — clear the look target so the head doesn't
-            // freeze on a stale position.
+            // freeze on a stale position, but AGE the pin (don't clear it
+            // yet — the wolf may reappear within the staleness window).
             cultivator.clearCognitiveLookTarget();
+            if (cultivator.hasAttentionPin()) {
+                cultivator.ageAttentionPin();
+            }
             return;
         }
 
-        // Priority: hostile (the thing being observed/fled) > prey > ally > witness
+        // ── Attention-object ownership path ──
+        // If we hold a pin, find the perceived entity nearest the PIN (not
+        // the NPC). Within the stickiness radius, that's our target — update
+        // the pin to the entity's current position and set the look-target.
+        PerceptionSnapshot.PerceivedEntity target = null;
+        if (cultivator.hasAttentionPin()) {
+            double pinX = cultivator.getAttentionPinX();
+            double pinY = cultivator.getAttentionPinY();
+            double pinZ = cultivator.getAttentionPinZ();
+            double bestPinDist = Double.MAX_VALUE;
+            double stickinessRadius = 8.0; // blocks — a wolf within 8 blocks
+                                            // of where we last saw it is "the same wolf"
+            for (PerceptionSnapshot.PerceivedEntity e : perception.nearbyEntities) {
+                int pri = classificationPriority(e.classification);
+                if (pri < 0) continue;
+                double dx = e.posX - pinX;
+                double dy = e.posY - (pinY - 1.0); // un-offset the eye-height
+                double dz = e.posZ - pinZ;
+                double d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                if (d < stickinessRadius && d < bestPinDist) {
+                    bestPinDist = d;
+                    target = e;
+                }
+            }
+            if (target != null) {
+                // Re-sighted — update the pin to the entity's current position
+                // and set the look-target. The pin now tracks the moving wolf.
+                cultivator.updateAttentionPin(
+                        (float) target.posX,
+                        (float) (target.posY + 1.0),
+                        (float) target.posZ);
+                cultivator.setCognitiveLookTarget(
+                        (float) target.posX,
+                        (float) (target.posY + 1.0),
+                        (float) target.posZ);
+                return;
+            }
+            // Pin held but no entity near it — age the pin. If it ages out,
+            // hasAttentionPin() will be false next tick and we fall through
+            // to the re-pin path below.
+            cultivator.ageAttentionPin();
+            if (cultivator.hasAttentionPin()) {
+                // Pin still held (not yet stale) but nothing to look at —
+                // clear the look-target this tick; the head drifts naturally.
+                cultivator.clearCognitiveLookTarget();
+                return;
+            }
+            // Pin released — fall through to re-pin from nearest-hostile.
+        }
+
+        // ── Fallback / re-pin path: pick by priority + proximity to NPC ──
+        target = pickAttentionObject(actor, null);
+        if (target == null) {
+            cultivator.clearCognitiveLookTarget();
+            return;
+        }
+        // Establish a fresh pin from this entity.
+        cultivator.pinAttentionObject(
+                (float) target.posX,
+                (float) (target.posY + 1.0),
+                (float) target.posZ);
+        cultivator.setCognitiveLookTarget(
+                (float) target.posX,
+                (float) (target.posY + 1.0),
+                (float) target.posZ);
+    }
+
+    /**
+     * Pick the best perceived entity to attend to, by priority then proximity.
+     *
+     * <p>Used both at commitment start (to establish the initial pin) and as
+     * the fallback when a pin has released (to re-pin). The {@code exclude}
+     * parameter is reserved for future use (e.g. avoiding re-pinning to an
+     * entity that just fled); pass null for now.
+     */
+    private PerceptionSnapshot.PerceivedEntity pickAttentionObject(
+            Actor actor, PerceptionSnapshot.PerceivedEntity exclude) {
+        PerceptionSnapshot perception = actor.lastPerception;
+        if (perception == null || perception.nearbyEntities == null
+                || perception.nearbyEntities.isEmpty()) {
+            return null;
+        }
         PerceptionSnapshot.PerceivedEntity target = null;
         int bestPriority = -1;
         double bestDist = Double.MAX_VALUE;
         for (PerceptionSnapshot.PerceivedEntity e : perception.nearbyEntities) {
+            if (e == exclude) continue;
             int pri = classificationPriority(e.classification);
             if (pri < 0) continue;
             if (pri > bestPriority
@@ -743,18 +873,75 @@ public class CognitionDrivenGoal extends Goal {
                 target = e;
             }
         }
+        return target;
+    }
 
-        if (target == null) {
-            cultivator.clearCognitiveLookTarget();
-            return;
+    /**
+     * Derive a 0–1 threat-intensity scalar from the actor's last perception
+     * and situation. Used to modulate the Performance (higher threat → more
+     * urgency/tension, less confidence).
+     *
+     * <p>Heuristic: if the perception flags a threat, base 0.5. Add up to 0.3
+     * for nearby hostiles (closer = more). Add up to 0.2 from the situation's
+     * threat intensity if available. Clamped to [0,1]. Returns 0 if no data.
+     */
+    private float deriveThreatIntensity(Actor actor) {
+        float t = 0.0f;
+        if (actor.lastPerception != null) {
+            if (actor.lastPerception.hasThreat) t += 0.5f;
+            // Closer hostiles raise the intensity
+            if (actor.lastPerception.nearbyEntities != null) {
+                double closestHostile = Double.MAX_VALUE;
+                for (PerceptionSnapshot.PerceivedEntity e : actor.lastPerception.nearbyEntities) {
+                    if ("hostile".equals(e.classification) && e.distanceBlocks < closestHostile) {
+                        closestHostile = e.distanceBlocks;
+                    }
+                }
+                if (closestHostile < Double.MAX_VALUE) {
+                    // within 16 blocks → up to +0.3; at 0 blocks → +0.3, at 16+ → +0
+                    t += Math.max(0.0f, 0.3f * (1.0f - (float) (closestHostile / 16.0)));
+                }
+            }
         }
+        if (actor.lastSituation != null && actor.lastSituation.primaryThreat != null) {
+            // The situation carries a primaryThreat record with an intensity
+            // scalar (0–1). Add up to 0.2 from it.
+            float sit = actor.lastSituation.primaryThreat.intensity();
+            if (sit > 0) t += Math.min(0.2f, sit * 0.2f);
+        }
+        return Math.max(0.0f, Math.min(1.0f, t));
+    }
 
-        // Set the look-target as world coordinates. Y is entity eye height
-        // approximation (posY + 1.0). The renderer lerps the head toward this.
-        cultivator.setCognitiveLookTarget(
-                (float) target.posX,
-                (float) (target.posY + 1.0),
-                (float) target.posZ);
+    /**
+     * Derive a 0–1 concealment-pressure scalar — how important it is for this
+     * NPC to stay hidden right now. Used to modulate the Performance (higher
+     * pressure → more concealment/tension).
+     *
+     * <p>Heuristic: certain IntentNatures inherently demand concealment
+     * (AVOID_REVEALING_STRENGTH, CULTIVATE_SECRETLY, AMBUSH, DECEIVE,
+     * MAINTAIN_COVER). For those, base 0.7. For observation intents near a
+     * player, add 0.2. Otherwise base 0.2. Clamped to [0,1].
+     */
+    private float deriveConcealmentPressure(Actor actor, IntentNature nature) {
+        float c = 0.2f;
+        if (nature == IntentNature.AVOID_REVEALING_STRENGTH
+                || nature == IntentNature.CULTIVATE_SECRETLY
+                || nature == IntentNature.AMBUSH
+                || nature == IntentNature.DECEIVE
+                || nature == IntentNature.MAINTAIN_COVER) {
+            c = 0.7f;
+        }
+        // If a player is nearby, concealment matters more for observation intents
+        if (nature == IntentNature.OBSERVE_FROM_DISTANCE
+                || nature == IntentNature.GATHER_INTEL
+                || nature == IntentNature.EXPLORE_CAUTIOUSLY) {
+            net.minecraft.world.entity.player.Player nearest =
+                    cultivator.level().getNearestPlayer(cultivator, 32.0);
+            if (nearest != null) {
+                c += 0.2f;
+            }
+        }
+        return Math.max(0.0f, Math.min(1.0f, c));
     }
 
     /**

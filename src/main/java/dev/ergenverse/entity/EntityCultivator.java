@@ -130,6 +130,40 @@ public class EntityCultivator extends PathfinderMob {
     private static final EntityDataAccessor<Float> DATA_LOOK_TARGET_Z =
             SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
 
+    // ── CRON-COMPLETIONIST-21: Acting Layer — Performance channels ──────
+    // The user's 2026-07-26 review: "instead of thinking in poses, think in
+    // independent channels — Head, Torso, Shoulders, Hands, Feet, Eyes,
+    // Breathing, Attention, Weight. Each channel updates independently."
+    //
+    // These seven synced floats carry the acting directions (focus, urgency,
+    // confidence, concealment, tension, patience, fatigue) from the server-side
+    // Commitment to the client-side renderer. When all are NaN, no Commitment
+    // is active and the renderer falls back to vanilla pose-based animation.
+    // When set, the renderer drives each body part INDEPENDENTLY from the
+    // channels — producing hundreds of emergent silhouettes instead of 5 fixed
+    // poses. Same IntentNature + different context → different acting.
+    /** Synced Performance channel: focus (concentration). NaN = no performance. */
+    private static final EntityDataAccessor<Float> DATA_PERF_FOCUS =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+    /** Synced Performance channel: urgency (time pressure). */
+    private static final EntityDataAccessor<Float> DATA_PERF_URGENCY =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+    /** Synced Performance channel: confidence (trust in one's read). */
+    private static final EntityDataAccessor<Float> DATA_PERF_CONFIDENCE =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+    /** Synced Performance channel: concealment (importance of staying hidden). */
+    private static final EntityDataAccessor<Float> DATA_PERF_CONCEALMENT =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+    /** Synced Performance channel: tension (physical readiness). */
+    private static final EntityDataAccessor<Float> DATA_PERF_TENSION =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+    /** Synced Performance channel: patience (willingness to hold still). */
+    private static final EntityDataAccessor<Float> DATA_PERF_PATIENCE =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+    /** Synced Performance channel: fatigue (accumulated tiredness). */
+    private static final EntityDataAccessor<Float> DATA_PERF_FATIGUE =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+
     // ── Hibernation ─────────────────────────────────────────────────────
 
     /**
@@ -191,6 +225,16 @@ public class EntityCultivator extends PathfinderMob {
         this.entityData.define(DATA_LOOK_TARGET_X, Float.NaN);
         this.entityData.define(DATA_LOOK_TARGET_Y, Float.NaN);
         this.entityData.define(DATA_LOOK_TARGET_Z, Float.NaN);
+        // CRON-COMPLETIONIST-21: Acting Layer — Performance channels default to
+        // NaN (no active commitment). When CognitionDrivenGoal sets a Performance,
+        // all seven are written together; when cleared, all seven go NaN together.
+        this.entityData.define(DATA_PERF_FOCUS, Float.NaN);
+        this.entityData.define(DATA_PERF_URGENCY, Float.NaN);
+        this.entityData.define(DATA_PERF_CONFIDENCE, Float.NaN);
+        this.entityData.define(DATA_PERF_CONCEALMENT, Float.NaN);
+        this.entityData.define(DATA_PERF_TENSION, Float.NaN);
+        this.entityData.define(DATA_PERF_PATIENCE, Float.NaN);
+        this.entityData.define(DATA_PERF_FATIGUE, Float.NaN);
     }
 
     public String getCharacterId() {
@@ -401,6 +445,124 @@ public class EntityCultivator extends PathfinderMob {
     public float getCognitiveLookTargetZ() {
         return this.entityData.get(DATA_LOOK_TARGET_Z);
     }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  CRON-COMPLETIONIST-21: Acting Layer — Performance channel accessors
+    // ═══════════════════════════════════════════════════════════════════
+
+    /**
+     * Set the seven Performance channels atomically (from a server-side
+     * Commitment interpretation). Pass NaN for all to clear (no performance).
+     *
+     * <p>The renderer reads these each frame and drives the body's channels
+     * (head lerp-speed, saccade amplitude, glance-away frequency, torso
+     * tension, breathing rate, weight shift, hand position) INDEPENDENTLY.
+     * This replaces the fixed-pose projection of CRON-19 with the
+     * channel-based acting the user's 2026-07-26 review demands.
+     */
+    public void setPerformance(float focus, float urgency, float confidence,
+                               float concealment, float tension, float patience,
+                               float fatigue) {
+        this.entityData.set(DATA_PERF_FOCUS, focus);
+        this.entityData.set(DATA_PERF_URGENCY, urgency);
+        this.entityData.set(DATA_PERF_CONFIDENCE, confidence);
+        this.entityData.set(DATA_PERF_CONCEALMENT, concealment);
+        this.entityData.set(DATA_PERF_TENSION, tension);
+        this.entityData.set(DATA_PERF_PATIENCE, patience);
+        this.entityData.set(DATA_PERF_FATIGUE, fatigue);
+    }
+
+    /** Clear all Performance channels (no active commitment → vanilla pose). */
+    public void clearPerformance() {
+        this.entityData.set(DATA_PERF_FOCUS, Float.NaN);
+        this.entityData.set(DATA_PERF_URGENCY, Float.NaN);
+        this.entityData.set(DATA_PERF_CONFIDENCE, Float.NaN);
+        this.entityData.set(DATA_PERF_CONCEALMENT, Float.NaN);
+        this.entityData.set(DATA_PERF_TENSION, Float.NaN);
+        this.entityData.set(DATA_PERF_PATIENCE, Float.NaN);
+        this.entityData.set(DATA_PERF_FATIGUE, Float.NaN);
+    }
+
+    /** True if a Performance is currently set (active commitment driving acting). */
+    public boolean hasPerformance() {
+        return !Float.isNaN(this.entityData.get(DATA_PERF_FOCUS));
+    }
+
+    public float getPerfFocus() { return this.entityData.get(DATA_PERF_FOCUS); }
+    public float getPerfUrgency() { return this.entityData.get(DATA_PERF_URGENCY); }
+    public float getPerfConfidence() { return this.entityData.get(DATA_PERF_CONFIDENCE); }
+    public float getPerfConcealment() { return this.entityData.get(DATA_PERF_CONCEALMENT); }
+    public float getPerfTension() { return this.entityData.get(DATA_PERF_TENSION); }
+    public float getPerfPatience() { return this.entityData.get(DATA_PERF_PATIENCE); }
+    public float getPerfFatigue() { return this.entityData.get(DATA_PERF_FATIGUE); }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  CRON-COMPLETIONIST-21: Attention Object ownership
+    // ═══════════════════════════════════════════════════════════════════
+    // The user's 2026-07-26 review: "Eventually [the look target] should
+    // become Commitment → Attention Object → Renderer. Then Wang Lin keeps
+    // watching THAT wolf even if another wolf walks slightly closer. That
+    // tiny detail makes the NPC appear to have intention rather than a
+    // targeting heuristic."
+    //
+    // We cannot track by entity UUID (PerceivedEntity has no UUID), so we pin
+    // the attention object's WORLD POSITION at commitment start. Each tick,
+    // the look-target resolver prefers the perceived entity NEAREST THE PINNED
+    // POSITION (not nearest the NPC). This naturally tracks the same wolf as
+    // it moves. If no suitable entity is within the stickiness radius for too
+    // long, the pin is released and the resolver falls back to nearest-hostile.
+
+    /** Pinned attention-object world X. NaN = no pin (re-pin to nearest). */
+    private float attentionPinX = Float.NaN;
+    /** Pinned attention-object world Y. */
+    private float attentionPinY = Float.NaN;
+    /** Pinned attention-object world Z. */
+    private float attentionPinZ = Float.NaN;
+    /** Ticks since the pinned object was last seen in perception. Resets on re-sight. */
+    private int attentionPinStaleTicks = 0;
+    /** Max ticks the pin holds without re-sighting before it releases. */
+    private static final int ATTENTION_PIN_MAX_STALE = 120; // ~6s
+
+    /** Pin the attention object to a world position (called at commitment start). */
+    public void pinAttentionObject(float x, float y, float z) {
+        this.attentionPinX = x;
+        this.attentionPinY = y;
+        this.attentionPinZ = z;
+        this.attentionPinStaleTicks = 0;
+    }
+
+    /** Update the pinned position as the tracked entity moves (re-sighted). */
+    public void updateAttentionPin(float x, float y, float z) {
+        this.attentionPinX = x;
+        this.attentionPinY = y;
+        this.attentionPinZ = z;
+        this.attentionPinStaleTicks = 0;
+    }
+
+    /** Mark one tick of staleness (called when the pinned object isn't re-sighted). */
+    public void ageAttentionPin() {
+        this.attentionPinStaleTicks++;
+        if (this.attentionPinStaleTicks > ATTENTION_PIN_MAX_STALE) {
+            clearAttentionPin();
+        }
+    }
+
+    /** Release the attention pin (commitment ended, or pin stale too long). */
+    public void clearAttentionPin() {
+        this.attentionPinX = Float.NaN;
+        this.attentionPinY = Float.NaN;
+        this.attentionPinZ = Float.NaN;
+        this.attentionPinStaleTicks = 0;
+    }
+
+    /** True if an attention-object pin is currently held. */
+    public boolean hasAttentionPin() {
+        return !Float.isNaN(attentionPinX);
+    }
+
+    public float getAttentionPinX() { return attentionPinX; }
+    public float getAttentionPinY() { return attentionPinY; }
+    public float getAttentionPinZ() { return attentionPinZ; }
 
     // ═══════════════════════════════════════════════════════════════════
     //  Data-driven initialization

@@ -527,20 +527,39 @@ public final class ActorTickLoop {
             // Count "retreat" / "disappear" / "fled" memories as evidence of
             // threat resolution. These are OBSERVED memories with moderate
             // strength — the actor SAW the wolves leaving.
+            // CRON-COMPLETIONIST-21: broadened the keyword set to include
+            // "left", "gone", "lost", "departed", "vanished", "no longer" —
+            // the memory recorder's phrasing varies, and the prior narrow set
+            // (retreat/disappear/fled/dispersed/driven off) rarely matched the
+            // recorder's actual output. The wider net catches more genuine
+            // retreat-themed descriptions.
             long retreatMemories = memories.stream()
                     .filter(n -> n.type != MemoryGraph.Type.INFERRED)
                     .filter(n -> n.strength >= 0.2)
-                    .filter(n -> n.subject != null && (
-                            n.subject.toLowerCase().contains("retreat") ||
-                            n.subject.toLowerCase().contains("disappear") ||
-                            n.subject.toLowerCase().contains("fled") ||
-                            n.subject.toLowerCase().contains("dispersed") ||
-                            n.subject.toLowerCase().contains("driven off")))
+                    .filter(n -> n.subject != null && isRetreatThemed(n.subject))
                     .count();
             // One retreat memory is enough to confirm the actor's belief
             // that the threat has been addressed. Without it, the actor
             // continues observing — the wolves might come back.
-            return retreatMemories >= 1;
+            if (retreatMemories >= 1) return true;
+
+            // CRON-COMPLETIONIST-21 FALLBACK: if no hostiles have been
+            // perceived for a LONG time (600+ ticks = 30s real-time) AND the
+            // actor has ANY memories about the target, treat the threat as
+            // resolved. The prior predicate was structurally correct but
+            // never fired because the memory recorder doesn't produce
+            // retreat-themed descriptions ("Completed: observation" instead of
+            // "wolf retreated"). This fallback ensures the commitment can
+            // complete when the wolves are genuinely gone for a sustained
+            // period, even without a retreat-specific memory. The 600-tick
+            // floor is longer than the abandonTargetGone grace (400), so
+            // abandon fires first if nothing was learned; this path only
+            // fires if the actor DID learn something but the recorder didn't
+            // phrase it as a retreat.
+            if (ctx.currentTick() - tick >= 600L && !memories.isEmpty()) {
+                return true;
+            }
+            return false;
         };
 
         // ── Success condition 2: understood pattern ──
@@ -619,16 +638,22 @@ public final class ActorTickLoop {
                                 || "prey".equals(e.classification));
             if (!noTarget) return false;
             // Cognitive: has the actor learned anything new recently?
-            // Check MemoryGraph for memories with timestamp >= (tick - 200).
-            // If no new memories formed in the last 200 ticks, the actor
-            // believes continued observation won't increase understanding.
+            // CRON-COMPLETIONIST-21 BUGFIX: the prior check was
+            //   n.tick >= tick + 200L - 200L  →  n.tick >= tick
+            // which counts ALL memories about the target (including ones
+            // formed BEFORE the commitment started), so the "recentNew == 0"
+            // branch almost never fired. The correct check is: memories
+            // formed in the last 200 ticks (since ctx.currentTick() - 200).
+            // If none, the actor believes continued observation won't add
+            // understanding — the user's "belief: further observation unlikely
+            // to increase understanding."
             if (ctx.actor() == null || ctx.actor().cognition == null) return true;
             var mem = ctx.actor().cognition.memory;
             if (mem == null) return true; // no memory → no evidence of learning
             java.util.List<MemoryGraph.MemoryNode> recentMemories =
                     mem.aboutKeywords(targetId);
             long recentNew = recentMemories.stream()
-                    .filter(n -> n.tick >= tick + 200L - 200L) // last 200 ticks
+                    .filter(n -> n.tick >= ctx.currentTick() - 200L) // last 200 ticks ONLY
                     .count();
             // If no new memories formed, the observation is yielding nothing.
             // The actor believes: "I've been staring at empty space for
@@ -744,6 +769,28 @@ public final class ActorTickLoop {
                  CALL_HELP, SUBMIT, FORGIVE, RESURRECT, WAIT, OTHER,
                  SOCIAL, GATHER_RESOURCE, BREAK_FORMATION -> false;
         };
+    }
+
+    /**
+     * CRON-COMPLETIONIST-21: Does a memory subject read as "the threat
+     * retreated / disappeared"? Used by the successThreatGone predicate to
+     * confirm the actor's belief that the threat is addressed. The keyword
+     * set is deliberately broad — the memory recorder's phrasing varies
+     * ("wolf retreated", "pack dispersed", "threat left", "no longer
+     * present", "gone from sight"), and a narrow set rarely matched the
+     * recorder's actual output. This wider net catches more genuine
+     * retreat-themed descriptions without false-positiving on neutral
+     * descriptions like "Completed: observation".
+     */
+    private static boolean isRetreatThemed(String subject) {
+        if (subject == null) return false;
+        String s = subject.toLowerCase();
+        return s.contains("retreat") || s.contains("disappear")
+                || s.contains("fled") || s.contains("dispersed")
+                || s.contains("driven off") || s.contains("left")
+                || s.contains("gone") || s.contains("lost")
+                || s.contains("departed") || s.contains("vanished")
+                || s.contains("no longer");
     }
 
     /**
