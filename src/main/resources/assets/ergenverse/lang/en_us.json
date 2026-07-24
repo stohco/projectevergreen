@@ -186,7 +186,7 @@
   "item.ergenverse.jade_slip_blank": "Jade Slip Blank",
   "item.ergenverse.jade_thunder_defense": "Jade Thunder Defense",
   "item.ergenverse.ji_qiong_head": "Ji Qiong — Head",
-  "item.ergenverse.ji_realm": "Ji Realm",
+  "item.ergenverse.ji_realm": "Ji Realm Divine Sense",
   "item.ergenverse.ji_realm_execution": "Ji Realm — Execution",
   "item.ergenverse.karma_domain": "Karma Domain",
   "item.ergenverse.karma_essence": "Karma Essence",
@@ -1531,5 +1531,6 @@
   "time_event.ergenverse.tribulation_scarring": "Tribulation Scarring",
   "time_event.ergenverse.void_fissure_event": "Void Fissure Event",
   "item.ergenverse.teleport_talisman": "Teleport Talisman",
-  "item.ergenverse.soul_bead": "Soul Bead"
+  "item.ergenverse.soul_bead": "Soul Bead",
+  "item.ergenverse.qilin_core": "Qilin Core"
 }

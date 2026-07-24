@@ -66,6 +66,32 @@ public final class ErgenverseItems {
             () -> new BeastCoreItem(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
     public static final RegistryObject<Item> WOLF_CORE = ITEMS.register("wolf_core",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    /**
+     * Qilin Core — the core of a divine qilin beast. Per the item_properties JSON:
+     * condensed divine auspicious-essence, 3000 jin weight, requires Ascendant body
+     * strength to lift. Referenced in the qilin entity loot table (60% drop chance
+     * when killed by player). Canon: a qilin's core, analogous to beast_core but
+     * from a divine-tier beast.
+     */
+    public static final RegistryObject<Item> QILIN_CORE = ITEMS.register("qilin_core",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    /**
+     * Vermilion Bird Feather — a rare feather from the Vermilion Bird divine beast.
+     * Referenced in the spirit_crane entity loot table and cloud_sky_pavilion chest.
+     * The WangLin arsenal version (I105_vermilion_bird_feather) has an uppercase
+     * prefix that is invalid in Minecraft ResourceLocations, so it fails to register.
+     * This standalone registration provides the item with a valid lowercase name.
+     */
+    public static final RegistryObject<Item> VERMILION_BIRD_FEATHER = ITEMS.register("vermilion_bird_feather",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    /**
+     * Ji Realm Divine Sense — a divine-sense technique/item from the Ji Realm.
+     * Referenced in the heavenly_fate_star_tower chest loot table.
+     * The WangLin arsenal version (ji_realm_divine_sense) is not registered (likely
+     * skipped or failed), so this standalone registration provides the item.
+     */
+    public static final RegistryObject<Item> JI_REALM = ITEMS.register("ji_realm",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
     public static final RegistryObject<Item> RABBIT_BLOOD_ESSENCE = ITEMS.register("rabbit_blood_essence",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> SPIRIT_HERB_SEED = ITEMS.register("spirit_herb_seed",
