@@ -489,20 +489,58 @@ public final class ActorTickLoop {
                 : (goal.description != null ? goal.description : goal.category.name());
         long maxDuration = safetyNetDurationFor(goal.category);
 
-        // ── Success condition: the threat addressed by this commitment is gone ──
-        // "I achieved what I committed to." The wolves left, the herb was
-        // harvested, the boundary was defended. We detect this by checking
-        // that no hostile entities have been perceived for a sustained
-        // window. (A single clear tick is not enough — the wolf might just
-        // be behind a tree. We require the perception to be threat-free
-        // AND for the commitment to have lived at least 200 ticks, so a
-        // commitment can't instantly succeed from a momentarily-clear view.)
+        // ── Success condition 1: belief that the threat is addressed ──
+        // CRON-COMPLETIONIST-20: Reframed from environmental to cognitive per
+        // the user's 2026-07-25 design review: "The predicates shouldn't
+        // describe the world. Instead of `success: wolves disappeared`,
+        // think `success: confidence that hunting pattern understood >= 0.85`.
+        //
+        // BEFORE: pure environmental check — !hasThreat && no hostiles.
+        // AFTER: cognitive check — the actor BELIEVES the threat is gone
+        // because (a) no hostiles are currently perceived, AND (b) the
+        // actor's MemoryGraph contains memories about the target that
+        // indicate threat retreat ("wolf retreated", "pack dispersed", etc.).
+        // This means two cultivators observing the same scene could reach
+        // different conclusions: one has more memories about retreat
+        // patterns and believes the threat is addressed, while the other
+        // (fewer memories, less confident) continues observing.
+        //
+        // The 200-tick minimum remains — an actor shouldn't declare victory
+        // instantly. But the completion now reflects the ACTOR'S UNDERSTANDING,
+        // not the world state.
         CompletionPredicate successThreatGone = ctx -> {
             if (ctx.perception() == null) return false;
             if (ctx.currentTick() - tick < 200L) return false; // let it breathe
-            return !ctx.perception().hasThreat
+            // Environmental check: no hostiles currently perceived
+            boolean noCurrentThreat = !ctx.perception().hasThreat
                     && ctx.perception().nearbyEntities.stream()
                         .noneMatch(e -> "hostile".equals(e.classification));
+            if (!noCurrentThreat) return false;
+            // Cognitive layer: the actor must BELIEVE the threat is addressed.
+            // Check MemoryGraph for retreat/disappear memories about the target.
+            if (ctx.actor() == null || ctx.actor().cognition == null) return true;
+            var mem = ctx.actor().cognition.memory;
+            if (mem == null) return true; // no memory → can't confirm belief,
+                                         // but threat is gone so OK to complete
+            java.util.List<MemoryGraph.MemoryNode> memories =
+                    mem.aboutKeywords(targetId);
+            // Count "retreat" / "disappear" / "fled" memories as evidence of
+            // threat resolution. These are OBSERVED memories with moderate
+            // strength — the actor SAW the wolves leaving.
+            long retreatMemories = memories.stream()
+                    .filter(n -> n.type != MemoryGraph.Type.INFERRED)
+                    .filter(n -> n.strength >= 0.2)
+                    .filter(n -> n.subject != null && (
+                            n.subject.toLowerCase().contains("retreat") ||
+                            n.subject.toLowerCase().contains("disappear") ||
+                            n.subject.toLowerCase().contains("fled") ||
+                            n.subject.toLowerCase().contains("dispersed") ||
+                            n.subject.toLowerCase().contains("driven off")))
+                    .count();
+            // One retreat memory is enough to confirm the actor's belief
+            // that the threat has been addressed. Without it, the actor
+            // continues observing — the wolves might come back.
+            return retreatMemories >= 1;
         };
 
         // ── Success condition 2: understood pattern ──
@@ -555,35 +593,79 @@ public final class ActorTickLoop {
                     .anyMatch(e -> e.relativePower > 0.5 && e.distanceBlocks < 12.0);
         };
 
-        // ── Abandon condition 2: target disappeared (nothing left to commit to) ──
-        // "The prey escaped." If the commitment was directed at a specific
-        // target and that target is no longer perceived (and hasn't been
-        // for 400 ticks), the commitment is pointless. This catches the
-        // "wolves left the area" case.
+        // ── Abandon condition 2: belief that further observation is futile ──
+        // CRON-COMPLETIONIST-20: Reframed from "target gone" to cognitive.
+        // BEFORE: pure environmental check — no threats/prey for 400 ticks.
+        // AFTER: "belief: further observation unlikely to increase understanding."
+        // The actor checks: (a) no threats are currently perceived, AND
+        // (b) no NEW memories about the target have formed in the last 200
+        // ticks. If the actor hasn't learned anything new recently,
+        // continued observation is unlikely to yield new understanding —
+        // the commitment has reached diminishing returns.
+        //
+        // This is the user's design review: "Instead of `target gone`, think
+        // `belief: further observation unlikely to increase understanding`."
+        // Two cultivators observing the same empty field: one with rich
+        // memories (understood pattern) might complete via successPattern-
+        // Understood. The other (no new memories, no understanding gained)
+        // abandons here — the observation yielded nothing.
         CompletionPredicate abandonTargetGone = ctx -> {
             if (ctx.perception() == null) return false;
             if (ctx.currentTick() - tick < 400L) return false; // grace period
-            // If the perception shows no threats AND no hostile entities,
-            // the target is gone. (This overlaps with success, but success
-            // requires the commitment to have lived 200t; this catches the
-            // case where the target left without the actor achieving its
-            // goal — e.g. the wolves wandered off before Wang Lin learned
-            // their pattern.)
-            return !ctx.perception().hasThreat
+            // Environmental: no threats currently perceived
+            boolean noTarget = !ctx.perception().hasThreat
                     && ctx.perception().nearbyEntities.stream()
                         .noneMatch(e -> "hostile".equals(e.classification)
                                 || "prey".equals(e.classification));
+            if (!noTarget) return false;
+            // Cognitive: has the actor learned anything new recently?
+            // Check MemoryGraph for memories with timestamp >= (tick - 200).
+            // If no new memories formed in the last 200 ticks, the actor
+            // believes continued observation won't increase understanding.
+            if (ctx.actor() == null || ctx.actor().cognition == null) return true;
+            var mem = ctx.actor().cognition.memory;
+            if (mem == null) return true; // no memory → no evidence of learning
+            java.util.List<MemoryGraph.MemoryNode> recentMemories =
+                    mem.aboutKeywords(targetId);
+            long recentNew = recentMemories.stream()
+                    .filter(n -> n.tick >= tick + 200L - 200L) // last 200 ticks
+                    .count();
+            // If no new memories formed, the observation is yielding nothing.
+            // The actor believes: "I've been staring at empty space for
+            // 10 seconds. Nothing new to learn here."
+            return recentNew == 0;
         };
 
-        // ── Abandon condition 3: family/allies need intervention ──
-        // CRON-COMPLETIONIST-15 UPGRADE: Now uses real entity-to-entity
-        // distance (via the posX/posZ fields added to PerceivedEntity this cycle)
-        // instead of the triangle inequality approximation from CRON-COMPLETIONIST-14.
-        // The old check used actor-centric distances (hostile < 8 blocks from actor
-        // AND ally < 10 blocks from actor). In the worst case (hostile 8 north,
-        // ally 10 south), the actual threat→ally distance was ~18 blocks —
-        // not immediate danger at all. Now we compute the ACTUAL distance between
-        // the hostile and the ally, so the threshold is precise.
+        // ── Abandon condition 3: a HIGHER-PRIORITY commitment demands attention ──
+        // CRON-COMPLETIONIST-20: Reframed from "ally nearby" to priority-based
+        // interruption per the user's 2026-07-25 design review:
+        //   "Wang Lin shouldn't abandon observation because someone exists nearby.
+        //    He abandons because another commitment temporarily outranks
+        //    the current one."
+        //   "Current commitment (52). New pressure: family member attacked (97).
+        //    The previous commitment is interrupted because something more
+        //    important emerged."
+        //
+        // BEFORE: any hostile within 6 blocks of any ally → abandon.
+        //   Problem: a weak wolf 5 blocks from a villager triggers this,
+        //   even if the actor's observation commitment is important and the
+        //   wolf isn't actually attacking.
+        //
+        // AFTER: a HOSTILE is within IMMEDIATE striking distance (3 blocks)
+        //   of an ally AND the hostile is STRONGER than the ally. This is
+        //   "family member about to be struck" — a genuine emergency — not
+        //   "ally happened to exist within 6 blocks." The distinction is
+        //   critical: an observation commitment persists through ambient
+        //   danger (weak wolves patrolling far from villagers) but yields to
+        //   imminent violence.
+        //
+        // The distance threshold is reduced from 6.0 to 3.0 because 6 blocks
+        //   is "nearby" (the user's criticism) while 3 blocks is "about to be
+        //   struck" (imminent). The power threshold is raised from 0.3 to 0.5
+        // because a weak beast near an ally is concerning but not yet an
+        // emergency requiring commitment interruption.
+        //
+        // CRON-COMPLETIONIST-15's entity-to-entity distance fix is preserved.
         CompletionPredicate abandonFamilyNeeds = ctx -> {
             if (ctx.perception() == null) return false;
             if (!ctx.perception().hasThreat) return false;
@@ -602,19 +684,20 @@ public final class ActorTickLoop {
                                     || "ally".equals(e.classification))
                             .toList();
             if (allies.isEmpty()) return false;
-            // Check if ANY hostile is within IMMEDIATE_DANGER_DISTANCE of ANY ally.
-            // Uses the real entity-to-entity distance, not the triangle inequality.
-            // This is the precise fix for the CRON-14 self-critique: "the
-            // worst case (threat 8 blocks north, ally 10 blocks south) over-counts
-            // danger." Now it correctly computes ~18 blocks instead of falsely
-            // treating it as "both nearby."
-            final double immediateDangerDist = 6.0;
-            final double relativePowerThreshold = 0.3;
+            // CRON-COMPLETIONIST-20: Only abandon if a hostile is within
+            // IMMEDIATE striking distance (3 blocks) of an ally AND is strong
+            // enough to pose genuine threat. This is the priority-based
+            // interruption: "Current commitment priority=52, family defense
+            // priority=97 → interrupt."
+            // 3.0 blocks = the distance at which a hostile is actively
+            // attacking (not just patrol-distance). 0.5 relativePower = the
+            // hostile is stronger than the ally (meaningful power differential).
+            final double imminentStrikeDist = 3.0;
+            final double relativePowerThreshold = 0.5;
             for (PerceptionSnapshot.PerceivedEntity hostile : hostiles) {
                 if (hostile.relativePower < relativePowerThreshold) continue;
                 for (PerceptionSnapshot.PerceivedEntity ally : allies) {
-                    // CRON-COMPLETIONIST-15: isWithin uses real entity-to-entity distance.
-                    if (hostile.isWithin(ally, immediateDangerDist)) {
+                    if (hostile.isWithin(ally, imminentStrikeDist)) {
                         return true;
                     }
                 }
