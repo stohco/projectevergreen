@@ -368,14 +368,12 @@ public class ErgenDebugCommand {
             sendLine(ctx, "4. Goal", "\u00a78NONE\u00a7r");
         }
 
-        // 5. Intent
-        if (actor.activeIntent != null) {
-            sendLine(ctx, "5. Intent", "\u00a7e" + actor.activeIntent.nature().label + "\u00a7r"
-                    + " target=\"" + actor.activeIntent.targetId() + "\"");
-            sendLine(ctx, "   Duration", actor.activeIntent.expectedDurationTicks() + " ticks ("
-                    + (actor.activeIntent.expectedDurationTicks() / 20) + "s)");
-        } else if (cog != null && cog.activeIntent != null) {
-            sendLine(ctx, "5. Intent", "\u00a7e" + cog.activeIntent.nature().label + "\u00a7r (legacy)");
+        // 5. Intent — CRON-COMPLETIONIST-14: Read from Ontology field directly.
+        if (cog != null && cog.activeIntent != null) {
+            sendLine(ctx, "5. Intent", "\u00a7e" + cog.activeIntent.nature().label + "\u00a7r"
+                    + " target=\"" + cog.activeIntent.targetId() + "\"");
+            sendLine(ctx, "   Duration", cog.activeIntent.expectedDurationTicks() + " ticks ("
+                    + (cog.activeIntent.expectedDurationTicks() / 20) + "s)");
         } else {
             sendLine(ctx, "5. Intent", "\u00a78NONE\u00a7r");
         }

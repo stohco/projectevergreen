@@ -77,16 +77,11 @@ public final class Actor {
     public Interpretation lastInterpretation = null;
     /** Last action-outcome prediction for the chosen action (null until first cognition tick). */
     public ActionPredictor.Outcome lastPrediction = null;
-    /** Current active intent (derived by IntentEngine). Per-tick, flickers. */
-    public Intent activeIntent = null;
-    /**
-     * Current active commitment (Article XLV §3). Persists across ticks.
-     * The commitment is the decision the per-tick Intent serves. When a
-     * commitment is active, the CognitionDrivenGoal honors it instead of
-     * re-decomposing the Intent every tick. This is the difference
-     * between an NPC that dithers and an NPC that holds its course.
-     */
-    public dev.ergenverse.simulation.intent.Commitment activeCommitment = null;
+    // CRON-COMPLETIONIST-14: Removed duplicate activeIntent and activeCommitment
+    // fields. These existed on both Actor and Ontology (actor.cognition),
+    // requiring manual sync at 3+ call sites. The canonical location is
+    // actor.cognition.activeIntent and actor.cognition.activeCommitment.
+    // All readers now use the Ontology fields directly.
     /** Current task queue from IntentDecomposer (ordered steps). */
     public final List<CultivationTask> activeTasks = new ArrayList<>();
     /** Index of the currently executing task in the queue (-1 if idle). */

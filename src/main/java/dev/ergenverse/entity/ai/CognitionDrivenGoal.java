@@ -178,8 +178,6 @@ public class CognitionDrivenGoal extends Goal {
             if (commitment.isFulfilled(ctx)) {
                 commitment.status = Commitment.Status.COMPLETED;
                 actor.cognition.activeCommitment = null;
-                // Keep the Actor-level duplicate in sync.
-                actor.activeCommitment = null;
                 logCommitmentEnd(actor, commitment, "success");
                 return false;
             }
@@ -192,7 +190,6 @@ public class CognitionDrivenGoal extends Goal {
                     commitment.status = Commitment.Status.ABANDONED;
                 }
                 actor.cognition.activeCommitment = null;
-                actor.activeCommitment = null;
                 logCommitmentEnd(actor, commitment,
                         commitment.endReason == Commitment.CompletionReason.MAX_DURATION_ELAPSED
                                 ? "safety-net-expired" : "abandoned");

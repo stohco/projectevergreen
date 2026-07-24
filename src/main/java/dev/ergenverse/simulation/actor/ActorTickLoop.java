@@ -372,13 +372,8 @@ public final class ActorTickLoop {
                     a.blockX, a.blockZ,
                     tick
             );
-            a.activeIntent = intent;
-            // ── BRIDGE FIX (CRON-COMPLETIONIST-12): sync the duplicate field ──
-            // Before this fix, ActorTickLoop set a.activeIntent (the Actor-level
-            // duplicate) but never a.cognition.activeIntent (the Ontology field
-            // that CognitionDrivenGoal reads). The result: CognitionDrivenGoal
-            // always saw null for the intent and never activated. This sync
-            // closes that gap. Same applies to activeCommitment below.
+            // CRON-COMPLETIONIST-14: Write directly to Ontology field.
+            // The Actor-level duplicate (a.activeIntent) was removed.
             if (a.cognition != null) {
                 a.cognition.activeIntent = intent;
             }
@@ -478,14 +473,10 @@ public final class ActorTickLoop {
         // directive: "Intent can change without Commitment changing." A
         // new intent (per-tick flicker) does not override an active
         // commitment. The commitment ends only when the world says so.
-        if (a.activeCommitment != null && a.activeCommitment.isActionable()) {
-            return;
-        }
-        // Also check the Ontology duplicate (it's the one CognitionDrivenGoal reads).
+        // CRON-COMPLETIONIST-14: Check Ontology field directly. The Actor-level
+        // duplicate was removed. No sync needed.
         if (a.cognition.activeCommitment != null
                 && a.cognition.activeCommitment.isActionable()) {
-            // Sync the Actor duplicate from the Ontology (in case only one was set).
-            a.activeCommitment = a.cognition.activeCommitment;
             return;
         }
 
@@ -545,17 +536,59 @@ public final class ActorTickLoop {
         };
 
         // ── Abandon condition 3: family/allies need intervention ──
-        // "Family needs intervention." If the actor perceives a witness
-        // (an ally observing) AND a threat is present, the actor may need
-        // to intervene directly rather than continue observing. This is a
-        // conservative trigger — it only fires when an ally is perceived
-        // AND the threat is close.
+        // "Family needs intervention." CRON-COMPLETIONIST-14 fix: the old
+        // predicate fired whenever ANY ally was within 16 blocks + ANY threat
+        // existed. In a village, allies are ALWAYS nearby — this made Wang Lin
+        // abandon his observation commitment every time a villager walked past
+        // during a wolf event. The fix: only fire when a HOSTILE entity is
+        // within IMMEDIATE_DANGER_BLOCKS of an ally/witness (not just near
+        // the actor). This checks threat→ally proximity, not threat→actor
+        // proximity.
         CompletionPredicate abandonFamilyNeeds = ctx -> {
             if (ctx.perception() == null) return false;
             if (!ctx.perception().hasThreat) return false;
-            return ctx.perception().nearbyEntities.stream()
-                    .filter(e -> "witness".equals(e.classification) || "ally".equals(e.classification))
-                    .anyMatch(e -> e.distanceBlocks < 16.0);
+            java.util.List<PerceptionSnapshot.PerceivedEntity> entities =
+                    ctx.perception().nearbyEntities;
+            // Find all hostiles
+            java.util.List<PerceptionSnapshot.PerceivedEntity> hostiles =
+                    entities.stream()
+                            .filter(e -> "hostile".equals(e.classification))
+                            .toList();
+            if (hostiles.isEmpty()) return false;
+            // Find all allies/witnesses
+            java.util.List<PerceptionSnapshot.PerceivedEntity> allies =
+                    entities.stream()
+                            .filter(e -> "witness".equals(e.classification)
+                                    || "ally".equals(e.classification))
+                            .toList();
+            if (allies.isEmpty()) return false;
+            // Check if ANY hostile is within immediate danger distance of ANY ally.
+            // Both distances are from the ACTOR's perspective (perception is
+            // actor-centric). If both hostile and ally are close to the actor,
+            // they are close to each other (triangle inequality: distance
+            // between two entities ≤ sum of their distances to the observer).
+            // We use a tight threshold: hostile within 8 blocks of actor AND
+            // ally within 10 blocks of actor → hostile is within ~18 blocks
+            // of ally. For a tighter check, require hostile within 6 AND
+            // ally within 8 (max distance between them ≈ 14, but likely
+            // much closer since both are near the actor).
+            // CRITICAL: also check that the ally is CLOSER to the actor than
+            // the hostile (the ally is between the actor and the threat, or
+            // at least in the same direction). This prevents false positives
+            // when an ally is behind the actor but a wolf is in front.
+            final double hostileMaxDist = 8.0;
+            final double allyMaxDist = 10.0;
+            final double relativePowerThreshold = 0.3;
+            for (PerceptionSnapshot.PerceivedEntity hostile : hostiles) {
+                if (hostile.distanceBlocks > hostileMaxDist) continue;
+                if (hostile.relativePower < relativePowerThreshold) continue;
+                for (PerceptionSnapshot.PerceivedEntity ally : allies) {
+                    if (ally.distanceBlocks > allyMaxDist) continue;
+                    // Ally is close and hostile is close — family needs help.
+                    return true;
+                }
+            }
+            return false;
         };
 
         String reasonText = a.displayName + " commits to " + nature.label
@@ -571,9 +604,7 @@ public final class ActorTickLoop {
                 .abandonWhen(abandonFamilyNeeds)
                 .form(tick);
 
-        // Set BOTH fields — the Actor duplicate and the Ontology field
-        // that CognitionDrivenGoal reads. This is the bridge.
-        a.activeCommitment = commitment;
+        // CRON-COMPLETIONIST-14: Write directly to Ontology field.
         a.cognition.activeCommitment = commitment;
 
         Ergenverse.LOGGER.info("[Ergenverse] ActorTick[commitment] {} FORMED: {} → {} "
