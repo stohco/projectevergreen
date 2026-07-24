@@ -94,7 +94,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_WOLF =
             ENTITY_TYPES.register("spirit_wolf", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.6F, 0.8F)
+                            .sized(0.7F, 1.0F)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("spirit_wolf"));
@@ -103,7 +103,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_DEER =
             ENTITY_TYPES.register("spirit_deer", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.7F, 2.2F)
+                            .sized(0.8F, 1.4F)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("spirit_deer"));
@@ -112,7 +112,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> FIRE_BEAST =
             ENTITY_TYPES.register("fire_beast", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.4F, 1.4F)
+                            .sized(1.0F, 1.4F)
                             .clientTrackingRange(12)
                             .updateInterval(2)
                             .fireImmune()
@@ -122,7 +122,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> STONE_BACK_BOAR =
             ENTITY_TYPES.register("stone_back_boar", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.4F, 1.0F)
+                            .sized(1.0F, 1.0F)
                             .clientTrackingRange(10)
                             .updateInterval(3)
                             .build("stone_back_boar"));
@@ -131,7 +131,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_HAWK =
             ENTITY_TYPES.register("spirit_hawk", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.8F, 0.8F)
+                            .sized(0.5F, 0.6F)
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build("spirit_hawk"));
@@ -141,7 +141,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_CRANE =
             ENTITY_TYPES.register("spirit_crane", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.5F, 2.0F)
+                            .sized(0.6F, 1.6F)
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build("spirit_crane"));
@@ -161,7 +161,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> QILIN =
             ENTITY_TYPES.register("qilin", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.0F, 1.5F)
+                            .sized(1.0F, 1.4F)
                             .clientTrackingRange(10)
                             .updateInterval(2)
                             .fireImmune()
@@ -172,7 +172,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SEA_SERPENT =
             ENTITY_TYPES.register("sea_serpent", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.2F, 0.8F)
+                            .sized(0.8F, 1.0F)
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build("sea_serpent"));

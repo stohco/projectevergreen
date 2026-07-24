@@ -7,33 +7,39 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
-import java.util.List;
 
 import dev.ergenverse.entity.SpiritBeastEntity;
 
 /**
- * SpiritBeastFlightGoal — true 3D flight for flying beasts (Hawk, future dragons).
+ * SpiritBeastFlightGoal — obstacle-aware 3D flight for flying beasts.
  *
- * <p>Prior to this goal, the Spirit Hawk WALKED on the ground (GroundPathNavigation)
- * despite having a bird model and wings. This goal makes it actually FLY by:
+ * <p>CRON-COMPLETIONIST-65: Major rewrite. Previously this goal used direct
+ * setDeltaMovement to bulldoze toward waypoints, clipping through trees and
+ * terrain. Now the entity uses its PathNavigation (FlyPathNavigation for
+ * flyers, installed by SpiritBeastEntity.reassessNavigation()) to path
+ * through 3D space with obstacle avoidance.
+ *
+ * <p>The flight pattern is now:
  * <ul>
- *   <li>Setting noGravity on start, restoring on stop.</li>
- *   <li>Picking random airborne waypoints (y = groundY + 10..25) and flying to them.</li>
- *   <li>Occasionally diving toward ground prey (swoop attack).</li>
- *   <li>Using direct setDeltaMovement (no pathfinding — flying ignores terrain).</li>
+ *   <li>Pick an airborne waypoint 10-25 blocks above ground</li>
+ *   <li>Navigate to it using the entity's pathfinder (not direct movement)</li>
+ *   <li>The pathfinder handles obstacle avoidance (trees, cliffs, buildings)</li>
+ *   <li>On approaching the waypoint, pick a new one</li>
+ *   <li>If a target exists and is within swoop range, dive toward it</li>
+ *   <li>noGravity is set during flight, cleared on landing</li>
  * </ul>
  *
- * <p>Self-critique: No real 3D pathfinding (setDeltaMovement bulldozes through trees).
- * Waypoint picking ignores territory. Swoop prey scan is O(n) every 40 ticks.
- * A real flight AI would use a 3D navigation grid + wind currents + thermals.
+ * <p>This is the behavioral counterpart to the FlyPathNavigation fix in
+ * SpiritBeastEntity. Together they eliminate the "bulldozing through trees"
+ * problem that existed for 50+ CRON rounds.
  */
 public class SpiritBeastFlightGoal extends Goal {
 
     private final Mob mob;
     private final double speed;
-    private Vec3 targetPos;
-    private int waypointCooldown;
+    private int flightDuration;
     private int swoopCooldown;
+    private boolean isSwooping;
 
     public SpiritBeastFlightGoal(Mob mob, double speed) {
         this.mob = mob;
@@ -43,128 +49,143 @@ public class SpiritBeastFlightGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        // Only fly if not leashed, not in a vehicle, and not currently hurt-recovering.
         if (mob.isLeashed() || mob.isPassenger()) return false;
         if (mob.getTarget() != null && mob.getTarget().isAlive()) {
-            // Has a target — fly if target is far (swoop from above).
-            return mob.distanceToSqr(mob.getTarget()) > 100.0D;
+            // Has a combat target — fly if target is far enough for a swoop approach
+            return mob.distanceToSqr(mob.getTarget()) > 64.0D; // >8 blocks
         }
-        // CRON-COMPLETIONIST-31: Flying beasts should FLY by default, not walk.
-        // Previously ~4% chance per tick (1/80) meant the hawk walked on ground
-        // 96% of the time despite having a bird model and wings. Now flyers have
-        // a ~70% chance per tick to fly — they are BIRDS, they belong in the air.
-        // The canContinueToUse() still limits flight duration to 5-10 seconds.
+        // Flyers fly by default — ~20% chance per tick to start flight
         if (mob instanceof SpiritBeastEntity beast && beast.getBeastType().isFlyer()) {
-            return mob.getRandom().nextInt(5) == 0; // ~20% per tick to START flight
+            return mob.getRandom().nextInt(5) == 0;
         }
-        return mob.getRandom().nextInt(80) == 0; // non-flyers: ~4% (future bat swarm etc.)
+        return false;
     }
 
     @Override
     public boolean canContinueToUse() {
-        return !mob.isLeashed() && !mob.isPassenger() && waypointCooldown > 0;
+        if (mob.isLeashed() || mob.isPassenger()) return false;
+        return flightDuration > 0;
     }
 
     @Override
     public boolean requiresUpdateEveryTick() {
-        return true; // Flight needs per-tick position updates for smooth 3D movement
+        return true;
     }
 
     @Override
     public void start() {
         mob.setNoGravity(true);
-        pickNewWaypoint();
-        // CRON-COMPLETIONIST-31: Longer flight duration for flyers (10-20s instead of 5-10s).
-        // Hawks should spend most of their time airborne, not walking on ground.
+        isSwooping = false;
+        // Flyers fly for 10-20 seconds; non-flyers (future use) for 5-10s
         if (mob instanceof SpiritBeastEntity beast && beast.getBeastType().isFlyer()) {
-            waypointCooldown = 200 + mob.getRandom().nextInt(200); // 10-20 seconds
+            flightDuration = 200 + mob.getRandom().nextInt(200);
         } else {
-            waypointCooldown = 100 + mob.getRandom().nextInt(100); // 5-10 seconds (non-flyers)
+            flightDuration = 100 + mob.getRandom().nextInt(100);
         }
         swoopCooldown = 60;
         if (mob instanceof SpiritBeastEntity beast) {
             beast.setSpiritPose(SpiritBeastEntity.POSE_FLYING);
         }
+        pickNewWaypoint();
     }
 
     @Override
     public void stop() {
         mob.setNoGravity(false);
-        targetPos = null;
-        // CRON-COMPLETIONIST-31: For flyers, set a SHORT rest on the ground before
-        // flying again. Previously the hawk landed and walked indefinitely because
-        // canUse() only had 4% trigger chance. Now after landing, a flyer waits
-        // only 1-3 seconds on the ground before re-launching (the ~20% per-tick
-        // canUse() rate ensures this).
+        // Gentle descent to ground
         mob.setDeltaMovement(mob.getDeltaMovement().add(0, -0.1D, 0));
         mob.hurtMarked = true;
         if (mob instanceof SpiritBeastEntity beast) {
             beast.setSpiritPose(SpiritBeastEntity.POSE_PERCHING);
         }
+        mob.getNavigation().stop();
+        isSwooping = false;
     }
 
     @Override
     public void tick() {
-        waypointCooldown--;
+        flightDuration--;
+        swoopCooldown--;
 
-        // ── Swoop at prey if a target exists and cooldown elapsed ──
         LivingEntity prey = mob.getTarget();
+
+        // ── Swoop at prey if cooldown elapsed ──
         if (prey != null && prey.isAlive() && swoopCooldown <= 0) {
             double distSq = mob.distanceToSqr(prey);
-            if (distSq < 900.0D) { // within 30 blocks
-                // Dive toward prey
-                targetPos = prey.position().add(0, 1, 0);
+            if (distSq < 625.0D) { // within 25 blocks
+                isSwooping = true;
+                // Use navigation to path toward the prey's position
+                // FlyPathNavigation will find a 3D path that avoids obstacles
+                mob.getNavigation().moveTo(prey, speed * 1.5);
                 if (distSq < 4.0D) {
                     // Close enough — attack
                     mob.doHurtTarget(prey);
                     swoopCooldown = 40; // 2s between swoop attacks
-                    // Climb back up after attack
-                    targetPos = mob.position().add(0, 12, 0);
+                    isSwooping = false;
                 }
+            } else {
+                isSwooping = false;
             }
         }
-        swoopCooldown--;
 
-        // ── Move toward target waypoint ──
-        if (targetPos == null || mob.distanceToSqr(targetPos) < 9.0D) {
-            pickNewWaypoint();
+        // ── Navigate toward waypoint using pathfinder (not bulldozing) ──
+        if (!isSwooping) {
+            // Check if we've reached the current path destination or navigation stalled
+            if (!mob.getNavigation().isInProgress() || mob.getNavigation().isDone()) {
+                pickNewWaypoint();
+            }
         }
 
-        if (targetPos != null) {
-            Vec3 direction = targetPos.subtract(mob.position()).normalize();
-            Vec3 motion = direction.scale(speed);
-            // Add slight upward bias to maintain altitude
-            motion = motion.add(0, 0.02D, 0);
-            mob.setDeltaMovement(motion);
+        // ── Altitude clamping ──
+        if (mob.getY() > 256) {
+            // Above build limit: push down gently
+            mob.setDeltaMovement(mob.getDeltaMovement().add(0, -0.1D, 0));
             mob.hurtMarked = true;
-
-            // Face the direction of travel
-            mob.setYRot((float) Math.toDegrees(Math.atan2(-motion.x, motion.z)));
-            mob.yBodyRot = mob.getYRot();
+        } else if (mob.getY() < mob.level().getMinBuildHeight() + 5) {
+            // Too low: push up
+            mob.setDeltaMovement(mob.getDeltaMovement().add(0, 0.15D, 0));
+            mob.hurtMarked = true;
         }
 
-        // Don't fly too high or too low
-        if (mob.getY() > 200) {
-            targetPos = mob.position().add(0, -5, 0);
+        // ── Minimal altitude maintenance (counteract gravity drift) ──
+        // FlightMoveControl handles the main altitude maintenance.
+        // This is a gentle correction for micro-drift.
+        if (!mob.onGround() && mob.getDeltaMovement().y < -0.05D && !isSwooping) {
+            mob.setDeltaMovement(mob.getDeltaMovement().add(0, 0.03D, 0));
+            mob.hurtMarked = true;
         }
     }
 
+    /**
+     * Pick a new airborne waypoint and navigate to it using the pathfinder.
+     * The waypoint is 10-25 blocks above local ground level, 10-30 blocks
+     * horizontally away. The entity's PathNavigation (FlyPathNavigation)
+     * handles obstacle avoidance.
+     */
     private void pickNewWaypoint() {
         // Find ground height below the mob
         BlockPos groundPos = mob.blockPosition();
-        while (groundPos.getY() > mob.level().getMinBuildHeight() &&
-                !mob.level().getBlockState(groundPos).isSolidRender(mob.level(), groundPos)) {
+        while (groundPos.getY() > mob.level().getMinBuildHeight() + 1
+                && !mob.level().getBlockState(groundPos).isSolidRender(mob.level(), groundPos)
+                && !mob.level().getBlockState(groundPos.below()).isSolidRender(mob.level(), groundPos.below())) {
             groundPos = groundPos.below();
         }
         int groundY = groundPos.getY();
 
-        // Pick a waypoint 10-25 blocks above ground, 10-30 blocks horizontally away
+        // Pick a waypoint 10-25 blocks above ground, 10-30 blocks horizontally
         double angle = mob.getRandom().nextDouble() * Math.PI * 2;
         double dist = 10 + mob.getRandom().nextInt(20);
         double dx = Math.cos(angle) * dist;
         double dz = Math.sin(angle) * dist;
         int dy = 10 + mob.getRandom().nextInt(15);
 
-        targetPos = new Vec3(mob.getX() + dx, groundY + dy, mob.getZ() + dz);
+        BlockPos target = BlockPos.containing(
+                mob.getX() + dx,
+                Math.max(groundY + dy, mob.level().getMinBuildHeight() + 5),
+                mob.getZ() + dz);
+
+        // Use the entity's pathfinder (FlyPathNavigation) to navigate there
+        // This replaces the old direct setDeltaMovement that bulldozed through terrain
+        mob.getNavigation().moveTo(target.getX(), target.getY(), target.getZ(), speed);
     }
 }

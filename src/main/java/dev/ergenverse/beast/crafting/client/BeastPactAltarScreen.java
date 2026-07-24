@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class BeastPactAltarScreen extends AbstractContainerScreen<BeastPactAltarMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/beastpactaltar.png");
+            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/beast_pact_altar.png");
 
     public BeastPactAltarScreen(BeastPactAltarMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);

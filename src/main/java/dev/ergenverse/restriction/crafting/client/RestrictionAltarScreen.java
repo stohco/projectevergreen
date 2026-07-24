@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class RestrictionAltarScreen extends AbstractContainerScreen<RestrictionAltarMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/restrictionaltar.png");
+            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/restriction_altar.png");
 
     public RestrictionAltarScreen(RestrictionAltarMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);

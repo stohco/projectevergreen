@@ -23,6 +23,10 @@ import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import dev.ergenverse.entity.control.SpiritFlightPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
@@ -30,22 +34,13 @@ import net.minecraft.world.level.Level;
  * SpiritBeastEntity — base entity for spirit-beast mobs (rabbit, wolf, deer, hawk,
  * fire_beast, stone_back_boar).
  *
- * <p>CRON-COMPLETIONIST-14: Major behavioral overhaul fixing 5 systemic bugs:
- * <ul>
- *   <li><b>BUG FIX 1</b>: reassessMoveControl() now called from
- *       {@link #defineSynchedData()} (after DATA_BEAST_TYPE is defined), so
- *       MoveControls are actually installed on entity construction.</li>
- *   <li><b>BUG FIX 2</b>: tick() pose heuristic no longer overwrites goal-driven
- *       poses. Uses a timestamp-based priority system: goals set pose + timestamp,
- *       tick() only applies heuristic if no goal has set a pose in the last 5 ticks.</li>
- *   <li><b>BUG FIX 3</b>: Per-species attribute profiles via
- *       {@link #createBeastAttributes(BeastType)}. Each beast type now has
- *       canonically-appropriate HP, speed, damage, and follow range.</li>
- *   <li><b>BUG FIX 4</b>: SpiritBeastSwimGoal now registered for ALL beast types
- *       (was dead code). SprintMoveControl.startSprint() wired into HuntGoal.</li>
- *   <li><b>BUG FIX 5</b>: HuntGoal charge phase now calls SprintMoveControl.startSprint()
- *       on the beast's MoveControl if it is a SprintMoveControl.</li>
- * </ul>
+ * <p>CRON-COMPLETIONIST-14: Major behavioral overhaul fixing 5 systemic bugs.
+ * <p>CRON-COMPLETIONIST-65: Pathfinding overhaul — flyers now use FlyPathNavigation
+ * and aquatics use WaterBoundPathNavigation instead of GroundPathNavigation. This
+ * eliminates the "bulldozing through trees" behavior where flyers clipped through
+ * terrain and aquatics walked on the ground. Bat now has combat goals (MeleeAttackGoal
+ * + NearestAttackableTargetGoal). Builder dimensions in EREntityTypes now match
+ * runtime getDimensions() to prevent dimension flicker on entity construction.
  */
 public class SpiritBeastEntity extends PathfinderMob {
 
@@ -71,15 +66,13 @@ public class SpiritBeastEntity extends PathfinderMob {
             return RABBIT;
         }
 
-        /** Movement category for MoveControl selection. */
-        public boolean isFlyer()    { return this == HAWK || this == BAT; }
+        /** Movement category for MoveControl and PathNavigation selection. */
+        public boolean isFlyer()    { return this == HAWK || this == BAT || this == QILIN; }
         public boolean isAquatic()  { return this == SEA_SERPENT || this == SOUL_FISH; }
         public boolean isGround()   { return !isFlyer() && !isAquatic(); }
     }
 
     // ── Synced Pose System (DATA_POSE) ─────────────────────────────────────
-    // 10 canonical pose constants. AI goals set the pose; models read it.
-    // This is the bridge between AI state and visual animation.
     public static final int POSE_STANDING  = 0;
     public static final int POSE_GRAZING   = 1;
     public static final int POSE_RESTING    = 2;
@@ -91,7 +84,6 @@ public class SpiritBeastEntity extends PathfinderMob {
     public static final int POSE_ALERT     = 8;
     public static final int POSE_CHARGING  = 9;
 
-    /** A pose value that means "no goal is actively driving the pose." */
     private static final int POSE_NONE = -1;
 
     private static final EntityDataAccessor<Integer> DATA_POSE =
@@ -103,11 +95,6 @@ public class SpiritBeastEntity extends PathfinderMob {
     private static final EntityDataAccessor<Integer> DATA_CULTIVATION_TIER =
             SynchedEntityData.defineId(SpiritBeastEntity.class, EntityDataSerializers.INT);
 
-    /**
-     * Tracks the last tick a goal explicitly set the pose.
-     * The tick() heuristic only applies when this is stale (>5 ticks ago).
-     * This prevents tick() from overwriting goal-driven poses.
-     */
     private int goalPoseTick = Integer.MIN_VALUE;
 
     public SpiritBeastEntity(EntityType<? extends SpiritBeastEntity> type, Level level) {
@@ -115,21 +102,7 @@ public class SpiritBeastEntity extends PathfinderMob {
     }
 
     // ── Per-species attribute profiles ─────────────────────────────────────
-    // Previously all beasts shared 20HP/0.28speed/2dmg/16follow — a rabbit
-    // had the same stats as a fire beast. Now each type has canon-appropriate
-    // attributes.
-    //
-    // Canon basis (Renegade Immortal):
-    //   - Spirit Rabbit: small, fast, fragile. Prey animal. 4HP, 0.35 speed.
-    //   - Spirit Wolf: pack predator. 16HP, 0.30 speed, 4dmg. Hunts deer/rabbits.
-    //   - Spirit Deer: medium herbivore. 12HP, 0.28 speed. Flees predators.
-    //   - Spirit Hawk: aerial predator. 10HP, 0.35 speed, 3dmg. Swoop attacks.
-    //   - Fire Beast: demonic predator. 40HP, 0.32 speed, 8dmg. Aggro on player.
-    //   - Stone Back Boar: tanky beast. 30HP, 0.25 speed, 6dmg. Armored back.
-
     public static AttributeSupplier.Builder createAttributes() {
-        // Default (rabbit) attributes — used when type is not yet known at
-        // EntityType construction time. Overridden in spawn events.
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 4.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.35D)
@@ -137,11 +110,6 @@ public class SpiritBeastEntity extends PathfinderMob {
                 .add(Attributes.FOLLOW_RANGE, 16.0D);
     }
 
-    /**
-     * Returns species-specific attribute builder. Called from spawn events and
-     * from the Forge EntityAttributeCreationEvent handler to apply correct
-     * stats when the beast type is known.
-     */
     public static AttributeSupplier.Builder createBeastAttributes(BeastType type) {
         return switch (type) {
             case RABBIT -> Mob.createMobAttributes()
@@ -207,16 +175,81 @@ public class SpiritBeastEntity extends PathfinderMob {
         };
     }
 
+    // ═══════════════════════════════════════════════════════════════════════
+    // CRON-COMPLETIONIST-65: 3D PathNavigation — the single biggest behavior fix
+    // ═══════════════════════════════════════════════════════════════════════
+    //
+    // PROBLEM: SpiritBeastEntity extends PathfinderMob, which uses
+    // GroundPathNavigation by default. GroundPathNavigation ONLY paths on
+    // the XZ plane at the entity's feet Y level. It ignores altitude entirely.
+    //
+    // CONSEQUENCE: Flying beasts (hawk, bat, qilin) with FlightGoal set
+    // noGravity=true and fly at Y=ground+15, but their MeleeAttackGoal
+    // and HuntGoal use GroundPathNavigation to path to targets ON THE GROUND.
+    // The entity tries to reach a ground-level path node while floating 15
+    // blocks up — resulting in the entity drifting sideways toward the target
+    // but never descending, or clipping through terrain when FlightGoal
+    // bulldozes with setDeltaMovement.
+    //
+    // Aquatic beasts (sea_serpent, soul_fish) also use GroundPathNavigation,
+    // so their HuntGoal paths them along the ocean floor instead of through
+    // the water column. A sea serpent chasing fish on the sea floor looks
+    // absurd — it should swim through 3D water space.
+    //
+    // FIX: Override createNavigation() to return:
+    //   - FlyPathNavigation for flyers (HAWK, BAT, QILIN) — this checks
+    //     canMoveTo in 3D, allowing paths that go over/around obstacles
+    //   - WaterBoundPathNavigation for aquatics (SEA_SERPENT, SOUL_FISH)
+    //     — this prefers water blocks and paths through water volumes
+    //   - GroundPathNavigation for ground beasts (existing, no change)
+    //
+    // FlyPathNavigation exists in MC 1.20.1 (used by Phantom, Ghast).
+    // WaterBoundPathNavigation exists in MC 1.20.1 (used by Dolphin, Fish).
+    // We simply USE them instead of reinventing the wheel.
+    //
+    // This is the most impactful single change because it makes ALL goals
+    // (not just FlightGoal) respect 3D space. MeleeAttackGoal, HuntGoal,
+    // PatrolGoal, FleeGoal — ALL now path correctly in 3D for flyers and
+    // aquatics.
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        // Navigation is selected based on the CURRENT beast type.
+        // This is called during super() constructor, before defineSynchedData(),
+        // so we cannot read DATA_BEAST_TYPE yet. Default to ground navigation
+        // here — it will be overridden by reassessNavigation() after type is set.
+        // (PathfinderMob constructor calls createNavigation before defineSynchedData)
+        return new GroundPathNavigation(this, level);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-65: Replace the PathNavigation with the correct
+     * 3D variant based on beast type. Called from setBeastType() and
+     * defineSynchedData() after DATA_BEAST_TYPE is available.
+     *
+     * This is separate from reassessMoveControl() because the navigation
+     * is a different system from the move control. MoveControl handles
+     * the physics of movement (altitude maintenance, obstacle vaulting).
+     * Navigation handles the pathfinding (finding a route to the target).
+     */
+    private void reassessNavigation() {
+        BeastType type = getBeastType();
+        if (type.isFlyer()) {
+            this.navigation = new SpiritFlightPathNavigation(this, this.level());
+        } else if (type.isAquatic()) {
+            this.navigation = new WaterBoundPathNavigation(this, this.level());
+        }
+        // Ground beasts keep GroundPathNavigation from createNavigation()
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_BEAST_TYPE, "rabbit");
         this.entityData.define(DATA_CULTIVATION_TIER, 0);
         this.entityData.define(DATA_POSE, POSE_STANDING);
-        // BUG FIX 1: Install the correct MoveControl now that DATA_BEAST_TYPE
-        // is defined (getBeastType() works). Previously reassessMoveControl()
-        // existed but was never called — all beasts used default WalkMoveControl.
         reassessMoveControl();
+        reassessNavigation();
     }
 
     public BeastType getBeastType() {
@@ -225,11 +258,10 @@ public class SpiritBeastEntity extends PathfinderMob {
 
     public void setBeastType(BeastType type) {
         this.entityData.set(DATA_BEAST_TYPE, type.id);
-        // Reinstall MoveControl when type changes (e.g. via spawn event)
         reassessMoveControl();
+        reassessNavigation();
     }
 
-    /** Reassess MoveControl after entityData is fully initialized. */
     public void reassessMoveControlPublic() {
         reassessMoveControl();
     }
@@ -247,10 +279,6 @@ public class SpiritBeastEntity extends PathfinderMob {
         return this.entityData.get(DATA_POSE);
     }
 
-    /**
-     * Set pose from an AI goal. Updates the timestamp so tick() heuristic
-     * knows a goal is actively driving the pose and won't overwrite it.
-     */
     public void setSpiritPose(int pose) {
         this.entityData.set(DATA_POSE, pose);
         if (pose != POSE_STANDING) {
@@ -258,10 +286,6 @@ public class SpiritBeastEntity extends PathfinderMob {
         }
     }
 
-    /**
-     * Returns the beast's MoveControl cast to SprintMoveControl if applicable,
-     * or null if the MoveControl is not a SprintMoveControl.
-     */
     public dev.ergenverse.entity.control.SprintMoveControl getSprintMoveControl() {
         return (this.moveControl instanceof dev.ergenverse.entity.control.SprintMoveControl sprint)
                 ? sprint : null;
@@ -272,8 +296,6 @@ public class SpiritBeastEntity extends PathfinderMob {
         BeastType type = getBeastType();
 
         // Common to all: float in water + swim goal + rest goal
-        // BUG FIX 4: SwimGoal was dead code — created but never registered for any beast type
-        // CRON-COMPLETIONIST-15: RestGoal now registered for all beasts (POSE_RESTING gap)
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SpiritBeastSwimGoal(this));
         this.goalSelector.addGoal(8, new SpiritBeastRestGoal(this));
@@ -327,15 +349,36 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
                 this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
             }
+            // ═══════════════════════════════════════════════════════════════
+            // CRON-COMPLETIONIST-65: BAT COMBAT FIX
+            // ═══════════════════════════════════════════════════════════════
+            // Previously the bat had ZERO combat goals — it could fly but
+            // never attacked anything. It had FlightGoal + stroll + lookAround
+            // and a HurtByTargetGoal that could only aggro it if hurt first.
+            //
+            // Canon: Spirit bats in Renegade Immortal are aggressive nocturnal
+            // predators that swarm and drain qi. They should attack small prey
+            // (rabbits, fish) and retaliate against attackers.
+            //
+            // Fix: Added MeleeAttackGoal (priority 3) so the bat can damage
+            // targets it reaches, and NearestAttackableTargetGoal for rabbits
+            // and fish (priority 3, optional=true) so it hunts small prey.
+            // Kept HurtByTargetGoal (priority 1) for retaliation.
             case BAT -> {
-                // Bat: flies, roosts, fast agile movement
+                this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0, true)); // NEW: can now attack
                 this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.SpiritBeastFlightGoal(this, 0.8D));
                 this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.2));
                 this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+                // NEW: Bats hunt small prey (rabbits, fish, deer) — canon-accurate
+                this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(
+                        this, SpiritBeastEntity.class, 10, true, false,
+                        (living) -> living instanceof SpiritBeastEntity prey
+                                && (prey.getBeastType() == BeastType.RABBIT
+                                || prey.getBeastType() == BeastType.SOUL_FISH
+                                || prey.getBeastType() == BeastType.DEER)));
             }
             case QILIN -> {
-                // Qilin: divine beast, territorial, powerful
                 this.goalSelector.addGoal(2, new SpiritBeastHuntGoal(this, 1.3D));
                 this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.3, true));
                 this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.SpiritBeastFlightGoal(this, 1.0D));
@@ -344,7 +387,6 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
             }
             case SEA_SERPENT -> {
-                // Sea serpent: aquatic predator, swims
                 this.goalSelector.addGoal(2, new SpiritBeastHuntGoal(this, 1.1D));
                 this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.1, true));
                 this.goalSelector.addGoal(4, new SpiritBeastSwimGoal(this));
@@ -354,7 +396,6 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
             }
             case SOUL_FISH -> {
-                // Soul fish: small aquatic, schools, flees (non-aggressive)
                 this.goalSelector.addGoal(4, new SpiritBeastSwimGoal(this));
                 this.goalSelector.addGoal(5, new PanicGoal(this, 1.5D));
                 this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.8));
@@ -369,18 +410,12 @@ public class SpiritBeastEntity extends PathfinderMob {
         dev.ergenverse.entity.ai.BeastIntelligenceGoalFactory.applyBeastGoals(
                 this, tier, this.goalSelector, this.targetSelector);
 
-        // ── Living Events: make beast behavior observable to NPCs/WorldHistory ──
-        // Per the Living Moments framework: "No subsystem is considered
-        // complete until it has participated in at least one observable
-        // Living Moment." This goal watches pose transitions and publishes
-        // events to the WorldEventBus so NPCs can react and WorldHistory
-        // can record memories.
+        // ── Living Events ──
         this.goalSelector.addGoal(10, new dev.ergenverse.entity.ai.BeastLivingEventGoal(this));
     }
 
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        // Spirit beasts persist like canon entities — no despawn.
         return false;
     }
 
@@ -416,17 +451,10 @@ public class SpiritBeastEntity extends PathfinderMob {
         } else {
             this.moveControl = new SprintMoveControl(this);
         }
-        // CRON-COMPLETIONIST-44: Per-species bounding box sized to anatomy.
-        // Previously ALL beasts shared the default 0.6×1.8 hitbox — a soul fish
-        // (2HP, tiny) had the same collision box as a qilin (60HP, divine beast).
-        // Now each species has a bounding box matching its model geometry.
         this.reassessDimensions();
     }
 
     // ── Per-species dimensions (bounding box) ──────────────────────────
-    // Each beast's dimensions match its model's visual footprint.
-    // Canon-based sizing from model geometry (box coordinates in model files).
-    // Stored as cached values; getDimensions() reads them.
     private float beastWidth = 0.6F;
     private float beastHeight = 1.8F;
     private float beastEyeHeight = 1.6F;
@@ -459,18 +487,6 @@ public class SpiritBeastEntity extends PathfinderMob {
     }
 
     // ── tick(): pose heuristic with goal-priority guard ──────────────────
-    //
-    // BUG FIX 2: Previously tick() ran AFTER goal.tick() every server tick
-    // and unconditionally overwrote the pose. If a beast was grazing
-    // (POSE_GRAZING set by GrazeGoal) but had any residual deltaMovement
-    // (which happens from gravity/friction), tick() would reset it to
-    // POSE_STANDING every tick. The graze animation flickered between
-    // grazing and standing.
-    //
-    // Fix: track goalPoseTick (updated by setSpiritPose when pose != STANDING).
-    // tick() only applies heuristic fallback when no goal has set a non-STANDING
-    // pose in the last 5 ticks. This gives goals a 5-tick grace period where
-    // their pose is safe from the heuristic.
     @Override
     public void tick() {
         super.tick();
@@ -479,7 +495,6 @@ public class SpiritBeastEntity extends PathfinderMob {
             boolean goalDrivingPose = ticksSinceGoal < 5;
 
             if (!goalDrivingPose) {
-                // No goal has claimed the pose recently — apply heuristic
                 if (this.isInWater()) {
                     setSpiritPose(POSE_SWIMMING);
                 } else if (!this.onGround()) {

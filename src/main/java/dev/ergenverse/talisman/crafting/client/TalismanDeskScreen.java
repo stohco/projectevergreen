@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class TalismanDeskScreen extends AbstractContainerScreen<TalismanDeskMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/talismandesk.png");
+            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/talisman_desk.png");
 
     public TalismanDeskScreen(TalismanDeskMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);

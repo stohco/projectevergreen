@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class RefiningPoolScreen extends AbstractContainerScreen<RefiningPoolMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/refiningpool.png");
+            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/refining_pool.png");
 
     public RefiningPoolScreen(RefiningPoolMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);

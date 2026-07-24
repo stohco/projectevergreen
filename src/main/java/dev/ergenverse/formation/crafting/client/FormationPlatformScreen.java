@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class FormationPlatformScreen extends AbstractContainerScreen<FormationPlatformMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/formationplatform.png");
+            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/formation_platform.png");
 
     public FormationPlatformScreen(FormationPlatformMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);

@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class PuppetPlatformScreen extends AbstractContainerScreen<PuppetPlatformMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/puppetplatform.png");
+            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/puppet_platform.png");
 
     public PuppetPlatformScreen(PuppetPlatformMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);

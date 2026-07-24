@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class SoulRefiningCauldronScreen extends AbstractContainerScreen<SoulRefiningCauldronMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/soulrefiningcauldron.png");
+            new ResourceLocation(Ergenverse.MOD_ID, "textures/gui/soul_refining_cauldron.png");
 
     public SoulRefiningCauldronScreen(SoulRefiningCauldronMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
