@@ -23,8 +23,15 @@ import org.lwjgl.glfw.GLFW;
  *   <li>B — Breakthrough attempt</li>
  *   <li>V — Divine Sense pulse (snapshot perception scan)</li>
  * </ul>
+ *
+ * <p>CRON-CLIENT-FIX: This class was previously on Bus.MOD only, which crashed the
+ * client at main-menu launch with "IllegalArgumentException: Method onKeyInput
+ * has @SubscribeEvent but takes an argument that is not a subtype of IModBusEvent".
+ * Root cause: {@link InputEvent.Key} is a FORGE bus event, NOT a MOD bus event.
+ * {@link RegisterKeyMappingsEvent} IS a MOD bus event. A single class cannot
+ * serve both buses via one @Mod.EventBusSubscriber annotation. Fix: split into
+ * two nested classes, each on the correct bus.
  */
-@Mod.EventBusSubscriber(modid = "ergenverse", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ERKeybinds {
 
     private ERKeybinds() {}
@@ -55,19 +62,42 @@ public final class ERKeybinds {
             "key.categories.ergenverse"
     );
 
-    @SubscribeEvent
-    public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(BREAKTHROUGH_KEY);
-        event.register(DIVINE_SENSE_KEY);
+    /**
+     * MOD-bus subscriber for keybind registration.
+     *
+     * <p>{@link RegisterKeyMappingsEvent} is an {@code IModBusEvent} and must
+     * be on {@link Mod.EventBusSubscriber.Bus#MOD}.
+     */
+    @Mod.EventBusSubscriber(modid = "ergenverse", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public static final class ModBusEvents {
+        private ModBusEvents() {}
+
+        @SubscribeEvent
+        public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+            event.register(BREAKTHROUGH_KEY);
+            event.register(DIVINE_SENSE_KEY);
+        }
     }
 
-    @SubscribeEvent
-    public static void onKeyInput(InputEvent.Key event) {
-        if (BREAKTHROUGH_KEY.consumeClick()) {
-            ERNetwork.getChannel().sendToServer(new BreakthroughRequestC2SPacket());
-        }
-        if (DIVINE_SENSE_KEY.consumeClick()) {
-            ERNetwork.getChannel().sendToServer(new DivineSensePulseC2SPacket());
+    /**
+     * FORGE-bus subscriber for key input handling.
+     *
+     * <p>{@link InputEvent.Key} is a runtime event on the FORGE event bus,
+     * NOT an {@code IModBusEvent}. Registering it on Bus.MOD crashes the
+     * client at launch with IllegalArgumentException.
+     */
+    @Mod.EventBusSubscriber(modid = "ergenverse", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    public static final class ForgeBusEvents {
+        private ForgeBusEvents() {}
+
+        @SubscribeEvent
+        public static void onKeyInput(InputEvent.Key event) {
+            if (BREAKTHROUGH_KEY.consumeClick()) {
+                ERNetwork.getChannel().sendToServer(new BreakthroughRequestC2SPacket());
+            }
+            if (DIVINE_SENSE_KEY.consumeClick()) {
+                ERNetwork.getChannel().sendToServer(new DivineSensePulseC2SPacket());
+            }
         }
     }
 }
