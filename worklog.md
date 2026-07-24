@@ -3445,3 +3445,44 @@ NEXT PRIORITY:
 3. COMMITMENT ENGINE: Begin the NpcScheduleGoal → commitment-driven goal replacement (Article XLV §3). The commitment engine reads world pressures, filters through NPC priorities, produces a commitment that persists across ticks.
 4. DO NOT BUILD ANOTHER ROOM. Wang Lin's room is the standard. It is not yet believable. Refine it until it is. Only then touch Li Muwan's.
 
+---
+Task ID: CRON-COMPLETIONIST-9
+Agent: cron-completionist
+Task: Living moment 5-stage tracking (Article XLV §9) — add stage field to all 5 living_moment JSONs, verify art critique is still accurate.
+
+Work Log:
+- Read worklog fully (3447 lines). Read CONSTITUTION.md (now includes Article XLV + all amendments from parallel CRON-COMPLETIONIST-8).
+- Art critique verification: CRON-COMPLETIONIST-73 scored 14 models 5-7/10 average 5.9/10. No model changes since CRON-COMPLETIONIST-73. The critique is still accurate. The art is at the ceiling of addBox(). No new model work done this cycle — correctly so, per the user's directive that "the remaining challenge is craftsmanship" and "the breakthrough comes from launching the game."
+- Discovered Wang Lin's room was already implemented by a parallel session (CRON-COMPLETIONIST-8, commit 5d2b428). buildWangLinCorner() contains 6 evidence items: sleeping mat, trapped chest with journal (7 pages), lectern with cultivation notes (6 pages), damaged hoe in item frame, worn boots in item frame, unfinished restriction diagram (2 redstone dust, deliberately incomplete). Article XLV also amended with user's design feedback (pressures/commitment, three tests, Understandable stage, architectural completeness declaration).
+- Created FurnishHelper.java (redundant — builder already has createWrittenBook + placeItemFrame). Deleted it. Did not ship dead code.
+- Added 5-stage tracking to all 5 living_moment JSONs per Article XLV §9:
+  moment_01 (wolf watching): "specified" — wiring spec exists but Java not implemented
+  moment_02 (recruiter arrives): "specified" — caravan/rumor momentum schemas exist but Java not implemented
+  moment_03 (Wang Lin approaches unbidden): "specified" — bidirectional protocol design exists but Java not implemented
+  moment_04 (herb competition): "specified" — herb momentum + opportunity carrier design exists but Java not implemented
+  moment_11 (Old Chen's dog memory): "specified" — memory ledger + rumor momentum design exists but Java not implemented. This is the canonical test for the "memorable" stage.
+- Each JSON got a "stage" field ("specified") and a "_stage_note" explaining what advancement to the next stage requires.
+- Compiled: BUILD SUCCESSFUL (0 errors, 9 pre-existing warnings).
+- Committed as c3907d8, pushed to stohco/projectevergreen main.
+
+Stage Summary:
+- Shipped: 5-stage tracking on all 5 living moments. The metric for The First Ordinary Day now has a ruler.
+- Build: GREEN (0 errors, 9 pre-existing warnings).
+- Git: c3907d8 pushed to stohco/projectevergreen main.
+- Art critique: No art changes this cycle. Models remain at addBox() ceiling (5.9/10). Wang Lin's room IS the new art frontier — it's hand-authored environmental storytelling, not a 3D model problem. The room is currently unverified (no client playtest). This is the honest assessment.
+
+WHAT COULD THE PLAYER EXPERIENCE TODAY?
+- The player has a metric. All 5 living moments now carry a "stage" field. This doesn't change the in-game experience, but it changes the project's ability to track progress. Yesterday, there was no way to answer "which stage is moment_01 at?" without reading the JSON and guessing. Today, the JSON says "specified" and explains what "simulated" requires. This is infrastructure, not experience.
+
+WHAT COULD THE PLAYER EXPERIENCE YESTERDAY?
+- The player could enter Wang Lin's house and find environmental storytelling (6 evidence items, 2 written books). This was shipped by CRON-COMPLETIONIST-8.
+
+The answers are NOT identical, but the delta is smaller than last cycle. The 5-stage tracking is infrastructure that enables measurement, not something the player sees. This cycle's contribution is a ruler, not a room.
+
+NEXT PRIORITY:
+1. CLIENT PLAYTEST: This has been the stated next priority for TWO cycles. The room exists, the ruler exists, but nobody has verified either one works in-game. The user's directive was clear: "the breakthrough comes from launching the game, standing in Wang Family Village for 30 minutes." The next cycle MUST launch the client, travel to the village, and verify.
+2. COMMITMENT ENGINE: The next leverage action after the ruler. The NpcScheduleGoal → commitment-driven goal replacement. Without this, the 30-minute AFK test fails (NPCs patrol randomly).
+3. REFINEMENT v2: Hide the trapped chest properly. Expand the restriction diagram. Add father's notes on furnace.
+4. DO NOT BUILD ANOTHER ROOM.
+
+
