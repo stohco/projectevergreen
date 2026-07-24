@@ -1,7 +1,7 @@
 {
   "name": "Ergenverse",
   "customAuthor": "stohco",
-  "version": "0.1.0-alpha",
+  "version": "0.1.3-alpha",
   "baseModLoader": {
     "name": "forge-47.4.0",
     "displayName": "Forge 47.4.0 for 1.20.1",
@@ -48,9 +48,9 @@
   "installedMods": [
     {
       "name": "Ergenverse",
-      "version": "0.1.0-alpha",
-      "fileName": "ergenverse-0.1.0-alpha.jar",
-      "filePath": "minecraft/mods/ergenverse-0.1.0-alpha.jar",
+      "version": "0.1.3-alpha",
+      "fileName": "ergenverse-0.1.3-alpha.jar",
+      "filePath": "minecraft/mods/ergenverse-0.1.3-alpha.jar",
       "downloadUrl": "",
       "projectID": -1,
       "fileID": -1,
@@ -71,7 +71,7 @@
     "unsplashDownloadLocation": null
   },
   "gameVersion": "1.20.1",
-  "latestVersion": "0.1.0-alpha",
+  "latestVersion": "0.1.3-alpha",
   "lastLaunched": "",
   "lastUpdated": "2026-07-20T14:10:00Z",
   "totalPlayTime": 0,

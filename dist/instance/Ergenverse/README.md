@@ -6,9 +6,9 @@ Minecraft 1.20.1 + Forge 47.4.0 + Java 17
 
 The **Modpack ZIP** is the most reliable install method. CurseForge reads the manifest, downloads Forge 47.4.0 automatically, and sets everything up.
 
-1. Download `ergenverse-modpack-0.1.0-alpha.zip`
+1. Download `ergenverse-modpack-0.1.3-alpha.zip`
 2. Open CurseForge → click **+ Create Custom Profile** → **Import**
-3. Select `ergenverse-modpack-0.1.0-alpha.zip`
+3. Select `ergenverse-modpack-0.1.3-alpha.zip`
 4. CurseForge creates a profile named **Ergenverse**, installs Forge 47.4.0, drops the mod in `mods/`
 5. Click **Play**
 
@@ -16,7 +16,7 @@ The **Modpack ZIP** is the most reliable install method. CurseForge reads the ma
 
 If the Modpack ZIP doesn't work, use the Instance ZIP:
 
-1. Download `ergenverse-instance-0.1.0-alpha.zip`
+1. Download `ergenverse-instance-0.1.3-alpha.zip`
 2. Extract it — you get an `Ergenverse/` folder
 3. Find your CurseForge instances folder:
    - **Windows:** `C:\Users\<you>\curseforge\minecraft\Instances\`
@@ -51,16 +51,25 @@ Ergenverse/
 ├── profile.json                 ← Profile metadata
 └── minecraft/
     ├── mods/
-    │   └── ergenverse-0.1.0-alpha.jar   ← THE MOD (13 MB, 800+ classes)
+    │   └── ergenverse-0.1.3-alpha.jar   ← THE MOD (15 MB, 800+ classes)
     ├── config/                   ← Mod configs (generated on first run)
     ├── versions/                 ← Forge/MC versions (created by CurseForge)
     ├── logs/                     ← Game logs (created on first launch)
     └── saves/                    ← World saves (created on first launch)
 ```
 
+## What's new in v0.1.3-alpha
+
+- 103 loot table parse errors fixed → 0 (loot tables now load cleanly)
+- 30 missing item registrations (spirit stones, beast cores, equipment/artifacts)
+- spirit_stone_wall blockstate fix (324 model bakery warnings → 0)
+- Registry freeze crash from duplicate item names fixed
+- ERKeybinds client main-menu crash fixed (client now reaches the title screen)
+- Version discipline established (see CHANGELOG.md)
+
 ## Links
 
-- **Release:** https://github.com/stohco/projectevergreen/releases/tag/v0.1.0-alpha
-- **Modpack ZIP:** https://github.com/stohco/projectevergreen/releases/download/v0.1.0-alpha/ergenverse-modpack-0.1.0-alpha.zip
-- **Instance ZIP:** https://github.com/stohco/projectevergreen/releases/download/v0.1.0-alpha/ergenverse-instance-0.1.0-alpha.zip
-- **Mod JAR only:** https://github.com/stohco/projectevergreen/releases/download/v0.1.0-alpha/ergenverse-0.1.0-alpha.jar
+- **Release:** https://github.com/stohco/projectevergreen/releases/tag/v0.1.3-alpha
+- **Modpack ZIP:** https://github.com/stohco/projectevergreen/releases/download/v0.1.3-alpha/ergenverse-modpack-0.1.3-alpha.zip
+- **Instance ZIP:** https://github.com/stohco/projectevergreen/releases/download/v0.1.3-alpha/ergenverse-instance-0.1.3-alpha.zip
+- **Mod JAR only:** https://github.com/stohco/projectevergreen/releases/download/v0.1.3-alpha/ergenverse-0.1.3-alpha.jar

@@ -12,16 +12,16 @@
     "created": "2026-07-20T01:55:00Z",
     "lastUsed": "",
     "playTime": 0,
-    "description": "Renegade Immortal (仙逆) — Forge mod. Alpha 0.1.0.",
+    "description": "Renegade Immortal (仙逆) — Forge mod. Alpha 0.1.3.",
     "author": "stohco",
-    "version": "0.1.0-alpha"
+    "version": "0.1.3-alpha"
   },
   "files": [
     {
-      "path": "minecraft/mods/ergenverse-0.1.0-alpha.jar",
+      "path": "minecraft/mods/ergenverse-0.1.3-alpha.jar",
       "type": "mod",
       "name": "Ergenverse",
-      "version": "0.1.0-alpha",
+      "version": "0.1.3-alpha",
       "source": "local"
     }
   ],
