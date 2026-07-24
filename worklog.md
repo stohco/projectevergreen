@@ -3326,7 +3326,7 @@ Stage Summary:
 - Shipped: Article XLV (10 sections + Compliance) appended to CONSTITUTION.md. No Java. No new files. Constitution now 2114 lines, 45 articles.
 - Direction locked: next milestone is "The First Ordinary Day," not "DailySchedule." NpcScheduleGoal is formally deprecated by Article XLV §3 and slated for replacement by a need-driven goal.
 - Measurement reformed: Canon Experience Status is now 4-stage (Specified/Simulated/Observable/Memorable), not percentage. Per-cycle success metric is now "what could a player witness today that they could not witness yesterday" (Article XLV §8).
-- Git: <hash filled after commit> pushed to stohco/projectevergreen main.
+- Git: 2ae71d8 pushed to stohco/projectevergreen main.
 
 HARDEST SELF-CRITIQUE (this round):
 - Article XLV §3 names NpcScheduleGoal as deprecated but does NOT delete it. This is the same transition-path pattern as Article XLIV §2 (NpcSpawnRegistry "deprecated but retained"). The risk is permanent deprecation-without-replacement — a rule that codifies the violation it condemns. The next cycle MUST begin the NeedDrivenGoal or Article XLV §3 becomes another unenforced entry on the pile. This is the single highest-leverage next action.
