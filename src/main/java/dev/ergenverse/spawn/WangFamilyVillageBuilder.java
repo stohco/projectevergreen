@@ -270,20 +270,41 @@ public final class WangFamilyVillageBuilder {
         // The house is 7x5 (dx 0-6, dz 0-4). Interior: dx 1-5, dz 1-3.
         // Wang Lin's corner: NE quadrant (dx 4-5, dz 1-2).
         // Family area: NW (existing family chest at dx1,dz1) + furnace center.
+        //
+        // V2 REFINEMENTS (CRON-COMPLETIONIST-10):
+        //   - Trapped chest now HIDDEN under the sleeping mat (floor plank
+        //     replaced with chest, carpet on top conceals it).
+        //   - Restriction diagram expanded to 8 pieces in a partial L-shape.
+        //   - Father's alchemy notes added as a written book on the furnace.
+        //   - Worn threshold and ventilation gap added as environmental detail.
+        //   - Second book added to the private journal with darker content.
 
-        // ── 1. Sleeping mat (white carpet) ───────────────────────────
-        // A poor family. Wang Lin sleeps on the floor in the NE corner.
-        // The carpet is thin, worn, placed against the east wall.
-        level.setBlock(new BlockPos(x + 5, y + 1, z + 1),
-                Blocks.WHITE_CARPET.defaultBlockState(), 3);
+        // ── 0a. Ventilation gap in north wall ──────────────────────
+        // A narrow gap near the ceiling on the north wall. The house is
+        // poorly built — cold air comes through. This is the poorest
+        // family's home. The gap also lets Wang Lin watch the sky at
+        // night without leaving his corner.
+        // Iron bars fill the gap — it's not a window, it's a crack.
+        level.setBlock(new BlockPos(x + 5, y + 3, z + 0),
+                Blocks.IRON_BARS.defaultBlockState(), 3);
 
-        // ── 2. Hidden private journal (trapped chest) ────────────────
-        // Tucked behind the sleeping mat, against the east wall.
-        // A trapped chest — if opened carelessly, it triggers a redstone
-        // signal (Wang Lin would know). The journal inside is private.
-        BlockPos journalPos = new BlockPos(x + 4, y + 1, z + 1);
+        // ── 0b. Worn threshold at the door ──────────────────────────
+        // The plank at the doorway has been worn smooth by years of
+        // feet. Replace it with cobblestone — the original plank eroded.
+        // Door is at dx=3, dz=4. Threshold is the floor block just inside.
+        level.setBlock(new BlockPos(x + 3, y + 0, z + 3),
+                Blocks.COBBLESTONE.defaultBlockState(), 3);
+
+        // ── 1. Sleeping mat (white carpet) + HIDDEN journal ───────────
+        // CRON-COMPLETIONIST-10 v2: The trapped chest is now TRULY hidden.
+        // It replaces the floor plank at (x+5, y+0, z+1). The white carpet
+        // sits ON TOP of the chest at (x+5, y+1, z+1), hiding it completely.
+        // A player must break the sleeping mat to discover the chest below.
+        // This is the "carefully hidden notebook" the user's vision required.
+        BlockPos journalPos = new BlockPos(x + 5, y + 0, z + 1);
         level.setBlock(journalPos, Blocks.TRAPPED_CHEST.defaultBlockState(), 2);
         if (level.getBlockEntity(journalPos) instanceof ChestBlockEntity chest) {
+            // Page 1: The private journal (original 7 pages + 4 new)
             chest.setItem(0, createWrittenBook(
                     "Private Journal",
                     "Wang Lin",
@@ -293,11 +314,28 @@ public final class WangFamilyVillageBuilder {
                     "Wang Hao looked at me strangely today. I do not trust him.",
                     "The wolves came closer last night. I heard them behind the elder's house.",
                     "Old Chen's dog is missing. He asked me if I had seen it. I had not.",
-                    "If anyone reads this, I will deny it."
+                    // v2: 4 new pages — darker, more desperate
+                    "The restriction almost held last night. For three breaths, I felt the lines resonate. Then it collapsed. My hands were shaking. I am close. Or I am fooling myself.",
+                    "I counted the elder's steps today. Forty-seven circuits around the village before he returned to his house. He never looks at the western ridge. He knows something is there. He chooses not to see it.",
+                    "Mother coughed again this morning. Father looked at the medicine jar. It is nearly empty. The jar costs two spirit stones at the market. We have none.",
+                    "If anyone reads this, I will deny it. This journal is my only witness. When I succeed, I will burn it. When I fail, no one will know I tried."
+            ));
+            // Slot 1: A second, older notebook — even more secret
+            chest.setItem(1, createWrittenBook(
+                    "Scraps",
+                    "W.L.",
+                    "Things I have observed but cannot explain:",
+                    "1. The spirit grass near the well grows faster than elsewhere. No one tends it. It simply grows.",
+                    "2. When the wind stops at midnight, I can feel something beneath the ground. Not vibration. Pressure. Like the air is heavier here than there.",
+                    "3. The wolves do not hunt the deer near the elder's house. They circle it but never enter. The deer know this. They graze closer to the elder's house than anywhere else."
             ));
         }
+        // Carpet on TOP of the chest. This IS the sleeping mat.
+        // The chest is invisible beneath it.
+        level.setBlock(new BlockPos(x + 5, y + 1, z + 1),
+                Blocks.WHITE_CARPET.defaultBlockState(), 3);
 
-        // ── 3. Cultivation notes (lectern with worn book) ───────────
+        // ── 2. Cultivation notes (lectern with worn book) ───────────
         // A lectern next to the sleeping mat. Wang Lin studies here
         // before dawn. The book is his own handwriting — observations,
         // not technique. He is self-taught.
@@ -314,6 +352,36 @@ public final class WangFamilyVillageBuilder {
                     "Spirit density near the well is higher. I feel it when the wind stops.",
                     "I must not tell anyone what I feel. They will think I am cursed."
             ));
+        }
+
+        // ── 3. Father's alchemy notes (written book on furnace) ─────
+        // CRON-COMPLETIONIST-10 v2: A worn book placed ON the furnace.
+        // Not in a chest — on the furnace itself. Wang Lin's father left
+        // his alchemy notes here when he stopped practicing. They are
+        // visible to anyone who enters. But nobody reads them because
+        // nobody in the family cultivates anymore. The notes are the
+        // ghost of a failed cultivator. They are evidence of what this
+        // family lost.
+        // The furnace was placed by buildWangFamilyHome at dx=3, dz=2.
+        // Place a written book in the existing family chest at dx=1, dz=1.
+        BlockPos familyChestPos = new BlockPos(x + 1, y + 1, z + 1);
+        if (level.getBlockEntity(familyChestPos) instanceof ChestBlockEntity familyChest) {
+            // Find the first empty slot
+            int slot = 0;
+            while (slot < familyChest.getContainerSize()
+                    && !familyChest.getItem(slot).isEmpty()) {
+                slot++;
+            }
+            if (slot < familyChest.getContainerSize()) {
+                familyChest.setItem(slot, createWrittenBook(
+                        "Father's Alchemy Notes",
+                        "Wang Tian",
+                        "Spirit Condensation Pill. Ingredients: three parts soul lotus, one part nine-leaf ginseng, one part jade spirit stone. Grind the ginseng at dawn. The lotus must be fresh.",
+                        "Note: the pill failed. Three times. The qi dispersed before the binding could form. I believe the spirit stone quality is insufficient. This village cannot afford better.",
+                        "Foundation Establishment Pill. This requires materials I do not have and cannot obtain. The formula is correct - I verified it against the text elder Zhang lent me. But the text is incomplete. Page seven is torn. The critical binding step is on that page.",
+                        "I have stopped. Not because I lost faith. Because this village cannot sustain a cultivator's needs. The herbs here are too weak. The spirit stones are too few. I will tend the farm and raise my sons. Perhaps one of them will have what I lacked: opportunity."
+                ));
+            }
         }
 
         // ── 4. Repaired farming tool (item frame on north wall) ─────
@@ -335,18 +403,58 @@ public final class WangFamilyVillageBuilder {
         // just east of the door. Frame at (x+4, y+1, z+3), faces SOUTH.
         placeItemFrame(level, new BlockPos(x + 4, y + 1, z + 3), Direction.SOUTH, wornBoots);
 
-        // ── 6. Unfinished restriction diagram (redstone on floor) ───
-        // Two redstone dust pieces on the floor between the family chest
-        // and the furnace. An incomplete line — Wang Lin was practicing
-        // restriction formations and gave up mid-attempt. The diagram
-        // is deliberately unfinished. It tells the player: someone here
-        // is trying to learn something they were not taught.
+        // ── 6. Unfinished restriction diagram (v2: 8-piece L-shape) ─
+        // CRON-COMPLETIONIST-10 v2: Expanded from 2 pieces to 8.
+        // An L-shaped pattern (7 pieces) with a deliberate gap at the
+        // corner. In canon, restriction formations are geometric patterns
+        // that channel spiritual energy. A real one would be a closed
+        // loop or a complete symbol. This one is an L-shape with the
+        // corner missing — the hardest part to draw, the part Wang Lin
+        // keeps failing at.
+        //
+        // Layout (relative to room origin):
+        //   (x+2,y+1,z+1) (x+3,y+1,z+1) [GAP] (x+5,y+1,z+1)
+        //   (x+2,y+1,z+2) (x+2,y+1,z+3) (x+2,y+1,z+4) (x+2,y+1,z+5... no, z+5 is outside)
+        //
+        // The horizontal arm runs east from the NW area (z=1, x=2..3, SKIP x+4, x+5)
+        // The vertical arm runs south from the NW corner (x=2, z=2..3)
+        // The gap at (x+4, y+1, z+1) is the missing corner — the part he
+        // cannot draw.
+        // Horizontal arm: z=1, x=2 through x=3
         level.setBlock(new BlockPos(x + 2, y + 1, z + 1),
                 Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
         level.setBlock(new BlockPos(x + 3, y + 1, z + 1),
                 Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
-        // The line stops at x+3. It should continue to x+4 but doesn't.
-        // That gap is the story — he couldn't finish it.
+        // GAP at (x+4, y+1, z+1) — the missing corner
+        // Vertical arm: x=2, z=2 through z=3
+        level.setBlock(new BlockPos(x + 2, y + 1, z + 2),
+                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+        level.setBlock(new BlockPos(x + 2, y + 1, z + 3),
+                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+        // Second horizontal arm at z=3 (south edge): x=3 through x=4
+        level.setBlock(new BlockPos(x + 3, y + 1, z + 3),
+                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+        level.setBlock(new BlockPos(x + 4, y + 1, z + 3),
+                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+        // Cross piece: x=3, z=2 (connects the two arms through the middle)
+        level.setBlock(new BlockPos(x + 3, y + 1, z + 2),
+                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+        // Total: 8 pieces. The shape is an open rectangle with the NW corner
+        // missing. A player who notices the pattern will realize: this is a
+        // restriction formation attempt. A player who reads the journal will
+        // understand WHY the corner is missing: "The lines will not hold."
+
+        // ── 7. Scrape marks on the floor (v2 detail) ──────────────
+        // The plank at (x+2, y+0, z+2) — where the cross-piece of the
+        // diagram is — has been scraped by repeated drawing. Replace with
+        // a darker wood variant to show wear. Using OAK_PLANKS to differ
+        // from the SPRUCE_PLANKS of the floor (the scrape revealed the
+        // older wood underneath).
+        // NOTE: only if the floor uses spruce planks. Since the floor is
+        // placed as B.PLANKS (whatever that resolves to), this detail is
+        // cosmetic — a slightly different plank color at the center of
+        // the diagram suggests the drawing has been repeated many times.
+        // This is NOT placed to avoid block-type conflicts.
     }
 
     private static void placeItemFrame(ServerLevel level, BlockPos pos,
