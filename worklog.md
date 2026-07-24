@@ -3144,3 +3144,47 @@ Next priority:
 2. AUDIT ALL BLOCKSTATES for MC version-migration errors (wall properties, fence properties, etc.) — proactively, not reactively.
 3. INCREASE JVM HEAP for client launch tests (-Xmx2G or more) so the client can survive past model baking to the title screen.
 4. REGISTER SCREENS for all menu types: Currently only ALCHEMY_FURNACE has a screen registered. FORMATION_PLATFORM, TALISMAN_DESK, BEAD_FUNCTION menus will crash when opened (not at launch, but on use).
+
+---
+Task ID: VERSION-DISCIPLINE-01
+Agent: interactive-user-session (version control fix)
+Task: User asked: "why havent you done any version control? its still 0.1.0-alpha, you need to make distinguishments whenever you make changes." — establish proper version discipline: retroactive tags for missed behavior boundaries, current version bump, CHANGELOG.md, and a going-forward rule that every behavior-changing commit bumps the version.
+
+Work Log:
+- Assessed the actual on-disk state (vs. the prior summary's claims):
+  - forge-mod repo has its own git at .git with remote github.com/stohco/projectevergreen.git
+  - ZERO local git tags existed before this task; fetched remote tags and found 2: v0.1.0-alpha (at f40264c, 2026-07-20) and a stray "mincraft" typo tag (at 4b7a42f, Initial commit)
+  - GitHub releases: 2 total — v0.1.0-alpha (id 356468848, prerelease, 3 assets: JAR + modpack zip + instance zip) and an empty "mincraft" release (id 356099807)
+  - Source version string in gradle.properties (line 51) AND mods.toml both still read "0.1.0-alpha" — 6 behavior-changing commits past the v0.1.0-alpha tag
+  - No CHANGELOG.md existed
+- Mapped the commit chain between v0.1.0-alpha (f40264c) and HEAD (dbdc0fb): ~70+ commits spanning 4 days, including 6 distinct post-v0.1.0-alpha behavior boundaries that should have been versioned.
+- Selected 3 honest retroactive tag points based on actual behavior changes (not arbitrary commit counts):
+  - v0.1.1-alpha @ 6ce50b6 (CRON-SMOKE-TEST, Jul 24 14:50) — "server boots cleanly for the first time" (bundles 0e7dc1b + 6ce50b6: SoulGourdItem stacksTo+durability crash, arsenal dup-name crash, biome spawn key fix)
+  - v0.1.2-alpha @ a74c82c (CRON-CLIENT-FIX, Jul 24 15:29) — "client reaches main menu for the first time" (bundles 4549011 + a74c82c: 68 loot tables missing type field, ERKeybinds MOD/FORGE bus split — THE fix that made the mod playable client-side)
+  - v0.1.3-alpha @ new commit (this one) — "loot tables parse + 30 items registered + version discipline established" (bundles a6654e2 + 157cac5 + dbdc0fb + this version-discipline commit)
+- Wrote CHANGELOG.md (new file) covering all 4 versions with a versioning-policy header, per-version Added/Fixed/Changed/Known-Limitations sections, and honest "retroactive tag" notes explaining that source version strings at historical commits still read 0.1.0-alpha.
+- Bumped gradle.properties mod_version=0.1.3-alpha with an inline retroactive-history comment block.
+- Bumped mods.toml version="0.1.3-alpha".
+- Created annotated git tags with messages explaining retroactive nature where applicable.
+- Pushed main + all 3 new tags to remote.
+- Rebuilt JAR for v0.1.3-alpha.
+- Created GitHub release v0.1.3-alpha with the rebuilt JAR + full changelog body.
+- Updated v0.1.0-alpha release body to mark it as superseded by v0.1.3-alpha.
+
+Stage Summary:
+- Shipped: version discipline established. 3 new git tags (v0.1.1-alpha, v0.1.2-alpha, v0.1.3-alpha), 1 new GitHub release (v0.1.3-alpha with rebuilt JAR), CHANGELOG.md, version strings bumped in gradle.properties + mods.toml.
+- Build: GREEN — JAR rebuilt for 0.1.3-alpha.
+- Git: tags pushed to stohco/projectevergreen. HEAD commit bumps version to 0.1.3-alpha in the same commit as the CHANGELOG.md addition.
+- Going-forward rule: NO behavior-changing commit lands on main without a version bump in the same commit. If the version string hasn't moved, the change is not done.
+
+Harshest self-critique:
+- The user is right that this should have been done from the start. 70+ CRON rounds of "development" shipped a mod whose source claimed 0.1.0-alpha for 4 days while 6 behavior-changing commits piled on top. Anyone who downloaded the v0.1.0-alpha JAR from GitHub got the pre-fix artifact, not the current state. If the user had handed the repo to another LLM, that LLM would have seen commits past the tag and had no way to know which artifact matched which code state.
+- The retroactive tags are honest but imperfect: the source at v0.1.1-alpha and v0.1.2-alpha still reads "0.1.0-alpha" in gradle.properties/mods.toml because I failed to bump at the time. The CHANGELOG.md and tag annotations document this explicitly. This is the best recoverable state — I cannot rewrite history without force-pushing, which would be more destructive than the current honest annotation.
+- The "mincraft" typo tag (at Initial commit, no assets, no release value) was left in place rather than deleted. Deleting tags is a destructive action; the user did not ask for cleanup, only for version discipline. Noted for future cleanup if the user approves.
+- This task only establishes version discipline. It does NOT address the prior CRON demands (harsh artwork critique, custom item mechanics, client playtest on real GPU). Those remain outstanding.
+
+Next priority:
+1. ENFORCE THE RULE: Every future behavior-changing commit must bump mod_version + mods.toml version + add a CHANGELOG.md entry + tag + release, all in the same commit. No exceptions.
+2. ADDRESS OUTSTANDING CRON DEMANDS: harsh artwork critique of all 14 entity model classes; custom right-click mechanics for the 30 new items; loot table content redesign to drop ergenverse items instead of vanilla emeralds/diamonds.
+3. CLIENT PLAYTEST ON REAL GPU: title screen, world creation, in-game rendering still unverified.
+4. AUDIT remaining blockstates for the same MC 1.20.1 wall-property migration issue that spirit_stone_wall had.
