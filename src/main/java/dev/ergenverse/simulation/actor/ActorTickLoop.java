@@ -6,6 +6,7 @@ import dev.ergenverse.npc.memory.NpcMemoryTickHandler;
 import dev.ergenverse.simulation.cognition.ActivityProcess;
 import dev.ergenverse.simulation.cognition.CognitionGoal;
 import dev.ergenverse.simulation.cognition.DecisionEngine;
+import dev.ergenverse.simulation.cognition.MemoryGraph;
 import dev.ergenverse.simulation.cognition.perception.AttentionFilter;
 import dev.ergenverse.simulation.cognition.perception.Interpretation;
 import dev.ergenverse.simulation.cognition.perception.PerceptionSnapshot;
@@ -504,6 +505,39 @@ public final class ActorTickLoop {
                         .noneMatch(e -> "hostile".equals(e.classification));
         };
 
+        // ── Success condition 2: understood pattern ──
+        // CRON-COMPLETIONIST-15: "The actor understood the pattern." For INVESTIGATE
+        // commitments, success can also come from having accumulated enough memory
+        // about the target. If the actor's MemoryGraph has 3+ memories about the
+        // target subject with strength >= 0.3 (and the commitment has lived at least
+        // 400 ticks), the actor has "understood the pattern" — no need to keep
+        // investigating. This is the bridge between memory and commitment:
+        //   "Observe wolves — Until: understand hunting pattern"
+        // The pattern is "understood" when the actor has enough episodic memory
+        // about the subject. A more sophisticated version would check for
+        // INFERRED memories (synthesis), but for now OBSERVED + PARTICIPATED
+        // memories with sufficient strength are the threshold.
+        CompletionPredicate successPatternUnderstood = ctx -> {
+            if (ctx.actor() == null) return false;
+            if (ctx.actor().cognition == null) return false;
+            if (goal.category != CognitionGoal.Category.INVESTIGATE) return false;
+            if (ctx.currentTick() - tick < 400L) return false; // need time to learn
+            var mem = ctx.actor().cognition.memory;
+            if (mem == null) return false;
+            String subject = targetId.toLowerCase();
+            int strongMemories = 0;
+            for (MemoryGraph.MemoryNode node : mem.about(subject)) {
+                if (node.strength >= 0.3) strongMemories++;
+            }
+            // Also check for INFERRED memories (actor synthesized a pattern).
+            for (MemoryGraph.MemoryNode node : mem.about(subject)) {
+                if (node.type == MemoryGraph.Type.INFERRED && node.strength >= 0.2) {
+                    strongMemories++; // inferred memories count extra
+                }
+            }
+            return strongMemories >= 3;
+        };
+
         // ── Abandon condition 1: danger exceeds tolerance ──
         // "The world changed; continuing is unsafe." A hostile entity
         // stronger than the actor has come within 12 blocks. This is the
@@ -536,14 +570,14 @@ public final class ActorTickLoop {
         };
 
         // ── Abandon condition 3: family/allies need intervention ──
-        // "Family needs intervention." CRON-COMPLETIONIST-14 fix: the old
-        // predicate fired whenever ANY ally was within 16 blocks + ANY threat
-        // existed. In a village, allies are ALWAYS nearby — this made Wang Lin
-        // abandon his observation commitment every time a villager walked past
-        // during a wolf event. The fix: only fire when a HOSTILE entity is
-        // within IMMEDIATE_DANGER_BLOCKS of an ally/witness (not just near
-        // the actor). This checks threat→ally proximity, not threat→actor
-        // proximity.
+        // CRON-COMPLETIONIST-15 UPGRADE: Now uses real entity-to-entity
+        // distance (via the posX/posZ fields added to PerceivedEntity this cycle)
+        // instead of the triangle inequality approximation from CRON-COMPLETIONIST-14.
+        // The old check used actor-centric distances (hostile < 8 blocks from actor
+        // AND ally < 10 blocks from actor). In the worst case (hostile 8 north,
+        // ally 10 south), the actual threat→ally distance was ~18 blocks —
+        // not immediate danger at all. Now we compute the ACTUAL distance between
+        // the hostile and the ally, so the threshold is precise.
         CompletionPredicate abandonFamilyNeeds = ctx -> {
             if (ctx.perception() == null) return false;
             if (!ctx.perception().hasThreat) return false;
@@ -562,30 +596,21 @@ public final class ActorTickLoop {
                                     || "ally".equals(e.classification))
                             .toList();
             if (allies.isEmpty()) return false;
-            // Check if ANY hostile is within immediate danger distance of ANY ally.
-            // Both distances are from the ACTOR's perspective (perception is
-            // actor-centric). If both hostile and ally are close to the actor,
-            // they are close to each other (triangle inequality: distance
-            // between two entities ≤ sum of their distances to the observer).
-            // We use a tight threshold: hostile within 8 blocks of actor AND
-            // ally within 10 blocks of actor → hostile is within ~18 blocks
-            // of ally. For a tighter check, require hostile within 6 AND
-            // ally within 8 (max distance between them ≈ 14, but likely
-            // much closer since both are near the actor).
-            // CRITICAL: also check that the ally is CLOSER to the actor than
-            // the hostile (the ally is between the actor and the threat, or
-            // at least in the same direction). This prevents false positives
-            // when an ally is behind the actor but a wolf is in front.
-            final double hostileMaxDist = 8.0;
-            final double allyMaxDist = 10.0;
+            // Check if ANY hostile is within IMMEDIATE_DANGER_DISTANCE of ANY ally.
+            // Uses the real entity-to-entity distance, not the triangle inequality.
+            // This is the precise fix for the CRON-14 self-critique: "the
+            // worst case (threat 8 blocks north, ally 10 blocks south) over-counts
+            // danger." Now it correctly computes ~18 blocks instead of falsely
+            // treating it as "both nearby."
+            final double immediateDangerDist = 6.0;
             final double relativePowerThreshold = 0.3;
             for (PerceptionSnapshot.PerceivedEntity hostile : hostiles) {
-                if (hostile.distanceBlocks > hostileMaxDist) continue;
                 if (hostile.relativePower < relativePowerThreshold) continue;
                 for (PerceptionSnapshot.PerceivedEntity ally : allies) {
-                    if (ally.distanceBlocks > allyMaxDist) continue;
-                    // Ally is close and hostile is close — family needs help.
-                    return true;
+                    // CRON-COMPLETIONIST-15: isWithin uses real entity-to-entity distance.
+                    if (hostile.isWithin(ally, immediateDangerDist)) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -597,8 +622,9 @@ public final class ActorTickLoop {
         Commitment commitment = Commitment.builder(nature, targetId, goal)
                 .reason(reasonText)
                 .maxDuration(maxDuration)
-                .successDescription("Threat addressed; no hostiles perceived for 200+ ticks.")
+                .successDescription("Threat addressed; no hostiles perceived for 200+ ticks, or pattern understood.")
                 .successWhen(successThreatGone)
+                .successWhen(successPatternUnderstood)
                 .abandonWhen(abandonDanger)
                 .abandonWhen(abandonTargetGone)
                 .abandonWhen(abandonFamilyNeeds)

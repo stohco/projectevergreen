@@ -124,7 +124,8 @@ public final class PerceptionSensor {
                 double relPower = relativePower(le, perceiverPower);
 
                 entities.add(new PerceptionSnapshot.PerceivedEntity(
-                        leId, classification, etype, dist, relPower, dname));
+                        leId, classification, etype, dist, relPower, dname,
+                        le.getX(), le.getY(), le.getZ()));
 
                 if ("hostile".equals(classification)) hasThreat = true;
                 if ("prey".equals(classification) || "opportunity".equals(classification)) hasOpportunity = true;

@@ -5,6 +5,8 @@ import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.entity.EREntityTypes;
 import dev.ergenverse.simulation.WorldRuntimeState;
 import dev.ergenverse.simulation.WorldStateDataLoader;
+import dev.ergenverse.simulation.actor.Actor;
+import dev.ergenverse.simulation.actor.ActorRegistry;
 import dev.ergenverse.simulation.opportunity.OpportunityRegistry;
 import dev.ergenverse.simulation.opportunity.OpportunityState;
 import dev.ergenverse.simulation.settlement.WorldSituation.OpportunitySnapshot;
@@ -184,6 +186,14 @@ public final class ActorMaterializer {
             }
 
             for (String actorId : settlement.getPopulation()) {
+                // CRON-COMPLETIONIST-15: Stash the WorldSituation on the actor
+                // so CommitmentContext predicates can read it. This is done before
+                // the reasoning step so predicates have access during cognition ticks.
+                Actor actor = ActorRegistry.get(actorId);
+                if (actor != null && situation != null) {
+                    actor.lastSituation = situation;
+                }
+
                 // ── The actor's mind reasons over the shared situation ──
                 // The mind scores candidate activities against the actor's
                 // motivation weights. Nobody wrote "if Wang Lin" — the decision

@@ -549,19 +549,15 @@ public class CognitionDrivenGoal extends Goal {
      * perception. Both may be null — predicates must handle that.
      */
     private CommitmentContext buildCommitmentContext(Actor actor, long tick) {
-        dev.ergenverse.simulation.settlement.WorldSituation situation = null;
-        try {
-            // The WorldSituation is computed per-scan by ActorMaterializer
-            // and is not stashed on the actor. For the context, we provide
-            // what we have: the actor's last perception. Predicates that
-            // need the situation will see null and return false — the
-            // commitment continues, which is the safe default.
-            situation = null;
-        } catch (Exception ignored) {}
+        // CRON-COMPLETIONIST-15: Use the actor's stashed WorldSituation.
+        // Previously this was always null (ActorMaterializer didn't stash it).
+        // Now predicates that need the situation (threat intensity, time-of-day,
+        // nearby opportunities) can read ctx.situation() instead of returning
+        // false.
         return new CommitmentContext(
                 tick,
                 actor,
-                situation,
+                actor.lastSituation,
                 actor.lastPerception);
     }
 

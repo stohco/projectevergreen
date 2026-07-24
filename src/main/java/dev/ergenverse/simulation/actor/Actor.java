@@ -5,6 +5,7 @@ import dev.ergenverse.simulation.cognition.Ontology;
 import dev.ergenverse.simulation.cognition.perception.Interpretation;
 import dev.ergenverse.simulation.cognition.perception.PerceptionSnapshot;
 import dev.ergenverse.simulation.cognition.prediction.ActionPredictor;
+import dev.ergenverse.simulation.settlement.WorldSituation;
 import dev.ergenverse.simulation.los.SimulationImportanceScore;
 import dev.ergenverse.simulation.los.SimulationLevel;
 import dev.ergenverse.simulation.cognition.ActivityProcess;
@@ -89,6 +90,17 @@ public final class Actor {
 
     /** Block position (used for distance-to-player importance calc). */
     public int blockX, blockY, blockZ;
+
+    /** CRON-COMPLETIONIST-15: Last-known WorldSituation, stashed by ActorMaterializer
+     * during the settlement scan. This gives CommitmentContext predicates access
+     * to settlement-level threat intensity, time-of-day, mood, and nearby
+     * opportunity data — information that was previously null in the context.
+     * Predicates that need the situation (threat intensity, distance to threat
+     * center, etc.) can now read ctx.situation() instead of returning false.
+     * Only set when the actor is materialized and the settlement has a valid
+     * WorldSituation. Null until first materialization pass.
+     */
+    public dev.ergenverse.simulation.settlement.WorldSituation lastSituation = null;
 
     public Actor(String id, ActorType type, String provenance, String canonConfidence) {
         this.id = id;

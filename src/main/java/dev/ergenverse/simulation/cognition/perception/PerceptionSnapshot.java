@@ -46,7 +46,14 @@ import java.util.List;
  */
 public final class PerceptionSnapshot {
 
-    /** One perceived entity, pre-classified. */
+    /** One perceived entity, pre-classified.
+     *
+     * CRON-COMPLETIONIST-15: Added posX/posY/posZ fields so predicates
+     * can compute entity-to-entity distances (not just entity-to-actor).
+     * This enables the abandonFamilyNeeds predicate to check whether a
+     * hostile is genuinely near an ally, rather than using the triangle
+     * inequality approximation.
+     */
     public static final class PerceivedEntity {
         public final String entityId;        // minecraft entity UUID string or actor id
         public final String classification;  // "hostile", "neutral", "prey", "witness", "ally", "unknown"
@@ -54,15 +61,42 @@ public final class PerceptionSnapshot {
         public final double distanceBlocks;
         public final double relativePower;   // -1..+1, negative = weaker than perceiver, positive = stronger
         public final String displayName;
+        /** World position of this entity at the time of perception.
+         *  CRON-COMPLETIONIST--15: added for entity-to-entity distance computation. */
+        public final double posX, posY, posZ;
 
         public PerceivedEntity(String entityId, String classification, String entityType,
-                               double distanceBlocks, double relativePower, String displayName) {
+                               double distanceBlocks, double relativePower, String displayName,
+                               double posX, double posY, double posZ) {
             this.entityId = entityId;
             this.classification = classification;
             this.entityType = entityType;
             this.distanceBlocks = distanceBlocks;
             this.relativePower = relativePower;
             this.displayName = displayName;
+            this.posX = posX;
+            this.posY = posY;
+            this.posZ = posZ;
+        }
+
+        /**
+         * Compute the 3D distance (in blocks) between this entity and another.
+         * CRON-COMPLETIONIST-15: enables predicates to check entity-to-entity
+         * proximity without the triangle inequality approximation.
+         */
+        public double distanceTo(PerceivedEntity other) {
+            if (other == null) return Double.MAX_VALUE;
+            double dx = this.posX - other.posX;
+            double dy = this.posY - other.posY;
+            double dz = this.posZ - other.posZ;
+            return Math.sqrt(dx * dx + dy * dy + dz * dz);
+        }
+
+        /**
+         * Check if another entity is within a given distance threshold.
+         */
+        public boolean isWithin(PerceivedEntity other, double maxDist) {
+            return distanceTo(other) <= maxDist;
         }
     }
 
