@@ -95,6 +95,11 @@ public final class SpiritBeastRenderers {
         // texture-only), so the whole head renders at fullbright. Per the
         // FireBeastRenderer self-critique, at wolf scale the dark skull contrasts
         // with bright eye texture pixels, making this acceptable.
+        // CRON-COMPLETIONIST-17: NOW targets individual eye cubes instead of the
+        // entire head. Added eye_left and eye_right cube parts to SpiritWolfModel.
+        // Only the tiny eye cubes render at fullbright — skull, snout, ears, jaw,
+        // fangs, and nose pad no longer glow. Fixes the "glowing skull" bug from
+        // CRON-COMPLETIONIST-13 art critique.
         @Override
         public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
                            PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
@@ -103,7 +108,9 @@ public final class SpiritBeastRenderers {
             poseStack.translate(0, 1.501F, 0);
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getHead().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            // Targeted emissive: only eye cubes, not the whole head.
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
             poseStack.popPose();
         }
     }
@@ -156,6 +163,9 @@ public final class SpiritBeastRenderers {
         // CRON-COMPLETIONIST-59: Emissive eye glow — spirit hawks are raptors with
         // glowing spirit eyes. Same approach as wolf (whole head at fullbright)
         // since hawk model has no separate eye cubes.
+        // CRON-COMPLETIONIST-17: NOW targets individual eye cubes. The whole head
+        // (skull + beak + crest) no longer glows — only the tiny eye cubes do.
+        // Fixes the "glowing beak" bug from CRON-COMPLETIONIST-13 art critique.
         @Override
         public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
                            PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
@@ -164,7 +174,9 @@ public final class SpiritBeastRenderers {
             poseStack.translate(0, 1.501F, 0);
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getHead().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            // Targeted emissive: only eye cubes, not the whole head.
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
             poseStack.popPose();
         }
     }

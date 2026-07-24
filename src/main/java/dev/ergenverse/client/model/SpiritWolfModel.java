@@ -63,6 +63,8 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
     private final ModelPart backLeftShin;
     private final ModelPart backRightThigh;
     private final ModelPart backRightShin;
+    private final ModelPart eyeLeft;
+    private final ModelPart eyeRight;
 
     public SpiritWolfModel(ModelPart root) {
         this.root = root;
@@ -84,6 +86,8 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         this.backLeftShin = this.backLeftThigh.getChild("shin");
         this.backRightThigh = root.getChild("back_right_thigh");
         this.backRightShin = this.backRightThigh.getChild("shin");
+        this.eyeLeft = this.head.getChild("eye_left");
+        this.eyeRight = this.head.getChild("eye_right");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -140,6 +144,20 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
                 CubeListBuilder.create().texOffs(40, 4)
                         .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F),
                 PartPose.offset(0.5F, 2.0F, -3.0F));
+        // eye_left, eye_right : CRON-COMPLETIONIST-17 — separate eye cubes for
+        // targeted emissive glow. Previously the whole head rendered at fullbright
+        // (skull, snout, ears, jaw all glowed). Now only the eye cubes glow,
+        // matching the approach used by FireBeastRenderer (specific part targeting).
+        // Each eye is a tiny 1x1x0.5 cube positioned on the front face of the skull
+        // where the texture maps the glowing pixels.
+        head.addOrReplaceChild("eye_left",
+                CubeListBuilder.create().texOffs(44, 4)
+                        .addBox(-1.4F, -0.5F, -1.51F, 1.0F, 1.0F, 0.5F),
+                PartPose.offset(0.0F, 0.0F, 0.0F));
+        head.addOrReplaceChild("eye_right",
+                CubeListBuilder.create().texOffs(44, 8)
+                        .addBox(0.4F, -0.5F, -1.51F, 1.0F, 1.0F, 0.5F),
+                PartPose.offset(0.0F, 0.0F, 0.0F));
         // nose pad : dark nub at the snout tip
         head.addOrReplaceChild("nose_pad",
                 CubeListBuilder.create().texOffs(44, 0)
@@ -205,6 +223,11 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
     // renders at fullbright. Acceptable at wolf scale — dark skull contrasts
     // with bright eye texture pixels.
     public ModelPart getHead() { return this.head; }
+
+    // CRON-COMPLETIONIST-17: Expose individual eye cubes for targeted emissive.
+    // Renderers now render ONLY these parts at fullbright, not the entire head.
+    public ModelPart getEyeLeft() { return this.eyeLeft; }
+    public ModelPart getEyeRight() { return this.eyeRight; }
 
     @Override
     public ModelPart root() {

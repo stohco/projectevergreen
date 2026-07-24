@@ -78,6 +78,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
     private final ModelPart bodyHind;
     private final ModelPart leftLeg;
     private final ModelPart rightLeg;
+    private final ModelPart eyeLeft;
+    private final ModelPart eyeRight;
 
     public SpiritHawkModel(ModelPart root) {
         this.root = root;
@@ -94,6 +96,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         this.tail = root.getChild("tail");
         this.leftLeg = root.getChild("left_leg");
         this.rightLeg = root.getChild("right_leg");
+        this.eyeLeft = this.head.getChild("eye_left");
+        this.eyeRight = this.head.getChild("eye_right");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -126,6 +130,19 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                         .texOffs(36, 0)
                         .addBox(-1.0F, -2.5F, -1.5F, 2.0F, 1.0F, 1.0F),  // crest on top
                 PartPose.offset(0.0F, -1.0F, -1.0F));
+
+        // CRON-COMPLETIONIST-17: eye_left, eye_right — separate eye cubes for
+        // targeted emissive glow. Previously the whole head rendered at fullbright
+        // (skull + beak + crest all glowed). Now only the tiny eye cubes glow.
+        // Positioned on the front face of the skull, on either side of the beak.
+        head.addOrReplaceChild("eye_left",
+                CubeListBuilder.create().texOffs(44, 12)
+                        .addBox(-1.4F, -0.3F, -3.01F, 0.8F, 0.8F, 0.5F),
+                PartPose.offset(0.0F, 0.0F, 0.0F));
+        head.addOrReplaceChild("eye_right",
+                CubeListBuilder.create().texOffs(44, 16)
+                        .addBox(0.6F, -0.3F, -3.01F, 0.8F, 0.8F, 0.5F),
+                PartPose.offset(0.0F, 0.0F, 0.0F));
 
         // ── left wing : shoulder -> forearm -> hand -> 3 feathers ────────
         PartDefinition leftWing = root.addOrReplaceChild("left_wing",
@@ -234,6 +251,11 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
 
     // CRON-COMPLETIONIST-59: Expose head for emissive eye glow render pass.
     public ModelPart getHead() { return this.head; }
+
+    // CRON-COMPLETIONIST-17: Expose individual eye cubes for targeted emissive.
+    // Renderers now render ONLY these parts at fullbright, not the entire head.
+    public ModelPart getEyeLeft() { return this.eyeLeft; }
+    public ModelPart getEyeRight() { return this.eyeRight; }
 
     @Override
     public ModelPart root() {
