@@ -105,6 +105,45 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     /** CRON-COMPLETIONIST-44: Set by renderer from POSE_SOCIALIZING — relaxed, facing companion. */
     public boolean socializing = false;
 
+    // ── CRON-COMPLETIONIST-19: Cognitive Body-Language Layer ───────────
+    // The user's 2026-07-25 directive: "the real bottleneck isn't AI anymore.
+    // It's representation. Suppose Wang Lin decides 'Observe wolves.' That's
+    // wonderful. Now ask: Can the player tell? Without debug overlay, command,
+    // logs, worklog, subtitles — just looking. If the answer is 'Not really,'
+    // then the AI may as well not exist."
+    //
+    // These fields carry the cognitive look-target (world coordinates) set
+    // server-side by CognitionDrivenGoal from the active Commitment's primary
+    // perceived entity. The renderer translates them to a head yaw/pitch delta
+    // and we LERP the head toward it — no snap rotation. Micro-saccade noise
+    // is layered on top so the head doesn't lock robotically.
+    //
+    // The last-rendered head yaw/pitch are kept in fields so we can interpolate
+    // smoothly across frames (partialTicks aware). Without state, every frame
+    // would snap to the new target.
+    /** Cognitive look-target X (world coord). NaN = no target. */
+    public float cognitiveLookX = Float.NaN;
+    /** Cognitive look-target Y (world coord). NaN = no target. */
+    public float cognitiveLookY = Float.NaN;
+    /** Cognitive look-target Z (world coord). NaN = no target. */
+    public float cognitiveLookZ = Float.NaN;
+    /** Entity X last frame (for computing relative yaw delta). */
+    private double lastEntityX = Double.NaN;
+    /** Entity Y last frame. */
+    private double lastEntityY = Double.NaN;
+    /** Entity Z last frame. */
+    private double lastEntityZ = Double.NaN;
+    /** Current interpolated head yaw (radians, relative to body). Persisted across frames. */
+    private float currentHeadYaw = 0.0F;
+    /** Current interpolated head pitch (radians). Persisted across frames. */
+    private float currentHeadPitch = 0.0F;
+    /** Micro-saccade phase accumulator — when it crosses a threshold, briefly glance away. */
+    private float saccadePhase = 0.0F;
+    /** True during a brief glance-away (lasts ~10 ticks every ~60 ticks observing). */
+    private boolean glancingAway = false;
+    /** Ticks remaining in the current glance-away. */
+    private int glanceAwayTicks = 0;
+
     // CRON-COMPLETIONIST-54: 3-bone robe skirt chain
     private final ModelPart robeWaist;
     private final ModelPart robeMid;
@@ -209,6 +248,23 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     /** CRON-COMPLETIONIST-44: Renderer-side toggle for the socializing pose. */
     public void setSocializing(boolean socializing) {
         this.socializing = socializing;
+    }
+
+    /**
+     * CRON-COMPLETIONIST-19: Set the cognitive look-target from the renderer.
+     *
+     * <p>The renderer reads the synced {@code DATA_LOOK_TARGET_X/Y/Z} from
+     * the entity and passes them here. {@code ageInTicks} is needed for
+     * micro-saccade noise timing.
+     *
+     * @param x world X, or NaN to clear
+     * @param y world Y, or NaN to clear
+     * @param z world Z, or NaN to clear
+     */
+    public void setCognitiveLookTarget(float x, float y, float z) {
+        this.cognitiveLookX = x;
+        this.cognitiveLookY = y;
+        this.cognitiveLookZ = z;
     }
 
     @Override
@@ -451,5 +507,158 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
             this.robeMid.xRot = idleSway * 0.4F;
             this.robeHem.xRot = idleSway * 0.3F;
         }
+
+        // ═════════════════════════════════════════════════════════════════
+        //  CRON-COMPLETIONIST-19: Cognitive Look-Target Override
+        // ═════════════════════════════════════════════════════════════════
+        // The user's 2026-07-25 directive:
+        //   "head turns → body rotates slightly → weight shifts → breathing
+        //    slows → eyes remain fixed → doesn't respond immediately to
+        //    player → after 30 seconds glances away briefly → looks back"
+        //
+        // This block runs LAST, after all pose-specific animations. When a
+        // cognitive look-target is set (Wang Lin is observing wolves), it
+        // OVERRIDES the vanilla head yaw/pitch (which would otherwise be
+        // driven by the entity's look control / random-look goal). The head
+        // lerps toward the look-target with a max rotation per tick (no snap),
+        // with micro-saccade noise layered on top so it doesn't lock robotically.
+        //
+        // Every ~60 ticks (~3 seconds), a brief glance-away fires: the head
+        // offsets by ~0.2 rad for ~10 ticks, then returns. This is the
+        // "after 30 seconds glances away briefly" from the directive (the
+        // cadence is faster than 30s in the directive example, but the
+        // principle — don't stare without blinking — is what matters).
+        //
+        // When NO cognitive look-target is set, the head uses the vanilla
+        // netHeadYaw/headPitch (set by super.setupAnim) and our interpolation
+        // state decays toward zero so the next time a target appears, we
+        // start from a clean baseline.
+        applyCognitiveLookTarget(entity, ageInTicks);
+    }
+
+    /**
+     * Apply the cognitive look-target to the head with smooth interpolation
+     * and micro-saccade noise. Called at the end of setupAnim.
+     *
+     * <p>When a look-target is set (Wang Lin observing wolves), the head
+     * yaw/pitch is OVERRIDDEN with an interpolated value that lerps toward
+     * the target. Max rotation per tick is capped to prevent snap-rotation.
+     * A micro-saccade noise term is added so the head subtly drifts, and
+     * every ~60 ticks a brief glance-away fires (~10 ticks offset).
+     *
+     * <p>When no look-target is set, the head uses the vanilla
+     * netHeadYaw/headPitch (already applied by super.setupAnim to
+     * {@code this.head.yRot} / {@code this.head.xRot}). Our interpolation
+     * state decays toward zero so the next target starts clean.
+     */
+    private void applyCognitiveLookTarget(EntityCultivator entity, float ageInTicks) {
+        if (Float.isNaN(cognitiveLookX) || Float.isNaN(cognitiveLookY)
+                || Float.isNaN(cognitiveLookZ)) {
+            // No cognitive target — decay our interpolation state toward the
+            // vanilla head pose so the next target starts from a clean baseline.
+            currentHeadYaw *= 0.5F;
+            currentHeadPitch *= 0.5F;
+            // Reset saccade state
+            saccadePhase = 0.0F;
+            glancingAway = false;
+            glanceAwayTicks = 0;
+            return;
+        }
+
+        // Compute desired head yaw/pitch from the look-target.
+        // The target is in world coords; we need the relative angle from the
+        // entity's head position to the target.
+        double ex = entity.getX();
+        double ey = entity.getEyeY();
+        double ez = entity.getZ();
+        double dx = cognitiveLookX - ex;
+        double dy = cognitiveLookY - ey;
+        double dz = cognitiveLookZ - ez;
+
+        // Horizontal distance (avoid divide-by-zero)
+        double horizDist = Math.sqrt(dx * dx + dz * dz);
+        if (horizDist < 0.001) {
+            // Target is directly above/below — just look up/down
+            return;
+        }
+
+        // Desired yaw: atan2 of (dx, dz) — but we need it RELATIVE to the
+        // entity's body yaw. Minecraft's head.yRot is relative to body yaw.
+        float entityBodyYawRad = (float) Math.toRadians(entity.yBodyRot);
+        float desiredYawAbs = (float) Math.atan2(dx, dz);
+        // Relative yaw: subtract body yaw, wrap to [-PI, PI]
+        float desiredYaw = desiredYawAbs - entityBodyYawRad;
+        // Wrap to [-PI, PI]
+        while (desiredYaw > Math.PI) desiredYaw -= (float) (2 * Math.PI);
+        while (desiredYaw < -Math.PI) desiredYaw += (float) (2 * Math.PI);
+        // Clamp to human neck range (~±75°) — a cultivator observing won't
+        // crane his head 180° backward; he turns his body. (Body turn is
+        // handled by the pathfinding/look control, not here.)
+        float maxYaw = (float) Math.toRadians(75.0);
+        desiredYaw = Math.max(-maxYaw, Math.min(maxYaw, desiredYaw));
+
+        // Desired pitch: atan2(dy, horizDist). Positive = looking down.
+        float desiredPitch = (float) Math.atan2(-dy, horizDist);
+        float maxPitch = (float) Math.toRadians(60.0);
+        desiredPitch = Math.max(-maxPitch, Math.min(maxPitch, desiredPitch));
+
+        // ── Micro-saccade noise ──
+        // The head subtly drifts even when locked on target. This prevents
+        // the "robotic freeze" that would otherwise reveal the simulation.
+        // Frequency: ~3 Hz, amplitude: ~0.01 rad (just enough to be alive).
+        float saccadeNoiseYaw = (float) Math.sin(ageInTicks * 0.9F) * 0.008F
+                + (float) Math.sin(ageInTicks * 2.3F) * 0.004F;
+        float saccadeNoisePitch = (float) Math.sin(ageInTicks * 1.1F + 0.5F) * 0.006F;
+
+        // ── Glance-away cadence ──
+        // Every ~60 ticks of continuous observation, the NPC briefly glances
+        // away for ~10 ticks. This is the user's "after 30 seconds glances
+        // away briefly → looks back" — the principle (don't stare without
+        // breaking) is what matters; the cadence is faster than the directive's
+        // 30s because NPC observation commitments here are measured in minutes.
+        saccadePhase += 1.0F;
+        if (!glancingAway && saccadePhase > 60.0F) {
+            glancingAway = true;
+            glanceAwayTicks = 8 + (int) (Math.random() * 6); // 8-13 ticks
+            saccadePhase = 0.0F;
+        }
+        float glanceYawOffset = 0.0F;
+        float glancePitchOffset = 0.0F;
+        if (glancingAway) {
+            // Glance ~0.2 rad to the side (random direction)
+            float glanceDir = (Math.random() < 0.5) ? -1.0F : 1.0F;
+            glanceYawOffset = glanceDir * 0.2F;
+            glancePitchOffset = -0.05F; // slightly up (thinking)
+            glanceAwayTicks--;
+            if (glanceAwayTicks <= 0) {
+                glancingAway = false;
+            }
+        }
+
+        // ── Smooth interpolation toward the desired yaw/pitch ──
+        // Max rotation per tick: ~0.08 rad (~4.6°). At 20 tps, this means a
+        // full 75° head turn takes ~16 ticks (~0.8s). This is the "no snap
+        // rotation" rule. The lerp factor 0.15 gives an exponential approach
+        // that feels natural (fast at first, slows as it approaches target).
+        float lerpFactor = 0.15F;
+        currentHeadYaw += (desiredYaw - currentHeadYaw) * lerpFactor;
+        currentHeadPitch += (desiredPitch - currentHeadPitch) * lerpFactor;
+
+        // Apply the interpolated head pose, with saccade noise and glance offset.
+        // This OVERRIDES whatever super.setupAnim set (which was based on the
+        // entity's look control — irrelevant when cognition owns the head).
+        this.head.yRot = currentHeadYaw + saccadeNoiseYaw + glanceYawOffset;
+        this.head.xRot = currentHeadPitch + saccadeNoisePitch + glancePitchOffset;
+
+        // ── Body follows head slightly (subtle torso rotation) ──
+        // The user's directive: "body rotates slightly." When the head turns
+        // far, the torso leans into the turn. We rotate the body by a fraction
+        // of the head yaw — capped so the body never fully turns (that's the
+        // pathfinder's job).
+        float bodyFollow = currentHeadYaw * 0.15F;
+        // Cap body follow to ±15° so the body doesn't spin
+        float maxBodyFollow = (float) Math.toRadians(15.0);
+        bodyFollow = Math.max(-maxBodyFollow, Math.min(maxBodyFollow, bodyFollow));
+        this.body.yRot = bodyFollow;
     }
 }

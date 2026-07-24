@@ -5,12 +5,14 @@ import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.simulation.actor.Actor;
 import dev.ergenverse.simulation.actor.ActorRegistry;
 import dev.ergenverse.simulation.cognition.Ontology;
+import dev.ergenverse.simulation.cognition.perception.PerceptionSnapshot;
 import dev.ergenverse.simulation.intent.ActorEntityLink;
 import dev.ergenverse.simulation.intent.Commitment;
 import dev.ergenverse.simulation.intent.CommitmentContext;
 import dev.ergenverse.simulation.intent.CultivationTask;
 import dev.ergenverse.simulation.intent.Intent;
 import dev.ergenverse.simulation.intent.IntentDecomposer;
+import dev.ergenverse.simulation.intent.IntentNature;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -224,6 +226,14 @@ public class CognitionDrivenGoal extends Goal {
      * the commitment's remaining persistence, so it will NOT expire
      * before the commitment does. The goal then decomposes this Intent
      * as usual.
+     *
+     * <p>CRON-COMPLETIONIST-19: Also projects the commitment onto the
+     * entity's body language in real time. The pose is set from the
+     * IntentNature, the attention lock is engaged so RandomLookAroundGoal
+     * is suppressed, and the look-target is initialized from the actor's
+     * last perception. This is the bridge the user named: "Suppose Wang
+     * Lin decides 'Observe wolves.' That's wonderful. Now ask: Can the
+     * player tell? Without debug overlay, command, logs — just looking."
      */
     @Override
     public void start() {
@@ -284,6 +294,22 @@ public class CognitionDrivenGoal extends Goal {
             beginTask(first, tick);
         }
 
+        // ── CRON-COMPLETIONIST-19: project the commitment onto body language ──
+        // This is the missing bridge the user named. The pose is set in real
+        // time from the active IntentNature, NOT only at settlement-scan time.
+        // The attention lock engages so the vanilla RandomLookAroundGoal is
+        // suppressed (the user: "doesn't respond immediately to player").
+        // The look-target is initialized from the actor's last perception and
+        // updated each tick in tick().
+        if (fromCommitment) {
+            int pose = poseForIntent(intent.nature());
+            cultivator.setCultivatorPose(pose);
+            cultivator.setCognitiveAttentionLock(true);
+            updateCognitiveLookTarget(actor);
+            Ergenverse.LOGGER.info("[CognitionDrivenGoal] {} body-language: pose={} (from {})",
+                    actorId, poseName(pose), intent.nature().label);
+        }
+
         // Log (rate-limited — only when intent label changes)
         if (!intent.nature().label.equals(lastLoggedIntent)) {
             Ergenverse.LOGGER.info("[CognitionDrivenGoal] {} starting {} '{}' → {} tasks",
@@ -296,6 +322,11 @@ public class CognitionDrivenGoal extends Goal {
 
     /**
      * Stop the goal — clear the task queue and navigation.
+     *
+     * <p>CRON-COMPLETIONIST-19: Also clear the cognitive look-target and
+     * release the attention lock so vanilla look control resumes. This is
+     * critical: if we don't clear these, the NPC's head stays locked on the
+     * last-known wolf position forever, even after the commitment ends.
      */
     @Override
     public void stop() {
@@ -303,10 +334,24 @@ public class CognitionDrivenGoal extends Goal {
         currentTaskIndex = -1;
         sourceIntent = null;
         cultivator.getNavigation().stop();
+        // CRON-COMPLETIONIST-19: release body-language state.
+        cultivator.setCognitiveAttentionLock(false);
+        cultivator.clearCognitiveLookTarget();
+        // Restore idle pose only if we were cognition-driven. If the entity
+        // is activity-locked (settlement-scan pose), leave the pose alone —
+        // the materializer owns it in that case.
+        if (!cultivator.isActivityLocked()) {
+            cultivator.setCultivatorPose(EntityCultivator.POSE_IDLE);
+        }
     }
 
     /**
      * Tick — execute the current task.
+     *
+     * <p>CRON-COMPLETIONIST-19: also refreshes the cognitive look-target
+     * each tick from the actor's latest perception. As the wolves move,
+     * Wang Lin's head tracks them. This is the real-time body-language
+     * projection the user's directive demands.
      */
     @Override
     public void tick() {
@@ -325,6 +370,17 @@ public class CognitionDrivenGoal extends Goal {
 
         // Execute the task
         executeTask(task, tick);
+
+        // CRON-COMPLETIONIST-19: refresh the cognitive look-target from the
+        // actor's latest perception. This runs every tick so the NPC's head
+        // tracks moving targets (wolves stalking through the treeline).
+        String actorId = cultivator.getCharacterId();
+        Actor actor = ActorRegistry.get(actorId);
+        if (actor != null && actor.cognition != null
+                && actor.cognition.activeCommitment != null
+                && actor.cognition.activeCommitment.isActionable()) {
+            updateCognitiveLookTarget(actor);
+        }
 
         // Check completion
         if (isTaskComplete(task, tick)) {
@@ -571,5 +627,149 @@ public class CognitionDrivenGoal extends Goal {
                 how,
                 commitment.endReason,
                 commitment.reason);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  CRON-COMPLETIONIST-19: Cognitive Body-Language projection
+    // ═══════════════════════════════════════════════════════════════════
+
+    /**
+     * Map an {@link IntentNature} to an EntityCultivator pose constant.
+     *
+     * <p>This is the real-time projection the user's 2026-07-25 directive
+     * demands. When a Commitment is active, the entity's pose is set from
+     * its IntentNature EVERY time the goal starts — not just at settlement
+     * scan. Wang Lin committing to OBSERVE_FROM_DISTANCE immediately shows
+     * POSE_OBSERVING (crouched, hand at brow, head raised).
+     *
+     * <p>The mapping is designed so that the player can READ the NPC's
+     * cognitive state from its silhouette alone:
+     * <ul>
+     *   <li>Observation intents (OBSERVE_FROM_DISTANCE, GATHER_INTEL,
+     *       EXPLORE_CAUTIOUSLY, AVOID_REVEALING_STRENGTH,
+     *       CULTIVATE_SECRETLY) → POSE_OBSERVING — crouched, watchful,
+     *       hand shielding brow, head raised. "He's watching something."</li>
+     *   <li>Defensive intents (PROTECT_ASSET, DEFEND_POSITION,
+     *       ESTABLISH_DOMINANCE, AMBUSH, DECEIVE, PROVOKE) →
+     *       POSE_GUARDING — feet wide, arms forward, combat-ready tension.
+     *       "He's braced for something."</li>
+     *   <li>Purposeful-movement intents (SEEK_OPPORTUNITY,
+     *       ADVANCE_OPPORTUNISTICALLY, RETREAT_TACTICALLY) →
+     *       POSE_PURSUING — body leaning forward, eyes on destination.
+     *       "He's going somewhere with intent."</li>
+     *   <li>Social intents (NEGOTIATE, TEST_JUDGMENT, MAINTAIN_COVER) →
+     *       POSE_SOCIALIZING — relaxed, gesturing, weight shifted.
+     *       "He's talking to someone."</li>
+     *   <li>Stealth cultivation (CULTIVATE_SECRETLY in some contexts) →
+     *       POSE_MEDITATING — hands at chest, head bowed.
+     *       "He's cultivating."</li>
+     * </ul>
+     *
+     * @param nature the active IntentNature
+     * @return the EntityCultivator pose constant
+     */
+    private static int poseForIntent(IntentNature nature) {
+        if (nature == null) return EntityCultivator.POSE_IDLE;
+        return switch (nature) {
+            case OBSERVE_FROM_DISTANCE, GATHER_INTEL, EXPLORE_CAUTIOUSLY,
+                 AVOID_REVEALING_STRENGTH -> EntityCultivator.POSE_OBSERVING;
+            case PROTECT_ASSET, DEFEND_POSITION, ESTABLISH_DOMINANCE,
+                 AMBUSH, DECEIVE, PROVOKE -> EntityCultivator.POSE_GUARDING;
+            case SEEK_OPPORTUNITY, ADVANCE_OPPORTUNISTICALLY,
+                 RETREAT_TACTICALLY -> EntityCultivator.POSE_PURSUING;
+            case NEGOTIATE, TEST_JUDGMENT, MAINTAIN_COVER -> EntityCultivator.POSE_SOCIALIZING;
+            case CULTIVATE_SECRETLY -> EntityCultivator.POSE_MEDITATING;
+        };
+    }
+
+    /** Human-readable pose name for logging. */
+    private static String poseName(int pose) {
+        return switch (pose) {
+            case EntityCultivator.POSE_IDLE -> "IDLE";
+            case EntityCultivator.POSE_MEDITATING -> "MEDITATING";
+            case EntityCultivator.POSE_CASTING -> "CASTING";
+            case EntityCultivator.POSE_OBSERVING -> "OBSERVING";
+            case EntityCultivator.POSE_GUARDING -> "GUARDING";
+            case EntityCultivator.POSE_PURSUING -> "PURSUING";
+            case EntityCultivator.POSE_SOCIALIZING -> "SOCIALIZING";
+            default -> "POSE_" + pose;
+        };
+    }
+
+    /**
+     * Update the cognitive look-target from the actor's latest perception.
+     *
+     * <p>Picks the most important entity to look at: prefer the nearest
+     * hostile (the wolves Wang Lin is observing), then the nearest prey,
+     * then the nearest witness/ally (for social commitments). The look
+     * target is set as world coordinates so the client-side renderer can
+     * lerp the head toward it.
+     *
+     * <p>If no perceived entity is available, the look-target is cleared
+     * (the NPC's head returns to vanilla look control). This is correct:
+     * an observing NPC with no wolves in sight shouldn't stare at a fixed
+     * point in the void — he should look around naturally until the wolves
+     * reappear.
+     *
+     * <p>The user's directive: "head turns → body rotates slightly →
+     * weight shifts → breathing slows → eyes remain fixed → doesn't
+     * respond immediately to player → after 30 seconds glances away
+     * briefly → looks back." The head-turn is THIS method (setting the
+     * target). The breathing-slow / weight-shift / micro-saccade are
+     * implemented in CultivatorRobeModel.setupAnim (client-side, using
+     * the synced pose + look-target).
+     */
+    private void updateCognitiveLookTarget(Actor actor) {
+        PerceptionSnapshot perception = actor.lastPerception;
+        if (perception == null || perception.nearbyEntities == null
+                || perception.nearbyEntities.isEmpty()) {
+            // No perception — clear the look target so the head doesn't
+            // freeze on a stale position.
+            cultivator.clearCognitiveLookTarget();
+            return;
+        }
+
+        // Priority: hostile (the thing being observed/fled) > prey > ally > witness
+        PerceptionSnapshot.PerceivedEntity target = null;
+        int bestPriority = -1;
+        double bestDist = Double.MAX_VALUE;
+        for (PerceptionSnapshot.PerceivedEntity e : perception.nearbyEntities) {
+            int pri = classificationPriority(e.classification);
+            if (pri < 0) continue;
+            if (pri > bestPriority
+                    || (pri == bestPriority && e.distanceBlocks < bestDist)) {
+                bestPriority = pri;
+                bestDist = e.distanceBlocks;
+                target = e;
+            }
+        }
+
+        if (target == null) {
+            cultivator.clearCognitiveLookTarget();
+            return;
+        }
+
+        // Set the look-target as world coordinates. Y is entity eye height
+        // approximation (posY + 1.0). The renderer lerps the head toward this.
+        cultivator.setCognitiveLookTarget(
+                (float) target.posX,
+                (float) (target.posY + 1.0),
+                (float) target.posZ);
+    }
+
+    /**
+     * Priority of a perceived entity classification for look-target selection.
+     * Higher = more important to look at. -1 = ignore (not a look target).
+     */
+    private static int classificationPriority(String classification) {
+        if (classification == null) return -1;
+        return switch (classification) {
+            case "hostile" -> 4;   // the wolf — always look at it
+            case "prey" -> 3;      // hunted creature
+            case "ally" -> 2;      // family member (for social commitments)
+            case "witness" -> 1;   // bystander
+            case "neutral" -> 0;   // neutral creature
+            default -> -1;         // "unknown" — ignore
+        };
     }
 }

@@ -182,6 +182,16 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
         model.setPursuing(entity.isPursuing());
         model.setSocializing(entity.isSocializing());
 
+        // CRON-COMPLETIONIST-19: pass the cognitive look-target (world coords)
+        // from the synced entity data to the model. The model lerps the head
+        // toward this target with micro-saccade noise — no snap rotation.
+        // When all components are NaN, the model falls back to vanilla head
+        // tracking (netHeadYaw/headPitch from the entity's look control).
+        model.setCognitiveLookTarget(
+                entity.getCognitiveLookTargetX(),
+                entity.getCognitiveLookTargetY(),
+                entity.getCognitiveLookTargetZ());
+
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 
         // Only render aura if the client has cultivation data

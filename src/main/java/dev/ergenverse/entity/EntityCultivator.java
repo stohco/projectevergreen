@@ -102,6 +102,34 @@ public class EntityCultivator extends PathfinderMob {
     private static final EntityDataAccessor<String> DATA_SECT =
             SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.STRING);
 
+    // ── CRON-COMPLETIONIST-19: Cognitive Body-Language Layer ───────────
+    // The user's 2026-07-25 directive: "the real bottleneck isn't AI anymore.
+    // It's representation. Suppose Wang Lin decides 'Observe wolves.' That's
+    // wonderful. Now ask: Can the player tell? Without debug overlay, command,
+    // logs, worklog, subtitles — just looking. If the answer is 'Not really,'
+    // then the AI may as well not exist."
+    //
+    // The fix: project the active Commitment onto the entity's pose + look
+    // target in REAL TIME (per CognitionDrivenGoal tick), not just at
+    // settlement-scan time. The NPC's head tracks the commitment's look
+    // target (the wolves), with smooth interpolated rotation and micro-saccade
+    // noise. The player walking past does NOT break the look-target — the NPC
+    // is absorbed in observation.
+    //
+    // These three synced floats carry the world-space look target. The
+    // renderer reads them and lerps the head toward them. When all three
+    // are NaN, no cognitive look target is set (vanilla look control runs).
+
+    /** Synced cognitive look-target X (world coords). NaN = no target. */
+    private static final EntityDataAccessor<Float> DATA_LOOK_TARGET_X =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+    /** Synced cognitive look-target Y (world coords, eye height). NaN = no target. */
+    private static final EntityDataAccessor<Float> DATA_LOOK_TARGET_Y =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+    /** Synced cognitive look-target Z (world coords). NaN = no target. */
+    private static final EntityDataAccessor<Float> DATA_LOOK_TARGET_Z =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+
     // ── Hibernation ─────────────────────────────────────────────────────
 
     /**
@@ -158,6 +186,11 @@ public class EntityCultivator extends PathfinderMob {
         this.entityData.define(DATA_CULTIVATION_REALM, "mortal");
         this.entityData.define(DATA_POSE, 0);
         this.entityData.define(DATA_SECT, "independent");
+        // CRON-COMPLETIONIST-19: cognitive look-target defaults to NaN (no target).
+        // Float.NaN is a valid float and syncs cleanly. The renderer checks isNaN.
+        this.entityData.define(DATA_LOOK_TARGET_X, Float.NaN);
+        this.entityData.define(DATA_LOOK_TARGET_Y, Float.NaN);
+        this.entityData.define(DATA_LOOK_TARGET_Z, Float.NaN);
     }
 
     public String getCharacterId() {
@@ -297,6 +330,76 @@ public class EntityCultivator extends PathfinderMob {
     /** CRON-COMPLETIONIST-44: True when in POSE_SOCIALIZING (relaxed, facing a companion). */
     public boolean isSocializing() {
         return this.entityData.get(DATA_POSE) == POSE_SOCIALIZING;
+    }
+
+    // ── CRON-COMPLETIONIST-19: Cognitive look-target + attention lock ──
+
+    /**
+     * Transient (non-synced, non-persisted) flag: when true, the entity is
+     * cognition-absorbed and the vanilla {@link RandomLookAroundGoal} should
+     * NOT fire. Set by {@link dev.ergenverse.entity.ai.CognitionDrivenGoal}
+     * when a Commitment is active. Cleared when the commitment ends.
+     *
+     * <p>The user's directive: an observing NPC "doesn't respond immediately
+     * to player." This flag is how we honor that — without it, the vanilla
+     * random-look goal would snap the NPC's head toward passing players,
+     * destroying the absorbed-in-observation read.
+     */
+    private boolean cognitiveAttentionLock = false;
+
+    /** True while the NPC is cognition-absorbed (RandomLookAroundGoal suppressed). */
+    public boolean isCognitiveAttentionLocked() {
+        return cognitiveAttentionLock;
+    }
+
+    /**
+     * Set the cognitive attention lock. Called by CognitionDrivenGoal when
+     * a Commitment is active (true) or ends (false). While locked, the
+     * entity's head tracks ONLY the cognitive look-target, not random stuff.
+     */
+    public void setCognitiveAttentionLock(boolean locked) {
+        this.cognitiveAttentionLock = locked;
+    }
+
+    /**
+     * Set the cognitive look-target (world coordinates). Called server-side
+     * by CognitionDrivenGoal each tick from the active Commitment's primary
+     * perceived target. Pass NaN for any component to clear the target.
+     *
+     * <p>The renderer reads these and lerps the head toward them with
+     * micro-saccade noise — no snap rotation.
+     */
+    public void setCognitiveLookTarget(float x, float y, float z) {
+        this.entityData.set(DATA_LOOK_TARGET_X, x);
+        this.entityData.set(DATA_LOOK_TARGET_Y, y);
+        this.entityData.set(DATA_LOOK_TARGET_Z, z);
+    }
+
+    /** Clear the cognitive look-target (no target — vanilla look control runs). */
+    public void clearCognitiveLookTarget() {
+        this.entityData.set(DATA_LOOK_TARGET_X, Float.NaN);
+        this.entityData.set(DATA_LOOK_TARGET_Y, Float.NaN);
+        this.entityData.set(DATA_LOOK_TARGET_Z, Float.NaN);
+    }
+
+    /** True if a cognitive look-target is currently set. */
+    public boolean hasCognitiveLookTarget() {
+        return !Float.isNaN(this.entityData.get(DATA_LOOK_TARGET_X));
+    }
+
+    /** X component of the cognitive look-target (NaN if none). */
+    public float getCognitiveLookTargetX() {
+        return this.entityData.get(DATA_LOOK_TARGET_X);
+    }
+
+    /** Y component of the cognitive look-target (NaN if none). */
+    public float getCognitiveLookTargetY() {
+        return this.entityData.get(DATA_LOOK_TARGET_Y);
+    }
+
+    /** Z component of the cognitive look-target (NaN if none). */
+    public float getCognitiveLookTargetZ() {
+        return this.entityData.get(DATA_LOOK_TARGET_Z);
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -532,6 +635,21 @@ public class EntityCultivator extends PathfinderMob {
             this.goalSelector.getRunningGoals().forEach(g -> g.stop());
             super.aiStep();
             return;
+        }
+        // CRON-COMPLETIONIST-19: Cognitive attention lock. When the NPC is
+        // cognition-absorbed (a Commitment is active and the CognitionDrivenGoal
+        // has set the attention lock), suppress RandomLookAroundGoal so the
+        // NPC's head tracks the cognitive look-target, not random stuff. The
+        // user's directive: an observing NPC "doesn't respond immediately to
+        // player." We do NOT stop ALL goals — CognitionDrivenGoal must keep
+        // running (it owns the look-target). We only stop the random-look
+        // specifically. Other goals (combat, gift-offer) still fire if their
+        // conditions trigger, which is correct — an observing NPC attacked
+        // by a zombie should still defend itself.
+        if (cognitiveAttentionLock) {
+            this.goalSelector.getRunningGoals()
+                    .filter(wg -> wg.getGoal() instanceof net.minecraft.world.entity.ai.goal.RandomLookAroundGoal)
+                    .forEach(wg -> wg.stop());
         }
         // Server: hibernate if no player nearby
         if (this.level().getNearestPlayer(this, HIBERNATION_RANGE) == null) {

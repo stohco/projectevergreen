@@ -1,5 +1,6 @@
 package dev.ergenverse.wanglin.ai.reasoning;
 
+import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.cultivation.RealmId;
 import dev.ergenverse.simulation.action.ActorRelationshipStore;
 import dev.ergenverse.simulation.affinity.ManifestationGiftSystem;
@@ -7,10 +8,15 @@ import dev.ergenverse.simulation.opportunity.PlayerObserverRealm;
 import dev.ergenverse.wanglin.ai.WangLinSpeechPatterns;
 import net.minecraft.server.level.ServerPlayer;
 
+import dev.ergenverse.simulation.event.WorldEvent;
+import dev.ergenverse.simulation.event.WorldEventSubscriber;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * WangLinReasoningEngine — the central 6-factor reasoning engine that governs
@@ -57,6 +63,139 @@ import java.util.Set;
 public final class WangLinReasoningEngine {
 
     private WangLinReasoningEngine() {}
+
+    // ─── SemanticEventReactor — event-reactive counters ─────────────
+    // Per-actor observation counters. Keyed by the OTHER actor's ID
+    // (the one who performed the deed that Wang Lin witnessed).
+    // These counters are consumed by evaluateSafety(), evaluateJudgment(),
+    // and evaluateUsefulness() to make Wang Lin's reasoning event-driven.
+
+    /** Witness counters for an individual actor, keyed by actor ID. */
+    public static final class WitnessCounters {
+        public final AtomicInteger mercyWitnessed = new AtomicInteger(0);
+        public final AtomicInteger crueltyWitnessed = new AtomicInteger(0);
+        public final AtomicInteger promiseBroken = new AtomicInteger(0);
+        public final AtomicInteger recklessReveal = new AtomicInteger(0);
+        public final AtomicInteger techniqueNoted = new AtomicInteger(0);
+    }
+
+    private static final ConcurrentHashMap<String, WitnessCounters> witnessCounters = new ConcurrentHashMap<>();
+
+    /** Wang Lin's canon actor ID. */
+    private static final String WANG_LIN_ID = "wang_lin";
+
+    /** Get or create witness counters for the given actor. */
+    private static WitnessCounters getCounters(String actorId) {
+        return witnessCounters.computeIfAbsent(actorId, k -> new WitnessCounters());
+    }
+
+    /**
+     * SemanticEventReactor — makes WangLinReasoningEngine event-reactive.
+     *
+     * <p>This static inner class subscribes to {@code "semantic."} events
+     * and maintains per-actor observation counters. Wang Lin's six-factor
+     * reasoning reads these counters directly, making the engine reactive
+     * to deeds witnessed on the WorldEventBus.
+     *
+     * <p>Counters:
+     * <ul>
+     *   <li>{@code mercyWitnessed} — ACT_OF_MERCY witnessed → JUDGMENT factor</li>
+     *   <li>{@code crueltyWitnessed} — ACT_OF_CRUELTY witnessed → JUDGMENT factor</li>
+     *   <li>{@code promiseBroken} — PROMISE_BROKEN witnessed → JUDGMENT factor</li>
+     *   <li>{@code recklessReveal} — CULTIVATION_REVEALED witnessed → SAFETY factor</li>
+     *   <li>{@code techniqueNoted} — TECHNIQUE_DISPLAYED witnessed → USEFULNESS factor</li>
+     * </ul>
+     */
+    public static final class SemanticEventReactor implements WorldEventSubscriber {
+
+        @Override
+        public String topicPrefix() {
+            return "semantic.";
+        }
+
+        @Override
+        public void onEvent(WorldEvent event) {
+            if (event == null) return;
+            String semanticTag = event.semanticTag();
+            if (semanticTag == null || semanticTag.isEmpty()) return;
+
+            // Wang Lin must be involved (same logic as WangLinSemanticSubscriber).
+            if (!isWangLinInvolved(event)) return;
+
+            // Resolve the other actor (the one who isn't Wang Lin).
+            String otherActorId = resolveOtherActor(
+                    event.sourceActorId(), event.targetActorId());
+            if (otherActorId == null || otherActorId.isEmpty()) return;
+
+            WitnessCounters counters = getCounters(otherActorId);
+
+            switch (semanticTag) {
+                case "ACT_OF_MERCY" -> {
+                    int count = counters.mercyWitnessed.incrementAndGet();
+                    Ergenverse.LOGGER.debug("[WangLinReactor] mercyWitnessed for {}: {}",
+                            otherActorId, count);
+                }
+                case "ACT_OF_CRUELTY" -> {
+                    int count = counters.crueltyWitnessed.incrementAndGet();
+                    Ergenverse.LOGGER.debug("[WangLinReactor] crueltyWitnessed for {}: {}",
+                            otherActorId, count);
+                }
+                case "PROMISE_BROKEN" -> {
+                    int count = counters.promiseBroken.incrementAndGet();
+                    Ergenverse.LOGGER.debug("[WangLinReactor] promiseBroken for {}: {}",
+                            otherActorId, count);
+                }
+                case "CULTIVATION_REVEALED" -> {
+                    int count = counters.recklessReveal.incrementAndGet();
+                    Ergenverse.LOGGER.debug("[WangLinReactor] recklessReveal for {}: {}",
+                            otherActorId, count);
+                }
+                case "TECHNIQUE_DISPLAYED" -> {
+                    int count = counters.techniqueNoted.incrementAndGet();
+                    Ergenverse.LOGGER.debug("[WangLinReactor] techniqueNoted for {}: {}",
+                            otherActorId, count);
+                }
+                default -> { /* other semantic tags don't affect reasoning counters */ }
+            }
+        }
+
+        /** Check if Wang Lin is involved — as source, target, or witness. */
+        private boolean isWangLinInvolved(WorldEvent event) {
+            String sourceId = event.sourceActorId();
+            String targetId = event.targetActorId();
+
+            // Direct involvement: Wang Lin is source or target.
+            if (WANG_LIN_ID.equals(sourceId) || WANG_LIN_ID.equals(targetId)) return true;
+
+            // Witness: Wang Lin entity exists within observation radius.
+            net.minecraft.server.level.ServerLevel level =
+                    dev.ergenverse.simulation.event.WorldEventBus.currentLevel();
+            if (level == null) return false;
+
+            // Events with pos (0,0,0) are global — Wang Lin always witnesses those.
+            if (event.pos().equals(net.minecraft.core.BlockPos.ZERO))
+                return event.severity() >= 0.5f;
+
+            // Check distance: if Wang Lin's actor is within 128 blocks.
+            var actors = dev.ergenverse.simulation.actor.ActorRegistry.all();
+            for (var actor : actors) {
+                if (WANG_LIN_ID.equals(actor.id)) {
+                    double distSq = Math.pow(actor.blockX - event.pos().getX(), 2)
+                                  + Math.pow(actor.blockZ - event.pos().getZ(), 2);
+                    return distSq <= 128.0 * 128.0;
+                }
+            }
+            return false;
+        }
+
+        /** Resolve the actor that is NOT Wang Lin. */
+        private String resolveOtherActor(String sourceId, String targetId) {
+            if (WANG_LIN_ID.equals(sourceId)) return targetId;
+            if (WANG_LIN_ID.equals(targetId)) return sourceId;
+            // Neither is Wang Lin — witnessed event; return the source.
+            return sourceId;
+        }
+    }
 
     // ─── Outcome thresholds (per §4.4) ─────────────────────────────────
 
