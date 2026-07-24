@@ -441,6 +441,16 @@ public final class Ergenverse {
             // Article XLIII §2: Relationships persist across server restart.
             // Idempotent — only seeds when store has 0 relationships.
             dev.ergenverse.simulation.action.CanonRelationshipSeeder.seedIfEmpty(overworld);
+            // CRON-COMPLETIONIST-67: Load Living Chapter 1 relationship graph seeds.
+            // CanonRelationshipSeeder seeds the major canon relationships (Wang Lin ↔
+            // Li Muwan, Teng Clan, etc.). RelationshipSeedLoader loads the detailed
+            // village-specific relationships from the Living Chapter JSON (Wang
+            // Tianshui ↔ Zhou Tingsu, Wang Tianshui ↔ Da Niu, etc.). Both are
+            // idempotent — they skip relationships that already exist.
+            int villageSeeds = dev.ergenverse.simulation.action.RelationshipSeedLoader.loadIfNeeded(overworld);
+            if (villageSeeds > 0) {
+                LOGGER.info("[Ergenverse] Seeded {} village NPC relationships from Living Chapter 1 data.", villageSeeds);
+            }
             // Initialize the NPC spawn registry — maps locations to canon NPCs.
             // Without this, only wang_tiangui would ever spawn.
             // DEPRECATED (Article XLIV): the spawn-registry model is being replaced

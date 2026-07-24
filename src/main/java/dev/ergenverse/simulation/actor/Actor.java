@@ -91,6 +91,13 @@ public final class Actor {
     /** Block position (used for distance-to-player importance calc). */
     public int blockX, blockY, blockZ;
 
+    /** CRON-COMPLETIONIST-67: Previous goal description for goal-change detection. */
+    public String previousGoalDescription = null;
+
+    /** CRON-COMPLETIONIST-67: Previous block position for position-change detection. */
+    public int prevBlockX = Integer.MIN_VALUE;
+    public int prevBlockZ = Integer.MIN_VALUE;
+
     /** CRON-COMPLETIONIST-15: Last-known WorldSituation, stashed by ActorMaterializer
      * during the settlement scan. This gives CommitmentContext predicates access
      * to settlement-level threat intensity, time-of-day, mood, and nearby

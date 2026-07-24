@@ -293,6 +293,40 @@ public final class NpcAutonomousEventPublisher {
     //  Internal helpers
     // ═══════════════════════════════════════════════════════════════
 
+    /**
+     * CRON-COMPLETIONIST-67: Publish a village "slow story" event.
+     *
+     * <p>Per Article XLV §7: "Equal engineering weight must be given to quiet
+     * moments, not only dramatic ones." Events like hanging clothes, repairing
+     * a fence, a child losing a toy, a merchant packing up, an elder falling
+     * asleep outside — these are why the village feels inhabited.
+     *
+     * <p>Called periodically by ActorTickLoop for actors at ACTIVE_ACTOR+
+     * sim levels. Each actor generates a slow-story event roughly once per
+     * 6000 ticks (5 minutes), creating a steady background rhythm of village life.
+     *
+     * @param actorId   the NPC's canon ID
+     * @param action    what the NPC is doing (e.g. "hangs clothes to dry")
+     * @param pos       the NPC's position
+     * @param tick      the current tick
+     */
+    public static void publishVillageLifeEvent(String actorId, String action,
+                                               BlockPos pos, long tick) {
+        if (actorId == null || action == null) return;
+
+        WorldEvent event = WorldEvent.of(
+                "village.life.slow_story", EnergyType.SOCIAL,
+                pos, 0.15f, 0.15f,
+                actorId + " " + action.toLowerCase() + ".",
+                "SIMULATION", tick,
+                actorId, "",
+                "VILLAGE_LIFE",
+                Map.of("action", action,
+                        "actor_id", actorId)
+        );
+        WorldEventBus.dispatch(event);
+    }
+
     private static float computeActivitySeverity(String activityType) {
         if (activityType == null) return 0.3f;
         String act = activityType.toLowerCase();

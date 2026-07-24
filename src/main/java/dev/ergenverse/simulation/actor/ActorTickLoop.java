@@ -19,8 +19,10 @@ import dev.ergenverse.simulation.intent.CultivationTask;
 import dev.ergenverse.simulation.intent.Intent;
 import dev.ergenverse.simulation.intent.IntentDecomposer;
 import dev.ergenverse.simulation.intent.IntentNature;
+import dev.ergenverse.simulation.action.NpcAutonomousEventPublisher;
 import dev.ergenverse.simulation.los.SimulationLevel;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
@@ -112,6 +114,17 @@ public final class ActorTickLoop {
                 if (dev.ergenverse.simulation.intent.ActorEntityLink.isLinked(a.id)) {
                     dev.ergenverse.simulation.intent.ActorEntityLink.syncPosition(a.id, level);
 
+                    // CRON-COMPLETIONIST-67: Wire position-change event.
+                    // Track previous position and publish a notable-move event
+                    // when the actor has moved more than 32 blocks.
+                    if (a.prevBlockX != Integer.MIN_VALUE) {
+                        NpcAutonomousEventPublisher.publishPositionChanged(
+                                a.id, a.prevBlockX, a.prevBlockZ,
+                                a.blockX, a.blockZ, currentTick);
+                    }
+                    a.prevBlockX = a.blockX;
+                    a.prevBlockZ = a.blockZ;
+
                     // Compute distance to nearest player (0..1, 1 = closest).
                     // MAX_IMPORTANCE_DISTANCE = 128 blocks (8 chunks).
                     // Within 16 blocks → distance = 1.0 (max).
@@ -197,6 +210,19 @@ public final class ActorTickLoop {
         }
         // Tick the actor's current activity process.
         tickActivity(a, tick);
+
+        // CRON-COMPLETIONIST-67: Village slow-story events (Article XLV §7).
+        // Generate one slow-life event per actor roughly every 6000 ticks
+        // (5 minutes). These are the mundane moments that make the village
+        // feel inhabited: hanging clothes, repairing fence, child playing, etc.
+        if (tick % 6000 == (a.id.hashCode() & 0x3FFF)) {
+            String slowAction = generateSlowStory(a);
+            if (slowAction != null) {
+                NpcAutonomousEventPublisher.publishVillageLifeEvent(
+                        a.id, slowAction,
+                        new BlockPos(a.blockX, 64, a.blockZ), tick);
+            }
+        }
     }
 
     private static void tickFullCognition(Actor a, long tick) {
@@ -309,6 +335,21 @@ public final class ActorTickLoop {
                 a.cognition.desires  // Art XXXI: desires produce SOCIAL goals
         );
         a.cognition.activeGoal = decision.goal;
+
+        // CRON-COMPLETIONIST-67: Publish goal-change event to WorldEventBus.
+        // Before this, NpcAutonomousEventPublisher.publishGoalChanged() had
+        // zero callers. Now when an NPC switches goals, the event flows
+        // through the bus so other NPCs and Wang Lin can observe it.
+        String oldGoalDesc = a.previousGoalDescription;
+        String newGoalDesc = decision.goal != null ? decision.goal.category.name() : null;
+        if (newGoalDesc != null && !newGoalDesc.equals(oldGoalDesc)) {
+            NpcAutonomousEventPublisher.publishGoalChanged(
+                    a.id, oldGoalDesc,
+                    decision.goal.description != null ? decision.goal.description : decision.goal.category.name(),
+                    decision.goal.category.name(),
+                    new BlockPos(a.blockX, 64, a.blockZ), tick);
+            a.previousGoalDescription = newGoalDesc;
+        }
 
         // ── Step 4 + 5 + 6: Prediction + Intent + Activity ──
         if (decision.goal != null) {
@@ -849,6 +890,14 @@ public final class ActorTickLoop {
                     // Activity completion creates a memory so the world
                     // can reference past actions.
                     recordActivityMemory(a, ap, tick);
+                    // CRON-COMPLETIONIST-67: Wire NPC activity completion to
+                    // WorldEventBus. Before this, NpcAutonomousEventPublisher
+                    // had 5 methods with ZERO callers — dead code. Now every
+                    // activity completion flows through the bus so other NPCs,
+                    // the chronicle, relationship engine, and Wang Lin can observe it.
+                    NpcAutonomousEventPublisher.publishActivityCompleted(
+                            a.id, ap.activityType,
+                            new BlockPos(a.blockX, 64, a.blockZ), tick);
                     Ergenverse.LOGGER.debug("[Ergenverse] Activity complete: {} for {}",
                             ap.activityType, a.id);
                 }
@@ -886,6 +935,105 @@ public final class ActorTickLoop {
                 // NOT_STARTED, STARTING — no action needed. The entity AI handles start.
                 break;
         }
+    }
+
+    // ── Slow story generation (Art XLV §7) ──
+
+    /**
+     * CRON-COMPLETIONIST-67: Generate a canon-appropriate "slow story" action
+     * for an NPC. Per Article XLV §7: "Someone hangs clothes to dry. Someone
+     * repairs a fence. A child loses a toy. A merchant packs up at sunset.
+     * An elder falls asleep outside. A dog follows the butcher."
+     *
+     * <p>The action is selected based on the actor's canon ID — each NPC
+     * has a set of characteristic mundane actions derived from their profile.
+     * The selection uses the tick to cycle through options so the same
+     * actor doesn't repeat the same action every time.
+     */
+    private static String generateSlowStory(Actor a) {
+        if (a == null || a.id == null) return null;
+
+        String id = a.id.toLowerCase();
+        int cycle = (int)(System.currentTimeMillis() / 300000) % 6;
+
+        // Wang family NPCs — canon-appropriate village life actions
+        if (id.contains("wang_tianshui") || id.contains("wang_tianlong")) {
+            return switch (cycle) {
+                case 0 -> "examines the strange jade in the fading light";
+                case 1 -> "sits on the doorstep watching the sunset";
+                case 2 -> "sharpens a farming tool by the lantern";
+                case 3 -> "checks the fence around the herb garden";
+                case 4 -> "shares a quiet meal with the family";
+                case 5 -> "walks slowly around the village perimeter";
+                default -> "tends to the evening fire";
+            };
+        }
+        if (id.contains("zhou_tingsu")) {
+            return switch (cycle) {
+                case 0 -> "mends a torn garment by candlelight";
+                case 1 -> "hangs washing to dry on the clothesline";
+                case 2 -> "prepares a simple evening meal";
+                case 3 -> "hums a quiet melody while sweeping";
+                case 4 -> "checks on the sleeping children";
+                case 5 -> "arranges dried herbs in clay pots";
+                default -> "sits by the window watching the road";
+            };
+        }
+        if (id.contains("da_niu")) {
+            return switch (cycle) {
+                case 0 -> "splits firewood behind the shed";
+                case 1 -> "tosses pebbles into the village well";
+                case 2 -> "naps against the storage shed wall";
+                case 3 -> "chews on a straw, staring at the sky";
+                case 4 -> "helps carry water from the well";
+                case 5 -> "practices shadow-boxing with a wooden stick";
+                default -> "scratches his head, watching chickens";
+            };
+        }
+        if (id.contains("wang_ping")) {
+            return switch (cycle) {
+                case 0 -> "carves a small wooden figure by the stream";
+                case 1 -> "feeds the chickens scattered grain";
+                case 2 -> "sits by the elder, listening to stories";
+                case 3 -> "plays with a stray dog near the path";
+                case 4 -> "practices writing characters on a slate";
+                case 5 -> "watches the road, hoping for travelers";
+                default -> "climbs the low hill behind the village";
+            };
+        }
+        if (id.contains("zhou_rui")) {
+            return switch (cycle) {
+                case 0 -> "arranges goods on the market stall";
+                case 1 -> "counts coins from the day's trade";
+                case 2 -> "smokes a pipe on the porch";
+                case 3 -> "inspects the roof tiles for leaks";
+                case 4 -> "shares tea with a neighbor";
+                case 5 -> "repairs a wobbly table leg";
+                default -> "checks the grain storage bins";
+            };
+        }
+        if (id.contains("elder") || id.contains("zhang_tian")) {
+            return switch (cycle) {
+                case 0 -> "meditates in the shrine, surrounded by incense";
+                case 1 -> "writes characters on a jade slip";
+                case 2 -> "advises a villager at the gate";
+                case 3 -> "falls asleep on the meditation mat";
+                case 4 -> "examines the formation array at the center";
+                case 5 -> "walks slowly through the village at dusk";
+                default -> "traces old maps by lantern light";
+            };
+        }
+
+        // Generic fallback for any NPC
+        return switch (cycle) {
+            case 0 -> "tends to daily chores";
+            case 1 -> "pauses to rest in the shade";
+            case 2 -> "greets a passerby";
+            case 3 -> "inspects something nearby";
+            case 4 -> "stretches and looks around";
+            case 5 -> "returns to routine tasks";
+            default -> "goes about their business";
+        };
     }
 
     // ── Memory recording (Art XXXI.5) ──
