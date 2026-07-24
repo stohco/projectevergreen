@@ -4,6 +4,8 @@
   "moment_id": 11,
   "title": "Old Chen's dog dies in a wolf raid; weeks later Old Chen says 'used to have one'; months later a child retells it wrong",
   "status": "SPEC",
+  "stage": "specified",
+  "_stage_note": "Article XLV §9 — 5-stage tracking. 'specified' = experience named in canon data. Memory ledger + rumor momentum design exists but Java wiring not implemented. This moment is the canonical test for the 'memorable' stage — it requires the full memory-retell pipeline.",
 
   "scene": "This is the canonical Memory Metric test (Article XXXI.5). It unfolds across ~6 Minecraft weeks: (Week 1) Old Chen owns a dog — the player may or may not notice it. (Week 3) The wolf pack, whose wolf_pack_momentum has been crossing its 'pet_or_villager_attack' threshold, raids the village edge at night. Old Chen's dog is killed. The event is written to memory_ledger with witnesses (Old Chen, nearby villagers). Old Chen's relationship_graph updates (grievance against the pack, fear). His motivation_state shifts (grief, desire for revenge or for the village to act). The village head's motivation_state activates 'organize_wolf_hunt'. A rumor_momentum seeds (the dog-death story). (Week 5) Old Chen, in ambient dialogue when a traveler asks about his gate, says 'used to have one' — unprompted, unscripted. (Months later) A child retells the story — with distorted details ('seven wolves, not five; red eyes'). NONE of this is scripted as a beat. It emerges from the wolf_pack_momentum crossing its threshold, the memory_ledger recording it, the relationship_graph updating, the motivation_state activating, and the rumor_momentum spreading and distorting.",
 

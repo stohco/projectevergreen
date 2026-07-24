@@ -4,6 +4,8 @@
   "moment_id": 1,
   "title": "Wang Lin abandons cultivation to watch wolves stalk a spirit deer",
   "status": "SPEC",
+  "stage": "specified",
+  "_stage_note": "Article XLV §9 — 5-stage tracking. 'specified' = experience named in canon data. Wiring spec exists (canon_experience_wiring_spec.json) but Java changes not yet implemented.",
 
   "scene": "The player is in or near Wang Family Village. It is daytime. Without warning, Wang Lin — who was sitting in meditation outside his cave above the village — stands up. He walks to a ridge overlooking the northern treeline. He stops. He looks down. The player, curious, follows at a distance. From the ridge, the player sees what Wang Lin sees: a small pack of wolves (5-7) is stalking a spirit deer at the treeline. The deer is spirit-touched (faint glow, unusual coloring). Wang Lin watches silently for ~30 seconds (real time). Then he turns and walks back to his cave. He does not speak. He does not intervene. He does not acknowledge the player unless the player has a high-trust relationship with him (in which case he may give a single acknowledging nod before leaving). The wolves either make the kill or spook and flee — the outcome varies per world (Article XXXIX §4).",
 

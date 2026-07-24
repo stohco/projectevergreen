@@ -4,6 +4,8 @@
   "moment_id": 4,
   "title": "Two cultivators arrive at the same spirit herb before the player",
   "status": "SPEC",
+  "stage": "specified",
+  "_stage_note": "Article XLV §9 — 5-stage tracking. 'specified' = experience named in canon data. Herb momentum + opportunity carrier design exists but Java wiring not implemented.",
 
   "scene": "The player has learned (via rumor_momentum, ambient dialogue, or their own observation) that the crimson root patch west of the village is approaching peak harvest. The player decides to go harvest it. When the player arrives, a cultivator from a neighboring village is already there — also intending to harvest. The two characters arrive within minutes of each other. Neither has a quest. Neither has a marker. The world produced this confrontation because: (a) herb_momentum declared the patch approaching peak (ripeness 0.78 → 0.95), (b) rumor_momentum spread news of the patch to the neighboring village, (c) the neighboring cultivator's motivation_state includes 'seek_spirit_herb' with high intensity, (d) the cultivator pathfound to the patch on travel_graph. The player must decide: compete (the harvest is limited — 0.60 remaining after Wang Lin's earlier harvest), negotiate (split it), defer (let the other cultivator take it — costs nothing but loses the herb), or ambush (combat — has consequences).",
 

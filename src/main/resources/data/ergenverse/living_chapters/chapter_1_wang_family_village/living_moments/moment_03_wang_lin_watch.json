@@ -4,6 +4,8 @@
   "moment_id": 3,
   "title": "Wang Lin approaches the player unbidden: 'Watch.' Demonstrates one restriction. Walks away.",
   "status": "SPEC",
+  "stage": "specified",
+  "_stage_note": "Article XLV §9 — 5-stage tracking. 'specified' = experience named in canon data. Bidirectional protocol design exists but Java wiring not implemented.",
 
   "scene": "The player has been studying restriction stones — visibly, using the player's own cultivation action, for ~3 Minecraft days. The player has NOT asked Wang Lin for help. The player has NOT triggered any quest. On day four, Wang Lin approaches the player unbidden. He says one word: 'Watch.' He demonstrates one restriction technique (a simple seal formation, visible as a brief particle effect on the ground). He does not explain. He does not name it. He walks away. NO reward window. NO 'quest complete.' NO notification. NO skill unlock. The player has merely witnessed Wang Lin deciding, on his own, that this person is worth a single demonstration. Whether the player learns anything from it is up to the player.",
 

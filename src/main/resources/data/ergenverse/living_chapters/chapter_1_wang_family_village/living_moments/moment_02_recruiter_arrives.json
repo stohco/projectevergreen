@@ -4,6 +4,8 @@
   "moment_id": 2,
   "title": "Heng Yue recruiter arrives; the village was already reacting; the rumor was already distorted",
   "status": "SPEC",
+  "stage": "specified",
+  "_stage_note": "Article XLV §9 — 5-stage tracking. 'specified' = experience named in canon data. Caravan/rumor momentum schemas exist but Java wiring not implemented.",
 
   "scene": "The player arrives at Wang Family Village (Chapter 1 start). Within the first Minecraft day, ambient cues establish that 'a recruiter is coming.' A traveler at the inn mentions seeing a sect carriage on the Zhao road. The village head orders the ancestral hall cleaned. Children are told to behave. The herbalist sets out her best herbs. A rumor circulates — but villagers DISAGREE: one says the recruiter comes Tuesday, another says Friday; one says it's Heng Yue, another says it's a different sect. The merchant passing through tells a fourth, distorted version. ~3 Minecraft days later, the recruiter's caravan arrives. The recruiter is polite but visibly stressed (a symptom of Heng Yue's decline — Living Moment #10). The recruiter asks about village children of suitable age. The recruiter asks pointed questions about Wang Lin. NO QUEST. NO MARKER. NO JOURNAL ENTRY. The player learns by living in the world.",
 
