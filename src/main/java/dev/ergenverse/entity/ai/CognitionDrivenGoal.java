@@ -120,7 +120,7 @@ public class CognitionDrivenGoal extends Goal {
      * <p>If no Actor is linked, or the Actor has neither a commitment
      * nor an Intent, this goal yields to lower-priority goals
      * (RandomStroll, RandomLookAround, and the deprecated
-     * NpcScheduleGoal).
+     * any lower-priority idle goals).
      */
     @Override
     public boolean canUse() {
