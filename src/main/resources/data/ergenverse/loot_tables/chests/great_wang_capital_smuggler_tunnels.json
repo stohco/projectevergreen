@@ -9,7 +9,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "weight": 16,
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:gold_nugget",
+          "name": "ergenverse:spirit_stone_low",
           "weight": 10,
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "weight": 10,
           "functions": [
             {
@@ -51,7 +51,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond",
+          "name": "ergenverse:spirit_stone_high",
           "weight": 2,
           "functions": [
             {
@@ -65,7 +65,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:glass_bottle",
+          "name": "ergenverse:talisman_paper_blank",
           "weight": 8,
           "functions": [
             {
@@ -79,7 +79,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:arrow",
+          "name": "ergenverse:talisman_paper_blank",
           "weight": 8,
           "functions": [
             {
@@ -93,7 +93,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "weight": 6,
           "functions": [
             {

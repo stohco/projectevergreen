@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:bone",
+          "name": "ergenverse:beast_bone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -78,7 +78,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:lead",
+          "name": "ergenverse:beast_bone",
           "functions": []
         },
         {

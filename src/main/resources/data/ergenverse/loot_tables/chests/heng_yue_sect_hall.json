@@ -84,7 +84,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:book",
+          "name": "ergenverse:jade_slip",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -98,7 +98,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
@@ -136,7 +136,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:iron_sword",
+          "name": "ergenverse:spirit_iron_ingot",
           "functions": []
         },
         {
@@ -154,7 +154,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",

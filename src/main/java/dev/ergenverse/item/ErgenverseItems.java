@@ -177,6 +177,13 @@ public final class ErgenverseItems {
     public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> MINOR_HEALING_PILL =
             ITEMS.register("minor_healing_pill", () -> new dev.ergenverse.item.SpiritPillItem(
                     dev.ergenverse.item.PillType.MINOR_HEALING, new Item.Properties().stacksTo(16)));
+    // CRON-COMPLETIONIST-7: Spirit Pill — generic cultivation buff consumable.
+    // Drink/eat animation, applies PillType effects (Regen/Absorption/Resistance family),
+    // 60-tick cooldown, publishes spell_cast WorldEvent. Stackable to 16.
+    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> SPIRIT_PILL =
+            ITEMS.register("spirit_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+                    dev.ergenverse.item.PillType.QI_GATHERING,
+                    new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
 
 
     // ── CRON-COMPLETIONIST-67: Canon Storage Ring & Soul Gourd ─────────────────
@@ -266,9 +273,12 @@ public final class ErgenverseItems {
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
     public static final RegistryObject<Item> CULTIVATION_MAT = ITEMS.register("cultivation_mat",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
-    // Generic flying sword for loot tables (non-Wang-Lin-specific)
-    public static final RegistryObject<Item> FLYING_SWORD = ITEMS.register("flying_sword",
-            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    // CRON-COMPLETIONIST-7: Generic flying sword upgraded from placeholder Item() to
+    // FlyingSwordItem (real mechanics — projectile launch, cultivation-scaled damage,
+    // event-bus publication, durability cost). Durability 512 per canon baseline.
+    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> FLYING_SWORD =
+            ITEMS.register("flying_sword", () -> new dev.ergenverse.item.FlyingSwordItem(8.0F,
+                    new Item.Properties().durability(512).rarity(net.minecraft.world.item.Rarity.RARE)));
 
     // ── Spawn Eggs ────────────────────────────────────────────────────
     // Uses DeferredSpawnEggItem because SpawnEggItem requires EntityType at
@@ -368,8 +378,10 @@ public final class ErgenverseItems {
                             output.accept(BLOOD_SOUL_PILL.get());
                             output.accept(MINOR_HEALING_PILL.get());
                             output.accept(WASTE_PILL.get());
+                            output.accept(SPIRIT_PILL.get());
                             // Flying swords (registered by WangLinItems, not here)
                             output.accept(GOD_SLAYING_SWORD.get());
+                            output.accept(FLYING_SWORD.get());
                             // Talismans
                             output.accept(FIREBALL_TALISMAN.get());
                             output.accept(BARRIER_TALISMAN.get());

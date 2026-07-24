@@ -102,7 +102,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:gold_ingot",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -116,7 +116,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:diamond",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",

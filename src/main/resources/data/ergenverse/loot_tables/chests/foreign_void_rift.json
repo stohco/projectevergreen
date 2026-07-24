@@ -10,7 +10,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:obsidian",
+          "name": "ergenverse:restriction_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -24,7 +24,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:ender_pearl",
+          "name": "ergenverse:dao_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -52,7 +52,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:cobblestone",
+          "name": "ergenverse:blood_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -66,7 +66,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -80,7 +80,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -102,25 +102,25 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:ender_pearl",
+          "name": "ergenverse:dao_fragment",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:experience_bottle",
+          "name": "ergenverse:soul_fragment",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",

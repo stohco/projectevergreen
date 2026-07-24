@@ -10,7 +10,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -24,7 +24,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:bone",
+          "name": "ergenverse:beast_bone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:arrow",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -52,25 +52,25 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:stone_sword",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:shield",
+          "name": "ergenverse:barrier_talisman",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:chainmail_helmet",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -84,7 +84,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:cobblestone",
+          "name": "ergenverse:blood_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -106,7 +106,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:book",
+          "name": "ergenverse:jade_slip",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -120,7 +120,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -140,13 +140,13 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:experience_bottle",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -182,13 +182,13 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:iron_sword",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:diamond",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",

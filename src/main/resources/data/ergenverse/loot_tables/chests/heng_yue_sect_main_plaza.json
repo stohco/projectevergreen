@@ -9,7 +9,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:bread",
+          "name": "ergenverse:qi_gathering_pill",
           "weight": 12,
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "weight": 8,
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "weight": 3
         },
         {

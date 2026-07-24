@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:leather",
+          "name": "ergenverse:beast_bone",
           "functions": [
             {
               "function": "minecraft:set_count",

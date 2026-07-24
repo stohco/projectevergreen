@@ -64,7 +64,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:bone",
+          "name": "ergenverse:blood_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -78,7 +78,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:wither_skeleton_skull",
+          "name": "ergenverse:spirit_stone_low",
           "functions": []
         },
         {
@@ -118,7 +118,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:ghast_tear",
+          "name": "ergenverse:tribulation_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -156,13 +156,13 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:ender_pearl",
+          "name": "ergenverse:dao_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -176,7 +176,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:experience_bottle",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -190,7 +190,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:dragon_breath",
+          "name": "ergenverse:dragon_scale",
           "functions": [
             {
               "function": "minecraft:set_count",

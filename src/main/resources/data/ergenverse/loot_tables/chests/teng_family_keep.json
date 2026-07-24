@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -52,7 +52,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:gold_ingot",
+          "name": "ergenverse:spirit_stone_mid",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -84,13 +84,13 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:iron_sword",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:diamond_sword",
+          "name": "ergenverse:spirit_stone_high",
           "functions": []
         },
         {
@@ -102,19 +102,19 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:chainmail_helmet",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:chainmail_chestplate",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:golden_apple",
+          "name": "ergenverse:foundation_pill",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -146,7 +146,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
@@ -170,7 +170,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:experience_bottle",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",

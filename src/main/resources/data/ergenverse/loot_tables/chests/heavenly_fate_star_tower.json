@@ -58,7 +58,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -84,25 +84,25 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:compass",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:clock",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:map",
+          "name": "ergenverse:jade_slip_blank",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
@@ -114,7 +114,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:experience_bottle",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -152,7 +152,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:ender_pearl",
+          "name": "ergenverse:dao_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -166,7 +166,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:nautilus_shell",
+          "name": "ergenverse:cave_world_key",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -180,7 +180,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:heart_of_the_sea",
+          "name": "ergenverse:starry_sky_token",
           "functions": []
         },
         {
@@ -192,7 +192,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:nether_star",
+          "name": "ergenverse:immortal_stone",
           "functions": []
         },
         {

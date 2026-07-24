@@ -30,7 +30,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:book",
+          "name": "ergenverse:jade_slip",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -50,7 +50,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
@@ -110,7 +110,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:paper",
+          "name": "ergenverse:jade_slip_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -124,7 +124,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",

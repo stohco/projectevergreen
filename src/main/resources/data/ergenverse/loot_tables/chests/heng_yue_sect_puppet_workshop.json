@@ -106,7 +106,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",

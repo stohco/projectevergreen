@@ -64,7 +64,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:glass_bottle",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -104,7 +104,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:glowstone_dust",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -118,7 +118,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:blaze_powder",
+          "name": "ergenverse:dao_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",

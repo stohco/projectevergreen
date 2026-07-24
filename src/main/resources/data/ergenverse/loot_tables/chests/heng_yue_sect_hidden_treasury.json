@@ -9,7 +9,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_high",
           "weight": 20,
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:gold_nugget",
+          "name": "ergenverse:spirit_stone_high",
           "weight": 15,
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:spirit_iron_ingot",
           "weight": 10,
           "functions": [
             {
@@ -51,12 +51,12 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond",
+          "name": "ergenverse:spirit_stone_high",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:glowstone_dust",
+          "name": "ergenverse:spirit_vein_essence",
           "weight": 12,
           "functions": [
             {
@@ -70,7 +70,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:book",
+          "name": "ergenverse:jade_slip",
           "weight": 8,
           "functions": [
             {
@@ -84,7 +84,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:paper",
+          "name": "ergenverse:fireball_talisman",
           "weight": 6,
           "functions": [
             {
@@ -98,7 +98,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:gold_ingot",
+          "name": "ergenverse:spirit_stone_high",
           "weight": 5,
           "functions": [
             {

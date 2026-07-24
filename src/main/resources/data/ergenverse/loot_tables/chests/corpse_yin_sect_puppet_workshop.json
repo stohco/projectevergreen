@@ -1,5 +1,5 @@
 {
-  "_comment": "Corpse Yin Sect — puppet_workshop. Corpse soldier construction. INFERRED.",
+  "_comment": "Corpse Yin Sect \u2014 puppet_workshop. Corpse soldier construction. INFERRED.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:bone",
+          "name": "ergenverse:beast_bone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:rotten_flesh",
+          "name": "ergenverse:blood_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:leather",
+          "name": "ergenverse:beast_bone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -81,7 +81,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:string",
+          "name": "ergenverse:soul_lasher",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -103,7 +103,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -123,7 +123,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:redstone",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",

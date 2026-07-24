@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:bone",
+          "name": "ergenverse:beast_core",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:soul_sand",
+          "name": "ergenverse:formation_core_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -118,7 +118,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:ghast_tear",
+          "name": "ergenverse:tribulation_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -132,7 +132,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:dragon_breath"
+          "name": "ergenverse:dragon_scale"
         }
       ]
     }

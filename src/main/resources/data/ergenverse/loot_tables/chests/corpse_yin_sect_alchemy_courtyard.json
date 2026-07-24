@@ -1,5 +1,5 @@
 {
-  "_comment": "Corpse Yin Sect — alchemy_courtyard. Yin-attribute alchemy. Corpse pills.",
+  "_comment": "Corpse Yin Sect \u2014 alchemy_courtyard. Yin-attribute alchemy. Corpse pills.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:bone",
+          "name": "ergenverse:blood_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:glass_bottle",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:coal",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:rotten_flesh",
+          "name": "ergenverse:blood_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -81,7 +81,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:blaze_powder",
+          "name": "ergenverse:dao_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -103,7 +103,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_mid",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -117,7 +117,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:ghast_tear",
+          "name": "ergenverse:tribulation_fragment",
           "functions": []
         },
         {

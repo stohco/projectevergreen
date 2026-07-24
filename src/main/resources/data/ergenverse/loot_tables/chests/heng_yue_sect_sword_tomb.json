@@ -98,7 +98,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:iron_sword",
+          "name": "ergenverse:spirit_iron_ingot",
           "functions": []
         },
         {

@@ -96,7 +96,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
@@ -108,7 +108,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:experience_bottle",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",

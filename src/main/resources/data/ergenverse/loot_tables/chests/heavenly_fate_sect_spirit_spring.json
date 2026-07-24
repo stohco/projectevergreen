@@ -1,5 +1,5 @@
 {
-  "_comment": "Heavenly Fate Sect — spirit_spring. Starlight-infused spring. INFERRED.",
+  "_comment": "Heavenly Fate Sect \u2014 spirit_spring. Starlight-infused spring. INFERRED.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:glowstone_dust",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:glass_bottle",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,13 +39,13 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:ender_pearl",
+          "name": "ergenverse:dao_fragment",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:redstone",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -59,7 +59,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:compass",
+          "name": "ergenverse:jade_slip",
           "functions": []
         }
       ]

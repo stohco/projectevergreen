@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 9,
-          "name": "minecraft:bone",
+          "name": "ergenverse:blood_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:obsidian",
+          "name": "ergenverse:restriction_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:soul_sand",
+          "name": "ergenverse:formation_core_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:spirit_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -117,7 +117,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:ender_pearl",
+          "name": "ergenverse:dao_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",

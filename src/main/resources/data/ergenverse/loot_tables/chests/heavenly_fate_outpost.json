@@ -1,5 +1,5 @@
 {
-  "_comment": "Heavenly Fate Sect — outpost. Remote observation post. Star monitoring.",
+  "_comment": "Heavenly Fate Sect \u2014 outpost. Remote observation post. Star monitoring.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:glowstone_dust",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:arrow",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:redstone",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:bread",
+          "name": "ergenverse:qi_gathering_pill",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -81,7 +81,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -103,25 +103,25 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:compass",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:clock",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:map",
+          "name": "ergenverse:jade_slip_blank",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",

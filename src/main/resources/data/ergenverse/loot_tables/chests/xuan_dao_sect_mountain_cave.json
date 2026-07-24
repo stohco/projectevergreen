@@ -1,5 +1,5 @@
 {
-  "_comment": "Xuan Dao Sect — mountain_cave. Hidden Dao meditation retreat.",
+  "_comment": "Xuan Dao Sect \u2014 mountain_cave. Hidden Dao meditation retreat.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:paper",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:redstone",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:lapis_lazuli",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -81,7 +81,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:obsidian",
+          "name": "ergenverse:restriction_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -103,7 +103,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -117,7 +117,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {

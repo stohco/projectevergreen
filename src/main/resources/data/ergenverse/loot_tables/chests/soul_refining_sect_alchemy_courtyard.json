@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:glass_bottle",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:coal",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:wheat",
+          "name": "ergenverse:qi_gathering_pill",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:bone",
+          "name": "ergenverse:blood_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_mid",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -81,7 +81,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:ghast_tear"
+          "name": "ergenverse:tribulation_fragment"
         }
       ]
     },
@@ -94,7 +94,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -113,7 +113,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:experience_bottle",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -127,7 +127,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:blaze_powder",
+          "name": "ergenverse:dao_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",

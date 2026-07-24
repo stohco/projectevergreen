@@ -1,5 +1,5 @@
 {
-  "_comment": "Xuan Dao Sect — main_plaza. Open debate and lecture area.",
+  "_comment": "Xuan Dao Sect \u2014 main_plaza. Open debate and lecture area.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:paper",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:bread",
+          "name": "ergenverse:qi_gathering_pill",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:redstone",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:lapis_lazuli",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -89,13 +89,13 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "functions": [
             {
               "function": "minecraft:set_count",

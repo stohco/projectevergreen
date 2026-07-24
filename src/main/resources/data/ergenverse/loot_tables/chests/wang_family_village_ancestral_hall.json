@@ -10,7 +10,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:stick",
+          "name": "ergenverse:fireball_talisman",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -24,7 +24,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:torch",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,13 +38,13 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:soul_lantern",
+          "name": "ergenverse:spirit_stone_low",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:paper",
+          "name": "ergenverse:fireball_talisman",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -58,7 +58,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:gold_nugget",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -98,7 +98,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:spirit_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",

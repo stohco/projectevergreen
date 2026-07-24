@@ -62,7 +62,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:spirit_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -76,7 +76,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:gold_ingot",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -96,7 +96,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:red_carpet",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",

@@ -9,7 +9,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "weight": 8,
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:book",
+          "name": "ergenverse:jade_slip",
           "weight": 10,
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:paper",
+          "name": "ergenverse:talisman_paper_blank",
           "weight": 10,
           "functions": [
             {
@@ -51,7 +51,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "weight": 8,
           "functions": [
             {
@@ -65,7 +65,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bone",
+          "name": "ergenverse:beast_bone",
           "weight": 8,
           "functions": [
             {
@@ -79,7 +79,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "weight": 6,
           "functions": [
             {

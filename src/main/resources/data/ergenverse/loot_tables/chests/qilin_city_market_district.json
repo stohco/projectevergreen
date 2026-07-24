@@ -9,7 +9,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "weight": 12,
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "weight": 10,
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:leather",
+          "name": "ergenverse:beast_bone",
           "weight": 12,
           "functions": [
             {
@@ -51,7 +51,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bone",
+          "name": "ergenverse:beast_bone",
           "weight": 10,
           "functions": [
             {
@@ -65,7 +65,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:lead",
+          "name": "ergenverse:beast_bone",
           "weight": 6,
           "functions": [
             {
@@ -79,7 +79,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bread",
+          "name": "ergenverse:qi_gathering_pill",
           "weight": 8,
           "functions": [
             {
@@ -93,7 +93,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:gold_nugget",
+          "name": "ergenverse:spirit_stone_low",
           "weight": 6,
           "functions": [
             {

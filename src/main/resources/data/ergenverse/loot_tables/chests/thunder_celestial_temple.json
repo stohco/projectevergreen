@@ -10,7 +10,7 @@
         {
           "type": "minecraft:item",
           "weight": 10,
-          "name": "minecraft:copper_ingot",
+          "name": "ergenverse:spirit_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -24,7 +24,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:lightning_rod",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:redstone",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -52,7 +52,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:glowstone",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -66,7 +66,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:gold_ingot",
+          "name": "ergenverse:spirit_stone_mid",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -80,7 +80,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:blaze_rod",
+          "name": "ergenverse:dao_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -94,7 +94,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -135,7 +135,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:experience_bottle",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -149,12 +149,12 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:enchanted_book"
+          "name": "ergenverse:jade_slip"
         },
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -168,7 +168,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:book"
+          "name": "ergenverse:jade_slip"
         }
       ]
     },
@@ -200,7 +200,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:diamond",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -214,7 +214,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:nether_star"
+          "name": "ergenverse:immortal_stone"
         }
       ]
     }

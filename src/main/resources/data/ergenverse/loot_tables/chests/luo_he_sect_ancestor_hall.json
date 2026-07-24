@@ -1,5 +1,5 @@
 {
-  "_comment": "Luo He Sect — ancestor_hall. Ancestor Hall. Memorial of Luo He founders above the eternal spring.",
+  "_comment": "Luo He Sect \u2014 ancestor_hall. Ancestor Hall. Memorial of Luo He founders above the eternal spring.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:prismarine_shard",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:gold_ingot",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:nautilus_shell",
+          "name": "ergenverse:cave_world_key",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:prismarine",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -81,7 +81,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:diamond",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -131,7 +131,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:enchanted_book"
+          "name": "ergenverse:jade_slip"
         },
         {
           "type": "minecraft:item",
@@ -150,7 +150,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:ender_pearl",
+          "name": "ergenverse:dao_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -172,7 +172,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:obsidian",
+          "name": "ergenverse:restriction_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -186,7 +186,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:nether_star"
+          "name": "ergenverse:immortal_stone"
         }
       ]
     }

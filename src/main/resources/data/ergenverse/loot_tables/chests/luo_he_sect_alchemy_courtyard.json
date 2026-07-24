@@ -1,5 +1,5 @@
 {
-  "_comment": "Luo He Sect — alchemy_courtyard. Water-pill refinery. Tide-powered alchemy furnaces.",
+  "_comment": "Luo He Sect \u2014 alchemy_courtyard. Water-pill refinery. Tide-powered alchemy furnaces.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 9,
-          "name": "minecraft:prismarine_shard",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:spirit_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:clay",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:prismarine",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -81,7 +81,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:lily_pad",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -103,7 +103,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_mid",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -117,12 +117,12 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:book"
+          "name": "ergenverse:jade_slip"
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:nautilus_shell"
+          "name": "ergenverse:cave_world_key"
         },
         {
           "type": "minecraft:item",
@@ -132,7 +132,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:experience_bottle"
+          "name": "ergenverse:soul_fragment"
         }
       ]
     },

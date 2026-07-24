@@ -134,7 +134,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {

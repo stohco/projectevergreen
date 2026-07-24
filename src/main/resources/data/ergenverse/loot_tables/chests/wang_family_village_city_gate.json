@@ -9,7 +9,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:bread",
+          "name": "ergenverse:qi_gathering_pill",
           "weight": 15,
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "weight": 10,
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:arrow",
+          "name": "ergenverse:talisman_paper_blank",
           "weight": 10,
           "functions": [
             {
@@ -51,7 +51,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "weight": 5,
           "functions": [
             {
@@ -65,7 +65,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:string",
+          "name": "ergenverse:soul_lasher",
           "weight": 5,
           "functions": [
             {

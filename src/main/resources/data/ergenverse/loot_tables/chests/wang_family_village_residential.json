@@ -10,7 +10,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:bread",
+          "name": "ergenverse:qi_gathering_pill",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -24,7 +24,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:wheat",
+          "name": "ergenverse:spirit_herb_seed",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:carrot",
+          "name": "ergenverse:spirit_herb_seed",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -52,7 +52,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:potato",
+          "name": "ergenverse:spirit_herb_seed",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -66,25 +66,25 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:wooden_pickaxe",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:wooden_axe",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:wooden_hoe",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:bowl",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -98,7 +98,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:leather",
+          "name": "ergenverse:beast_bone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -124,7 +124,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -138,7 +138,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:stick",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -152,7 +152,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:flint",
+          "name": "ergenverse:spirit_stone_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -166,7 +166,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:cobblestone",
+          "name": "ergenverse:blood_stone",
           "functions": [
             {
               "function": "minecraft:set_count",

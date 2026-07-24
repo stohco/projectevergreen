@@ -9,7 +9,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:wheat",
+          "name": "ergenverse:spirit_herb_seed",
           "weight": 18,
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:glowstone_dust",
+          "name": "ergenverse:spirit_vein_essence",
           "weight": 12,
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bone_meal",
+          "name": "ergenverse:spirit_herb_seed",
           "weight": 8,
           "functions": [
             {
@@ -51,12 +51,12 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:book",
+          "name": "ergenverse:jade_slip",
           "weight": 5
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "weight": 8,
           "functions": [
             {
@@ -70,7 +70,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "weight": 3,
           "functions": [
             {

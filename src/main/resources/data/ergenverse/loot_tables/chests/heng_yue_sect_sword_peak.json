@@ -52,7 +52,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:iron_sword",
+          "name": "ergenverse:spirit_iron_ingot",
           "functions": []
         },
         {
@@ -104,7 +104,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:flint",
+          "name": "ergenverse:spirit_stone_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",

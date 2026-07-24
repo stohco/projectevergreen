@@ -1,5 +1,5 @@
 {
-  "_comment": "Corpse Yin Sect — main_plaza. Open gathering area. Minimal loot.",
+  "_comment": "Corpse Yin Sect \u2014 main_plaza. Open gathering area. Minimal loot.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:bone",
+          "name": "ergenverse:beast_bone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:bread",
+          "name": "ergenverse:qi_gathering_pill",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -75,7 +75,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:stick",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -89,7 +89,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:rotten_flesh",
+          "name": "ergenverse:blood_essence",
           "functions": [
             {
               "function": "minecraft:set_count",

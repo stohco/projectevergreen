@@ -10,7 +10,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -24,7 +24,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:gold_ingot",
+          "name": "ergenverse:spirit_stone_mid",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -52,31 +52,31 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:iron_sword",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:iron_chestplate",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:iron_helmet",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:shield",
+          "name": "ergenverse:barrier_talisman",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:golden_apple",
+          "name": "ergenverse:foundation_pill",
           "functions": []
         },
         {
@@ -94,7 +94,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:paper",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -108,7 +108,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:book",
+          "name": "ergenverse:jade_slip",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -122,7 +122,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -136,7 +136,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:gold_nugget",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -150,7 +150,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:arrow",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -164,7 +164,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:bow",
+          "name": "ergenverse:beast_bone",
           "functions": []
         },
         {

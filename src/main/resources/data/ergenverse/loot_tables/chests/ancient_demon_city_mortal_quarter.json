@@ -9,7 +9,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:bread",
+          "name": "ergenverse:qi_gathering_pill",
           "weight": 10,
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bone",
+          "name": "ergenverse:beast_bone",
           "weight": 10,
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "weight": 6,
           "functions": [
             {
@@ -51,7 +51,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:stick",
+          "name": "ergenverse:talisman_paper_blank",
           "weight": 4,
           "functions": [
             {
@@ -65,7 +65,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:wheat",
+          "name": "ergenverse:spirit_herb_seed",
           "weight": 4,
           "functions": [
             {

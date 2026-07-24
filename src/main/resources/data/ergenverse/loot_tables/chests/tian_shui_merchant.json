@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -52,7 +52,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:diamond",
+          "name": "ergenverse:spirit_stone_high",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -66,7 +66,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:gold_ingot",
+          "name": "ergenverse:spirit_stone_mid",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -92,13 +92,13 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:golden_apple",
+          "name": "ergenverse:foundation_pill",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -112,13 +112,13 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:enchanted_golden_apple",
+          "name": "ergenverse:foundation_pill_real",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:totem_of_undying",
+          "name": "ergenverse:soul_gourd",
           "functions": []
         },
         {
@@ -136,19 +136,19 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:diamond_sword",
+          "name": "ergenverse:spirit_stone_high",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:chainmail_chestplate",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:iron_sword",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {

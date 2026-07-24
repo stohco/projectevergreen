@@ -234,6 +234,8 @@
   "item.ergenverse.planet_soul_extraction": "Planet Soul Extraction",
   "item.ergenverse.purification_pill": "Purification Pill",
   "item.ergenverse.qi_gathering_pill": "Qi Gathering Pill",
+  "item.ergenverse.flying_sword": "Flying Sword",
+  "item.ergenverse.spirit_pill": "Spirit Pill",
   "item.ergenverse.qi_gathering_scroll": "Qi Gathering Scroll",
   "item.ergenverse.rabbit_blood_essence": "Rabbit Blood Essence",
   "item.ergenverse.rain_celestial_sword": "Rain Celestial Sword",
@@ -1527,5 +1529,7 @@
   "time_event.ergenverse.spirit_vein_exhaustion": "Spirit Vein Exhaustion",
   "time_event.ergenverse.spirit_vein_shift": "Spirit Vein Shift",
   "time_event.ergenverse.tribulation_scarring": "Tribulation Scarring",
-  "time_event.ergenverse.void_fissure_event": "Void Fissure Event"
+  "time_event.ergenverse.void_fissure_event": "Void Fissure Event",
+  "item.ergenverse.teleport_talisman": "Teleport Talisman",
+  "item.ergenverse.soul_bead": "Soul Bead"
 }

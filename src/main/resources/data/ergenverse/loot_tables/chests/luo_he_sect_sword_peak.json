@@ -1,5 +1,5 @@
 {
-  "_comment": "Luo He Sect — sword_peak. Flowing Sword Peak. Water-sword training ground.",
+  "_comment": "Luo He Sect \u2014 sword_peak. Flowing Sword Peak. Water-sword training ground.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:prismarine_shard",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:gold_ingot",
+          "name": "ergenverse:spirit_stone_mid",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:prismarine",
+          "name": "ergenverse:soul_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:clay",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:nautilus_shell",
+          "name": "ergenverse:cave_world_key",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -81,7 +81,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:tropical_fish",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -117,7 +117,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -131,7 +131,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:enchanted_book"
+          "name": "ergenverse:jade_slip"
         },
         {
           "type": "minecraft:item",
@@ -150,7 +150,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:ender_pearl"
+          "name": "ergenverse:dao_fragment"
         }
       ]
     },
@@ -168,7 +168,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:obsidian",
+          "name": "ergenverse:restriction_stone",
           "functions": [
             {
               "function": "minecraft:set_count",

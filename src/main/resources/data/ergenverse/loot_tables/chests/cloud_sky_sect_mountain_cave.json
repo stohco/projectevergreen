@@ -1,5 +1,5 @@
 {
-  "_comment": "Cloud Sky Sect — mountain_cave. High-altitude cave. Wind tunnels and pressure cultivation chambers.",
+  "_comment": "Cloud Sky Sect \u2014 mountain_cave. High-altitude cave. Wind tunnels and pressure cultivation chambers.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 9,
-          "name": "minecraft:white_wool",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 8,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:feather",
+          "name": "ergenverse:beast_bone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:quartz",
+          "name": "ergenverse:formation_core_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -81,7 +81,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:phantom_membrane"
+          "name": "ergenverse:soul_fragment"
         }
       ]
     },
@@ -94,7 +94,7 @@
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -108,7 +108,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:book"
+          "name": "ergenverse:jade_slip"
         },
         {
           "type": "minecraft:item",
@@ -118,12 +118,12 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:experience_bottle"
+          "name": "ergenverse:soul_fragment"
         },
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:string",
+          "name": "ergenverse:soul_lasher",
           "functions": [
             {
               "function": "minecraft:set_count",

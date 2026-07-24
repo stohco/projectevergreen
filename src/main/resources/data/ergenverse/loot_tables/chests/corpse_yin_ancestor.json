@@ -24,7 +24,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:bone",
+          "name": "ergenverse:beast_core",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,7 +38,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:wither_skeleton_skull",
+          "name": "ergenverse:spirit_stone_low",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -92,7 +92,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:ghast_tear",
+          "name": "ergenverse:tribulation_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -106,13 +106,13 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:ender_pearl",
+          "name": "ergenverse:dao_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -126,7 +126,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:crying_obsidian",
+          "name": "ergenverse:restriction_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -204,7 +204,7 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:totem_of_undying",
+          "name": "ergenverse:soul_gourd",
           "functions": []
         },
         {

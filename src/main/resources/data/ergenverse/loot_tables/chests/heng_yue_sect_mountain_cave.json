@@ -98,7 +98,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:glowstone_dust",
+          "name": "ergenverse:spirit_vein_essence",
           "functions": [
             {
               "function": "minecraft:set_count",

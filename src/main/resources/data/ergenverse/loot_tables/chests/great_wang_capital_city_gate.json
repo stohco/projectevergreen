@@ -10,19 +10,19 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:iron_sword",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:iron_axe",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 7,
-          "name": "minecraft:arrow",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -36,13 +36,13 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:bow",
+          "name": "ergenverse:beast_bone",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -56,19 +56,19 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:chainmail_chestplate",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:iron_chestplate",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:bread",
+          "name": "ergenverse:qi_gathering_pill",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -82,7 +82,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:coal",
+          "name": "ergenverse:iron_sand",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -108,13 +108,13 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:shield",
+          "name": "ergenverse:barrier_talisman",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:flint",
+          "name": "ergenverse:spirit_stone_fragment",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -128,7 +128,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:stick",
+          "name": "ergenverse:talisman_paper_blank",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -142,7 +142,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:leather",
+          "name": "ergenverse:beast_bone",
           "functions": [
             {
               "function": "minecraft:set_count",

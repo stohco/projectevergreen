@@ -1,5 +1,5 @@
 {
-  "_comment": "Corpse Yin Sect — sword_tomb. Weapons of fallen cultivators. INFERRED.",
+  "_comment": "Corpse Yin Sect \u2014 sword_tomb. Weapons of fallen cultivators. INFERRED.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "weight": 6,
-          "name": "minecraft:bone",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -25,7 +25,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:iron_ingot",
+          "name": "ergenverse:spirit_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -39,7 +39,7 @@
         {
           "type": "minecraft:item",
           "weight": 5,
-          "name": "minecraft:ink_sac",
+          "name": "ergenverse:spirit_ink",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -53,7 +53,7 @@
         {
           "type": "minecraft:item",
           "weight": 4,
-          "name": "minecraft:emerald",
+          "name": "ergenverse:cold_iron_ingot",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -67,7 +67,7 @@
         {
           "type": "minecraft:item",
           "weight": 3,
-          "name": "minecraft:obsidian",
+          "name": "ergenverse:restriction_stone",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -81,7 +81,7 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:rotten_flesh",
+          "name": "ergenverse:blood_essence",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -117,19 +117,19 @@
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:enchanted_book",
+          "name": "ergenverse:jade_slip",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 2,
-          "name": "minecraft:ghast_tear",
+          "name": "ergenverse:tribulation_fragment",
           "functions": []
         },
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "minecraft:wither_skeleton_skull",
+          "name": "ergenverse:spirit_stone_low",
           "functions": []
         }
       ]
