@@ -81,6 +81,22 @@ public final class WangLinItems {
     private static final java.util.Set<String> REGISTERED_NAMES = new java.util.HashSet<>();
 
     /**
+     * Registry names that are OWNED by {@link dev.ergenverse.item.ErgenverseItems}
+     * with real mechanics (SoulGourdItem, StorageRingItem, JournalItem, etc.).
+     * The WangLin arsenal manifest also lists these (as tooltip-only WangLinItem
+     * duplicates), so we must skip them here to avoid a same-namespace collision
+     * that crashes the server at registry freeze.
+     * Add to this set whenever ErgenverseItems gains a new functional item that
+     * also appears in wanglin_arsenal_manifest.json.
+     */
+    private static final java.util.Set<String> ERGENVERSE_ITEMS_OWNED_NAMES = java.util.Set.of(
+            "soul_gourd",
+            "storage_ring",
+            "cultivation_journal",
+            "beast_core"
+    );
+
+    /**
      * Manifest bare-id -> canonical registry entry id.
      *
      * <p>Built by analyzing the 309-entry {@code wanglin_arsenal_manifest.json}
@@ -484,6 +500,20 @@ public final class WangLinItems {
     private static void registerArsenalItem(ManifestEntry me) {
         String registryName = me.registryName();
         String manifestCanonId = me.canonId();
+
+        // CRON-SMOKE-TEST FIX: Skip items whose registry name is ALREADY owned by
+        // ErgenverseItems. Both DeferredRegisters target the "ergenverse" namespace,
+        // so if ErgenverseItems registers "ergenverse:soul_gourd" (the real
+        // SoulGourdItem with capture/release mechanics) and WangLinItems ALSO
+        // registers "ergenverse:soul_gourd" (a tooltip-only WangLinItem), Forge
+        // creates an override that maps to `air`, crashing the server at registry
+        // freeze with "One or more entry values did not copy to the correct id."
+        // The ErgenverseItems version is always the one with real mechanics, so we
+        // defer to it and skip the arsenal's display-only duplicate.
+        if (ERGENVERSE_ITEMS_OWNED_NAMES.contains(registryName)) {
+            Ergenverse.LOGGER.info("[WangLin] Skipping arsenal duplicate of ErgenverseItems-owned item: {}", registryName);
+            return;
+        }
 
         // Skip duplicate entries — the manifest has 6 duplicate registry names.
         // Without this check, DeferredRegister.register() throws IllegalArgumentException

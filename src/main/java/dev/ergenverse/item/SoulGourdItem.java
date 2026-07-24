@@ -62,7 +62,12 @@ public class SoulGourdItem extends Item {
     private static final String NBT_CAPTURE_TIME = "CaptureTime";
 
     public SoulGourdItem(Properties props) {
-        super(props.stacksTo(1).rarity(Rarity.RARE));
+        // NOTE: props already carries .durability(500) from registration.
+        // In MC 1.20.1, durability() implicitly forces maxStackSize=1, and
+        // calling .stacksTo(1) on top of durability() throws
+        // "Unable to have damage AND stack" at registration time (server boot crash).
+        // So we do NOT call stacksTo() here — rarity() is the only safe addition.
+        super(props.rarity(Rarity.RARE));
     }
 
     @Override
