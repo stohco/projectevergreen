@@ -1874,3 +1874,241 @@ When in doubt: the actor already existed. Minecraft is catching up.
 When in doubt: the settlement owns the people. The people own the
 residences. Minecraft owns only the rendering.
 
+## Article XLV — Systems Must Be Lived In, Not Built
+
+A system with no dependent actor is dead weight. This Article
+forbids the construction of systems that exist only because they
+are "a feature." Every system must be load-bearing in at least one
+NPC's life.
+
+This Article is the negative-space complement to Article XLIV.
+Article XLIV says the actor is primary and the spawn is deprecated.
+This Article says the system is subordinate and exists only to
+serve a life that was already in motion.
+
+### §1 — The Rule
+
+No system may exist unless at least one NPC relies on it to live.
+
+- An economy exists because merchants eat.
+- Weather exists because farmers react to it.
+- Memory exists because Old Chen remembers his dog.
+- Relationships exist because Wang Lin refuses someone he no longer
+  trusts.
+- Rumors exist because children repeat them.
+
+A system that no NPC consults, reacts to, suffers from, or profits
+by is not a system. It is decoration. Decoration is forbidden.
+
+### §2 — The Dependent-Actor Test
+
+Before any system is built, the builder must name, in writing:
+
+1. **The dependent actor** — which NPC's life changes because this
+   system exists.
+2. **The reliance** — what that actor does differently because of it.
+3. **The failure mode** — what the actor's life looks like if the
+   system breaks or is removed.
+
+If all three cannot be named, the system is not built. If a system
+already exists and cannot answer all three, it is a candidate for
+deletion in the next cycle.
+
+### §3 — Schedules Are A Symptom, Not A System
+
+A daily schedule ("06:00 field, 12:00 eat, 18:00 home") is not a
+system. It is a timetable. A timetable tells you where an NPC is.
+It does not tell you why.
+
+The correct object is a **need**. Needs cascade:
+
+```
+need food
+  -> need crops
+    -> field
+      -> rain starts
+        -> stops working
+          -> visits neighbor
+            -> hears rumor
+              -> changes tomorrow's plans
+```
+
+The schedule emerges from the cascade. It is never authored
+directly. `NpcScheduleGoal` — which reads a `daily_schedule` array
+of `{t0, t1, act, dir, dist}` time-windowed patrol entries and
+whose own Javadoc says "at dawn they cultivate at Sword Peak, at
+noon they eat at the Main Hall, at night they sleep" — is the
+timetable anti-pattern. It is deprecated by this Article. It is
+retained only until a need-driven goal replaces it.
+
+This does not forbid routine. It forbids routine that is not the
+visible downstream of a need. A farmer who always works the field
+at dawn is correct — because the need (food) cascades through
+crops through the field through the time of day when the field is
+workable. A guard who always patrols at midnight is correct —
+because the need (safety) cascades through darkness through
+visibility through the patrol. A cultivator who "meditates at
+Sword Peak from 06:00 to 12:00 because the schedule says so" is
+wrong, because nothing cascades into that slot.
+
+### §4 — Extraordinary Events Override Routine
+
+Because routine is the downstream of need, extraordinary events
+naturally override it. If wolves attack:
+
+- Wang Lin ignores breakfast.
+- Da Niu grabs a shovel.
+- Children run home.
+- Old Chen searches for his dog.
+
+Nobody follows a timetable because the world changed. A system in
+which an NPC continues its schedule during a wolf attack is a bug.
+The schedule is suspended the moment a higher-urgency need
+displaces it. This is the same context-collapse described in
+Article XLIV §5, restated as a requirement: the cascade must be
+live, not cached.
+
+### §5 — Interiors Are Character, Not Furniture
+
+A residence's room contents are not generic ("table, chair, bed,
+chest"). They are the visible biography of the occupant. The
+correct question is not "what furniture goes here" but "what
+would someone learn by entering this room."
+
+- **Wang Lin's house**: worn cultivation notes, repaired farming
+  tools, one hidden notebook, almost nothing luxurious.
+- **Li Muwan's dwelling**: carefully labeled herbs, partially
+  finished pills, drying racks, experimental failures she has not
+  thrown away.
+- **Situ Nan's quarters**: almost empty. The emptiness is the
+  point.
+
+A room that could belong to anyone belongs to no one. A Residence
+(Article XLIV §4) whose room contents are not character-derived
+fails this Article.
+
+### §6 — The Village Does Not Wait
+
+The central test of the simulation is not "does it run" but "does
+it live without the player." The test is:
+
+> Stand completely still for 30 real minutes. Does the village
+> still feel alive?
+
+If the answer is yes — NPCs move with reason, things change,
+people talk, the world develops — the simulation is beginning to
+work. If the answer is "NPCs walk circles, nothing changes, nobody
+talks, nothing develops," the simulation is not there yet,
+regardless of how many systems are wired.
+
+This is Article V ("Everything Exists Without The Player") restated
+as a concrete, falsifiable test.
+
+### §7 — Slow Stories
+
+Equal engineering weight must be given to quiet moments, not only
+dramatic ones:
+
+- Someone hangs clothes to dry.
+- Someone repairs a fence.
+- A child loses a toy.
+- A merchant packs up at sunset.
+- An elder falls asleep outside.
+- A dog follows the butcher.
+
+These are not quests. They are why the village feels inhabited. A
+cycle that ships only dramatic moments (wolf attacks, recruiter
+arrivals, tribulations) and no slow stories is an incomplete
+cycle.
+
+### §8 — The Per-Cycle Question
+
+Every cycle must answer one question, and it is not "what did we
+build." It is:
+
+> What could a player witness today that they could not witness
+> yesterday?
+
+Examples of acceptable answers:
+
+- Yesterday: nothing. Today: a child follows Wang Lin because they
+  admire him.
+- Yesterday: villagers teleported home. Today: they run because
+  they heard wolves.
+- Yesterday: Li Muwan existed. Today: she harvests herbs before
+  sunrise.
+
+A cycle that cannot answer this question has not advanced the
+project, regardless of lines of code shipped.
+
+### §9 — Canon Experience Status: Four Stages, Not Percentages
+
+Progress on a Canon Experience is tracked across four stages, not
+as a percentage:
+
+```
+Specified    The experience is named in canon data. We know
+             what should happen.
+Simulated    The underlying systems produce the behavior in
+             data/logic. It runs, but is not yet visible.
+Observable   A player can witness it in-game, without debug
+             commands, within a single session.
+Memorable    NPCs carry the event in memory and retell/act on
+             it later. The experience persists.
+```
+
+A percentage cannot tell you where something is stuck. The four
+stages can. Every Canon Experience in the living chapters must
+carry its current stage. A moment at Observable that has been at
+Observable for three cycles without advancing to Memorable is
+stuck — and the stuck-ness is the signal, not a failure to be
+papered over with a higher percentage.
+
+### §10 — The First Ordinary Day
+
+The next milestone is not a system. It is an experience:
+
+> **The First Ordinary Day.**
+>
+> Wake up in Wang Family Village. Never open a quest log. Never
+> receive a tutorial. Simply follow your curiosity.
+>
+> By sunset, you should have naturally discovered:
+> - where people work,
+> - who avoids whom,
+> - who is respected,
+> - who is struggling,
+> - where Wang Lin spends his time,
+> - why the village exists,
+> - and at least one thing that changed without your involvement.
+>
+> Success: a player reaches the end of that day and says
+> "It felt like I arrived in the middle of someone else's life."
+
+This is the benchmark. Every system built between now and that day
+must justify itself against this milestone. Every system that does
+not serve The First Ordinary Day is, by this Article, decoration.
+
+### Compliance
+
+A system for which no dependent actor can be named is a bug.
+
+A daily schedule authored as a timetable (time-windowed patrol
+entries not downstream of a named need) is a bug. `NpcScheduleGoal`
+in its current form is the deprecated transition path; it must be
+replaced by a need-driven goal.
+
+A residence whose room contents are generic furniture (not
+character-derived) is a bug.
+
+A cycle that cannot answer "what could a player witness today that
+they could not witness yesterday" has not advanced the project.
+
+A Canon Experience tracked as a percentage (rather than the four
+stages) is a bug.
+
+When in doubt: the village was already alive. The schedule was
+already cascading from need. Minecraft is catching up to a life
+that was already in motion. When in doubt: if you remove the
+system and no NPC's life changes, the system was decoration.
+
