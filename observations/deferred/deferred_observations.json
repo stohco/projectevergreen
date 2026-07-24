@@ -1,0 +1,29 @@
+{
+  "_schema": "Deferred observations — entries that could NOT be verified by a real human playtest in the current environment. Per Article XLVI §4, these are DEBTS, not observations. The Living Observation Count (living_observations.json) counts only real observations. This file is the risk register: what we would observe if we could, and what we most fear is wrong.",
+  "_count": 2,
+  "_lastUpdated": "2026-07-26",
+  "deferred": [
+    {
+      "id": "D-001",
+      "date": "2026-07-26",
+      "change": "CRON-23: PerformanceInterpreter + directive-driven renderer. The renderer no longer reads psychology channels; it obeys semantic directives (LOCK_ATTENTION, BRACE, CONCEAL_WEAPON_HAND, etc.).",
+      "scene": "Wang Family Village, Wang Lin's yard, mid-morning. Wang Lin is seated, reading a bamboo slip (POSE_SOCIALIZING idle branch, or a new POSE_READING if added). Old Chen walks toward him from 20 blocks away.",
+      "setup": "Observe the ~10 seconds BEFORE Old Chen reaches speaking distance. Do not read any dialogue. Watch only Wang Lin's body.",
+      "expectedPlayerInterpretation": "Wang Lin noticed Old Chen approaching but chose not to acknowledge him yet. He is not ignoring him rudely — he is deciding when to respond. This is a person who controls the pace of his own attention.",
+      "fearedArtificialMoment": "Wang Lin's head snaps to Old Chen the instant Old Chen enters the look-target radius, then locks perfectly. No glance-up-then-return. No continued-reading pause. The body language says 'I am tracking a target' instead of 'I noticed you but I'm busy.' The directive boundary is correct but the interpreter's thresholds (LOCK_ATTENTION fires at focus>0.5) may be too binary — a reading NPC has focus on the text, not on the visitor, so the look-target switch may feel like a mode-flip rather than a layered attention shift.",
+      "verificationScene": "The same scene, but the observer must answer: 'Without dialogue, did you understand who has higher social status in this interaction?' If the answer is 'Wang Lin, because he made Old Chen wait' — the Acting Layer is communicating. If the answer is 'Old Chen, because Wang Lin looked scared' or 'I couldn't tell' — it is not.",
+      "blocks": "This deferred observation blocks the milestone: 'A brand-new player infers Wang Lin is unusually patient, pays attention to things others ignore, and decides for non-obvious reasons.' Until this scene is witnessed, that milestone is an unverified hypothesis."
+    },
+    {
+      "id": "D-002",
+      "date": "2026-07-26",
+      "change": "CRON-23: The CONCEAL_WEAPON_HAND directive. Fires only when concealment × urgency > 0.2 (product). The unknown-cultivator observer (concealment≈0.95, urgency≈0.85 → product ≈0.81) should draw the hand toward the weapon. The wolf-observer (concealment≈0.85, urgency≈0.15 → product ≈0.13) should NOT.",
+      "scene": "Treeline west of Wang Family Village. Two scenarios, back to back: (A) Wang Lin observes a wolf pack 40 blocks away. (B) Wang Lin observes an unknown cultivator 40 blocks away. Observer does not know which is which.",
+      "setup": "Watch Wang Lin's right hand for 30 seconds in each scenario. Do not look at what he is looking at.",
+      "expectedPlayerInterpretation": "In one scenario the observer concludes 'he is wary of a person.' In the other 'he is watching an animal.' The hand-near-weapon cue is the tell: it should appear in the person scenario and be absent in the animal scenario.",
+      "fearedArtificialMoment": "The hand movement is too large (a full arm sweep toward the hip) instead of a subtle drift. OR: the hand moves identically in both scenarios because the interpreter's product threshold (0.2) is too low and the wolf case (0.13) is close enough to fire under noise. OR: the hand snaps to position instead of drifting over ~2 seconds (the directive applies additively per frame, but if the Performance channels sync with a step change rather than a ramp, the hand will jump).",
+      "verificationScene": "The same two scenarios. The observer must answer: 'In which scenario was he more afraid?' If the answer matches the person-scenario, the CONCEAL_WEAPON_HAND directive is communicating threat-assessment. If the observer cannot distinguish the two, the directive is too subtle or the wolf-observer's urgency (0.15) is too low to contrast against.",
+      "blocks": "This deferred observation blocks the canonical example from the 2026-07-26 review: 'Observe wolves' vs 'Observe unknown cultivator' must look different. Until witnessed, the Acting Layer's central claim — same IntentNature, different Performance, different body — is unverified."
+    }
+  ]
+}

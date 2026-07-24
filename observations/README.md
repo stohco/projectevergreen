@@ -70,7 +70,22 @@ note records how they actually felt to watch.
 
 ## Current status
 
-The observation log is empty. The first entry cannot be written until a
-client playtest is run — the project's most stubborn gap (14+ cycles without
-one). The scaffold exists so the moment a playtest is possible, the observer
-knows exactly what to record and where.
+The observation log (`living_observations.json`) is empty. The Living
+Observation Count is **0**. Per Article XLVI §2, this means every
+architectural claim about how the simulation "feels" is an unverified
+hypothesis.
+
+Deferred observations (entries that could NOT be verified by a real
+playtest in the current environment) live in `deferred/deferred_observations.json`.
+Per Article XLVI §4, these are **debts**, not observations — they do not
+increment the Living Observation Count. They are the risk register: what
+we would observe if we could, and what we most fear is wrong. The first
+two deferred entries (D-001, D-002) block the project's two most important
+milestones: the conversation-approach scene and the wolves-vs-cultivator
+canonical example.
+
+The first real observation cannot be written until a client playtest is
+run — the project's most stubborn gap (15+ cycles without one). The
+scaffold exists so the moment a playtest is possible, the observer knows
+exactly what to record and where, and the deferred entries tell them
+which scenes to watch first.

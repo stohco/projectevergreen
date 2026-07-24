@@ -2179,12 +2179,116 @@ already cascading from pressure. Minecraft is catching up to a
 life that was already in motion. When in doubt: if you remove the
 system and no NPC's life changes, the system was decoration.
 
+## Article XLVI — No Change Is Complete Without Observation
+
+This Article governs development behavior, not simulation behavior.
+It is the feedback loop the project has been missing: a rule that
+the codebase cannot declare a gameplay-affecting change "done" until
+a human has watched it and recorded what they saw.
+
+The simulation can run. The build can be green. The architecture
+can be clean. None of that answers the only question that matters:
+**did a human watching the screen understand what the NPC was
+thinking?**
+
+That question is answered only by observation. This Article makes
+observation mandatory, not optional.
+
+### §1 — The Rule
+
+No gameplay-affecting change is complete until it has an observation
+entry describing:
+
+1. **What a human saw** — the concrete visual/auditory experience,
+   not the code that produced it.
+2. **What felt artificial** — the moments that broke the illusion,
+   however small. "Nothing felt artificial" is a valid answer only
+   when the observer is deliberately stress-testing the specific
+   feature the change introduced.
+3. **What changed because of that observation** — the fix, the
+   tuning, the removal, or the explicit decision to defer. "No
+   change needed" must be justified, not assumed.
+
+An observation entry that omits any of these three is not an
+observation. It is a log line.
+
+### §2 — Where Observations Live
+
+Observations are recorded in `observations/` as structured entries
+(see `observations/README.md`). Each entry has a scene, a setup,
+a `timeUntilNoticed` (how long the observer watched before the
+behavior registered), a `playerInterpretation` (what the observer
+concluded the NPC was doing), an `unexpectedBehavior` (what
+surprised them), an `artificialMoment` (what broke the illusion),
+a `believableScore` (0–10), a `fix` (what changed), and a
+`followup` (the next observation to perform).
+
+The count of these entries — the **Living Observation Count** — is
+the project's primary quality metric. Not canon checks passed. Not
+systems built. Not lines of code. The number of times a human
+watched the world and recorded what they understood.
+
+A Living Observation Count of zero means the project does not yet
+know whether its simulation communicates. Every architectural claim
+about "the player will understand X" is, at count zero, an
+unverified hypothesis.
+
+### §3 — What Counts As Gameplay-Affecting
+
+A change is gameplay-affecting if it alters what a player could
+see, hear, infer, or do. This includes but is not limited to:
+
+- Any change to an entity's model, animation, or rendering.
+- Any change to the Acting Layer (Performance, directives, body
+  channels).
+- Any change to AI goals, commitments, or cognition.
+- Any change to world generation, structures, or ecology.
+- Any change to items, mechanics, or player abilities.
+- Any change to conversation, relationships, or memory.
+
+A change that only refactors internal plumbing without altering
+observable behavior is exempt — but the burden is on the author to
+argue why no observable behavior changed.
+
+### §4 — The Honest Deferral
+
+If a change cannot be observed in the current environment (no
+playtest available, no human in the loop), the author MUST record
+a **deferred observation** entry stating:
+
+- The change that was made.
+- The specific scene the author would observe to verify it.
+- The specific `playerInterpretation` the author expects a human
+  to reach.
+- The specific `artificialMoment` the author most fears.
+
+A deferred observation is not a substitute for a real one. It is a
+debt. The Living Observation Count counts only real observations;
+deferred observations are tracked separately as a risk register.
+
+### §5 — Relationship To Prior Articles
+
+Article XL says architecture must prove the experience. This
+Article says the experience must be observed before it counts as
+proven. Article XLV says systems must be lived in. This Article
+says living must be witnessed and recorded.
+
+The milestone from the First Ordinary Day (Article XLV §6) is the
+ultimate observation: a player arrives in Wang Family Village and
+spends a day without prompts. Every smaller observation is a step
+toward that one. The Living Observation Count is the step counter.
+
+When in doubt: the code does not know whether it communicates. Only
+a watcher knows. When in doubt: a green build proves the code
+compiles. It does not prove the world is inhabited.
+
 ## Architectural Completeness Declaration
 
-The Constitution is architecturally complete at Article XLV.
-Future changes shall be amendments, clarifications, or removals —
-not new articles. The project does not suffer from a lack of
-articles. It suffers when Articles XL–XLV are not yet lived. The
+The Constitution is architecturally complete at Article XLVI.
+Article XLVI is an amendment to the development process, not to the
+simulation — it is the last article because it closes the loop the
+prior forty-five opened. The project does not suffer from a lack of
+articles. It suffers when Articles XL–XLVI are not yet lived. The
 remaining challenge is not conceptual. It is craftsmanship:
 launching the game, standing in Wang Family Village, finding what
 feels artificial, and refining it through iteration, not through
