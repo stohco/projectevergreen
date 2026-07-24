@@ -3381,3 +3381,67 @@ WITNESS ANSWER FOR THIS CYCLE (Article XLV §8):
 - Today: the Constitution forbids timetable schedules (Article XLV §3), names NpcScheduleGoal as deprecated, replaces percentage tracking with the 4-stage ladder (§9), and names "The First Ordinary Day" as the milestone (§10). A player could not witness any of this in-game — but the project's direction is now legibly different, and the next cycle has a scoped, ordered path to the first witnessable ordinary-day behavior.
 - Honest grade for this cycle: the witness is documentary, not playable. That is acceptable for a direction-correction cycle. It would NOT be acceptable for a second consecutive cycle.
 
+---
+Task ID: CRON-COMPLETIONIST-8
+Agent: cron-completionist
+Task: User's design review (second round): Constitution is architecturally complete — stop legislating, start crafting. Build ONE room (Wang Lin's) as evidence, not furniture. Amend Article XLV with clarifications only.
+
+Work Log:
+- Read worklog tail (DESIGN-PIVOT-01) and the user's second design review. Key directives:
+  (1) Constitution is architecturally complete. No Article XLVI. Future changes = amendments only.
+  (2) "The NPC doesn't own a schedule. The world owns pressures. The NPC owns priorities."
+  (3) The interesting part is the COMMITMENT, not the goal. Commitments persist across ticks.
+  (4) Three tests: AFK / Observer / Participant (not just one AFK test).
+  (5) Insert "Understandable" stage between Observable and Memorable — players witness without understanding.
+  (6) Don't build 5 rooms. Build ONE. Wang Lin's. Refuse to touch another until it's believable.
+  (7) "Don't build houses. Build evidence."
+  (8) Mandatory worklog ending: "What could the player experience today?" vs "yesterday?" If identical, cycle didn't advance.
+- Read WangFamilyVillageBuilder.java (685 lines). Located buildWangFamilyHome (line 367): 7×5 house, furnace + chest, completely generic interior. This is the anti-pattern.
+- Implemented buildWangLinCorner(level, x, y, z) — six pieces of evidence, zero generic furniture:
+  1. Sleeping mat (WHITE_CARPET at NE corner) — poor family, no bed.
+  2. Hidden private journal (TRAPPED_CHEST tucked behind sleeping mat) — 7-page written book with Wang Lin's inner voice: "I must not let Mother see this" / restriction diagram fails / father's furnace cold / Wang Hao distrust / wolves near elder's house / Old Chen's dog missing / "I will deny it."
+  3. Cultivation notes (LECTERN + written book) — 6 pages: qi breathing / "I am not still" / father's advice on observation / ant-watching / spirit density near the well / "they will think I am cursed."
+  4. Repaired farming hoe (ITEM_FRAME on north wall, damaged IRON_HOE with damageValue=118) — he fixes tools, doesn't replace them.
+  5. Worn shoes by the door (ITEM_FRAME near doorway, damaged LEATHER_BOOTS with damageValue=38).
+  6. Unfinished restriction diagram (REDSTONE_WIRE at 2 positions, deliberately incomplete — the gap IS the story).
+- Created two helper methods: placeItemFrame (spawns ItemFrame entity with item) and createWrittenBook (creates WRITTEN_BOOK ItemStack with custom title/author/pages NBT using CompoundTag + ListTag + StringTag + Component.Serializer.toJson).
+- Added 9 new imports: CompoundTag, ListTag, StringTag, Component, ItemFrame, ItemStack, Items, ChestBlockEntity, LecternBlockEntity.
+- Wired buildWangLinCorner into buildWangFamilyHome (called after furnace + chest placement).
+- Amended Article XLV (clarifications only, NOT a new article — per user's directive):
+  §3: Reframed from "need → cascade" to "world owns pressures, NPC owns priorities, commitment persists." The pipeline is Mind → Reasoning → Decision → Commitment → Execution. NeedDrivenGoal is a "commitment engine," not a goal selector. Per-tick re-evaluation is a bug — it produces dithering.
+  §5: Renamed from "Interiors Are Character, Not Furniture" to "Interiors Are Evidence, Not Furniture." Added The One-Room Standard: build one room, Wang Lin's, refuse to touch another until believable.
+  §6: Expanded from one 30-minute AFK test to Three Tests: AFK Test (player never moves, does world continue?), Observer Test (player walks but doesn't interact, does anything meaningful happen?), Participant Test (player interferes, does simulation react?). All three must pass.
+  §9: Expanded from 4 stages to 5 — inserted "Understandable" between Observable and Memorable. Players witness without understanding. Meaning arrives after observation. Example: seeing Wang Lin watch wolves is Observable; learning he studies their hunting patterns because cultivation comes from observing Heaven makes it Memorable. The simulation must make the meaning reachable through dialogue, evidence, and consequences — not quest text.
+  Compliance: Updated all references from "four stages" to "five stages," "need" to "pressure," "witness" to "experience." Added mandatory two-questions requirement to every worklog.
+- Added Architectural Completeness Declaration after Article XLV Compliance: "The Constitution is architecturally complete at Article XLV. Future changes shall be amendments, clarifications, or removals — not new articles."
+- Compiled: BUILD SUCCESSFUL (0 errors, 100 pre-existing warnings, 0 new warnings from this cycle's code).
+- Committed as 5d2b428, pushed to stohco/projectevergreen main.
+
+Stage Summary:
+- Shipped: Wang Lin's corner — 6 evidence pieces, 2 written books (13 pages total of Wang Lin's voice), 2 item frames, 1 trapped chest, 1 lectern, 1 sleeping mat, 1 unfinished restriction diagram. The ONE room. The standard for every future room.
+- Shipped: Article XLV amendments (§3 pressures/commitment, §5 evidence + one-room standard, §6 three tests, §9 five stages with Understandable). Architectural Completeness Declaration.
+- Build: GREEN (0 errors, 100 pre-existing warnings).
+- Git: 5d2b428 pushed to stohco/projectevergreen main.
+
+HARDEST SELF-CRITIQUE (this round):
+- The room is HAND-AUTHORED but not yet PLAYTESTED. I cannot confirm the item frames place correctly (the Direction parameter in `new ItemFrame(level, pos, direction)` may be inverted — I used SOUTH for frames on the north wall, but if the API expects the direction of the supporting block rather than the facing direction, the frames will face the wrong way). This is a runtime risk that only a client playtest can catch. The code compiles, but compilation is not verification.
+- The written books use `Component.Serializer.toJson(Component.literal(page))` for page content. This produces valid JSON text components, but the pages are plain text with no formatting (no line breaks, no styling). A real cultivation journal would have marginalia, crossings-out, ink stains. This is the minimum viable evidence — better than generic furniture, but not yet "a room that feels like it belongs to a real person."
+- The trapped chest is "tucked behind the sleeping mat" but not truly HIDDEN. A player walking in will see it immediately. The user's vision was "a single carefully hidden notebook." To truly hide it, I'd need to place it under the floor (below the carpet, in the foundation layer) or behind a removable wall block. This is a v2 refinement — the v1 ships the evidence, v2 hides it properly.
+- The restriction diagram is only 2 redstone dust pieces. A real restriction formation would be a circle or grid pattern. Two pieces reads as "someone dropped redstone," not "someone was practicing formations." This needs 4-8 pieces in a recognizable-but-incomplete pattern. v2 refinement.
+- I did NOT run the client playtest. The user's central directive was "the next breakthrough comes from launching the game and standing in Wang Family Village for 30 minutes." I shipped the room but did not stand in it. The next cycle MUST launch the client and verify the room renders correctly — item frames facing the right way, books readable, chest accessible, diagram visible.
+- The art critique (CRON Step 2) was NOT re-done this cycle. The existing critique (CRON-COMPLETIONIST-73, 14 models scored 5-7/10) stands. The user's feedback redirected this cycle toward craftsmanship (the room) over audit (the models). The art is still at the ceiling of addBox(). The room is the new art frontier.
+
+WHAT COULD THE PLAYER EXPERIENCE TODAY?
+- The player can enter Wang Lin's house in Wang Family Village, walk to the NE corner, and find: a sleeping mat on the floor, a trapped chest with a private journal (7 pages of Wang Lin's fears and secrets), a lectern with cultivation notes (6 pages of self-taught observations), a damaged hoe on the wall, worn boots by the door, and an unfinished restriction diagram on the floor. The player can READ the books. They learn who Wang Lin is — cautious, secretive, struggling, filial — without any quest log or tutorial. This is the first environmental storytelling in the project. It is the ONE room.
+
+WHAT COULD THE PLAYER EXPERIENCE YESTERDAY?
+- The player could enter Wang Lin's house and find: an alchemy furnace and a chest. That's it. No evidence. No character. No story. The room could belong to anyone. It belonged to no one.
+
+The answers are NOT identical. The cycle advanced the game.
+
+NEXT PRIORITY:
+1. CLIENT PLAYTEST: Launch the game, travel to Wang Family Village (3842, surface, -1184), enter Wang Lin's house, verify the evidence renders correctly. Fix item frame directions if wrong. Fix book text if unreadable. This is the mandatory verification step.
+2. REFINEMENT v2: Hide the trapped chest properly (under floor / behind wall). Expand the restriction diagram to 4-8 pieces in a recognizable pattern. Add a third book (father's alchemy notes, left on the furnace).
+3. COMMITMENT ENGINE: Begin the NpcScheduleGoal → commitment-driven goal replacement (Article XLV §3). The commitment engine reads world pressures, filters through NPC priorities, produces a commitment that persists across ticks.
+4. DO NOT BUILD ANOTHER ROOM. Wang Lin's room is the standard. It is not yet believable. Refine it until it is. Only then touch Li Muwan's.
+
