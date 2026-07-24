@@ -2282,15 +2282,146 @@ When in doubt: the code does not know whether it communicates. Only
 a watcher knows. When in doubt: a green build proves the code
 compiles. It does not prove the world is inhabited.
 
+## Article XLVII — Residences Are Authored From Lives
+
+The world's hardest remaining problem is not AI, rendering, terrain,
+or architecture. It is authorship: how to fill an entire Er Gen
+world without spending twenty years placing every block.
+
+This Article solves that by inverting the authorship direction.
+
+### §1 — The Inversion
+
+A residence is not a schematic. It is a simulation object. The house
+is generated FROM the resident, not the other way around. You do
+not author buildings. You author people. The buildings emerge.
+
+The chain is:
+
+```
+ResidentProfile (who the person IS)
+  → ResidenceManifestBuilder
+  → ResidenceManifest (what the house CONTAINS and WHY)
+  → BlockPlacementEngine [future]
+  → Minecraft blocks
+```
+
+The profile is canon. The manifest is derived canon. The blocks are
+rendering. Each layer only translates.
+
+### §2 — Two Kinds of Authored Content
+
+**Canon-authored (immutable).** Never procedurally generated. Ever.
+Planet Suzaku, Wang Family Village, Heng Yue Sect, Zhao Capital,
+Sea of Devils, Suzaku Tomb, spirit veins, rivers, mountains, roads,
+ancient battlefields. These are the historical map. They exist as
+they exist because the novels say they exist.
+
+**Life-authored.** Not terrain. Not buildings. Lives. Old Chen's
+house, routine, personality, goals, relationships, inventory, fears,
+habits, history, garden, dog, friends, enemies, debt, favorite tea.
+None of that is Minecraft. Minecraft merely renders it.
+
+### §3 — Everything Exists Because Someone Needed It
+
+Nothing exists because the designer placed it. Everything exists
+because someone needed it.
+
+- A kitchen exists because someone cooks.
+- A storage chest exists because someone has valuables.
+- A hidden stash exists because someone hides things.
+- An observation post exists because someone watches.
+- A memorial nook exists because someone grieves.
+- A chicken coop exists because someone keeps chickens.
+- A herb garden exists because someone grows herbs.
+- A training yard exists because someone practices combat.
+
+If no one needed it, it does not exist. A room with no purpose is
+decoration. Decoration is forbidden (Article XLV).
+
+### §4 — Interiors Are Evidence, Not Furniture (Strengthened)
+
+Article XLV §5 established that a residence's contents are the
+visible biography of the occupant. This Article strengthens that
+rule by making it derivable: the biography (ResidentProfile) is the
+source of truth, and the contents (ResidenceManifest) are generated
+from it. The block-placement layer is the last, not the first, step.
+
+A room whose contents cannot be traced to a need in the resident's
+profile is a bug. An object whose purpose cannot be stated in one
+sentence is a bug. A house that looks the same for two different
+residents is a bug.
+
+### §5 — Settlements Emerge From Residents, Not The Reverse
+
+A village is not a collection of houses placed by a designer. A
+village is an ecosystem of people whose needs collectively produce
+the village.
+
+```
+Villagers
+  → need houses
+  → need roads (to reach each other)
+  → need wells (for water)
+  → need farms (for food)
+  → need storage (for harvest)
+  → need markets (for trade)
+  → need temples (for worship)
+  → need cemeteries (for the dead)
+  → Village emerges
+```
+
+Nothing exists because the designer placed it. Everything exists
+because someone needed it. That is incredibly Er Gen.
+
+### §6 — The Depth Mandate
+
+The architecture is mature. Depth will teach more than breadth. The
+project shall spend sustained effort on a single location — Wang
+Family Village — until:
+
+- every house is authored from its resident,
+- every resident has believable needs and relationships,
+- every field, path, and fence exists for a reason,
+- every room reveals something about its owner,
+- one complete seasonal cycle passes,
+- one or two fully emergent "Living Moments" occur.
+
+If that village feels like a place that existed decades before the
+player arrived, the design problem is solved for the rest of the Er
+Gen universe. Heng Yue Sect, Zhao Capital, and eventually the
+Immortal Astral Continent become larger applications of the same
+principles, not entirely new engineering challenges.
+
+### §7 — Relationship To Prior Articles
+
+Article XLIV says the actor is primary and the spawn is deprecated.
+This Article says the residence is also primary and the schematic
+is deprecated. The actor and their home are one authorship unit.
+
+Article XLV says systems must be lived in. This Article says homes
+must be lived in — and "lived in" means "derived from a life," not
+"furnished by a designer."
+
+Article XLVI says no change is complete without observation. This
+Article says no residence is complete until a player entering it
+infers something true about its occupant. The observation test for
+a residence is: "What does this room tell you about who lives here?"
+If the answer is "nothing," the residence is decoration.
+
+When in doubt: the world is not generated for the player. It is
+remembered. The player simply arrives after its history has already
+begun. When in doubt: you author lives. Minecraft renders them.
+
 ## Architectural Completeness Declaration
 
-The Constitution is architecturally complete at Article XLVI.
-Article XLVI is an amendment to the development process, not to the
-simulation — it is the last article because it closes the loop the
-prior forty-five opened. The project does not suffer from a lack of
-articles. It suffers when Articles XL–XLVI are not yet lived. The
-remaining challenge is not conceptual. It is craftsmanship:
-launching the game, standing in Wang Family Village, finding what
-feels artificial, and refining it through iteration, not through
-further legislation.
+The Constitution is architecturally complete at Article XLVII.
+Article XLVII closes the authorship loop: where Articles XL–XLVI
+governed the simulation, the experience, and the observation, this
+Article governs the world's content. The project does not suffer
+from a lack of articles. It suffers when Articles XL–XLVII are not
+yet lived. The remaining challenge is not conceptual. It is
+authorship: launching the game, standing in Wang Family Village,
+finding what feels placed rather than lived, and refining it through
+iteration, not through further legislation.
 

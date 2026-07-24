@@ -1,0 +1,69 @@
+{
+  "residentId": "wang_lin",
+  "displayName": "Wang Lin",
+  "settlementId": "wang_family_village",
+  "occupation": "hidden_cultivator",
+  "personalityTraits": [
+    "cautious",
+    "observant",
+    "concealment_first",
+    "sparse",
+    "patient",
+    "determined"
+  ],
+  "cultivationStyle": "qi_condensation",
+  "needs": [
+    "BASIC_SHELTER",
+    "KITCHEN",
+    "STORAGE",
+    "CULTIVATION_SPACE",
+    "OBSERVATION",
+    "CONCEALMENT",
+    "DEFENSE",
+    "WORKSHOP"
+  ],
+  "inventory": [
+    "flying_sword",
+    "jade_slip",
+    "tea_set"
+  ],
+  "fears": [
+    "revealing_strength",
+    "losing_family",
+    "being_discovered_by_sect"
+  ],
+  "habits": [
+    "observes_from_roof",
+    "maintains_weapons",
+    "checks_escape_routes",
+    "sleeps_within_reach_of_weapon"
+  ],
+  "relationships": [
+    "son_of:wang_tianlong",
+    "son_of:wang_mother",
+    "neighbor:old_chen",
+    "student_of:heng_yue_sect"
+  ],
+  "history": [
+    {
+      "event": "Wang Lin repaired the fence after the spring storm",
+      "location": "courtyard_south_fence",
+      "evidence": "inferred",
+      "emotionalWeight": "pride"
+    },
+    {
+      "event": "Wang Lin first sensed qi while meditating here",
+      "location": "cultivation_chamber",
+      "evidence": "canon",
+      "emotionalWeight": "awe"
+    },
+    {
+      "event": "Wang Lin concealed his flying sword beneath the floor here",
+      "location": "hidden_stash",
+      "evidence": "inferred",
+      "emotionalWeight": "tension"
+    }
+  ],
+  "canonSourced": true,
+  "_authorshipNote": "Wang Lin's residence is sparse, carefully maintained, nothing unnecessary, storage hidden, observation point on roof. This is the user's 2026-07-26 canonical example: 'Very sparse. No decorations. Carefully maintained. Nothing unnecessary. Storage hidden. Observation point on roof.'"
+}

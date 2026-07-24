@@ -1,0 +1,63 @@
+{
+  "residentId": "wang_tianlong",
+  "displayName": "Wang Tianlong",
+  "settlementId": "wang_family_village",
+  "occupation": "farmer",
+  "personalityTraits": [
+    "hardworking",
+    "protective",
+    "practical",
+    "proud_of_son"
+  ],
+  "cultivationStyle": "none",
+  "needs": [
+    "BASIC_SHELTER",
+    "KITCHEN",
+    "STORAGE",
+    "ANIMAL_HOUSING",
+    "SOCIAL_SPACE",
+    "WORKSHOP"
+  ],
+  "inventory": [
+    "farming_tools",
+    "savings_chest",
+    "family_portrait"
+  ],
+  "fears": [
+    "bad_harvest",
+    "son_in_danger",
+    "wolf_attacks"
+  ],
+  "habits": [
+    "works_fields_at_dawn",
+    "checks_perimeter_at_dusk",
+    "repairs_tools_in_evening"
+  ],
+  "relationships": [
+    "father_of:wang_lin",
+    "husband_of:wang_mother",
+    "friend:old_chen"
+  ],
+  "history": [
+    {
+      "event": "Wang Tianlong built the chicken coop with his own hands",
+      "location": "courtyard_east",
+      "evidence": "inferred",
+      "emotionalWeight": "pride"
+    },
+    {
+      "event": "The family savings are kept in the bedroom chest",
+      "location": "bedroom_chest",
+      "evidence": "inferred",
+      "emotionalWeight": "trust"
+    },
+    {
+      "event": "Wang Tianlong gave a dog pup to Old Chen from this house's litter",
+      "location": "courtyard",
+      "evidence": "inferred",
+      "emotionalWeight": "generosity"
+    }
+  ],
+  "canonSourced": true,
+  "_authorshipNote": "Wang Tianlong is Wang Lin's father — a mortal farmer. His residence is practical, well-maintained, with farming tools and a chicken coop. He is proud of his son but worries. The savings chest in the bedroom is the family's security. He is the one who gave Old Chen a new dog pup after the old one died — this ties the two residences together socially."
+}

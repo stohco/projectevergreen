@@ -1,0 +1,72 @@
+{
+  "residentId": "old_chen",
+  "displayName": "Old Chen",
+  "settlementId": "wang_family_village",
+  "occupation": "elder_farmer",
+  "personalityTraits": [
+    "kind",
+    "grieving",
+    "tea_drinker",
+    "storyteller",
+    "patient"
+  ],
+  "cultivationStyle": "none",
+  "needs": [
+    "BASIC_SHELTER",
+    "KITCHEN",
+    "STORAGE",
+    "ANIMAL_HOUSING",
+    "SOCIAL_SPACE",
+    "MOURNING",
+    "WORKSHOP"
+  ],
+  "inventory": [
+    "tea_set",
+    "dog",
+    "farming_tools",
+    "family_portrait"
+  ],
+  "fears": [
+    "another_loss",
+    "the_cold_winter"
+  ],
+  "habits": [
+    "brews_morning_tea",
+    "tends_garden",
+    "feeds_dog_first",
+    "tells_stories_to_children"
+  ],
+  "relationships": [
+    "neighbor:wang_lin",
+    "elder_of:wang_family_village",
+    "friend:wang_tianlong"
+  ],
+  "history": [
+    {
+      "event": "Old Chen's dog died in the north corner of the courtyard",
+      "location": "courtyard_north_corner",
+      "evidence": "inferred",
+      "emotionalWeight": "grief"
+    },
+    {
+      "event": "Old Chen's wife passed away in the bedroom",
+      "location": "bedroom",
+      "evidence": "inferred",
+      "emotionalWeight": "grief"
+    },
+    {
+      "event": "Old Chen tells stories to village children by the hearth",
+      "location": "kitchen_hearth",
+      "evidence": "inferred",
+      "emotionalWeight": "warmth"
+    },
+    {
+      "event": "Old Chen received a new dog pup from Wang Tianlong",
+      "location": "courtyard",
+      "evidence": "inferred",
+      "emotionalWeight": "hope"
+    }
+  ],
+  "canonSourced": true,
+  "_authorshipNote": "Old Chen is the village elder with a dog. The Constitution (Article XLV §5) names him: 'Memory exists because Old Chen remembers his dog.' His residence is warm, lived-in, with evidence of loss and continuation. The memorial nook is for his wife; the dog shelter is for his current dog (received after the old one died)."
+}
