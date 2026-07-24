@@ -1920,36 +1920,56 @@ A daily schedule ("06:00 field, 12:00 eat, 18:00 home") is not a
 system. It is a timetable. A timetable tells you where an NPC is.
 It does not tell you why.
 
-The correct object is a **need**. Needs cascade:
+The NPC does not own a schedule. The **world** owns pressures.
+The **NPC** owns priorities. The NPC asks, of the world's
+pressures: "Which of these matters to me?" Different NPCs give
+different answers. That is much richer than everyone carrying a
+timetable.
+
+The pipeline is:
 
 ```
-need food
-  -> need crops
-    -> field
-      -> rain starts
-        -> stops working
-          -> visits neighbor
-            -> hears rumor
-              -> changes tomorrow's plans
+Mind
+  ↓
+  Reasoning
+    ↓
+    Decision
+      ↓
+      Commitment
+        ↓
+        Execution
 ```
 
-The schedule emerges from the cascade. It is never authored
-directly. `NpcScheduleGoal` — which reads a `daily_schedule` array
-of `{t0, t1, act, dir, dist}` time-windowed patrol entries and
+The "goal" is not the interesting part. The interesting part is
+the **commitment**. Once Wang Lin decides "I'm going to
+investigate those wolves," that decision persists. He does not
+rethink it every tick. That is closer to human behavior.
+
+A `NeedDrivenGoal` (the proposed replacement for `NpcScheduleGoal`)
+should therefore be understood as a **commitment engine**, not a
+goal selector. The NPC commits to an action derived from world
+pressures filtered through personal priorities. The commitment
+persists until completed, interrupted by a higher-urgency
+pressure, or abandoned. Per-tick re-evaluation of the same
+pressure is a bug — it produces dithering, not behavior.
+
+`NpcScheduleGoal` — which reads a `daily_schedule` array of
+`{t0, t1, act, dir, dist}` time-windowed patrol entries and
 whose own Javadoc says "at dawn they cultivate at Sword Peak, at
 noon they eat at the Main Hall, at night they sleep" — is the
 timetable anti-pattern. It is deprecated by this Article. It is
-retained only until a need-driven goal replaces it.
+retained only until a commitment-driven goal replaces it.
 
 This does not forbid routine. It forbids routine that is not the
-visible downstream of a need. A farmer who always works the field
-at dawn is correct — because the need (food) cascades through
-crops through the field through the time of day when the field is
-workable. A guard who always patrols at midnight is correct —
-because the need (safety) cascades through darkness through
-visibility through the patrol. A cultivator who "meditates at
-Sword Peak from 06:00 to 12:00 because the schedule says so" is
-wrong, because nothing cascades into that slot.
+visible downstream of a pressure. A farmer who always works the
+field at dawn is correct — because the pressure (food scarcity)
+cascades through crops through the field through the time of day
+when the field is workable. A guard who always patrols at
+midnight is correct — because the pressure (safety) cascades
+through darkness through visibility through the patrol. A
+cultivator who "meditates at Sword Peak from 06:00 to 12:00
+because the schedule says so" is wrong, because no pressure
+cascades into that slot.
 
 ### §4 — Extraordinary Events Override Routine
 
@@ -1968,18 +1988,22 @@ displaces it. This is the same context-collapse described in
 Article XLIV §5, restated as a requirement: the cascade must be
 live, not cached.
 
-### §5 — Interiors Are Character, Not Furniture
+### §5 — Interiors Are Evidence, Not Furniture
 
 A residence's room contents are not generic ("table, chair, bed,
 chest"). They are the visible biography of the occupant. The
 correct question is not "what furniture goes here" but "what
-would someone learn by entering this room."
+would someone learn by entering this room." Do not build houses.
+Build **evidence**.
 
-- **Wang Lin's house**: worn cultivation notes, repaired farming
-  tools, one hidden notebook, almost nothing luxurious.
+- **Wang Lin's house**: a repaired farming tool hung on the wall,
+  an unfinished restriction diagram on the floor, a single
+  carefully hidden notebook, worn shoes by the door, worn
+  cultivation notes on a lectern, a thin sleeping mat in the
+corner.
 - **Li Muwan's dwelling**: carefully labeled herbs, partially
-  finished pills, drying racks, experimental failures she has not
-  thrown away.
+  finished pills, drying racks, experimental failures she has
+  not thrown away.
 - **Situ Nan's quarters**: almost empty. The emptiness is the
   point.
 
@@ -1987,22 +2011,45 @@ A room that could belong to anyone belongs to no one. A Residence
 (Article XLIV §4) whose room contents are not character-derived
 fails this Article.
 
-### §6 — The Village Does Not Wait
+**The One-Room Standard.** Do not build five rooms. Build one.
+Build Wang Lin's. Refuse to touch another room until it is
+believable. Once one room feels like it belongs to a real person,
+it becomes the standard for every future room. Five generic rooms
+are worth less than one believable room.
+
+### §6 — The Village Does Not Wait (Three Tests)
 
 The central test of the simulation is not "does it run" but "does
-it live without the player." The test is:
+it live without the player." There are three canonical tests:
 
-> Stand completely still for 30 real minutes. Does the village
-> still feel alive?
+**The AFK Test.** The player never moves. Does the world
+continue? Does the village develop, do NPCs move with reason, do
+things change without any input? If the answer is "NPCs walk
+circles, nothing changes, nobody talks, nothing develops," the
+simulation is not there yet.
 
-If the answer is yes — NPCs move with reason, things change,
-people talk, the world develops — the simulation is beginning to
-work. If the answer is "NPCs walk circles, nothing changes, nobody
-talks, nothing develops," the simulation is not there yet,
-regardless of how many systems are wired.
+**The Observer Test.** The player walks around but never
+interacts. Does anything meaningful happen? Does the player
+witness behavior that feels like it was happening anyway — not
+triggered by proximity, not queued for an audience? If every
+event only fires when the player approaches, the world is a
+diorama, not a simulation.
 
-This is Article V ("Everything Exists Without The Player") restated
-as a concrete, falsifiable test.
+**The Participant Test.** The player actively interferes. Does
+the simulation react? If the player attacks, steals, helps, or
+speaks, do the NPCs respond with reason — not with scripted
+quest dialogue, but with the same pressure-priority-commitment
+logic that governs their other behavior?
+
+These three tests together cover almost everything the project
+is trying to build. A cycle that passes only the Participant
+Test but fails the AFK Test has built a game, not a world. A
+cycle that passes only the AFK Test but fails the Participant
+Test has built a screensaver, not a simulation. All three must
+pass.
+
+This is Article V ("Everything Exists Without The Player")
+restated as three concrete, falsifiable tests.
 
 ### §7 — Slow Stories
 
@@ -2041,28 +2088,44 @@ Examples of acceptable answers:
 A cycle that cannot answer this question has not advanced the
 project, regardless of lines of code shipped.
 
-### §9 — Canon Experience Status: Four Stages, Not Percentages
+### §9 — Canon Experience Status: Five Stages, Not Percentages
 
-Progress on a Canon Experience is tracked across four stages, not
-as a percentage:
+Progress on a Canon Experience is tracked across five stages,
+not as a percentage:
 
 ```
-Specified    The experience is named in canon data. We know
-             what should happen.
-Simulated    The underlying systems produce the behavior in
-             data/logic. It runs, but is not yet visible.
-Observable   A player can witness it in-game, without debug
-             commands, within a single session.
-Memorable    NPCs carry the event in memory and retell/act on
-             it later. The experience persists.
+Specified     The experience is named in canon data. We know
+              what should happen.
+Simulated     The underlying systems produce the behavior in
+              data/logic. It runs, but is not yet visible.
+Observable    A player can witness it in-game, without debug
+              commands, within a single session.
+Understandable  The player can understand WHY it happened —
+              the cause is legible, the meaning is reachable.
+              Players often witness something without
+              understanding it. Meaning often arrives after
+              observation.
+Memorable     NPCs carry the event in memory and retell/act
+              on it later. The experience persists across
+              time.
 ```
 
-A percentage cannot tell you where something is stuck. The four
+A percentage cannot tell you where something is stuck. The five
 stages can. Every Canon Experience in the living chapters must
 carry its current stage. A moment at Observable that has been at
-Observable for three cycles without advancing to Memorable is
-stuck — and the stuck-ness is the signal, not a failure to be
+Observable for three cycles without advancing to Understandable
+is stuck — and the stuck-ness is the signal, not a failure to be
 papered over with a higher percentage.
+
+The Understandable stage is inserted because players often
+witness something without understanding it. Example: you see
+Wang Lin watching wolves. Cool. But if you later learn he's
+studying their hunting patterns because cultivation comes from
+observing Heaven, that moment suddenly becomes memorable.
+Meaning often arrives after observation. The simulation must
+make the meaning reachable — through NPC dialogue, through
+environmental evidence (Article XLV §5), through consequences
+that play out over time — not through quest text.
 
 ### §10 — The First Ordinary Day
 
@@ -2094,21 +2157,36 @@ not serve The First Ordinary Day is, by this Article, decoration.
 A system for which no dependent actor can be named is a bug.
 
 A daily schedule authored as a timetable (time-windowed patrol
-entries not downstream of a named need) is a bug. `NpcScheduleGoal`
-in its current form is the deprecated transition path; it must be
-replaced by a need-driven goal.
+entries not downstream of a named pressure) is a bug.
+`NpcScheduleGoal` in its current form is the deprecated transition
+path; it must be replaced by a commitment-driven goal.
 
 A residence whose room contents are generic furniture (not
-character-derived) is a bug.
+character-derived evidence) is a bug. Building five generic rooms
+is a bug — build one believable room first.
 
-A cycle that cannot answer "what could a player witness today that
-they could not witness yesterday" has not advanced the project.
+A cycle that cannot answer "what could a player experience today
+that they could not yesterday" has not advanced the project. Both
+questions must be answered in every worklog: today's experience
+AND yesterday's experience. If the answers are identical, the
+cycle did not advance the game, regardless of lines of code.
 
-A Canon Experience tracked as a percentage (rather than the four
+A Canon Experience tracked as a percentage (rather than the five
 stages) is a bug.
 
 When in doubt: the village was already alive. The schedule was
-already cascading from need. Minecraft is catching up to a life
-that was already in motion. When in doubt: if you remove the
+already cascading from pressure. Minecraft is catching up to a
+life that was already in motion. When in doubt: if you remove the
 system and no NPC's life changes, the system was decoration.
+
+## Architectural Completeness Declaration
+
+The Constitution is architecturally complete at Article XLV.
+Future changes shall be amendments, clarifications, or removals —
+not new articles. The project does not suffer from a lack of
+articles. It suffers when Articles XL–XLV are not yet lived. The
+remaining challenge is not conceptual. It is craftsmanship:
+launching the game, standing in Wang Family Village, finding what
+feels artificial, and refining it through iteration, not through
+further legislation.
 

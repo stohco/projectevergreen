@@ -4,9 +4,18 @@ import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.core.Ergenverse;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -248,6 +257,121 @@ public final class WangFamilyVillageBuilder {
         Ergenverse.LOGGER.info("[Ergenverse] Wang Family Village v2 construction complete.");
     }
 
+    // ── Wang Lin's Corner — Evidence, Not Furniture ───────────────────
+    //
+    // Article XLV §5: "Interiors Are Character, Not Furniture."
+    // The user's directive: "Don't build houses. Build evidence."
+    // The player enters and CONSTRUCTS Wang Lin from what they see.
+    //
+    // This is the ONE room. The standard for every future room.
+    // Do not build another room until this one is believable.
+
+    private static void buildWangLinCorner(ServerLevel level, int x, int y, int z) {
+        // The house is 7x5 (dx 0-6, dz 0-4). Interior: dx 1-5, dz 1-3.
+        // Wang Lin's corner: NE quadrant (dx 4-5, dz 1-2).
+        // Family area: NW (existing family chest at dx1,dz1) + furnace center.
+
+        // ── 1. Sleeping mat (white carpet) ───────────────────────────
+        // A poor family. Wang Lin sleeps on the floor in the NE corner.
+        // The carpet is thin, worn, placed against the east wall.
+        level.setBlock(new BlockPos(x + 5, y + 1, z + 1),
+                Blocks.WHITE_CARPET.defaultBlockState(), 3);
+
+        // ── 2. Hidden private journal (trapped chest) ────────────────
+        // Tucked behind the sleeping mat, against the east wall.
+        // A trapped chest — if opened carelessly, it triggers a redstone
+        // signal (Wang Lin would know). The journal inside is private.
+        BlockPos journalPos = new BlockPos(x + 4, y + 1, z + 1);
+        level.setBlock(journalPos, Blocks.TRAPPED_CHEST.defaultBlockState(), 2);
+        if (level.getBlockEntity(journalPos) instanceof ChestBlockEntity chest) {
+            chest.setItem(0, createWrittenBook(
+                    "Private Journal",
+                    "Wang Lin",
+                    "I must not let Mother see this.",
+                    "The restriction diagram still fails. Third attempt. The lines will not hold.",
+                    "Father's furnace grows cold. I cannot reignite it. I am not strong enough.",
+                    "Wang Hao looked at me strangely today. I do not trust him.",
+                    "The wolves came closer last night. I heard them behind the elder's house.",
+                    "Old Chen's dog is missing. He asked me if I had seen it. I had not.",
+                    "If anyone reads this, I will deny it."
+            ));
+        }
+
+        // ── 3. Cultivation notes (lectern with worn book) ───────────
+        // A lectern next to the sleeping mat. Wang Lin studies here
+        // before dawn. The book is his own handwriting — observations,
+        // not technique. He is self-taught.
+        BlockPos lecternPos = new BlockPos(x + 5, y + 1, z + 2);
+        level.setBlock(lecternPos, Blocks.LECTERN.defaultBlockState(), 2);
+        if (level.getBlockEntity(lecternPos) instanceof LecternBlockEntity lectern) {
+            lectern.setBook(createWrittenBook(
+                    "Cultivation Notes",
+                    "Wang Lin",
+                    "Qi Gathering. Breathe in through the nose, out through the mouth.",
+                    "The first layer requires stillness. I am not still. My mind moves like water.",
+                    "Father said: 'Observe Heaven. All patterns come from observation.'",
+                    "I try to observe the ants. They work without complaint. I do not understand how.",
+                    "Spirit density near the well is higher. I feel it when the wind stops.",
+                    "I must not tell anyone what I feel. They will think I am cursed."
+            ));
+        }
+
+        // ── 4. Repaired farming tool (item frame on north wall) ─────
+        // A damaged iron hoe, hung on the wall above the family chest.
+        // Wang Lin repairs the family's tools. The hoe is worn but
+        // functional — he fixed it, he didn't replace it.
+        ItemStack damagedHoe = new ItemStack(Items.IRON_HOE);
+        damagedHoe.setDamageValue(118); // well-worn, nearly half durability used
+        // Frame on interior face of north wall (dz=0), above the family chest (dx=1, dz=1)
+        // Frame hangs at (x+1, y+2, z+1), faces SOUTH (into the room)
+        placeItemFrame(level, new BlockPos(x + 1, y + 2, z + 1), Direction.SOUTH, damagedHoe);
+
+        // ── 5. Worn shoes by the door (item frame near doorway) ──────
+        // Leather boots, placed by the door where Wang Lin leaves them
+        // when he comes in. Worn, damaged — he walks far to gather herbs.
+        ItemStack wornBoots = new ItemStack(Items.LEATHER_BOOTS);
+        wornBoots.setDamageValue(38);
+        // Door is at dx=3, dz=4. Frame on interior face of south wall,
+        // just east of the door. Frame at (x+4, y+1, z+3), faces SOUTH.
+        placeItemFrame(level, new BlockPos(x + 4, y + 1, z + 3), Direction.SOUTH, wornBoots);
+
+        // ── 6. Unfinished restriction diagram (redstone on floor) ───
+        // Two redstone dust pieces on the floor between the family chest
+        // and the furnace. An incomplete line — Wang Lin was practicing
+        // restriction formations and gave up mid-attempt. The diagram
+        // is deliberately unfinished. It tells the player: someone here
+        // is trying to learn something they were not taught.
+        level.setBlock(new BlockPos(x + 2, y + 1, z + 1),
+                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+        level.setBlock(new BlockPos(x + 3, y + 1, z + 1),
+                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+        // The line stops at x+3. It should continue to x+4 but doesn't.
+        // That gap is the story — he couldn't finish it.
+    }
+
+    private static void placeItemFrame(ServerLevel level, BlockPos pos,
+                                          Direction facing, ItemStack item) {
+        ItemFrame frame = new ItemFrame(level, pos, facing);
+        frame.setItem(item);
+        level.addFreshEntity(frame);
+    }
+
+    private static ItemStack createWrittenBook(String title, String author,
+                                                  String... pages) {
+        ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
+        CompoundTag tag = book.getOrCreateTag();
+        tag.putString("title", title);
+        tag.putString("author", author);
+        tag.putBoolean("resolved", true);
+        ListTag pagesList = new ListTag();
+        for (String page : pages) {
+            String json = Component.Serializer.toJson(Component.literal(page));
+            pagesList.add(StringTag.valueOf(json));
+        }
+        tag.put("pages", pagesList);
+        return book;
+    }
+
     // ── Terrain ──────────────────────────────────────────────────────────
 
     private static void flattenTerrain(ServerLevel level, int cx, int cy, int cz) {
@@ -414,6 +538,13 @@ public final class WangFamilyVillageBuilder {
         // Chest with family keepsakes
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, y + 1, z + 1),
                 new ResourceLocation("ergenverse", "chests/wang_family_village_main"));
+
+        // ── Wang Lin's corner: evidence, not furniture ───────────────
+        // Article XLV §5. The ONE room. Do not build another until this
+        // one is believable. The player enters and constructs Wang Lin
+        // from what they see: sleeping mat, hidden journal, cultivation
+        // notes, repaired hoe, worn shoes, unfinished restriction diagram.
+        buildWangLinCorner(level, x, y, z);
     }
 
     // ── Elder's Home ────────────────────────────────────────────────────
