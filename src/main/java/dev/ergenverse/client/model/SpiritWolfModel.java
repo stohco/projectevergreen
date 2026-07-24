@@ -200,6 +200,12 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
+    // CRON-COMPLETIONIST-59: Expose head for emissive eye glow render pass.
+    // Wolf eyes are texture-only (no separate eye cubes), so the whole head
+    // renders at fullbright. Acceptable at wolf scale — dark skull contrasts
+    // with bright eye texture pixels.
+    public ModelPart getHead() { return this.head; }
+
     @Override
     public ModelPart root() {
         return this.root;

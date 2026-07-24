@@ -50,6 +50,7 @@ public final class SpiritBeastRenderers {
     public static class RabbitRenderer extends MobRenderer<SpiritBeastEntity, SpiritRabbitModel> {
         private static final ResourceLocation TEX =
                 new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/spirit_rabbit.png");
+        private static final int FULLBRIGHT = 15728880;
 
         public RabbitRenderer(EntityRendererProvider.Context context) {
             super(context, new SpiritRabbitModel(context.bakeLayer(SpiritBeastModelLayers.SPIRIT_RABBIT)), 0.4F);
@@ -57,6 +58,22 @@ public final class SpiritBeastRenderers {
 
         @Override
         public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        // CRON-COMPLETIONIST-59: Emissive ear glow — spirit rabbits have faintly
+        // luminescent ears (qi sensitivity). Canon: rabbit ears glow with faint
+        // spiritual light, visible in darkness.
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getEarLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEarRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
     }
 
     // ── Spirit Wolf ───────────────────────────────────────
@@ -64,6 +81,7 @@ public final class SpiritBeastRenderers {
     public static class WolfRenderer extends MobRenderer<SpiritBeastEntity, SpiritWolfModel> {
         private static final ResourceLocation TEX =
                 new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/spirit_wolf.png");
+        private static final int FULLBRIGHT = 15728880;
 
         public WolfRenderer(EntityRendererProvider.Context context) {
             super(context, new SpiritWolfModel(context.bakeLayer(SpiritBeastModelLayers.SPIRIT_WOLF)), 0.6F);
@@ -71,6 +89,23 @@ public final class SpiritBeastRenderers {
 
         @Override
         public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        // CRON-COMPLETIONIST-59: Emissive eye glow — spirit wolves have glowing
+        // spirit eyes in darkness. Wolf model has no separate eye cubes (eyes are
+        // texture-only), so the whole head renders at fullbright. Per the
+        // FireBeastRenderer self-critique, at wolf scale the dark skull contrasts
+        // with bright eye texture pixels, making this acceptable.
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getHead().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
     }
 
     // ── Spirit Deer ───────────────────────────────────────
@@ -78,6 +113,7 @@ public final class SpiritBeastRenderers {
     public static class DeerRenderer extends MobRenderer<SpiritBeastEntity, SpiritDeerModel> {
         private static final ResourceLocation TEX =
                 new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/spirit_deer.png");
+        private static final int FULLBRIGHT = 15728880;
 
         public DeerRenderer(EntityRendererProvider.Context context) {
             super(context, new SpiritDeerModel(context.bakeLayer(SpiritBeastModelLayers.SPIRIT_DEER)), 0.6F);
@@ -85,6 +121,22 @@ public final class SpiritBeastRenderers {
 
         @Override
         public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        // CRON-COMPLETIONIST-59: Emissive antler tine tips — spirit deer antlers
+        // glow at the tips (divine quality, similar to qilin). Canon: deer antlers
+        // radiate faint spiritual light at their extremities.
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getAntlerLeftTip().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getAntlerRightTip().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
     }
 
     // ── Spirit Hawk ───────────────────────────────────────
@@ -92,6 +144,7 @@ public final class SpiritBeastRenderers {
     public static class HawkRenderer extends MobRenderer<SpiritBeastEntity, SpiritHawkModel> {
         private static final ResourceLocation TEX =
                 new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/spirit_hawk.png");
+        private static final int FULLBRIGHT = 15728880;
 
         public HawkRenderer(EntityRendererProvider.Context context) {
             super(context, new SpiritHawkModel(context.bakeLayer(SpiritBeastModelLayers.SPIRIT_HAWK)), 0.5F);
@@ -99,6 +152,21 @@ public final class SpiritBeastRenderers {
 
         @Override
         public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        // CRON-COMPLETIONIST-59: Emissive eye glow — spirit hawks are raptors with
+        // glowing spirit eyes. Same approach as wolf (whole head at fullbright)
+        // since hawk model has no separate eye cubes.
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getHead().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
     }
 
     // ── Spirit Crane ───────────────────────────────────────
@@ -204,6 +272,7 @@ public final class SpiritBeastRenderers {
     public static class BoarRenderer extends MobRenderer<SpiritBeastEntity, StoneBackBoarModel> {
         private static final ResourceLocation TEX =
                 new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/stone_back_boar.png");
+        private static final int FULLBRIGHT = 15728880;
 
         public BoarRenderer(EntityRendererProvider.Context context) {
             super(context, new StoneBackBoarModel(context.bakeLayer(SpiritBeastModelLayers.STONE_BACK_BOAR)), 0.6F);
@@ -211,6 +280,21 @@ public final class SpiritBeastRenderers {
 
         @Override
         public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        // CRON-COMPLETIONIST-59: Emissive stone plate center ridge — Stone Back Boars
+        // have spiritual mineral deposits that glow faintly. Canon: the stone
+        // carapace on their back contains qi-infused minerals.
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
+            this.getModel().getStoneCenter().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
     }
 
     // ── Spirit Bat (CRON-COMPLETIONIST-33) ──────────────────────

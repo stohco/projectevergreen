@@ -51,6 +51,7 @@ public class FlyingSwordModel extends HierarchicalModel<Entity> {
     private final ModelPart guard;
     private final ModelPart handle;
     private final ModelPart pommel;
+    private final ModelPart bladeTip;
     private final ModelPart tassel;
 
     public FlyingSwordModel(ModelPart root) {
@@ -59,6 +60,7 @@ public class FlyingSwordModel extends HierarchicalModel<Entity> {
         this.guard = root.getChild("guard");
         this.handle = root.getChild("handle");
         this.pommel = this.handle.getChild("pommel");
+        this.bladeTip = this.blade.getChild("blade_tip");
         this.tassel = this.pommel.getChild("tassel");
     }
 
@@ -74,12 +76,16 @@ public class FlyingSwordModel extends HierarchicalModel<Entity> {
 
         // ── blade : long thin steel edge ──────────────────────────────────
         // Tapers from 1.2px wide at base to 0.6px at tip (using two boxes)
-        root.addOrReplaceChild("blade",
+        PartDefinition blade = root.addOrReplaceChild("blade",
                 CubeListBuilder.create().texOffs(0, 0)
                         .addBox(-0.6F, -4.0F, -0.6F, 1.2F, 5.0F, 1.2F),   // lower blade (wider)
                 PartPose.offset(0.0F, 0.0F, 0.0F));
-        // Blade tip — child of blade, slightly narrower
-        // (We add a second box to the blade part to create a taper illusion)
+        // CRON-COMPLETIONIST-59: blade_tip — second box creating visible taper
+        // from 1.2px at base to 0.6px at tip. Previously only one box existed.
+        blade.addOrReplaceChild("blade_tip",
+                CubeListBuilder.create().texOffs(4, 0)
+                        .addBox(-0.3F, -5.0F, -0.3F, 0.6F, 3.0F, 0.6F),
+                PartPose.offset(0.0F, -5.0F, 0.0F));
 
         // ── guard : flat crosspiece at the blade-handle junction ─────────
         root.addOrReplaceChild("guard",

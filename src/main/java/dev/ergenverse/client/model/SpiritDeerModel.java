@@ -81,6 +81,8 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
     private final ModelPart backLeftShin;
     private final ModelPart backRightThigh;
     private final ModelPart backRightShin;
+    private final ModelPart antlerLeftTip;
+    private final ModelPart antlerRightTip;
 
     public SpiritDeerModel(ModelPart root) {
         this.root = root;
@@ -100,6 +102,8 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         this.backLeftShin = this.backLeftThigh.getChild("shin");
         this.backRightThigh = root.getChild("back_right_thigh");
         this.backRightShin = this.backRightThigh.getChild("shin");
+        this.antlerLeftTip = this.head.getChild("antler_left_base").getChild("mid").getChild("tip");
+        this.antlerRightTip = this.head.getChild("antler_right_base").getChild("mid").getChild("tip");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -245,6 +249,11 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
 
         return LayerDefinition.create(mesh, 64, 32);
     }
+
+    // CRON-COMPLETIONIST-59: Expose antler tips for emissive divine glow render pass.
+    // Spirit deer antlers glow at the tips (divine quality, similar to qilin).
+    public ModelPart getAntlerLeftTip() { return this.antlerLeftTip; }
+    public ModelPart getAntlerRightTip() { return this.antlerRightTip; }
 
     @Override
     public ModelPart root() {

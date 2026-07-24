@@ -74,6 +74,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
     private final ModelPart leftForearm;
     private final ModelPart rightForearm;
     private final ModelPart tail;
+    private final ModelPart bodyChest;
+    private final ModelPart bodyHind;
     private final ModelPart leftLeg;
     private final ModelPart rightLeg;
 
@@ -87,6 +89,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         this.rightShoulder = rightWing.getChild("shoulder");
         this.leftForearm = leftShoulder.getChild("forearm");
         this.rightForearm = rightShoulder.getChild("forearm");
+        this.bodyChest = root.getChild("body_chest");
+        this.bodyHind = root.getChild("body_hind");
         this.tail = root.getChild("tail");
         this.leftLeg = root.getChild("left_leg");
         this.rightLeg = root.getChild("right_leg");
@@ -97,10 +101,15 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         PartDefinition root = mesh.getRoot();
 
         // ── body : horizontal torso, hovering around y=10 ────────────────
-        root.addOrReplaceChild("body",
+        // CRON-COMPLETIONIST-59: body split into chest + hind for raptor taper
+        root.addOrReplaceChild("body_chest",
                 CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-3.0F, -2.0F, -3.0F, 6.0F, 4.0F, 6.0F),
-                PartPose.offset(0.0F, 10.0F, 0.0F));
+                        .addBox(-3.0F, -2.0F, -3.0F, 6.0F, 4.0F, 4.0F),
+                PartPose.offset(0.0F, 10.0F, -1.0F));
+        root.addOrReplaceChild("body_hind",
+                CubeListBuilder.create().texOffs(0, 8)
+                        .addBox(-2.5F, -1.75F, -1.5F, 5.0F, 3.5F, 3.0F),
+                PartPose.offset(0.0F, 10.0F, 2.0F));
 
         // ── CRON-COMPLETIONIST-21: neck — short connector between body and head ──
         PartDefinition neck = root.addOrReplaceChild("neck",
@@ -223,6 +232,9 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
+    // CRON-COMPLETIONIST-59: Expose head for emissive eye glow render pass.
+    public ModelPart getHead() { return this.head; }
+
     @Override
     public ModelPart root() {
         return this.root;
@@ -337,6 +349,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
             // FLAP : full oscillation, elbow flexes on the downstroke
             this.leftWing.zRot = flap;
             this.rightWing.zRot = -flap;
+            // CRON-COMPLETIONIST-59: Spine flex on flap cycle
+            this.bodyChest.xRot = (float) Math.sin(ageInTicks * 0.6F) * 0.08F * limbSwingAmount;
             float downstroke = (float) Math.max(0.0F, Math.sin(ageInTicks * 0.6F));
             float elbow = downstroke * 0.3F * limbSwingAmount;
             this.leftShoulder.zRot = -elbow;

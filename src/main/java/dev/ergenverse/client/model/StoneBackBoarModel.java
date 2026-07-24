@@ -63,6 +63,7 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
     private final ModelPart backLeftShin;
     private final ModelPart backRightThigh;
     private final ModelPart backRightShin;
+    private final ModelPart stoneCenter;
 
     public StoneBackBoarModel(ModelPart root) {
         this.root = root;
@@ -77,6 +78,7 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
         this.backLeftShin = this.backLeftThigh.getChild("shin");
         this.backRightThigh = root.getChild("back_right_thigh");
         this.backRightShin = this.backRightThigh.getChild("shin");
+        this.stoneCenter = root.getChild("body_chest").getChild("stone_center");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -225,6 +227,9 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
 
         return LayerDefinition.create(mesh, 128, 64);
     }
+
+    // CRON-COMPLETIONIST-59: Expose stone center ridge for emissive spiritual mineral glow.
+    public ModelPart getStoneCenter() { return this.stoneCenter; }
 
     @Override
     public ModelPart root() {

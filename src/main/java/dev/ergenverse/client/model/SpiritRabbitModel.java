@@ -154,6 +154,11 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
         return this.root;
     }
 
+    // CRON-COMPLETIONIST-59: Expose ears for emissive qi-glow render pass.
+    // Spirit rabbits have faintly luminescent ears (qi sensitivity).
+    public ModelPart getEarLeft() { return this.earLeft; }
+    public ModelPart getEarRight() { return this.earRight; }
+
     @Override
     public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
                           float ageInTicks, float netHeadYaw, float headPitch) {
