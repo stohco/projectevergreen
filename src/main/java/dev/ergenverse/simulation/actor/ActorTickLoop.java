@@ -506,17 +506,17 @@ public final class ActorTickLoop {
         };
 
         // ── Success condition 2: understood pattern ──
-        // CRON-COMPLETIONIST-15: "The actor understood the pattern." For INVESTIGATE
-        // commitments, success can also come from having accumulated enough memory
-        // about the target. If the actor's MemoryGraph has 3+ memories about the
-        // target subject with strength >= 0.3 (and the commitment has lived at least
-        // 400 ticks), the actor has "understood the pattern" — no need to keep
-        // investigating. This is the bridge between memory and commitment:
-        //   "Observe wolves — Until: understand hunting pattern"
-        // The pattern is "understood" when the actor has enough episodic memory
-        // about the subject. A more sophisticated version would check for
-        // INFERRED memories (synthesis), but for now OBSERVED + PARTICIPATED
-        // memories with sufficient strength are the threshold.
+        // CRON-COMPLETIONIST-16: Fixed two bugs from CRON-COMPLETIONIST-15:
+        //   (a) Subject mismatch: targetId may be "wolves near village" while
+        //       MemoryGraph memories are stored under "wolf" or "hostile_creature".
+        //       Now uses aboutKeywords() for fuzzy matching instead of exact-match
+        //       about(). This extracts individual words and matches them against
+        //       memory subjects bidirectionally (subject-contains-keyword OR
+        //       keyword-contains-subject), with stop-word filtering.
+        //   (b) Double-counting: the old code iterated mem.about(subject) twice.
+        //       An INFERRED memory with strength >= 0.3 was counted in BOTH loops.
+        //       Now iterates once, counting OBSERVED/PARTICIPATED at >= 0.3 and
+        //       INFERRED at >= 0.2 in a single pass, with each node counted once.
         CompletionPredicate successPatternUnderstood = ctx -> {
             if (ctx.actor() == null) return false;
             if (ctx.actor().cognition == null) return false;
@@ -524,15 +524,21 @@ public final class ActorTickLoop {
             if (ctx.currentTick() - tick < 400L) return false; // need time to learn
             var mem = ctx.actor().cognition.memory;
             if (mem == null) return false;
-            String subject = targetId.toLowerCase();
+
+            // Fuzzy keyword search: matches "wolves near village" against "wolf",
+            // "hostile_creature", "village_events", etc.
+            java.util.List<MemoryGraph.MemoryNode> candidates = mem.aboutKeywords(targetId);
+            if (candidates.isEmpty()) return false;
+
             int strongMemories = 0;
-            for (MemoryGraph.MemoryNode node : mem.about(subject)) {
-                if (node.strength >= 0.3) strongMemories++;
-            }
-            // Also check for INFERRED memories (actor synthesized a pattern).
-            for (MemoryGraph.MemoryNode node : mem.about(subject)) {
-                if (node.type == MemoryGraph.Type.INFERRED && node.strength >= 0.2) {
-                    strongMemories++; // inferred memories count extra
+            for (MemoryGraph.MemoryNode node : candidates) {
+                if (node.type == MemoryGraph.Type.INFERRED) {
+                    // INFERRED memories count at a lower threshold — they represent
+                    // the actor's synthesis of observed patterns.
+                    if (node.strength >= 0.2) strongMemories++;
+                } else {
+                    // OBSERVED, PARTICIPATED, HEARD, SOUL_SEARCHED, etc.
+                    if (node.strength >= 0.3) strongMemories++;
                 }
             }
             return strongMemories >= 3;

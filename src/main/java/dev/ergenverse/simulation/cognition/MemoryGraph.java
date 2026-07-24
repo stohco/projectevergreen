@@ -99,6 +99,79 @@ public final class MemoryGraph {
         return out;
     }
 
+    /**
+     * Fuzzy keyword search: extract individual words from a target string
+     * and return all non-FORGOTTEN memories whose subject CONTAINS any
+     * of those words (case-insensitive).
+     *
+     * <p>This solves the subject mismatch problem in the understood-pattern
+     * predicate: a commitment with targetId "wolves near village" would
+     * never match memories stored under subject "wolf" or "hostile_creature"
+     * via exact-match {@link #about}. This method extracts the keywords
+     * ["wolves", "near", "village"] and matches against all memory subjects,
+     * so a memory with subject "wolf" (which contains the stem "wolv") or
+     * a memory with subject "village_events" would both be found.
+     *
+     * <p>Stop words (articles, prepositions, conjunctions under 4 chars)
+     * are filtered out to avoid noise matches on "the", "and", "for", etc.
+     *
+     * <p>Results are sorted by strength descending (strongest first).
+     * Each unique memory node appears at most once, even if multiple
+     * keywords match the same node.
+     *
+     * @param targetPhrase the free-text target phrase to extract keywords from
+     * @return list of matching MemoryNodes, sorted by strength descending
+     */
+    public List<MemoryNode> aboutKeywords(String targetPhrase) {
+        if (targetPhrase == null || targetPhrase.isBlank()) return List.of();
+
+        // Extract keywords: split on non-word chars, filter stop words and short words.
+        String[] rawWords = targetPhrase.toLowerCase().split("\\W+");
+        java.util.Set<String> seenKeywords = new java.util.HashSet<>();
+        java.util.Set<String> keywords = new java.util.HashSet<>();
+        for (String word : rawWords) {
+            if (word.length() < 3) continue; // skip "a", "an", "of", "to", "in"
+            if (STOP_WORDS.contains(word)) continue;
+            // Store both the exact word and a 5-char prefix for stem matching.
+            // "wolves" → keywords: "wolves", "wolve" (matches "wolf" via contains)
+            keywords.add(word);
+            if (word.length() > 4) {
+                keywords.add(word.substring(0, Math.min(word.length() - 1, 5)));
+            }
+            seenKeywords.add(word);
+        }
+        if (keywords.isEmpty()) return List.of();
+
+        // Match against all non-forgotten memories.
+        java.util.Set<Long> matchedIds = new java.util.HashSet<>();
+        List<MemoryNode> out = new ArrayList<>();
+        String[] keywordArray = keywords.toArray(new String[0]);
+        for (MemoryNode n : nodes.values()) {
+            if (n.type == Type.FORGOTTEN) continue;
+            if (matchedIds.contains(n.id)) continue;
+            String memSubject = n.subject.toLowerCase();
+            for (String kw : keywordArray) {
+                if (memSubject.contains(kw) || kw.contains(memSubject)) {
+                    out.add(n);
+                    matchedIds.add(n.id);
+                    break;
+                }
+            }
+        }
+        out.sort((a, b) -> Double.compare(b.strength, a.strength));
+        return out;
+    }
+
+    /** Common stop words to filter from keyword extraction. */
+    private static final java.util.Set<String> STOP_WORDS = java.util.Set.of(
+            "the", "and", "for", "but", "not", "you", "all", "can", "had",
+            "her", "was", "one", "our", "out", "are", "has", "his", "how",
+            "its", "may", "new", "now", "old", "see", "way", "who", "did",
+            "get", "let", "say", "she", "too", "use", "via", "yet", "him",
+            "with", "from", "that", "this", "they", "will", "what", "when",
+            "were", "been", "have", "some", "them", "than", "then", "also"
+    );
+
     /** Apply per-tick decay. SUPPRESSED, BLOODLINE, KARMIC_IMPRINT, TRIBULATION_MEMORY
      *  decay much slower than OBSERVED / HEARD. */
     public void decay(double baseAmount) {

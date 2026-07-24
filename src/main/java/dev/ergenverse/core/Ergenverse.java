@@ -221,6 +221,11 @@ public final class Ergenverse {
         // WorldSimCommand: /ergen worldsim — debug window into the macro simulation.
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.WorldSimCommand.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.history.HistoryEvents.class);
+        // CRON-COMPLETIONIST-16: PlayerActionBridge — player is a first-class actor.
+        // All player entity interactions now flow through SimulationActions → WorldEventBus.
+        // Registered at HIGHEST priority (before HistoryEvents) so the bus dispatch
+        // happens before existing handlers process the raw Forge event.
+        MinecraftForge.EVENT_BUS.register(dev.ergenverse.simulation.action.PlayerActionBridge.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.SectMissionInteraction.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.LectureInteraction.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.advanced.AdvancedMechanicsCommand.class);
