@@ -7,6 +7,7 @@ import dev.ergenverse.entity.ai.SpiritBeastGrazeGoal;
 import dev.ergenverse.entity.ai.SpiritBeastHuntGoal;
 import dev.ergenverse.entity.ai.SpiritBeastRestGoal;
 import dev.ergenverse.entity.ai.SpiritBeastSwimGoal;
+import dev.ergenverse.entity.ai.SpiritBeastFeedGoal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -96,6 +97,9 @@ public class SpiritBeastEntity extends PathfinderMob {
             SynchedEntityData.defineId(SpiritBeastEntity.class, EntityDataSerializers.INT);
 
     private int goalPoseTick = Integer.MIN_VALUE;
+
+    /** CRON-COMPLETIONIST-71: Reference to FeedGoal for hunger timer ticking. */
+    private SpiritBeastFeedGoal feedGoal;
 
     public SpiritBeastEntity(EntityType<? extends SpiritBeastEntity> type, Level level) {
         super(type, level);
@@ -412,6 +416,10 @@ public class SpiritBeastEntity extends PathfinderMob {
 
         // ── Living Events ──
         this.goalSelector.addGoal(10, new dev.ergenverse.entity.ai.BeastLivingEventGoal(this));
+
+        // ── CRON-COMPLETIONIST-71: Create feed goal with stored reference for hunger ticking ──
+        this.feedGoal = new SpiritBeastFeedGoal(this);
+        this.goalSelector.addGoal(5, this.feedGoal);
     }
 
     @Override
@@ -490,6 +498,8 @@ public class SpiritBeastEntity extends PathfinderMob {
     @Override
     public void tick() {
         super.tick();
+        // CRON-COMPLETIONIST-71: Tick the feed goal's hunger timer every tick
+        if (feedGoal != null) feedGoal.tickHunger();
         if (!this.level().isClientSide()) {
             int ticksSinceGoal = this.tickCount - this.goalPoseTick;
             boolean goalDrivingPose = ticksSinceGoal < 5;

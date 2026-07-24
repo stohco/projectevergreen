@@ -48,11 +48,14 @@ public final class BeastIntelligenceGoalFactory {
      */
     public static void applyBeastGoals(PathfinderMob mob, BeastIntelligence tier,
                                         GoalSelector goals, GoalSelector targets) {
-        // ── INSTINCT(0): basic survival only — no added goals (entity handles flee/wander) ──
+        // ── INSTINCT(0): basic survival only — entity handles flee/wander ──
+        // FeedGoal is added directly in SpiritBeastEntity.registerGoals() with a stored reference
         if (tier.ordinal() < BeastIntelligence.AWARE.ordinal()) return;
 
-        // ── AWARE(1): + hurt retaliation + alertness ──
+        // ── AWARE(1): + hurt retaliation + alertness + migration ──
         targets.addGoal(2, new HurtByTargetGoal(mob));
+        // CRON-COMPLETIONIST-71: AWARE+ beasts migrate toward better territory
+        goals.addGoal(6, new SpiritBeastMigrationGoal((dev.ergenverse.entity.SpiritBeastEntity) mob));
 
         if (tier.ordinal() < BeastIntelligence.CUNNING.ordinal()) return;
 
@@ -80,6 +83,7 @@ public final class BeastIntelligenceGoalFactory {
         if (tier.ordinal() < BeastIntelligence.OLD_MONSTER.ordinal()) return;
 
         // ── OLD_MONSTER(6): + devastating counter when cornered (in BeastSmartFleeGoal) ──
+        // OLD_MONSTER: enhanced feeding — seek wider range, restore more HP
     }
 
     /** Territory radius scales with tier. SPIRIT=16, DEMON=24, ANCIENT=40, OLD_MONSTER=64. */
