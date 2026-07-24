@@ -66,8 +66,30 @@ public final class TerrainSpiritifier {
     /** Radius (in chunks) around the player to convert. 3 = 7x7 chunk area. */
     private static final int CHUNK_RADIUS = 3;
 
-    /** Vanilla → custom block mapping. */
-    private static final Map<Block, Block> CONVERSION_MAP = buildMap();
+    /**
+     * Vanilla → custom block mapping.
+     *
+     * <p><b>LAZY-INITIALIZED:</b> Cannot be a static final field because
+     * {@code ErgenverseBlocks.SPIRIT_GRASS.get()} throws NullPointerException
+     * if called before Forge has populated the block registry. The previous
+     * static-final version crashed the mod at class-load time during
+     * AutomaticEventSubscriber injection (before any registry is resolved).
+     * The map is now built on first access via {@link #getConversionMap()},
+     * which is only called from {@link #onServerTick} (well after registry
+     * resolution).
+     */
+    private static volatile Map<Block, Block> CONVERSION_MAP;
+
+    private static Map<Block, Block> getConversionMap() {
+        Map<Block, Block> m = CONVERSION_MAP;
+        if (m != null) return m;
+        synchronized (TerrainSpiritifier.class) {
+            if (CONVERSION_MAP == null) {
+                CONVERSION_MAP = buildMap();
+            }
+            return CONVERSION_MAP;
+        }
+    }
 
     private static Map<Block, Block> buildMap() {
         Map<Block, Block> m = new java.util.HashMap<>();
@@ -222,7 +244,7 @@ public final class TerrainSpiritifier {
                 for (int y = 0; y < 16; y++) {
                     for (int z = 0; z < 16; z++) {
                         BlockState state = section.getBlockState(x, y, z);
-                        Block target = CONVERSION_MAP.get(state.getBlock());
+                        Block target = getConversionMap().get(state.getBlock());
                         if (target == null) continue;
                         BlockPos pos = new BlockPos(
                                 chunk.getPos().getMinBlockX() + x,

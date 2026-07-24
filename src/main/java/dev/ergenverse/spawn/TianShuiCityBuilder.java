@@ -32,6 +32,17 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public final class TianShuiCityBuilder {
 
+    /**
+     * Lazy-initialized BlockState holder. ErgenverseBlocks.X.get() throws NPE before
+     * Forge resolves the block registry, so these cannot be static-final in the outer
+     * class. This inner class loads on first reference (during build(), which runs at
+     * world-gen time — well after registry resolution).
+     */
+    private static final class B {
+        private static final BlockState SPIRIT_STONE = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+        private static final BlockState JADE_STONE = ErgenverseBlocks.JADE_STONE.get().defaultBlockState();
+    }
+
     private TianShuiCityBuilder() {}
 
     // ── Block palette ──────────────────────────────────────────────────
@@ -92,9 +103,6 @@ public final class TianShuiCityBuilder {
     private static final BlockState STONE_STAIRS        = Blocks.STONE_STAIRS.defaultBlockState();
     private static final BlockState STONE_SLAB          = Blocks.STONE_SLAB.defaultBlockState();
     private static final BlockState SANDSTONE           = Blocks.SANDSTONE.defaultBlockState();
-    private static final BlockState SPIRIT_STONE        = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
-    private static final BlockState JADE_STONE          = ErgenverseBlocks.JADE_STONE.get().defaultBlockState();
-
     // ── Dimensions ────────────────────────────────────────────────────
     private static final int CITY_RADIUS = 65;   // half-size, so 130×130 total
     private static final int WALL_HEIGHT = 10;

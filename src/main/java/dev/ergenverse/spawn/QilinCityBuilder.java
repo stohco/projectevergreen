@@ -54,6 +54,22 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public final class QilinCityBuilder {
 
+    /**
+     * Lazy-initialized BlockState holder. ErgenverseBlocks.X.get() throws NPE before
+     * Forge resolves the block registry, so these cannot be static-final in the outer
+     * class. This inner class loads on first reference (during build(), which runs at
+     * world-gen time — well after registry resolution).
+     */
+    private static final class B {
+        private static final BlockState SPIRIT_STONE = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+        private static final BlockState SPIRIT_STONE_STAIRS = ErgenverseBlocks.SPIRIT_STONE_STAIRS.get().defaultBlockState();
+        private static final BlockState SPIRIT_STONE_SLAB = ErgenverseBlocks.SPIRIT_STONE_SLAB.get().defaultBlockState();
+        private static final BlockState SPIRIT_STONE_WALL = ErgenverseBlocks.SPIRIT_STONE_WALL.get().defaultBlockState();
+        private static final BlockState JADE_STONE = ErgenverseBlocks.JADE_STONE.get().defaultBlockState();
+        private static final BlockState SPIRIT_DIRT = ErgenverseBlocks.SPIRIT_DIRT.get().defaultBlockState();
+        private static final BlockState SPIRIT_GRASS = ErgenverseBlocks.SPIRIT_GRASS.get().defaultBlockState();
+    }
+
     private QilinCityBuilder() {}
 
     // ── Canonical position on Planet Suzaku ────────────────────────
@@ -127,14 +143,6 @@ public final class QilinCityBuilder {
     private static final BlockState WHITE_CONCRETE      = Blocks.WHITE_CONCRETE.defaultBlockState();
     private static final BlockState WHITE_CONCRETE_POWDER = Blocks.WHITE_CONCRETE_POWDER.defaultBlockState();
     // Custom Ergenverse blocks
-    private static final BlockState SPIRIT_STONE        = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
-    private static final BlockState SPIRIT_STONE_STAIRS = ErgenverseBlocks.SPIRIT_STONE_STAIRS.get().defaultBlockState();
-    private static final BlockState SPIRIT_STONE_SLAB   = ErgenverseBlocks.SPIRIT_STONE_SLAB.get().defaultBlockState();
-    private static final BlockState SPIRIT_STONE_WALL   = ErgenverseBlocks.SPIRIT_STONE_WALL.get().defaultBlockState();
-    private static final BlockState JADE_STONE          = ErgenverseBlocks.JADE_STONE.get().defaultBlockState();
-    private static final BlockState SPIRIT_DIRT         = ErgenverseBlocks.SPIRIT_DIRT.get().defaultBlockState();
-    private static final BlockState SPIRIT_GRASS        = ErgenverseBlocks.SPIRIT_GRASS.get().defaultBlockState();
-
     // ── Dimensions ────────────────────────────────────────────────────
     private static final int CITY_RADIUS = 62;
     private static final int WALL_HEIGHT = 11;
@@ -211,7 +219,7 @@ public final class QilinCityBuilder {
         for (int dx = -CITY_RADIUS - 5; dx <= CITY_RADIUS + 5; dx++) {
             for (int dz = -CITY_RADIUS - 5; dz <= CITY_RADIUS + 5; dz++) {
                 BlockPos p = new BlockPos(cx + dx, baseY - 1, cz + dz);
-                level.setBlock(p, SPIRIT_DIRT, 2);
+                level.setBlock(p, B.SPIRIT_DIRT, 2);
                 for (int y = baseY; y <= baseY + WALL_HEIGHT + 5; y++) {
                     level.setBlock(new BlockPos(cx + dx, y, cz + dz), AIR, 2);
                 }
@@ -255,10 +263,10 @@ public final class QilinCityBuilder {
         }
         // Spirit stone road on top of walls (patrol walkway)
         for (int i = -r; i <= r; i++) {
-            level.setBlock(new BlockPos(cx + i, wallY + WALL_HEIGHT + 1, cz - r), SPIRIT_STONE, 2);
-            level.setBlock(new BlockPos(cx + i, wallY + WALL_HEIGHT + 1, cz + r), SPIRIT_STONE, 2);
-            level.setBlock(new BlockPos(cx - r, wallY + WALL_HEIGHT + 1, cz + i), SPIRIT_STONE, 2);
-            level.setBlock(new BlockPos(cx + r, wallY + WALL_HEIGHT + 1, cz + i), SPIRIT_STONE, 2);
+            level.setBlock(new BlockPos(cx + i, wallY + WALL_HEIGHT + 1, cz - r), B.SPIRIT_STONE, 2);
+            level.setBlock(new BlockPos(cx + i, wallY + WALL_HEIGHT + 1, cz + r), B.SPIRIT_STONE, 2);
+            level.setBlock(new BlockPos(cx - r, wallY + WALL_HEIGHT + 1, cz + i), B.SPIRIT_STONE, 2);
+            level.setBlock(new BlockPos(cx + r, wallY + WALL_HEIGHT + 1, cz + i), B.SPIRIT_STONE, 2);
         }
         // Lanterns on towers
         buildWatchtower(level, cx - r, baseY, cz - r);
@@ -301,13 +309,13 @@ public final class QilinCityBuilder {
         // N-S avenue (6 wide, spirit stone)
         for (int dz = -r + 2; dz <= r - 2; dz++) {
             for (int dx = -2; dx <= 2; dx++) {
-                level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), SPIRIT_STONE, 2);
+                level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), B.SPIRIT_STONE, 2);
             }
         }
         // E-W avenue (6 wide)
         for (int dx = -r + 2; dx <= r - 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
-                level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), SPIRIT_STONE, 2);
+                level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), B.SPIRIT_STONE, 2);
             }
         }
         // Sidewalk trim — gold block lines along streets
@@ -348,8 +356,8 @@ public final class QilinCityBuilder {
         }
         // Jade pillar pillars flanking gate
         for (int y = 0; y < 10; y++) {
-            level.setBlock(new BlockPos(gx, baseY + y, cz - 3), JADE_STONE, 2);
-            level.setBlock(new BlockPos(gx, baseY + y, cz + 3), JADE_STONE, 2);
+            level.setBlock(new BlockPos(gx, baseY + y, cz - 3), B.JADE_STONE, 2);
+            level.setBlock(new BlockPos(gx, baseY + y, cz + 3), B.JADE_STONE, 2);
         }
         // Gold plaque above gate (where city name would go)
         level.setBlock(new BlockPos(gx, baseY + 9, cz - 1), GOLD_BLOCK, 2);
@@ -405,7 +413,7 @@ public final class QilinCityBuilder {
             for (int dz = -10; dz <= 10; dz++) {
                 int dist = dx * dx + dz * dz;
                 if (dist > 81 && dist <= 121) {
-                    level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), JADE_STONE, 2);
+                    level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), B.JADE_STONE, 2);
                 }
             }
         }
@@ -449,7 +457,7 @@ public final class QilinCityBuilder {
         // Spirit stone floor for the whole district
         for (int dx = 0; dx < 35; dx++) {
             for (int dz = 0; dz < 30; dz++) {
-                level.setBlock(new BlockPos(startX + dx, baseY, startZ + dz), SPIRIT_STONE, 2);
+                level.setBlock(new BlockPos(startX + dx, baseY, startZ + dz), B.SPIRIT_STONE, 2);
             }
         }
         // 8 beast pens (4x2 grid), each 8×8×4
@@ -645,7 +653,7 @@ public final class QilinCityBuilder {
         // Spirit dirt floor
         for (int dx = 0; dx < 24; dx++) {
             for (int dz = 0; dz < 22; dz++) {
-                level.setBlock(new BlockPos(startX + dx, baseY, startZ + dz), SPIRIT_DIRT, 2);
+                level.setBlock(new BlockPos(startX + dx, baseY, startZ + dz), B.SPIRIT_DIRT, 2);
             }
         }
         // 12 humble houses (3 rows of 4)
@@ -737,7 +745,7 @@ public final class QilinCityBuilder {
         // Spirit grass floor
         for (int dx = 0; dx < 28; dx++) {
             for (int dz = 0; dz < 22; dz++) {
-                level.setBlock(new BlockPos(startX + dx, baseY, startZ + dz), SPIRIT_GRASS, 2);
+                level.setBlock(new BlockPos(startX + dx, baseY, startZ + dz), B.SPIRIT_GRASS, 2);
             }
         }
         // 8 homes with gardens (2 rows of 4)
@@ -771,7 +779,7 @@ public final class QilinCityBuilder {
         }
         // Garden behind house (spirit grass + flowers)
         for (int dx = 0; dx < 4; dx++) {
-            level.setBlock(new BlockPos(x + 6, baseY, z + 1 + dx), SPIRIT_GRASS, 2);
+            level.setBlock(new BlockPos(x + 6, baseY, z + 1 + dx), B.SPIRIT_GRASS, 2);
             if (dx % 2 == 0) {
                 level.setBlock(new BlockPos(x + 6, baseY, z + 2 + dx), YELLOW_CARPET, 2);
             }
@@ -824,8 +832,8 @@ public final class QilinCityBuilder {
         }
         // Jade pillars flanking front door
         for (int y = 0; y < 8; y++) {
-            level.setBlock(new BlockPos(gx + 9, baseY + y, gz - 1), JADE_STONE, 2);
-            level.setBlock(new BlockPos(gx + 9, baseY + y, gz + 1), JADE_STONE, 2);
+            level.setBlock(new BlockPos(gx + 9, baseY + y, gz - 1), B.JADE_STONE, 2);
+            level.setBlock(new BlockPos(gx + 9, baseY + y, gz + 1), B.JADE_STONE, 2);
         }
         // Gold plaque above front door
         level.setBlock(new BlockPos(gx + 9, baseY + 8, gz), GOLD_BLOCK, 2);
@@ -877,7 +885,7 @@ public final class QilinCityBuilder {
         // Spirit stone floor for the whole district
         for (int dx = 0; dx < 32; dx++) {
             for (int dz = 0; dz < 28; dz++) {
-                level.setBlock(new BlockPos(startX + dx, baseY, startZ + dz), SPIRIT_STONE, 2);
+                level.setBlock(new BlockPos(startX + dx, baseY, startZ + dz), B.SPIRIT_STONE, 2);
             }
         }
         // Main temple (14×10×8) with obsidian altar
@@ -887,7 +895,7 @@ public final class QilinCityBuilder {
         // Meditation garden (6×6 open with spirit grass)
         for (int dx = -3; dx <= 2; dx++) {
             for (int dz = -3; dz <= 2; dz++) {
-                level.setBlock(new BlockPos(startX + 4 + dx, baseY, startZ + 20 + dz), SPIRIT_GRASS, 2);
+                level.setBlock(new BlockPos(startX + 4 + dx, baseY, startZ + 20 + dz), B.SPIRIT_GRASS, 2);
             }
         }
         // Lotus pond in meditation garden
@@ -936,8 +944,8 @@ public final class QilinCityBuilder {
         }
         // Jade pillars at entrance
         for (int y = 0; y < 8; y++) {
-            level.setBlock(new BlockPos(x + 6, baseY + y, z - 1), JADE_STONE, 2);
-            level.setBlock(new BlockPos(x + 6, baseY + y, z + 1), JADE_STONE, 2);
+            level.setBlock(new BlockPos(x + 6, baseY + y, z - 1), B.JADE_STONE, 2);
+            level.setBlock(new BlockPos(x + 6, baseY + y, z + 1), B.JADE_STONE, 2);
         }
         // Gold trim above entrance
         level.setBlock(new BlockPos(x + 6, baseY + 8, z), GOLD_BLOCK, 2);

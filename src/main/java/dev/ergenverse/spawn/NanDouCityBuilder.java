@@ -53,6 +53,24 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public final class NanDouCityBuilder {
 
+    /**
+     * Lazy-initialized BlockState holder. ErgenverseBlocks.X.get() throws NPE before
+     * Forge resolves the block registry, so these cannot be static-final in the outer
+     * class. This inner class loads on first reference (during build(), which runs at
+     * world-gen time — well after registry resolution).
+     */
+    private static final class B {
+        private static final BlockState SPIRIT_STONE = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+        private static final BlockState JADE_STONE = ErgenverseBlocks.JADE_STONE.get().defaultBlockState();
+        private static final BlockState SPIRIT_SAND = ErgenverseBlocks.SPIRIT_SAND.get().defaultBlockState();
+        private static final BlockState SPIRIT_WOOD_PLANK = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
+        private static final BlockState SPIRIT_WOOD_LOG = ErgenverseBlocks.SPIRIT_WOOD_LOG.get().defaultBlockState();
+        private static final BlockState ALCHEMY_FURNACE = ErgenverseBlocks.ALCHEMY_FURNACE.get().defaultBlockState();
+        private static final BlockState PILL_FURNACE = ErgenverseBlocks.PILL_FURNACE.get().defaultBlockState();
+        private static final BlockState DAO_STONE = ErgenverseBlocks.FORMATION_CORE_STONE.get().defaultBlockState();
+        private static final BlockState FORMATION_PLATFORM = ErgenverseBlocks.FORMATION_PLATFORM.get().defaultBlockState();
+    }
+
     private NanDouCityBuilder() {}
 
     // ── Block palette ──────────────────────────────────────────────────
@@ -115,16 +133,6 @@ public final class NanDouCityBuilder {
     private static final BlockState FERN             = Blocks.FERN.defaultBlockState();
     private static final BlockState AZALEA           = Blocks.FLOWERING_AZALEA.defaultBlockState();
     // ErgenverseBlocks
-    private static final BlockState SPIRIT_STONE     = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
-    private static final BlockState JADE_STONE       = ErgenverseBlocks.JADE_STONE.get().defaultBlockState();
-    private static final BlockState SPIRIT_SAND      = ErgenverseBlocks.SPIRIT_SAND.get().defaultBlockState();
-    private static final BlockState SPIRIT_WOOD_PLANK = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
-    private static final BlockState SPIRIT_WOOD_LOG   = ErgenverseBlocks.SPIRIT_WOOD_LOG.get().defaultBlockState();
-    private static final BlockState ALCHEMY_FURNACE  = ErgenverseBlocks.ALCHEMY_FURNACE.get().defaultBlockState();
-    private static final BlockState PILL_FURNACE     = ErgenverseBlocks.PILL_FURNACE.get().defaultBlockState();
-    private static final BlockState DAO_STONE        = ErgenverseBlocks.FORMATION_CORE_STONE.get().defaultBlockState();
-    private static final BlockState FORMATION_PLATFORM = ErgenverseBlocks.FORMATION_PLATFORM.get().defaultBlockState();
-
     // ── Dimensions ────────────────────────────────────────────────────
     private static final int CITY_HALF = 75;        // 150x150 total
     private static final int WALL_HEIGHT = 12;
@@ -526,7 +534,7 @@ public final class NanDouCityBuilder {
         // Formation platform in garden (cultivation ceremony space)
         for (int dx = -3; dx <= 3; dx++) {
             for (int dz = -3; dz <= 3; dz++) {
-                level.setBlock(new BlockPos(px + dx, baseY + 1, pz - 8 + dz), FORMATION_PLATFORM, 3);
+                level.setBlock(new BlockPos(px + dx, baseY + 1, pz - 8 + dz), B.FORMATION_PLATFORM, 3);
             }
         }
 
@@ -668,11 +676,11 @@ public final class NanDouCityBuilder {
                 boolean edge = Math.abs(x) == 15 || Math.abs(z) == 15;
                 if (edge) {
                     for (int y = baseY + 1; y <= baseY + 5; y++) {
-                        level.setBlock(new BlockPos(mx + x, y, mz + z), SPIRIT_STONE, 3);
+                        level.setBlock(new BlockPos(mx + x, y, mz + z), B.SPIRIT_STONE, 3);
                     }
                 }
                 // Market floor
-                level.setBlock(new BlockPos(mx + x, baseY + 1, mz + z), SPIRIT_SAND, 3);
+                level.setBlock(new BlockPos(mx + x, baseY + 1, mz + z), B.SPIRIT_SAND, 3);
             }
         }
 
@@ -680,7 +688,7 @@ public final class NanDouCityBuilder {
         for (int i = -10; i <= 10; i += 10) {
             for (int j = -10; j <= 10; j += 10) {
                 for (int y = 2; y <= 7; y++) {
-                    level.setBlock(new BlockPos(mx + i, baseY + y, mz + j), SPIRIT_WOOD_LOG, 3);
+                    level.setBlock(new BlockPos(mx + i, baseY + y, mz + j), B.SPIRIT_WOOD_LOG, 3);
                 }
                 // Lantern on each pillar
                 level.setBlock(new BlockPos(mx + i, baseY + 7, mz + j), LANTERN, 3);
@@ -706,11 +714,11 @@ public final class NanDouCityBuilder {
         }
 
         // Alchemy furnace (corner of market)
-        level.setBlock(new BlockPos(mx + 12, baseY + 1, mz + 12), ALCHEMY_FURNACE, 3);
-        level.setBlock(new BlockPos(mx + 12, baseY + 1, mz - 12), PILL_FURNACE, 3);
+        level.setBlock(new BlockPos(mx + 12, baseY + 1, mz + 12), B.ALCHEMY_FURNACE, 3);
+        level.setBlock(new BlockPos(mx + 12, baseY + 1, mz - 12), B.PILL_FURNACE, 3);
 
         // Dao stone display at market center
-        level.setBlock(new BlockPos(mx, baseY + 1, mz), DAO_STONE, 3);
+        level.setBlock(new BlockPos(mx, baseY + 1, mz), B.DAO_STONE, 3);
         level.setBlock(new BlockPos(mx, baseY + 2, mz), GLASS_PANE, 3);
 
         // Anvil for artifact repairs
@@ -881,10 +889,10 @@ public final class NanDouCityBuilder {
                 boolean edge = Math.abs(x) == 12 || Math.abs(z) == 15;
                 if (edge) {
                     for (int y = baseY + 1; y <= baseY + 6; y++) {
-                        level.setBlock(new BlockPos(tx + x, y, tz + z), SPIRIT_STONE, 3);
+                        level.setBlock(new BlockPos(tx + x, y, tz + z), B.SPIRIT_STONE, 3);
                     }
                 }
-                level.setBlock(new BlockPos(tx + x, baseY + 1, tz + z), SPIRIT_SAND, 3);
+                level.setBlock(new BlockPos(tx + x, baseY + 1, tz + z), B.SPIRIT_SAND, 3);
             }
         }
 
@@ -894,7 +902,7 @@ public final class NanDouCityBuilder {
             for (int z = -8; z <= 8; z++) {
                 for (int y = baseY + 2; y <= baseY + 4; y++) {
                     level.setBlock(new BlockPos(tx + x, y, tz + z),
-                        (Math.abs(x) == 6 || Math.abs(z) == 8) ? SPIRIT_STONE : WHITE_CARPET, 3);
+                        (Math.abs(x) == 6 || Math.abs(z) == 8) ? B.SPIRIT_STONE : WHITE_CARPET, 3);
                 }
             }
         }
@@ -911,14 +919,14 @@ public final class NanDouCityBuilder {
         int[][] pillarOffsets = {{-5, -7}, {5, -7}, {-5, 7}, {5, 7}};
         for (int[] p : pillarOffsets) {
             for (int y = hallY; y <= hallY + 8; y++) {
-                level.setBlock(new BlockPos(tx + p[0], y, tz + p[1]), SPIRIT_WOOD_LOG, 3);
+                level.setBlock(new BlockPos(tx + p[0], y, tz + p[1]), B.SPIRIT_WOOD_LOG, 3);
             }
         }
         // 2 middle pillars
         for (int z = -3; z <= 3; z += 6) {
             for (int y = hallY; y <= hallY + 8; y++) {
-                level.setBlock(new BlockPos(tx - 5, y, tz + z), SPIRIT_WOOD_LOG, 3);
-                level.setBlock(new BlockPos(tx + 5, y, tz + z), SPIRIT_WOOD_LOG, 3);
+                level.setBlock(new BlockPos(tx - 5, y, tz + z), B.SPIRIT_WOOD_LOG, 3);
+                level.setBlock(new BlockPos(tx + 5, y, tz + z), B.SPIRIT_WOOD_LOG, 3);
             }
         }
 
@@ -927,7 +935,7 @@ public final class NanDouCityBuilder {
             for (int z = -10; z <= 10; z++) {
                 boolean innerRoof = Math.abs(x) <= 6 && Math.abs(z) <= 8;
                 level.setBlock(new BlockPos(tx + x, hallY + 9, tz + z),
-                    innerRoof ? SPIRIT_WOOD_PLANK : DARK_OAK_STAIR, 3);
+                    innerRoof ? B.SPIRIT_WOOD_PLANK : DARK_OAK_STAIR, 3);
             }
         }
         // Gold roof ornament
@@ -940,7 +948,7 @@ public final class NanDouCityBuilder {
                 level.setBlock(new BlockPos(tx + x, hallY, tz + z), OBSIDIAN, 3);
             }
         }
-        level.setBlock(new BlockPos(tx, hallY + 1, tz - 6), DAO_STONE, 3);
+        level.setBlock(new BlockPos(tx, hallY + 1, tz - 6), B.DAO_STONE, 3);
         level.setBlock(new BlockPos(tx, hallY + 2, tz - 6), SOUL_LANTERN, 3);
 
         // Incense burners (cauldrons) on each side of altar
@@ -987,7 +995,7 @@ public final class NanDouCityBuilder {
                 boolean wall = Math.abs(x) == 11 || Math.abs(z) == 5;
                 if (wall) {
                     for (int y = 2; y <= 5; y++) {
-                        level.setBlock(new BlockPos(tx + x, baseY + y, tz + z), SPIRIT_STONE, 3);
+                        level.setBlock(new BlockPos(tx + x, baseY + y, tz + z), B.SPIRIT_STONE, 3);
                     }
                 }
             }

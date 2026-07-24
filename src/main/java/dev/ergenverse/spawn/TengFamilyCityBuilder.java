@@ -58,6 +58,22 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public final class TengFamilyCityBuilder {
 
+    /**
+     * Lazy-initialized BlockState holder. ErgenverseBlocks.X.get() throws NPE before
+     * Forge resolves the block registry, so these cannot be static-final in the outer
+     * class. This inner class loads on first reference (during build(), which runs at
+     * world-gen time — well after registry resolution).
+     */
+    private static final class B {
+        private static final BlockState SPRUCE_PLANK = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
+        private static final BlockState SPRUCE_LOG = ErgenverseBlocks.SPIRIT_WOOD_LOG.get().defaultBlockState();
+        private static final BlockState SPRUCE_STAIRS = ErgenverseBlocks.SPIRIT_WOOD_PLANKS_STAIRS.get().defaultBlockState();
+        private static final BlockState OBSIDIAN = ErgenverseBlocks.RESTRICTION_STONE.get().defaultBlockState();
+        private static final BlockState SPIRIT_STONE = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+        private static final BlockState BRICK_WALL = ErgenverseBlocks.SPIRIT_STONE_WALL.get().defaultBlockState();
+        private static final BlockState JADE_STONE = ErgenverseBlocks.JADE_STONE.get().defaultBlockState();
+    }
+
     private TengFamilyCityBuilder() {}
 
     // ── Block palette ──────────────────────────────────────────────────
@@ -74,8 +90,6 @@ public final class TengFamilyCityBuilder {
     private static final BlockState GRASS            = Blocks.GRASS_BLOCK.defaultBlockState();
     private static final BlockState OAK_PLANK        = Blocks.OAK_PLANKS.defaultBlockState();
     private static final BlockState OAK_LOG          = Blocks.OAK_LOG.defaultBlockState();
-    private static final BlockState SPRUCE_PLANK     = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
-    private static final BlockState SPRUCE_LOG        = ErgenverseBlocks.SPIRIT_WOOD_LOG.get().defaultBlockState();
     private static final BlockState DARK_OAK_PLANK   = Blocks.DARK_OAK_PLANKS.defaultBlockState();
     private static final BlockState DARK_OAK_LOG     = Blocks.DARK_OAK_LOG.defaultBlockState();
     private static final BlockState IRON_BARS        = Blocks.IRON_BARS.defaultBlockState();
@@ -107,13 +121,8 @@ public final class TengFamilyCityBuilder {
     private static final BlockState STONE_STAIRS     = Blocks.STONE_STAIRS.defaultBlockState();
     private static final BlockState COBBLE_STAIRS    = Blocks.COBBLESTONE_STAIRS.defaultBlockState();
     private static final BlockState OAK_STAIRS       = Blocks.OAK_STAIRS.defaultBlockState();
-    private static final BlockState SPRUCE_STAIRS    = ErgenverseBlocks.SPIRIT_WOOD_PLANKS_STAIRS.get().defaultBlockState();
     private static final BlockState DARK_OAK_STAIRS  = Blocks.DARK_OAK_STAIRS.defaultBlockState();
-    private static final BlockState OBSIDIAN         = ErgenverseBlocks.RESTRICTION_STONE.get().defaultBlockState();
-    private static final BlockState SPIRIT_STONE     = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
     private static final BlockState SPIRIT_STONE_SLAB= ErgenverseBlocks.SPIRIT_STONE_SLAB.get().defaultBlockState();
-    private static final BlockState BRICK_WALL       = ErgenverseBlocks.SPIRIT_STONE_WALL.get().defaultBlockState();
-    private static final BlockState JADE_STONE       = ErgenverseBlocks.JADE_STONE.get().defaultBlockState();
     private static final BlockState GOLD_BLOCK       = Blocks.GOLD_BLOCK.defaultBlockState();
     private static final BlockState FLOWER_POT       = Blocks.FLOWER_POT.defaultBlockState();
     private static final BlockState TORCH            = Blocks.TORCH.defaultBlockState();
@@ -308,7 +317,7 @@ public final class TengFamilyCityBuilder {
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
                 if (Math.abs(dx) <= 1 && Math.abs(dz) <= 1) {
-                    setBlock(level, c.offset(dx, 0, dz), JADE_STONE);
+                    setBlock(level, c.offset(dx, 0, dz), B.JADE_STONE);
                 }
             }
         }
@@ -511,7 +520,7 @@ public final class TengFamilyCityBuilder {
                     }
                 }
                 // Main house
-                wallBox(level, houseBase, 6, 4, 6, SPRUCE_PLANK, OAK_PLANK);
+                wallBox(level, houseBase, 6, 4, 6, B.SPRUCE_PLANK, OAK_PLANK);
                 placeDoor(level, houseBase.offset(2, 1, 5), SPRUCE_DOOR);
                 // Windows
                 setBlock(level, houseBase.offset(0, 2, 2), IRON_BARS);
@@ -654,10 +663,10 @@ public final class TengFamilyCityBuilder {
         placeRoof(level, keepWalls.offset(-1, 8, -1), 13, 15, DARK_OAK_PLANK);
 
         // Spirit stone corner pillars (showing cultivator influence)
-        setBlock(level, keepWalls.offset(0, 3, 0), SPIRIT_STONE);
-        setBlock(level, keepWalls.offset(10, 3, 0), SPIRIT_STONE);
-        setBlock(level, keepWalls.offset(0, 3, 12), SPIRIT_STONE);
-        setBlock(level, keepWalls.offset(10, 3, 12), SPIRIT_STONE);
+        setBlock(level, keepWalls.offset(0, 3, 0), B.SPIRIT_STONE);
+        setBlock(level, keepWalls.offset(10, 3, 0), B.SPIRIT_STONE);
+        setBlock(level, keepWalls.offset(0, 3, 12), B.SPIRIT_STONE);
+        setBlock(level, keepWalls.offset(10, 3, 12), B.SPIRIT_STONE);
     }
 
     // ── 9. Cultivator Quarter ─────────────────────────────────────────
@@ -669,15 +678,15 @@ public final class TengFamilyCityBuilder {
         // Spirit stone paving (cultivators use spirit materials)
         for (int dx = 0; dx < 24; dx++) {
             for (int dz = 0; dz < 20; dz++) {
-                setBlock(level, districtOrigin.offset(dx, 0, dz), SPIRIT_STONE);
+                setBlock(level, districtOrigin.offset(dx, 0, dz), B.SPIRIT_STONE);
             }
         }
 
         // Training hall (8×6, spirit wood)
         BlockPos trainingHall = districtOrigin.offset(8, 0, 2);
-        wallBox(level, trainingHall, 8, 5, 6, SPRUCE_PLANK, SPRUCE_PLANK);
+        wallBox(level, trainingHall, 8, 5, 6, B.SPRUCE_PLANK, B.SPRUCE_PLANK);
         placeDoor(level, trainingHall.offset(3, 1, 5), SPRUCE_DOOR);
-        placeRoof(level, trainingHall.offset(0, 5, 0), 8, 6, SPRUCE_PLANK);
+        placeRoof(level, trainingHall.offset(0, 5, 0), 8, 6, B.SPRUCE_PLANK);
         // Interior: training dummies (hay bales) and weapon racks
         setBlock(level, trainingHall.offset(1, 1, 1), HAY);
         setBlock(level, trainingHall.offset(3, 1, 1), HAY);
@@ -688,7 +697,7 @@ public final class TengFamilyCityBuilder {
         // Cultivator residences (4×4 spirit wood cabins)
         for (int i = 0; i < 3; i++) {
             BlockPos cabin = districtOrigin.offset(1, 0, 12 + i * 3);
-            wallBox(level, cabin, 4, 4, 2, SPRUCE_PLANK, SPRUCE_PLANK);
+            wallBox(level, cabin, 4, 4, 2, B.SPRUCE_PLANK, B.SPRUCE_PLANK);
             placeDoor(level, cabin.offset(1, 1, 1), SPRUCE_DOOR);
             // Interior: bed, chest
             setBlock(level, cabin.offset(1, 1, 0), WHITE_WOOL);
@@ -787,7 +796,7 @@ public final class TengFamilyCityBuilder {
         wallBox(level, tavern, 10, 4, 8, OAK_PLANK, OAK_PLANK);
         placeDoor(level, tavern.offset(4, 1, 7), OAK_DOOR);
         placeDoor(level, tavern.offset(5, 1, 7), OAK_DOOR);
-        placeRoof(level, tavern.offset(0, 4, 0), 10, 8, SPRUCE_PLANK);
+        placeRoof(level, tavern.offset(0, 4, 0), 10, 8, B.SPRUCE_PLANK);
 
         // Interior: tables (oak slabs), brewing stands, barrels
         for (int row = 0; row < 2; row++) {

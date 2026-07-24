@@ -88,28 +88,37 @@ import net.minecraft.world.level.block.state.properties.BedPart;
  */
 public final class SoulRefiningSectBuilder {
 
+    /**
+     * Lazy-initialized BlockState holder. ErgenverseBlocks.X.get() throws NPE before
+     * Forge resolves the block registry, so these cannot be static-final in the outer
+     * class. This inner class loads on first reference (during build(), which runs at
+     * world-gen time — well after registry resolution).
+     */
+    private static final class B {
+        private static final BlockState SPIRIT_STONE = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+        private static final BlockState SPIRIT_STONE_SLAB = ErgenverseBlocks.SPIRIT_STONE_SLAB.get().defaultBlockState();
+        private static final BlockState STONE_BRICK = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+        private static final BlockState BRICK_WALL = ErgenverseBlocks.SPIRIT_STONE_WALL.get().defaultBlockState();
+        private static final BlockState DEEPSLATE = ErgenverseBlocks.SCORCHED_STONE.get().defaultBlockState();
+        private static final BlockState DEEPSLATE_BRICK = ErgenverseBlocks.SCORCHED_STONE.get().defaultBlockState();
+        private static final BlockState SPRUCE_PLANK = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
+        private static final BlockState DARK_OAK_PLANK = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
+        private static final BlockState DARK_OAK_LOG = ErgenverseBlocks.ANCIENT_SPIRIT_LOG.get().defaultBlockState();
+        private static final BlockState DARK_OAK_STAIR = ErgenverseBlocks.ANCIENT_SPIRIT_STAIRS.get().defaultBlockState();
+        private static final BlockState SPRUCE_STAIR = ErgenverseBlocks.SPIRIT_WOOD_PLANKS_STAIRS.get().defaultBlockState();
+        private static final BlockState BRICK_STAIR = ErgenverseBlocks.SPIRIT_STONE_STAIRS.get().defaultBlockState();
+        private static final BlockState OBSIDIAN = ErgenverseBlocks.RESTRICTION_STONE.get().defaultBlockState();
+        private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.get().defaultBlockState();
+        private static final BlockState LAPIS = ErgenverseBlocks.FORMATION_CORE_STONE.get().defaultBlockState();
+    }
+
     private SoulRefiningSectBuilder() {}
 
     // ── Block palette (ErgenverseBlocks — canon-correct spirit materials) ──
-    private static final BlockState SPIRIT_STONE    = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
-    private static final BlockState SPIRIT_STONE_SLAB = ErgenverseBlocks.SPIRIT_STONE_SLAB.get().defaultBlockState();
-    private static final BlockState STONE_BRICK     = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
-    private static final BlockState BRICK_WALL      = ErgenverseBlocks.SPIRIT_STONE_WALL.get().defaultBlockState();
     private static final BlockState COBBLE          = Blocks.COBBLESTONE.defaultBlockState();
-    private static final BlockState DEEPSLATE       = ErgenverseBlocks.SCORCHED_STONE.get().defaultBlockState();
-    private static final BlockState DEEPSLATE_BRICK = ErgenverseBlocks.SCORCHED_STONE.get().defaultBlockState();
-    private static final BlockState SPRUCE_PLANK    = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
-    private static final BlockState DARK_OAK_PLANK  = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
-    private static final BlockState DARK_OAK_LOG    = ErgenverseBlocks.ANCIENT_SPIRIT_LOG.get().defaultBlockState();
-    private static final BlockState DARK_OAK_STAIR  = ErgenverseBlocks.ANCIENT_SPIRIT_STAIRS.get().defaultBlockState();
-    private static final BlockState SPRUCE_STAIR    = ErgenverseBlocks.SPIRIT_WOOD_PLANKS_STAIRS.get().defaultBlockState();
-    private static final BlockState BRICK_STAIR     = ErgenverseBlocks.SPIRIT_STONE_STAIRS.get().defaultBlockState();
     private static final BlockState LANTERN         = Blocks.LANTERN.defaultBlockState();
     private static final BlockState SOUL_LANTERN    = Blocks.SOUL_LANTERN.defaultBlockState();
     private static final BlockState SEA_LANTERN     = Blocks.SEA_LANTERN.defaultBlockState();
-    private static final BlockState OBSIDIAN        = ErgenverseBlocks.RESTRICTION_STONE.get().defaultBlockState();
-    private static final BlockState REDSTONE_BLOCK  = ErgenverseBlocks.BLOOD_STONE.get().defaultBlockState();
-    private static final BlockState LAPIS           = ErgenverseBlocks.FORMATION_CORE_STONE.get().defaultBlockState();
     private static final BlockState IRON_BARS       = Blocks.IRON_BARS.defaultBlockState();
     private static final BlockState WATER           = Blocks.WATER.defaultBlockState();
     private static final BlockState BOOKSHELF       = Blocks.BOOKSHELF.defaultBlockState();
@@ -201,8 +210,8 @@ public final class SoulRefiningSectBuilder {
         for (int dx = -30; dx <= 30; dx++) {
             for (int dz = -30; dz <= 30; dz++) {
                 // Two-layer floor: deepslate under scorched stone
-                setBlock(level, c.offset(dx, c.getY() - 2, dz), DEEPSLATE);
-                setBlock(level, c.offset(dx, c.getY() - 1, dz), DEEPSLATE_BRICK);
+                setBlock(level, c.offset(dx, c.getY() - 2, dz), B.DEEPSLATE);
+                setBlock(level, c.offset(dx, c.getY() - 1, dz), B.DEEPSLATE_BRICK);
             }
         }
         // Netherrack patches (scarlet earth — blood-soaked ground motif)
@@ -284,16 +293,16 @@ public final class SoulRefiningSectBuilder {
         }
         // Blood stone trim at the base (2 blocks high on each pillar)
         for (int dy = 0; dy < 2; dy++) {
-            setBlock(level, new BlockPos(gx - 6, gy + dy, gz), REDSTONE_BLOCK);
-            setBlock(level, new BlockPos(gx + 6, gy + dy, gz), REDSTONE_BLOCK);
+            setBlock(level, new BlockPos(gx - 6, gy + dy, gz), B.REDSTONE_BLOCK);
+            setBlock(level, new BlockPos(gx + 6, gy + dy, gz), B.REDSTONE_BLOCK);
         }
         // Lintel: dark oak log beam across the top
         for (int dx = -7; dx <= 7; dx++) {
-            setBlock(level, new BlockPos(gx + dx, gy + 8, gz), DARK_OAK_LOG);
+            setBlock(level, new BlockPos(gx + dx, gy + 8, gz), B.DARK_OAK_LOG);
         }
         // Second lintel layer for thickness
         for (int dx = -6; dx <= 6; dx++) {
-            setBlock(level, new BlockPos(gx + dx, gy + 9, gz), DARK_OAK_LOG);
+            setBlock(level, new BlockPos(gx + dx, gy + 9, gz), B.DARK_OAK_LOG);
         }
         // Soul lanterns flanking the gate entrance on top of each pillar
         setBlock(level, new BlockPos(gx - 5, gy + 9, gz), SOUL_LANTERN);
@@ -340,20 +349,20 @@ public final class SoulRefiningSectBuilder {
     private static void buildMainPlaza(ServerLevel level, BlockPos c) {
         // 24×24 blackstone floor (larger than Heng Yue — the sect's heart)
         fill(level, c.offset(-12, -1, -12), c.offset(12, -1, 12), BLACKSTONE);
-        fill(level, c.offset(-12, 0, -12), c.offset(12, 0, 12), DEEPSLATE_BRICK);
+        fill(level, c.offset(-12, 0, -12), c.offset(12, 0, 12), B.DEEPSLATE_BRICK);
         // Obsidian border around the plaza edge (1 block wide)
         for (int dx = -12; dx <= 12; dx++) {
-            setBlock(level, c.offset(dx, 0, -12), OBSIDIAN);
-            setBlock(level, c.offset(dx, 0, 12), OBSIDIAN);
+            setBlock(level, c.offset(dx, 0, -12), B.OBSIDIAN);
+            setBlock(level, c.offset(dx, 0, 12), B.OBSIDIAN);
         }
         for (int dz = -12; dz <= 12; dz++) {
-            setBlock(level, c.offset(-12, 0, dz), OBSIDIAN);
-            setBlock(level, c.offset(12, 0, dz), OBSIDIAN);
+            setBlock(level, c.offset(-12, 0, dz), B.OBSIDIAN);
+            setBlock(level, c.offset(12, 0, dz), B.OBSIDIAN);
         }
         // Formation core stone (lapis) ring at radius 8
-        ring(level, c, 8, 0, LAPIS);
+        ring(level, c, 8, 0, B.LAPIS);
         // Blood stone ring at radius 4
-        ring(level, c, 4, 0, REDSTONE_BLOCK);
+        ring(level, c, 4, 0, B.REDSTONE_BLOCK);
         // Central soul fire (soul campfire)
         setBlock(level, c.offset(0, 1, 0), CAMPFIRE);
         // 8 soul pillars (obsidian column + sea lantern on top) in a ring radius 6
@@ -363,7 +372,7 @@ public final class SoulRefiningSectBuilder {
             int pz = (int) Math.round(Math.sin(rad) * 6);
             // Obsidian pillar, 5 blocks tall
             for (int dy = 1; dy <= 5; dy++) {
-                setBlock(level, c.offset(px, dy, pz), OBSIDIAN);
+                setBlock(level, c.offset(px, dy, pz), B.OBSIDIAN);
             }
             // Sea lantern on top (ghost-light glow)
             setBlock(level, c.offset(px, 6, pz), SEA_LANTERN);
@@ -394,7 +403,7 @@ public final class SoulRefiningSectBuilder {
         // Floor: blackstone, slightly recessed
         for (int dx = -10; dx <= 10; dx++) {
             for (int dz = -10; dz <= 10; dz++) {
-                setBlock(level, base.offset(dx, -1, dz), DEEPSLATE);
+                setBlock(level, base.offset(dx, -1, dz), B.DEEPSLATE);
                 setBlock(level, base.offset(dx, 0, dz), BLACKSTONE);
             }
         }
@@ -403,18 +412,18 @@ public final class SoulRefiningSectBuilder {
             for (int dy = 1; dy <= 14; dy++) {
                 // North and south walls
                 setBlock(level, base.offset(dx, dy, -10),
-                        (Math.abs(dx) <= 2) ? OBSIDIAN : NETHER_BRICK);
+                        (Math.abs(dx) <= 2) ? B.OBSIDIAN : NETHER_BRICK);
                 setBlock(level, base.offset(dx, dy, 10),
-                        (Math.abs(dx) <= 2) ? OBSIDIAN : NETHER_BRICK);
+                        (Math.abs(dx) <= 2) ? B.OBSIDIAN : NETHER_BRICK);
             }
         }
         for (int dz = -10; dz <= 10; dz++) {
             for (int dy = 1; dy <= 14; dy++) {
                 // East and west walls
                 setBlock(level, base.offset(-10, dy, dz),
-                        (Math.abs(dz) <= 2) ? OBSIDIAN : NETHER_BRICK);
+                        (Math.abs(dz) <= 2) ? B.OBSIDIAN : NETHER_BRICK);
                 setBlock(level, base.offset(10, dy, dz),
-                        (Math.abs(dz) <= 2) ? OBSIDIAN : NETHER_BRICK);
+                        (Math.abs(dz) <= 2) ? B.OBSIDIAN : NETHER_BRICK);
             }
         }
         // Ceiling: blackstone with sea lantern lights
@@ -435,7 +444,7 @@ public final class SoulRefiningSectBuilder {
             for (int ox = 0; ox < 2; ox++) {
                 for (int oz = 0; oz < 2; oz++) {
                     for (int dy = 1; dy <= 14; dy++) {
-                        setBlock(level, base.offset(pc[0] + ox, dy, pc[1] + oz), OBSIDIAN);
+                        setBlock(level, base.offset(pc[0] + ox, dy, pc[1] + oz), B.OBSIDIAN);
                     }
                 }
             }
@@ -444,15 +453,15 @@ public final class SoulRefiningSectBuilder {
         int[][] midPillars = {{-5, -9}, {5, -9}, {-5, 9}, {5, 9}};
         for (int[] mp : midPillars) {
             for (int dy = 1; dy <= 10; dy++) {
-                setBlock(level, base.offset(mp[0], dy, mp[1]), OBSIDIAN);
+                setBlock(level, base.offset(mp[0], dy, mp[1]), B.OBSIDIAN);
             }
             setBlock(level, base.offset(mp[0], 11, mp[1]), SEA_LANTERN);
         }
         // Central altar: raised platform of obsidian with blast furnace centerpiece
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
-                setBlock(level, base.offset(dx, 1, dz), OBSIDIAN);
-                setBlock(level, base.offset(dx, 2, dz), OBSIDIAN);
+                setBlock(level, base.offset(dx, 1, dz), B.OBSIDIAN);
+                setBlock(level, base.offset(dx, 2, dz), B.OBSIDIAN);
             }
         }
         // Blast furnace (the Soul Refining Furnace itself)
@@ -469,7 +478,7 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(3, 3, 3), SOUL_LANTERN);
         // Blood stone accent line along the floor approaching the altar
         for (int dz = -8; dz <= -3; dz++) {
-            setBlock(level, base.offset(0, 1, dz), REDSTONE_BLOCK);
+            setBlock(level, base.offset(0, 1, dz), B.REDSTONE_BLOCK);
         }
         // Skull sentries at the entrance (north wall opening)
         setBlock(level, base.offset(-2, 1, -9), SKELETON_SKULL);
@@ -585,7 +594,7 @@ public final class SoulRefiningSectBuilder {
         // 16×12 courtyard floor: nether brick (fire-resistant)
         fill(level, base.offset(-8, 0, -6), base.offset(8, 0, 6), NETHER_BRICK);
         // Scorched stone underlayer
-        fill(level, base.offset(-8, -1, -6), base.offset(8, -1, 6), DEEPSLATE_BRICK);
+        fill(level, base.offset(-8, -1, -6), base.offset(8, -1, 6), B.DEEPSLATE_BRICK);
         // Netherrack patches (for eternal fire — soul refinement fires that never go out)
         int[][] firePatches = {{-6, -3}, {-6, 3}, {6, -3}, {6, 3}, {0, 0}};
         for (int[] fp : firePatches) {
@@ -602,15 +611,15 @@ public final class SoulRefiningSectBuilder {
         }
         // Obsidian workbenches in the center area
         for (int dx = -2; dx <= 2; dx += 2) {
-            setBlock(level, base.offset(dx, 1, -1), OBSIDIAN);
-            setBlock(level, base.offset(dx, 1, 1), OBSIDIAN);
+            setBlock(level, base.offset(dx, 1, -1), B.OBSIDIAN);
+            setBlock(level, base.offset(dx, 1, 1), B.OBSIDIAN);
         }
         // Blood stone channels connecting furnaces to cauldrons (essence conduits)
         for (int dz = -4; dz <= 4; dz += 2) {
-            setBlock(level, base.offset(-5, 0, dz), REDSTONE_BLOCK);
-            setBlock(level, base.offset(-3, 0, dz), REDSTONE_BLOCK);
-            setBlock(level, base.offset(3, 0, dz), REDSTONE_BLOCK);
-            setBlock(level, base.offset(5, 0, dz), REDSTONE_BLOCK);
+            setBlock(level, base.offset(-5, 0, dz), B.REDSTONE_BLOCK);
+            setBlock(level, base.offset(-3, 0, dz), B.REDSTONE_BLOCK);
+            setBlock(level, base.offset(3, 0, dz), B.REDSTONE_BLOCK);
+            setBlock(level, base.offset(5, 0, dz), B.REDSTONE_BLOCK);
         }
         // Nether brick walls enclosing the courtyard (3 tall)
         for (int dx = -8; dx <= 8; dx++) {
@@ -645,7 +654,7 @@ public final class SoulRefiningSectBuilder {
     private static void buildAncestorHall(ServerLevel level, BlockPos c) {
         BlockPos base = c.offset(0, 0, 25);
         // 14×10 dark floor
-        fill(level, base.offset(-7, 0, -5), base.offset(7, 0, 5), DEEPSLATE_BRICK);
+        fill(level, base.offset(-7, 0, -5), base.offset(7, 0, 5), B.DEEPSLATE_BRICK);
         // Nether brick walls, 5 tall (taller than alchemy — more reverent)
         for (int dx = -7; dx <= 7; dx++) {
             for (int dy = 1; dy <= 5; dy++) {
@@ -675,9 +684,9 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(0, 3, -4), SKELETON_SKULL);
         setBlock(level, base.offset(1, 3, -4), SKELETON_SKULL);
         // Blood stone offerings in front of the altar
-        setBlock(level, base.offset(0, 1, -3), REDSTONE_BLOCK);
-        setBlock(level, base.offset(-2, 1, -3), REDSTONE_BLOCK);
-        setBlock(level, base.offset(2, 1, -3), REDSTONE_BLOCK);
+        setBlock(level, base.offset(0, 1, -3), B.REDSTONE_BLOCK);
+        setBlock(level, base.offset(-2, 1, -3), B.REDSTONE_BLOCK);
+        setBlock(level, base.offset(2, 1, -3), B.REDSTONE_BLOCK);
         // 4 soul campfire incense braziers
         setBlock(level, base.offset(-5, 1, -2), CAMPFIRE);
         setBlock(level, base.offset(-5, 1, 2), CAMPFIRE);
@@ -695,8 +704,8 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(0, 5, 4), SOUL_LANTERN);
         // Kneeling pads (spirit stone slabs) in two rows
         for (int dx = -3; dx <= 3; dx++) {
-            setBlock(level, base.offset(dx, 1, -1), SPIRIT_STONE_SLAB);
-            setBlock(level, base.offset(dx, 1, 1), SPIRIT_STONE_SLAB);
+            setBlock(level, base.offset(dx, 1, -1), B.SPIRIT_STONE_SLAB);
+            setBlock(level, base.offset(dx, 1, 1), B.SPIRIT_STONE_SLAB);
         }
         // Entrance (south wall gap)
         setBlock(level, base.offset(0, 1, 5), AIR);
@@ -716,7 +725,7 @@ public final class SoulRefiningSectBuilder {
         // 12×12 raised platform: blackstone
         fill(level, base.offset(-6, 0, -6), base.offset(6, 0, 6), BLACKSTONE);
         // Scorched stone sublayer
-        fill(level, base.offset(-6, -1, -6), base.offset(6, -1, 6), DEEPSLATE);
+        fill(level, base.offset(-6, -1, -6), base.offset(6, -1, 6), B.DEEPSLATE);
         // Nether brick walls, 4 tall
         for (int dx = -6; dx <= 6; dx++) {
             for (int dy = 1; dy <= 4; dy++) {
@@ -758,7 +767,7 @@ public final class SoulRefiningSectBuilder {
             setBlock(level, base.offset(5, 3, dz), IRON_BARS);
         }
         // Central weapon anvil on obsidian
-        setBlock(level, base.offset(0, 1, 0), OBSIDIAN);
+        setBlock(level, base.offset(0, 1, 0), B.OBSIDIAN);
         setBlock(level, base.offset(0, 2, 0), Blocks.ANVIL.defaultBlockState());
         // Soul lanterns for eerie lighting
         setBlock(level, base.offset(-4, 5, -4), SOUL_LANTERN);
@@ -787,7 +796,7 @@ public final class SoulRefiningSectBuilder {
         // Floor: netherrack (savage, primal)
         fill(level, base.offset(-9, 0, -7), base.offset(9, 0, 7), NETHERRACK);
         // Deepslate underlayer
-        fill(level, base.offset(-9, -1, -7), base.offset(9, -1, 7), DEEPSLATE);
+        fill(level, base.offset(-9, -1, -7), base.offset(9, -1, 7), B.DEEPSLATE);
         // Pen dividers: iron bars running east-west (3 pens)
         // Divider 1 at x = -3
         for (int dz = -7; dz <= 7; dz++) {
@@ -851,7 +860,7 @@ public final class SoulRefiningSectBuilder {
         BlockPos[] halls = {c.offset(18, 0, 18), c.offset(18, 0, 25)};
         for (BlockPos hall : halls) {
             // Floor: dark oak planks (dark, spartan)
-            fill(level, hall.offset(-7, 0, -3), hall.offset(7, 0, 3), DARK_OAK_PLANK);
+            fill(level, hall.offset(-7, 0, -3), hall.offset(7, 0, 3), B.DARK_OAK_PLANK);
             // Nether brick walls, 4 tall
             for (int dx = -7; dx <= 7; dx++) {
                 for (int dy = 1; dy <= 4; dy++) {
@@ -921,7 +930,7 @@ public final class SoulRefiningSectBuilder {
                 for (int dy = 0; dy < 4; dy++) {
                     for (int dz = 1; dz <= 5; dz++) {
                         if (dx == -2 || dx == 2 || dy == 0 || dy == 3 || dz == 5) {
-                            setBlock(level, caveBase.offset(dx, dy, dz), DEEPSLATE_BRICK);
+                            setBlock(level, caveBase.offset(dx, dy, dz), B.DEEPSLATE_BRICK);
                         } else {
                             setBlock(level, caveBase.offset(dx, dy, dz), AIR);
                         }
@@ -933,7 +942,7 @@ public final class SoulRefiningSectBuilder {
             setBlock(level, caveBase.offset(0, 1, 0), AIR);
             setBlock(level, caveBase.offset(0, 2, 0), AIR);
             // Meditation mat (spirit stone slab)
-            setBlock(level, caveBase.offset(0, 1, 3), SPIRIT_STONE_SLAB);
+            setBlock(level, caveBase.offset(0, 1, 3), B.SPIRIT_STONE_SLAB);
             // Soul lantern (one per cave — dim, isolated)
             setBlock(level, caveBase.offset(-1, 2, 3), SOUL_LANTERN);
             // Soul campfire brazier
@@ -954,7 +963,7 @@ public final class SoulRefiningSectBuilder {
         for (int dz = -20; dz <= 20; dz++) {
             // Floor
             for (int dx = -1; dx <= 1; dx++) {
-                setBlock(level, base.offset(dx, 0, dz), DEEPSLATE);
+                setBlock(level, base.offset(dx, 0, dz), B.DEEPSLATE);
             }
             // Ceiling
             for (int dx = -1; dx <= 1; dx++) {
@@ -1028,7 +1037,7 @@ public final class SoulRefiningSectBuilder {
         // 14×14 netherrack floor (hellish trial arena)
         fill(level, base.offset(-7, 0, -7), base.offset(7, 0, 7), NETHERRACK);
         // Deepslate underlayer
-        fill(level, base.offset(-7, -1, -7), base.offset(7, -1, 7), DEEPSLATE);
+        fill(level, base.offset(-7, -1, -7), base.offset(7, -1, 7), B.DEEPSLATE);
         // Blackstone border walls, 4 tall
         for (int dx = -7; dx <= 7; dx++) {
             for (int dy = 1; dy <= 4; dy++) {
@@ -1058,10 +1067,10 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(5, 1, 5), CAMPFIRE);
         // Observation platforms: 2×3 elevated stands on north and south walls
         for (int dx = -2; dx <= 2; dx++) {
-            setBlock(level, base.offset(dx, 1, -6), OBSIDIAN);
+            setBlock(level, base.offset(dx, 1, -6), B.OBSIDIAN);
         }
         for (int dx = -2; dx <= 2; dx++) {
-            setBlock(level, base.offset(dx, 1, 6), OBSIDIAN);
+            setBlock(level, base.offset(dx, 1, 6), B.OBSIDIAN);
         }
         // Iron bar railings on observation platforms
         for (int dx = -2; dx <= 2; dx++) {
@@ -1079,12 +1088,12 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(0, 4, 6), SOUL_LANTERN);
         // Blood stone lines forming a formation pattern on the floor
         for (int dx = -6; dx <= 6; dx += 2) {
-            setBlock(level, base.offset(dx, 1, -6), REDSTONE_BLOCK);
-            setBlock(level, base.offset(dx, 1, 6), REDSTONE_BLOCK);
+            setBlock(level, base.offset(dx, 1, -6), B.REDSTONE_BLOCK);
+            setBlock(level, base.offset(dx, 1, 6), B.REDSTONE_BLOCK);
         }
         for (int dz = -6; dz <= 6; dz += 2) {
-            setBlock(level, base.offset(-6, 1, dz), REDSTONE_BLOCK);
-            setBlock(level, base.offset(6, 1, dz), REDSTONE_BLOCK);
+            setBlock(level, base.offset(-6, 1, dz), B.REDSTONE_BLOCK);
+            setBlock(level, base.offset(6, 1, dz), B.REDSTONE_BLOCK);
         }
         // Entrance gap (east wall)
         setBlock(level, base.offset(7, 1, 0), AIR);

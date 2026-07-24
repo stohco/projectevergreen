@@ -41,41 +41,50 @@ import net.minecraft.world.level.block.state.properties.BedPart;
  *       no weathering (mossy/cracked scatter) or ruined variation.</li>
  *   <li>Tomb/caves are carved into manually-piled stone outcrops rather than
  *       real terrain; the CHEST is empty (no loot table).</li>
- *   <li>STONE_BRICK, MOSSY_BRICK, CRACKED_BRICK all map to SPIRIT_STONE_BLOCK —
+ *   <li>B.STONE_BRICK, B.MOSSY_BRICK, B.CRACKED_BRICK all map to SPIRIT_STONE_BLOCK —
  *       no distinct cracked/mossy spirit stone variant exists yet. Weathering
  *       reads as uniform. Needs separate weathered spirit stone blocks.</li>
  * </ul>
  */
 public final class HengYueSectBuilder {
 
+    /**
+     * Lazy-initialized BlockState holder. ErgenverseBlocks.X.get() throws NPE before
+     * Forge resolves the block registry, so these cannot be static-final in the outer
+     * class. This inner class loads on first reference (during build(), which runs at
+     * world-gen time — well after registry resolution).
+     */
+    private static final class B {
+        private static final BlockState SPIRIT_STONE = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+        private static final BlockState SPIRIT_STONE_SLAB = ErgenverseBlocks.SPIRIT_STONE_SLAB.get().defaultBlockState();
+        private static final BlockState STONE_BRICK = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+        private static final BlockState MOSSY_BRICK = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+        private static final BlockState CRACKED_BRICK = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+        private static final BlockState BRICK_WALL = ErgenverseBlocks.SPIRIT_STONE_WALL.get().defaultBlockState();
+        private static final BlockState DEEPSLATE_BRICK = ErgenverseBlocks.SCORCHED_STONE.get().defaultBlockState();
+        private static final BlockState SPRUCE_PLANK = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
+        private static final BlockState SPRUCE_LOG = ErgenverseBlocks.SPIRIT_WOOD_LOG.get().defaultBlockState();
+        private static final BlockState DARK_OAK_PLANK = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
+        private static final BlockState DARK_OAK_LOG = ErgenverseBlocks.ANCIENT_SPIRIT_LOG.get().defaultBlockState();
+        private static final BlockState DARK_OAK_STAIR = ErgenverseBlocks.ANCIENT_SPIRIT_STAIRS.get().defaultBlockState();
+        private static final BlockState SPRUCE_STAIR = ErgenverseBlocks.SPIRIT_WOOD_PLANKS_STAIRS.get().defaultBlockState();
+        private static final BlockState BRICK_STAIR = ErgenverseBlocks.SPIRIT_STONE_STAIRS.get().defaultBlockState();
+        private static final BlockState LAPIS = ErgenverseBlocks.FORMATION_CORE_STONE.get().defaultBlockState();
+        private static final BlockState OBSIDIAN = ErgenverseBlocks.RESTRICTION_STONE.get().defaultBlockState();
+        private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.get().defaultBlockState();
+    }
+
     private HengYueSectBuilder() {}
 
     // ── Block palette (ErgenverseBlocks — canon-correct spirit materials) ──
     // CRON-COMPLETIONIST-26: Replaced all vanilla stand-ins with custom blocks.
-    private static final BlockState SPIRIT_STONE   = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
-    private static final BlockState SPIRIT_STONE_SLAB = ErgenverseBlocks.SPIRIT_STONE_SLAB.get().defaultBlockState();
-    private static final BlockState STONE_BRICK    = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
-    private static final BlockState MOSSY_BRICK    = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
-    private static final BlockState CRACKED_BRICK  = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
-    private static final BlockState BRICK_WALL     = ErgenverseBlocks.SPIRIT_STONE_WALL.get().defaultBlockState();
     private static final BlockState COBBLE         = Blocks.COBBLESTONE.defaultBlockState(); // path material — vanilla
-    private static final BlockState DEEPSLATE_BRICK = ErgenverseBlocks.SCORCHED_STONE.get().defaultBlockState();
-    private static final BlockState SPRUCE_PLANK   = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
-    private static final BlockState SPRUCE_LOG     = ErgenverseBlocks.SPIRIT_WOOD_LOG.get().defaultBlockState();
-    private static final BlockState DARK_OAK_PLANK = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
-    private static final BlockState DARK_OAK_LOG   = ErgenverseBlocks.ANCIENT_SPIRIT_LOG.get().defaultBlockState();
-    private static final BlockState DARK_OAK_STAIR = ErgenverseBlocks.ANCIENT_SPIRIT_STAIRS.get().defaultBlockState();
-    private static final BlockState SPRUCE_STAIR   = ErgenverseBlocks.SPIRIT_WOOD_PLANKS_STAIRS.get().defaultBlockState();
-    private static final BlockState BRICK_STAIR    = ErgenverseBlocks.SPIRIT_STONE_STAIRS.get().defaultBlockState();
     private static final BlockState LANTERN        = Blocks.LANTERN.defaultBlockState(); // keep vanilla
     private static final BlockState END_ROD        = Blocks.END_ROD.defaultBlockState(); // keep vanilla
     private static final BlockState SEA_LANTERN    = Blocks.SEA_LANTERN.defaultBlockState(); // keep vanilla
     private static final BlockState GLOWSTONE      = Blocks.GLOWSTONE.defaultBlockState(); // keep vanilla
-    private static final BlockState LAPIS          = ErgenverseBlocks.FORMATION_CORE_STONE.get().defaultBlockState();
     private static final BlockState GOLD           = Blocks.GOLD_BLOCK.defaultBlockState(); // sect plaque — vanilla
     private static final BlockState AMETHYST       = Blocks.AMETHYST_BLOCK.defaultBlockState(); // keep vanilla
-    private static final BlockState OBSIDIAN       = ErgenverseBlocks.RESTRICTION_STONE.get().defaultBlockState();
-    private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.get().defaultBlockState();
     private static final BlockState IRON_BARS      = Blocks.IRON_BARS.defaultBlockState();
     private static final BlockState WATER          = Blocks.WATER.defaultBlockState();
     private static final BlockState BOOKSHELF      = Blocks.BOOKSHELF.defaultBlockState();
@@ -162,11 +171,11 @@ public final class HengYueSectBuilder {
             int z = c.getZ() + 30 - step * 2;
             int y = c.getY() - 6 + step;
             for (int dx = -3; dx <= 3; dx++) {
-                setBlock(level, new BlockPos(c.getX() + dx, y, z), BRICK_STAIR);
+                setBlock(level, new BlockPos(c.getX() + dx, y, z), B.BRICK_STAIR);
             }
             // Flanking walls + lanterns every 4 steps
-            setBlock(level, new BlockPos(c.getX() - 4, y, z), BRICK_WALL);
-            setBlock(level, new BlockPos(c.getX() + 4, y, z), BRICK_WALL);
+            setBlock(level, new BlockPos(c.getX() - 4, y, z), B.BRICK_WALL);
+            setBlock(level, new BlockPos(c.getX() + 4, y, z), B.BRICK_WALL);
             if (step % 4 == 0) {
                 setBlock(level, new BlockPos(c.getX() - 4, y + 1, z), LANTERN);
                 setBlock(level, new BlockPos(c.getX() + 4, y + 1, z), LANTERN);
@@ -178,14 +187,14 @@ public final class HengYueSectBuilder {
         int gx = c.getX(), gz = c.getZ() + 30, gy = c.getY();
         // Two pillars 2×1×6
         for (int dy = 0; dy < 6; dy++) {
-            setBlock(level, new BlockPos(gx - 4, gy + dy, gz), STONE_BRICK);
-            setBlock(level, new BlockPos(gx - 5, gy + dy, gz), STONE_BRICK);
-            setBlock(level, new BlockPos(gx + 4, gy + dy, gz), STONE_BRICK);
-            setBlock(level, new BlockPos(gx + 5, gy + dy, gz), STONE_BRICK);
+            setBlock(level, new BlockPos(gx - 4, gy + dy, gz), B.STONE_BRICK);
+            setBlock(level, new BlockPos(gx - 5, gy + dy, gz), B.STONE_BRICK);
+            setBlock(level, new BlockPos(gx + 4, gy + dy, gz), B.STONE_BRICK);
+            setBlock(level, new BlockPos(gx + 5, gy + dy, gz), B.STONE_BRICK);
         }
         // Lintel (dark oak logs across the top)
         for (int dx = -5; dx <= 5; dx++) {
-            setBlock(level, new BlockPos(gx + dx, gy + 6, gz), DARK_OAK_LOG);
+            setBlock(level, new BlockPos(gx + dx, gy + 6, gz), B.DARK_OAK_LOG);
         }
         // Gold plaque above the gate
         setBlock(level, new BlockPos(gx, gy + 7, gz), GOLD);
@@ -201,25 +210,25 @@ public final class HengYueSectBuilder {
 
     private static void buildStoneLion(ServerLevel level, BlockPos base) {
         setBlock(level, base, COBBLE);
-        setBlock(level, base.above(), STONE_BRICK);
-        setBlock(level, base.above().above(), STONE_BRICK);
+        setBlock(level, base.above(), B.STONE_BRICK);
+        setBlock(level, base.above().above(), B.STONE_BRICK);
         setBlock(level, base.east(), COBBLE);
         setBlock(level, base.east().above(), COBBLE);
     }
 
     private static void buildMainPlaza(ServerLevel level, BlockPos c) {
         // 20×20 spirit stone floor
-        fill(level, c.offset(-10, 0, -10), c.offset(10, 0, 10), SPIRIT_STONE);
-        // LAPIS formation ring radius 5 at center
-        ring(level, c, 5, 0, LAPIS);
+        fill(level, c.offset(-10, 0, -10), c.offset(10, 0, 10), B.SPIRIT_STONE);
+        // B.LAPIS formation ring radius 5 at center
+        ring(level, c, 5, 0, B.LAPIS);
         // Gold foundation anchor at dead center
         setBlock(level, c, GOLD);
         // Four corner pillars 2×2×4 with END_ROD lights
         int[][] corners = {{-9, -9}, {9, -9}, {-9, 9}, {9, 9}};
         for (int[] corner : corners) {
             for (int dy = 1; dy <= 4; dy++) {
-                setBlock(level, c.offset(corner[0], dy, corner[1]), STONE_BRICK);
-                setBlock(level, c.offset(corner[0] + (corner[0] < 0 ? 1 : -1), dy, corner[1]), STONE_BRICK);
+                setBlock(level, c.offset(corner[0], dy, corner[1]), B.STONE_BRICK);
+                setBlock(level, c.offset(corner[0] + (corner[0] < 0 ? 1 : -1), dy, corner[1]), B.STONE_BRICK);
             }
             setBlock(level, c.offset(corner[0], 5, corner[1]), END_ROD);
         }
@@ -234,13 +243,13 @@ public final class HengYueSectBuilder {
             int y = base.getY() + story * 4;
             int half = s / 2;
             // Floor
-            fill(level, base.offset(-half, y, -half), base.offset(half, y, half), SPRUCE_PLANK);
+            fill(level, base.offset(-half, y, -half), base.offset(half, y, half), B.SPRUCE_PLANK);
             // Walls (bookshelves interior, stone brick exterior)
             for (int dx = -half; dx <= half; dx++) {
                 for (int dz = -half; dz <= half; dz++) {
                     if (dx == -half || dx == half || dz == -half || dz == half) {
                         for (int dy = 1; dy <= 3; dy++) {
-                            setBlock(level, base.offset(dx, y + dy, dz), STONE_BRICK);
+                            setBlock(level, base.offset(dx, y + dy, dz), B.STONE_BRICK);
                         }
                     } else if (story < 2) {
                         // Interior bookshelves on ground floor
@@ -257,15 +266,15 @@ public final class HengYueSectBuilder {
             setBlock(level, base.offset(half - 1, y + 1, half - 1), SEA_LANTERN);
             // Pagoda roof: stair ring facing outward, 2 layers
             for (int dx = -half; dx <= half; dx++) {
-                setBlock(level, base.offset(dx, y + 4, -half), DARK_OAK_STAIR);
+                setBlock(level, base.offset(dx, y + 4, -half), B.DARK_OAK_STAIR);
                 setBlock(level, base.offset(dx, y + 4, half),
-                        DARK_OAK_STAIR.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.NORTH));
+                        B.DARK_OAK_STAIR.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.NORTH));
             }
             for (int dz = -half; dz <= half; dz++) {
                 setBlock(level, base.offset(-half, y + 4, dz),
-                        DARK_OAK_STAIR.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.EAST));
+                        B.DARK_OAK_STAIR.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.EAST));
                 setBlock(level, base.offset(half, y + 4, dz),
-                        DARK_OAK_STAIR.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.WEST));
+                        B.DARK_OAK_STAIR.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.WEST));
             }
         }
         // Amethyst + end-rod finial on top
@@ -276,7 +285,7 @@ public final class HengYueSectBuilder {
     private static void buildAlchemyCourtyard(ServerLevel level, BlockPos c) {
         BlockPos base = c.offset(-18, 0, 0);
         // 12×12 stone brick floor
-        fill(level, base.offset(-6, 0, -6), base.offset(6, 0, 6), STONE_BRICK);
+        fill(level, base.offset(-6, 0, -6), base.offset(6, 0, 6), B.STONE_BRICK);
         // Furnaces along the west wall
         setBlock(level, base.offset(-6, 1, -3), BLAST_FURNACE);
         setBlock(level, base.offset(-6, 1, -1), BLAST_FURNACE);
@@ -290,7 +299,7 @@ public final class HengYueSectBuilder {
         }
         // Herb garden along the south edge (terraced 2 levels)
         for (int dx = -5; dx <= 5; dx++) {
-            setBlock(level, base.offset(dx, 1, 5), SPRUCE_PLANK);
+            setBlock(level, base.offset(dx, 1, 5), B.SPRUCE_PLANK);
             setBlock(level, base.offset(dx, 2, 5), switch ((dx + 5) % 4) {
                 case 0 -> AZALEA;
                 case 1 -> CORNFLOWER;
@@ -316,25 +325,25 @@ public final class HengYueSectBuilder {
         setBlock(level, base.offset(0, 1, 0), ANVIL);
         // Weapon rack (spruce planks shelf)
         for (int dx = -2; dx <= 2; dx++) {
-            setBlock(level, base.offset(dx, 2, -6), SPRUCE_PLANK);
+            setBlock(level, base.offset(dx, 2, -6), B.SPRUCE_PLANK);
         }
     }
 
     private static void buildAncestorHall(ServerLevel level, BlockPos c) {
         BlockPos base = c.offset(0, 0, -18);
         // 12×8 dark oak floor
-        fill(level, base.offset(-6, 0, -4), base.offset(6, 0, 4), DARK_OAK_PLANK);
+        fill(level, base.offset(-6, 0, -4), base.offset(6, 0, 4), B.DARK_OAK_PLANK);
         // Stone brick walls
         for (int dx = -6; dx <= 6; dx++) {
             for (int dy = 1; dy <= 4; dy++) {
-                setBlock(level, base.offset(dx, dy, -4), STONE_BRICK);
-                setBlock(level, base.offset(dx, dy, 4), STONE_BRICK);
+                setBlock(level, base.offset(dx, dy, -4), B.STONE_BRICK);
+                setBlock(level, base.offset(dx, dy, 4), B.STONE_BRICK);
             }
         }
         for (int dz = -4; dz <= 4; dz++) {
             for (int dy = 1; dy <= 4; dy++) {
-                setBlock(level, base.offset(-6, dy, dz), STONE_BRICK);
-                setBlock(level, base.offset(6, dy, dz), STONE_BRICK);
+                setBlock(level, base.offset(-6, dy, dz), B.STONE_BRICK);
+                setBlock(level, base.offset(6, dy, dz), B.STONE_BRICK);
             }
         }
         // 5 memorial tablets (flower pot on smooth stone slab) along north wall
@@ -365,7 +374,7 @@ public final class HengYueSectBuilder {
                 setBlock(level, base.offset(dx, 0, dz), WATER);
                 // Smooth stone rim
                 if (Math.abs(dx) == 3 || Math.abs(dz) == 3) {
-                    setBlock(level, base.offset(dx, 1, dz), SPIRIT_STONE);
+                    setBlock(level, base.offset(dx, 1, dz), B.SPIRIT_STONE);
                 }
             }
         }
@@ -378,12 +387,12 @@ public final class HengYueSectBuilder {
         BlockPos base = c.offset(25, 0, 5);
         // 3×4 deepslate doorway frame
         for (int dy = 0; dy < 4; dy++) {
-            setBlock(level, base.offset(-1, dy, 0), DEEPSLATE_BRICK);
-            setBlock(level, base.offset(1, dy, 0), DEEPSLATE_BRICK);
+            setBlock(level, base.offset(-1, dy, 0), B.DEEPSLATE_BRICK);
+            setBlock(level, base.offset(1, dy, 0), B.DEEPSLATE_BRICK);
         }
-        setBlock(level, base.offset(-1, 4, 0), DEEPSLATE_BRICK);
-        setBlock(level, base.offset(0, 4, 0), DEEPSLATE_BRICK);
-        setBlock(level, base.offset(1, 4, 0), DEEPSLATE_BRICK);
+        setBlock(level, base.offset(-1, 4, 0), B.DEEPSLATE_BRICK);
+        setBlock(level, base.offset(0, 4, 0), B.DEEPSLATE_BRICK);
+        setBlock(level, base.offset(1, 4, 0), B.DEEPSLATE_BRICK);
         // Iron bars gate
         setBlock(level, base.offset(0, 0, 0), IRON_BARS);
         setBlock(level, base.offset(0, 1, 0), IRON_BARS);
@@ -399,7 +408,7 @@ public final class HengYueSectBuilder {
             for (int dy = 0; dy < 6; dy++) {
                 for (int dz = 0; dz <= 6; dz++) {
                     if (dx == -5 || dx == 5 || dy == 0 || dy == 5 || dz == 0 || dz == 6) {
-                        setBlock(level, chamber.offset(dx, dy, dz), DEEPSLATE_BRICK);
+                        setBlock(level, chamber.offset(dx, dy, dz), B.DEEPSLATE_BRICK);
                     } else {
                         setBlock(level, chamber.offset(dx, dy, dz), Blocks.AIR.defaultBlockState());
                     }
@@ -460,21 +469,21 @@ public final class HengYueSectBuilder {
         BlockPos[] halls = {c.offset(-8, 0, 12), c.offset(8, 0, 12)};
         for (BlockPos hall : halls) {
             // Floor
-            fill(level, hall.offset(-8, 0, -3), hall.offset(8, 0, 3), SPRUCE_PLANK);
+            fill(level, hall.offset(-8, 0, -3), hall.offset(8, 0, 3), B.SPRUCE_PLANK);
             // Walls
             for (int dx = -8; dx <= 8; dx++) {
                 for (int dy = 1; dy <= 4; dy++) {
-                    setBlock(level, hall.offset(dx, dy, -3), STONE_BRICK);
-                    setBlock(level, hall.offset(dx, dy, 3), STONE_BRICK);
+                    setBlock(level, hall.offset(dx, dy, -3), B.STONE_BRICK);
+                    setBlock(level, hall.offset(dx, dy, 3), B.STONE_BRICK);
                 }
             }
             // Roof (dark oak stairs)
             for (int dx = -8; dx <= 8; dx++) {
                 setBlock(level, hall.offset(dx, 5, -3),
-                        DARK_OAK_STAIR.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.SOUTH));
+                        B.DARK_OAK_STAIR.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.SOUTH));
                 setBlock(level, hall.offset(dx, 5, 3),
-                        DARK_OAK_STAIR.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.NORTH));
-                setBlock(level, hall.offset(dx, 6, 0), DARK_OAK_PLANK);
+                        B.DARK_OAK_STAIR.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.NORTH));
+                setBlock(level, hall.offset(dx, 6, 0), B.DARK_OAK_PLANK);
             }
             // 6 beds per hall (alternating red/blue)
             for (int i = 0; i < 6; i++) {
@@ -516,16 +525,16 @@ public final class HengYueSectBuilder {
             // North + South walls (skip gate gaps)
             if (Math.abs(dx) > 1) {
                 for (int dy = 1; dy <= 3; dy++) {
-                    setBlock(level, c.offset(dx, dy, -r), BRICK_WALL);
-                    setBlock(level, c.offset(dx, dy, r), BRICK_WALL);
+                    setBlock(level, c.offset(dx, dy, -r), B.BRICK_WALL);
+                    setBlock(level, c.offset(dx, dy, r), B.BRICK_WALL);
                 }
             }
         }
         for (int dz = -r; dz <= r; dz++) {
             if (Math.abs(dz) > 1) {
                 for (int dy = 1; dy <= 3; dy++) {
-                    setBlock(level, c.offset(-r, dy, dz), BRICK_WALL);
-                    setBlock(level, c.offset(r, dy, dz), BRICK_WALL);
+                    setBlock(level, c.offset(-r, dy, dz), B.BRICK_WALL);
+                    setBlock(level, c.offset(r, dy, dz), B.BRICK_WALL);
                 }
             }
         }
@@ -535,7 +544,7 @@ public final class HengYueSectBuilder {
             for (int dx = -2; dx <= 2; dx += 4) {
                 for (int dz = -2; dz <= 2; dz += 4) {
                     for (int dy = 1; dy <= 4; dy++) {
-                        setBlock(level, c.offset(g[0] + dx, dy, g[1] + dz), STONE_BRICK);
+                        setBlock(level, c.offset(g[0] + dx, dy, g[1] + dz), B.STONE_BRICK);
                     }
                     setBlock(level, c.offset(g[0] + dx, 5, g[1] + dz), LANTERN);
                 }
