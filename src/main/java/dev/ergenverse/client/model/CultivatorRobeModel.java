@@ -623,6 +623,12 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
      *   <li><b>Hands</b> — when concealment AND urgency are both high, the
      *       right arm drifts inward (hand nearer weapon). The user's "hand
      *       nearer weapon" cue for the unknown-cultivator case.</li>
+     *   <li><b>Shoulders</b> — raised with tension (arms hike), relaxed with
+     *       confidence (arms drop). Approximated via arm.xRot offsets.</li>
+     *   <li><b>Feet</b> — planted with high patience (pigeon-toed, still),
+     *       shuffling with low patience (leg yRot oscillation).</li>
+     *   <li><b>Eyes</b> — track slightly ahead of look-target. Approximated
+     *       as head lead (2-5° when focus high). Fatigued eyes lag downward.</li>
      * </ul>
      *
      * <p>When no Performance is set (all channels NaN), this decays the
@@ -787,6 +793,98 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
             this.rightArm.yRot += -0.25F * weaponReadiness;
             this.rightArm.xRot += 0.15F * weaponReadiness; // arm lowers slightly toward belt
         }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  SHOULDERS CHANNEL
+        // ═══════════════════════════════════════════════════════════════
+        // The user listed Shoulders as an independent channel. In Minecraft's
+        // HumanoidModel, shoulders are part of the body part (shared mesh).
+        // We approximate shoulder behavior through body.yRot micro-adjustments
+        // and arm.xRot offsets:
+        //   - High tension → shoulders raised (arms hike up slightly)
+        //   - High confidence → shoulders relaxed (arms drop to neutral)
+        //   - High fatigue → shoulders round (arm.xRot sags)
+        // These are ADDITIVE offsets on top of the pose — they modulate the
+        // existing pose without overriding it.
+        if (tension > 0.4F) {
+            // Tense shoulders: arms hike up slightly (bracing for action)
+            float shoulderRaise = (tension - 0.4F) * 0.15F; // 0..0.09 rad
+            this.rightArm.xRot -= shoulderRaise;
+            this.leftArm.xRot -= shoulderRaise;
+        }
+        if (confidence > 0.7F) {
+            // Relaxed shoulders: subtle arm drop (at ease)
+            float shoulderDrop = (confidence - 0.7F) * 0.05F; // 0..0.015 rad
+            this.rightArm.xRot += shoulderDrop;
+            this.leftArm.xRot += shoulderDrop;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  FEET CHANNEL
+        // ═══════════════════════════════════════════════════════════════
+        // The user listed Feet as an independent channel. 'Planted' vs 'shifting.'
+        // In MC models, feet move via leg parts. We modulate leg yRot (slight
+        // toe-out) and xRot (knee micro-bend) from patience:
+        //   - High patience → feet planted, legs still (micro-sway only)
+        //   - Low patience → feet shuffle, subtle weight transfers between legs
+        // The weight-shift channel already moves body.x (simulating weight
+        // transfer), so feet adds the leg-local component.
+        if (patience < 0.5F) {
+            // Impatient: subtle foot shuffles — one leg micro-shifts
+            // The frequency is low (~0.12Hz) — shuffles are deliberate.
+            float shufflePhase = (float) Math.sin(ageInTicks * 0.12F);
+            float shuffleAmp = (0.5F - patience) * 0.04F; // 0..0.02 rad
+            this.rightLeg.yRot += shufflePhase * shuffleAmp;
+            this.leftLeg.yRot -= shufflePhase * shuffleAmp;
+        }
+        // Planted: feet grip the ground — legs resist external rotation.
+        // When patience is high, legs are already still from the pose;
+        // we add a subtle inward pinch (feet slightly pigeon-toed, planted).
+        if (patience > 0.6F) {
+            float plantedPinch = (patience - 0.6F) * 0.03F; // 0..0.012 rad
+            this.rightLeg.yRot += plantedPinch;
+            this.leftLeg.yRot -= plantedPinch;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  EYES CHANNEL
+        // ═══════════════════════════════════════════════════════════════
+        // The user listed Eyes as an independent channel: 'track slightly
+        // ahead' of the look-target. In MC models, eyes are texture-painted
+        // on the head — we can't move the pupils independently. BUT we can
+        // offset the head slightly AHEAD of the tracked target, creating the
+        // illusion that the eyes lead and the head follows. This is a subtle
+        // anticipatory drift: the head's desired yaw leads the target by a
+        // few degrees when focus is high (concentrating ahead) and lags
+        // slightly when fatigue is high (slow to keep up).
+        //
+        // This is layered on top of the HEAD CHANNEL's yaw/pitch — it's
+        // computed after head interpolation so it adds to the already-tracked
+        // head pose.
+        float eyeLeadYaw = 0.0F;
+        float eyeLeadPitch = 0.0F;
+        if (focus > 0.5F) {
+            // High focus: eyes lead the head by ~2-5 degrees.
+            // The NPC looks WHERE the target is GOING, not where it IS.
+            // This is the 'track slightly ahead' from the user's example.
+            // Lead scales with focus: 0.5→0.035 rad (2°), 1.0→0.087 rad (5°).
+            float leadAngle = (focus - 0.5F) * 0.174F; // 0..0.087 rad (5°)
+            // Lead in the direction the target is moving (or the current
+            // head yaw direction if no movement data). We use the head's
+            // current yaw as the lead direction proxy.
+            eyeLeadYaw = Math.signum(currentHeadYaw) * leadAngle;
+            // Pitch lead: eyes look slightly up when anticipating movement
+            // (scanning for threats above the horizon).
+            eyeLeadPitch = -leadAngle * 0.3F;
+        }
+        if (fatigue > 0.4F) {
+            // Fatigued: eyes lag — subtle downward droop.
+            // The user: 'longer blinks (rendered as longer glance-downs).'
+            // We simulate this as a pitch-down offset that grows with fatigue.
+            eyeLeadPitch += (fatigue - 0.4F) * 0.1F; // 0..0.06 rad (~3.4°)
+        }
+        this.head.yRot += eyeLeadYaw;
+        this.head.xRot += eyeLeadPitch;
 
         // ═══════════════════════════════════════════════════════════════
         //  FATIGUE CHANNEL
