@@ -7,15 +7,12 @@
     "targets": [
       {
         "target": {
-          "predicate": {
-            "type": "minecraft:tag_match",
-            "tag": "minecraft:stone_ore_replaceables"
-          },
-          "state": {
-            "Name": "minecraft:obsidian"
-          }
+          "tag": "minecraft:stone_ore_replaceables",
+          "predicate_type": "minecraft:tag_match"
         },
-        "size": 3
+        "state": {
+          "Name": "minecraft:obsidian"
+        }
       }
     ]
   }

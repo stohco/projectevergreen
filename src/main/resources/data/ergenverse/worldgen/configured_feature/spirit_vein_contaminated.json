@@ -7,27 +7,21 @@
     "targets": [
       {
         "target": {
-          "predicate": {
-            "type": "minecraft:tag_match",
-            "tag": "minecraft:stone_ore_replaceables"
-          },
-          "state": {
-            "Name": "minecraft:gray_concrete"
-          }
+          "tag": "minecraft:stone_ore_replaceables",
+          "predicate_type": "minecraft:tag_match"
         },
-        "size": 5
+        "state": {
+          "Name": "minecraft:gray_concrete"
+        }
       },
       {
         "target": {
-          "predicate": {
-            "type": "minecraft:tag_match",
-            "tag": "minecraft:deepslate_ore_replaceables"
-          },
-          "state": {
-            "Name": "minecraft:gray_concrete"
-          }
+          "tag": "minecraft:deepslate_ore_replaceables",
+          "predicate_type": "minecraft:tag_match"
         },
-        "size": 5
+        "state": {
+          "Name": "minecraft:gray_concrete"
+        }
       }
     ]
   }

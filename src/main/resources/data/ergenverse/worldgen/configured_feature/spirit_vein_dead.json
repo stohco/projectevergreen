@@ -7,27 +7,21 @@
     "targets": [
       {
         "target": {
-          "predicate": {
-            "type": "minecraft:tag_match",
-            "tag": "minecraft:stone_ore_replaceables"
-          },
-          "state": {
-            "Name": "minecraft:dead_tube_coral_block"
-          }
+          "tag": "minecraft:stone_ore_replaceables",
+          "predicate_type": "minecraft:tag_match"
         },
-        "size": 4
+        "state": {
+          "Name": "minecraft:dead_tube_coral_block"
+        }
       },
       {
         "target": {
-          "predicate": {
-            "type": "minecraft:tag_match",
-            "tag": "minecraft:deepslate_ore_replaceables"
-          },
-          "state": {
-            "Name": "minecraft:dead_tube_coral_block"
-          }
+          "tag": "minecraft:deepslate_ore_replaceables",
+          "predicate_type": "minecraft:tag_match"
         },
-        "size": 4
+        "state": {
+          "Name": "minecraft:dead_tube_coral_block"
+        }
       }
     ]
   }

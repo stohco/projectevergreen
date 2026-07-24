@@ -1,9 +1,6 @@
 {
   "type": "forge:add_spawns",
-  "biomes": [
-    "ergenverse:fire_burn_country",
-    "ergenverse:fire_demon_country"
-  ],
+  "biomes": "#minecraft:is_overworld",
   "spawners": [
     {
       "type": "ergenverse:fire_beast",

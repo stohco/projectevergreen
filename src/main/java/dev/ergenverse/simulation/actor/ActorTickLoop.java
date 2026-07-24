@@ -6,6 +6,13 @@ import dev.ergenverse.npc.memory.NpcMemoryTickHandler;
 import dev.ergenverse.simulation.cognition.ActivityProcess;
 import dev.ergenverse.simulation.cognition.CognitionGoal;
 import dev.ergenverse.simulation.cognition.DecisionEngine;
+import dev.ergenverse.simulation.cognition.perception.AttentionFilter;
+import dev.ergenverse.simulation.cognition.perception.Interpretation;
+import dev.ergenverse.simulation.cognition.perception.PerceptionSnapshot;
+import dev.ergenverse.simulation.cognition.perception.PerceptionSensor;
+import dev.ergenverse.simulation.cognition.prediction.ActionPredictor;
+import dev.ergenverse.simulation.intent.CultivationTask;
+import dev.ergenverse.simulation.intent.IntentDecomposer;
 import dev.ergenverse.simulation.los.SimulationLevel;
 
 import net.minecraft.server.level.ServerLevel;
@@ -50,6 +57,16 @@ public final class ActorTickLoop {
     private ActorTickLoop() {}
 
     /**
+     * The ServerLevel currently being ticked. Set at the start of {@link #tick}
+     * so that {@link #tickFullCognition} (which doesn't take a level parameter)
+     * can pass it to {@link PerceptionSensor}. Cleared after the tick pass.
+     *
+     * <p>This is safe because the actor tick loop runs synchronously on the
+     * server thread — there is no concurrent access.
+     */
+    private static ServerLevel currentServerLevel = null;
+
+    /**
      * Run one actor-tick pass. Called from the main server tick loop.
      *
      * <p>Also syncs linked actors' positions from their Minecraft entities
@@ -67,6 +84,17 @@ public final class ActorTickLoop {
      * @param level       the overworld ServerLevel (for entity lookups)
      */
     public static void tick(long currentTick, ServerLevel level) {
+        // Track the current level for the duration of this tick pass so
+        // tickFullCognition can pass it to PerceptionSensor.
+        currentServerLevel = level;
+        try {
+            tickImpl(currentTick, level);
+        } finally {
+            currentServerLevel = null;
+        }
+    }
+
+    private static void tickImpl(long currentTick, ServerLevel level) {
         // ── Position sync + importance score computation ──
         // Before this fix, SimulationImportanceScore was never written to,
         // so all actors had score 0 → STATIC_DATA → no cognition ever ran.
@@ -183,8 +211,87 @@ public final class ActorTickLoop {
         if (!seasonalTick && hasActiveActivity) {
             return;
         }
-        // Run the full DecisionEngine pipeline.
+
+        // ── ARTICLE XXXV COGNITION CHAIN ──
+        // World -> Perception -> Attention -> Interpretation ->
+        // Prediction -> Goals -> Intent -> Plan -> Tasks -> Activities -> Minecraft
+        //
+        // Before this wiring, the DecisionEngine generated goals purely from
+        // internal NEEDS. A wolf 5 blocks from a meditating cultivator did
+        // not change the cultivator's goal — because the cultivator never
+        // PERCEIVED the wolf. This is the gap the user identified:
+        // "Wang Lin doesn't immediately evaluate 'wolf.' He first notices
+        //  it, then decides if it matters, then predicts what will happen,
+        //  then decides whether to intervene."
+        //
+        // We now run the full chain each cognition pass:
+        //   1. PERCEPTION  — PerceptionSensor.sense() builds a snapshot
+        //   2. INTERPRETATION — Interpretation.interpret() classifies it
+        //   3. DECISION    — DecisionEngine.decide() with interpretation context
+        //   4. PREDICTION  — ActionPredictor.predict() on the chosen action
+        //   5. INTENT      — IntentEngine.derive() the strategic framing
+        //   6. ACTIVITY    — ActivityAssigner.assign() the concrete activity
+
+        // ── Step 1: Perception ──
+        PerceptionSnapshot perception = null;
+        Interpretation interpretation = null;
+        try {
+            perception = PerceptionSensor.sense(a, currentServerLevel, tick);
+            a.lastRawPerception = perception;
+        } catch (Exception e) {
+            Ergenverse.LOGGER.error("[Ergenverse] PerceptionSensor failed for {}: {}", a.id, e.toString());
+        }
+
+        // ── Step 1.5: Attention Filter ──
+        // CRON-COMPLETIONIST-65: The user identified that "Wang Lin doesn't
+        // immediately evaluate 'wolf.' He first notices it. Then decides
+        // if it matters." This attention gate filters the raw perception
+        // by salience threshold before interpretation. A Nascent Soul cultivator
+        // ignores distant rabbits; a mortal notices everything.
+        if (perception != null && a.cognition != null) {
+            int realmOrder = a.cognition.cultivation != null ? a.cognition.cultivation.realmOrder() : 0;
+            try {
+                perception = AttentionFilter.attend(perception, realmOrder, a.cognition.personality);
+                a.lastPerception = perception;
+            } catch (Exception e) {
+                Ergenverse.LOGGER.error("[Ergenverse] AttentionFilter failed for {}: {}", a.id, e.toString());
+            }
+        }
+
+        // ── Step 2: Interpretation ──
+        if (perception != null) {
+            try {
+                boolean isBeast = a.type == ActorType.BEAST;
+                interpretation = Interpretation.interpret(perception, a.daoIdentity, isBeast);
+                a.lastInterpretation = interpretation;
+            } catch (Exception e) {
+                Ergenverse.LOGGER.error("[Ergenverse] Interpretation failed for {}: {}", a.id, e.toString());
+            }
+        }
+
+        // ── Step 3: Decision (needs + desires, now context-aware via interpretation) ──
         var needs = a.cognition.computeNeedIntensities();
+
+        // If the interpretation suggests an urgent goal override (e.g. FLEE
+        // from a THREAT_TO_LIFE), inject it as a high-urgency synthetic goal.
+        // This is how a wolf appearing near Wang Lin interrupts his meditation:
+        // the perception → interpretation chain produces a FLEE goal with
+        // urgency 0.9+, which outranks the MEDITATE goal from his needs.
+        if (interpretation != null
+                && interpretation.suggestedGoalOverride != null
+                && interpretation.urgency > 0.5) {
+            CognitionGoal overrideGoal = new CognitionGoal(
+                    null, interpretation.suggestedGoalOverride,
+                    interpretation.summary, interpretation.urgency, 0.95);
+            overrideGoal.status = CognitionGoal.Status.ACTIVE;
+            a.cognition.activeGoal = overrideGoal;
+
+            // Skip the normal DecisionEngine — the situation demands immediate action.
+            assignAndDerive(a, overrideGoal, perception, interpretation, tick);
+            logCognition(a, perception, interpretation, overrideGoal, null, tick);
+            return;
+        }
+
         var decision = DecisionEngine.decide(
                 a.cognition.daoIdentity,
                 needs,
@@ -192,48 +299,112 @@ public final class ActorTickLoop {
                 a.cognition.cultivation,
                 a.cognition.social,
                 a.cognition.personality,
-                "default",
+                interpretation != null ? interpretation.category.name() : "default",
                 a.cognition.desires  // Art XXXI: desires produce SOCIAL goals
         );
         a.cognition.activeGoal = decision.goal;
+
+        // ── Step 4 + 5 + 6: Prediction + Intent + Activity ──
         if (decision.goal != null) {
             decision.goal.status = CognitionGoal.Status.ACTIVE;
 
-            // ── ACTIVITY ASSIGNMENT (Article XLI) ──
-            // Map the cognition goal to an ActivityProcess so the
-            // interruption pipeline can manage it. Not all goals
-            // produce activities (e.g. FLEE is handled by entity AI).
-            if (a.currentActivity == null || a.currentActivity.isComplete()
-                    || a.currentActivity.isAbandoned()) {
-                dev.ergenverse.simulation.cognition.ActivityAssigner.assign(
-                        a, decision.goal, tick);
+            // Prediction on the chosen action — does this action make sense
+            // given what the actor just perceived? If the prediction is
+            // catastrophically bad (e.g. MEDITATE while a wolf attacks),
+            // the actor re-evaluates with FLEE forced.
+            ActionPredictor.Outcome prediction = null;
+            if (decision.chosen != null) {
+                try {
+                    prediction = ActionPredictor.predict(
+                            decision.chosen, decision.goal, perception, interpretation,
+                            a.cognition.personality);
+                    a.lastPrediction = prediction;
+
+                    // Catastrophe guard: if the chosen action has EV < -0.3 and
+                    // there's a lethal threat, fall back to FLEE. This is the
+                    // "prediction vetoes decision" mechanism — the mind
+                    // simulating the future and refusing a suicidal action.
+                    if (prediction.expectedValue < -0.3
+                            && interpretation != null
+                            && interpretation.category == Interpretation.Category.THREAT_TO_LIFE) {
+                        CognitionGoal fleeGoal = new CognitionGoal(
+                                null, CognitionGoal.Category.FLEE,
+                                "Fleeing threat: " + interpretation.summary,
+                                interpretation.urgency, 0.95);
+                        fleeGoal.status = CognitionGoal.Status.ACTIVE;
+                        a.cognition.activeGoal = fleeGoal;
+                        assignAndDerive(a, fleeGoal, perception, interpretation, tick);
+                        logCognition(a, perception, interpretation, fleeGoal, prediction, tick);
+                        return;
+                    }
+                } catch (Exception e) {
+                    Ergenverse.LOGGER.error("[Ergenverse] ActionPredictor failed for {}: {}", a.id, e.toString());
+                }
             }
 
-            // ── INTENT LAYER ──
-            // Derive the immediate Intent from the active Goal + Dao Identity +
-            // Personality. This is the "WHY" behind the NPC's current behavior —
-            // the strategic framing that makes Wang Lin feel like Wang Lin.
-            // (ChatGPT architectural review: Identity → Goals → Intent → Decision → Action)
-            try {
-                var intent = dev.ergenverse.simulation.intent.IntentEngine.derive(
-                        decision.goal,
-                        a.cognition.daoIdentity,
-                        a.cognition.personality,
-                        a.id,
+            assignAndDerive(a, decision.goal, perception, interpretation, tick);
+            logCognition(a, perception, interpretation, decision.goal, prediction, tick);
+        }
+    }
+
+    /** Assign the activity process and derive the intent for a chosen goal. */
+    private static void assignAndDerive(Actor a, CognitionGoal goal,
+                                         PerceptionSnapshot perception,
+                                         Interpretation interpretation, long tick) {
+        // Activity assignment (Article XLI).
+        if (a.currentActivity == null || a.currentActivity.isComplete()
+                || a.currentActivity.isAbandoned()) {
+            dev.ergenverse.simulation.cognition.ActivityAssigner.assign(a, goal, tick);
+        }
+
+        // Intent derivation — the strategic "WHY" behind the action.
+        try {
+            var intent = dev.ergenverse.simulation.intent.IntentEngine.derive(
+                    goal,
+                    a.cognition.daoIdentity,
+                    a.cognition.personality,
+                    a.id,
+                    a.blockX, a.blockZ,
+                    tick
+            );
+            a.activeIntent = intent;
+            if (intent != null) {
+                // CRON-COMPLETIONIST-65: Wire IntentDecomposer into the tick loop.
+                // Before this fix, IntentDecomposer existed but was never called.
+                // The Intent was derived but never decomposed into concrete tasks.
+                // Now we decompose the intent into a task queue that the
+                // CognitionDrivenGoal executes step by step.
+                List<CultivationTask> tasks = IntentDecomposer.decompose(
+                        intent,
                         a.blockX, a.blockZ,
+                        null, // nearestPlayerUuid — resolved later by CognitionDrivenGoal
+                        999.0, // placeholder distance
+                        null, // targetPos — derived from perception focus
                         tick
                 );
-                a.cognition.activeIntent = intent;
-                if (intent != null) {
-                    Ergenverse.LOGGER.debug("[Ergenverse] ActorTick[cognition] {} intent: {}",
-                            a.id, intent.nature().label);
-                }
-            } catch (Exception e) {
-                Ergenverse.LOGGER.error("[Ergenverse] IntentEngine failed for {}", a.id, e);
+                a.activeTasks.clear();
+                a.activeTasks.addAll(tasks);
+                a.currentTaskIndex = tasks.isEmpty() ? -1 : 0;
+
+                Ergenverse.LOGGER.debug("[Ergenverse] ActorTick[cognition] {} intent: {} -> {} tasks",
+                        a.id, intent.nature().label, tasks.size());
             }
+        } catch (Exception e) {
+            Ergenverse.LOGGER.error("[Ergenverse] IntentEngine failed for {}", a.id, e);
         }
-        Ergenverse.LOGGER.debug("[Ergenverse] ActorTick[cognition] {} decision: {}",
-                a.id, decision);
+    }
+
+    /** One-line debug log of the full cognition chain for this tick. */
+    private static void logCognition(Actor a, PerceptionSnapshot perception,
+                                      Interpretation interpretation, CognitionGoal goal,
+                                      ActionPredictor.Outcome prediction, long tick) {
+        if (perception == null) return;
+        Ergenverse.LOGGER.debug("[Ergenverse] Cognition[{}] t={}: {} -> {} -> {}{}",
+                a.id, tick,
+                perception,
+                interpretation == null ? "no-interp" : interpretation,
+                goal == null ? "no-goal" : goal.category,
+                prediction == null ? "" : " -> " + prediction);
     }
 
     /**

@@ -1,9 +1,6 @@
 {
   "type": "forge:add_spawns",
-  "biomes": [
-    "ergenverse:zhao_mountains",
-    "ergenverse:forest_of_distorted_sense"
-  ],
+  "biomes": "#minecraft:is_overworld",
   "spawners": [
     {
       "type": "ergenverse:spirit_wolf",

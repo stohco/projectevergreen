@@ -15,8 +15,8 @@
       {
         "type": "minecraft:bat",
         "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
+        "minSize": 8,
+        "maxSize": 8
       }
     ],
     "axolotls": [],
@@ -25,26 +25,26 @@
       {
         "type": "minecraft:spider",
         "weight": 40,
-        "minCount": 1,
-        "maxCount": 2
+        "minSize": 1,
+        "maxSize": 2
       },
       {
         "type": "minecraft:zombie",
         "weight": 30,
-        "minCount": 2,
-        "maxCount": 4
+        "minSize": 2,
+        "maxSize": 4
       },
       {
         "type": "minecraft:skeleton",
         "weight": 25,
-        "minCount": 1,
-        "maxCount": 2
+        "minSize": 1,
+        "maxSize": 2
       },
       {
         "type": "minecraft:creeper",
         "weight": 15,
-        "minCount": 1,
-        "maxCount": 1
+        "minSize": 1,
+        "maxSize": 1
       }
     ],
     "underground_water_creature": [],
@@ -54,12 +54,8 @@
   "spawn_costs": {},
   "carvers": {
     "air": [
-      {
-        "type": "minecraft:cave"
-      },
-      {
-        "type": "minecraft:cave_extra_underground"
-      }
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
     ],
     "liquid": []
   },
@@ -71,27 +67,9 @@
     [],
     [],
     [
-      "minecraft:ore_dirt",
-      "minecraft:ore_gravel",
-      "minecraft:ore_granite_upper",
-      "minecraft:ore_granite_lower",
-      "minecraft:ore_diorite_upper",
-      "minecraft:ore_diorite_lower",
-      "minecraft:ore_andesite_upper",
-      "minecraft:ore_andesite_lower",
-      "minecraft:ore_coal_upper",
-      "minecraft:ore_coal_lower",
-      "minecraft:ore_iron_upper",
-      "minecraft:ore_iron_middle",
-      "minecraft:ore_iron_small",
-      "minecraft:ore_gold_upper",
-      "minecraft:ore_gold_lower",
-      "minecraft:ore_copper",
       "ergenverse:spirit_vein_quartz_ore"
     ],
-    [
-      "minecraft:forest_rocks"
-    ],
+    [],
     [],
     [
       "ergenverse:qi_gathering_grass"

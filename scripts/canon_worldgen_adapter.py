@@ -35,6 +35,7 @@ PF_DIR = f"{DATA}/worldgen/placed_feature"
 STRUCT_DIR = f"{DATA}/worldgen/structure"
 SS_DIR = f"{DATA}/worldgen/structure_set"
 TP_DIR = f"{DATA}/worldgen/template_pool"
+DT_DIR = f"{DATA}/dimension_type"
 LANG_FILE = f"{FORGE}/src/main/resources/assets/ergenverse/lang/en_us.json"
 
 # ============================================================
@@ -89,15 +90,19 @@ def validate_biome(biome, name):
     """Validate a biome JSON against MC 1.20.1 schema requirements."""
     errors = []
 
-    # Check carvers: must be {air: [{type: "..."}], liquid: [{type: "..."}]}
+    # Check carvers: MC 1.20.1 biome carvers are LISTS OF RESOURCE-LOCATION STRINGS
+    # (references to configured carvers), NOT objects. Object form {"type":...}
+    # is for ConfiguredCarver definitions, not biome references.
+    # Correct:   "carvers": {"air": ["minecraft:cave", "minecraft:canyon"], "liquid": []}
+    # WRONG:      "carvers": {"air": [{"type": "minecraft:cave"}], "liquid": []}
     for slot in ("air", "liquid"):
         entries = biome.get("carvers", {}).get(slot, [])
         for i, entry in enumerate(entries):
-            if isinstance(entry, str):
-                errors.append(f"carvers.{slot}[{i}] is bare string '{entry}', "
-                              f"must be {{'type': '{entry}'}}")
-            elif isinstance(entry, dict) and "type" not in entry:
-                errors.append(f"carvers.{slot}[{i}] missing 'type' key")
+            if isinstance(entry, dict):
+                errors.append(f"carvers.{slot}[{i}] is object {entry}, "
+                              f"must be bare resource-location string (e.g. 'minecraft:cave')")
+            elif not isinstance(entry, str):
+                errors.append(f"carvers.{slot}[{i}] is {type(entry).__name__}, must be string")
 
     # Check features: must be 11-element list of lists
     features = biome.get("features", [])
@@ -107,11 +112,11 @@ def validate_biome(biome, name):
         if not isinstance(step, list):
             errors.append(f"features[{i}] is {type(step).__name__}, must be list")
 
-    # Check spawners: each entry must have {type, weight, minCount, maxCount}
+    # Check spawners: each entry must have {type, weight, minSize, maxSize}
     for category, entries in biome.get("spawners", {}).items():
         for i, entry in enumerate(entries):
             if isinstance(entry, dict):
-                for key in ("type", "weight", "minCount", "maxCount"):
+                for key in ("type", "weight", "minSize", "maxSize"):
                     if key not in entry:
                         errors.append(f"spawners.{category}[{i}] missing '{key}'")
             elif isinstance(entry, str):
@@ -158,6 +163,17 @@ def validate_structure(struct, name):
         if key not in struct:
             errors.append(f"missing required key '{key}'")
 
+    # start_height.value must be a VerticalAnchor object: {"absolute":N} / {"above_bottom":N} / {"below_top":N}
+    # NOT a raw integer. Raw int causes "Not a JSON object: 0" at registry load.
+    sh = struct.get("start_height")
+    if isinstance(sh, dict) and "value" in sh:
+        v = sh["value"]
+        if not isinstance(v, dict):
+            errors.append(f"start_height.value is {type(v).__name__} ({v!r}), "
+                          f"must be VerticalAnchor object e.g. {{'absolute': 0}}")
+        elif not any(k in v for k in ("absolute", "above_bottom", "below_top")):
+            errors.append(f"start_height.value {v} missing absolute/above_bottom/below_top key")
+
     if errors:
         msg = f"VALIDATION FAILED for structure '{name}':\n  " + "\n  ".join(errors)
         raise ValueError(msg)
@@ -182,7 +198,12 @@ def validate_structure_set(ss, name):
 
 
 def validate_template_pool(tp, name):
-    """Validate a template_pool JSON."""
+    """Validate a template_pool JSON.
+
+    MC 1.20.1 requires each element to have the structure:
+        {"weight": N, "element": {"element_type": "...", "location": "...", ...}}
+    NOT the flat form where element_type/location are at the top level.
+    """
     errors = []
     if "name" not in tp:
         errors.append("missing 'name'")
@@ -192,13 +213,66 @@ def validate_template_pool(tp, name):
         errors.append("missing 'elements'")
     else:
         for i, el in enumerate(tp["elements"]):
-            if "element_type" not in el:
-                errors.append(f"elements[{i}] missing 'element_type'")
+            if not isinstance(el, dict):
+                errors.append(f"elements[{i}] is not an object")
+                continue
             if "weight" not in el:
                 errors.append(f"elements[{i}] missing 'weight'")
+            if "element" not in el:
+                errors.append(f"elements[{i}] missing 'element' wrapper "
+                              f"(MC 1.20.1 requires {{weight, element: {{element_type, ...}}}})")
+            else:
+                inner = el["element"]
+                if not isinstance(inner, dict):
+                    errors.append(f"elements[{i}].element is not an object")
+                elif "element_type" not in inner:
+                    errors.append(f"elements[{i}].element missing 'element_type'")
     if errors:
         msg = f"VALIDATION FAILED for template_pool '{name}':\n  " + "\n  ".join(errors)
         raise ValueError(msg)
+
+
+def validate_dimension_type(dt, name):
+    """Validate a dimension_type JSON for MC 1.20.1 schema compliance.
+
+    Catches the 'value_in_clamped_range' bug: MC 1.20.1 expects
+    monster_spawn_light_level to be an IntProvider:
+        {"type":"minecraft:uniform","value":{"min_inclusive":N,"max_inclusive":M}}
+    NOT a flat object with 'value_in_clamped_range' + top-level min/max.
+    """
+    errors = []
+    required = ["ultrawarm", "natural", "piglin_safe", "respawn_anchor_works",
+                "bed_works", "has_raids", "has_skylight", "has_ceiling",
+                "coordinate_scale", "ambient_light", "logical_height",
+                "min_y", "height", "infiniburn", "effects"]
+    for key in required:
+        if key not in dt:
+            errors.append(f"missing '{key}'")
+
+    msl = dt.get("monster_spawn_light_level")
+    if msl is not None:
+        if isinstance(msl, dict):
+            if "value_in_clamped_range" in msl:
+                errors.append(
+                    "monster_spawn_light_level uses deprecated 'value_in_clamped_range' format. "
+                    "MC 1.20.1 requires {\"type\":\"minecraft:uniform\",\"value\":{\"min_inclusive\":N,\"max_inclusive\":M}}"
+                )
+            elif "type" in msl:
+                if "value" not in msl:
+                    errors.append("monster_spawn_light_level has 'type' but no 'value' IntProvider")
+                else:
+                    v = msl["value"]
+                    if not isinstance(v, dict) or "min_inclusive" not in v or "max_inclusive" not in v:
+                        errors.append("monster_spawn_light_level.value must have min_inclusive + max_inclusive")
+        # integer form is also valid (literal light level) — no check needed.
+
+    if "monster_spawn_block_light_limit" not in dt:
+        errors.append("missing 'monster_spawn_block_light_limit' (required in 1.20.1)")
+
+    if errors:
+        msg = f"VALIDATION FAILED for dimension_type '{name}':\n  " + "\n  ".join(errors)
+        raise ValueError(msg)
+
 
 def make_11_step_features(step_map):
     """Build 11-step list-of-lists from {step_idx: [features]}."""
@@ -334,46 +408,47 @@ def generate_sub_region_biomes(canon, report):
 
             if region_key in ("farmland", "river_basin", "old_caravan_road"):
                 creatures = [
-                    {"type": "minecraft:sheep", "weight": 12, "minCount": 4, "maxCount": 4},
-                    {"type": "minecraft:cow", "weight": 10, "minCount": 4, "maxCount": 4},
-                    {"type": "minecraft:pig", "weight": 10, "minCount": 4, "maxCount": 4},
+                    {"type": "minecraft:sheep", "weight": 12, "minSize": 4, "maxSize": 4},
+                    {"type": "minecraft:cow", "weight": 10, "minSize": 4, "maxSize": 4},
+                    {"type": "minecraft:pig", "weight": 10, "minSize": 4, "maxSize": 4},
                 ]
             elif region_key in ("forest", "mortals_hunting_forest", "beast_territory"):
                 creatures = [
-                    {"type": "minecraft:wolf", "weight": 10, "minCount": 4, "maxCount": 4},
-                    {"type": "minecraft:fox", "weight": 8, "minCount": 2, "maxCount": 4},
-                    {"type": "minecraft:rabbit", "weight": 10, "minCount": 2, "maxCount": 3},
+                    {"type": "minecraft:wolf", "weight": 10, "minSize": 4, "maxSize": 4},
+                    {"type": "minecraft:fox", "weight": 8, "minSize": 2, "maxSize": 4},
+                    {"type": "minecraft:rabbit", "weight": 10, "minSize": 2, "maxSize": 3},
                 ]
             elif region_key == "coast":
-                creatures = [{"type": "minecraft:turtle", "weight": 8, "minCount": 1, "maxCount": 1}]
+                creatures = [{"type": "minecraft:turtle", "weight": 8, "minSize": 1, "maxSize": 1}]
 
             if region_key in ("ancient_battlefield", "abandoned_battlefield", "corrupted_zone", "collapsed_spirit_mine"):
                 monsters = [
-                    {"type": "minecraft:skeleton", "weight": 40, "minCount": 1, "maxCount": 3},
-                    {"type": "minecraft:zombie", "weight": 30, "minCount": 2, "maxCount": 4},
-                    {"type": "minecraft:creeper", "weight": 20, "minCount": 1, "maxCount": 1},
+                    {"type": "minecraft:skeleton", "weight": 40, "minSize": 1, "maxSize": 3},
+                    {"type": "minecraft:zombie", "weight": 30, "minSize": 2, "maxSize": 4},
+                    {"type": "minecraft:creeper", "weight": 20, "minSize": 1, "maxSize": 1},
                 ]
                 if region_key == "corrupted_zone":
-                    monsters.append({"type": "minecraft:witch", "weight": 20, "minCount": 1, "maxCount": 1})
+                    monsters.append({"type": "minecraft:witch", "weight": 20, "minSize": 1, "maxSize": 1})
             elif region_key in ("marsh", "fog_marsh"):
                 monsters = [
-                    {"type": "minecraft:slime", "weight": 30, "minCount": 1, "maxCount": 3},
-                    {"type": "minecraft:witch", "weight": 15, "minCount": 1, "maxCount": 1},
-                    {"type": "minecraft:spider", "weight": 25, "minCount": 1, "maxCount": 2},
+                    {"type": "minecraft:slime", "weight": 30, "minSize": 1, "maxSize": 3},
+                    {"type": "minecraft:witch", "weight": 15, "minSize": 1, "maxSize": 1},
+                    {"type": "minecraft:spider", "weight": 25, "minSize": 1, "maxSize": 2},
                 ]
             else:
                 monsters = [
-                    {"type": "minecraft:spider", "weight": 40, "minCount": 1, "maxCount": 2},
-                    {"type": "minecraft:zombie", "weight": 30, "minCount": 2, "maxCount": 4},
-                    {"type": "minecraft:skeleton", "weight": 25, "minCount": 1, "maxCount": 2},
-                    {"type": "minecraft:creeper", "weight": 15, "minCount": 1, "maxCount": 1},
+                    {"type": "minecraft:spider", "weight": 40, "minSize": 1, "maxSize": 2},
+                    {"type": "minecraft:zombie", "weight": 30, "minSize": 2, "maxSize": 4},
+                    {"type": "minecraft:skeleton", "weight": 25, "minSize": 1, "maxSize": 2},
+                    {"type": "minecraft:creeper", "weight": 15, "minSize": 1, "maxSize": 1},
                 ]
 
-            # Carvers — MC 1.20.1 format: list of {"type": "minecraft:carver_name"}
-            # NOT bare strings (that was Bug #1 of the 1504-file failure)
-            carvers = [{"type": "minecraft:cave"}, {"type": "minecraft:cave_extra_underground"}]
+            # Carvers — MC 1.20.1 biome carvers are LISTS OF RESOURCE-LOCATION STRINGS
+            # (references to configured carvers by ID), NOT objects.
+            # Corrected from CRON-64 which wrongly used {"type":...} objects.
+            carvers = ["minecraft:cave", "minecraft:cave_extra_underground"]
             if region_key in ("canyon", "hills", "plateau", "broken_restriction_valley", "hidden_cave_network"):
-                carvers.append({"type": "minecraft:canyon"})
+                carvers.append("minecraft:canyon")
 
             biome = {
                 "_comment": f"{country['name']} — {region_key.replace('_', ' ').title()}. Auto-generated sub-region from canon location {country['id']} ({country['nameCn']}). Parent world-law tier: {tier}. Spirit veins: {country.get('spiritVeins', 'unknown')}. Prime Directive: this region exists objectively as part of {country['name']}; cultivation determines perception, not existence.",
@@ -388,7 +463,7 @@ def generate_sub_region_biomes(canon, report):
                     "grass_color_modifier": "none",
                 },
                 "spawners": {
-                    "ambient": [{"type": "minecraft:bat", "weight": 10, "minCount": 8, "maxCount": 8}] if downfall > 0.1 else [],
+                    "ambient": [{"type": "minecraft:bat", "weight": 10, "minSize": 8, "maxSize": 8}] if downfall > 0.1 else [],
                     "axolotls": [],
                     "creature": creatures,
                     "monster": monsters,
@@ -556,7 +631,7 @@ def generate_structure_components(canon, report):
                 "spawn_overrides": {},
                 "start_pool": f"ergenverse:{struct_name}/start_pool",
                 "size": 4,
-                "start_height": {"type": "minecraft:constant", "value": 0},
+                "start_height": {"type": "minecraft:constant", "value": {"absolute": 0}},
                 "project_start_to_heightmap": "WORLD_SURFACE_WG",
                 "max_distance_from_center": 80,
                 "use_expansion_hack": False,
@@ -590,11 +665,13 @@ def generate_structure_components(canon, report):
                 "name": f"ergenverse:{struct_name}/start_pool",
                 "fallback": fallback,
                 "elements": [{
-                    "element_type": "minecraft:single_pool_element",
-                    "location": element,
-                    "projection": "rigid",
-                    "processors": "minecraft:empty",
                     "weight": 1,
+                    "element": {
+                        "element_type": "minecraft:single_pool_element",
+                        "location": element,
+                        "projection": "rigid",
+                        "processors": "minecraft:empty",
+                    },
                 }],
             }
             validate_template_pool(tp, struct_name)
@@ -632,7 +709,7 @@ def generate_structure_components(canon, report):
                 "spawn_overrides": {},
                 "start_pool": f"ergenverse:{struct_name}/start_pool",
                 "size": 5,
-                "start_height": {"type": "minecraft:constant", "value": 0},
+                "start_height": {"type": "minecraft:constant", "value": {"absolute": 0}},
                 "project_start_to_heightmap": "WORLD_SURFACE_WG",
                 "max_distance_from_center": 80,
                 "use_expansion_hack": False,
@@ -662,11 +739,13 @@ def generate_structure_components(canon, report):
                 "name": f"ergenverse:{struct_name}/start_pool",
                 "fallback": fallback,
                 "elements": [{
-                    "element_type": "minecraft:single_pool_element",
-                    "location": element,
-                    "projection": "rigid",
-                    "processors": "minecraft:empty",
                     "weight": 1,
+                    "element": {
+                        "element_type": "minecraft:single_pool_element",
+                        "location": element,
+                        "projection": "rigid",
+                        "processors": "minecraft:empty",
+                    },
                 }],
             }
             validate_template_pool(tp, struct_name)
@@ -912,7 +991,7 @@ def generate_ocean_layers(canon, report):
                    "minecraft:elder_guardian": 5, "minecraft:wither_skeleton": 15,
                    "minecraft:blaze": 10, "minecraft:ghast": 8, "minecraft:warden": 1}
         for m in layer_data["monsters"]:
-            monsters.append({"type": m, "weight": weights.get(m, 10), "minCount": 1, "maxCount": 2})
+            monsters.append({"type": m, "weight": weights.get(m, 10), "minSize": 1, "maxSize": 2})
 
         biome = {
             "_comment": f"{layer_data['comment']} Auto-generated ocean layer. Prime Directive: the ocean layers exist objectively — the beasts that live in the deep are real, not spawned for the player.",
@@ -927,17 +1006,17 @@ def generate_ocean_layers(canon, report):
                 "grass_color_modifier": "none",
             },
             "spawners": {
-                "ambient": [{"type": "minecraft:bat", "weight": 10, "minCount": 8, "maxCount": 8}],
+                "ambient": [{"type": "minecraft:bat", "weight": 10, "minSize": 8, "maxSize": 8}],
                 "axolotls": [],
                 "creature": [],
                 "monster": monsters,
-                "underground_water_creature": [{"type": "minecraft:glow_squid", "weight": 10, "minCount": 3, "maxCount": 5}] if layer_data["temp"] < 0.3 else [],
-                "water_ambient": [{"type": "minecraft:cod", "weight": 10, "minCount": 3, "maxCount": 6}] if layer_data["temp"] > 0.3 else [],
-                "water_creature": [{"type": "minecraft:squid", "weight": 10, "minCount": 1, "maxCount": 4}] if layer_data["temp"] > 0.3 else [],
+                "underground_water_creature": [{"type": "minecraft:glow_squid", "weight": 10, "minSize": 3, "maxSize": 5}] if layer_data["temp"] < 0.3 else [],
+                "water_ambient": [{"type": "minecraft:cod", "weight": 10, "minSize": 3, "maxSize": 6}] if layer_data["temp"] > 0.3 else [],
+                "water_creature": [{"type": "minecraft:squid", "weight": 10, "minSize": 1, "maxSize": 4}] if layer_data["temp"] > 0.3 else [],
             },
             "spawn_costs": {},
-            # Carvers — MC 1.20.1 format: list of {"type": "..."}
-            "carvers": {"air": [{"type": "minecraft:cave"}], "liquid": []},
+            # Carvers — MC 1.20.1: bare resource-location strings
+            "carvers": {"air": ["minecraft:cave"], "liquid": []},
             "features": make_11_step_features({
                 6: ["minecraft:ore_dirt", "minecraft:ore_gravel", "minecraft:ore_coal_upper",
                     "minecraft:ore_iron_upper", "minecraft:ore_iron_middle",
@@ -1106,6 +1185,18 @@ def validate_existing_files(report):
                 tp = json.load(f)
             name = os.path.basename(os.path.dirname(filepath))
             validate_template_pool(tp, name)
+        except Exception as e:
+            errors_found += 1
+            print(f"  ERROR: {filepath}: {e}")
+
+    # Validate all dimension_types (catches the monster_spawn_light_level bug)
+    for filepath in sorted(glob.glob(f"{DT_DIR}/*.json")):
+        files_checked += 1
+        try:
+            with open(filepath) as f:
+                dt = json.load(f)
+            name = os.path.basename(filepath)[:-5]
+            validate_dimension_type(dt, name)
         except Exception as e:
             errors_found += 1
             print(f"  ERROR: {filepath}: {e}")

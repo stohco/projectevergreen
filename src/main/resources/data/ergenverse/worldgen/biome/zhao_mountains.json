@@ -1,0 +1,78 @@
+{
+  "_comment": "zhao_mountains — country-level biome (aggregated). Based on zhao_hills template. Prime Directive: this region exists objectively as part of the Er Gen world.",
+  "temperature": 0.30000000000000004,
+  "downfall": 0.4,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 12694940,
+    "fog_color": 12694940,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 10,
+        "minSize": 8,
+        "maxSize": 8
+      }
+    ],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:spider",
+        "weight": 40,
+        "minSize": 1,
+        "maxSize": 2
+      },
+      {
+        "type": "minecraft:zombie",
+        "weight": 30,
+        "minSize": 2,
+        "maxSize": 4
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 25,
+        "minSize": 1,
+        "maxSize": 2
+      },
+      {
+        "type": "minecraft:creeper",
+        "weight": 15,
+        "minSize": 1,
+        "maxSize": 1
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}

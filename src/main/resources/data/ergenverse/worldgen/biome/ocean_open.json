@@ -15,8 +15,8 @@
       {
         "type": "minecraft:bat",
         "weight": 10,
-        "minCount": 8,
-        "maxCount": 8
+        "minSize": 8,
+        "maxSize": 8
       }
     ],
     "axolotls": [],
@@ -25,14 +25,14 @@
       {
         "type": "minecraft:drowned",
         "weight": 40,
-        "minCount": 1,
-        "maxCount": 2
+        "minSize": 1,
+        "maxSize": 2
       },
       {
         "type": "minecraft:guardian",
         "weight": 25,
-        "minCount": 1,
-        "maxCount": 2
+        "minSize": 1,
+        "maxSize": 2
       }
     ],
     "underground_water_creature": [],
@@ -40,25 +40,23 @@
       {
         "type": "minecraft:cod",
         "weight": 10,
-        "minCount": 3,
-        "maxCount": 6
+        "minSize": 3,
+        "maxSize": 6
       }
     ],
     "water_creature": [
       {
         "type": "minecraft:squid",
         "weight": 10,
-        "minCount": 1,
-        "maxCount": 4
+        "minSize": 1,
+        "maxSize": 4
       }
     ]
   },
   "spawn_costs": {},
   "carvers": {
     "air": [
-      {
-        "type": "minecraft:cave"
-      }
+      "minecraft:cave"
     ],
     "liquid": []
   },
@@ -70,21 +68,11 @@
     [],
     [],
     [
-      "minecraft:ore_dirt",
-      "minecraft:ore_gravel",
-      "minecraft:ore_coal_upper",
-      "minecraft:ore_iron_upper",
-      "minecraft:ore_iron_middle",
-      "minecraft:ore_gold_upper",
-      "minecraft:ore_copper",
       "ergenverse:spirit_vein_quartz_ore"
     ],
     [],
     [],
-    [
-      "minecraft:patch_seagrass",
-      "minecraft:patch_kelp"
-    ],
+    [],
     []
   ]
 }

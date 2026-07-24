@@ -1,10 +1,6 @@
 {
   "type": "forge:add_spawns",
-  "biomes": [
-    "ergenverse:zhao_plains",
-    "ergenverse:zhao_mountains",
-    "ergenverse:chu_country"
-  ],
+  "biomes": "#minecraft:is_overworld",
   "spawners": [
     {
       "type": "ergenverse:spirit_rabbit",

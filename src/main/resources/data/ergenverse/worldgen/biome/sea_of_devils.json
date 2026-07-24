@@ -1,0 +1,84 @@
+{
+  "_comment": "sea_of_devils — country-level biome (aggregated). Based on ocean_shallow template. Prime Directive: this region exists objectively as part of the Er Gen world.",
+  "temperature": 0.6,
+  "downfall": 0.5,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 8355711,
+    "fog_color": 12694940,
+    "water_color": 6388580,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 10,
+        "minSize": 8,
+        "maxSize": 8
+      }
+    ],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:drowned",
+        "weight": 40,
+        "minSize": 1,
+        "maxSize": 2
+      },
+      {
+        "type": "minecraft:cod",
+        "weight": 20,
+        "minSize": 1,
+        "maxSize": 2
+      },
+      {
+        "type": "minecraft:salmon",
+        "weight": 15,
+        "minSize": 1,
+        "maxSize": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [
+      {
+        "type": "minecraft:cod",
+        "weight": 10,
+        "minSize": 3,
+        "maxSize": 6
+      }
+    ],
+    "water_creature": [
+      {
+        "type": "minecraft:squid",
+        "weight": 10,
+        "minSize": 1,
+        "maxSize": 4
+      }
+    ]
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}

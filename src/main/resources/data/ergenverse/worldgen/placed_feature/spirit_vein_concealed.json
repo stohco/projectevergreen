@@ -9,13 +9,8 @@
       "type": "minecraft:in_square"
     },
     {
-      "type": "minecraft:height_range",
-      "min": {
-        "absolute": -48
-      },
-      "max": {
-        "absolute": 32
-      }
+      "type": "minecraft:count",
+      "count": 1
     },
     {
       "type": "minecraft:biome"
