@@ -182,6 +182,83 @@ public final class ErgenverseItems {
     public static final RegistryObject<Item> CULTIVATION_JOURNAL = ITEMS.register("cultivation_journal",
             () -> new JournalItem(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
 
+    // ── CRON-72: Spirit Stone Currency (loot table items) ──────────────
+    // Canon: spirit stones are the universal currency of the cultivation world.
+    // Low/Mid/High tiers correspond to Qi Condensation/Foundation/Core Formation value ranges.
+    // NOTE: spirit_stone block item is registered by ErgenverseBlocks.registerSimple("spirit_stone").
+    // Do NOT register a duplicate here — would crash at registry freeze.
+    public static final RegistryObject<Item> SPIRIT_STONE_LOW = ITEMS.register("spirit_stone_low",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SPIRIT_STONE_MID = ITEMS.register("spirit_stone_mid",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> SPIRIT_STONE_HIGH = ITEMS.register("spirit_stone_high",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> IMMORTAL_STONE = ITEMS.register("immortal_stone",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+
+    // ── CRON-72: Beast Cores & Essences (mob drops) ────────────────────
+    // Canon: cores harvested from spirit beasts are used for beast taming,
+    // alchemy, and restriction artifacts.
+    public static final RegistryObject<Item> ANCIENT_GOD_CORE = ITEMS.register("ancient_god_core",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    public static final RegistryObject<Item> ANCIENT_GOD_BONE = ITEMS.register("ancient_god_bone",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    public static final RegistryObject<Item> AZURE_DRAGON_CORE = ITEMS.register("azure_dragon_core",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> CLOUD_WHALE_CORE = ITEMS.register("cloud_whale_core",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> LEI_JI_CORE = ITEMS.register("lei_ji_core",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> NETHER_CORE = ITEMS.register("nether_core",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    public static final RegistryObject<Item> THUNDER_TOAD_CORE = ITEMS.register("thunder_toad_core",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> SOUL_FRAGMENT = ITEMS.register("soul_fragment",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> SOUL_LASHER = ITEMS.register("soul_lasher",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> SPIRIT_VEIN_ESSENCE = ITEMS.register("spirit_vein_essence",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> BLOOD_ESSENCE = ITEMS.register("blood_essence",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> DRAGON_SCALE = ITEMS.register("dragon_scale",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    // vermilion_bird_feather: registered by WangLinItems arsenal (do NOT duplicate)
+    public static final RegistryObject<Item> NINE_COLOR_FLAME = ITEMS.register("nine_color_flame",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    public static final RegistryObject<Item> TRIBULATION_FRAGMENT = ITEMS.register("tribulation_fragment",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> DAO_FRAGMENT = ITEMS.register("dao_fragment",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    // ji_realm: registered by WangLinItems arsenal (do NOT duplicate)
+
+    // ── CRON-72: Equipment & Artifacts (treasure items) ──────────────────
+    public static final RegistryObject<Item> SPIRIT_ARMOR = ITEMS.register("spirit_armor",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    // karma_whip: registered by WangLinItems arsenal (do NOT duplicate)
+    public static final RegistryObject<Item> HEAVEN_FAN = ITEMS.register("heaven_fan",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    // heaven_defying_bead: registered by WangLinItems arsenal (do NOT duplicate)
+    public static final RegistryObject<Item> STAR_SEALING_FLAG = ITEMS.register("star_sealing_flag",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> SOUL_REFINING_FLAG = ITEMS.register("soul_refining_flag",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> CAVE_WORLD_KEY = ITEMS.register("cave_world_key",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    public static final RegistryObject<Item> STARSKY_TOKEN = ITEMS.register("starry_sky_token",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> EIGHTEEN_HELL_STAMP = ITEMS.register("eighteen_hell_stamp",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    public static final RegistryObject<Item> VERMILION_EMPEROR_SEAL = ITEMS.register("vermilion_emperor_seal",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    public static final RegistryObject<Item> STORAGE_POUCH = ITEMS.register("storage_pouch",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> CULTIVATION_MAT = ITEMS.register("cultivation_mat",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    // Generic flying sword for loot tables (non-Wang-Lin-specific)
+    public static final RegistryObject<Item> FLYING_SWORD = ITEMS.register("flying_sword",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+
     // ── Spawn Eggs ────────────────────────────────────────────────────
     // Uses DeferredSpawnEggItem because SpawnEggItem requires EntityType at
     // construction time, but ITEM registry fires BEFORE ENTITY_TYPE registry.

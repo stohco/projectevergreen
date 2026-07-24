@@ -7,7 +7,7 @@
   ],
   "key": {
     "I": { "item": "minecraft:iron_block" },
-    "S": { "item": "ergenverse:soul_essence" },
+    "S": { "item": "ergenverse:soul_fragment" },
     "O": { "item": "minecraft:obsidian" }
   },
   "result": {

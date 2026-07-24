@@ -3,9 +3,8 @@
   "pools": [
     {
       "rolls": {
-        "rolls": 4,
-        "min_rolls": 3,
-        "max_rolls": 6
+        "min": 3,
+        "max": 6
       },
       "entries": [
         {
@@ -15,10 +14,10 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": [
-                2,
-                8
-              ]
+              "count": {
+                "min": 2,
+                "max": 8
+              }
             }
           ]
         },
@@ -29,10 +28,10 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": [
-                3,
-                9
-              ]
+              "count": {
+                "min": 3,
+                "max": 9
+              }
             }
           ]
         },
@@ -43,10 +42,10 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": [
-                2,
-                5
-              ]
+              "count": {
+                "min": 2,
+                "max": 5
+              }
             }
           ]
         },
@@ -62,10 +61,10 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": [
-                2,
-                6
-              ]
+              "count": {
+                "min": 2,
+                "max": 6
+              }
             }
           ]
         },
@@ -76,10 +75,10 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": [
-                1,
-                2
-              ]
+              "count": {
+                "min": 1,
+                "max": 2
+              }
             }
           ]
         },
@@ -90,10 +89,10 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": [
-                2,
-                5
-              ]
+              "count": {
+                "min": 2,
+                "max": 5
+              }
             }
           ]
         },
@@ -104,10 +103,10 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": [
-                1,
-                2
-              ]
+              "count": {
+                "min": 1,
+                "max": 2
+              }
             }
           ]
         },

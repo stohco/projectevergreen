@@ -6,7 +6,7 @@
     "SSS"
   ],
   "key": {
-    "F": { "item": "ergenverse:formation_flag" },
+    "F": { "item": "ergenverse:formation_flag_blank" },
     "S": { "item": "minecraft:stone_bricks" }
   },
   "result": {

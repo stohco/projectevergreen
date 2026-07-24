@@ -79,7 +79,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:planks",
+          "name": "minecraft:oak_planks",
           "weight": 4,
           "functions": [
             {

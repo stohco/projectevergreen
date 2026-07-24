@@ -132,9 +132,8 @@
           ]
         },
         {
-          "type": "minecraft:item",
+          "type": "minecraft:empty",
           "weight": 6,
-          "name": "minecraft:empty",
           "functions": []
         }
       ]
