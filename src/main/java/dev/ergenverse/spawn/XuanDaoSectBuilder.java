@@ -125,11 +125,21 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     private static final int BASE_Y = -2;
 
     /**
+     * Check if the sect is already built by looking for the library tower's
+     * sea lantern marker at the expected position.
+     */
+    public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
+        // Library tower places a sea lantern at center + library offset
+        return level.getBlockState(center.offset(0, 3, -3)).getBlock() == Blocks.SEA_LANTERN;
+    }
+
+    /**
      * Build the full Xuan Dao Sect centered at the given position.
      * @param level the server level
      * @param center the courtyard center block position
      */
     public static void build(ServerLevel level, BlockPos center) {
+        if (isAlreadyBuilt(level, center)) return;
         dev.ergenverse.core.Ergenverse.LOGGER.info("[Ergenverse] Building Xuan Dao Sect at {}", center);
 
         buildEntryPath(level, center);

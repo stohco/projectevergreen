@@ -32,6 +32,13 @@ import java.util.concurrent.ConcurrentHashMap;
  *   <li>Heng Yue Sect (via HengYueSectBuilder — full sect builder)</li>
  *   <li>Teng City (via TengFamilyCityBuilder — full city builder)</li>
  *   <li>Tian Shui City (via TianShuiCityBuilder — full city builder)</li>
+ *   <li>Soul Refining Sect (via SoulRefiningSectBuilder — full sect builder)</li>
+ *   <li>Nan Dou City (via NanDouCityBuilder — full city builder)</li>
+ *   <li>Snow Domain Capital (via SnowDomainCapitalBuilder — full city builder)</li>
+ *   <li>Vermilion Bird Imperial City (via VermilionBirdImperialCityBuilder)</li>
+ *   <li>Luo He Sect (via LuoHeSectBuilder — full sect builder)</li>
+ *   <li>Qilin City (via QilinCityBuilder — full city builder)</li>
+ *   <li>Xuan Dao Sect (via XuanDaoSectBuilder — full sect builder)</li>
  *   <li>Zhao Capital marker (placeholder)</li>
  *   <li>Canonical spirit vein stone markers at each spirit vein location</li>
  *   <li>Restriction zone boundary markers</li>
@@ -181,6 +188,24 @@ public final class CanonGeographyPlacer {
                     // Constitution: every block hand-authored.
                     if (!dev.ergenverse.spawn.LuoHeSectBuilder.isAlreadyBuilt(level)) {
                         dev.ergenverse.spawn.LuoHeSectBuilder.build(level);
+                    }
+                }
+                case "qilin_city" -> {
+                    // Full hand-built Qilin City (麒麟城) — ornate trading city.
+                    // Constitution: every block hand-authored.
+                    if (!dev.ergenverse.spawn.QilinCityBuilder.isAlreadyBuilt(level)) {
+                        dev.ergenverse.spawn.QilinCityBuilder.build(level);
+                    }
+                }
+                case "xuan_dao_sect" -> {
+                    // Full hand-built Xuan Dao Sect (悬道宗) — scholarly restriction sect.
+                    // Constitution: every block hand-authored.
+                    int xdY = level.getHeightmapPos(
+                            net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                            new BlockPos(x, 0, z)).getY();
+                    BlockPos xdCenter = new BlockPos(x, xdY, z);
+                    if (!dev.ergenverse.spawn.XuanDaoSectBuilder.isAlreadyBuilt(level, xdCenter)) {
+                        dev.ergenverse.spawn.XuanDaoSectBuilder.build(level, xdCenter);
                     }
                 }
                 default -> buildSettlementMarker(level, x, z, settlement);

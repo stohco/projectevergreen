@@ -397,6 +397,42 @@
         "chapter": 6,
         "distance_from_wang_village": 2600,
         "builder_class": "dev.ergenverse.spawn.LuoHeSectBuilder"
+      },
+      {
+        "id": "qilin_city",
+        "name": "Qilin City",
+        "canon_name": "Qi Lin Cheng / 麒麟城",
+        "canon_confidence": "INFERRED — major trading city in southern Zhao, qilin-related trade wealth",
+        "type": "trading_city",
+        "x": 6242,
+        "z": -384,
+        "country": "zhao",
+        "population": 45000,
+        "description": "A major trading city in southern Zhao Country, sacred to divine Qilin beasts. Known for its wealth from qilin-related trade — scales, spirit beast parts, cultivation resources. The city architecture is ornate with gold-trim, jade inlay, and amber stone. The governor is a late Foundation Formation cultivator. Hosts an annual Qilin Festival where beasts are displayed and traded.",
+        "tier": "trading_city",
+        "cultivation_range": "qi_condensation_to_late_foundation",
+        "chapter": 2,
+        "distance_from_wang_village": 2600,
+        "radius": 62,
+        "builder_class": "dev.ergenverse.spawn.QilinCityBuilder"
+      },
+      {
+        "id": "xuan_dao_sect",
+        "name": "Xuan Dao Sect",
+        "canon_name": "Xuan Dao Zong / 悬道宗",
+        "canon_confidence": "INFERRED — scholarly sect on Cold Ice Country border, restriction arts",
+        "type": "cultivation_sect",
+        "x": 2200,
+        "z": -1800,
+        "country": "zhao",
+        "population": 150,
+        "description": "A mid-tier scholarly cultivation sect known for restriction (formation) techniques. Smaller and more focused than Heng Yue Sect — an institution of learning rather than combat. Features a 3-story Library Tower housing restriction art scrolls, Sealed Meditation Chambers for deep cultivation, a Restriction Array Workshop, and a Refinery for refining formation materials. The sect prioritizes functionality over grandeur.",
+        "tier": "minor_sect",
+        "cultivation_range": "foundation_establishment_to_core_formation",
+        "chapter": 3,
+        "distance_from_wang_village": 1800,
+        "radius": 30,
+        "builder_class": "dev.ergenverse.spawn.XuanDaoSectBuilder"
       }
     ],
 

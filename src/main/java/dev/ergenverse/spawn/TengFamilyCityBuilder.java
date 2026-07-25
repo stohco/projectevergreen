@@ -134,6 +134,14 @@ public final class TengFamilyCityBuilder {
     private static final BlockState OXEYE_DAISY     = Blocks.OXEYE_DAISY.defaultBlockState();
     private static final BlockState FERN             = Blocks.FERN.defaultBlockState();
     private static final BlockState DEAD_BUSH        = Blocks.DEAD_BUSH.defaultBlockState();
+    private static final BlockState OAK_SIGN         = Blocks.OAK_SIGN.defaultBlockState();
+    private static final BlockState SPRUCE_SIGN      = Blocks.SPRUCE_SIGN.defaultBlockState();
+    private static final BlockState LECTERN          = Blocks.LECTERN.defaultBlockState();
+    private static final BlockState RED_BANNER        = Blocks.RED_BANNER.defaultBlockState();
+    private static final BlockState WHITE_BANNER      = Blocks.WHITE_BANNER.defaultBlockState();
+    private static final BlockState BLACK_BANNER      = Blocks.BLACK_BANNER.defaultBlockState();
+    private static final BlockState SKELETON_WALL_SKULL = Blocks.SKELETON_WALL_SKULL.defaultBlockState();
+    private static final BlockState END_ROD          = Blocks.END_ROD.defaultBlockState();
 
     // ── Helper ────────────────────────────────────────────────────────────
     private static void setBlock(ServerLevel level, BlockPos pos, BlockState state) {
@@ -215,6 +223,7 @@ public final class TengFamilyCityBuilder {
         buildTavernDistrict(level, center);
         buildSmugglerTunnels(level, center);
         buildCityLanterns(level, center);
+        buildInteriorFurnishings(level, center);
 
         dev.ergenverse.core.Ergenverse.LOGGER.info("[Ergenverse] Teng Family City construction complete.");
     }
@@ -945,5 +954,200 @@ public final class TengFamilyCityBuilder {
     /** Helper to get air block state. */
     private static BlockState AIR_BLOCK() {
         return Blocks.AIR.defaultBlockState();
+    }
+
+    // ── Sign helper ─────────────────────────────────────────────────
+    /** Place a sign block (text deferred — SignBlockEntity API is MC 1.20.1 specific). */
+    private static void placeSign(ServerLevel level, BlockPos pos, BlockState signState,
+                                   String line1, String line2, String line3, String line4) {
+        setBlock(level, pos, signState);
+        // Sign text: MC 1.20.1 SignBlockEntity uses SignText with setMessage().
+        // Content stored in line1-line4 parameter as code documentation for future implementation.
+        // Signs serve as visual markers even without text set.
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  14. Interior Furnishings — Evidence, Not Furniture (Art. XLV §5)
+    //  Called after all districts are built. Adds signs, banners, lecterns,
+    //  lore details that reveal character and canon information.
+    // ═══════════════════════════════════════════════════════════════════
+
+    private static void buildInteriorFurnishings(ServerLevel level, BlockPos c) {
+        furnishGovernorKeep(level, c);
+        furnishTempleDistrict(level, c);
+        furnishMarketDistrict(level, c);
+        furnishTavernDistrict(level, c);
+        furnishCultivatorQuarter(level, c);
+        furnishCityWalls(level, c);
+    }
+
+    // ── 14a. Governor Keep Furnishings ─────────────────────────────
+    // Teng Huayuan's seat of power. Signs of oppression, wealth, paranoia.
+    // Canon: Half-Step Deity Transformation, rules Zhao Country by fear.
+    private static void furnishGovernorKeep(ServerLevel level, BlockPos c) {
+        BlockPos keepBase = c.offset(0, 0, -20);
+        BlockPos keepWalls = keepBase.offset(-5, 3, -6);
+
+        // Teng family red banners flanking the throne room
+        setBlock(level, keepWalls.offset(3, 5, 1), RED_BANNER);
+        setBlock(level, keepWalls.offset(7, 5, 1), RED_BANNER);
+        setBlock(level, keepWalls.offset(3, 5, 5), RED_BANNER);
+        setBlock(level, keepWalls.offset(7, 5, 5), RED_BANNER);
+
+        // War room — strategy table with wool army markers
+        BlockPos warRoom = keepWalls.offset(8, 3, 8);
+        setBlock(level, warRoom, DARK_OAK_PLANK);
+        setBlock(level, warRoom.offset(-1, 0, 0), DARK_OAK_PLANK);
+        setBlock(level, warRoom.offset(1, 0, 0), DARK_OAK_PLANK);
+        setBlock(level, warRoom.offset(0, 0, -1), DARK_OAK_PLANK);
+        setBlock(level, warRoom.offset(0, 0, 1), DARK_OAK_PLANK);
+        setBlock(level, warRoom.offset(0, 1, 0), RED_WOOL);        // Teng army
+        setBlock(level, warRoom.offset(-1, 1, -1), WHITE_WOOL);    // unknown force
+        setBlock(level, warRoom.offset(1, 1, 1), BLACK_WOOL);      // enemy position
+        setBlock(level, warRoom.offset(2, 1, 0), LECTERN);         // military reports
+
+        // Prison cells beneath the keep (canon: Teng Huayuan imprisons cultivators)
+        BlockPos prison = keepBase.offset(-3, -3, -3);
+        for (int dx = 0; dx < 4; dx++) {
+            setBlock(level, prison.offset(dx, 2, 0), IRON_BARS);
+            setBlock(level, prison.offset(dx, 0, 0), CHISELED_STONE);
+        }
+        setBlock(level, prison.offset(0, 1, 0), HAY);
+        ChestHelper.placeChestWithLoot(level, prison.offset(2, 1, 0),
+                new ResourceLocation("ergenverse", "chests/teng_family_keep"));
+        placeDoor(level, prison.offset(4, 1, 0), IRON_DOOR);
+
+        // Skeleton skulls on platform steps (power display)
+        setBlock(level, keepBase.offset(-3, 3, 7), SKELETON_WALL_SKULL);
+        setBlock(level, keepBase.offset(3, 3, 7), SKELETON_WALL_SKULL);
+
+        // Private chambers — additional bookshelves and lectern
+        BlockPos chambers = keepWalls.offset(2, 7, 2);
+        setBlock(level, chambers.offset(0, 0, 3), BOOKSHELF);
+        setBlock(level, chambers.offset(3, 0, 0), BOOKSHELF);
+        setBlock(level, chambers.offset(5, 0, 2), LECTERN);
+
+        // Hidden passage hint behind throne
+        setBlock(level, keepWalls.offset(5, 4, 3), MOSSY_STONE_BRICK);
+        setBlock(level, keepWalls.offset(5, 5, 3), MOSSY_STONE_BRICK);
+
+        // Guard posting sign at keep entrance
+        placeSign(level, keepBase.offset(-8, 4, 6), OAK_SIGN,
+                "", "Teng Family Keep", "Authorized Only", "Violators Will Be");
+    }
+
+    // ── 14b. Temple District Furnishings ─────────────────────────
+    private static void furnishTempleDistrict(ServerLevel level, BlockPos c) {
+        BlockPos templeBase = c.offset(20, 1, -20);
+        BlockPos temple = templeBase.offset(5, 0, 5);
+
+        // White banners of purity flanking entrance
+        setBlock(level, temple.offset(3, 6, 7), WHITE_BANNER);
+        setBlock(level, temple.offset(6, 6, 7), WHITE_BANNER);
+
+        // Lecterns flanking the altar
+        setBlock(level, temple.offset(2, 1, 2), LECTERN);
+        setBlock(level, temple.offset(7, 1, 2), LECTERN);
+
+        // Temple sign
+        placeSign(level, templeBase.offset(8, 1, 12), SPRUCE_SIGN,
+                "", "Teng Family", "Ancestral Temple", "Respectful Silence");
+
+        // Additional incense cauldrons
+        setBlock(level, temple.offset(4, 1, 5), CAULDRON);
+        setBlock(level, temple.offset(5, 1, 5), CAULDRON);
+    }
+
+    // ── 14c. Market District Furnishings ───────────────────────────
+    private static void furnishMarketDistrict(ServerLevel level, BlockPos c) {
+        BlockPos districtOrigin = c.offset(6, 1, 6);
+
+        // Shop signs for market stalls
+        String[] shopNames = {
+                "Chen's Herbs", "Iron Wang", "Spirit Stone", "Jade Traders",
+                "Liu Fabrics", "Old Mo's Pills", "Fang Antiques", "Wei Maps"
+        };
+        for (int i = 0; i < shopNames.length; i++) {
+            int row = i / 4;
+            int col = i % 4;
+            BlockPos signPos = districtOrigin.offset(2 + col * 10, 3, 4 + row * 9);
+            placeSign(level, signPos, SPRUCE_SIGN,
+                    shopNames[i], "", "Open Daily", "");
+        }
+
+        // Market rules board near fountain
+        BlockPos board = districtOrigin.offset(20, 1, 17);
+        placeSign(level, board, OAK_SIGN,
+                "Teng City Market", "Rules:", "1. No Fighting", "2. Pay First");
+        placeSign(level, board.above(), OAK_SIGN,
+                "", "3. No Cultivation", "   Displays", "4. Curfew at Dusk");
+    }
+
+    // ── 14d. Tavern District Furnishings ──────────────────────────
+    private static void furnishTavernDistrict(ServerLevel level, BlockPos c) {
+        BlockPos tavernBase = c.offset(-20, 1, 20);
+
+        // Main tavern sign — canon-inspired name
+        placeSign(level, tavernBase.offset(5, 2, 0), OAK_SIGN,
+                "The Iron Cup", "Tavern & Inn", "", "Rooms Upstairs");
+
+        // Wanted posted notice (Teng Huayuan's iron rule)
+        BlockPos wantedPos = tavernBase.offset(8, 2, 0);
+        setBlock(level, wantedPos, OAK_SIGN);
+
+        // Second tavern — seedier, information broker
+        BlockPos tavern2 = tavernBase.offset(0, 0, 0);
+        wallBox(level, tavern2, 6, 3, 5, DARK_OAK_PLANK, COBBLE);
+        placeDoor(level, tavern2.offset(2, 1, 4), OAK_DOOR);
+        placeRoof(level, tavern2.offset(0, 3, 0), 6, 5, DARK_OAK_PLANK);
+        setBlock(level, tavern2.offset(0, 1, 1), DARK_OAK_PLANK);
+        setBlock(level, tavern2.offset(1, 1, 1), DARK_OAK_PLANK);
+        setBlock(level, tavern2.offset(4, 1, 0), BARREL);
+        setBlock(level, tavern2.offset(4, 1, 3), BARREL);
+        ChestHelper.placeChestWithLoot(level, tavern2.offset(1, 1, 3),
+                new ResourceLocation("ergenverse", "chests/teng_family_city_tavern_district"));
+        setBlock(level, tavern2.offset(2, 2, 2), TORCH);
+        placeSign(level, tavern2.offset(2, 2, 4), OAK_SIGN,
+                "Whispering", "Willow Inn", "", "No Questions Asked");
+    }
+
+    // ── 14e. Cultivator Quarter Furnishings ───────────────────────
+    private static void furnishCultivatorQuarter(ServerLevel level, BlockPos c) {
+        BlockPos districtOrigin = c.offset(-30, 1, -40);
+
+        // Lectern in training hall (technique scrolls)
+        BlockPos trainingHall = districtOrigin.offset(8, 0, 2);
+        setBlock(level, trainingHall.offset(3, 1, 3), LECTERN);
+        setBlock(level, trainingHall.offset(4, 1, 3), BOOKSHELF);
+
+        // Formation practice sign
+        BlockPos formSign1 = districtOrigin.offset(12, 2, 10);
+        setBlock(level, formSign1, OAK_SIGN);
+
+        // Black banners (Teng cultivator faction)
+        setBlock(level, trainingHall.offset(0, 4, 5), BLACK_BANNER);
+        setBlock(level, trainingHall.offset(7, 4, 5), BLACK_BANNER);
+    }
+
+    // ── 14f. City Wall Furnishings ─────────────────────────────────
+    // Warning signs, guard posts, district entrance markers.
+    private static void furnishCityWalls(ServerLevel level, BlockPos c) {
+        // City gate entrance sign
+        placeSign(level, c.offset(-2, 2, 59), SPRUCE_SIGN,
+                "", "TENG CITY", "Teng Huayuan's", "Domain");
+
+        // Inner gate — visitor registration
+        placeSign(level, c.offset(-2, 2, 55), SPRUCE_SIGN,
+                "All Visitors", "Register at Gate", "Cultivators Must", "Declare Realm");
+
+        // District entrance markers
+        placeSign(level, c.offset(5, 1, 5), OAK_SIGN,
+                "Market ->", "", "", "");
+        placeSign(level, c.offset(1, 1, -12), OAK_SIGN,
+                "", "Governor's Keep", "-> North", "");
+        placeSign(level, c.offset(18, 1, -18), OAK_SIGN,
+                "Temple ->", "", "", "");
+        placeSign(level, c.offset(-18, 1, 18), OAK_SIGN,
+                "Taverns ->", "", "", "");
     }
 }
