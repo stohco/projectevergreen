@@ -1,6 +1,7 @@
 package dev.ergenverse.client.model;
 
 // TEXTURE: assets/ergenverse/textures/entity/beast/spirit_tiger.png  SIZE: 64x64
+// v2 — CRON-COMPLETIONIST-83: added body CubeDeformation
 /*
  * SpiritTigerModel — barrel-chested apex land predator.
  *
@@ -143,13 +144,13 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
         // Tiger chest is the widest point of the body. 5x7x6 — deep belly.
         root.addOrReplaceChild("body_chest",
                 CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-2.5F, -3.5F, -5.5F, 5.0F, 7.0F, 5.5F),
+                        .addBox(-2.5F, -3.5F, -5.5F, 5.0F, 7.0F, 5.5F, new CubeDeformation(0.2F)),
                 PartPose.offset(0.0F, 5.5F, -3.0F));
 
         // ── body_hip : slightly narrower rear, overlaps chest by 1px ──────
         root.addOrReplaceChild("body_hip",
                 CubeListBuilder.create().texOffs(0, 14)
-                        .addBox(-2.0F, -3.0F, -1.0F, 4.0F, 6.0F, 7.0F),
+                        .addBox(-2.0F, -3.0F, -1.0F, 4.0F, 6.0F, 7.0F, new CubeDeformation(0.2F)),
                 PartPose.offset(0.0F, 5.0F, 2.5F));
 
         // ── neck : very short, thick — barely visible (big cat anatomy) ────

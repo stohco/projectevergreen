@@ -199,6 +199,12 @@ public final class Ergenverse {
         dev.ergenverse.block.entity.ErgenverseBlockEntities.register(modEventBus);
         dev.ergenverse.screen.ErgenverseMenus.register(modEventBus);
 
+        // ── Custom Chunk Generators (CRON-70):
+        //    BlueprintChunkGenerator replaces minecraft:noise for Planet Suzaku,
+        //    providing canon-aware terrain shaped by the blueprint's geography.
+        //    Must be registered BEFORE the dimension is loaded.
+        dev.ergenverse.runtime.worldgen.ErgenverseChunkGenerators.register(modEventBus);
+
         // ── Heaven-Defying Bead systems (Layer 2 — Simulation):
         //    The bead's storage menu (MenuType) and interior dimension.
         //    Must run AFTER WangLinItems (which registers the bead item)

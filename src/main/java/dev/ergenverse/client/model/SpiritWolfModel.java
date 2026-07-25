@@ -1,6 +1,7 @@
 package dev.ergenverse.client.model;
 
 // TEXTURE: assets/ergenverse/textures/entity/beast/spirit_wolf.png  SIZE: 64x64
+// v2 — CRON-COMPLETIONIST-83: added CubeDeformation, tapered tail
 /*
  * SpiritWolfModel — lean quadruped predator.
  *
@@ -51,6 +52,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 
 public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
 
@@ -110,7 +112,7 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         // ── body_chest : front torso, deeper at shoulders ──────────────
         root.addOrReplaceChild("body_chest",
                 CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-2.0F, -3.0F, -5.0F, 4.0F, 6.0F, 5.0F),
+                        .addBox(-2.0F, -3.0F, -5.0F, 4.0F, 6.0F, 5.0F, new CubeDeformation(0.3F)),
                 PartPose.offset(0.0F, 6.0F, -2.5F));
 
         // ── body_hip : rear torso, narrower at hips ───────────────────────
@@ -118,20 +120,20 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         // eliminating the visible seam between chest and hip.
         root.addOrReplaceChild("body_hip",
                 CubeListBuilder.create().texOffs(0, 12)
-                        .addBox(-1.5F, -2.5F, -1.0F, 3.0F, 5.0F, 6.0F),
+                        .addBox(-1.5F, -2.5F, -1.0F, 3.0F, 5.0F, 6.0F, new CubeDeformation(0.2F)),
                 PartPose.offset(0.0F, 5.5F, 2.5F));
 
         // ── neck : short tilted connector at the front ───────────────────
         // CRON-COMPLETIONIST-78: Capture PartDefinition for head parenting
         PartDefinition neckDef = root.addOrReplaceChild("neck",
                 CubeListBuilder.create().texOffs(28, 0)
-                        .addBox(-1.0F, -1.0F, -2.0F, 2.0F, 2.0F, 3.0F),
+                        .addBox(-1.0F, -1.0F, -2.0F, 2.0F, 2.0F, 3.0F, new CubeDeformation(0.08F)),
                 PartPose.offsetAndRotation(0.0F, 4.0F, -5.0F, -0.4F, 0.0F, 0.0F));
 
         // ── head : skull + snout + ears + jaw + fangs (child of neck) ─────
         PartDefinition head = neckDef.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 18)
-                        .addBox(-1.5F, -1.5F, -1.5F, 3.0F, 3.0F, 3.0F)   // skull
+                        .addBox(-1.5F, -1.5F, -1.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.15F))   // skull
                         .texOffs(0, 26)
                         .addBox(-1.0F, 0.0F, -3.5F, 2.0F, 2.0F, 2.0F),   // snout forward
                 PartPose.offset(0.0F, -1.0F, -4.0F));
@@ -196,15 +198,15 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         // ── tail : 3-segment chain curving down from the rear ────────────
         PartDefinition tailBase = root.addOrReplaceChild("tail_base",
                 CubeListBuilder.create().texOffs(36, 8)
-                        .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 3.0F),
+                        .addBox(-0.45F, -0.45F, 0.0F, 0.9F, 0.9F, 3.0F),
                 PartPose.offsetAndRotation(0.0F, 4.0F, 5.0F, 0.3F, 0.0F, 0.0F));
         PartDefinition tailMid = tailBase.addOrReplaceChild("mid",
                 CubeListBuilder.create().texOffs(36, 14)
-                        .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 3.0F),
+                        .addBox(-0.35F, -0.35F, 0.0F, 0.7F, 0.7F, 3.0F),
                 PartPose.offsetAndRotation(0.0F, 0.0F, 3.0F, 0.3F, 0.0F, 0.0F));
         tailMid.addOrReplaceChild("tip",
                 CubeListBuilder.create().texOffs(36, 20)
-                        .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 3.0F),
+                        .addBox(-0.25F, -0.25F, 0.0F, 0.5F, 0.5F, 3.0F),
                 PartPose.offsetAndRotation(0.0F, 0.0F, 3.0F, 0.2F, 0.0F, 0.0F));
 
         // ── legs : 4 legs, thigh + shin, feet at y=15 ────────────────────

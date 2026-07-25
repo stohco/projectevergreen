@@ -2,7 +2,7 @@
   "_comment": "Planet Suzaku \u2014 Wang Lin's home cultivation world. Canon: a third-tier (later elevated) cultivation planet in the Vermilion Bird Star System of the Sealed Realm inside the Cave World. Contains multiple countries (Zhao, Chu, Fire Burn, Sky Demon, Pilu, Snow Domain, Xuan Wu, Fire Demon, Vermilion Bird Country) plus the Sea of Devils (east, vast, 14+ districts) and the Forest of Distorted Divine Sense (embedded in Zhao). The Vermilion Bird Dynasty rules from the central continent. Spirit veins run through the mountains. The planet is sealed around the Cultivation Planet Crystal (inside the Suzaku Tomb, underground). Biomes are organized by canonical geography with country-scale regions (each spans thousands of blocks). Prime Directive: everything exists objectively \u2014 cultivation changes what the player can interact with, not what exists.",
   "type": "ergenverse:planet_suzaku_type",
   "generator": {
-    "type": "minecraft:noise",
+    "type": "ergenverse:blueprint",
     "biome_source": {
       "type": "minecraft:multi_noise",
       "biomes": [

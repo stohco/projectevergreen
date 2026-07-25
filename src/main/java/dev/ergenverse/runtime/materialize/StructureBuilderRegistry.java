@@ -53,20 +53,22 @@ public final class StructureBuilderRegistry {
         // Wang Family Village — fully wired, canon-faithful (Wang Lin's birthplace, RI Ch.1).
         register(PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.id, WangFamilyVillageBuilder::build);
 
-        // The remaining builders exist but are flagged provisional until their
-        // canon accuracy is vetted against the CRON-69 fact-check. Registered so
-        // the materializer CAN invoke them, but each guards on isAlreadyBuilt.
-        // Uncomment / vet one per future round (Heng Yue Sect is the natural next).
-        // register(PlanetSuzakuBlueprint.HENG_YUE_SECT.id, HengYueSectBuilder::build);
-        // register(PlanetSuzakuBlueprint.TENG_FAMILY_CITY.id, TengFamilyCityBuilder::build);
-        // register(PlanetSuzakuBlueprint.TIAN_SHUI_CITY.id, TianShuiCityBuilder::build);
-        // register(PlanetSuzakuBlueprint.QILIN_CITY.id, QilinCityBuilder::build);
-        // register(PlanetSuzakuBlueprint.NAN_DOU_CITY.id, NanDouCityBuilder::build);
-        // register(PlanetSuzakuBlueprint.SNOW_DOMAIN_CAPITAL.id, SnowDomainCapitalBuilder::build);
-        // register(PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.id, VermilionBirdImperialCityBuilder::build);
-        // register(PlanetSuzakuBlueprint.SOUL_REFINING_SECT.id, SoulRefiningSectBuilder::build);
-        // register(PlanetSuzakuBlueprint.XUAN_DAO_SECT.id, XuanDaoSectBuilder::build);
-        // register(PlanetSuzakuBlueprint.LUO_HE_SECT.id, LuoHeSectBuilder::build);
+        // CRON-COMPLETIONIST-83: all 11 builders now wired. Each guards on
+        // isAlreadyBuilt (idempotent). The Blueprint+Layer architecture materializes
+        // these on chunk load — no vanilla random terrain dependency.
+        // 6 builders take (ServerLevel, BlockPos); 5 take (ServerLevel).
+        // The 2-arg builders are wrapped with lambdas that discard the BlockPos
+        // (the builder resolves its own center internally).
+        register(PlanetSuzakuBlueprint.HENG_YUE_SECT.id, l -> HengYueSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.TENG_FAMILY_CITY.id, l -> TengFamilyCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.TIAN_SHUI_CITY.id, l -> TianShuiCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.QILIN_CITY.id, QilinCityBuilder::build);
+        register(PlanetSuzakuBlueprint.NAN_DOU_CITY.id, l -> NanDouCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.SNOW_DOMAIN_CAPITAL.id, SnowDomainCapitalBuilder::build);
+        register(PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.id, VermilionBirdImperialCityBuilder::build);
+        register(PlanetSuzakuBlueprint.SOUL_REFINING_SECT.id, l -> SoulRefiningSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.XUAN_DAO_SECT.id, l -> XuanDaoSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.LUO_HE_SECT.id, LuoHeSectBuilder::build);
     }
 
     /** Register (or replace) the builder for a canon location id. */
