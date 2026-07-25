@@ -25,6 +25,8 @@ import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import dev.ergenverse.entity.ai.AquaticWanderGoal;
+import dev.ergenverse.entity.ai.SchoolingGoal;
 import dev.ergenverse.entity.control.SpiritFlightPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
@@ -319,6 +321,12 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.8));
                 this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+                // CRON-COMPLETIONIST-77: Wolves hunt herbivores (rabbits, deer) — food chain
+                this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(
+                        this, SpiritBeastEntity.class, 10, true, false,
+                        (living) -> living instanceof SpiritBeastEntity prey
+                                && (prey.getBeastType() == BeastType.RABBIT
+                                || prey.getBeastType() == BeastType.DEER)));
             }
             case RABBIT -> {
                 this.goalSelector.addGoal(2, new PanicGoal(this, 1.4));
@@ -352,6 +360,11 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
                 this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
+                // CRON-COMPLETIONIST-77: Hawks hunt rabbits from the air — food chain
+                this.targetSelector.addGoal(3, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(
+                        this, SpiritBeastEntity.class, 10, true, false,
+                        (living) -> living instanceof SpiritBeastEntity prey
+                                && prey.getBeastType() == BeastType.RABBIT));
             }
             case FIRE_BEAST -> {
                 this.goalSelector.addGoal(2, new SpiritBeastHuntGoal(this, 1.0D));
@@ -428,19 +441,50 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
             }
+            // ═══════════════════════════════════════════════════════════════
+            // CRON-COMPLETIONIST-77: SEA SERPENT AQUATIC AI FIX
+            // ═══════════════════════════════════════════════════════════════
+            // Previously the sea serpent used WaterAvoidingRandomStrollGoal —
+            // this is CANONICALLY WRONG. Sea serpents are aquatic predators that
+            // live in deep water. WaterAvoidingRandomStrollGoal causes them to
+            // AVOID water and wander on land. A sea serpent on a beach is absurd.
+            //
+            // Fix: Replaced WaterAvoidingRandomStrollGoal with AquaticWanderGoal.
+            // Sea serpents now wander WITHIN water, preferring deeper water.
+            // If stranded on land, they navigate back to the nearest water.
+            // Added NearestAttackableTargetGoal for soul_fish (prey species).
             case SEA_SERPENT -> {
                 this.goalSelector.addGoal(2, new SpiritBeastHuntGoal(this, 1.1D));
                 this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.1, true));
                 this.goalSelector.addGoal(4, new SpiritBeastSwimGoal(this));
-                this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.7));
+                // FIXED: AquaticWanderGoal replaces WaterAvoidingRandomStrollGoal
+                this.goalSelector.addGoal(7, new AquaticWanderGoal(this, 0.7, 24));
                 this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
                 this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
+                // Sea serpents hunt soul fish — aquatic food chain
+                this.targetSelector.addGoal(3, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(
+                        this, SpiritBeastEntity.class, 10, true, false,
+                        (living) -> living instanceof SpiritBeastEntity prey
+                                && prey.getBeastType() == BeastType.SOUL_FISH));
             }
+            // ═══════════════════════════════════════════════════════════════
+            // CRON-COMPLETIONIST-77: SOUL FISH AQUATIC AI FIX + SCHOOLING
+            // ═══════════════════════════════════════════════════════════════
+            // Previously soul fish used WaterAvoidingRandomStrollGoal — a fish
+            // that avoids water is cosmically wrong. Soul fish are bioluminescent
+            // qi-infused fish that travel in schools through spirit veins.
+            //
+            // Fix: Replaced WaterAvoidingRandomStrollGoal with AquaticWanderGoal.
+            // Added SchoolingGoal — soul fish cluster together in schools using
+            // simplified boid rules (cohesion + separation). This creates the
+            // shimmering schools that cultivators seek out in the novels.
             case SOUL_FISH -> {
+                this.goalSelector.addGoal(3, new SchoolingGoal(this));
                 this.goalSelector.addGoal(4, new SpiritBeastSwimGoal(this));
                 this.goalSelector.addGoal(5, new PanicGoal(this, 1.5D));
-                this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.8));
+                // FIXED: AquaticWanderGoal replaces WaterAvoidingRandomStrollGoal
+                this.goalSelector.addGoal(7, new AquaticWanderGoal(this, 0.8, 8));
                 this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
             }
@@ -454,6 +498,12 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
                 this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
+                // CRON-COMPLETIONIST-77: Tigers ambush herbivores (rabbits, deer) — apex predator food chain
+                this.targetSelector.addGoal(3, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(
+                        this, SpiritBeastEntity.class, 10, true, false,
+                        (living) -> living instanceof SpiritBeastEntity prey
+                                && (prey.getBeastType() == BeastType.RABBIT
+                                || prey.getBeastType() == BeastType.DEER)));
             }
         }
 
