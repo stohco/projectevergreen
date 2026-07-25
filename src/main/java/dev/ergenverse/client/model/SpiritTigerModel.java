@@ -298,22 +298,28 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
 
         if (alert) {
             // ── POSE_ALERT : STALKING CROUCH — tiger drops belly to ground ──
-            // Canon: tigers crouch extremely low when detecting prey, freezing
-            // before the final charge. Body FLAT, head forward and low, ears
-            // pinned flat, tail perfectly still ( predator stealth ).
+            // CRON-COMPLETIONIST-80: Fixed hip-higher-than-shoulder silhouette.
+            // Canon: tigers crouch extremely low when detecting prey, with hindquarters
+            // slightly raised above forequarters — the classic "cat ready to pounce"
+            // silhouette. The forequarters (chest) drop to ground level while the
+            // haunches (hips) remain elevated, coiling the hind legs like springs.
             float breath = (float) Math.sin(ageInTicks * 0.06F) * 0.03F; // near-static
-            this.root.y = -3.0F + breath; // belly ON the ground
-            this.root.xRot = 0.1F; // slight body pitch forward
+            this.root.y = -3.0F + breath; // belly ON the ground (baseline)
+            this.root.xRot = 0.15F; // body pitched forward, weight on front
+            // HIP-HIGHER-THAN-SHOULDER: chest drops, hips stay elevated
+            this.bodyChest.y = -0.8F; // forequarters lower (belly to ground)
+            this.bodyHip.y = -0.2F; // hindquarters 0.6 higher (coiled spring)
             // Front legs splayed wide, bent at shin — wide stalking base
             this.frontLeftThigh.xRot  = 0.3F;
             this.frontRightThigh.xRot = 0.3F;
             this.frontLeftShin.xRot   = 0.6F;
             this.frontRightShin.xRot  = 0.6F;
             // Back legs bent under body — coiled spring for explosive launch
-            this.backLeftThigh.xRot   = 0.5F;
-            this.backRightThigh.xRot  = 0.5F;
-            this.backLeftShin.xRot    = -0.7F;
-            this.backRightShin.xRot   = -0.7F;
+            // Back thighs angle MORE than front because hips are elevated
+            this.backLeftThigh.xRot   = 0.7F;
+            this.backRightThigh.xRot  = 0.7F;
+            this.backLeftShin.xRot    = -0.8F;
+            this.backRightShin.xRot   = -0.8F;
             // Head low and forward — targeting prey through grass
             this.head.xRot = 0.5F;
             this.neck.xRot = 0.4F;

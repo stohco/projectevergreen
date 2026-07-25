@@ -101,7 +101,12 @@ public class SpiritBeastHuntGoal extends Goal {
                 beast.setSpiritPose(SpiritBeastEntity.POSE_CHARGING);
             }
             beast.getLookControl().setLookAt(prey, 30.0F, 30.0F);
-            beast.getNavigation().moveTo(prey, speed * 0.6D);
+            // CRON-COMPLETIONIST-80: Tigers stalk at near-glacial pace (0.3x).
+            // Canon: tigers move extremely slowly when closing distance — barely
+            // perceptible motion. Wolves and other predators use 0.6x.
+            double stalkSpeed = (beast.getBeastType() == SpiritBeastEntity.BeastType.TIGER)
+                    ? speed * 0.3D : speed * 0.6D;
+            beast.getNavigation().moveTo(prey, stalkSpeed);
 
             if (beast.distanceToSqr(prey) < 9.0D || stateTimer <= 0) {
                 state = 2; // switch to charging
