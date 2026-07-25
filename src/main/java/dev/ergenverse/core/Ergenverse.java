@@ -231,6 +231,10 @@ public final class Ergenverse {
         // a combat event is published. NPC kills also publish semantic act_of_cruelty
         // if the target was severely weakened. Per the 2026-07-23 event-sourced pivot.
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.simulation.action.PlayerCombatBridge.class);
+        // CRON-COMPLETIONIST-77: PlayerItemUseBridge — generic mod item use flows through WorldEventBus.
+        // Catches any ergenverse mod item use that doesn't self-publish events (scrolls,
+        // banners, generic materials) so the simulation observes all player actions.
+        MinecraftForge.EVENT_BUS.register(dev.ergenverse.simulation.action.PlayerItemUseBridge.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.SectMissionInteraction.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.LectureInteraction.class);
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.advanced.AdvancedMechanicsCommand.class);
@@ -403,6 +407,15 @@ public final class Ergenverse {
                     new dev.ergenverse.simulation.action.OpportunityClaimSubscriber());
             dev.ergenverse.simulation.event.WorldEventBus.subscribe(
                     new dev.ergenverse.wanglin.ai.reasoning.WangLinSemanticSubscriber());
+            // ── Wang Lin Reasoning Engine — SemanticEventReactor ──
+            // CRON-COMPLETIONIST-77: The SemanticEventReactor was defined as an inner
+            // class of WangLinReasoningEngine but NEVER registered on the bus. This
+            // meant Wang Lin's 6-factor reasoning witness counters (mercyWitnessed,
+            // crueltyWitnessed, promiseBroken, recklessReveal, techniqueNoted) were
+            // never populated from events. Wang Lin's opinion was blind to deeds.
+            // Now his reasoning is truly event-driven.
+            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+                    new dev.ergenverse.wanglin.ai.reasoning.WangLinReasoningEngine.SemanticEventReactor());
             // ── General NPC Semantic Relationship Wiring (CRON-COMPLETIONIST) ──
             // All NPCs (not just Wang Lin) now update their multi-axis relationship
             // graphs when they witness semantic events. Per Art XLI §2 (simulation
@@ -421,9 +434,9 @@ public final class Ergenverse {
                     + "+ ActivityInterruption + Memory + Chronicle + HistorySubscriber "
                     + "+ RelationshipEngine + OpportunityGenerator + BeliefFormation "
                     + "+ ExpectationObserver + ReputationObserver + OpportunityClaimSubscriber "
-                    + "+ WangLinSemanticSubscriber + NpcSemanticRelationshipSubscriber "
-                    + "+ OpportunityCarrierSubscriber "
-                    + "(event-sourced + belief + expectation + reputation + opportunity-claim + wang-lin-cognition + general-npc-relationship + opportunity-carrier).");
+                    + "+ WangLinSemanticSubscriber + SemanticEventReactor + NpcSemanticRelationshipSubscriber "
+                    + "+ OpportunityCarrierSubscriber + PlayerItemUseBridge "
+                    + "(event-sourced + belief + expectation + reputation + opportunity-claim + wang-lin-cognition + wang-lin-reasoning-reactor + general-npc-relationship + opportunity-carrier + player-item-use).");
             // Art XLII/XLIII: seed the chronicle opening + canon divergence ledger on world load.
             // The chronicle's t₀ entry is the immutable "world at the moment the player arrives" record.
             dev.ergenverse.history.WorldChronicle chronicle =
