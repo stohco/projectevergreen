@@ -170,120 +170,124 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
         PartDefinition leftWing = root.addOrReplaceChild("left_wing",
                 CubeListBuilder.create(),
                 PartPose.offset(-1.0F, 9.0F, 0.0F));
+        // CRON-COMPLETIONIST-63: Thinner wing bones (0.5px instead of 1.0px)
         PartDefinition leftShoulder = leftWing.addOrReplaceChild("shoulder",
                 CubeListBuilder.create().texOffs(0, 12)
-                        .addBox(-5.0F, -0.5F, -2.0F, 5.0F, 1.0F, 4.0F),
+                        .addBox(-5.0F, -0.25F, -2.0F, 5.0F, 0.5F, 4.0F),
                 PartPose.ZERO);
         PartDefinition leftForearm = leftShoulder.addOrReplaceChild("forearm",
                 CubeListBuilder.create().texOffs(0, 18)
-                        .addBox(-5.0F, -0.5F, -2.0F, 5.0F, 1.0F, 4.0F),
+                        .addBox(-5.0F, -0.25F, -2.0F, 5.0F, 0.5F, 4.0F),
                 PartPose.offset(-5.0F, 0.0F, 0.0F));
         PartDefinition leftHand = leftForearm.addOrReplaceChild("hand",
                 CubeListBuilder.create().texOffs(0, 24)
-                        .addBox(-4.0F, -0.5F, -2.0F, 4.0F, 1.0F, 4.0F),
+                        .addBox(-4.0F, -0.25F, -2.0F, 4.0F, 0.5F, 4.0F),
                 PartPose.offset(-5.0F, 0.0F, 0.0F));
-        // CRON-COMPLETIONIST-68: 7 tapered primaries with angular fan spread
-        // Width tapers: 8.0 -> 7.5 -> 7.0 -> 6.5 -> 6.0 -> 5.5 -> 5.0
-        // zRot fans outward: -0.12 -> -0.08 -> -0.04 -> 0 -> 0.04 -> 0.08 -> 0.12
+        // CRON-COMPLETIONIST-63: 7 wide flat vane feathers (wide z, thin y)
+        // Each feather is now a flat paddle shape instead of a square stick.
+        // Vane width (z): 2.5 -> 2.3 -> 2.1 -> 2.0 -> 1.8 -> 1.6 -> 1.4
+        // Vane thickness (y): 0.4 -> 0.35 -> 0.3 -> 0.3 -> 0.25 -> 0.25 -> 0.2
+        // Length taper preserved: 8.0 -> 7.5 -> 7.0 -> 6.5 -> 6.0 -> 5.5 -> 5.0
         leftHand.addOrReplaceChild("feather1",
                 CubeListBuilder.create().texOffs(20, 12)
-                        .addBox(-8.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
+                        .addBox(-8.0F, -0.2F, -1.25F, 8.0F, 0.4F, 2.5F),
                 PartPose.offsetAndRotation(-3.0F, 0.0F, -2.0F, 0.0F, 0.0F, -0.12F));
         leftHand.addOrReplaceChild("feather2",
                 CubeListBuilder.create().texOffs(20, 16)
-                        .addBox(-7.5F, -0.45F, -0.45F, 7.5F, 0.9F, 0.9F),
+                        .addBox(-7.5F, -0.175F, -1.15F, 7.5F, 0.35F, 2.3F),
                 PartPose.offsetAndRotation(-3.0F, 0.0F, -1.0F, 0.0F, 0.0F, -0.08F));
         leftHand.addOrReplaceChild("feather3",
                 CubeListBuilder.create().texOffs(20, 20)
-                        .addBox(-7.0F, -0.4F, -0.4F, 7.0F, 0.8F, 0.8F),
+                        .addBox(-7.0F, -0.15F, -1.05F, 7.0F, 0.3F, 2.1F),
                 PartPose.offsetAndRotation(-3.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.04F));
         leftHand.addOrReplaceChild("feather4",
                 CubeListBuilder.create().texOffs(20, 24)
-                        .addBox(-6.5F, -0.35F, -0.35F, 6.5F, 0.7F, 0.7F),
+                        .addBox(-6.5F, -0.15F, -1.0F, 6.5F, 0.3F, 2.0F),
                 PartPose.ZERO);
         leftHand.addOrReplaceChild("feather5",
                 CubeListBuilder.create().texOffs(20, 28)
-                        .addBox(-6.0F, -0.3F, -0.3F, 6.0F, 0.6F, 0.6F),
+                        .addBox(-6.0F, -0.125F, -0.9F, 6.0F, 0.25F, 1.8F),
                 PartPose.offsetAndRotation(-3.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.04F));
         leftHand.addOrReplaceChild("feather6",
                 CubeListBuilder.create().texOffs(20, 32)
-                        .addBox(-5.5F, -0.25F, -0.25F, 5.5F, 0.5F, 0.5F),
+                        .addBox(-5.5F, -0.125F, -0.8F, 5.5F, 0.25F, 1.6F),
                 PartPose.offsetAndRotation(-3.0F, 0.0F, 2.0F, 0.0F, 0.0F, 0.08F));
         leftHand.addOrReplaceChild("feather7",
                 CubeListBuilder.create().texOffs(20, 36)
-                        .addBox(-5.0F, -0.2F, -0.2F, 5.0F, 0.4F, 0.4F),
+                        .addBox(-5.0F, -0.1F, -0.7F, 5.0F, 0.2F, 1.4F),
                 PartPose.offsetAndRotation(-3.0F, 0.0F, 3.0F, 0.0F, 0.0F, 0.12F));
-        // Secondary coverts: small overlapping feathers above primaries
+        // CRON-COMPLETIONIST-63: Coverts also wider-and-thinner (flat vane shape)
         leftHand.addOrReplaceChild("covert1",
                 CubeListBuilder.create().texOffs(32, 12)
-                        .addBox(-5.0F, -0.3F, -0.3F, 5.0F, 0.6F, 0.6F),
+                        .addBox(-5.0F, -0.15F, -0.6F, 5.0F, 0.3F, 1.2F),
                 PartPose.offsetAndRotation(-2.0F, -0.5F, -1.5F, 0.0F, 0.0F, -0.05F));
         leftHand.addOrReplaceChild("covert2",
                 CubeListBuilder.create().texOffs(32, 16)
-                        .addBox(-4.5F, -0.25F, -0.25F, 4.5F, 0.5F, 0.5F),
+                        .addBox(-4.5F, -0.125F, -0.5F, 4.5F, 0.25F, 1.0F),
                 PartPose.offsetAndRotation(-2.0F, -0.5F, 0.0F, 0.0F, 0.0F, 0.0F));
         leftHand.addOrReplaceChild("covert3",
                 CubeListBuilder.create().texOffs(32, 20)
-                        .addBox(-4.0F, -0.2F, -0.2F, 4.0F, 0.4F, 0.4F),
+                        .addBox(-4.0F, -0.1F, -0.4F, 4.0F, 0.2F, 0.8F),
                 PartPose.offsetAndRotation(-2.0F, -0.5F, 1.5F, 0.0F, 0.0F, 0.05F));
 
         // ── right wing : mirror ──────────────────────────────────────────
         PartDefinition rightWing = root.addOrReplaceChild("right_wing",
                 CubeListBuilder.create(),
                 PartPose.offset(1.0F, 9.0F, 0.0F));
+        // CRON-COMPLETIONIST-63: Thinner right wing bones
         PartDefinition rightShoulder = rightWing.addOrReplaceChild("shoulder",
                 CubeListBuilder.create().texOffs(0, 32)
-                        .addBox(0.0F, -0.5F, -2.0F, 5.0F, 1.0F, 4.0F),
+                        .addBox(0.0F, -0.25F, -2.0F, 5.0F, 0.5F, 4.0F),
                 PartPose.ZERO);
         PartDefinition rightForearm = rightShoulder.addOrReplaceChild("forearm",
                 CubeListBuilder.create().texOffs(0, 38)
-                        .addBox(0.0F, -0.5F, -2.0F, 5.0F, 1.0F, 4.0F),
+                        .addBox(0.0F, -0.25F, -2.0F, 5.0F, 0.5F, 4.0F),
                 PartPose.offset(5.0F, 0.0F, 0.0F));
         PartDefinition rightHand = rightForearm.addOrReplaceChild("hand",
                 CubeListBuilder.create().texOffs(0, 44)
-                        .addBox(0.0F, -0.5F, -2.0F, 4.0F, 1.0F, 4.0F),
+                        .addBox(0.0F, -0.25F, -2.0F, 4.0F, 0.5F, 4.0F),
                 PartPose.offset(5.0F, 0.0F, 0.0F));
-        // CRON-COMPLETIONIST-68: 7 tapered primaries with angular fan spread (mirror)
+        // CRON-COMPLETIONIST-63: 7 wide flat vane feathers (mirror)
         rightHand.addOrReplaceChild("feather1",
                 CubeListBuilder.create().texOffs(20, 32)
-                        .addBox(0.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
+                        .addBox(0.0F, -0.2F, -1.25F, 8.0F, 0.4F, 2.5F),
                 PartPose.offsetAndRotation(3.0F, 0.0F, -2.0F, 0.0F, 0.0F, 0.12F));
         rightHand.addOrReplaceChild("feather2",
                 CubeListBuilder.create().texOffs(20, 36)
-                        .addBox(0.5F, -0.45F, -0.45F, 7.5F, 0.9F, 0.9F),
+                        .addBox(0.5F, -0.175F, -1.15F, 7.5F, 0.35F, 2.3F),
                 PartPose.offsetAndRotation(3.0F, 0.0F, -1.0F, 0.0F, 0.0F, 0.08F));
         rightHand.addOrReplaceChild("feather3",
                 CubeListBuilder.create().texOffs(20, 40)
-                        .addBox(0.5F, -0.4F, -0.4F, 7.0F, 0.8F, 0.8F),
+                        .addBox(0.5F, -0.15F, -1.05F, 7.0F, 0.3F, 2.1F),
                 PartPose.offsetAndRotation(3.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.04F));
         rightHand.addOrReplaceChild("feather4",
                 CubeListBuilder.create().texOffs(20, 44)
-                        .addBox(0.0F, -0.35F, -0.35F, 6.5F, 0.7F, 0.7F),
+                        .addBox(0.0F, -0.15F, -1.0F, 6.5F, 0.3F, 2.0F),
                 PartPose.ZERO);
         rightHand.addOrReplaceChild("feather5",
                 CubeListBuilder.create().texOffs(20, 48)
-                        .addBox(0.0F, -0.3F, -0.3F, 6.0F, 0.6F, 0.6F),
+                        .addBox(0.0F, -0.125F, -0.9F, 6.0F, 0.25F, 1.8F),
                 PartPose.offsetAndRotation(3.0F, 0.0F, 1.0F, 0.0F, 0.0F, -0.04F));
         rightHand.addOrReplaceChild("feather6",
                 CubeListBuilder.create().texOffs(20, 52)
-                        .addBox(0.0F, -0.25F, -0.25F, 5.5F, 0.5F, 0.5F),
+                        .addBox(0.0F, -0.125F, -0.8F, 5.5F, 0.25F, 1.6F),
                 PartPose.offsetAndRotation(3.0F, 0.0F, 2.0F, 0.0F, 0.0F, -0.08F));
         rightHand.addOrReplaceChild("feather7",
                 CubeListBuilder.create().texOffs(20, 56)
-                        .addBox(0.0F, -0.2F, -0.2F, 5.0F, 0.4F, 0.4F),
+                        .addBox(0.0F, -0.1F, -0.7F, 5.0F, 0.2F, 1.4F),
                 PartPose.offsetAndRotation(3.0F, 0.0F, 3.0F, 0.0F, 0.0F, -0.12F));
-        // Secondary coverts (mirror)
+        // CRON-COMPLETIONIST-63: Coverts mirror (wider-and-thinner)
         rightHand.addOrReplaceChild("covert1",
                 CubeListBuilder.create().texOffs(32, 32)
-                        .addBox(0.0F, -0.3F, -0.3F, 5.0F, 0.6F, 0.6F),
+                        .addBox(0.0F, -0.15F, -0.6F, 5.0F, 0.3F, 1.2F),
                 PartPose.offsetAndRotation(2.0F, -0.5F, -1.5F, 0.0F, 0.0F, 0.05F));
         rightHand.addOrReplaceChild("covert2",
                 CubeListBuilder.create().texOffs(32, 36)
-                        .addBox(0.0F, -0.25F, -0.25F, 4.5F, 0.5F, 0.5F),
+                        .addBox(0.0F, -0.125F, -0.5F, 4.5F, 0.25F, 1.0F),
                 PartPose.offsetAndRotation(2.0F, -0.5F, 0.0F, 0.0F, 0.0F, 0.0F));
         rightHand.addOrReplaceChild("covert3",
                 CubeListBuilder.create().texOffs(32, 40)
-                        .addBox(0.0F, -0.2F, -0.2F, 4.0F, 0.4F, 0.4F),
+                        .addBox(0.0F, -0.1F, -0.4F, 4.0F, 0.2F, 0.8F),
                 PartPose.offsetAndRotation(2.0F, -0.5F, 1.5F, 0.0F, 0.0F, -0.05F));
 
         // ── tail : short black fan projecting past wings ───────────────
