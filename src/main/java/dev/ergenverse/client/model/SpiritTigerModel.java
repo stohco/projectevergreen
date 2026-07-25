@@ -109,7 +109,8 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
         this.bodyChest = root.getChild("body_chest");
         this.bodyHip = root.getChild("body_hip");
         this.neck = root.getChild("neck");
-        this.head = root.getChild("head");
+        // CRON-COMPLETIONIST-78: Fix head/neck hierarchy — head must be child of neck
+        this.head = this.neck.getChild("head");
         this.jaw = this.head.getChild("jaw");
         this.earLeft = this.head.getChild("ear_left");
         this.earRight = this.head.getChild("ear_right");
@@ -152,16 +153,19 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offset(0.0F, 5.0F, 2.5F));
 
         // ── neck : very short, thick — barely visible (big cat anatomy) ────
-        root.addOrReplaceChild("neck",
+        // CRON-COMPLETIONIST-78: Capture neck PartDefinition for head parenting
+        PartDefinition neckDef = root.addOrReplaceChild("neck",
                 CubeListBuilder.create().texOffs(20, 0)
                         .addBox(-1.5F, -1.0F, -1.5F, 3.0F, 2.0F, 2.5F, softDeform),
                 PartPose.offsetAndRotation(0.0F, 3.5F, -6.0F, -0.3F, 0.0F, 0.0F));
 
         // ── head : broad rounded skull + wide cheeks + rounded ears ──────
-        PartDefinition head = root.addOrReplaceChild("head",
+        PartDefinition head = neckDef.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 22)
                         .addBox(-2.0F, -1.8F, -1.8F, 4.0F, 3.6F, 3.6F, softDeform), // broad skull
-                PartPose.offset(0.0F, -0.5F, -3.5F));
+                // CRON-COMPLETIONIST-78: offset relative to neck pivot (0,3.5,-6.0):
+                // root-space (0,-0.5,-3.5) → relative (0,-4.0,2.5)
+                PartPose.offset(0.0F, -4.0F, 2.5F));
 
         // snout : shorter and wider than wolf's
         head.addOrReplaceChild("jaw",
