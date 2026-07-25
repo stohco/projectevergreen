@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "ergenverse:item/flying_sword_3d",
   "textures": {
     "layer0": "ergenverse:item/wealth_flying_sword"
   }

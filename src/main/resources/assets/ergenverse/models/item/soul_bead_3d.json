@@ -1,0 +1,70 @@
+{
+  "credit": "Ergenverse — 3D soul bead model",
+  "textures": {
+    "layer0": "ergenverse:item/soul_bead"
+  },
+  "elements": [
+    {
+      "name": "bead",
+      "from": [5, 5, 5],
+      "to": [11, 11, 11],
+      "faces": {
+        "north": {"uv": [5, 5, 11, 11], "texture": "#layer0"},
+        "east":  {"uv": [5, 5, 11, 11], "texture": "#layer0"},
+        "south": {"uv": [5, 5, 11, 11], "texture": "#layer0"},
+        "west":  {"uv": [5, 5, 11, 11], "texture": "#layer0"},
+        "up":    {"uv": [5, 5, 11, 11], "texture": "#layer0"},
+        "down":  {"uv": [5, 5, 11, 11], "texture": "#layer0"}
+      }
+    },
+    {
+      "name": "glow_top",
+      "from": [6, 11, 6],
+      "to": [10, 12, 10],
+      "faces": {
+        "up":    {"uv": [6, 6, 10, 10], "texture": "#layer0"},
+        "north": {"uv": [6, 4, 10, 5], "texture": "#layer0"},
+        "east":  {"uv": [6, 4, 10, 5], "texture": "#layer0"},
+        "south": {"uv": [6, 4, 10, 5], "texture": "#layer0"},
+        "west":  {"uv": [6, 4, 10, 5], "texture": "#layer0"}
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [0, 0, 0],
+      "translation": [0, 4, 0],
+      "scale": [0.6, 0.6, 0.6]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [0, 0, 0],
+      "translation": [0, 4, 0],
+      "scale": [0.6, 0.6, 0.6]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 0, 0],
+      "translation": [0, 5, 0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 0, 0],
+      "translation": [0, 5, 0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "gui": {
+      "rotation": [0, 0, 0],
+      "translation": [0, 0, 0],
+      "scale": [0.7, 0.7, 0.7]
+    },
+    "ground": {
+      "rotation": [0, 0, 0],
+      "translation": [0, 2, 0],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "fixed": {
+      "rotation": [0, 180, 0],
+      "translation": [0, 3, 0],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "ergenverse:item/soul_bead_3d",
   "textures": {
     "layer0": "ergenverse:item/soul_bead"
   }
