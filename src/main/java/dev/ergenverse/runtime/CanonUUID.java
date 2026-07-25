@@ -62,8 +62,10 @@ public final class CanonUUID {
     public static final UUID DA_NIU = of("npc:da_niu");
     public static final UUID LI_MUWAN = of("npc:li_muwan");
     public static final UUID WANG_ZHUO = of("npc:wang_zhuo");
+    // CRON-69 canon fact-check: surname is 藤 (vine); the young antagonist is
+    // 藤厉 (Teng Li), NOT "Teng Lijun" — there is no "军" in the canon name.
     public static final UUID TENG_HUAYUAN = of("npc:teng_huayuan");
-    public static final UUID TENG_LIJUN = of("npc:teng_lijun");
+    public static final UUID TENG_LI = of("npc:teng_li");
     public static final UUID SITU_NAN = of("npc:situ_nan");
     public static final UUID WANG_HAO = of("npc:wang_hao");
 

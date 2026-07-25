@@ -38,7 +38,7 @@ import dev.ergenverse.runtime.WorldRuntime;
  *   <li>Places terrain blocks (from the blueprint's terrain definition, or
  *       from the deterministic noise base layer)</li>
  *   <li>Places structure blocks (every block hand-authored at fixed coords)</li>
- *   <li>Applies simulation + player deltas (via {@link dev.ergenverse.runtime.DeltaManager})</li>
+ *   <li>Applies simulation + player deltas (via the {@link dev.ergenverse.runtime.layer.CompositeWorldLayer})</li>
  *   <li>Returns the materialized chunk</li>
  * </ol>
  *
@@ -48,17 +48,15 @@ import dev.ergenverse.runtime.WorldRuntime;
  *   Er Gen:   Chunk → Blueprint.query() → Terrain + Structures + Deltas → Done
  * </pre>
  *
- * <h2>Three-layer delta model (2026-07-26)</h2>
- * <p>The materializer uses the {@link dev.ergenverse.runtime.DeltaManager}
- * to compose three layers:
+ * <h2>Composable-layer model (CRON-69 refactor)</h2>
+ * <p>The materializer is a stateless pure function (point 6). It asks the
+ * {@link dev.ergenverse.runtime.layer.CompositeWorldLayer} what each layer
+ * contributes to the chunk (point 7), then applies those contributions in
+ * materialization order (blueprint structures → simulation changes → player
+ * changes). Resolution priority PLAYER &gt; SIMULATION &gt; CANON is expressed
+ * purely by layer order in the composite — no hardcoded priority here.
  * <pre>
- *   Layer 1 (Immutable): PlanetSuzakuBlueprint — canon, never changes
- *   Layer 2 (Mutable):   SimulationDelta — runtime simulation changes
- *   Layer 3 (Player):    PlayerDelta — player modifications
- * </pre>
- * Block resolution priority: PLAYER > SIMULATION > CANON.
- * <pre>
- *   Load Blueprint → Apply Simulation Changes → Apply Player Changes → Chunk ready
+ *   Load Blueprint (structures) → Apply Simulation Changes → Apply Player Changes → Chunk ready
  * </pre>
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>

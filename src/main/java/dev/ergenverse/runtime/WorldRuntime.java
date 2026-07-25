@@ -1,68 +1,63 @@
 package dev.ergenverse.runtime;
 
+import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
+import dev.ergenverse.runtime.layer.BlueprintLayer;
+import dev.ergenverse.runtime.layer.CompositeWorldLayer;
+import dev.ergenverse.runtime.layer.PlayerLayer;
+import dev.ergenverse.runtime.layer.SimulationLayer;
+import dev.ergenverse.runtime.layer.WorldFacade;
+import dev.ergenverse.runtime.layer.WorldLayer;
 import dev.ergenverse.runtime.materialize.ActorMaterializer;
+import dev.ergenverse.runtime.materialize.CanonActorMaterializer;
 import dev.ergenverse.runtime.materialize.ChunkMaterializer;
+import dev.ergenverse.runtime.materialize.PlanetSuzakuChunkMaterializer;
+import dev.ergenverse.runtime.persist.WorldDeltaSavedData;
 import dev.ergenverse.runtime.spatial.Quadtree;
 import dev.ergenverse.runtime.spatial.SpatialIndex;
+import net.minecraft.server.level.ServerLevel;
+
+import java.util.List;
 
 /**
  * WorldRuntime — the central simulation authority for the Er Gen Verse.
  *
- * <p><b>ARCHITECTURE (2026-07-25, refined):</b>
+ * <p><b>ARCHITECTURE (CRON-69, ten-point refactor):</b> the world is now a
+ * composition of {@link WorldLayer}s, journaled by a unified {@link WorldDeltaStore},
+ * and materialized by stateless functions. The user's directive, point by point:
  *
- * <p>The user's directive is clear: "You're writing something closer to
- * Er Gen World Simulator + Minecraft Adapter, where Forge is just the
- * adapter that renders entities, renders blocks, handles input, saves data,
- * plays sounds. Everything else — canon, simulation, actor reasoning,
- * settlements, and world state — belongs to your own engine."
- *
- * <h2>Immutable vs Mutable split</h2>
- * <p>The user's refinement (2026-07-25): "I'd divide it into immutable and
- * mutable. Blueprint contains Terrain, Structures, Countries, Spirit Veins,
- * Roads, Cities, Static formations — those are never simulated. Runtime
- * contains People, Animals, Relationships, Weather, Economy, Events,
- * Politics, Cultivation, Rumors, Memories. Notice terrain disappeared.
- * Terrain isn't 'running.' It's just there."
- *
- * <p>The data flow is:
- * <pre>
- *   PlanetSuzakuBlueprint  (immutable: terrain, structures, countries, veins, roads, cities, formations)
- *           ↓
- *   SpatialIndex           (quadtree — O(log n) queries for chunk materialization)
- *           ↓
- *   WorldRuntime           (mutable: people, animals, relationships, weather, economy, events, cultivation, memories)
- *     ├── NPCRuntime           (actors load, never spawn — materializeActor/dematerializeActor)
- *     ├── SettlementRuntime    (structures instantiated by ChunkMaterializer, not generated)
- *     ├── BeastRuntime         (beasts load, never spawn — same materialize/dematerialize cycle)
- *     ├── RelationshipRuntime  (NPC-to-NPC social graph)
- *     ├── MemoryRuntime        (deep memory, never forgotten)
- *     ├── CultivationRuntime   (knowledge is progression, not XP)
- *     ├── EconomyRuntime       (spirit stones, trade routes, markets)
- *     ├── EventRuntime         (WorldEventBus — simulation nervous system)
- *     └── WeatherRuntime       (canon weather: Snow Domain blizzards, etc.)
- *           ↓
- *   Materializers           (ChunkMaterializer + ActorMaterializer)
- *           ↓
- *   Minecraft Entity/Block Materialization  (chunks loaded from blueprint, actors materialized on chunk load)
- *           ↓
- *   Renderer/UI
- * </pre>
+ * <ol>
+ *   <li><b>One delta language.</b> Every change — block, actor, relationship —
+ *       is a {@link dev.ergenverse.runtime.delta.WorldDelta}. One journal,
+ *       one persistence mechanism.</li>
+ *   <li><b>Provenance, not ownership.</b> {@link Provenance} (CANON/SIMULATION/PLAYER)
+ *       describes where state came from. No one "owns" a mountain.</li>
+ *   <li><b>Composable layers.</b> {@link CompositeWorldLayer} asks layers in
+ *       order; no hardcoded priority in a manager. Insert a QuestLayer later.</li>
+ *   <li><b>No "removed" blocks.</b> Mining = {@code BlockChangeDelta(pos, "minecraft:air", PLAYER)}.
+ *       Air is just a state.</li>
+ *   <li><b>Invisible manager.</b> Gameplay writes {@code runtime.world().setBlock(...)}.
+ *       The {@link WorldFacade} routes to the journal + live level.</li>
+ *   <li><b>Stateless materializer.</b> {@link PlanetSuzakuChunkMaterializer#materialize}
+ *       is a pure function of (chunk, runtime, layers).</li>
+ *   <li><b>Chunk-scoped answers.</b> Each layer answers "what do I contribute to
+ *       this chunk?" — never "regenerate all 65k blocks."</li>
+ *   <li><b>Blueprint never answers getBlock.</b> {@link PlanetSuzakuBlueprint}
+ *       answers at structure granularity; {@link BlueprintLayer#getBlock} returns null.</li>
+ *   <li><b>Deterministic decoration.</b> {@link dev.ergenverse.runtime.worldgen.DeterministicTerrainGenerator}
+ *       fills accents deterministically; handcraft reserved for narrative places.</li>
+ *   <li><b>Milestone.</b> Planet Suzaku loads from Blueprint + Layers; Wang Lin
+ *       materializes; a broken wall persists across reload; a new save resets it.</li>
+ * </ol>
  *
  * <h2>Single-player maximalism (Article XLIII)</h2>
- * <p>One JVM. One save. One player. One authority. There is no server/client
- * split in the architecture — only Simulation Layer → Presentation Layer.
+ * <p>One JVM. One save. One player. One authority. No server/client split in the
+ * architecture — only Simulation Layer → Presentation Layer.
  *
  * <h2>The world as Git</h2>
- * <p>The save is: Blueprint + Simulation history (deltas). NOT Random terrain
- * + Player edits. Chunk generation becomes LOADING via the ChunkMaterializer.
- *
- * <h2>Permanent UUIDs</h2>
- * <p>Every important thing has a permanent identity (see {@link CanonUUID}):
- * NPCs, spirit beasts, artifacts, spirit veins, herb patches, buildings,
- * ancient formations, teleport arrays, named caves, sect halls, important
- * trees, ancient battlefields, storage rings, flying swords. Not entity IDs.
- * Permanent IDs. The simulation references UUIDs; Minecraft entities are
- * materialized views.
+ * <p>The save is: Blueprint (immutable) + WorldDeltaStore (the journal of every
+ * change since day 0). The blueprint is NEVER rewritten; a fresh save starts
+ * from identical canon.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
@@ -76,8 +71,12 @@ public final class WorldRuntime {
     // ── Spatial index for O(log n) chunk queries ──
     private final SpatialIndex<PlanetSuzakuBlueprint.CanonLocation> spatialIndex;
 
-    // ── Delta manager (three-layer world model: Blueprint + Simulation + Player) ──
-    private final DeltaManager deltaManager;
+    // ── The unified delta journal (persistence unit) ──
+    private final WorldDeltaStore deltaStore;
+
+    // ── The composable world layers ──
+    private final CompositeWorldLayer worldLayer;
+    private final WorldFacade worldFacade;
 
     // ── Mutable subsystems (simulation state) ──
     private final NPCRuntime npcs;
@@ -90,9 +89,15 @@ public final class WorldRuntime {
     private final EventRuntime events;
     private final WeatherRuntime weather;
 
-    // ── Materializers (bridge between simulation and Minecraft) ──
+    // ── Materializers (stateless bridges to Minecraft) ──
     private ChunkMaterializer chunkMaterializer;
-    private ActorMaterializer actorMaterializer;
+    private CanonActorMaterializer actorMaterializer;
+
+    // ── The bound Planet Suzaku level (set on initialize) ──
+    private ServerLevel suzakuLevel;
+
+    // ── The persisted delta journal (set on initialize) ──
+    private WorldDeltaSavedData savedData;
 
     private boolean initialized = false;
 
@@ -102,8 +107,19 @@ public final class WorldRuntime {
         this.spatialIndex = new Quadtree<>(
                 -100_000, -100_000, 100_000, 100_000, 8, 12);
 
-        // Three-layer delta manager: Blueprint (immutable) + Simulation + Player
-        this.deltaManager = new DeltaManager(blueprint);
+        // The unified delta journal — one language, one persistence mechanism.
+        this.deltaStore = new WorldDeltaStore();
+
+        // Compose the layers in priority (query) order: PLAYER > SIMULATION > CANON.
+        // Inserting a QuestLayer or TemporaryEventLayer later is a one-line change.
+        this.worldLayer = new CompositeWorldLayer(List.of(
+                new PlayerLayer(deltaStore),
+                new SimulationLayer(deltaStore),
+                new BlueprintLayer(blueprint, spatialIndex)
+        ));
+
+        // The invisible manager — gameplay writes runtime.world().setBlock(...).
+        this.worldFacade = new WorldFacade(deltaStore);
 
         this.npcs = new NPCRuntime(blueprint);
         this.settlements = new SettlementRuntime(blueprint);
@@ -116,11 +132,7 @@ public final class WorldRuntime {
         this.weather = new WeatherRuntime(blueprint);
     }
 
-    /**
-     * Get the singleton WorldRuntime instance. The runtime is initialized
-     * on first access (lazy). In single-player, this happens when the
-     * integrated server starts.
-     */
+    /** Get the singleton WorldRuntime instance (lazy). */
     public static synchronized WorldRuntime get() {
         if (instance == null) {
             instance = new WorldRuntime();
@@ -129,25 +141,22 @@ public final class WorldRuntime {
     }
 
     /**
-     * Initialize the runtime from the canonical blueprint.
+     * Initialize the runtime, bound to the Planet Suzaku server level.
      *
-     * <p>The initialization order matters:
+     * <p>Order:
      * <ol>
-     *   <li>Validate the blueprint (internal consistency)</li>
-     *   <li>Build the spatial index (O(n) build, enables O(log n) queries)</li>
-     *   <li>Register settlement materializers (link builders to blueprint locations)</li>
-     *   <li>Install chunk hooks (ChunkMaterializer + ActorMaterializer)</li>
-     *   <li>Load all actors from the save (or instantiate from blueprint on day 0)</li>
-     *   <li>Start the event bus and weather simulation</li>
+     *   <li>Validate the blueprint</li>
+     *   <li>Build the spatial index</li>
+     *   <li>Bind the facade + actor materializer to the level</li>
+     *   <li>Load (or create) the persisted delta journal</li>
+     *   <li>Register the concrete materializers</li>
+     *   <li>Load mutable subsystems</li>
+     *   <li>Start the event bus and weather</li>
      * </ol>
-     *
-     * <p>Per the user's directive: "The village shouldn't be built after
-     * runtime initializes. The runtime should own building." So this method
-     * registers materializers; the actual block placement happens lazily
-     * when Minecraft requests the relevant chunks.
      */
-    public void initialize() {
+    public void initialize(ServerLevel suzakuLevel) {
         if (initialized) return;
+        this.suzakuLevel = suzakuLevel;
 
         // 1. Validate blueprint
         blueprint.validate();
@@ -155,10 +164,23 @@ public final class WorldRuntime {
         // 2. Build spatial index
         buildSpatialIndex();
 
-        // 3. Register materializers (stub — wired in future rounds)
-        registerMaterializers();
+        // 3. Bind the facade + actor materializer to the live level
+        worldFacade.bind(suzakuLevel);
 
-        // 4. Load mutable subsystems
+        // 4. Load (or create) the persisted delta journal — this fills the
+        //    deltaStore from NBT, so PLAYER/SIMULATION changes survive reload.
+        try {
+            this.savedData = WorldDeltaSavedData.getOrCreate(suzakuLevel, deltaStore);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.error("[Ergenverse] WorldDeltaSavedData load failed: {}", t.getMessage(), t);
+        }
+
+        // 5. Register the concrete, stateless materializers
+        this.chunkMaterializer = new PlanetSuzakuChunkMaterializer();
+        this.actorMaterializer = new CanonActorMaterializer();
+        this.actorMaterializer.bind(suzakuLevel);
+
+        // 6. Load mutable subsystems
         npcs.loadAll();
         settlements.loadAll();
         beasts.loadAll();
@@ -167,49 +189,24 @@ public final class WorldRuntime {
         cultivation.loadAll();
         economy.loadAll();
 
-        // 5. Start event bus + weather
+        // 7. Start event bus + weather
         events.start();
         weather.start();
 
         initialized = true;
+        Ergenverse.LOGGER.info("[Ergenverse] WorldRuntime initialized. Blueprint: {} locations, spatial index: {} entries, delta journal: {} recorded changes.",
+                blueprint.allLocations().size(), spatialIndex.size(), deltaStore.size());
     }
 
     /**
      * Build the spatial index from the blueprint's canonical locations.
-     * This is O(n) — done once at initialization. After this, chunk
-     * materialization queries are O(log n).
+     * O(n) once at init; enables O(log n) chunk materialization queries.
      */
     private void buildSpatialIndex() {
         for (PlanetSuzakuBlueprint.CanonLocation loc : blueprint.allLocations().values()) {
-            // Each location occupies a ~100x100 block footprint centered on its coordinate.
-            // The actual structure size is determined by the settlement builder.
             int half = 50;
             spatialIndex.insert(loc, loc.x - half, loc.z - half, loc.x + half, loc.z + half);
         }
-    }
-
-    /**
-     * Register the chunk and actor materializers. In future rounds, this
-     * will create a PlanetSuzakuChunkMaterializer that queries the spatial
-     * index and places blocks, and a CanonActorMaterializer that
-     * materializes actors by canon UUID.
-     */
-    private void registerMaterializers() {
-        // TODO: Create concrete PlanetSuzakuChunkMaterializer that:
-        //   1. Queries spatialIndex for the chunk's bounds
-        //   2. For each intersecting location, calls the corresponding builder
-        //   3. Applies simulation deltas (changed blocks)
-        // For now, the existing SpawnEventHandler + WangFamilyVillageBuilder
-        // handle village placement. The materializer will replace this.
-        this.chunkMaterializer = null; // wired in future round
-
-        // TODO: Create concrete CanonActorMaterializer that:
-        //   1. Looks up the actor's simulation state by canon UUID
-        //   2. Creates a Minecraft entity (EntityCultivator or SpiritBeastEntity)
-        //   3. Sets the entity's persistence UUID to the canon UUID
-        //   4. Places the entity at its canonical location
-        //   5. On chunk unload, serializes state and destroys the entity
-        this.actorMaterializer = null; // wired in future round
     }
 
     // ── Accessors ──
@@ -217,22 +214,24 @@ public final class WorldRuntime {
     /** The canonical, immutable blueprint for Planet Suzaku. */
     public PlanetSuzakuBlueprint blueprint() { return blueprint; }
 
-    /**
-     * The spatial index for O(log n) chunk queries.
-     * Used by the ChunkMaterializer to find what objects intersect a chunk.
-     */
+    /** The spatial index for O(log n) chunk queries. */
     public SpatialIndex<PlanetSuzakuBlueprint.CanonLocation> spatialIndex() { return spatialIndex; }
 
+    /** The unified delta journal (persistence unit). */
+    public WorldDeltaStore deltaStore() { return deltaStore; }
+
+    /** The composable world layers (PLAYER > SIMULATION > CANON). */
+    public CompositeWorldLayer worldLayer() { return worldLayer; }
+
     /**
-     * The delta manager — composes the three-layer world model.
-     * <pre>
-     *   Layer 1 (Immutable): PlanetSuzakuBlueprint — canon, never changes
-     *   Layer 2 (Mutable):   SimulationDelta — runtime simulation changes
-     *   Layer 3 (Player):    PlayerDelta — player modifications
-     * </pre>
-     * Block resolution: PLAYER > SIMULATION > CANON.
+     * The invisible world-write facade. Gameplay code calls
+     * {@code runtime.world().setPlayerBlock(...)} or {@code setSimulationBlock(...)} —
+     * never touches the journal or layers directly.
      */
-    public DeltaManager deltaManager() { return deltaManager; }
+    public WorldFacade world() { return worldFacade; }
+
+    /** The bound Planet Suzaku server level, or null before initialize. */
+    public ServerLevel suzakuLevel() { return suzakuLevel; }
 
     public NPCRuntime npcs() { return npcs; }
     public SettlementRuntime settlements() { return settlements; }

@@ -2,31 +2,49 @@ package dev.ergenverse.runtime;
 
 import dev.ergenverse.core.Ergenverse;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * PlanetSuzakuBlueprint — the canonical, immutable, hand-authored definition
+ * PlanetSuzakuBlueprint — the canonical, immutable, hand-authored <i>description</i>
  * of Planet Suzaku (Wang Lin's home cultivation world).
  *
- * <p><b>This is the source of truth.</b> Not the chunk generator. Not the
- * world save. Not the entity data. The blueprint defines what EXISTS; the
- * simulation defines what CHANGES; the save stores only the deltas.
+ * <p><b>This is the source of truth.</b> Not the chunk generator. Not the world
+ * save. Not the entity data. The blueprint defines what EXISTS; the simulation
+ * defines what CHANGES; the save stores only the deltas.
  *
- * <p>Canon: Planet Suzaku is a third-tier (later elevated) cultivation planet
- * in the Vermilion Bird Star System of the Sealed Realm inside the Cave World.
- * It contains multiple countries, the Sea of Devils (east), and the Forest of
- * Distorted Divine Sense (embedded in Zhao). The Vermilion Bird Dynasty rules
- * from the central continent. Spirit veins run through the mountains. The
- * planet is sealed around the Cultivation Planet Crystal (inside the Suzaku
- * Tomb, underground).
+ * <p><b>Canon (CRON-69 fact-checked against the novel / Baidu Baike / Fandom):</b>
+ * Planet Suzaku (朱雀星) is a 6th-level cultivation planet in the Kun Xu star
+ * domain. The early story takes place on it. Wang Lin (王林) is born in a remote
+ * mountain village in Zhao Country (赵国). He joins Heng Yue Sect (恒岳派) on
+ * Heng Yue Mountain. The Teng family (藤家 — note 藤, vine, not 滕) is a powerful
+ * family in Zhao; its ancestor Teng Huayuan (藤化元) is a Nascent Soul cultivator
+ * and early antagonist; the young antagonist is Teng Li (藤厉), not "Teng Lijun".
+ * Li Muwan (李慕婉) is from Luo He Sect (洛河门) in Huo Fen Country. Situ Nan
+ * (司徒南) is the 2nd-generation Suzaku Son (朱雀子) of Suzaku Country (朱雀国).
+ * The Sea of Devils is canonically 修魔海 (Xiu Mo Hai). The Snow Country is
+ * 雪域国 (Snow Domain Country). The Suzaku Tomb (朱雀墓) is the underground
+ * inheritance site of the Suzaku Son lineage.
+ *
+ * <h2>The blueprint is a description, not a block array (CRON-69, point 8)</h2>
+ * <p>"PlanetSuzakuBlueprint should never answer 'getBlock'. … Instead I'd make
+ * the blueprint answer higher-level questions: queryTerrain(...),
+ * queryStructures(...), queryActors(...), querySpiritVeins(...). Because the
+ * blueprint isn't actually a giant block array. It's a description of the
+ * world." So this class exposes <b>query</b> methods that return canon objects
+ * (locations, actors, spirit veins) — never a per-block {@code getBlock}. The
+ * {@link dev.ergenverse.runtime.layer.BlueprintLayer} and the
+ * {@link dev.ergenverse.runtime.materialize.PlanetSuzakuChunkMaterializer}
+ * consume these queries; the actual blocks are placed by hand-authored builders.
  *
  * <h2>Canonical geography (fixed coordinates, deterministic seed)</h2>
  * <p>Every location has a fixed canonical coordinate. The deterministic seed
  * ({@link dev.ergenverse.spawn.DeterministicSeedHandler#CANON_SEED}) ensures
- * the noise-generated terrain matches these coordinates. The blueprint
- * overlays hand-authored structures at these coordinates.
+ * the noise-generated base terrain is identical every playthrough, so these
+ * coordinates always sit in the same geography.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
@@ -44,14 +62,9 @@ public final class PlanetSuzakuBlueprint {
     // ════════════════════════════════════════════════════════════════════
 
     /**
-     * A canonical location on Planet Suzaku. Each location has:
-     * <ul>
-     *   <li>A permanent {@code id} (used as UUID seed — never changes)</li>
-     *   <li>A {@code name} (canon name from the novels)</li>
-     *   <li>Fixed {@code x}, {@code y}, {@code z} coordinates</li>
-     *   <li>A {@code category} (settlement, sect, ruin, geographic, etc.)</li>
-     *   <li>A {@code canonReference} (which novel chapter describes it)</li>
-     * </ul>
+     * A canonical location on Planet Suzaku. Each location has a permanent
+     * {@code id}, a canon {@code name}, fixed coordinates, a {@code category},
+     * and a {@code canonReference} citing the novel.
      */
     public static final class CanonLocation {
         public final String id;
@@ -72,85 +85,96 @@ public final class PlanetSuzakuBlueprint {
         }
     }
 
-    // ── Wang Family Village (Wang Lin's birthplace) ──
+    // ── Wang Family Village (Wang Lin's birthplace; 赵国某偏僻小山村) ──
     public static final CanonLocation WANG_FAMILY_VILLAGE =
             new CanonLocation("wang_family_village", "Wang Family Village",
-                    3842, 0, -1184, "settlement", "Renegade Immortal Ch. 1");
+                    3842, 0, -1184, "settlement", "RI Ch.1 — Zhao Country remote mountain village (王氏)");
 
-    // ── Heng Yue Sect (where Wang Lin joins as a disciple) ──
+    // ── Heng Yue Sect (恒岳派 on 恒岳山, Zhao Country's largest sect, declined) ──
     public static final CanonLocation HENG_YUE_SECT =
             new CanonLocation("heng_yue_sect", "Heng Yue Sect",
-                    4200, 0, -1400, "sect", "Renegade Immortal Ch. 3-15");
+                    4200, 0, -1400, "sect", "RI Ch.3-15 — 恒岳派, on 恒岳山");
 
-    // ── Teng Family City (city near Heng Yue Sect) ──
+    // ── Teng Family City (藤家城 — note 藤, vine) ──
     public static final CanonLocation TENG_FAMILY_CITY =
-            new CanonLocation("teng_family_city", "Teng Family City",
-                    3500, 0, -900, "settlement", "Renegade Immortal Ch. 20-35");
+            new CanonLocation("teng_family_city", "Teng Family City (藤家城)",
+                    3500, 0, -900, "settlement", "RI Ch.20-35 — 藤家, Zhao Country");
 
-    // ── Tian Shui City (major trade city) ──
+    // ── Tian Shui City (天水城 — largest city in northern Zhao Country) ──
     public static final CanonLocation TIAN_SHUI_CITY =
-            new CanonLocation("tian_shui_city", "Tian Shui City",
-                    2600, 0, -2000, "settlement", "Renegade Immortal Ch. 50-65");
+            new CanonLocation("tian_shui_city", "Tian Shui City (天水城)",
+                    2600, 0, -2000, "settlement", "RI Ch.50-65 — northern Zhao Country military city");
 
-    // ── Qilin City (city in Qilin country) ──
+    // ── Qilin City (麒麟城 — a 修魔海 beast-city) ──
     public static final CanonLocation QILIN_CITY =
-            new CanonLocation("qilin_city", "Qilin City",
-                    1800, 0, -2600, "settlement", "Renegade Immortal Ch. 80-95");
+            new CanonLocation("qilin_city", "Qilin City (麒麟城)",
+                    1800, 0, -2600, "settlement", "RI 修魔海 arc — 麒麟兽城");
 
-    // ── Nan Dou City (southern city) ──
+    // ── Nan Dou City (南斗城 — a 修魔海 beast-city on an ancient beast) ──
     public static final CanonLocation NAN_DOU_CITY =
-            new CanonLocation("nan_dou_city", "Nan Dou City",
-                    4400, 0, -2400, "settlement", "Renegade Immortal Ch. 100-115");
+            new CanonLocation("nan_dou_city", "Nan Dou City (南斗城)",
+                    4400, 0, -2400, "settlement", "RI 修魔海 arc — beast-city");
 
-    // ── Snow Domain Capital (Snow Country capital) ──
+    // ── Snow Domain Capital (雪域国 — Snow Domain Country) ──
     public static final CanonLocation SNOW_DOMAIN_CAPITAL =
-            new CanonLocation("snow_domain_capital", "Snow Domain Capital",
-                    2000, 0, 3200, "settlement", "Renegade Immortal Ch. 200-220");
+            new CanonLocation("snow_domain_capital", "Snow Domain Capital (雪域国)",
+                    2000, 0, 3200, "settlement", "RI Ch.200-220 — 雪域国, home of genius 红蝶");
 
-    // ── Vermilion Bird Capital (imperial capital) ──
+    // ── Vermilion Bird Capital (朱雀国 — seat of the 朱雀子 / Suzaku Son) ──
     public static final CanonLocation VERMILION_BIRD_CAPITAL =
-            new CanonLocation("vermilion_bird_capital", "Vermilion Bird Imperial City",
-                    0, 0, 0, "settlement", "Renegade Immortal Ch. 300-320");
+            new CanonLocation("vermilion_bird_capital", "Vermilion Bird Capital (朱雀国)",
+                    0, 0, 0, "settlement", "RI Ch.300-320 — 朱雀国, seat of the 朱雀子; mod infers a capital city");
 
-    // ── Soul Refining Sect ──
+    // ── Soul Refining Sect (炼魂宗 — patriarch 遁天 / Dun Tian) ──
     public static final CanonLocation SOUL_REFINING_SECT =
-            new CanonLocation("soul_refining_sect", "Soul Refining Sect",
-                    -1600, 0, -1800, "sect", "Renegade Immortal Ch. 250-270");
+            new CanonLocation("soul_refining_sect", "Soul Refining Sect (炼魂宗)",
+                    -1600, 0, -1800, "sect", "RI Ch.250-270 — 炼魂宗, treasure 十亿尊魂幡");
 
-    // ── Xuan Dao Sect ──
+    // ── Xuan Dao Sect (玄道宗 — patriarch 朴南子 destroys Heng Yue) ──
     public static final CanonLocation XUAN_DAO_SECT =
-            new CanonLocation("xuan_dao_sect", "Xuan Dao Sect",
-                    -2400, 0, 1400, "sect", "Renegade Immortal Ch. 280-300");
+            new CanonLocation("xuan_dao_sect", "Xuan Dao Sect (玄道宗)",
+                    -2400, 0, 1400, "sect", "RI Ch.280-300 — 玄道宗");
 
-    // ── Luo He Sect ──
+    // ── Luo He Sect (洛河门 — Li Muwan's original sect, in 火焚国) ──
     public static final CanonLocation LUO_HE_SECT =
-            new CanonLocation("luo_he_sect", "Luo He Sect",
-                    3000, 0, 2400, "sect", "Renegade Immortal Ch. 310-330");
+            new CanonLocation("luo_he_sect", "Luo He Sect (洛河门)",
+                    3000, 0, 2400, "sect", "RI — 洛河门, 火焚国; Li Muwan's sect");
+
+    // ── Four Sects Alliance (四派联盟 — site of Wang Lin's 化凡 mortal-life arc, 曾大牛's home) ──
+    public static final CanonLocation FOUR_SECTS_ALLIANCE =
+            new CanonLocation("four_sects_alliance", "Four Sects Alliance (四派联盟)",
+                    1000, 0, 1600, "region", "RI 化凡 arc — 四派联盟; home of 曾大牛 / 曾小牛");
 
     // ── Geographic features ──
+    // Sea of Devils = 修魔海 (Xiu Mo Hai), the perilous demon-cultivation sea.
     public static final CanonLocation SEA_OF_DEVILS =
-            new CanonLocation("sea_of_devils", "Sea of Devils",
-                    6000, 0, -1184, "geographic", "Renegade Immortal (east of Zhao)");
+            new CanonLocation("sea_of_devils", "Sea of Devils (修魔海)",
+                    6000, 0, -1184, "geographic", "RI — 修魔海; 古神之地, 蚊兽, 十亿尊魂幡 events");
 
+    // Forest of Distorted Sense — mod-original (no canon "扭曲之森"); canon analogue is 决明谷 (Jue Ming Valley).
     public static final CanonLocation FOREST_OF_DISTORTED_SENSE =
-            new CanonLocation("forest_of_distorted_sense", "Forest of Distorted Divine Sense",
-                    4500, 0, -2400, "geographic", "Renegade Immortal (northeast Zhao)");
+            new CanonLocation("forest_of_distorted_sense", "Forest of Distorted Sense (扭曲之森)",
+                    4500, 0, -2400, "geographic", "MOD-ORIGINAL (canon analogue: 决明谷 / Jue Ming Valley)");
 
+    // Suzaku Tomb (朱雀墓) — underground inheritance site of the 朱雀子 lineage.
     public static final CanonLocation SUZAKU_TOMB =
-            new CanonLocation("suzaku_tomb", "Suzaku Tomb (Cultivation Planet Crystal)",
-                    0, -60, 0, "ruin", "Renegade Immortal (deep underground, center)");
+            new CanonLocation("suzaku_tomb", "Suzaku Tomb (朱雀墓)",
+                    0, -60, 0, "ruin", "RI — 朱雀墓, underground; 15th-gen 朱雀子 inheritance, 拓森 reappears");
 
-    // ── Canonical NPC UUIDs (permanent identity, never entity IDs) ──
+    // ── Canonical NPC id strings (the UUID lives in CanonUUID) ──
     public static final String NPC_WANG_LIN = "wang_lin";
     public static final String NPC_OLD_CHEN = "old_chen";
-    public static final String NPC_DA_NIU = "da_niu";
+    public static final String NPC_DA_NIU = "zeng_da_niu";   // 曾大牛 — surname 曾
     public static final String NPC_LI_MUWAN = "li_muwan";
     public static final String NPC_WANG_ZHUO = "wang_zhuo";
-    public static final String NPC_TENG_HUAYUAN = "teng_huayuan";
-    public static final String NPC_TENG_LIJUN = "teng_lijun";
+    public static final String NPC_TENG_HUAYUAN = "teng_huayuan";  // 藤化元
+    public static final String NPC_TENG_LI = "teng_li";             // 藤厉 (not "Teng Lijun")
+    public static final String NPC_SITU_NAN = "situ_nan";
+    public static final String NPC_WANG_HAO = "wang_hao";
 
     /**
-     * All canonical locations, indexed by id. Immutable.
+     * All canonical locations, indexed by id. Immutable. Built fresh each call
+     * (the set is tiny — 15 entries — so this is negligible).
      */
     public Map<String, CanonLocation> allLocations() {
         Map<String, CanonLocation> map = new LinkedHashMap<>();
@@ -165,29 +189,117 @@ public final class PlanetSuzakuBlueprint {
         map.put(SOUL_REFINING_SECT.id, SOUL_REFINING_SECT);
         map.put(XUAN_DAO_SECT.id, XUAN_DAO_SECT);
         map.put(LUO_HE_SECT.id, LUO_HE_SECT);
+        map.put(FOUR_SECTS_ALLIANCE.id, FOUR_SECTS_ALLIANCE);
         map.put(SEA_OF_DEVILS.id, SEA_OF_DEVILS);
         map.put(FOREST_OF_DISTORTED_SENSE.id, FOREST_OF_DISTORTED_SENSE);
         map.put(SUZAKU_TOMB.id, SUZAKU_TOMB);
         return Collections.unmodifiableMap(map);
     }
 
+    // ════════════════════════════════════════════════════════════════════
+    //  QUERY API — the blueprint answers higher-level questions, never getBlock
+    //  (CRON-69, point 8)
+    // ════════════════════════════════════════════════════════════════════
+
+    /**
+     * All canon locations whose footprint intersects the given block rectangle.
+     * Used by the {@link dev.ergenverse.runtime.layer.BlueprintLayer} to answer
+     * "what structures intersect this chunk?" without iterating per-block.
+     */
+    public List<CanonLocation> queryStructures(int minX, int minZ, int maxX, int maxZ) {
+        List<CanonLocation> out = new ArrayList<>();
+        for (CanonLocation loc : allLocations().values()) {
+            int half = 50;
+            if (loc.x - half <= maxX && loc.x + half >= minX
+                    && loc.z - half <= maxZ && loc.z + half >= minZ) {
+                out.add(loc);
+            }
+        }
+        return out;
+    }
+
+    /** All canon locations of a given category (e.g. "sect", "settlement", "ruin"). */
+    public List<CanonLocation> queryByCategory(String category) {
+        List<CanonLocation> out = new ArrayList<>();
+        for (CanonLocation loc : allLocations().values()) {
+            if (loc.category.equals(category)) out.add(loc);
+        }
+        return out;
+    }
+
+    /**
+     * Canon actors (NPCs) anchored at a location intersecting the rectangle.
+     * The actor's full state lives in {@link NPCRuntime}; this returns the
+     * anchoring location ids. Used by the materializer to decide which actors
+     * to materialize when a chunk loads.
+     */
+    public List<String> queryActors(int minX, int minZ, int maxX, int maxZ) {
+        // The actor→anchor mapping is owned by NPCRuntime (registered on loadAll).
+        // The blueprint only owns locations; this query is a thin pass-through
+        // kept on the blueprint so callers have one place to ask "what's here?".
+        List<String> out = new ArrayList<>();
+        for (CanonLocation loc : queryStructures(minX, minZ, maxX, maxZ)) {
+            out.add(loc.id);
+        }
+        return out;
+    }
+
+    /**
+     * Canon spirit veins intersecting the rectangle. Today the spirit-vein
+     * registry lives in {@link CanonUUID} (vein ids); the geographic placement
+     * is co-located with the hosting sect/location. This returns the hosting
+     * locations so the materializer can place vein blocks.
+     */
+    public List<CanonLocation> querySpiritVeins(int minX, int minZ, int maxX, int maxZ) {
+        // Spirit veins are co-located with their hosting sect/landmark for now.
+        List<CanonLocation> out = new ArrayList<>();
+        for (CanonLocation loc : queryStructures(minX, minZ, maxX, maxZ)) {
+            if (loc.category.equals("sect") || loc.id.equals("suzaku_tomb")
+                    || loc.id.equals("wang_family_village")) {
+                out.add(loc);
+            }
+        }
+        return out;
+    }
+
+    /** Canon landmarks (ruins, geographic features) intersecting the rectangle. */
+    public List<CanonLocation> queryLandmarks(int minX, int minZ, int maxX, int maxZ) {
+        List<CanonLocation> out = new ArrayList<>();
+        for (CanonLocation loc : queryStructures(minX, minZ, maxX, maxZ)) {
+            if (loc.category.equals("ruin") || loc.category.equals("geographic") || loc.category.equals("region")) {
+                out.add(loc);
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Canon terrain constraints for a region (placeholder for future
+     * deterministic-procedural decoration, point 9). Today returns the
+     * intersecting geographic landmarks; a future expansion will carry climate,
+     * elevation, spirit-density, and tree-species constraints per region.
+     */
+    public List<CanonLocation> queryTerrain(int minX, int minZ, int maxX, int maxZ) {
+        return queryLandmarks(minX, minZ, maxX, maxZ);
+    }
+
+    // ════════════════════════════════════════════════════════════════════
+    //  VALIDATION
+    // ════════════════════════════════════════════════════════════════════
+
     /**
      * Validate the blueprint's internal consistency. Called on initialize().
-     * Throws IllegalStateException if the blueprint is inconsistent (e.g.
-     * two locations overlap, a referenced NPC doesn't exist, etc.)
      */
     public void validate() {
         Map<String, CanonLocation> locs = allLocations();
         if (locs.isEmpty()) {
             throw new IllegalStateException("Blueprint has no locations");
         }
-        // Check for coordinate overlaps (settlements should be ≥500 blocks apart)
         for (CanonLocation a : locs.values()) {
             for (CanonLocation b : locs.values()) {
                 if (a == b) continue;
                 if (a.category.equals("settlement") && b.category.equals("settlement")) {
-                    double dist = Math.sqrt(
-                            Math.pow(a.x - b.x, 2) + Math.pow(a.z - b.z, 2));
+                    double dist = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.z - b.z, 2));
                     if (dist < 500.0) {
                         Ergenverse.LOGGER.warn(
                                 "[Ergenverse] Blueprint warning: settlements {} and {} are only {} blocks apart (< 500).",
@@ -196,38 +308,11 @@ public final class PlanetSuzakuBlueprint {
                 }
             }
         }
-        Ergenverse.LOGGER.info("[Ergenverse] PlanetSuzakuBlueprint validated: {} canonical locations.",
-                locs.size());
+        Ergenverse.LOGGER.info("[Ergenverse] PlanetSuzakuBlueprint validated: {} canonical locations.", locs.size());
     }
 
-    /**
-     * Get the canon block state at a position.
-     *
-     * <p>This is called by {@link DeltaManager#getBlock} when no simulation
-     * or player delta exists at the position. The blueprint itself doesn't
-     * store per-block terrain (that comes from the deterministic noise base
-     * layer via {@code minecraft:overworld} settings). Instead, it returns
-     * null for positions not covered by a hand-authored structure, signaling
-     * to the materializer to use the noise-generated terrain.
-     *
-     * <p>For positions within a hand-authored structure (e.g. Wang Family
-     * Village), the blueprint's structure definition (loaded via the
-     * ChunkMaterializer querying the spatial index) determines the block.
-     * This method is a stub — the actual per-block lookup is done by the
-     * settlement builders when the ChunkMaterializer calls them.
-     *
-     * @return the block state string, or null if not in a canon structure
-     *         (use noise-generated terrain instead)
-     */
-    public String getBlock(int x, int y, int z) {
-        // The blueprint doesn't store per-block data directly — it stores
-        // canonical locations with footprints. The ChunkMaterializer queries
-        // the spatial index to find which structures intersect a chunk, then
-        // calls the corresponding builder to place blocks.
-        //
-        // This method exists for the DeltaManager's contract. It returns null
-        // (meaning "use noise terrain") for all positions. The actual canon
-        // blocks are placed by the ChunkMaterializer via the settlement builders.
-        return null;
-    }
+    // NOTE: there is deliberately NO getBlock(int,int,int) method on the
+    // blueprint. Per CRON-69 point 8, the blueprint is a description, not a
+    // block array. Per-block canon is materialized by hand-authored builders
+    // invoked through the ChunkMaterializer, never by a per-block lookup here.
 }

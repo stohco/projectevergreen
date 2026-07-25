@@ -19,17 +19,17 @@ import net.minecraftforge.registries.ForgeRegistries;
  *
  * <p>This handler listens to Forge's {@link BlockEvent.BreakEvent} (player
  * mines a block) and {@link BlockEvent.EntityPlaceEvent} (player places a
- * block) and records the change in the {@link PlayerDelta} via the
- * {@link DeltaManager}.
+ * block) and records the change through the {@link dev.ergenverse.runtime.layer.WorldFacade}
+ * — the simulation's single front door (CRON-69 point 5: gameplay never
+ * touches the delta store directly; it writes {@code runtime.world().setBlock}).
  *
- * <p>When the player mines a block at (x,y,z), we record
- * {@code playerDelta.set(x, y, z, "minecraft:air")}. When the player places
- * a block, we record {@code playerDelta.set(x, y, z, blockId)}.
- *
- * <p>On chunk load, the {@link dev.ergenverse.runtime.materialize.ChunkMaterializer}
- * applies these deltas after placing the canon blueprint blocks. This ensures
- * the player's changes persist across save/load cycles WITHOUT modifying the
- * blueprint.
+ * <p>When the player mines a block at (x,y,z), we record a PLAYER
+ * {@code BlockChangeDelta(pos, "minecraft:air")} (CRON-69 point 4: there is no
+ * "removed" object — air is just a state). When the player places a block, we
+ * record {@code BlockChangeDelta(pos, blockId)}. The facade journals the delta
+ * AND mirrors it into the live level. On reload, the persisted journal (via
+ * {@link dev.ergenverse.runtime.persist.WorldDeltaSavedData}) replays the
+ * change, so it survives save/load without modifying the blueprint.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
@@ -48,10 +48,9 @@ public final class PlayerBlockDeltaTracker {
         if (event.getPlayer().isCreative()) return; // creative mode doesn't persist changes
 
         BlockPos pos = event.getPos();
-        // Record the break as "air" in the player delta
+        // Record the break as a PLAYER block-change delta (air = "removed").
         try {
-            DeltaManager dm = WorldRuntime.get().deltaManager();
-            dm.setPlayerBlock(pos.getX(), pos.getY(), pos.getZ(), "minecraft:air");
+            WorldRuntime.get().world().setPlayerBlock(pos.getX(), pos.getY(), pos.getZ(), "minecraft:air");
         } catch (Exception e) {
             // Non-fatal — the block still breaks in Minecraft, we just don't track it
             Ergenverse.LOGGER.debug("[Ergenverse] PlayerBlockDeltaTracker break failed: {}", e.getMessage());
@@ -72,8 +71,7 @@ public final class PlayerBlockDeltaTracker {
         if (blockId == null) return;
 
         try {
-            DeltaManager dm = WorldRuntime.get().deltaManager();
-            dm.setPlayerBlock(pos.getX(), pos.getY(), pos.getZ(), blockId.toString());
+            WorldRuntime.get().world().setPlayerBlock(pos.getX(), pos.getY(), pos.getZ(), blockId.toString());
         } catch (Exception e) {
             Ergenverse.LOGGER.debug("[Ergenverse] PlayerBlockDeltaTracker place failed: {}", e.getMessage());
         }

@@ -51,31 +51,37 @@ public final class NPCRuntime {
         // Initialize canon NPCs at their canonical locations.
         // On day 0, each NPC starts at their canon home. After that, their
         // position is loaded from the save (deltas from the canon start).
-        register(CanonUUID.WANG_LIN, "Wang Lin",
+        // CRON-69 canon fact-check applied:
+        //  - Li Muwan is from 洛河门 (Luo He Sect) in 火焚国, NOT Xuan Dao Sect.
+        //  - Situ Nan is the 2nd-gen 朱雀子 of 朱雀国 (Vermilion Bird / Suzaku Country),
+        //    NOT Soul Refining Sect.
+        //  - 曾大牛 (Zeng Da Niu) belongs to the 四派联盟 化凡 arc, NOT Wang Family Village.
+        //  - The young Teng antagonist is 藤厉 (Teng Li), not "Teng Lijun".
+        register(CanonUUID.WANG_LIN, "Wang Lin 王林",
                 PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.x,
                 PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.z);
-        register(CanonUUID.OLD_CHEN, "Old Chen",
+        register(CanonUUID.OLD_CHEN, "Old Chen 陈老头 (mod-original)",
                 PlanetSuzakuBlueprint.HENG_YUE_SECT.x,
                 PlanetSuzakuBlueprint.HENG_YUE_SECT.z);
-        register(CanonUUID.DA_NIU, "Da Niu",
-                PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.x,
-                PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.z);
-        register(CanonUUID.LI_MUWAN, "Li Muwan",
-                PlanetSuzakuBlueprint.XUAN_DAO_SECT.x,
-                PlanetSuzakuBlueprint.XUAN_DAO_SECT.z);
-        register(CanonUUID.WANG_ZHUO, "Wang Zhuo",
+        register(CanonUUID.DA_NIU, "Zeng Da Niu 曾大牛",
+                PlanetSuzakuBlueprint.FOUR_SECTS_ALLIANCE.x,
+                PlanetSuzakuBlueprint.FOUR_SECTS_ALLIANCE.z);
+        register(CanonUUID.LI_MUWAN, "Li Muwan 李慕婉",
+                PlanetSuzakuBlueprint.LUO_HE_SECT.x,
+                PlanetSuzakuBlueprint.LUO_HE_SECT.z);
+        register(CanonUUID.WANG_ZHUO, "Wang Zhuo 王卓",
                 PlanetSuzakuBlueprint.HENG_YUE_SECT.x,
                 PlanetSuzakuBlueprint.HENG_YUE_SECT.z);
-        register(CanonUUID.TENG_HUAYUAN, "Teng Huayuan",
+        register(CanonUUID.TENG_HUAYUAN, "Teng Huayuan 藤化元",
                 PlanetSuzakuBlueprint.TENG_FAMILY_CITY.x,
                 PlanetSuzakuBlueprint.TENG_FAMILY_CITY.z);
-        register(CanonUUID.TENG_LIJUN, "Teng Lijun",
+        register(CanonUUID.TENG_LI, "Teng Li 藤厉",
                 PlanetSuzakuBlueprint.TENG_FAMILY_CITY.x,
                 PlanetSuzakuBlueprint.TENG_FAMILY_CITY.z);
-        register(CanonUUID.SITU_NAN, "Situ Nan",
-                PlanetSuzakuBlueprint.SOUL_REFINING_SECT.x,
-                PlanetSuzakuBlueprint.SOUL_REFINING_SECT.z);
-        register(CanonUUID.WANG_HAO, "Wang Hao",
+        register(CanonUUID.SITU_NAN, "Situ Nan 司徒南",
+                PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.x,
+                PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.z);
+        register(CanonUUID.WANG_HAO, "Wang Hao 王浩",
                 PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.x,
                 PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.z);
         loaded = true;

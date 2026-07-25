@@ -52,38 +52,30 @@ public final class SpawnEventHandler {
 
     @SubscribeEvent
     public static void onServerStarting(ServerStartingEvent event) {
-        // CRON-COMPLETIONIST-66/67 (2026-07-25 architecture pivot):
-        // Initialize the WorldRuntime — the single simulation authority.
-        // The runtime loads the canonical blueprint, builds the spatial index,
-        // and registers materializers. This happens BEFORE any player joins.
-        //
-        // Per the user's directive: "The village shouldn't be built after
-        // runtime initializes. The runtime should own building." The eventual
-        // goal is for the ChunkMaterializer to handle all block placement
-        // when chunks load. For now, the village builder is called explicitly
-        // as a bridge until the ChunkMaterializer is fully wired.
+        // CRON-69 (ten-point refactor): initialize the WorldRuntime, bound to the
+        // Planet Suzaku level. The runtime builds the spatial index, loads the
+        // persisted delta journal (WorldDeltaSavedData), registers the concrete
+        // stateless materializers, and loads all canon actors.
+        ResourceKey<Level> suzakuKey = ResourceKey.create(Registries.DIMENSION,
+                new net.minecraft.resources.ResourceLocation(Ergenverse.MOD_ID, "planet_suzaku"));
+        ServerLevel suzakuLevel = event.getServer().getLevel(suzakuKey);
+        if (suzakuLevel == null) {
+            Ergenverse.LOGGER.error("[Ergenverse] Planet Suzaku dimension not found! WorldRuntime not initialized.");
+            return;
+        }
+
         try {
             dev.ergenverse.runtime.WorldRuntime runtime = dev.ergenverse.runtime.WorldRuntime.get();
-            runtime.initialize();
-            Ergenverse.LOGGER.info("[Ergenverse] WorldRuntime initialized. Blueprint: {} locations, spatial index: {} entries.",
-                    runtime.blueprint().allLocations().size(), runtime.spatialIndex().size());
+            runtime.initialize(suzakuLevel);
+            Ergenverse.LOGGER.info("[Ergenverse] WorldRuntime initialized. Blueprint: {} locations, spatial index: {} entries, delta journal: {} changes.",
+                    runtime.blueprint().allLocations().size(), runtime.spatialIndex().size(), runtime.deltaStore().size());
         } catch (Exception e) {
             Ergenverse.LOGGER.error("[Ergenverse] WorldRuntime initialization failed: {}", e.getMessage(), e);
         }
 
-        // Build the Wang Family Village at its canonical coordinate on
-        // Planet Suzaku. This happens before any player joins — the village
-        // exists independently of the player.
-        ResourceKey<Level> suzakuKey = ResourceKey.create(Registries.DIMENSION,
-                new net.minecraft.resources.ResourceLocation(Ergenverse.MOD_ID, "planet_suzaku"));
-        ServerLevel suzakuLevel = event.getServer().getLevel(suzakuKey);
-
-        if (suzakuLevel == null) {
-            Ergenverse.LOGGER.error("[Ergenverse] Planet Suzaku dimension not found! Village not built.");
-            return;
-        }
-
-        // Delay by 20 ticks (1s) to ensure all dimensions are fully loaded.
+        // Build the Wang Family Village at its canonical coordinate, then
+        // materialize Wang Lin (the milestone: "Wang Lin materializes from the
+        // blueprint at his canonical starting location"). Both are idempotent.
         event.getServer().tell(new TickTask(event.getServer().getTickCount() + 20, () -> {
             try {
                 if (!WangFamilyVillageBuilder.isAlreadyBuilt(suzakuLevel)) {
@@ -93,8 +85,16 @@ public final class SpawnEventHandler {
                 } else {
                     Ergenverse.LOGGER.info("[Ergenverse] Wang Family Village already built at canonical coordinate.");
                 }
+
+                // Materialize Wang Lin at his canonical starting location (Wang Family Village).
+                dev.ergenverse.runtime.WorldRuntime runtime = dev.ergenverse.runtime.WorldRuntime.get();
+                if (runtime.isInitialized() && !runtime.npcs().isMaterialized(dev.ergenverse.runtime.CanonUUID.WANG_LIN)) {
+                    int eid = runtime.npcs().materializeActor(dev.ergenverse.runtime.CanonUUID.WANG_LIN, runtime);
+                    Ergenverse.LOGGER.info("[Ergenverse] Wang Lin materialization: entity id {} (canon UUID {}).",
+                            eid, dev.ergenverse.runtime.CanonUUID.WANG_LIN);
+                }
             } catch (Exception e) {
-                Ergenverse.LOGGER.error("[Ergenverse] Failed to build Wang Family Village: {}", e.getMessage(), e);
+                Ergenverse.LOGGER.error("[Ergenverse] Failed to build village / materialize Wang Lin: {}", e.getMessage(), e);
             }
         }));
     }
