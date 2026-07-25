@@ -240,7 +240,7 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-0.8F, 0.0F, -0.5F, 1.6F, 0.1F, 1.0F),
                 PartPose.offset(0.0F, 11.5F, 0.5F));
 
-        return LayerDefinition.create(mesh, 64, 64);
+        return LayerDefinition.create(mesh, 64, 64);  // CRON-67: UV space adequate for membrane additions
     }
 
     @Override

@@ -59,6 +59,8 @@ public class ClientEvents {
         event.registerLayerDefinition(SpiritBeastModelLayers.SOUL_FISH, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SOUL_FISH));
         // CRON-COMPLETIONIST-45: Flying sword model layer (was missing — would crash at init)
         event.registerLayerDefinition(SpiritBeastModelLayers.FLYING_SWORD, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.FLYING_SWORD));
+        // CRON-COMPLETIONIST-67: Spirit tiger model layer (model existed since CRON-75, never registered)
+        event.registerLayerDefinition(SpiritBeastModelLayers.SPIRIT_TIGER, SpiritBeastModelLayers.getSupplier(SpiritBeastModelLayers.SPIRIT_TIGER));
     }
 
     @SubscribeEvent
@@ -86,6 +88,9 @@ public class ClientEvents {
         event.registerEntityRenderer(EREntityTypes.SEA_SERPENT.get(),       SpiritBeastRenderers.SeaSerpentRenderer::new);
         // CRON-COMPLETIONIST-36: Soul fish (11th beast type — small aquatic)
         event.registerEntityRenderer(EREntityTypes.SOUL_FISH.get(),         SpiritBeastRenderers.SoulFishRenderer::new);
+        // CRON-COMPLETIONIST-67: Spirit tiger (12th beast type — apex land predator)
+        // Model existed since CRON-75 but was never registered. NOW FIXED.
+        event.registerEntityRenderer(EREntityTypes.SPIRIT_TIGER.get(),      SpiritBeastRenderers.TigerRenderer::new);
 
         // Flying sword projectile (launched by FlyingSwordItem). Invisible except
         // for its particle trail — the renderer is a no-op shell.

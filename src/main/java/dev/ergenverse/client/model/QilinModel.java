@@ -354,7 +354,7 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, legRound),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        return LayerDefinition.create(mesh, 64, 64);
+        return LayerDefinition.create(mesh, 128, 64);  // CRON-67: expanded for 6+3 feather UVs per wing
     }
 
     @Override

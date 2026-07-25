@@ -160,19 +160,42 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                 CubeListBuilder.create().texOffs(0, 32)
                         .addBox(-4.0F, -0.5F, -2.0F, 4.0F, 1.0F, 4.0F),
                 PartPose.offset(-5.0F, 0.0F, 0.0F));
-        // primary feathers : flat slabs fanning off the trailing edge
+        // CRON-COMPLETIONIST-67: 5 tapered primaries with angular fan spread
+        // Widths decrease: 1.0 → 0.9 → 0.8 → 0.7 → 0.5 (taper like real feathers)
+        // zRot fan: each feather angles further for spread effect
         leftHand.addOrReplaceChild("feather1",
                 CubeListBuilder.create().texOffs(20, 16)
                         .addBox(-8.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
-                PartPose.offset(-3.0F, 0.0F, -1.5F));
+                PartPose.offsetAndRotation(-3.0F, 0.0F, -2.0F, 0.0F, 0.0F, -0.08F));
         leftHand.addOrReplaceChild("feather2",
                 CubeListBuilder.create().texOffs(20, 20)
-                        .addBox(-8.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
-                PartPose.offset(-3.0F, 0.0F, 0.0F));
+                        .addBox(-7.5F, -0.45F, -0.45F, 7.5F, 0.9F, 0.9F),
+                PartPose.offsetAndRotation(-3.0F, 0.0F, -1.0F, 0.0F, 0.0F, -0.04F));
         leftHand.addOrReplaceChild("feather3",
                 CubeListBuilder.create().texOffs(20, 24)
-                        .addBox(-8.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
-                PartPose.offset(-3.0F, 0.0F, 1.5F));
+                        .addBox(-7.0F, -0.4F, -0.4F, 7.0F, 0.8F, 0.8F),
+                PartPose.ZERO);
+        leftHand.addOrReplaceChild("feather4",
+                CubeListBuilder.create().texOffs(20, 28)
+                        .addBox(-6.5F, -0.35F, -0.35F, 6.5F, 0.7F, 0.7F),
+                PartPose.offsetAndRotation(-3.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.04F));
+        leftHand.addOrReplaceChild("feather5",
+                CubeListBuilder.create().texOffs(20, 32)
+                        .addBox(-6.0F, -0.3F, -0.3F, 6.0F, 0.6F, 0.6F),
+                PartPose.offsetAndRotation(-3.0F, 0.0F, 2.0F, 0.0F, 0.0F, 0.08F));
+        // Secondary coverts: small overlapping feathers above primaries
+        leftHand.addOrReplaceChild("covert1",
+                CubeListBuilder.create().texOffs(32, 16)
+                        .addBox(-5.0F, -0.3F, -0.3F, 5.0F, 0.6F, 0.6F),
+                PartPose.offsetAndRotation(-2.0F, -0.5F, -1.0F, 0.0F, 0.0F, -0.05F));
+        leftHand.addOrReplaceChild("covert2",
+                CubeListBuilder.create().texOffs(32, 20)
+                        .addBox(-4.5F, -0.25F, -0.25F, 4.5F, 0.5F, 0.5F),
+                PartPose.offsetAndRotation(-2.0F, -0.5F, 0.5F, 0.0F, 0.0F, 0.0F));
+        leftHand.addOrReplaceChild("covert3",
+                CubeListBuilder.create().texOffs(32, 24)
+                        .addBox(-4.0F, -0.2F, -0.2F, 4.0F, 0.4F, 0.4F),
+                PartPose.offsetAndRotation(-2.0F, -0.5F, 2.0F, 0.0F, 0.0F, 0.05F));
 
         // ── right wing : mirror ──────────────────────────────────────────
         PartDefinition rightWing = root.addOrReplaceChild("right_wing",
@@ -190,18 +213,40 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                 CubeListBuilder.create().texOffs(0, 56)
                         .addBox(0.0F, -0.5F, -2.0F, 4.0F, 1.0F, 4.0F),
                 PartPose.offset(5.0F, 0.0F, 0.0F));
+        // CRON-COMPLETIONIST-67: 5 tapered primaries with angular fan spread (mirror)
         rightHand.addOrReplaceChild("feather1",
                 CubeListBuilder.create().texOffs(20, 40)
                         .addBox(0.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
-                PartPose.offset(3.0F, 0.0F, -1.5F));
+                PartPose.offsetAndRotation(3.0F, 0.0F, -2.0F, 0.0F, 0.0F, 0.08F));
         rightHand.addOrReplaceChild("feather2",
                 CubeListBuilder.create().texOffs(20, 44)
-                        .addBox(0.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
-                PartPose.offset(3.0F, 0.0F, 0.0F));
+                        .addBox(0.5F, -0.45F, -0.45F, 7.5F, 0.9F, 0.9F),
+                PartPose.offsetAndRotation(3.0F, 0.0F, -1.0F, 0.0F, 0.0F, 0.04F));
         rightHand.addOrReplaceChild("feather3",
                 CubeListBuilder.create().texOffs(20, 48)
-                        .addBox(0.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
-                PartPose.offset(3.0F, 0.0F, 1.5F));
+                        .addBox(0.5F, -0.4F, -0.4F, 7.0F, 0.8F, 0.8F),
+                PartPose.ZERO);
+        rightHand.addOrReplaceChild("feather4",
+                CubeListBuilder.create().texOffs(20, 52)
+                        .addBox(0.0F, -0.35F, -0.35F, 6.5F, 0.7F, 0.7F),
+                PartPose.offsetAndRotation(3.0F, 0.0F, 1.0F, 0.0F, 0.0F, -0.04F));
+        rightHand.addOrReplaceChild("feather5",
+                CubeListBuilder.create().texOffs(20, 56)
+                        .addBox(0.0F, -0.3F, -0.3F, 6.0F, 0.6F, 0.6F),
+                PartPose.offsetAndRotation(3.0F, 0.0F, 2.0F, 0.0F, 0.0F, -0.08F));
+        // Secondary coverts (mirror)
+        rightHand.addOrReplaceChild("covert1",
+                CubeListBuilder.create().texOffs(32, 40)
+                        .addBox(0.0F, -0.3F, -0.3F, 5.0F, 0.6F, 0.6F),
+                PartPose.offsetAndRotation(2.0F, -0.5F, -1.0F, 0.0F, 0.0F, 0.05F));
+        rightHand.addOrReplaceChild("covert2",
+                CubeListBuilder.create().texOffs(32, 44)
+                        .addBox(0.0F, -0.25F, -0.25F, 4.5F, 0.5F, 0.5F),
+                PartPose.offsetAndRotation(2.0F, -0.5F, 0.5F, 0.0F, 0.0F, 0.0F));
+        rightHand.addOrReplaceChild("covert3",
+                CubeListBuilder.create().texOffs(32, 48)
+                        .addBox(0.0F, -0.2F, -0.2F, 4.0F, 0.4F, 0.4F),
+                PartPose.offsetAndRotation(2.0F, -0.5F, 2.0F, 0.0F, 0.0F, -0.05F));
 
         // ── tail : 3 feather slabs fanning from the rear (+Z) ────────────
         PartDefinition tail = root.addOrReplaceChild("tail",
@@ -246,7 +291,7 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-1.0F, 3.0F, 0.5F, 1.0F, 1.0F, 1.0F),    // CRON-21: rear hallux
                 PartPose.offset(1.5F, 12.0F, 0.0F));
 
-        return LayerDefinition.create(mesh, 64, 64);
+        return LayerDefinition.create(mesh, 128, 64);  // CRON-67: expanded for 5+3 feather UVs
     }
 
     // CRON-COMPLETIONIST-59: Expose head for emissive eye glow render pass.

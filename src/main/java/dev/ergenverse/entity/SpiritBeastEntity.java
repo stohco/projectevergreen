@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -57,7 +58,8 @@ public class SpiritBeastEntity extends PathfinderMob {
         BAT("spirit_bat"),
         QILIN("qilin"),
         SEA_SERPENT("sea_serpent"),
-        SOUL_FISH("soul_fish");
+        SOUL_FISH("soul_fish"),
+        TIGER("spirit_tiger");
 
         public final String id;
         BeastType(String id) { this.id = id; }
@@ -176,6 +178,12 @@ public class SpiritBeastEntity extends PathfinderMob {
                     .add(Attributes.MOVEMENT_SPEED, 0.45D)
                     .add(Attributes.ATTACK_DAMAGE, 0.0D)
                     .add(Attributes.FOLLOW_RANGE, 8.0D);
+            case TIGER -> Mob.createMobAttributes()
+                    .add(Attributes.MAX_HEALTH, 28.0D)
+                    .add(Attributes.MOVEMENT_SPEED, 0.30D)
+                    .add(Attributes.ATTACK_DAMAGE, 7.0D)
+                    .add(Attributes.FOLLOW_RANGE, 20.0D)
+                    .add(Attributes.KNOCKBACK_RESISTANCE, 0.3D);
         };
     }
 
@@ -406,6 +414,17 @@ public class SpiritBeastEntity extends PathfinderMob {
                 this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
                 this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
             }
+            // CRON-COMPLETIONIST-67: Spirit tiger — apex land predator.
+            // Canon: ferocious mountain/forest beast, solitary ambush predator.
+            case TIGER -> {
+                this.goalSelector.addGoal(2, new SpiritBeastHuntGoal(this, 1.15D));
+                this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.15, true));
+                this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.6));
+                this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 12.0F));
+                this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+                this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this, Player.class, true));
+            }
         }
 
         // ── BeastIntelligence-tiered AI (Constitution: 7-tier system) ──
@@ -480,6 +499,7 @@ public class SpiritBeastEntity extends PathfinderMob {
             case QILIN  -> { beastWidth = 1.0F; beastHeight = 1.4F; beastEyeHeight = 1.2F; }
             case SEA_SERPENT -> { beastWidth = 0.8F; beastHeight = 1.0F; beastEyeHeight = 0.8F; }
             case SOUL_FISH -> { beastWidth = 0.3F; beastHeight = 0.3F; beastEyeHeight = 0.15F; }
+            case TIGER  -> { beastWidth = 1.0F; beastHeight = 1.0F; beastEyeHeight = 0.85F; }
             default -> { beastWidth = 0.6F; beastHeight = 1.8F; beastEyeHeight = 1.6F; }
         }
     }

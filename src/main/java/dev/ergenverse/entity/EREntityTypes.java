@@ -186,4 +186,15 @@ public class EREntityTypes {
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("soul_fish"));
+
+    // CRON-COMPLETIONIST-67: SpiritTigerModel — barrel-chested apex land predator.
+    // Model existed since CRON-75 but entity type was never registered. NOW FIXED.
+    // Hitbox: ~1.0 wide, ~1.0 tall (big cat, belly close to ground when stalking).
+    public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_TIGER =
+            ENTITY_TYPES.register("spirit_tiger", () ->
+                    EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
+                            .sized(1.0F, 1.0F)
+                            .clientTrackingRange(8)
+                            .updateInterval(2)
+                            .build("spirit_tiger"));
 }

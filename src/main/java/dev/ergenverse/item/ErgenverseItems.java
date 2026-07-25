@@ -329,6 +329,12 @@ public final class ErgenverseItems {
                     () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_HAWK.get(),
                     0x785032, 0x00C8DC,
                     new Item.Properties()));
+    // CRON-COMPLETIONIST-67: Spirit tiger spawn egg (orange + black stripes)
+    public static final RegistryObject<Item> SPIRIT_TIGER_SPAWN_EGG = ITEMS.register("spirit_tiger_spawn_egg",
+            () -> new dev.ergenverse.item.DeferredSpawnEggItem(
+                    () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_TIGER.get(),
+                    0xFF8C00, 0x1A1A1A,
+                    new Item.Properties()));
 
     // ── CRON-COMPLETIONIST-40: Canon Technique Scrolls ─────────────────────
     // Right-click to study, consumes scroll, grants temporary cultivation buff.

@@ -41,6 +41,10 @@ public final class SpiritBeastModelLayers {
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "sea_serpent"), "main");
     public static final ModelLayerLocation SOUL_FISH =
             new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "soul_fish"), "main");
+    // CRON-COMPLETIONIST-67: Spirit tiger — model existed since CRON-75 but was
+    // never registered in the layer system. Invisible in-game until now.
+    public static final ModelLayerLocation SPIRIT_TIGER =
+            new ModelLayerLocation(new ResourceLocation(Ergenverse.MOD_ID, "spirit_tiger"), "main");
 
     public static Supplier<LayerDefinition> getSupplier(ModelLayerLocation location) {
         if (SPIRIT_RABBIT.equals(location))       return SpiritRabbitModel::createBodyLayer;
@@ -56,6 +60,7 @@ public final class SpiritBeastModelLayers {
         if (QILIN.equals(location))               return QilinModel::createBodyLayer;
         if (SEA_SERPENT.equals(location))          return SeaSerpentModel::createBodyLayer;
         if (SOUL_FISH.equals(location))            return SoulFishModel::createBodyLayer;
+        if (SPIRIT_TIGER.equals(location))          return SpiritTigerModel::createBodyLayer;
         return null;
     }
 }

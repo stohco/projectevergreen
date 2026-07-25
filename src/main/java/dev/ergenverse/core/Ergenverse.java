@@ -318,6 +318,10 @@ public final class Ergenverse {
         event.put(dev.ergenverse.entity.EREntityTypes.SOUL_FISH.get(),
                 dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
                         dev.ergenverse.entity.SpiritBeastEntity.BeastType.SOUL_FISH).build());
+        // CRON-COMPLETIONIST-67: Spirit tiger attributes (apex land predator)
+        event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_TIGER.get(),
+                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.TIGER).build());
         LOGGER.info("[Ergenverse] Registered per-species Spirit Beast attributes.");
     }
 

@@ -320,7 +320,7 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(0.0F, 0.0F, 0.5F, 1.0F, 1.0F, 1.0F),
                 PartPose.ZERO);
 
-        return LayerDefinition.create(mesh, 64, 64);
+        return LayerDefinition.create(mesh, 128, 64);  // CRON-67: expanded for 7+3 feather UVs
     }
 
     @Override

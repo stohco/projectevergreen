@@ -13,6 +13,7 @@ import dev.ergenverse.client.model.SpiritDeerModel;
 import dev.ergenverse.client.model.SpiritHawkModel;
 import dev.ergenverse.client.model.SpiritCraneModel;
 import dev.ergenverse.client.model.SpiritFireBeastModel;
+import dev.ergenverse.client.model.SpiritTigerModel;
 import dev.ergenverse.client.model.StoneBackBoarModel;
 import dev.ergenverse.client.model.SpiritBatModel;
 import dev.ergenverse.client.model.QilinModel;
@@ -436,6 +437,41 @@ public final class SpiritBeastRenderers {
             var vertexConsumer = buffer.getBuffer(renderType);
             this.getModel().getBody().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
             this.getModel().getQiGlow().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            poseStack.popPose();
+        }
+    }
+
+    // ── Spirit Tiger (CRON-COMPLETIONIST-67) ──────────────────────
+    // CRON-COMPLETIONIST-67: Tiger model existed since CRON-75 but was NEVER
+    // registered as an entity type or renderer. The beast was invisible in-game
+    // despite having a full model (23 cubes, tapered tail, wide cheekbones) and
+    // texture (spirit_tiger.png). NOW FIXED — full registration pipeline.
+    // Emissive eyes — tiger eyes glow amber/gold in darkness. Canon: spirit
+    // tigers have blazing predatory eyes that pierce through forest shadow.
+
+    public static class TigerRenderer extends MobRenderer<SpiritBeastEntity, SpiritTigerModel> {
+        private static final ResourceLocation TEX =
+                new ResourceLocation(Ergenverse.MOD_ID, "textures/entity/beast/spirit_tiger.png");
+        private static final int FULLBRIGHT = 15728880;
+
+        public TigerRenderer(EntityRendererProvider.Context context) {
+            super(context, new SpiritTigerModel(context.bakeLayer(SpiritBeastModelLayers.SPIRIT_TIGER)), 0.7F);
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation(SpiritBeastEntity entity) { return TEX; }
+
+        @Override
+        public void render(SpiritBeastEntity entity, float entityYaw, float partialTicks,
+                           PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            // Emissive eyes — amber/gold predatory glow
+            poseStack.pushPose();
+            poseStack.translate(0, 1.501F, 0);
+            var renderType = this.getModel().renderType(getTextureLocation(entity));
+            var vertexConsumer = buffer.getBuffer(renderType);
             this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
             this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
             poseStack.popPose();
