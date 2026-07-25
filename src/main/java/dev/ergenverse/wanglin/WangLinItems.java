@@ -93,7 +93,16 @@ public final class WangLinItems {
             "soul_gourd",
             "storage_ring",
             "cultivation_journal",
-            "beast_core"
+            "beast_core",
+            // CRON-COMPLETIONIST-76: Added ji_realm and vermilion_bird_feather — both
+            // are registered as standalone items in ErgenverseItems with valid lowercase
+            // names. The WangLinItems manifest maps them to ji_realm_divine_sense and
+            // I105_vermilion_bird_feather, but the manifest's bare-id (ji_realm,
+            // vermilion_bird_feather) is used as the registry name, causing a duplicate
+            // registration that crashes the server at registry freeze with
+            // "One or more entry values did not copy to the correct id."
+            "ji_realm",
+            "vermilion_bird_feather"
     );
 
     /**

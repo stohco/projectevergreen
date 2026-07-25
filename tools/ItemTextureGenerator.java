@@ -477,5 +477,99 @@ public class ItemTextureGenerator {
         savePNG("soul_bead", buf);
 
         System.out.println("\nDone! Generated soul bead texture.");
+
+        // ── Missing scroll textures (rolled scroll) ──────────────────
+        System.out.println("\nGenerating missing scroll textures...");
+        int SCROLL_1 = 0xFFF0E8D0, SCROLL_2 = 0xFFD0C0A0, SCROLL_3 = 0xFFB09060;
+        int SEAL_GOLD = 0xFFFFD040;
+        // Generic scroll pattern
+        buf = clear();
+        fillRect(buf, 3, 3, 12, 12, SCROLL_2);
+        fillRect(buf, 3, 3, 12, 3, SCROLL_1);
+        fillRect(buf, 3, 12, 12, 12, SCROLL_3);
+        fillRect(buf, 3, 3, 3, 12, SCROLL_1);
+        fillRect(buf, 12, 3, 12, 12, SCROLL_3);
+        // Scroll lines
+        drawLine(buf, 5, 5, 10, 5, 0xFF604020);
+        drawLine(buf, 5, 7, 10, 7, 0xFF604020);
+        drawLine(buf, 5, 9, 10, 9, 0xFF604020);
+        drawLine(buf, 5, 11, 8, 11, 0xFF604020);
+        // Seal
+        fillRect(buf, 7, 2, 8, 3, SEAL_GOLD);
+        savePNG("qi_gathering_scroll", buf);
+
+        buf = clear();
+        fillRect(buf, 3, 3, 12, 12, 0xFFE0D8F0); fillRect(buf, 3, 3, 12, 3, 0xFFF0F0FF);
+        fillRect(buf, 3, 12, 12, 12, 0xFFC0B0D0); fillRect(buf, 3, 3, 3, 12, 0xFFF0F0FF);
+        fillRect(buf, 12, 3, 12, 12, 0xFFC0B0D0);
+        drawLine(buf, 5, 5, 10, 5, 0xFF8060A0); drawLine(buf, 5, 7, 10, 7, 0xFF8060A0);
+        drawLine(buf, 5, 9, 10, 9, 0xFF8060A0); drawLine(buf, 5, 11, 8, 11, 0xFF8060A0);
+        fillRect(buf, 7, 2, 8, 3, 0xFFC080E0);
+        savePNG("spiritual_sense_scroll", buf);
+
+        buf = clear();
+        fillRect(buf, 3, 3, 12, 12, 0xFFD0E8D0); fillRect(buf, 3, 3, 12, 3, 0xFFE0F0E0);
+        fillRect(buf, 3, 12, 12, 12, 0xFFA0C0A0); fillRect(buf, 3, 3, 3, 12, 0xFFE0F0E0);
+        fillRect(buf, 12, 3, 12, 12, 0xFFA0C0A0);
+        drawLine(buf, 5, 5, 10, 5, 0xFF406040); drawLine(buf, 5, 7, 10, 7, 0xFF406040);
+        drawLine(buf, 5, 9, 10, 9, 0xFF406040); drawLine(buf, 5, 11, 8, 11, 0xFF406040);
+        fillRect(buf, 7, 2, 8, 3, 0xFF40C060);
+        savePNG("sword_technique_scroll", buf);
+
+        buf = clear();
+        fillRect(buf, 3, 3, 12, 12, 0xFFE0D0D0); fillRect(buf, 3, 3, 12, 3, 0xFFF0E0E0);
+        fillRect(buf, 3, 12, 12, 12, 0xFFC0A0A0); fillRect(buf, 3, 3, 3, 12, 0xFFF0E0E0);
+        fillRect(buf, 12, 3, 12, 12, 0xFFC0A0A0);
+        drawLine(buf, 5, 5, 10, 5, 0xFF804040); drawLine(buf, 5, 7, 10, 7, 0xFF804040);
+        drawLine(buf, 5, 9, 10, 9, 0xFF804040); drawLine(buf, 5, 11, 8, 11, 0xFF804040);
+        fillRect(buf, 7, 2, 8, 3, 0xFFE04040);
+        savePNG("body_refinement_scroll", buf);
+
+        buf = clear();
+        fillRect(buf, 3, 3, 12, 12, 0xFFD0D8E0); fillRect(buf, 3, 3, 12, 3, 0xFFE0E8F0);
+        fillRect(buf, 3, 12, 12, 12, 0xFFA0B0C0); fillRect(buf, 3, 3, 3, 12, 0xFFE0E8F0);
+        fillRect(buf, 12, 3, 12, 12, 0xFFA0B0C0);
+        drawLine(buf, 5, 5, 10, 5, 0xFF405060); drawLine(buf, 5, 7, 10, 7, 0xFF405060);
+        drawLine(buf, 5, 9, 10, 9, 0xFF405060); drawLine(buf, 5, 11, 8, 11, 0xFF405060);
+        fillRect(buf, 7, 2, 8, 3, 0xFF40A0C0);
+        savePNG("fire_control_scroll", buf);
+
+        buf = clear();
+        fillRect(buf, 3, 3, 12, 12, 0xFFD0D0E0); fillRect(buf, 3, 3, 12, 3, 0xFFE0E0F0);
+        fillRect(buf, 3, 12, 12, 12, 0xFFA0A0C0); fillRect(buf, 3, 3, 3, 12, 0xFFE0E0F0);
+        fillRect(buf, 12, 3, 12, 12, 0xFFA0A0C0);
+        drawLine(buf, 5, 5, 10, 5, 0xFF404060); drawLine(buf, 5, 7, 10, 7, 0xFF404060);
+        drawLine(buf, 5, 9, 10, 9, 0xFF404060); drawLine(buf, 5, 11, 8, 11, 0xFF404060);
+        fillRect(buf, 7, 2, 8, 3, 0xFF8040C0);
+        savePNG("restriction_art_scroll", buf);
+
+        // ── Missing banner textures ────────────────────────────────
+        System.out.println("\nGenerating missing banner textures...");
+        // Generate banners individually
+        buf = clear(); drawFlag(buf, 0xFFE0E0E0, 0xFFC0C0C0, 0xFFC0C0C0, 0xFF4080C0); savePNG("heng_yue_banner", buf);
+        buf = clear(); drawFlag(buf, 0xFF2A1A4A, 0xFF1A1030, 0xFF0A0820, 0xFF8040C0); savePNG("xuan_dao_banner", buf);
+        buf = clear(); drawFlag(buf, 0xFFC02020, 0xFFA01010, 0xFF800808, 0xFFFFD040); savePNG("teng_family_banner", buf);
+        buf = clear(); drawFlag(buf, 0xFF3070A0, 0xFF205080, 0xFF103050, 0xFF60C0E0); savePNG("tian_shui_banner", buf);
+        buf = clear(); drawFlag(buf, 0xFF1A1A1A, 0xFF0A0A0A, 0xFF050505, 0xFF40E060); savePNG("soul_refining_banner", buf);
+
+        // wanglin_arsenal — book/spellbook icon
+        buf = clear();
+        fillRect(buf, 3, 2, 12, 13, 0xFF604030);
+        fillRect(buf, 3, 2, 12, 2, 0xFF806050);
+        fillRect(buf, 3, 13, 12, 13, 0xFF403020);
+        fillRect(buf, 3, 2, 3, 13, 0xFF806050);
+        fillRect(buf, 12, 2, 12, 13, 0xFF403020);
+        // Spine
+        fillRect(buf, 3, 2, 4, 13, 0xFF403020);
+        // Pages
+        fillRect(buf, 5, 3, 11, 12, 0xFFF0E8D0);
+        // Rune lines
+        drawLine(buf, 6, 5, 10, 5, RUNE_GOLD);
+        drawLine(buf, 6, 7, 10, 7, RUNE_GOLD);
+        drawLine(buf, 6, 9, 10, 9, RUNE_GOLD);
+        drawLine(buf, 6, 11, 8, 11, RUNE_GOLD);
+        savePNG("wanglin_arsenal", buf);
+
+        System.out.println("\nDone! Generated missing scroll, banner, and arsenal textures.");
     }
 }
