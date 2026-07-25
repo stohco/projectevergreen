@@ -62,8 +62,11 @@ import java.util.Set;
  *       auto-observer wouldn't catch.</li>
  * </ol>
  *
- * <p>After every observation, we sync the atlas to the client (so the
- * new entry shows up immediately in the M-key UI).
+ * <p><b>SINGLE-PLAYER ARCHITECTURE (2026-07-25 pivot):</b> There is no
+ * network sync. The atlas lives on the player's capability, which is the
+ * single source of truth. The client UI reads directly from the local
+ * player's capability via {@link dev.ergenverse.client.AtlasClientEvents#refreshFromLocalPlayer()}.
+ * No packets. No serialization. No registration. No login sync.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
@@ -95,9 +98,10 @@ public final class AtlasObservationEvents {
                     player.getName().getString());
             return;
         }
-        Ergenverse.LOGGER.info("[Ergenverse] Syncing Divine Sense Atlas for {} on login ({} entries).",
+        Ergenverse.LOGGER.info("[Ergenverse] Divine Sense Atlas loaded for {} ({} entries).",
                 player.getName().getString(), atlas.size());
-        AtlasNetworkPackets.sendToClient(player, atlas);
+        // SINGLE-PLAYER: no network sync. The client reads directly from the
+        // capability when the M-key screen opens or refreshes.
     }
 
     // ─── Player tick: periodic auto-observation ─────────────────────
@@ -120,10 +124,9 @@ public final class AtlasObservationEvents {
         PlayerObserverRealm tier = atlas.getCurrentTier(player);
         boolean changed = scanNearbyBlocks(player, atlas, tier);
 
-        if (changed) {
-            // Sync the new observations to the client.
-            AtlasNetworkPackets.sendToClient(player, atlas);
-        }
+        // SINGLE-PLAYER: no network sync needed. The client's atlas screen
+        // refreshes itself every 10 ticks via AtlasClientEvents.refreshFromLocalPlayer().
+        // New observations appear live when the screen is open.
     }
 
     /**
@@ -349,7 +352,7 @@ public final class AtlasObservationEvents {
             }
         }
 
-        AtlasNetworkPackets.sendToClient(player, atlas);
+        // SINGLE-PLAYER: no network sync. The client reads directly.
 
         player.sendSystemMessage(Component.literal(
                 "\u00A7a[Atlas] Recorded observation at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ()

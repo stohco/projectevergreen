@@ -50,10 +50,13 @@ import java.util.Set;
  * {@link RealmId} via {@link #getCurrentTier(ServerPlayer)} — it is NOT
  * persisted, because it can be re-derived from the CultivationState.
  *
- * <h2>Thread safety</h2>
- * <p>All mutation happens server-side, on the main server thread. The
- * client receives an immutable snapshot via {@code AtlasSyncS2CPacket}
- * (see {@link AtlasNetworkPackets}) and never mutates this class.
+ * <h2>Thread safety / Single-player architecture</h2>
+ * <p>SINGLE-PLAYER ONLY (Article XLIII, 2026-07-25 pivot). There is one JVM,
+ * one save, one player, one authority. All mutation happens on the main
+ * simulation thread. The client UI reads directly from this capability via
+ * {@link dev.ergenverse.client.AtlasClientEvents#refreshFromLocalPlayer()} —
+ * no packets, no serialization, no network sync. The capability IS the
+ * single source of truth.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */

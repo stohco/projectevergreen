@@ -52,6 +52,19 @@ public final class SpawnEventHandler {
 
     @SubscribeEvent
     public static void onServerStarting(ServerStartingEvent event) {
+        // CRON-COMPLETIONIST-66 (2026-07-25 architecture pivot):
+        // Initialize the WorldRuntime — the single simulation authority.
+        // The runtime loads the canonical blueprint and all subsystems.
+        // This happens BEFORE any player joins — the world exists independently.
+        try {
+            dev.ergenverse.runtime.WorldRuntime runtime = dev.ergenverse.runtime.WorldRuntime.get();
+            runtime.initialize();
+            Ergenverse.LOGGER.info("[Ergenverse] WorldRuntime initialized. Blueprint: {} locations.",
+                    runtime.blueprint().allLocations().size());
+        } catch (Exception e) {
+            Ergenverse.LOGGER.error("[Ergenverse] WorldRuntime initialization failed: {}", e.getMessage(), e);
+        }
+
         // Build the Wang Family Village at its canonical coordinate on
         // Planet Suzaku. This happens before any player joins — the village
         // exists independently of the player.

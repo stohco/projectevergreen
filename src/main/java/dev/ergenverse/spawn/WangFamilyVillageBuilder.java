@@ -140,11 +140,19 @@ public final class WangFamilyVillageBuilder {
     /** Village half-extent. Total footprint = (2*RADIUS+1) squared = 83x83. */
     public static final int VILLAGE_RADIUS = 41;
 
-    /** Canonical village X coordinate. Fixed for every world/seed/player. */
-    public static final int VILLAGE_X = 3842;
+    /**
+     * Canonical village X coordinate. Fixed for every world/seed/player.
+     * Sourced from {@link dev.ergenverse.runtime.PlanetSuzakuBlueprint#WANG_FAMILY_VILLAGE}.
+     */
+    public static final int VILLAGE_X =
+            dev.ergenverse.runtime.PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.x;
 
-    /** Canonical village Z coordinate. Fixed for every world/seed/player. */
-    public static final int VILLAGE_Z = -1184;
+    /**
+     * Canonical village Z coordinate. Fixed for every world/seed/player.
+     * Sourced from {@link dev.ergenverse.runtime.PlanetSuzakuBlueprint#WANG_FAMILY_VILLAGE}.
+     */
+    public static final int VILLAGE_Z =
+            dev.ergenverse.runtime.PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.z;
 
     /**
      * The village center is the fixed canonical position. The Y coordinate
