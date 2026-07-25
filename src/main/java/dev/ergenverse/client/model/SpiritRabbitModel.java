@@ -39,6 +39,7 @@ import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
@@ -76,22 +77,26 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
 
-        // ── body_chest : front torso, narrower at shoulders ───────────────
+        // ── CRON-COMPLETIONIST-70: body with CubeDeformation for organic roundness ──
+        // Previously hard-edged boxes — looked noticeably blockier than all other
+        // updated quadrupeds (wolf, tiger, fire_beast, boar all use CubeDeformation).
+        CubeDeformation chestSoft = new CubeDeformation(0.3F);
         root.addOrReplaceChild("body_chest",
                 CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-1.5F, -1.75F, -1.5F, 3.0F, 3.5F, 3.0F),
+                        .addBox(-1.5F, -1.75F, -1.5F, 3.0F, 3.5F, 3.0F, chestSoft),
                 PartPose.offset(0.0F, 11.5F, -2.0F));
 
-        // ── body_rump : rear torso, WIDER rump (rabbit silhouette) ──────
+        CubeDeformation rumpSoft = new CubeDeformation(0.35F);
         root.addOrReplaceChild("body_rump",
                 CubeListBuilder.create().texOffs(12, 0)
-                        .addBox(-1.75F, -2.0F, -2.0F, 3.5F, 4.0F, 4.0F),
+                        .addBox(-1.75F, -2.0F, -2.0F, 3.5F, 4.0F, 4.0F, rumpSoft),
                 PartPose.offset(0.0F, 11.0F, 1.0F));
 
-        // ── head : at the front, slightly up ─────────────────────────────
+        // ── CRON-COMPLETIONIST-70: head with CubeDeformation ──
+        CubeDeformation headSoft = new CubeDeformation(0.25F);
         PartDefinition head = root.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 14)
-                        .addBox(-1.25F, -1.25F, -1.25F, 2.5F, 2.5F, 2.5F)   // skull
+                        .addBox(-1.25F, -1.25F, -1.25F, 2.5F, 2.5F, 2.5F, headSoft)   // skull
                         .texOffs(0, 22)
                         .addBox(-0.5F, 0.0F, -2.0F, 1.0F, 0.5F, 1.0F)     // nose forward
                         .texOffs(10, 14)
@@ -140,10 +145,11 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        // ── puff tail : BIGGER round puff at the rear ────────────────────
+        // ── CRON-COMPLETIONIST-70: puff tail with CubeDeformation ──
+        CubeDeformation tailSoft = new CubeDeformation(0.4F);
         root.addOrReplaceChild("tail",
                 CubeListBuilder.create().texOffs(28, 14)
-                        .addBox(-0.75F, -0.75F, 0.0F, 1.5F, 1.5F, 1.5F),
+                        .addBox(-0.75F, -0.75F, 0.0F, 1.5F, 1.5F, 1.5F, tailSoft),
                 PartPose.offset(0.0F, 10.5F, 4.0F));
 
         return LayerDefinition.create(mesh, 64, 64);

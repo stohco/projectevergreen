@@ -57,6 +57,7 @@ import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
@@ -110,16 +111,20 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
 
-        // ── body_chest : wider front torso (deep chest) ─────────────────
+        // ── CRON-COMPLETIONIST-70: body_chest with CubeDeformation for organic roundness ──
+        // Previously hard-edged box — looked noticeably blockier than wolf/tiger/fire_beast
+        // which all use CubeDeformation. Now matches quality parity.
+        CubeDeformation bodySoft = new CubeDeformation(0.25F);
         PartDefinition bodyChest = root.addOrReplaceChild("body_chest",
                 CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-1.75F, -2.75F, -4.0F, 3.5F, 5.5F, 4.0F),
+                        .addBox(-1.75F, -2.75F, -4.0F, 3.5F, 5.5F, 4.0F, bodySoft),
                 PartPose.offset(0.0F, 6.0F, -2.0F));
 
-        // ── body_hind : narrower rear torso (tapered waist) ────────────────
+        // ── CRON-COMPLETIONIST-70: body_hind with CubeDeformation ──
+        CubeDeformation hindSoft = new CubeDeformation(0.2F);
         PartDefinition bodyHind = root.addOrReplaceChild("body_hind",
                 CubeListBuilder.create().texOffs(14, 0)
-                        .addBox(-1.25F, -2.25F, 0.0F, 2.5F, 4.5F, 5.0F),
+                        .addBox(-1.25F, -2.25F, 0.0F, 2.5F, 4.5F, 5.0F, hindSoft),
                 PartPose.offset(0.0F, 6.0F, 2.5F));
 
         // ── neck_base : lower neck segment (wider, angled up-forward) ──────
@@ -134,21 +139,23 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-0.4F, -2.5F, -0.4F, 0.8F, 2.5F, 0.8F),
                 PartPose.offsetAndRotation(0.0F, -2.5F, 0.0F, 0.5F, 0.0F, 0.0F));
 
-        // ── head : child of neck_tip, at the tip ──────────────────────
+        // ── CRON-COMPLETIONIST-70: head with CubeDeformation ──
+        CubeDeformation headSoft = new CubeDeformation(0.15F);
         PartDefinition head = neckTip.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 16)
-                        .addBox(-1.0F, -1.5F, -2.0F, 2.0F, 3.0F, 2.0F)   // skull
+                        .addBox(-1.0F, -1.5F, -2.0F, 2.0F, 3.0F, 2.0F, headSoft)   // skull
                         .texOffs(8, 16)
                         .addBox(-1.0F, 0.0F, -3.5F, 2.0F, 1.0F, 2.0F),   // snout forward
                 PartPose.offset(0.0F, -4.0F, 0.0F));
-        // ears : leaf-shaped boxes on top of skull
+        // ── CRON-COMPLETIONIST-70: ears with CubeDeformation for softer look ──
+        CubeDeformation earSoft = new CubeDeformation(0.2F);
         head.addOrReplaceChild("ear_left",
                 CubeListBuilder.create().texOffs(20, 16)
-                        .addBox(-1.0F, -1.5F, 0.0F, 1.0F, 2.0F, 1.0F),
+                        .addBox(-1.0F, -1.5F, 0.0F, 1.0F, 2.0F, 1.0F, earSoft),
                 PartPose.offsetAndRotation(-1.0F, -1.5F, -1.0F, 0.0F, 0.0F, -0.4F));
         head.addOrReplaceChild("ear_right",
                 CubeListBuilder.create().texOffs(20, 20)
-                        .addBox(0.0F, -1.5F, 0.0F, 1.0F, 2.0F, 1.0F),
+                        .addBox(0.0F, -1.5F, 0.0F, 1.0F, 2.0F, 1.0F, earSoft),
                 PartPose.offsetAndRotation(1.0F, -1.5F, -1.0F, 0.0F, 0.0F, 0.4F));
 
         // ── antlers : 3-segment CURVED main beam + brow/bay/trez tines ─────
@@ -212,10 +219,11 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-0.2F, 0.0F, -0.2F, 0.4F, 0.8F, 0.4F),
                 PartPose.offsetAndRotation(0.0F, -0.5F, 0.0F, 0.35F, 0.0F, 0.6F));
 
-        // ── tail : short puffy tuft ──────────────────────────────────────
+        // ── CRON-COMPLETIONIST-70: tail with CubeDeformation for puffy look ──
+        CubeDeformation tailSoft = new CubeDeformation(0.3F);
         root.addOrReplaceChild("tail",
                 CubeListBuilder.create().texOffs(40, 0)
-                        .addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 2.0F),
+                        .addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 2.0F, tailSoft),
                 PartPose.offsetAndRotation(0.0F, 4.0F, 4.0F, 0.3F, 0.0F, 0.0F));
 
         // ── legs : 4 slim legs, thigh + shin, feet at y=15 ───────────────
