@@ -90,8 +90,12 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
 
     public SpiritFireBeastModel(ModelPart root) {
         this.root = root;
-        this.head = root.getChild("head");
+        // FIX (RE-APPLY-PHASE1): head is parented under neck in createBodyLayer()
+        // (neck.addOrReplaceChild("head", ...)), NOT under root. Reading head from
+        // root returned null and threw NPE at this.head.getChild("jaw") the moment
+        // a FireBeast rendered — a direct client crash cause.
         this.neck = root.getChild("neck");
+        this.head = this.neck.getChild("head");
         this.jaw = this.head.getChild("jaw");
         this.eyeLeft = this.head.getChild("eye_left");
         this.eyeRight = this.head.getChild("eye_right");

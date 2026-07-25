@@ -171,9 +171,9 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                 CubeListBuilder.create().texOffs(0, 8)
                         .addBox(-2.0F, -0.25F, -0.75F, 2.0F, 0.5F, 1.5F),
                 PartPose.ZERO);
-        // Thumb claw on leading edge
+        // Thumb claw on leading edge — FIX: UV moved from (0,12) [overlapped left elbow]
         leftRoot.addOrReplaceChild("thumb_claw",
-                CubeListBuilder.create().texOffs(0, 12)
+                CubeListBuilder.create().texOffs(24, 8)
                         .addBox(-0.3F, -0.1F, -0.3F, 0.3F, 0.2F, 0.6F),
                 PartPose.offset(-0.5F, 0.3F, -0.5F));
 
@@ -183,11 +183,15 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-3.0F, -0.2F, -0.6F, 3.0F, 0.4F, 1.2F),
                 PartPose.offset(-2.0F, 0.0F, 0.0F));
 
-        // Finger (metacarpal + phalanges)
-        PartDefinition leftFinger = leftRoot.addOrReplaceChild("finger",
+        // Finger (metacarpal + phalanges) — FIX (RE-APPLY-PHASE1): parented under
+        // elbow (not leftRoot) so the 4-segment chain shoulder->elbow->finger->web
+        // flexes with phase delay. Constructor reads finger from elbow; previously
+        // it was under leftRoot → NPE on render. Offset -5.0 -> -3.0 (elbow is at
+        // -2.0 from root, so -3.0 from elbow preserves world position).
+        PartDefinition leftFinger = leftElbow.addOrReplaceChild("finger",
                 CubeListBuilder.create().texOffs(0, 16)
                         .addBox(-3.0F, -0.15F, -0.5F, 3.0F, 0.3F, 1.0F),
-                PartPose.offset(-5.0F, 0.0F, 0.0F));
+                PartPose.offset(-3.0F, 0.0F, 0.0F));
 
         // Membrane web (the sail)
         leftFinger.addOrReplaceChild("web",
@@ -200,26 +204,30 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                 CubeListBuilder.create(),
                 PartPose.offset(1.25F, 9.5F, 0.0F));
 
+        // FIX (RE-APPLY-PHASE1): UV overlaps resolved — elbow_parent moved from
+        // (0,16) [overlapped left finger], thumb_claw moved from (0,20) [overlapped
+        // right elbow]. finger re-parented under captured rightElbow (chain flex
+        // fix + NPE fix), offset 5.0->3.0 to preserve world position.
         rightRoot.addOrReplaceChild("elbow_parent",
-                CubeListBuilder.create().texOffs(0, 16)
+                CubeListBuilder.create().texOffs(30, 8)
                         .addBox(0.0F, -0.25F, -0.75F, 2.0F, 0.5F, 1.5F),
                 PartPose.ZERO);
         rightRoot.addOrReplaceChild("thumb_claw",
-                CubeListBuilder.create().texOffs(0, 20)
+                CubeListBuilder.create().texOffs(40, 8)
                         .addBox(0.0F, -0.1F, -0.3F, 0.3F, 0.2F, 0.6F),
                 PartPose.offset(0.5F, 0.3F, -0.5F));
 
-        rightRoot.addOrReplaceChild("elbow",
+        PartDefinition rightElbow = rightRoot.addOrReplaceChild("elbow",
                 CubeListBuilder.create().texOffs(0, 20)
                         .addBox(0.0F, -0.2F, -0.6F, 3.0F, 0.4F, 1.2F),
                 PartPose.offset(2.0F, 0.0F, 0.0F));
 
-        rightRoot.addOrReplaceChild("finger",
+        rightElbow.addOrReplaceChild("finger",
                 CubeListBuilder.create().texOffs(0, 24)
                         .addBox(0.0F, -0.15F, -0.5F, 3.0F, 0.3F, 1.0F),
-                PartPose.offset(5.0F, 0.0F, 0.0F));
+                PartPose.offset(3.0F, 0.0F, 0.0F));
 
-        rightRoot.getChild("finger").addOrReplaceChild("web",
+        rightElbow.getChild("finger").addOrReplaceChild("web",
                 CubeListBuilder.create().texOffs(20, 6)
                         .addBox(0.0F, 0.0F, -1.75F, 3.5F, 0.15F, 3.5F),
                 PartPose.offset(3.0F, 0.15F, 0.0F));

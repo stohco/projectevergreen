@@ -255,7 +255,10 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
                 CubeListBuilder.create().texOffs(8, 46).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        return LayerDefinition.create(mesh, 64, 32);
+        // FIX (RE-APPLY-PHASE1): texture is 64x64 and model uses UVs up to y=46,
+        // but this declared only 32px tall → UVs beyond y=32 rendered as black
+        // rectangles (the "floating black prisms" symptom). Now 64x64.
+        return LayerDefinition.create(mesh, 64, 64);
     }
 
     // CRON-COMPLETIONIST-59: Expose antler tips for emissive divine glow render pass.

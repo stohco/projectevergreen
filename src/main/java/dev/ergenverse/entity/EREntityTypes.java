@@ -54,7 +54,8 @@ public class EREntityTypes {
      * {@code character_id} (synced via SynchedEntityData) and configures itself
      * from the canon DB + WorldRuntimeState overrides.
      *
-     * <p>Bounding box: 0.6×1.8 (humanoid proportions, same as vanilla Player).
+     * <p>Bounding box: 0.7×2.0 (slightly larger than vanilla Player to match the
+     * robe model visual — FIX RE-APPLY-PHASE1, was 0.6×1.8).
      *
      * <p>Client tracking range: 5 chunks (80 blocks) — standard for humanoids.
      *
@@ -68,7 +69,7 @@ public class EREntityTypes {
     public static final RegistryObject<EntityType<EntityCultivator>> CULTIVATOR =
             ENTITY_TYPES.register("cultivator", () ->
                     EntityType.Builder.<EntityCultivator>of(EntityCultivator::new, MobCategory.MISC)
-                            .sized(0.6F, 1.8F)
+                            .sized(0.7F, 2.0F)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .fireImmune()

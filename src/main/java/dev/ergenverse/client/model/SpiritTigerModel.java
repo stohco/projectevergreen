@@ -255,12 +255,14 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.5F, 0.0F));
 
+        // FIX (RE-APPLY-PHASE1): back_right_thigh/shin UVs were duplicates of
+        // front_left (both at x=10) — moved to x=30 (free column, tiger tex is 64 wide).
         root.addOrReplaceChild("back_right_thigh",
-                CubeListBuilder.create().texOffs(10, 42)
+                CubeListBuilder.create().texOffs(30, 42)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.5F, 2.0F),
                 PartPose.offset(2.0F, 8.5F, 4.5F));
         root.getChild("back_right_thigh").addOrReplaceChild("shin",
-                CubeListBuilder.create().texOffs(10, 52)
+                CubeListBuilder.create().texOffs(30, 52)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.5F, 0.0F));
 
