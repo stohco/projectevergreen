@@ -52,15 +52,21 @@ public final class SpawnEventHandler {
 
     @SubscribeEvent
     public static void onServerStarting(ServerStartingEvent event) {
-        // CRON-COMPLETIONIST-66 (2026-07-25 architecture pivot):
+        // CRON-COMPLETIONIST-66/67 (2026-07-25 architecture pivot):
         // Initialize the WorldRuntime — the single simulation authority.
-        // The runtime loads the canonical blueprint and all subsystems.
-        // This happens BEFORE any player joins — the world exists independently.
+        // The runtime loads the canonical blueprint, builds the spatial index,
+        // and registers materializers. This happens BEFORE any player joins.
+        //
+        // Per the user's directive: "The village shouldn't be built after
+        // runtime initializes. The runtime should own building." The eventual
+        // goal is for the ChunkMaterializer to handle all block placement
+        // when chunks load. For now, the village builder is called explicitly
+        // as a bridge until the ChunkMaterializer is fully wired.
         try {
             dev.ergenverse.runtime.WorldRuntime runtime = dev.ergenverse.runtime.WorldRuntime.get();
             runtime.initialize();
-            Ergenverse.LOGGER.info("[Ergenverse] WorldRuntime initialized. Blueprint: {} locations.",
-                    runtime.blueprint().allLocations().size());
+            Ergenverse.LOGGER.info("[Ergenverse] WorldRuntime initialized. Blueprint: {} locations, spatial index: {} entries.",
+                    runtime.blueprint().allLocations().size(), runtime.spatialIndex().size());
         } catch (Exception e) {
             Ergenverse.LOGGER.error("[Ergenverse] WorldRuntime initialization failed: {}", e.getMessage(), e);
         }
