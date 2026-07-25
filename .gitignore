@@ -6,3 +6,4 @@ build/
 *.log
 run/logs/
 run/world/
+*.orig
