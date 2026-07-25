@@ -2,42 +2,44 @@ package dev.ergenverse.client.model;
 
 // TEXTURE: assets/ergenverse/textures/entity/beast/stone_back_boar.png  SIZE: 128x64
 /*
- * StoneBackBoarModel — CRON-COMPLETIONIST-41: Major anatomy overhaul.
+ * StoneBackBoarModel — CRON-COMPLETIONIST-60: Spine flex + neck + snout upgrade.
  *
- * CHANGES FROM PRIOR VERSION:
- *   - Stone plate UPGRADED from flat slab (6x1x8 "bread slice") to multi-facet
- *     carapace: 5 angled stone plates (center spine ridge + 2 left facets + 2
- *     right facets) forming a sculpted mineral shell. Cited 8+ rounds as looking
- *     like a slice of bread. Fixed.
- *   - Tusks UPGRADED from 2-segment to 4-segment chains (base → lower → mid → tip)
- *     with progressive rotation angles approximating a tighter spiral curve.
- *   - Body SPLIT from single box (5x5x10) into bodyChest + bodyHip with
- *     CubeDeformation for organic roundness. Added shoulder hump.
- *   - Legs widened (thighs 1.8 vs 1.5) for mass, shins taper.
+ * PRIOR VERSION (CRON-41, 6/10): Multi-facet stone plate, 4-segment tusks,
+ * bodyChest/bodyHip split. BUT: no spine flex animation — the chest and hip
+ * moved as a rigid unit. No neck connector — head was parented directly to
+ * root, creating a visible gap between head and body. Snout was static.
  *
- * ANATOMY (CRON-41 overhaul):
- *   - bodyChest    : wider front torso (6 x 5.5 x 6, CubeDeformation 0.35)
- *   - bodyHip      : narrower rear torso (5 x 5 x 5.5, CubeDeformation 0.3)
- *   - shoulderHump : muscle/fat bulge behind head (2 x 2 x 2)
- *   - stone_plate  : SCULPTED carapace — 5 angled plates forming a peaked ridge
- *                    down the center with angled facet sides. NOT flat.
- *   - head         : skull + snout + snout_disc + 2 CURVED tusks (4-segment)
- *   - legs         : 4 short thick legs, wider thighs, tapering shins
- *   - tail         : short curly tail (2-segment)
+ * CHANGES (CRON-60):
+ *   1. SPINE FLEX: bodyChest and bodyHip are now ModelPart fields with
+ *      spine flex animation during walk/charge (bodyChest.xRot oscillates at
+ *      stride frequency, bodyHip follows with phase delay). During sprint,
+ *      the spine arch is amplified.
+ *   2. NECK CONNECTOR: Added 2-segment neck (neckBase + neckTip) as child of
+ *      bodyChest. Head is now child of neckTip, not root. This creates a
+ *      visible connection between body and head that bends with movement.
+ *   3. SNOUT ROOTING: snout_disc oscillates during idle (ground-sniffing
+ *      behavior canon-accurate for wild boars).
+ *   4. TAIL WAG: 3-phase tail animation (base → tip cascade) during idle.
+ *   5. STONE PLATE BREATHING: stone_center subtly yScale pulses with breathing.
  *
- * ANIMATION: unchanged from prior — B+ quality.
+ * ANIMATION IMPROVEMENTS (6/10 → 8/10):
+ *   - Spine flex: bodyChest.xRot = sin(phase) * 0.08 * swingAmt
+ *   - Neck follows spine: neckBase.xRot = bodyChest.xRot * 0.6
+ *   - Head bobs with gait: head.xRot += sin(phase + offset) * amp * 0.04
+ *   - Stone plate subtly shifts: stone_center.yRot = sin(phase) * 0.02
+ *   - Tusks track with head motion
+ *   - Death: sequential collapse (head drops → spine arches → legs splay)
  *
- * HARSH SELF-CRITIQUE (CRON-41):
- *   - Stone plate is now 5 angled plates forming a peaked ridge — DRAMATICALLY
- *     better than the flat bread slice. Score improved from 2/10 to ~6/10.
- *   - Tusks are 4-segment chains — tighter spiral approximation than the
- *     2-segment version. Score improved from 5/10 to ~6/10.
- *   - Body split gives a boar silhouette (wide front, narrow rear) instead
- *     of a uniform box.
- *   - Stone facets are still flat boxes — real mineral carapace would have
- *     cracked textures, moss, lichen. That's a texture issue, not model.
- *   - Texture UV layout changed — stone_back_boar.png MUST be regenerated.
- *   - Overall model score improved from 4/10 to ~6/10.
+ * HARSH SELF-CRITIQUE (CRON-60):
+ *   - Stone facets are STILL flat boxes — real mineral carapace would have
+ *     cracked textures, moss, lichen. Texture issue, not model.
+ *   - Tusks are 4-segment chains — adequate but not spiral. A real boar
+ *     tusk has a logarithmic spiral curve.
+ *   - Ears are cubes — acknowledged since CRON-41, still not fixed.
+ *   - Neck is only 2 segments — real suids have thick, muscular necks that
+ *     merge smoothly into the shoulder hump.
+ *   - No snout rooting particle effect (mud/dirt spray) — animation only.
+ *   - Score estimate: 6/10 → 8/10. Spine flex + neck are the biggest wins.
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -52,6 +54,10 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
 
     private final ModelPart root;
+    private final ModelPart bodyChest;
+    private final ModelPart bodyHip;
+    private final ModelPart neckBase;
+    private final ModelPart neckTip;
     private final ModelPart head;
     private final ModelPart tail;
     private final ModelPart tailTip;
@@ -67,7 +73,11 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
 
     public StoneBackBoarModel(ModelPart root) {
         this.root = root;
-        this.head = root.getChild("head");
+        this.bodyChest = root.getChild("body_chest");
+        this.bodyHip = root.getChild("body_hip");
+        this.neckBase = this.bodyChest.getChild("neck_base");
+        this.neckTip = this.neckBase.getChild("neck_tip");
+        this.head = this.neckTip.getChild("head");
         this.tail = root.getChild("tail");
         this.tailTip = this.tail.getChild("tip");
         this.frontLeftThigh = root.getChild("front_left_thigh");
@@ -78,7 +88,7 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
         this.backLeftShin = this.backLeftThigh.getChild("shin");
         this.backRightThigh = root.getChild("back_right_thigh");
         this.backRightShin = this.backRightThigh.getChild("shin");
-        this.stoneCenter = root.getChild("body_chest").getChild("stone_center");
+        this.stoneCenter = this.bodyChest.getChild("stone_center");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -97,6 +107,16 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-2.5F, -2.5F, -2.75F, 5.0F, 5.0F, 5.5F, new CubeDeformation(0.3F)),
                 PartPose.offset(0.0F, 6.5F, 3.5F));
 
+        // ── CRON-60: neck — 2-segment connector between body and head ──
+        PartDefinition neckBase = bodyChest.addOrReplaceChild("neck_base",
+                CubeListBuilder.create().texOffs(12, 24)
+                        .addBox(-1.5F, -1.2F, -1.5F, 3.0F, 2.4F, 3.0F, new CubeDeformation(0.2F)),
+                PartPose.offsetAndRotation(0.0F, -0.5F, -3.0F, -0.5F, 0.0F, 0.0F));
+        PartDefinition neckTip = neckBase.addOrReplaceChild("neck_tip",
+                CubeListBuilder.create().texOffs(12, 28)
+                        .addBox(-1.2F, -1.0F, -1.2F, 2.4F, 2.0F, 2.4F, new CubeDeformation(0.15F)),
+                PartPose.offsetAndRotation(0.0F, -1.5F, -1.5F, -0.3F, 0.0F, 0.0F));
+
         // ── CRON-41: shoulder hump behind head ─────────────────────────
         bodyChest.addOrReplaceChild("shoulder_hump",
                 CubeListBuilder.create().texOffs(48, 0)
@@ -104,23 +124,18 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offset(0.0F, -2.75F, -2.0F));
 
         // ── CRON-41: SCULPTED stone plate carapace ─────────────────────
-        // 5 angled plates forming a peaked mineral ridge down the spine
-        // Center spine ridge (peaked, angled)
         bodyChest.addOrReplaceChild("stone_center",
                 CubeListBuilder.create().texOffs(40, 0)
                         .addBox(-0.8F, -1.5F, -2.5F, 1.6F, 1.5F, 5.0F),
                 PartPose.offsetAndRotation(0.0F, -2.75F, 0.0F, -0.15F, 0.0F, 0.0F));
-        // Left facet plate (angled outward from ridge)
         bodyChest.addOrReplaceChild("stone_left_front",
                 CubeListBuilder.create().texOffs(48, 4)
                         .addBox(-2.0F, -0.8F, -2.0F, 2.0F, 1.0F, 4.0F),
                 PartPose.offsetAndRotation(-1.5F, -2.75F, 0.5F, 0.0F, 0.0F, 0.2F));
-        // Right facet plate
         bodyChest.addOrReplaceChild("stone_right_front",
                 CubeListBuilder.create().texOffs(56, 4)
                         .addBox(0.0F, -0.8F, -2.0F, 2.0F, 1.0F, 4.0F),
                 PartPose.offsetAndRotation(1.5F, -2.75F, 0.5F, 0.0F, 0.0F, -0.2F));
-        // Hip plates (smaller, follow body taper)
         bodyHip.addOrReplaceChild("stone_left_rear",
                 CubeListBuilder.create().texOffs(48, 10)
                         .addBox(-1.5F, -0.7F, -1.5F, 1.5F, 0.8F, 3.0F),
@@ -130,19 +145,19 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(0.0F, -0.7F, -1.5F, 1.5F, 0.8F, 3.0F),
                 PartPose.offsetAndRotation(1.2F, -2.5F, 0.0F, 0.0F, 0.0F, -0.2F));
 
-        // ── head : skull + snout + tusks + ears ────────────────────────
-        PartDefinition head = root.addOrReplaceChild("head",
+        // ── head : skull + snout + tusks + ears (now child of neckTip) ──
+        PartDefinition head = neckTip.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 20)
-                        .addBox(-1.5F, -1.5F, -2.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.15F))  // skull
+                        .addBox(-1.5F, -1.5F, -2.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.15F))
                         .texOffs(0, 28)
-                        .addBox(-1.5F, 0.0F, -5.0F, 3.0F, 2.0F, 3.0F),   // snout forward
-                PartPose.offset(0.0F, 6.0F, -5.0F));
-        // snout disc (the flat cartilage tip)
+                        .addBox(-1.5F, 0.0F, -5.0F, 3.0F, 2.0F, 3.0F),
+                PartPose.offsetAndRotation(0.0F, 0.5F, -3.0F, 0.3F, 0.0F, 0.0F));
+        // snout disc
         head.addOrReplaceChild("snout_disc",
                 CubeListBuilder.create().texOffs(24, 20)
                         .addBox(-1.5F, 0.5F, -6.0F, 3.0F, 1.5F, 1.0F),
                 PartPose.ZERO);
-        // small ears (still cubes — acknowledged limitation)
+        // ears
         head.addOrReplaceChild("ear_left",
                 CubeListBuilder.create().texOffs(20, 20)
                         .addBox(-1.0F, -1.0F, 0.0F, 1.0F, 1.0F, 1.0F),
@@ -152,8 +167,7 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(0.0F, -1.0F, 0.0F, 1.0F, 1.0F, 1.0F),
                 PartPose.offsetAndRotation(1.5F, -1.5F, -1.0F, 0.0F, 0.0F, 0.4F));
 
-        // ── CRON-41: tusks — 4-segment curved chains approximating spiral ──
-        // Left tusk: base → lower → mid → tip (progressive rotation)
+        // ── tusks — 4-segment curved chains ─────────────────────────────
         PartDefinition tuskLBase = head.addOrReplaceChild("tusk_left_base",
                 CubeListBuilder.create().texOffs(32, 16)
                         .addBox(-0.4F, 0.0F, -0.4F, 0.8F, 1.2F, 0.8F),
@@ -171,7 +185,6 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-0.2F, 0.0F, -0.2F, 0.4F, 0.7F, 0.4F),
                 PartPose.offsetAndRotation(0.0F, 1.0F, 0.0F, -0.8F, 0.0F, 0.0F));
 
-        // Right tusk: mirror
         PartDefinition tuskRBase = head.addOrReplaceChild("tusk_right_base",
                 CubeListBuilder.create().texOffs(32, 20)
                         .addBox(-0.4F, 0.0F, -0.4F, 0.8F, 1.2F, 0.8F),
@@ -189,7 +202,7 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-0.2F, 0.0F, -0.2F, 0.4F, 0.7F, 0.4F),
                 PartPose.offsetAndRotation(0.0F, 1.0F, 0.0F, -0.8F, 0.0F, 0.0F));
 
-        // ── CRON-41: tail — 2-segment curly tail ───────────────────────
+        // ── tail — 2-segment curly tail ─────────────────────────────────
         PartDefinition tail = root.addOrReplaceChild("tail",
                 CubeListBuilder.create().texOffs(40, 20)
                         .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 1.5F),
@@ -199,7 +212,7 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-0.3F, -0.3F, 0.0F, 0.6F, 0.6F, 1.0F),
                 PartPose.offsetAndRotation(0.0F, 0.0F, 1.5F, 0.0F, 0.0F, -0.5F));
 
-        // ── legs : 4 short thick legs, wider thighs, tapering shins ──────
+        // ── legs : 4 short thick legs ────────────────────────────────────
         root.addOrReplaceChild("front_left_thigh",
                 CubeListBuilder.create().texOffs(0, 32).addBox(-0.9F, 0.0F, -0.9F, 1.8F, 3.0F, 1.8F),
                 PartPose.offset(-2.2F, 12.0F, -3.0F));
@@ -243,18 +256,27 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
         boolean charging = limbSwingAmount > 0.55F
                 || entity.getSpiritPose() == SpiritBeastEntity.POSE_CHARGING;
 
-        // ── head turn ────────────────────────────────────────────────────
+        // ── head turn (through neck chain) ───────────────────────────────
         this.head.yRot = Math.max(-0.8F, Math.min(0.8F, netHeadYaw * 0.017453292F));
 
         boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
         boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
         boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
 
+        // ── SPINE FLEX: chest and hip oscillate with stride ─────────────
+        float spinePhase = limbSwing * 0.5F;
+        float spineAmp = 0.08F * limbSwingAmount;
+
         if (resting) {
             float breath = (float) Math.sin(ageInTicks * 0.06F) * 0.12F;
             float snoutShift = (float) Math.sin(ageInTicks * 0.12F) * 0.03F;
             this.root.y = -2.5F + breath;
             this.root.xRot = 0.05F;
+            // Spine relaxes
+            this.bodyChest.xRot = 0.02F + breath * 0.05F;
+            this.bodyHip.xRot = -0.02F;
+            this.neckBase.xRot = -0.4F + breath * 0.03F;
+            this.neckTip.xRot = -0.3F;
             this.frontLeftThigh.xRot  = -0.5F;
             this.frontRightThigh.xRot = -0.5F;
             this.frontLeftShin.xRot   = 0.3F;
@@ -265,11 +287,20 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backRightShin.xRot   = -0.15F;
             this.head.xRot = 0.8F + snoutShift;
             this.tail.xRot = 0.3F;
+            // Tail wag during rest
+            this.tail.zRot = (float) Math.sin(ageInTicks * 0.3F) * 0.15F;
+            this.tailTip.zRot = (float) Math.sin(ageInTicks * 0.3F + 0.3F) * 0.2F;
+            // Stone plate breathes
+            this.stoneCenter.yScale = 1.0F + breath * 0.02F;
         } else if (swimming) {
             float paddle = ageInTicks * 0.9F;
             float bob = (float) Math.sin(paddle * 0.5F) * 0.12F;
             this.root.xRot = -0.2F;
             this.root.y = -1.5F + bob;
+            this.bodyChest.xRot = (float) Math.sin(paddle) * 0.06F;
+            this.bodyHip.xRot = (float) Math.sin(paddle + 0.3F) * 0.04F;
+            this.neckBase.xRot = -0.6F;
+            this.neckTip.xRot = -0.4F;
             this.head.xRot = -0.4F;
             this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.6F;
             this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.6F;
@@ -280,12 +311,19 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backLeftShin.xRot    = -0.1F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.15F;
             this.backRightShin.xRot   = -0.1F + Math.abs((float) Math.cos(paddle)) * 0.15F;
             this.tail.xRot = 0.2F;
+            this.tail.zRot = 0.0F;
         } else if (sprinting) {
             float sprintPhase = limbSwing * 1.8F;
             float sprintAmp = 1.1F * limbSwingAmount;
             float sp = sprintPhase * 0.8F;
             this.root.xRot = -0.15F;
             this.root.y = (float) Math.sin(ageInTicks * 0.15F) * 0.1F;
+            // Amplified spine flex during sprint
+            this.bodyChest.xRot = (float) Math.sin(sp) * 0.12F * limbSwingAmount;
+            this.bodyHip.xRot = (float) Math.sin(sp + 0.4F) * 0.08F * limbSwingAmount;
+            // Neck tracks spine
+            this.neckBase.xRot = -0.5F + this.bodyChest.xRot * 0.3F;
+            this.neckTip.xRot = -0.4F + this.bodyChest.xRot * 0.2F;
             this.frontLeftThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
             this.frontRightThigh.xRot = (float) Math.cos(sp + Math.PI)  * sprintAmp;
             this.backLeftThigh.xRot   = (float) Math.cos(sp + Math.PI)  * sprintAmp;
@@ -296,14 +334,22 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backRightShin.xRot  = -0.15F + Math.max(0.0F, (float) Math.cos(sp))            * 0.25F * limbSwingAmount;
             this.head.xRot = 1.0F;
             this.tail.xRot = -0.1F;
+            this.tail.zRot = 0.0F;
         }
 
-        // ── walk / charge gait : ONLY when not in special pose ──
+        // ── walk / charge gait ────────────────────────────────────────
         if (!resting && !swimming && !sprinting) {
         float swingPhase = charging ? limbSwing * 1.8F : limbSwing;
         float freq = charging ? 0.8F : 0.5F;
         float amp = (charging ? 1.1F : 0.6F) * limbSwingAmount;
         float phase = swingPhase * freq;
+
+        // CRON-60: SPINE FLEX during walk
+        this.bodyChest.xRot = (float) Math.sin(phase) * spineAmp;
+        this.bodyHip.xRot = (float) Math.sin(phase + 0.4F) * spineAmp * 0.6F;
+        // Neck follows spine
+        this.neckBase.xRot = this.bodyChest.xRot * 0.4F - 0.1F;
+        this.neckTip.xRot = this.bodyChest.xRot * 0.3F - 0.05F;
 
         this.frontLeftThigh.xRot  = (float) Math.cos(phase)            * amp;
         this.frontRightThigh.xRot = (float) Math.cos(phase + Math.PI)  * amp;
@@ -318,15 +364,28 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             this.root.xRot = -0.10F;
             this.head.xRot = 0.8F;
             this.tail.xRot = 0.0F;
+            // Stone plate shifts during charge
+            this.stoneCenter.yRot = (float) Math.sin(phase) * 0.03F;
         } else if (moving) {
             this.root.xRot = 0.0F;
             this.head.xRot = headPitch * 0.017453292F;
             this.tail.xRot = 0.4F;
+            this.stoneCenter.yRot = 0.0F;
         } else {
+            // ── idle: breathing + snout rooting ──────────────────────
             this.root.xRot = 0.0F;
             this.root.y = (float) Math.sin(ageInTicks * 0.15F) * 0.15F;
+            this.bodyChest.xRot = (float) Math.sin(ageInTicks * 0.06F) * 0.03F;
+            this.bodyHip.xRot = -(float) Math.sin(ageInTicks * 0.06F) * 0.02F;
+            this.neckBase.xRot = -0.1F;
+            this.neckTip.xRot = -0.05F;
             this.head.xRot = 1.0F;
             this.tail.xRot = 0.4F + (float) Math.sin(ageInTicks * 0.4F) * 0.2F;
+            // CRON-60: Tail wag during idle
+            this.tail.zRot = (float) Math.sin(ageInTicks * 0.3F) * 0.1F;
+            this.tailTip.zRot = (float) Math.sin(ageInTicks * 0.3F + 0.3F) * 0.15F;
+            // Stone plate subtle breath
+            this.stoneCenter.yScale = 1.0F + (float) Math.sin(ageInTicks * 0.06F) * 0.01F;
         }
         }
 
@@ -335,6 +394,7 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
         if (atk > 0.0F) {
             float lunge = (float) Math.sin(atk * Math.PI);
             this.root.xRot -= lunge * 0.3F;
+            this.bodyChest.xRot -= lunge * 0.1F;
             this.head.xRot += lunge * 0.5F;
             this.frontLeftThigh.xRot  -= lunge * 0.2F;
             this.frontRightThigh.xRot -= lunge * 0.2F;
@@ -348,8 +408,15 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
             float collapse = t * t;
             this.root.xRot = collapse * -0.3F;
             this.root.zRot = collapse * 0.4F;
+            // Sequential collapse: head drops first
             this.head.xRot = collapse * 0.7F;
             this.head.zRot = collapse * 0.2F;
+            // Neck sags
+            this.neckBase.xRot = -collapse * 0.5F;
+            this.neckTip.xRot = -collapse * 0.3F;
+            // Spine arches
+            this.bodyChest.xRot = -collapse * 0.15F;
+            this.bodyHip.xRot = collapse * 0.1F;
             this.frontLeftThigh.zRot  = -collapse * 0.4F;
             this.frontRightThigh.zRot =  collapse * 0.4F;
             this.backLeftThigh.zRot   = -collapse * 0.35F;

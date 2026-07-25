@@ -178,12 +178,12 @@ public class EREntityTypes {
                             .updateInterval(2)
                             .build("sea_serpent"));
 
-    // CRON-COMPLETIONIST-36: SoulFishModel — small qi-infused fish.
-    // Hitbox: ~0.3 wide, ~0.3 tall (tiny aquatic creature, schools in spirit waters).
+    // CRON-COMPLETIONIST-60: SoulFishModel v3 — doubled model dimensions.
+    // Hitbox: 0.6×0.5 (was 0.3×0.3 — too small to see any model detail).
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SOUL_FISH =
             ENTITY_TYPES.register("soul_fish", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.3F, 0.3F)
+                            .sized(0.6F, 0.5F)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("soul_fish"));

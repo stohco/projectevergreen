@@ -99,16 +99,15 @@ public class FlyingSwordProjectileRenderer extends EntityRenderer<FlyingSwordPro
         this.model.renderToBuffer(poseStack, buffer.getBuffer(this.model.renderType(TEXTURE)),
                 packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        // ── CRON-COMPLETIONIST-45: Qi glow emissive pass ──
-        // Re-render ONLY the blade at fullbright so it glows in darkness.
-        // The blade is a direct child of root, so rendering blade alone
-        // renders just the blade cubes (lower + tip) — NOT the guard/handle/tassel.
-        // This is the same technique used for FireBeastRenderer eye glow.
+        // ── CRON-COMPLETIONIST-45/60: Qi glow emissive pass ──
+        // Re-render blade + qi trail at fullbright for spiritual glow effect.
         poseStack.pushPose();
         poseStack.translate(0, 1.501F, 0); // 1 pixel above to prevent z-fighting
         var renderType = this.model.renderType(TEXTURE);
         var vertexConsumer = buffer.getBuffer(renderType);
         this.model.getBlade().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+        // CRON-60: Also glow the qi trail aura
+        this.model.getQiTrail().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
         poseStack.popPose();
 
         poseStack.popPose();
