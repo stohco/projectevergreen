@@ -1,9 +1,7 @@
 package dev.ergenverse.client.screen;
 
 import dev.ergenverse.client.AtlasClientEvents;
-import dev.ergenverse.network.ERNetwork;
 import dev.ergenverse.perception.atlas.AtlasEntry;
-import dev.ergenverse.perception.atlas.AtlasNetworkPackets;
 import dev.ergenverse.simulation.opportunity.PlayerObserverRealm;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -22,7 +20,7 @@ import java.util.List;
  *
  * <p>Per PROJECT_MASTER.md §5.5, this is a <b>perception record</b>, not a
  * satellite view. It renders ONLY entries the player has genuinely acquired
- * (synced via {@link AtlasNetworkPackets.AtlasSyncS2CPacket} from the
+ * (read directly from the local player's capability in single-player mode via
  * server's {@link dev.ergenverse.perception.atlas.DivineSenseAtlas}).
  *
  * <h2>Layout</h2>
@@ -84,10 +82,11 @@ public final class DivineSenseAtlasScreen extends Screen {
         addLayerButton(btnX, btnY + 88,  "4: Law", 4);
 
         // ── Refresh button ──
+        // SINGLE-PLAYER: reads directly from local player capability instead of
+        // sending an unregistered network packet (which would crash the client).
         addRenderableWidget(Button.builder(
                 Component.literal("Refresh"),
-                button -> ERNetwork.getChannel().sendToServer(
-                        new AtlasNetworkPackets.AtlasRequestC2SPacket()))
+                button -> dev.ergenverse.client.AtlasClientEvents.refreshFromLocalPlayer())
                 .bounds(btnX, btnY + 120, 100, 18)
                 .build());
 

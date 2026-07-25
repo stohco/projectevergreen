@@ -200,8 +200,12 @@ public final class ErgenverseBlocks {
     private static RegistryObject<Block> registerHerb(String name,
                                                       @javax.annotation.Nullable net.minecraft.world.effect.MobEffect stewEffect,
                                                       int effectDuration) {
+        // FIX CRON-COMPLETIONIST-65: Previously passed `null` as the Supplier when
+        // stewEffect was null, causing NPE during block registration (FlowerBlock
+        // constructor calls .get() on the Supplier). Now always passes a non-null
+        // Supplier that may return null (harmless — just no stew effect applied).
         RegistryObject<Block> block = BLOCKS.register(name, () -> new FlowerBlock(
-                stewEffect != null ? () -> stewEffect : null, effectDuration,
+                () -> stewEffect, effectDuration,
                 BlockBehaviour.Properties.of()
                         .noCollission()
                         .instabreak()

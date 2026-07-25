@@ -150,9 +150,10 @@ public final class AtlasNetworkPackets {
                 PlayerObserverRealm tier = atlas.getCurrentTier(player);
                 List<AtlasEntry> visible = atlas.getEntriesForTier(tier);
                 List<String> rumors = new ArrayList<>(atlas.rumorIds());
-                AtlasSyncS2CPacket reply = new AtlasSyncS2CPacket(tier, visible, rumors);
-                ERNetwork.getChannel().send(
-                        PacketDistributor.PLAYER.with(() -> player), reply);
+                // SINGLE-PLAYER: no network reply needed. Client reads locally.
+                // AtlasSyncS2CPacket reply = new AtlasSyncS2CPacket(tier, visible, rumors);
+                // ERNetwork.getChannel().send(
+                //         PacketDistributor.PLAYER.with(() -> player), reply);
             });
             ctx.get().setPacketHandled(true);
             return true;
@@ -162,15 +163,19 @@ public final class AtlasNetworkPackets {
     /**
      * Server-side helper: send a fresh atlas sync to the given player.
      *
-     * <p>Called from {@code AtlasObservationEvents} after each new
-     * observation, and on player login.
+     * <p>SINGLE-PLAYER ONLY (Article XLIII). The atlas sync packets were never
+     * registered in {@link ERNetwork} (the comment claimed IDs 26/27 but they
+     * were never wired). Sending an unregistered packet crashed the client on
+     * login with "Invalid player data". Since this mod is single-player only,
+     * there is no network boundary — the client reads atlas state directly
+     * from the integrated server's player capability via
+     * {@link AtlasClientEvents#refreshFromLocalPlayer()}.
+     *
+     * <p>This method is now a NO-OP. All call sites are preserved for future
+     * multiplayer support; they simply do nothing.
      */
     public static void sendToClient(ServerPlayer player, DivineSenseAtlas atlas) {
-        if (player == null || atlas == null) return;
-        PlayerObserverRealm tier = atlas.getCurrentTier(player);
-        List<AtlasEntry> visible = atlas.getEntriesForTier(tier);
-        List<String> rumors = new ArrayList<>(atlas.rumorIds());
-        AtlasSyncS2CPacket packet = new AtlasSyncS2CPacket(tier, visible, rumors);
-        ERNetwork.getChannel().send(PacketDistributor.PLAYER.with(() -> player), packet);
+        // NO-OP — single-player only. The client reads atlas state directly.
+        // See AtlasClientEvents.refreshFromLocalPlayer() for the local read path.
     }
 }

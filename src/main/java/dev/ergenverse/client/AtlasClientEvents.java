@@ -2,11 +2,17 @@ package dev.ergenverse.client;
 
 import dev.ergenverse.client.screen.DivineSenseAtlasScreen;
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.cultivation.CultivationCapability;
+import dev.ergenverse.cultivation.CultivationState;
+import dev.ergenverse.cultivation.RealmId;
+import dev.ergenverse.perception.atlas.AtlasCapability;
 import dev.ergenverse.perception.atlas.AtlasEntry;
 import dev.ergenverse.perception.atlas.AtlasNetworkPackets;
+import dev.ergenverse.perception.atlas.DivineSenseAtlas;
 import dev.ergenverse.simulation.opportunity.PlayerObserverRealm;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -103,6 +109,42 @@ public final class AtlasClientEvents {
         return lastSyncTick;
     }
 
+    /**
+     * SINGLE-PLAYER refresh: reads the atlas state directly from the local
+     * player's capability. No network packet needed (Article XLIII:
+     * single-player maximalism). Called by the DivineSenseAtlasScreen
+     * refresh button and by the tick handler when the screen is open.
+     */
+    public static void refreshFromLocalPlayer() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc == null || mc.player == null) return;
+        try {
+            // Compute tier client-side from cultivation state (getCurrentTier
+            // takes ServerPlayer, but we're on the client with a LocalPlayer).
+            PlayerObserverRealm tier = PlayerObserverRealm.MORTAL;
+            var cultivationOpt = CultivationCapability.get(mc.player);
+            if (cultivationOpt.isPresent()) {
+                CultivationState state = cultivationOpt.resolve().get();
+                RealmId realm = state.getCurrentRealm();
+                tier = DivineSenseAtlas.fromRealmId(realm);
+            }
+
+            final PlayerObserverRealm finalTier = tier;
+            LazyOptional<DivineSenseAtlas> opt = mc.player.getCapability(AtlasCapability.ATLAS);
+            opt.ifPresent(atlas -> {
+                List<AtlasEntry> visible = atlas.getEntriesForTier(finalTier);
+                clientEntries = new ArrayList<>(visible);
+                clientRumors = new ArrayList<>(atlas.rumorIds());
+                clientTier = finalTier;
+                if (mc.level != null) {
+                    lastSyncTick = mc.level.getGameTime();
+                }
+            });
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Atlas local refresh failed: {}", t.getMessage());
+        }
+    }
+
     // ─── M-key handler ──────────────────────────────────────────────
 
     /**
@@ -115,13 +157,22 @@ public final class AtlasClientEvents {
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
-        // Don't open if a screen is already showing (would stack screens).
         Minecraft mc = Minecraft.getInstance();
         if (mc == null) return;
-        if (mc.screen != null) return;
         if (mc.player == null) return;
 
+        // SINGLE-PLAYER: if the atlas screen is open, refresh from local
+        // capability every 10 ticks (0.5s) so new observations appear live.
+        if (mc.screen instanceof DivineSenseAtlasScreen) {
+            if (mc.level != null && mc.level.getGameTime() % 10 == 0) {
+                refreshFromLocalPlayer();
+            }
+            return; // don't process keybind while screen is open
+        }
+
         if (AtlasKeybind.ATLAS_KEY.consumeClick()) {
+            // Refresh before opening so the screen has fresh data.
+            refreshFromLocalPlayer();
             mc.setScreen(new DivineSenseAtlasScreen());
         }
     }

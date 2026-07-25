@@ -11,19 +11,15 @@ import dev.ergenverse.client.model.SpiritRabbitModel;
 import dev.ergenverse.client.model.SpiritWolfModel;
 import dev.ergenverse.client.model.SpiritDeerModel;
 import dev.ergenverse.client.model.SpiritHawkModel;
-import dev.ergenverse.client.model.SpiritCraneModel;
 import dev.ergenverse.client.model.SpiritFireBeastModel;
 import dev.ergenverse.client.model.SpiritTigerModel;
 import dev.ergenverse.client.model.StoneBackBoarModel;
-import dev.ergenverse.client.model.SpiritBatModel;
-import dev.ergenverse.client.model.QilinModel;
-import dev.ergenverse.client.model.SeaSerpentModel;
-import dev.ergenverse.client.model.SoulFishModel;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -68,11 +64,12 @@ public final class SpiritBeastRenderers {
                            PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getEarLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getEarRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEarLeft().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getEarRight().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -106,12 +103,13 @@ public final class SpiritBeastRenderers {
                            PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
             // Targeted emissive: only eye cubes, not the whole head.
-            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -138,11 +136,12 @@ public final class SpiritBeastRenderers {
                            PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getAntlerLeftTip().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getAntlerRightTip().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getAntlerLeftTip().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getAntlerRightTip().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -172,12 +171,13 @@ public final class SpiritBeastRenderers {
                            PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
             // Targeted emissive: only eye cubes, not the whole head.
-            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -206,10 +206,11 @@ public final class SpiritBeastRenderers {
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             // Emissive crown — red spiritual glow on the 丹顶 (red crown)
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getCrown().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getCrown().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -271,11 +272,12 @@ public final class SpiritBeastRenderers {
             //
             // The 17+ round bug is now FIXED: both eyes glow, only eyes glow.
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0); // pixel above normal to prevent z-fighting
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset // pixel above normal to prevent z-fighting
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -302,10 +304,11 @@ public final class SpiritBeastRenderers {
                            PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getStoneCenter().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getStoneCenter().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -332,11 +335,12 @@ public final class SpiritBeastRenderers {
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             // Emissive ear tips — faint qi-glow
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getEarLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getEarRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEarLeft().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getEarRight().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -364,11 +368,12 @@ public final class SpiritBeastRenderers {
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             // Emissive antler tips — divine spiritual glow
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getAntlerLeftTip().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getAntlerRightTip().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getAntlerLeftTip().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getAntlerRightTip().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -397,11 +402,12 @@ public final class SpiritBeastRenderers {
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             // Emissive eyes — bioluminescent predatory glow in deep water
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -432,13 +438,14 @@ public final class SpiritBeastRenderers {
             // Full emissive: body, qi-glow aura, AND eyes at fullbright.
             // Soul fish are canonically bioluminescent — this IS their identity.
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getBody().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getQiGlow().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getBody().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getQiGlow().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }
@@ -469,11 +476,12 @@ public final class SpiritBeastRenderers {
             super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
             // Emissive eyes — amber/gold predatory glow
             poseStack.pushPose();
-            poseStack.translate(0, 1.501F, 0);
+            poseStack.scale(-1.0F, -1.0F, 1.0F); // CRON-65 FIX: match MobRenderer's y-flip
+            poseStack.translate(0, -1.5F, 0);    // CRON-65 FIX: match MobRenderer's ground offset
             var renderType = this.getModel().renderType(getTextureLocation(entity));
             var vertexConsumer = buffer.getBuffer(renderType);
-            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
-            this.getModel().getEyeRight().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+            this.getModel().getEyeLeft().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
+            this.getModel().getEyeRight().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
     }

@@ -99,15 +99,19 @@ public class FlyingSwordProjectileRenderer extends EntityRenderer<FlyingSwordPro
         this.model.renderToBuffer(poseStack, buffer.getBuffer(this.model.renderType(TEXTURE)),
                 packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        // ── CRON-COMPLETIONIST-45/60: Qi glow emissive pass ──
+        // ── CRON-COMPLETIONIST-45/60/65: Qi glow emissive pass ──
         // Re-render blade + qi trail at fullbright for spiritual glow effect.
+        // CRON-65 FIX: removed erroneous translate(0, 1.501, 0) which placed
+        // emissive parts 1.5 blocks above the sword. Now uses a tiny offset
+        // (0.001 blocks) for z-fighting prevention. Also fixed parameter order:
+        // FULLBRIGHT is now the light (not overlay).
         poseStack.pushPose();
-        poseStack.translate(0, 1.501F, 0); // 1 pixel above to prevent z-fighting
+        poseStack.translate(0, 0.001F, 0); // tiny offset to prevent z-fighting
         var renderType = this.model.renderType(TEXTURE);
         var vertexConsumer = buffer.getBuffer(renderType);
-        this.model.getBlade().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+        this.model.getBlade().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
         // CRON-60: Also glow the qi trail aura
-        this.model.getQiTrail().render(poseStack, vertexConsumer, packedLight, FULLBRIGHT);
+        this.model.getQiTrail().render(poseStack, vertexConsumer, FULLBRIGHT, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
 
         poseStack.popPose();
