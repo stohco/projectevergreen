@@ -377,6 +377,7 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
         boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
         boolean flying = entity.getSpiritPose() == SpiritBeastEntity.POSE_FLYING;
         boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
+        boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
 
         ModelPart[] mane = {this.mane0, this.mane1, this.mane2, this.mane3, this.mane4};
 
@@ -408,6 +409,42 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
             this.rightWingMid.zRot = 0.0F;
             this.leftWingTip.zRot = 0.0F;
             this.rightWingTip.zRot = 0.0F;
+        } else if (swimming) {
+            // ── CRON-COMPLETIONIST-76: Qilin swims — divine beasts can ford rivers ──
+            // Canon: qilin are supernatural creatures that can walk on water or
+            // swim with serene grace. Body pitches, legs paddle, head elevated.
+            float paddle = ageInTicks * 1.0F;
+            float bob = (float) Math.sin(paddle * 0.5F) * 0.08F;
+            this.root.xRot = -0.25F;          // body pitches slightly down
+            this.root.y = -1.0F + bob;         // submerged partially
+            // Head stays above water
+            this.head.xRot = -0.3F;
+            this.neck.xRot = -0.5F;
+            this.jaw.xRot = 0.0F;
+            // Legs paddle — slower than wolf, more deliberate (divine poise)
+            this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.6F;
+            this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.6F;
+            this.backLeftThigh.xRot   = (float) Math.cos(paddle + Math.PI) * 0.5F;
+            this.backRightThigh.xRot  = (float) Math.cos(paddle) * 0.5F;
+            this.frontLeftShin.xRot  = -0.2F + Math.abs((float) Math.cos(paddle)) * 0.4F;
+            this.frontRightShin.xRot = -0.2F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.4F;
+            this.backLeftShin.xRot   = -0.2F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.3F;
+            this.backRightShin.xRot  = -0.2F + Math.abs((float) Math.cos(paddle)) * 0.3F;
+            // Tail sways in water — wider than on land
+            this.tailBase.yRot = (float) Math.sin(paddle * 0.5F) * 0.4F;
+            this.tailMid.yRot = (float) Math.sin(paddle * 0.5F + 0.5F) * 0.25F;
+            this.tailFan.yRot = (float) Math.sin(paddle * 0.5F + 1.0F) * 0.2F;
+            // Mane flows in water — gentle sway
+            for (int i = 0; i < mane.length; i++) {
+                float p = ageInTicks * 0.4F + i * 0.5F;
+                mane[i].yRot = (float) Math.sin(p) * 0.12F;
+                mane[i].yScale = 0.85F + (float) Math.sin(p) * 0.05F;
+            }
+            // Wings stay folded when swimming (too heavy to flap in water)
+            this.leftWingRoot.zRot = 0.0F;
+            this.rightWingRoot.zRot = 0.0F;
+            this.leftWingRoot.xRot = -0.8F;
+            this.rightWingRoot.xRot = 0.8F;
         } else {
             // ── walk / run / sprint gait ──────────────────────────────
             boolean running = limbSwingAmount > 0.5F;
