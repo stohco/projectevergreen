@@ -291,7 +291,7 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-1.0F, 3.0F, 0.5F, 1.0F, 1.0F, 1.0F),    // CRON-21: rear hallux
                 PartPose.offset(1.5F, 12.0F, 0.0F));
 
-        return LayerDefinition.create(mesh, 128, 64);  // CRON-67: expanded for 5+3 feather UVs
+        return LayerDefinition.create(mesh, 64, 64);
     }
 
     // CRON-COMPLETIONIST-59: Expose head for emissive eye glow render pass.
