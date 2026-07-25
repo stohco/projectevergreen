@@ -1,6 +1,11 @@
 {
+  "_comment": "CRON-86: Spirit wolf (灵狼) — forest/mountain predator. Spawns in Zhao mountains and forests, plus the Jue Ming Valley (决明谷, formerly Forest of Distorted Sense — remapped in CRON-79 for canon purity). Wolves hunt rabbits and deer. Weight 6 = uncommon predator. Added zhao_forest (wolves are forest creatures, not just mountain).",
   "type": "forge:add_spawns",
-  "biomes": "#minecraft:is_overworld",
+  "biomes": [
+    "ergenverse:zhao_mountains",
+    "ergenverse:zhao_forest",
+    "ergenverse:jue_ming_valley"
+  ],
   "spawners": [
     {
       "type": "ergenverse:spirit_wolf",

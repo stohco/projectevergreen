@@ -1,0 +1,18 @@
+{
+  "_comment": "CRON-86: Sea serpent (海蛇) — aquatic predator of the 修魔海 (Sea of Devils). Canon: the Sea of Devils is home to demonic sea beasts that attack cultivators. The sea serpent is the apex aquatic predator, hunting soul_fish. Weight 6 = uncommon predator. Restricted to Sea of Devils waters.",
+  "type": "forge:add_spawns",
+  "biomes": [
+    "ergenverse:sea_of_devils",
+    "ergenverse:sea_of_devils_outer_ring",
+    "ergenverse:sea_of_devils_inner_ring",
+    "ergenverse:sea_of_devils_chaotic_current"
+  ],
+  "spawners": [
+    {
+      "type": "ergenverse:sea_serpent",
+      "weight": 6,
+      "minCount": 1,
+      "maxCount": 2
+    }
+  ]
+}

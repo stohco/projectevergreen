@@ -1,0 +1,19 @@
+{
+  "_comment": "CRON-86: Spirit bat (灵蝠) — cave-dwelling aerial beast. Spawns in hidden cave networks and the Jue Ming Valley (决明谷, formerly Forest of Distorted Sense). Canon note: spirit bats are not explicitly named in 仙逆 but are implied in the Mosquito Valley arc and various cave encounters. MOD-ORIGINAL species concept, but culturally appropriate. Weight 6 = common in caves.",
+  "type": "forge:add_spawns",
+  "biomes": [
+    "ergenverse:zhao_hidden_cave_network",
+    "ergenverse:chu_hidden_cave_network",
+    "ergenverse:jue_ming_valley",
+    "ergenverse:jue_ming_valley_depths",
+    "ergenverse:jue_ming_valley_abyss"
+  ],
+  "spawners": [
+    {
+      "type": "ergenverse:spirit_bat",
+      "weight": 6,
+      "minCount": 2,
+      "maxCount": 4
+    }
+  ]
+}

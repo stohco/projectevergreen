@@ -1,0 +1,21 @@
+{
+  "_comment": "CRON-86: Spirit crane (灵鹤) — wetland bird, immortal companion. Spawns in marshes, river basins, and spirit herb hills. Canon note: the crane is a culturally-significant bird associated with Daoist cultivators; in 仙逆, cranes appear as immortal mounts and sect mascots. Weight 4 = uncommon (dignified creature, not a pest).",
+  "type": "forge:add_spawns",
+  "biomes": [
+    "ergenverse:zhao_river_basin",
+    "ergenverse:zhao_marsh",
+    "ergenverse:zhao_fog_marsh",
+    "ergenverse:zhao_spirit_herb_hills",
+    "ergenverse:chu_river_basin",
+    "ergenverse:chu_marsh",
+    "ergenverse:chu_fog_marsh"
+  ],
+  "spawners": [
+    {
+      "type": "ergenverse:spirit_crane",
+      "weight": 4,
+      "minCount": 1,
+      "maxCount": 2
+    }
+  ]
+}

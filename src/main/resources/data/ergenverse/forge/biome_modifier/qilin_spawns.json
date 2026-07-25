@@ -1,0 +1,16 @@
+{
+  "_comment": "CRON-86: Qilin (麒麟) — divine beast, very rare. Per canon, Wang Lin encounters the 麒灵 beast-city in the 修魔海 (Sea of Devils) arc; the Qilin is a sacred creature associated with the beast-cities of the sea. Weight 1 = extremely rare (divine beast, not a common spawn). Spawning restricted to the Sea of Devils and its sub-biomes.",
+  "type": "forge:add_spawns",
+  "biomes": [
+    "ergenverse:sea_of_devils",
+    "ergenverse:sea_of_devils_outer_ring"
+  ],
+  "spawners": [
+    {
+      "type": "ergenverse:qilin",
+      "weight": 1,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

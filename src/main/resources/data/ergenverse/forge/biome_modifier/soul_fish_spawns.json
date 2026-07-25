@@ -1,0 +1,18 @@
+{
+  "_comment": "CRON-86: Soul fish (魂鱼) — small qi-infused fish that schools in the 修魔海 (Sea of Devils). Canon: the Sea of Devils teems with corrupted sea life; soul fish are the base of the aquatic food chain, preyed upon by sea serpents. Weight 10 = common (schooling prey species, the rabbit of the sea).",
+  "type": "forge:add_spawns",
+  "biomes": [
+    "ergenverse:sea_of_devils",
+    "ergenverse:sea_of_devils_outer_ring",
+    "ergenverse:sea_of_devils_inner_ring",
+    "ergenverse:sea_of_devils_chaotic_current"
+  ],
+  "spawners": [
+    {
+      "type": "ergenverse:soul_fish",
+      "weight": 10,
+      "minCount": 3,
+      "maxCount": 6
+    }
+  ]
+}
