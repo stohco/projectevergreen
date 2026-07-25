@@ -91,7 +91,15 @@ public class SpiritBeastHuntGoal extends Goal {
 
         if (state == 1) {
             // STALKING: creep toward prey at reduced speed
-            beast.setSpiritPose(SpiritBeastEntity.POSE_CHARGING);
+            // CRON-COMPLETIONIST-79: Tigers use POSE_ALERT (crouch) during stalking,
+            // not POSE_CHARGING. Canon: tigers drop belly to ground and freeze when
+            // stalking — the POSE_ALERT animation shows this crouch with ears pinned
+            // flat and tail perfectly still. Other predators continue using CHARGING.
+            if (beast.getBeastType() == SpiritBeastEntity.BeastType.TIGER) {
+                beast.setSpiritPose(SpiritBeastEntity.POSE_ALERT);
+            } else {
+                beast.setSpiritPose(SpiritBeastEntity.POSE_CHARGING);
+            }
             beast.getLookControl().setLookAt(prey, 30.0F, 30.0F);
             beast.getNavigation().moveTo(prey, speed * 0.6D);
 

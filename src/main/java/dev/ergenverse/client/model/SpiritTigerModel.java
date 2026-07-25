@@ -288,8 +288,7 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
         boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
         boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
         boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
-        // Tigers stalk low — POSE_CHARGING is the lunge/attack, but stalking
-        // is represented by the slow, low-to-ground walk when not sprinting.
+        boolean alert = entity.getSpiritPose() == SpiritBeastEntity.POSE_ALERT;
 
         // ── head turn (clamped) ──────────────────────────────────────────
         float yaw = netHeadYaw * 0.017453292F;
@@ -297,7 +296,47 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
         this.head.yRot = Math.max(-1.0F, Math.min(1.0F, yaw));
         this.head.xRot = Math.max(-0.7F, Math.min(0.7F, pitch));
 
-        if (resting) {
+        if (alert) {
+            // ── POSE_ALERT : STALKING CROUCH — tiger drops belly to ground ──
+            // Canon: tigers crouch extremely low when detecting prey, freezing
+            // before the final charge. Body FLAT, head forward and low, ears
+            // pinned flat, tail perfectly still ( predator stealth ).
+            float breath = (float) Math.sin(ageInTicks * 0.06F) * 0.03F; // near-static
+            this.root.y = -3.0F + breath; // belly ON the ground
+            this.root.xRot = 0.1F; // slight body pitch forward
+            // Front legs splayed wide, bent at shin — wide stalking base
+            this.frontLeftThigh.xRot  = 0.3F;
+            this.frontRightThigh.xRot = 0.3F;
+            this.frontLeftShin.xRot   = 0.6F;
+            this.frontRightShin.xRot  = 0.6F;
+            // Back legs bent under body — coiled spring for explosive launch
+            this.backLeftThigh.xRot   = 0.5F;
+            this.backRightThigh.xRot  = 0.5F;
+            this.backLeftShin.xRot    = -0.7F;
+            this.backRightShin.xRot   = -0.7F;
+            // Head low and forward — targeting prey through grass
+            this.head.xRot = 0.5F;
+            this.neck.xRot = 0.4F;
+            this.neck.yRot = 0.0F;
+            // Ears pinned FLAT — tiger ears flatten completely when stalking
+            this.earLeft.zRot  = -0.8F;
+            this.earRight.zRot = 0.8F;
+            this.earLeft.xRot  = -0.3F;
+            this.earRight.xRot = -0.3F;
+            // Jaw slightly open — tasting the air for scent
+            this.jaw.xRot = 0.15F;
+            // Tail PERFECTLY STILL — frozen to avoid detection
+            this.tailBase.xRot = 0.3F;
+            this.tailBase.yRot = 0.0F;
+            this.tailMid1.yRot = 0.0F;
+            this.tailMid2.yRot = 0.0F;
+            this.tailTip.yRot = 0.0F;
+            // Body flat — no shoulder roll, no spine flex
+            this.bodyChest.xRot = 0.0F;
+            this.bodyChest.yRot = 0.0F;
+            this.bodyHip.xRot = 0.0F;
+            this.bodyHip.yRot = 0.0F;
+        } else if (resting) {
             // ── POSE_RESTING : big cat curls up, hind legs under body ──
             float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.1F;
             float earTwitch = (ageInTicks % 80 < 5) ? (float) Math.sin(ageInTicks * 2.0F) * 0.08F : 0.0F;
