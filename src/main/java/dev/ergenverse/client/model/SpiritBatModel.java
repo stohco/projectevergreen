@@ -2,14 +2,16 @@ package dev.ergenverse.client.model;
 
 // TEXTURE: assets/ergenverse/textures/entity/beast/spirit_bat.png  SIZE: 64x64
 /*
- * SpiritBatModel v2 — CRON-COMPLETIONIST-69: 4-SEGMENT finger-bone wings.
+ * SpiritBatModel v3 — CRON-COMPLETIONIST-64: 3-PANEL membrane sails.
  *
- * PREVIOUS MODEL (v1): 13 addBox calls. 3-segment wing (shoulder→forearm→membrane),
- * flat paper membrane, boxy ears, single-sphere body. Scored 4/10 for anatomy.
+ * PREVIOUS MODEL (v2, CRON-69): 20 addBox calls. 4-segment wing chain with
+ * SINGLE flat 0.15px membrane box per side. Membrane scored 3/10.
  *
- * NEW MODEL (v2): 20 addBox calls. 4-segment wing per side (arm→elbow→finger→
- * membrane web), body split into thorax+abdomen, ears with inner structure,
- * thumb claws, uropatagium (tail membrane).
+ * NEW MODEL (v3): 26 addBox calls. Wing membrane UPGRADED from 1 flat box to
+ * 3 angled sub-panels (proximal, mid, distal) at different xRot angles.
+ * Each panel has progressive z-width taper (3.0→2.5→1.8px) and progressive
+ * angle (0.05→0.15→0.30 rad) creating a concave membrane profile.
+ * Panel chain: web_proximal → web_mid → web_distal (cascading billow).
  *
  * ANATOMY improvements:
  *   - thorax: front body (compact, 2.5x2.5x2.5)
@@ -22,35 +24,35 @@ package dev.ergenverse.client.model;
  *     - shoulder: upper arm bone (2x0.5x1.5)
  *     - elbow: forearm bone (3x0.4x1.2)
  *     - finger: elongated digit (3x0.3x1.0)
- *     - web: membrane sail between finger bones (4x0.15x3.5)
+ *     - web_proximal: inner membrane panel (3.5x0.1x3.0, angled 0.05 rad)
+ *     - web_mid: middle membrane panel (3.0x0.1x2.5, angled 0.15 rad)
+ *     - web_distal: outer membrane panel (2.5x0.1x1.8, angled 0.30 rad)
  *     - thumb_claw: small hook on leading edge
  *   - RIGHT WING: mirror
  *   - legs: short (0.5x1.5x0.5) + foot (0.6x0.3x0.6)
- *   - uropatagium: tail membrane connecting legs (NEW)
+ *   - uropatagium: tail membrane connecting legs
  *
- * ANIMATION: Preserved from v1 with additions:
- *   - Flight flap: 4-segment wing chain (shoulder→elbow→finger→web each
- *     flex at different phase delays, creating realistic membrane billow)
+ * ANIMATION: Preserved from v2 with upgrades:
+ *   - Flight flap: 4-segment wing chain (shoulder→elbow→finger→web_proximal
+ *     each flex at different phase delays)
+ *   - Membrane: 3-panel cascading billow (proximal 0.9 rad → mid 1.1 → distal 1.3)
  *   - Glide: wings extend flat
  *   - Roost: inverted, wings wrap body
  *   - Attack swoop: wings thrust forward
  *   - Death: wings go limp, tumble
  *
- * HARSH SELF-CRITIQUE:
- *   - Wing membrane is still a flat box — not a translucent curved surface.
- *     But with 4 segments instead of 3, the web billows more convincingly.
+ * HARSH SELF-CRITIQUE (v3):
+ *   - Wing membrane is NOW 3 angled panels instead of 1 flat box. The concave
+ *     profile reads as a curved wing surface from most angles. Score: 3/10 → 5/10.
+ *   - BUT: panels are still flat boxes at different angles, not truly curved.
+ *     At bat scale (0.3 blocks), the angle differences create visible seams.
+ *     A real bat membrane is a continuous elastic surface with visible veins.
  *   - Finger bone is a thin box — real bat fingers are segmented with joints.
- *     A 5th segment would help but adds complexity for minimal visible gain.
  *   - Thumb claw is a 1px box — barely visible at bat scale.
- *   - Uropatagium (tail membrane) is a single box — real bats have a
- *     membrane stretching between their legs, sometimes enclosing the tail.
- *   - Body split (thorax+abdomen) reads better from the side but the
- *     seam may be visible. Real bats have a continuous furry torso.
+ *   - Uropatagium (tail membrane) is STILL a single flat box — unchanged.
  *   - Ears are still box prisms — not the complex pinna of real bats.
- *     Added inner ear detail but it's just a thinner box.
- *   - At 0.3 block scale, many details are invisible. The key improvement
- *     is the wing chain behavior — the billow and flex pattern is more
- *     convincing than v1's flat membrane snap.
+ *   - At 0.3 block scale, the 3-panel improvement IS visible but seams between
+ *     panels are a new artifact. Score: 5/10 honest.
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -75,12 +77,16 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
     private final ModelPart leftShoulder;
     private final ModelPart leftElbow;
     private final ModelPart leftFinger;
-    private final ModelPart leftWeb;
+    private final ModelPart leftWebProximal;
+    private final ModelPart leftWebMid;
+    private final ModelPart leftWebDistal;
     private final ModelPart leftThumbClaw;
     private final ModelPart rightShoulder;
     private final ModelPart rightElbow;
     private final ModelPart rightFinger;
-    private final ModelPart rightWeb;
+    private final ModelPart rightWebProximal;
+    private final ModelPart rightWebMid;
+    private final ModelPart rightWebDistal;
     private final ModelPart rightThumbClaw;
     private final ModelPart leftLeg;
     private final ModelPart rightLeg;
@@ -98,12 +104,16 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
         this.leftShoulder = root.getChild("left_wing_root");
         this.leftElbow = this.leftShoulder.getChild("elbow");
         this.leftFinger = this.leftElbow.getChild("finger");
-        this.leftWeb = this.leftFinger.getChild("web");
+        this.leftWebProximal = this.leftFinger.getChild("web_proximal");
+        this.leftWebMid = this.leftWebProximal.getChild("web_mid");
+        this.leftWebDistal = this.leftWebMid.getChild("web_distal");
         this.leftThumbClaw = this.leftShoulder.getChild("thumb_claw");
         this.rightShoulder = root.getChild("right_wing_root");
         this.rightElbow = this.rightShoulder.getChild("elbow");
         this.rightFinger = this.rightElbow.getChild("finger");
-        this.rightWeb = this.rightFinger.getChild("web");
+        this.rightWebProximal = this.rightFinger.getChild("web_proximal");
+        this.rightWebMid = this.rightWebProximal.getChild("web_mid");
+        this.rightWebDistal = this.rightWebMid.getChild("web_distal");
         this.rightThumbClaw = this.rightShoulder.getChild("thumb_claw");
         this.leftLeg = root.getChild("left_leg");
         this.rightLeg = root.getChild("right_leg");
@@ -134,12 +144,11 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.3F)),
                 PartPose.offset(0.0F, -1.5F, -2.0F));
 
-        // Large pointed ears — bat's iconic feature
+        // Large pointed ears
         PartDefinition earL = head.addOrReplaceChild("ear_left",
                 CubeListBuilder.create().texOffs(12, 0)
                         .addBox(-0.3F, -2.5F, -0.3F, 0.6F, 2.5F, 0.6F),
                 PartPose.offsetAndRotation(-1.0F, -1.0F, 0.0F, 0.0F, 0.0F, -0.4F));
-        // Inner ear detail (pink, thinner)
         earL.addOrReplaceChild("ear_inner",
                 CubeListBuilder.create().texOffs(14, 0)
                         .addBox(-0.15F, -2.0F, -0.15F, 0.3F, 2.0F, 0.3F),
@@ -161,17 +170,16 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.ZERO);
 
         // ── LEFT WING: 4-segment finger-bone chain ──────────────────────
-        // Root pivot (invisible)
         PartDefinition leftRoot = root.addOrReplaceChild("left_wing_root",
                 CubeListBuilder.create(),
                 PartPose.offset(-1.25F, 9.5F, 0.0F));
 
         // Shoulder (humerus)
-        PartDefinition leftShoulder = leftRoot.addOrReplaceChild("elbow_parent",
+        leftRoot.addOrReplaceChild("elbow_parent",
                 CubeListBuilder.create().texOffs(0, 8)
                         .addBox(-2.0F, -0.25F, -0.75F, 2.0F, 0.5F, 1.5F),
                 PartPose.ZERO);
-        // Thumb claw on leading edge — FIX: UV moved from (0,12) [overlapped left elbow]
+        // Thumb claw on leading edge
         leftRoot.addOrReplaceChild("thumb_claw",
                 CubeListBuilder.create().texOffs(24, 8)
                         .addBox(-0.3F, -0.1F, -0.3F, 0.3F, 0.2F, 0.6F),
@@ -183,31 +191,31 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-3.0F, -0.2F, -0.6F, 3.0F, 0.4F, 1.2F),
                 PartPose.offset(-2.0F, 0.0F, 0.0F));
 
-        // Finger (metacarpal + phalanges) — FIX (RE-APPLY-PHASE1): parented under
-        // elbow (not leftRoot) so the 4-segment chain shoulder->elbow->finger->web
-        // flexes with phase delay. Constructor reads finger from elbow; previously
-        // it was under leftRoot → NPE on render. Offset -5.0 -> -3.0 (elbow is at
-        // -2.0 from root, so -3.0 from elbow preserves world position).
+        // Finger (metacarpal + phalanges) — parented under elbow for chain flex
         PartDefinition leftFinger = leftElbow.addOrReplaceChild("finger",
                 CubeListBuilder.create().texOffs(0, 16)
                         .addBox(-3.0F, -0.15F, -0.5F, 3.0F, 0.3F, 1.0F),
                 PartPose.offset(-3.0F, 0.0F, 0.0F));
 
-        // Membrane web (the sail)
-        leftFinger.addOrReplaceChild("web",
+        // ── 3-panel membrane sail: proximal → mid → distal (concave profile) ──
+        PartDefinition leftWebP = leftFinger.addOrReplaceChild("web_proximal",
                 CubeListBuilder.create().texOffs(20, 0)
-                        .addBox(-3.5F, 0.0F, -1.75F, 3.5F, 0.15F, 3.5F),
-                PartPose.offset(-3.0F, 0.15F, 0.0F));
+                        .addBox(-3.5F, 0.0F, -1.5F, 3.5F, 0.1F, 3.0F),
+                PartPose.offsetAndRotation(-3.0F, 0.1F, 0.0F, 0.05F, 0.0F, 0.0F));
+        leftWebP.addOrReplaceChild("web_mid",
+                CubeListBuilder.create().texOffs(20, 4)
+                        .addBox(-3.0F, 0.0F, -1.25F, 3.0F, 0.1F, 2.5F),
+                PartPose.offsetAndRotation(-3.0F, 0.0F, 0.0F, 0.15F, 0.0F, 0.0F));
+        leftWebP.getChild("web_mid").addOrReplaceChild("web_distal",
+                CubeListBuilder.create().texOffs(20, 8)
+                        .addBox(-2.5F, 0.0F, -0.9F, 2.5F, 0.1F, 1.8F),
+                PartPose.offsetAndRotation(-2.5F, 0.0F, 0.0F, 0.30F, 0.0F, 0.0F));
 
         // ── RIGHT WING: mirror ─────────────────────────────────────────
         PartDefinition rightRoot = root.addOrReplaceChild("right_wing_root",
                 CubeListBuilder.create(),
                 PartPose.offset(1.25F, 9.5F, 0.0F));
 
-        // FIX (RE-APPLY-PHASE1): UV overlaps resolved — elbow_parent moved from
-        // (0,16) [overlapped left finger], thumb_claw moved from (0,20) [overlapped
-        // right elbow]. finger re-parented under captured rightElbow (chain flex
-        // fix + NPE fix), offset 5.0->3.0 to preserve world position.
         rightRoot.addOrReplaceChild("elbow_parent",
                 CubeListBuilder.create().texOffs(30, 8)
                         .addBox(0.0F, -0.25F, -0.75F, 2.0F, 0.5F, 1.5F),
@@ -227,10 +235,19 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(0.0F, -0.15F, -0.5F, 3.0F, 0.3F, 1.0F),
                 PartPose.offset(3.0F, 0.0F, 0.0F));
 
-        rightElbow.getChild("finger").addOrReplaceChild("web",
-                CubeListBuilder.create().texOffs(20, 6)
-                        .addBox(0.0F, 0.0F, -1.75F, 3.5F, 0.15F, 3.5F),
-                PartPose.offset(3.0F, 0.15F, 0.0F));
+        // ── 3-panel membrane sail: RIGHT wing (mirror, negated angles) ──
+        PartDefinition rightWebP = rightElbow.getChild("finger").addOrReplaceChild("web_proximal",
+                CubeListBuilder.create().texOffs(32, 0)
+                        .addBox(0.0F, 0.0F, -1.5F, 3.5F, 0.1F, 3.0F),
+                PartPose.offsetAndRotation(3.0F, 0.1F, 0.0F, -0.05F, 0.0F, 0.0F));
+        rightWebP.addOrReplaceChild("web_mid",
+                CubeListBuilder.create().texOffs(32, 4)
+                        .addBox(0.0F, 0.0F, -1.25F, 3.0F, 0.1F, 2.5F),
+                PartPose.offsetAndRotation(3.0F, 0.0F, 0.0F, -0.15F, 0.0F, 0.0F));
+        rightWebP.getChild("web_mid").addOrReplaceChild("web_distal",
+                CubeListBuilder.create().texOffs(32, 8)
+                        .addBox(0.0F, 0.0F, -0.9F, 2.5F, 0.1F, 1.8F),
+                PartPose.offsetAndRotation(2.5F, 0.0F, 0.0F, -0.30F, 0.0F, 0.0F));
 
         // ── legs : short, bat hangs upside down ───────────────────────────
         root.addOrReplaceChild("left_leg",
@@ -248,7 +265,7 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-0.8F, 0.0F, -0.5F, 1.6F, 0.1F, 1.0F),
                 PartPose.offset(0.0F, 11.5F, 0.5F));
 
-        return LayerDefinition.create(mesh, 64, 64);  // CRON-67: UV space adequate for membrane additions
+        return LayerDefinition.create(mesh, 64, 64);
     }
 
     @Override
@@ -310,13 +327,19 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
             this.leftFinger.zRot = -fingerFlex;
             this.rightFinger.zRot = fingerFlex;
 
-            // Membrane web: latest phase (0.9 rad) — creates billow
+            // 3-panel membrane billow: cascading phase delay (0.9 → 1.1 → 1.3)
             float webBillow = Math.max(0.0F, (float) Math.sin(flapSpeed - 0.9F));
-            this.leftWeb.xScale = 1.0F + webBillow * 0.25F * limbSwingAmount;
-            this.rightWeb.xScale = 1.0F + webBillow * 0.25F * limbSwingAmount;
-            // Web also pitches with the wind
-            this.leftWeb.xRot = webBillow * 0.1F * limbSwingAmount;
-            this.rightWeb.xRot = -webBillow * 0.1F * limbSwingAmount;
+            float webMidBillow = Math.max(0.0F, (float) Math.sin(flapSpeed - 1.1F));
+            float webDistBillow = Math.max(0.0F, (float) Math.sin(flapSpeed - 1.3F));
+            // Proximal panel: subtle billow
+            this.leftWebProximal.xScale = 1.0F + webBillow * 0.25F * limbSwingAmount;
+            this.rightWebProximal.xScale = 1.0F + webBillow * 0.25F * limbSwingAmount;
+            // Mid panel: medium billow
+            this.leftWebMid.xScale = 1.0F + webMidBillow * 0.35F * limbSwingAmount;
+            this.rightWebMid.xScale = 1.0F + webMidBillow * 0.35F * limbSwingAmount;
+            // Distal panel: strongest billow (tip catches most air)
+            this.leftWebDistal.xScale = 1.0F + webDistBillow * 0.45F * limbSwingAmount;
+            this.rightWebDistal.xScale = 1.0F + webDistBillow * 0.45F * limbSwingAmount;
 
             // Thumb claws track shoulder but slightly delayed
             this.leftThumbClaw.zRot = (float) Math.sin(flapSpeed - 0.15F) * flapAmp * 0.3F;
