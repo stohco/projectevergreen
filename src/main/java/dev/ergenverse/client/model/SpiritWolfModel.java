@@ -20,6 +20,8 @@ package dev.ergenverse.client.model;
  *   - Idle       : breathing + tail sway
  *   - POSE_RESTING : legs fold, head drops, body lowers (CRON-16)
  *   - POSE_SWIMMING : body pitches, legs paddle, head elevated (CRON-16)
+ *   - POSE_ALERT    : stalking crouch — body lowers, ears pin, tail freezes,
+ *                    head locks forward, NO breathing bob, NO tail sway (CRON-82)
  *   - Combat     : synced via getTarget() + POSE_CHARGING
  *   - Attack lunge: synced via entity.attackAnim (smooth 0→1→0)
  *   - Death      : collapse over 0.4s with quadratic ease-in
@@ -29,9 +31,15 @@ package dev.ergenverse.client.model;
  *   - Ears are boxy cubes, not triangular shells.
  *   - Fangs are 1x1x1 cubes, not tapered cones.
  *   - Tail is 3 uniform segments, not a tapered plume.
- *   - No separate eye cubes (relies on texture).
  *   - Nose pad is a 1x1x0.5 box — better than nothing but still a box.
  *   - Spine flex is via invisible connector pivot — works but limited.
+ *   - CRON-82: Added POSE_ALERT (wolf stalking crouch). Wolves now lower body,
+ *     pin ears flat, freeze tail, lock head forward when stalking prey. Differs
+ *     from tiger POSE_ALERT: wolf keeps head LEVEL (not dipped), body lowers
+ *     less (partial crouch, not belly-to-ground), tail is STRAIGHT back (not
+ *     coiled). Canon: wolves are pursuit predators that drop into a crouch
+ *     before the final sprint — the transition from frozen stalk to explosive
+ *     charge is their hunting signature.
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -241,6 +249,11 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
     @Override
     public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
                           float ageInTicks, float netHeadYaw, float headPitch) {
+        // ── CRON-COMPLETIONIST-82: POSE_ALERT (wolf stalking crouch) ──
+        // Wolf drops into predator's crouch: body lowers, ears pin flat,
+        // tail freezes rigid straight back, head locks level forward.
+        // NO breathing bob, NO tail sway — the wolf is frozen.
+        boolean alert = entity.getSpiritPose() == SpiritBeastEntity.POSE_ALERT;
         // ── CRON-COMPLETIONIST-16: POSE_RESTING (legs fold, head drops, body lowers) ──
         boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
         // ── CRON-COMPLETIONIST-16: POSE_SWIMMING (body pitches, legs paddle, head up) ──
@@ -254,7 +267,42 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         this.head.yRot = Math.max(-1.0F, Math.min(1.0F, yaw));
         this.head.xRot = Math.max(-0.7F, Math.min(0.7F, pitch));
 
-        if (resting) {
+        if (alert) {
+            // ── POSE_ALERT : wolf stalking crouch (CRON-COMPLETIONIST-82) ──
+            // Body lowers partially — wolf crouch, not tiger belly-crawl.
+            this.root.y = -1.5F;
+            this.root.xRot = 0.08F; // slight forward lean (ready to spring)
+            // Head locked forward and LEVEL — no dipping, no breathing bob.
+            this.head.xRot = -0.1F;
+            this.head.yRot = 0.0F; // locked — no scanning
+            this.neck.xRot = -0.2F; // neck extends forward
+            this.neck.yRot = 0.0F; // locked
+            // Ears pinned flat — universal wolf body language for "I am focused."
+            this.earLeft.zRot  = -0.7F;
+            this.earRight.zRot =  0.7F;
+            // Jaw closed — silence before the strike.
+            this.jaw.xRot = 0.0F;
+            // Tail STRAIGHT BACK and PERFECTLY STILL — rigid line, no movement.
+            this.tailBase.xRot = 0.4F;
+            this.tailBase.yRot = 0.0F;
+            this.tailMid.xRot  = 0.0F;
+            this.tailMid.yRot  = 0.0F;
+            this.tailTip.xRot  = 0.0F;
+            this.tailTip.yRot  = 0.0F;
+            // Front legs bent — shoulder assembly compressed.
+            this.frontLeftThigh.xRot  = 0.3F;
+            this.frontRightThigh.xRot = 0.3F;
+            this.frontLeftShin.xRot  = -0.2F;
+            this.frontRightShin.xRot = -0.2F;
+            // Back legs bent — haunches coiled, ready to spring.
+            this.backLeftThigh.xRot   = 0.4F;
+            this.backRightThigh.xRot  = 0.4F;
+            this.backLeftShin.xRot    = -0.3F;
+            this.backRightShin.xRot   = -0.3F;
+            // Spine slightly arched — back is tense.
+            this.bodyChest.xRot = 0.05F;
+            this.bodyHip.xRot  = -0.03F;
+        } else if (resting) {
             // ── POSE_RESTING : wolf curls up on the ground ─────────────
             float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.12F;
             float earTwitch = (ageInTicks % 60 < 5) ? (float) Math.sin(ageInTicks * 2.0F) * 0.1F : 0.0F;

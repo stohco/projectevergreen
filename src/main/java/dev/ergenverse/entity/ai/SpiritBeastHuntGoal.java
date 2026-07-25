@@ -91,21 +91,29 @@ public class SpiritBeastHuntGoal extends Goal {
 
         if (state == 1) {
             // STALKING: creep toward prey at reduced speed
-            // CRON-COMPLETIONIST-79: Tigers use POSE_ALERT (crouch) during stalking,
-            // not POSE_CHARGING. Canon: tigers drop belly to ground and freeze when
-            // stalking — the POSE_ALERT animation shows this crouch with ears pinned
-            // flat and tail perfectly still. Other predators continue using CHARGING.
-            if (beast.getBeastType() == SpiritBeastEntity.BeastType.TIGER) {
+            // CRON-COMPLETIONIST-79/82: Tigers use POSE_ALERT (belly-crawl crouch),
+            // wolves use POSE_ALERT (partial crouch, ears pinned, frozen).
+            // Both are stalking predators that drop into a crouch before the charge.
+            // Other predators continue using POSE_CHARGING (generic run-toward-target).
+            if (beast.getBeastType() == SpiritBeastEntity.BeastType.TIGER
+                    || beast.getBeastType() == SpiritBeastEntity.BeastType.WOLF) {
                 beast.setSpiritPose(SpiritBeastEntity.POSE_ALERT);
             } else {
                 beast.setSpiritPose(SpiritBeastEntity.POSE_CHARGING);
             }
             beast.getLookControl().setLookAt(prey, 30.0F, 30.0F);
-            // CRON-COMPLETIONIST-80: Tigers stalk at near-glacial pace (0.3x).
-            // Canon: tigers move extremely slowly when closing distance — barely
-            // perceptible motion. Wolves and other predators use 0.6x.
-            double stalkSpeed = (beast.getBeastType() == SpiritBeastEntity.BeastType.TIGER)
-                    ? speed * 0.3D : speed * 0.6D;
+            // CRON-COMPLETIONIST-80/82: Stalking speed varies by predator type.
+            // Tigers: 0.3x (near-glacial belly crawl, barely perceptible).
+            // Wolves: 0.5x (deliberate crouch-stalk, short bursts between freezes).
+            // Hawks/bats/fire_beast/boar: 0.6x (fastest stalk, still reduced).
+            double stalkSpeed;
+            if (beast.getBeastType() == SpiritBeastEntity.BeastType.TIGER) {
+                stalkSpeed = speed * 0.3D;
+            } else if (beast.getBeastType() == SpiritBeastEntity.BeastType.WOLF) {
+                stalkSpeed = speed * 0.5D;
+            } else {
+                stalkSpeed = speed * 0.6D;
+            }
             beast.getNavigation().moveTo(prey, stalkSpeed);
 
             if (beast.distanceToSqr(prey) < 9.0D || stateTimer <= 0) {
