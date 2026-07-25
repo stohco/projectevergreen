@@ -76,6 +76,9 @@ public final class WorldRuntime {
     // ── Spatial index for O(log n) chunk queries ──
     private final SpatialIndex<PlanetSuzakuBlueprint.CanonLocation> spatialIndex;
 
+    // ── Delta manager (three-layer world model: Blueprint + Simulation + Player) ──
+    private final DeltaManager deltaManager;
+
     // ── Mutable subsystems (simulation state) ──
     private final NPCRuntime npcs;
     private final SettlementRuntime settlements;
@@ -98,6 +101,9 @@ public final class WorldRuntime {
         // Quadtree spanning -100,000 to +100,000 blocks (200km x 200km world)
         this.spatialIndex = new Quadtree<>(
                 -100_000, -100_000, 100_000, 100_000, 8, 12);
+
+        // Three-layer delta manager: Blueprint (immutable) + Simulation + Player
+        this.deltaManager = new DeltaManager(blueprint);
 
         this.npcs = new NPCRuntime(blueprint);
         this.settlements = new SettlementRuntime(blueprint);
@@ -216,6 +222,17 @@ public final class WorldRuntime {
      * Used by the ChunkMaterializer to find what objects intersect a chunk.
      */
     public SpatialIndex<PlanetSuzakuBlueprint.CanonLocation> spatialIndex() { return spatialIndex; }
+
+    /**
+     * The delta manager — composes the three-layer world model.
+     * <pre>
+     *   Layer 1 (Immutable): PlanetSuzakuBlueprint — canon, never changes
+     *   Layer 2 (Mutable):   SimulationDelta — runtime simulation changes
+     *   Layer 3 (Player):    PlayerDelta — player modifications
+     * </pre>
+     * Block resolution: PLAYER > SIMULATION > CANON.
+     */
+    public DeltaManager deltaManager() { return deltaManager; }
 
     public NPCRuntime npcs() { return npcs; }
     public SettlementRuntime settlements() { return settlements; }

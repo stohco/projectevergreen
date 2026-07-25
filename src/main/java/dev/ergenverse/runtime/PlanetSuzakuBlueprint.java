@@ -199,4 +199,35 @@ public final class PlanetSuzakuBlueprint {
         Ergenverse.LOGGER.info("[Ergenverse] PlanetSuzakuBlueprint validated: {} canonical locations.",
                 locs.size());
     }
+
+    /**
+     * Get the canon block state at a position.
+     *
+     * <p>This is called by {@link DeltaManager#getBlock} when no simulation
+     * or player delta exists at the position. The blueprint itself doesn't
+     * store per-block terrain (that comes from the deterministic noise base
+     * layer via {@code minecraft:overworld} settings). Instead, it returns
+     * null for positions not covered by a hand-authored structure, signaling
+     * to the materializer to use the noise-generated terrain.
+     *
+     * <p>For positions within a hand-authored structure (e.g. Wang Family
+     * Village), the blueprint's structure definition (loaded via the
+     * ChunkMaterializer querying the spatial index) determines the block.
+     * This method is a stub — the actual per-block lookup is done by the
+     * settlement builders when the ChunkMaterializer calls them.
+     *
+     * @return the block state string, or null if not in a canon structure
+     *         (use noise-generated terrain instead)
+     */
+    public String getBlock(int x, int y, int z) {
+        // The blueprint doesn't store per-block data directly — it stores
+        // canonical locations with footprints. The ChunkMaterializer queries
+        // the spatial index to find which structures intersect a chunk, then
+        // calls the corresponding builder to place blocks.
+        //
+        // This method exists for the DeltaManager's contract. It returns null
+        // (meaning "use noise terrain") for all positions. The actual canon
+        // blocks are placed by the ChunkMaterializer via the settlement builders.
+        return null;
+    }
 }
