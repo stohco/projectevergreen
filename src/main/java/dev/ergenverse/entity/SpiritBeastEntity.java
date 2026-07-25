@@ -390,6 +390,36 @@ public class SpiritBeastEntity extends PathfinderMob {
                                 || prey.getBeastType() == BeastType.SOUL_FISH
                                 || prey.getBeastType() == BeastType.DEER)));
             }
+            // ═══════════════════════════════════════════════════════════════
+            // CRON-COMPLETIONIST-72: SPIRIT CRANE AI FIX
+            // ═══════════════════════════════════════════════════════════════
+            // Previously the crane had NO case in the registerGoals() switch.
+            // It only received the common goals (Float, Swim, Rest, Feed,
+            // LivingEvent) plus BeastIntelligence tier goals. It had NO
+            // StrollGoal, no RandomLookAround, no combat goals, and no
+            // target selectors. The crane would just stand in place, float,
+            // and occasionally rest — completely inert.
+            //
+            // Canon (Renegade Immortal): spirit cranes are graceful, vigilant
+            // creatures associated with cultivation sects. They are not
+            // aggressive predators but will defend themselves when attacked.
+            // They stalk through shallows, graze on small aquatic life, and
+            // perform their famous crane dance during courtship.
+            //
+            // Fix: Added full goal set — graze, wander, look around, melee
+            // self-defense, hurt-by retaliation, and flee response.
+            case CRANE -> {
+                // Spirit cranes are herbivores/omnivores — they graze in shallows
+                this.goalSelector.addGoal(2, new SpiritBeastGrazeGoal(this));
+                // Self-defense only — cranes don't hunt, but will strike back
+                this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 0.8, true));
+                // Wander through their territory (slow, majestic gait)
+                this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.5));
+                // Periodically scan surroundings (vigilant, crane-like alertness)
+                this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
+                // Retaliate when attacked — cranes are territorial
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+            }
             case QILIN -> {
                 this.goalSelector.addGoal(2, new SpiritBeastHuntGoal(this, 1.3D));
                 this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.3, true));
