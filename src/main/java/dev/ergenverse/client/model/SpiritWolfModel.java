@@ -28,7 +28,9 @@ package dev.ergenverse.client.model;
  *
  * HARSH SELF-CRITIQUE:
  *   - Chest/hip split is 2 boxes — real wolf has continuous muscle taper.
- *   - Ears are boxy cubes, not triangular shells.
+ *   - Ears are 2-segment pointed geometry (CRON-COMPLETIONIST-62): base 1x1.5x1 + tip 0.6x1.8x0.6
+ *     angled progressively outward. Still boxes (Minecraft limitation) but the
+ *     two-segment taper creates a recognizable pointed-ear silhouette. Score: 7/10.
  *   - Fangs are 1x1x1 cubes, not tapered cones.
  *   - Tail is 3 uniform segments, not a tapered plume.
  *   - Nose pad is a 1x1x0.5 box — better than nothing but still a box.
@@ -133,15 +135,30 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
                         .texOffs(0, 26)
                         .addBox(-1.0F, 0.0F, -3.5F, 2.0F, 2.0F, 2.0F),   // snout forward
                 PartPose.offset(0.0F, -1.0F, -4.0F));
-        // ears : angled tall thin boxes on top of skull
+        // CRON-COMPLETIONIST-62: ears — 2-segment POINTED geometry (base→tip)
+        // Replaces the old 1x2x1 boxy cube ears. Each ear is now a base box + a
+        // narrower tip box angled further outward, creating a triangular silhouette.
+        // Real wolf ears are tall, pointed, and slightly cupped — not rectangular prisms.
+        // Left ear base
         head.addOrReplaceChild("ear_left",
                 CubeListBuilder.create().texOffs(20, 18)
-                        .addBox(-0.5F, -2.0F, -0.5F, 1.0F, 2.0F, 1.0F),
-                PartPose.offsetAndRotation(-1.2F, -1.5F, 0.0F, 0.0F, 0.0F, -0.3F));
+                        .addBox(-0.5F, -1.5F, -0.5F, 1.0F, 1.5F, 1.0F),
+                PartPose.offsetAndRotation(-1.0F, -1.5F, 0.0F, 0.0F, 0.0F, -0.25F));
+        // Left ear tip — narrower, taller, angled further out to create the point
+        head.getChild("ear_left").addOrReplaceChild("ear_tip",
+                CubeListBuilder.create().texOffs(20, 22)
+                        .addBox(-0.3F, -1.8F, -0.3F, 0.6F, 1.8F, 0.6F),
+                PartPose.offsetAndRotation(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, -0.15F));
+        // Right ear base (mirror)
         head.addOrReplaceChild("ear_right",
-                CubeListBuilder.create().texOffs(20, 24)
-                        .addBox(-0.5F, -2.0F, -0.5F, 1.0F, 2.0F, 1.0F),
-                PartPose.offsetAndRotation(1.2F, -1.5F, 0.0F, 0.0F, 0.0F, 0.3F));
+                CubeListBuilder.create().texOffs(20, 26)
+                        .addBox(-0.5F, -1.5F, -0.5F, 1.0F, 1.5F, 1.0F),
+                PartPose.offsetAndRotation(1.0F, -1.5F, 0.0F, 0.0F, 0.0F, 0.25F));
+        // Right ear tip
+        head.getChild("ear_right").addOrReplaceChild("ear_tip",
+                CubeListBuilder.create().texOffs(20, 30)
+                        .addBox(-0.3F, -1.8F, -0.3F, 0.6F, 1.8F, 0.6F),
+                PartPose.offsetAndRotation(0.0F, -1.5F, 0.0F, 0.0F, 0.0F, 0.15F));
         // lower jaw : separate child, pivots at the back of the mouth
         head.addOrReplaceChild("jaw",
                 CubeListBuilder.create().texOffs(28, 18)

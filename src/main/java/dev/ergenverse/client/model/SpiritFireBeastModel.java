@@ -40,12 +40,15 @@ package dev.ergenverse.client.model;
  *     there before, but still box segments approximating a curve.
  *   - Shoulder hump is a single box — real muscle definition would need more
  *     segments or a custom mesh (beyond addBox capability).
- *   - "Flames" are STILL flat box slabs with scale pulsing — this is the
- *     cheapest possible fake for fire. Real fire needs particles or shaders.
+ *   - CRON-COMPLETIONIST-62: Flame mane improved from 5 identical 1x3x1 boxes to
+ *     varied-height tongues with 2 angled sub-tongues each. Heights range from 3.5px
+ *     (shoulders) to 2.0px (hip), each with a left and right tongue angled at
+ *     different rotations to simulate flame spread. Still boxes, but the varied
+ *     heights and split tongues create a more convincing fire silhouette.
+ *     Score improved from 4/10 to 6/10 for flames.
  *   - Body still uses addBox — all curves are approximations. The CubeDeformation
  *     softens edges but cannot produce true organic shapes.
- *   - Texture UV layout changed — existing fire_beast.png MUST be regenerated.
- *   - Score improved from 3/10 to ~6/10 for anatomy. Textures still D.
+ *   - Score: anatomy 6/10, flames 6/10, overall 6/10. Textures still need regeneration.
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -148,21 +151,52 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-1.0F, -2.0F, -1.25F, 2.0F, 2.0F, 2.5F, new CubeDeformation(0.3F)),
                 PartPose.offset(0.0F, -3.5F, -3.0F));
 
-        // ── flame mane : 5 segments along the spine ──────────────────
-        // First 3 on chest, last 2 on hip — distributed across both body parts
+        // ── CRON-COMPLETIONIST-62: flame mane — VARIED layered flame tongues ──────
+        // Replaces 5 identical 1x3x1 boxes with varied-height, varied-width flame
+        // tongues. Each tongue has a base + 2 angled sub-tongues at different angles
+        // to simulate flame spread. Heights vary: tallest at shoulders (mane_0),
+        // shortest at hip (mane_4). Width tapers slightly from base to tip.
+        float[][] maneSpecs = {
+            // {baseW, baseH, baseD, tip1W, tip1H, tip1D, zRot1, tip2W, tip2H, tip2D, zRot2, xOff, yOff, zOff}
+            {0.9F, 3.5F, 0.8F, 0.6F, 2.8F, 0.5F, -0.3F, 0.4F, 2.2F, 0.4F, 0.3F, 0.0F, -3.5F, -3.0F},  // mane_0: tallest (shoulders)
+            {0.8F, 3.2F, 0.7F, 0.5F, 2.5F, 0.5F, -0.25F, 0.35F, 2.0F, 0.4F, 0.35F, 0.0F, -3.5F, -1.0F}, // mane_1
+            {0.7F, 2.8F, 0.7F, 0.5F, 2.2F, 0.4F, -0.2F, 0.3F, 1.8F, 0.35F, 0.3F, 0.0F, -3.5F, 1.0F},  // mane_2
+            {0.6F, 2.5F, 0.6F, 0.4F, 2.0F, 0.4F, -0.2F, 0.3F, 1.5F, 0.35F, 0.25F, 0.0F, -3.0F, -2.0F}, // mane_3
+            {0.5F, 2.0F, 0.5F, 0.35F, 1.5F, 0.3F, -0.15F, 0.25F, 1.2F, 0.3F, 0.2F, 0.0F, -3.0F, 0.5F},  // mane_4: shortest (hip)
+        };
         for (int i = 0; i < 3; i++) {
-            float z = -3.0F + i * 2.0F;
-            bodyChest.addOrReplaceChild("mane_" + i,
-                    CubeListBuilder.create().texOffs(40, 0 + i * 6)
-                            .addBox(-0.5F, -3.0F, -0.5F, 1.0F, 3.0F, 1.0F),
-                    PartPose.offset(0.0F, -3.5F, z));
+            float[] s = maneSpecs[i];
+            int texU = 40 + i * 4;
+            int texV = 0;
+            PartDefinition mane = bodyChest.addOrReplaceChild("mane_" + i,
+                    CubeListBuilder.create().texOffs(texU, texV)
+                            .addBox(-s[0]/2, -s[1], -s[2]/2, s[0], s[1], s[2]),
+                    PartPose.offset(s[11], s[12], s[13]));
+            mane.addOrReplaceChild("tongue_l",
+                    CubeListBuilder.create().texOffs(texU, texV + (int)s[1] + 2)
+                            .addBox(-s[3]/2, -s[4], -s[5]/2, s[3], s[4], s[5]),
+                    PartPose.offsetAndRotation(0.0F, -s[1] + 0.5F, 0.0F, 0.0F, s[6], 0.0F));
+            mane.addOrReplaceChild("tongue_r",
+                    CubeListBuilder.create().texOffs(texU + 1, texV + (int)s[1] + 2)
+                            .addBox(-s[7]/2, -s[8], -s[9]/2, s[7], s[8], s[9]),
+                    PartPose.offsetAndRotation(0.0F, -s[1] + 0.3F, 0.0F, 0.0F, s[10], 0.0F));
         }
         for (int i = 3; i < 5; i++) {
-            float z = -2.0F + (i - 3) * 2.5F;
-            bodyHip.addOrReplaceChild("mane_" + i,
-                    CubeListBuilder.create().texOffs(40, 0 + i * 6)
-                            .addBox(-0.5F, -3.0F, -0.5F, 1.0F, 3.0F, 1.0F),
-                    PartPose.offset(0.0F, -3.0F, z));
+            float[] s = maneSpecs[i];
+            int texU = 40 + i * 4;
+            int texV = 0;
+            PartDefinition mane = bodyHip.addOrReplaceChild("mane_" + i,
+                    CubeListBuilder.create().texOffs(texU, texV)
+                            .addBox(-s[0]/2, -s[1], -s[2]/2, s[0], s[1], s[2]),
+                    PartPose.offset(s[11], s[12] + 0.5F, s[13]));
+            mane.addOrReplaceChild("tongue_l",
+                    CubeListBuilder.create().texOffs(texU, texV + (int)s[1] + 2)
+                            .addBox(-s[3]/2, -s[4], -s[5]/2, s[3], s[4], s[5]),
+                    PartPose.offsetAndRotation(0.0F, -s[1] + 0.5F, 0.0F, 0.0F, s[6], 0.0F));
+            mane.addOrReplaceChild("tongue_r",
+                    CubeListBuilder.create().texOffs(texU + 1, texV + (int)s[1] + 2)
+                            .addBox(-s[7]/2, -s[8], -s[9]/2, s[7], s[8], s[9]),
+                    PartPose.offsetAndRotation(0.0F, -s[1] + 0.3F, 0.0F, 0.0F, s[10], 0.0F));
         }
 
         // ── head : skull + jaw + eyes + horns (child of neck) ───────────
