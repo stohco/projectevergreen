@@ -7,6 +7,7 @@ import dev.ergenverse.spawn.HengYueSectBuilder;
 import dev.ergenverse.spawn.LuoHeSectBuilder;
 import dev.ergenverse.spawn.NanDouCityBuilder;
 import dev.ergenverse.spawn.QilinCityBuilder;
+import dev.ergenverse.spawn.RanyunStarBuilder;
 import dev.ergenverse.spawn.SnowDomainCapitalBuilder;
 import dev.ergenverse.spawn.SoulRefiningSectBuilder;
 import dev.ergenverse.spawn.SuzakuTombBuilder;
@@ -58,6 +59,14 @@ import java.util.Map;
  * sealing formation, and an inheritance chest that drops World Origin
  * Essence. This closes the CRON-101 acquisition bridge and fills the
  * last canon-location gap.
+ *
+ * <p><b>CRON-COMPLETIONIST-120 (Ranyun Star):</b> the 13th builder —
+ * {@link RanyunStarBuilder} — is registered for the
+ * {@link PlanetSuzakuBlueprint#RANYUN_STAR} canon location (category
+ * "mortal_star") at (-5000, 0, -5000). It materializes 落月村 (Luo Yue
+ * Village) at the foot of 祁连峰 — Wang Lin's mortal-life woodcarver
+ * village. Closes CRON-117 self-critique #1: the Wang Ping redemption
+ * now fires ON Ranyun Star (canon), not at the Suzaku Tomb.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
@@ -150,6 +159,18 @@ public final class StructureBuilderRegistry {
         // CRON-101 acquisition bridge. Protected by CRON-104's 150-block
         // cave-suppression radius — no caves can breach the chamber.
         register(PlanetSuzakuBlueprint.SUZAKU_TOMB.id, (l, b) -> SuzakuTombBuilder.buildForChunk(l, b));
+
+        // CRON-COMPLETIONIST-120: Ranyun Star (冉云星) — Wang Lin's
+        // 二次化凡 mortal-life arc star, in the 罗天星域 / 雷之仙界 domain.
+        // Materializes 落月村 (Luo Yue Village) at (-5000, surface, -5000)
+        // — the woodcarver village at the foot of 祁连峰 where Wang Lin
+        // (alias 阿木/许木) lived as a mortal woodcarver for 19 years, and
+        // where Wang Ping materializes after the redemption event
+        // (WangPingRedemptionEvent.redeemAtRanyunStar). Closes CRON-117
+        // self-critique #1 and CRON-117/118/119 NEXT PRIORITY (a):
+        // the redemption now fires on Ranyun Star (canon), not at the
+        // Suzaku Tomb (mod-original condensation, retired in CRON-120).
+        register(PlanetSuzakuBlueprint.RANYUN_STAR.id, (l, b) -> RanyunStarBuilder.buildForChunk(l, b));
     }
 
     /** Register (or replace) the builder for a canon location id. */

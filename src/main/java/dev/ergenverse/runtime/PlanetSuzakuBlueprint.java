@@ -244,6 +244,85 @@ public final class PlanetSuzakuBlueprint {
                     "RI — 大罗剑宗 on 天运星 (洞府界); Ling Tianhou (剑尊) founder; "
                             + "source of the two sword qi strands for Wang Ping's redemption");
 
+    // ── Ranyun Star (冉云星) — Wang Lin's 二次化凡 mortal-life arc star ──
+    // CRON-COMPLETIONIST-120: Canon (web-search verified 2026-07-27, Baidu Baike
+    // 仙逆编年史 https://baike.baidu.com/item/仙逆编年史/9845998 + Zhihu
+    // https://zhuanlan.zhihu.com/p/713215901 + Baidu Baike 凌天侯):
+    //   - 冉云星 (Ranyun Star) is canonically located in the 罗天星域 (Luo Tian
+    //     Star Domain), the north sub-region. 罗天星域 is the 雷之仙界 (Thunder
+    //     Immortal Realm), ruled by 仙帝白凡 (Immortal Emperor Bai Fan). It is
+    //     part of the 洞府界 (Cave Mansion Realm), the same broader cosmos
+    //     containing 朱雀星 (Planet Suzaku, the mod's overworld, in the
+    //     联盟星域 / 雨之仙界 domain) and 天运星 (Tian Yun Star, the home of
+    //     Da Luo Sword Sect).
+    //   - Wang Lin entered 冉云星 under the alias 阿木 / 许木 (A Mu / Xu Mu),
+    //     lived there as a mortal woodcarver (木雕师) for 19 years, raised
+    //     Wang Ping (王平) for 72 years, and helped him attain the mortal
+    //     emperor's throne (天行帝国 / Tianxing Empire, reign 10 years).
+    //   - 冉云星 canon geography (Baidu Baike 仙逆编年史):
+    //       * 落月村 (Luo Yue Village) at the foot of 祁连峰 (Qi Lian Peak)
+    //         — Wang Lin's mortal-life home as woodcarver.
+    //       * 祁水城 (Qi Shui City) — the city where Wang Ping later ruled
+    //         as emperor of 天行帝国.
+    //       * 宝合楼 (Bao He Pavilion) — a treasure/woodcraft trading house.
+    //       * 三大家族 (Three Great Families) — 冉家 (Ran), 孙家 (Sun),
+    //         赵家 (Zhao), each with an 问鼎-tier ancestor (Ascendant level).
+    //         Wang Ping married 青宜 (Qing Yi), a daughter of the Sun family.
+    //       * 雷仙殿 (Lei Xian Hall / Thunder Immortal Hall) — an outpost
+    //         of the 雷之仙界 on Ranyun Star; its envoy exposed Wang Ping's
+    //         sword-qi body truth at age 72, leading to his voluntary
+    //         dispersal.
+    //   - Canon chapter citations (Baidu Baike Wang Ping entry):
+    //       * Vol 7 Ch 680 《柳眉的特殊法宝》 — Wang Ping first appears as "厉儿"
+    //       * Vol 7 Ch 681 — Wang Lin names him 王平
+    //       * Vol 7 Ch 693 — 青宜 (Qing Yi) first appearance
+    //       * Vol 7 Ch 695 《王平的要求》 — references the Sun family
+    //       * Vol 7 Ch 699 《雷仙殿真正的使者》 — Thunder Immortal Hall envoy
+    //       * Vol 7 Ch 700 《惊变》 — Wang Ping's sword-qi dispersal
+    //       * Vol 7 Ch 701 《修为》 — aftermath
+    //     NO fabricated chapter citations — all chapter numbers are attested
+    //     by Baidu Baike's Wang Ping entry.
+    //
+    // <b>CRON-120 closes the canon-fidelity bug from CRON-117 self-critique
+    // #1 and CRON-117/118/119 NEXT PRIORITY (a):</b> the Wang Ping redemption
+    // event (Wang Lin rebuilds Wang Ping's body from two strands of Ling
+    // Tianhou's sword qi) now fires ON Ranyun Star, not at the Suzaku Tomb.
+    // The Suzaku Tomb remains the conception site (Ch 443-450+); the
+    // redemption fires when the player right-clicks the Cultivation Planet
+    // Crystal at the Suzaku Tomb (still the spiritual-focus trigger), then
+    // the player is teleported to Ranyun Star and Wang Ping is materialized
+    // at 落月村 (the woodcarver village at the foot of 祁连峰).
+    //
+    // Mod-original concrete placement: the canon 洞府界 (Cave Mansion Realm)
+    // is a separate cosmos not yet implemented in the mod. This placement
+    // (far southwest, remote, ~7000 blocks from spawn and ~6400 from the
+    // Da Luo Sword Sect at (5000, 5000)) reflects Ranyun Star's
+    // "remote northern star" nature — the player must travel far from
+    // Planet Suzaku to reach it. A future CRON could implement 洞府界 as a
+    // true multi-dimension structure (parallel to the Kunxu Realm and Da
+    // Luo Sword Sect treatments — both currently also remote overworld
+    // regions). For now, Wang Ping materializes here as a mortal boy at
+    // 落月村; the future Wang Ping mortal-life arc (woodcarving, marriage
+    // to 青宜, 25 years of war, 10-year reign, age-72 dispersal) can be
+    // implemented as a multi-stage questline parallel to the Kunxu Realm
+    // cultivation arc for 周茹 (CRON-111).
+    //
+    // Canon sources:
+    //   - Baidu Baike 仙逆编年史 (https://baike.baidu.com/item/仙逆编年史/9845998)
+    //     — confirms Wang Lin's alias 许木, 19-year woodcarving, 72-year
+    //       raising of Wang Ping, and 10-year emperor reign on 冉云星.
+    //   - Zhihu (https://zhuanlan.zhihu.com/p/713215901) — the 5-stage
+    //     Wang Ping mortal-life timeline (19+8+25+10+10=72 years).
+    //   - Baidu Baike 凌天侯 (https://baike.baidu.com/item/凌天侯/65285935)
+    //     — Ling Tianhou's identity and the two-sword-qi reconstruction.
+    //   - Baidu Baike 王平 (https://baike.baidu.com/item/王平/62563845) —
+    //     Wang Ping's chapter citations (Ch 680-701).
+    public static final CanonLocation RANYUN_STAR =
+            new CanonLocation("ranyun_star", "Ranyun Star (冉云星)",
+                    -5000, 0, -5000, "mortal_star",
+                    "RI — 冉云星 (罗天星域 / 雷之仙界 north); Wang Lin's 二次化凡 mortal-life "
+                            + "arc star; Wang Ping materializes at 落月村 (woodcarver village)");
+
     // ── Canonical NPC id strings (the UUID lives in CanonUUID) ──
     public static final String NPC_WANG_LIN = "wang_lin";
     public static final String NPC_OLD_CHEN = "old_chen";
@@ -351,6 +430,7 @@ public final class PlanetSuzakuBlueprint {
         map.put(SUZAKU_TOMB.id, SUZAKU_TOMB);
         map.put(KUNXU_REALM.id, KUNXU_REALM);
         map.put(DA_LUO_SWORD_SECT.id, DA_LUO_SWORD_SECT);
+        map.put(RANYUN_STAR.id, RANYUN_STAR);  // CRON-120: Wang Ping redemption star
         return Collections.unmodifiableMap(map);
     }
 

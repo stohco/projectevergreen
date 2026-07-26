@@ -362,7 +362,7 @@ public class CultivationPlanetCrystalBlock extends Block {
         }
 
         // Prerequisite 1: Crystal must not already be inherited.
-        // ── CRON-117/118/119: Wang Ping Redemption Event branch ──
+        // ── CRON-117/118/119/120: Wang Ping Redemption Event branch ──
         // If the Crystal IS inherited AND the player meets the redemption
         // prerequisites (sword qi strands in inventory, realm ≥ ASCENDANT
         // (= 问鼎 / WenDing, corrected in CRON-119 from the wrong label "合体"),
@@ -372,10 +372,20 @@ public class CultivationPlanetCrystalBlock extends Block {
         // the redemption trigger — the Crystal is the spiritual core of
         // Planet Suzaku; Wang Lin channels Ling Tianhou's sword qi
         // (obtained from the Da Luo Sword Sect, CRON-118) through the
-        // Crystal to rebuild Wang Ping's body. See WangPingRedemptionEvent
-        // class javadoc for the full canon basis and the mod-original
-        // condensation (canon places the redemption on Ranyun Star, not
-        // Suzaku Tomb).
+        // Crystal to rebuild Wang Ping's body.
+        //
+        // CRON-120 CANON RELOCATION: prior to CRON-120, the redemption
+        // materialized Wang Ping at the Suzaku Tomb (the conception site)
+        // — a mod-original condensation flagged in CRON-117 self-critique
+        // #1. Canon (Baidu Baike 仙逆编年史) clearly establishes that
+        // Wang Lin rebuilt Wang Ping's body on 冉云星 (Ranyun Star), NOT
+        // at the Suzaku Tomb. CRON-120 closes this canon-fidelity gap:
+        // the right-click on the Crystal still triggers the redemption
+        // (the Crystal is the spiritual-focus point), but on success the
+        // player is TELEPORTED to Ranyun Star and Wang Ping materializes
+        // at 落月村 (Luo Yue Village, the woodcarver village at the foot
+        // of 祁连峰). See WangPingRedemptionEvent.redeemAtRanyunStar
+        // class javadoc for the full canon basis.
         //
         // CRON-118 CANON CORRECTION: the prior CRON-117 implementation
         // checked isLiMuwanRevived as the prerequisite. This was
@@ -404,9 +414,12 @@ public class CultivationPlanetCrystalBlock extends Block {
                     && getPlayerRealm(serverPlayer).order >= RealmId.ASCENDANT.order
                     && isWangPingAwaitingRedemption()) {
                 // All redemption prerequisites met — fire the redemption.
+                // CRON-120: the redemption now fires on Ranyun Star (canon-faithful
+                // location), not at the Suzaku Tomb. The player is teleported to
+                // Ranyun Star and Wang Ping materializes at 落月村.
                 try {
                     boolean redeemed = dev.ergenverse.wanglin.bead.WangPingRedemptionEvent
-                            .redeemAtSuzakuTomb(serverPlayer, pos, level.getGameTime());
+                            .redeemAtRanyunStar(serverPlayer, pos, level.getGameTime());
                     if (redeemed) {
                         // Consume the 2 sword qi strands from the player's inventory.
                         consumeSwordQiStrands(serverPlayer, 2);
