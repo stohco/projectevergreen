@@ -2,25 +2,25 @@
   "_schema": "world_blueprint",
   "_schema_version": 1,
   "_article": "Prime Directive + Architecture: Simulation is source of truth, Minecraft is renderer",
-  "_comment": "AUTHORED geography of Planet Suzaku. This is the source of truth for where everything IS. Minecraft's random seed does NOT decide geography — this blueprint does. The stage is fixed; the simulation (NPCs, ecology, events, opportunities) varies per playthrough via the Simulation Seed. Large-scale geography = 100% handcrafted. Medium-scale = procedural within constraints. Small-scale = fully procedural decoration. Inspired by Zelda/Elden Ring/Skyrim — Whiterun doesn't randomly spawn somewhere else. Neither does Wang Family Village.",
-
+  "_comment": "AUTHORED geography of Planet Suzaku. This is the source of truth for where everything IS. Minecraft's random seed does NOT decide geography — this blueprint does. The stage is fixed; the simulation (NPCs, ecology, events, opportunities) varies per playthrough via the Simulation Seed. Large-scale geography = 100% handcrafted. Medium-scale = procedural within constraints. Small-scale = fully procedural decoration. Inspired by Zelda/Elden Ring/Skyrim — Whiterun doesn't randomly spawn somewhere else. Neither does Wang Family Village.\n\nCRON-90: Country polygons redrawn to contain canon-correct settlement coordinates (fixes CRON-88 regression). 5 settlement country assignments corrected per canon (soul_refining_sect→pilu, luo_he_sect→fire_burn, qilin_city→sea_of_devils_region, nan_dou_city→sea_of_devils_region, four_sects_alliance→four_sects_alliance). 2 new countries added (sea_of_devils_region, four_sects_alliance). Canon verification: 毗卢国 for 炼魂宗 (Baidu Baike), 火焚国 for 洛河门 (李慕婉=火焚国洛河门弟子), 修魔海 for 麒麟城+南斗城 (Java blueprint: RI 修魔海 arc — beast-cities), 四派联盟 independent (web search 2026-07-26).",
   "blueprint": {
     "id": "planet_suzaku",
     "name": "Planet Suzaku",
     "canon_name": "Zhuque Xing / Vermilion Bird Star",
     "version": 1,
     "canon_confidence": "MIXED — country names and adjacencies are EXPLICIT (Er Gen RI canon); exact coordinates are INFERRED (Article XV) based on canonical travel times and relationships",
-
     "canon_seed": -7283654891029384756,
     "_canon_seed_comment": "Fixed deterministic seed for terrain noise. Every playthrough gets the SAME terrain shape. The Simulation Seed (separate, random per world) controls NPC choices, herb locations, weather, events — NOT geography.",
-
     "coordinate_system": {
       "unit": "1_block = 1_meter",
       "chunk_size": 16,
-      "origin": { "id": "wang_family_village", "x": 3842, "z": -1184 },
+      "origin": {
+        "id": "wang_family_village",
+        "x": 3842,
+        "z": -1184
+      },
       "_origin_comment": "Wang Family Village is the anchor point. All other locations are positioned relative to canonical travel relationships."
     },
-
     "scale": {
       "_comment": "Countries span thousands of blocks. A day's travel on foot ~ 2000-3000 blocks. Wang Lin's journey from village to Heng Yue Sect takes ~1 day. Village to Teng City ~2 days. Zhao to Chu border crossing ~3-4 days.",
       "country_span_blocks": 6000,
@@ -28,7 +28,6 @@
       "village_radius_blocks": 30,
       "sect_radius_blocks": 150
     },
-
     "countries": [
       {
         "id": "zhao",
@@ -36,8 +35,50 @@
         "canon_name": "Zhao Guo / 赵国",
         "canon_confidence": "EXPLICIT — Wang Lin's birthplace country",
         "polygon": [
-          [3000, -2400], [7200, -2400], [7600, -1600], [7400, -200],
-          [6800, 600], [3800, 600], [3100, -400], [3000, -1600]
+          [
+            -3000,
+            -2400
+          ],
+          [
+            5000,
+            -2400
+          ],
+          [
+            5400,
+            -1600
+          ],
+          [
+            5200,
+            -200
+          ],
+          [
+            5000,
+            600
+          ],
+          [
+            3800,
+            800
+          ],
+          [
+            2600,
+            800
+          ],
+          [
+            2400,
+            1600
+          ],
+          [
+            -1800,
+            1600
+          ],
+          [
+            -3000,
+            1600
+          ],
+          [
+            -3000,
+            0
+          ]
         ],
         "capital": "zhao_capital",
         "biome_rule": "ergenverse:zhao_plains",
@@ -52,8 +93,38 @@
         "canon_name": "Chu Guo / 楚国",
         "canon_confidence": "EXPLICIT — Wang Lin flees here; larger and more powerful than Zhao",
         "polygon": [
-          [7600, -2800], [11000, -2800], [11200, -800], [10800, 1200],
-          [8200, 1800], [7600, 600], [7400, -200], [7600, -1600]
+          [
+            7600,
+            -2800
+          ],
+          [
+            11000,
+            -2800
+          ],
+          [
+            11200,
+            -800
+          ],
+          [
+            10800,
+            1200
+          ],
+          [
+            8200,
+            1800
+          ],
+          [
+            7600,
+            600
+          ],
+          [
+            7400,
+            -200
+          ],
+          [
+            7600,
+            -1600
+          ]
         ],
         "capital": "chu_capital",
         "biome_rule": "ergenverse:chu_country",
@@ -67,8 +138,34 @@
         "canon_name": "Zhuque Guo / 朱雀国",
         "canon_confidence": "EXPLICIT — the ruling dynasty of Planet Suzaku, central continent",
         "polygon": [
-          [4200, 600], [8200, 600], [8200, 1800], [10800, 1200],
-          [10600, 3600], [6800, 4200], [3800, 3600], [3600, 1800]
+          [
+            -800,
+            -800
+          ],
+          [
+            2800,
+            -800
+          ],
+          [
+            3200,
+            600
+          ],
+          [
+            2800,
+            2400
+          ],
+          [
+            2400,
+            4200
+          ],
+          [
+            -200,
+            4200
+          ],
+          [
+            -800,
+            2400
+          ]
         ],
         "capital": "vermilion_bird_imperial_city",
         "biome_rule": "ergenverse:vermilion_bird_country",
@@ -82,8 +179,30 @@
         "canon_name": "Xue Yu / 雪域",
         "canon_confidence": "EXPLICIT — cold northern/southern region with ice-based cultivation",
         "polygon": [
-          [2800, -7000], [9000, -7000], [9000, -4200], [6000, -3600],
-          [3200, -3800]
+          [
+            800,
+            2400
+          ],
+          [
+            3200,
+            2400
+          ],
+          [
+            3400,
+            4200
+          ],
+          [
+            2800,
+            5400
+          ],
+          [
+            1200,
+            5400
+          ],
+          [
+            600,
+            4000
+          ]
         ],
         "capital": "snow_domain_capital",
         "biome_rule": "ergenverse:snow_domain_country",
@@ -97,7 +216,30 @@
         "canon_name": "Huofen Guo / 火焚国",
         "canon_confidence": "EXPLICIT — fiery region, fire-path cultivation",
         "polygon": [
-          [3600, 3600], [6800, 4200], [6600, 6200], [3800, 6400], [3000, 5000]
+          [
+            2400,
+            1800
+          ],
+          [
+            3800,
+            1800
+          ],
+          [
+            4000,
+            3200
+          ],
+          [
+            3400,
+            4000
+          ],
+          [
+            2400,
+            4000
+          ],
+          [
+            2200,
+            2600
+          ]
         ],
         "capital": "fire_burn_capital",
         "biome_rule": "ergenverse:fire_burn_country",
@@ -111,8 +253,26 @@
         "canon_name": "Tianmo Guo / 天魔国",
         "canon_confidence": "EXPLICIT — demon-influenced region",
         "polygon": [
-          [9000, -5200], [13000, -5200], [13000, -2800], [11200, -2800],
-          [9200, -3600]
+          [
+            9000,
+            -5200
+          ],
+          [
+            13000,
+            -5200
+          ],
+          [
+            13000,
+            -2800
+          ],
+          [
+            11200,
+            -2800
+          ],
+          [
+            9200,
+            -3600
+          ]
         ],
         "capital": "sky_demon_capital",
         "biome_rule": "ergenverse:sky_demon_country",
@@ -126,8 +286,26 @@
         "canon_name": "Huomo Guo / 火魔国",
         "canon_confidence": "EXPLICIT — combination fire/demon region",
         "polygon": [
-          [10600, 3600], [13000, 3600], [13000, 600], [11200, -800],
-          [10800, 1200]
+          [
+            10600,
+            3600
+          ],
+          [
+            13000,
+            3600
+          ],
+          [
+            13000,
+            600
+          ],
+          [
+            11200,
+            -800
+          ],
+          [
+            10800,
+            1200
+          ]
         ],
         "capital": "fire_demon_capital",
         "biome_rule": "ergenverse:fire_demon_country",
@@ -141,8 +319,34 @@
         "canon_name": "Pilu Guo / 毗卢国",
         "canon_confidence": "EXPLICIT — western kingdom",
         "polygon": [
-          [-500, -3200], [3000, -3800], [3100, -400], [2600, 600],
-          [0, 400], [-500, -1200]
+          [
+            -3200,
+            -2400
+          ],
+          [
+            -1000,
+            -2400
+          ],
+          [
+            -400,
+            -1200
+          ],
+          [
+            -600,
+            0
+          ],
+          [
+            -1400,
+            800
+          ],
+          [
+            -2800,
+            800
+          ],
+          [
+            -3400,
+            -400
+          ]
         ],
         "capital": "pilu_capital",
         "biome_rule": "ergenverse:pilu_kingdom",
@@ -156,7 +360,22 @@
         "canon_name": "Xuanwu Guo / 玄武国",
         "canon_confidence": "EXPLICIT — black tortoise region, water/defense traditions",
         "polygon": [
-          [-500, -7000], [2800, -7000], [3200, -3800], [-500, -3200]
+          [
+            -500,
+            -7000
+          ],
+          [
+            2800,
+            -7000
+          ],
+          [
+            3200,
+            -3800
+          ],
+          [
+            -500,
+            -3200
+          ]
         ],
         "capital": "xuan_wu_capital",
         "biome_rule": "ergenverse:xuan_wu_country",
@@ -170,16 +389,116 @@
         "canon_name": "Qingshui Guo / 清水国",
         "canon_confidence": "EXPLICIT — 'clear water' kingdom, ruined in canon",
         "polygon": [
-          [-500, -1200], [2600, 600], [2400, 2400], [-200, 2600], [-600, 400]
+          [
+            -500,
+            -1200
+          ],
+          [
+            2600,
+            600
+          ],
+          [
+            2400,
+            2400
+          ],
+          [
+            -200,
+            2600
+          ],
+          [
+            -600,
+            400
+          ]
         ],
         "capital": "qing_shui_ruin",
         "biome_rule": "ergenverse:qing_shui_ruin",
         "terrain_description": "Once prosperous, now partially ruined. Ancient battlefields. Spirit vein remnants. A place of opportunities and danger.",
         "political_tier": "declined_kingdom",
         "cultivation_power": "low — was higher before the ruin"
+      },
+      {
+        "id": "sea_of_devils_region",
+        "name": "Sea of Devils Region",
+        "canon_name": "Xiu Mo Hai / 修魔海",
+        "canon_confidence": "EXPLICIT — vast demon-cultivation sea spanning half of Suzaku Star",
+        "polygon": [
+          [
+            1200,
+            -3200
+          ],
+          [
+            5400,
+            -3200
+          ],
+          [
+            6400,
+            -2400
+          ],
+          [
+            6200,
+            -800
+          ],
+          [
+            5000,
+            -400
+          ],
+          [
+            3600,
+            -600
+          ],
+          [
+            2400,
+            -800
+          ],
+          [
+            1400,
+            -1600
+          ]
+        ],
+        "capital": null,
+        "biome_rule": "ergenverse:sea_of_devils",
+        "terrain_description": "A vast perilous region of demon-cultivation seas and beast-cities. Spans nearly half of Suzaku Star. Home to ancient beast-cities like Qilin City and Nan Dou City. The highest peak, Po Tian (破天), is the gateway to the Foreign Battleground (域外战场).",
+        "political_tier": "wilderness_region",
+        "cultivation_power": "high — demonic cultivators and ancient beasts"
+      },
+      {
+        "id": "four_sects_alliance",
+        "name": "Four Sects Alliance",
+        "canon_name": "Si Pai Meng / 四派联盟",
+        "canon_confidence": "EXPLICIT — independent 四级修真国, Wang Lin's 化凡 arc region",
+        "polygon": [
+          [
+            400,
+            1200
+          ],
+          [
+            1800,
+            1200
+          ],
+          [
+            2000,
+            2200
+          ],
+          [
+            1600,
+            2400
+          ],
+          [
+            600,
+            2400
+          ],
+          [
+            200,
+            1800
+          ]
+        ],
+        "capital": null,
+        "biome_rule": "ergenverse:four_sects_alliance_region",
+        "terrain_description": "An independent four-tier cultivation kingdom formed by an alliance of four sects: Eastern White Cloud Sect (东方白云宗), Southern Ink Sect (南方水墨门), Western Green Wood Cliff (西方青木崖), and Northern Black Soul Sect (北方黑魂派). Home of 曾大牛 (Zeng Da Niu). Wang Lin lives his 化凡 (mortal-life) arc here.",
+        "political_tier": "minor_cultivation_kingdom",
+        "cultivation_power": "moderate — four allied sects"
       }
     ],
-
     "settlements": [
       {
         "id": "wang_family_village",
@@ -195,7 +514,10 @@
         "builder_class": "dev.ergenverse.spawn.WangFamilyVillageBuilder",
         "chapter": 1,
         "is_spawn_point": true,
-        "spawn_offset_from_center": { "dx": -600, "dz": 0 }
+        "spawn_offset_from_center": {
+          "dx": -600,
+          "dz": 0
+        }
       },
       {
         "id": "heng_yue_sect",
@@ -211,7 +533,7 @@
         "tier": "minor_sect",
         "cultivation_range": "qi_condensation_to_foundation_establishment",
         "chapter": 1,
-        "distance_from_wang_village": 1800,
+        "distance_from_wang_village": 418,
         "_distance_comment": "~1 day travel. Wang Lin walks here from the village."
       },
       {
@@ -226,7 +548,7 @@
         "population": 50000,
         "description": "The largest city in Zhao Country. A hub of mortal commerce. Teng Huayuan (藤化元), a Foundation Establishment cultivator, operates from here. Wang Lin visits to purchase cultivation resources. CRON-88: coordinates synced to Java PlanetSuzakuBlueprint.TENG_FAMILY_CITY (3500, -900).",
         "chapter": 1,
-        "distance_from_wang_village": 600,
+        "distance_from_wang_village": 445,
         "_distance_comment": "~0.5 day travel. CRON-88: recalculated from Java coords."
       },
       {
@@ -241,7 +563,7 @@
         "population": 100000,
         "description": "The greatest trade city in Zhao Country. Situated on the central river, Tian Shui City is where merchants, cultivators, and mortals converge. The city lord is Core Formation. Home to the merchant guild, cultivator guild, and the city guard. Known for its elegant white-stone architecture and bustling river port.",
         "chapter": 1,
-        "distance_from_wang_village": 2200,
+        "distance_from_wang_village": 1486,
         "_distance_comment": "~3 days travel by river barge."
       },
       {
@@ -266,13 +588,13 @@
         "type": "cultivation_sect",
         "x": -1600,
         "z": -1800,
-        "country": "zhao",
+        "country": "pilu",
         "population": 300,
-        "description": "A sinister, dark valley sect that specializes in refining souls. Surrounded by dead trees and perpetual mist, the Soul Refining Sect is feared by all cultivators in Zhao Country. Their techniques are forbidden — they capture spirit beasts and refine their souls for power. The central Furnace Hall contains the sect's prize artifact. The atmosphere is oppressive: black stone, soul lanterns, bone altars, and the ever-present ghost-blue glow of soul fire. This is where Wang Lin encounters one of his most dangerous adversaries.",
+        "description": "A cultivation sect in Pilu Kingdom (毗卢国), one of the three great sects. The patriarch Dun Tian (遁天) gifted Wang Lin the Billion Soul Flag (十亿尊魂幡). Canon: 炼魂宗 is one of the three great sects of 毗卢国 (Pilu Kingdom).",
         "tier": "minor_sect",
         "cultivation_range": "foundation_establishment_to_core_formation",
         "chapter": 2,
-        "distance_from_wang_village": 2400,
+        "distance_from_wang_village": 5477,
         "_distance_comment": "~2 days travel through dangerous terrain. Located in the dark valley region northwest of the village."
       },
       {
@@ -284,8 +606,26 @@
         "x": 6000,
         "z": -1184,
         "polygon": [
-          [11000, -200], [14000, -200], [15000, 4000], [13000, 6000],
-          [11000, 5000]
+          [
+            11000,
+            -200
+          ],
+          [
+            14000,
+            -200
+          ],
+          [
+            15000,
+            4000
+          ],
+          [
+            13000,
+            6000
+          ],
+          [
+            11000,
+            5000
+          ]
         ],
         "description": "A vast sea to the east. 14+ districts, each with different dangers. Demon cultivators, ancient ruins, sea beasts. Wang Lin spends significant time here. Not for the weak.",
         "chapter": 3,
@@ -314,9 +654,9 @@
         "type": "cultivation_capital",
         "x": 4400,
         "z": -2400,
-        "country": "nan_dou",
+        "country": "sea_of_devils_region",
         "population": 300000,
-        "description": "The capital of the Nan Dou region. A massive ancient city housing the regional cultivation authority, major merchant guilds, the Temple of the Heavenly Dao, and hundreds of thousands of mortals and cultivators. The city lord is a late Nascent Soul cultivator. A political nexus where sects negotiate, merchants trade spirit stones, and mortals live in the shadow of immortals.",
+        "description": "A beast-city in the Sea of Devils (修魔海) region, built on the back of an ancient beast. Canon: RI 修魔海 arc — beast-city (南斗城).",
         "chapter": 3,
         "radius": 150,
         "builder_class": "dev.ergenverse.spawn.NanDouCityBuilder"
@@ -377,13 +717,13 @@
         "type": "cultivation_sect",
         "x": 3000,
         "z": 2400,
-        "country": "zhao",
+        "country": "fire_burn",
         "population": 400,
-        "description": "A cultivation sect known for its river/water cultivation arts, situated near a major river in Zhao State. The sect practices techniques that harmonize with flowing water energy. Architecture incorporates water motifs — flowing channels, jade ponds, mist-filled courtyards. The sect produces pills and talismans through water-based alchemy. The sect master is a Nascent Soul cultivator.",
+        "description": "A cultivation sect in Fire Burn Country (火焚国), Li Muwan's original sect. Practices water/river cultivation arts. Canon: 李慕婉 is 火焚国洛河门弟子. The sect was nearly destroyed in the war between 火焚国 and 宣武国.",
         "tier": "minor_sect",
         "cultivation_range": "foundation_establishment_to_nascent_soul",
         "chapter": 6,
-        "distance_from_wang_village": 2600,
+        "distance_from_wang_village": 3682,
         "builder_class": "dev.ergenverse.spawn.LuoHeSectBuilder"
       },
       {
@@ -394,13 +734,13 @@
         "type": "trading_city",
         "x": 1800,
         "z": -2600,
-        "country": "zhao",
+        "country": "sea_of_devils_region",
         "population": 45000,
-        "description": "A major trading city in southern Zhao Country, sacred to divine Qilin beasts. Known for its wealth from qilin-related trade — scales, spirit beast parts, cultivation resources. The city architecture is ornate with gold-trim, jade inlay, and amber stone. The governor is a late Foundation Formation cultivator. Hosts an annual Qilin Festival where beasts are displayed and traded.",
+        "description": "A major trading beast-city in the Sea of Devils (修魔海) region, sacred to divine Qilin beasts. Known for its wealth from qilin-related trade. Canon: RI 修魔海 arc — 麒麟兽城 (Qilin Beast City).",
         "tier": "trading_city",
         "cultivation_range": "qi_condensation_to_late_foundation",
         "chapter": 2,
-        "distance_from_wang_village": 2600,
+        "distance_from_wang_village": 2485,
         "radius": 62,
         "builder_class": "dev.ergenverse.spawn.QilinCityBuilder"
       },
@@ -418,7 +758,7 @@
         "tier": "minor_sect",
         "cultivation_range": "foundation_establishment_to_core_formation",
         "chapter": 3,
-        "distance_from_wang_village": 1800,
+        "distance_from_wang_village": 6756,
         "radius": 30,
         "builder_class": "dev.ergenverse.spawn.XuanDaoSectBuilder"
       },
@@ -430,20 +770,40 @@
         "type": "region",
         "x": 1000,
         "z": 1600,
-        "country": "vermilion_bird",
+        "country": "four_sects_alliance",
         "population": 0,
-        "description": "The Four Sects Alliance region where Wang Lin lives his 化凡 (mortal-life) arc. Home of 曾大牛 (Zeng Da Niu) and his family. Wang Lin spends years here as a mortal, refining his Ji Realm (极境) understanding. CRON-88: added to JSON to match Java PlanetSuzakuBlueprint.FOUR_SECTS_ALLIANCE (1000, 1600). Previously missing from JSON settlements — now synced.",
+        "description": "The Four Sects Alliance region where Wang Lin lives his 化凡 (mortal-life) arc. An independent 四级修真国 (four-tier cultivation kingdom) formed by four allied sects. Home of 曾大牛 (Zeng Da Niu). Canon: NOT part of 朱雀国 — it is an independent kingdom.",
         "chapter": 5,
         "is_restriction_zone": false
       }
     ],
-
     "geography": {
       "mountain_ranges": [
         {
           "id": "zhao_northern_mountains",
           "name": "Northern Zhao Mountains",
-          "path": [[3600, -2200], [4200, -2300], [5000, -2200], [5600, -2000], [6000, -1900]],
+          "path": [
+            [
+              3600,
+              -2200
+            ],
+            [
+              4200,
+              -2300
+            ],
+            [
+              5000,
+              -2200
+            ],
+            [
+              5600,
+              -2000
+            ],
+            [
+              6000,
+              -1900
+            ]
+          ],
           "width": 300,
           "height": 120,
           "country": "zhao",
@@ -452,7 +812,24 @@
         {
           "id": "snow_domain_peaks",
           "name": "Snow Domain Peaks",
-          "path": [[3500, -6500], [5500, -6800], [7500, -6500], [8500, -6000]],
+          "path": [
+            [
+              3500,
+              -6500
+            ],
+            [
+              5500,
+              -6800
+            ],
+            [
+              7500,
+              -6500
+            ],
+            [
+              8500,
+              -6000
+            ]
+          ],
           "width": 500,
           "height": 180,
           "country": "snow_domain"
@@ -460,18 +837,55 @@
         {
           "id": "fire_burn_volcanoes",
           "name": "Fire Burn Volcanic Range",
-          "path": [[4000, 4800], [5000, 5200], [6000, 5400], [6200, 5000]],
+          "path": [
+            [
+              4000,
+              4800
+            ],
+            [
+              5000,
+              5200
+            ],
+            [
+              6000,
+              5400
+            ],
+            [
+              6200,
+              5000
+            ]
+          ],
           "width": 400,
           "height": 150,
           "country": "fire_burn"
         }
       ],
-
       "rivers": [
         {
           "id": "zhao_central_river",
           "name": "Zhao Central River",
-          "path": [[3800, -2400], [4000, -1800], [4200, -1000], [4400, 0], [4600, 600]],
+          "path": [
+            [
+              3800,
+              -2400
+            ],
+            [
+              4000,
+              -1800
+            ],
+            [
+              4200,
+              -1000
+            ],
+            [
+              4400,
+              0
+            ],
+            [
+              4600,
+              600
+            ]
+          ],
           "width": 12,
           "country": "zhao",
           "_comment": "Flows south through Zhao, past the capital."
@@ -479,12 +893,28 @@
         {
           "id": "chu_great_river",
           "name": "Chu Great River",
-          "path": [[8000, -2600], [8800, -1800], [9400, -800], [10000, 0]],
+          "path": [
+            [
+              8000,
+              -2600
+            ],
+            [
+              8800,
+              -1800
+            ],
+            [
+              9400,
+              -800
+            ],
+            [
+              10000,
+              0
+            ]
+          ],
           "width": 16,
           "country": "chu"
         }
       ],
-
       "spirit_veins": [
         {
           "id": "zhao_minor_vein_1",
@@ -529,12 +959,32 @@
           "_comment": "A corrupted major spirit vein beneath the Sea of Devils. Attracts demon cultivators."
         }
       ],
-
       "roads": [
         {
           "id": "village_to_heng_yue_road",
           "name": "Village to Heng Yue Road",
-          "path": [[3842, -1184], [4200, -1400], [4800, -1600], [5200, -1800], [5400, -1900]],
+          "path": [
+            [
+              3842,
+              -1184
+            ],
+            [
+              4200,
+              -1400
+            ],
+            [
+              4800,
+              -1600
+            ],
+            [
+              5200,
+              -1800
+            ],
+            [
+              5400,
+              -1900
+            ]
+          ],
           "width": 4,
           "type": "dirt_path",
           "_comment": "The road Wang Lin walks to reach Heng Yue Sect."
@@ -542,33 +992,98 @@
         {
           "id": "village_to_teng_city_road",
           "name": "Village to Teng City Road",
-          "path": [[3842, -1184], [4500, -1100], [5400, -1000], [6200, -1050], [6800, -1000]],
+          "path": [
+            [
+              3842,
+              -1184
+            ],
+            [
+              4500,
+              -1100
+            ],
+            [
+              5400,
+              -1000
+            ],
+            [
+              6200,
+              -1050
+            ],
+            [
+              6800,
+              -1000
+            ]
+          ],
           "width": 5,
           "type": "packed_dirt_road"
         },
         {
           "id": "village_to_zhao_capital_road",
           "name": "Village to Zhao Capital Road",
-          "path": [[3842, -1184], [4000, -800], [4200, -400], [4400, 0], [4400, 100]],
+          "path": [
+            [
+              3842,
+              -1184
+            ],
+            [
+              4000,
+              -800
+            ],
+            [
+              4200,
+              -400
+            ],
+            [
+              4400,
+              0
+            ],
+            [
+              4400,
+              100
+            ]
+          ],
           "width": 5,
           "type": "packed_dirt_road"
         },
         {
           "id": "zhao_to_chu_road",
           "name": "Zhao to Chu Trade Road",
-          "path": [[6800, -1000], [7200, -900], [7600, -700], [8000, -500], [8400, -400]],
+          "path": [
+            [
+              6800,
+              -1000
+            ],
+            [
+              7200,
+              -900
+            ],
+            [
+              7600,
+              -700
+            ],
+            [
+              8000,
+              -500
+            ],
+            [
+              8400,
+              -400
+            ]
+          ],
           "width": 6,
           "type": "stone_paved_road",
           "_comment": "The main trade route between Zhao and Chu."
         }
       ]
     },
-
     "restrictions": [
       {
         "id": "jue_ming_valley_restriction",
         "name": "Valley of Certain Death Seal",
-        "center": [4500, -500],
+        "center": [
+          4500,
+          -500
+        ],
         "radius": 200,
         "type": "ancient_seal",
         "effect": "sealed_beasts_hidden_inheritance",
@@ -577,21 +1092,32 @@
       {
         "id": "suzaku_tom_b_restriction",
         "name": "Suzaku Tomb Seal",
-        "center": [6000, 2400],
+        "center": [
+          6000,
+          2400
+        ],
         "radius": 100,
         "type": "ancient_immortal_seal",
         "effect": "entrance_hidden_dimension_access",
         "is_active": true
       }
     ],
-
     "ecology_zones": [
       {
         "id": "zhao_plains_ecology",
         "name": "Zhao Plains Ecology",
         "country": "zhao",
-        "flora": ["spirit_grass", "qi_gathering_grass", "snow_heart_herb"],
-        "fauna": ["spirit_rabbit", "spirit_deer", "spirit_wolf", "stone_back_boar"],
+        "flora": [
+          "spirit_grass",
+          "qi_gathering_grass",
+          "snow_heart_herb"
+        ],
+        "fauna": [
+          "spirit_rabbit",
+          "spirit_deer",
+          "spirit_wolf",
+          "stone_back_boar"
+        ],
         "carrying_capacity": "moderate",
         "_comment": "Temperate ecology. Wolves hunt deer and rabbits. Boars root in the forests."
       },
@@ -599,8 +1125,16 @@
         "id": "snow_domain_ecology",
         "name": "Snow Domain Ecology",
         "country": "snow_domain",
-        "flora": ["snow_heart_herb", "frost_herb", "thunder_root_grass"],
-        "fauna": ["frost_spirit_wolf", "ice_spirit_deer", "snow_spirit_hawk"],
+        "flora": [
+          "snow_heart_herb",
+          "frost_herb",
+          "thunder_root_grass"
+        ],
+        "fauna": [
+          "frost_spirit_wolf",
+          "ice_spirit_deer",
+          "snow_spirit_hawk"
+        ],
         "carrying_capacity": "low",
         "_comment": "Sparse, hardy ecology. Ice-adapted beasts."
       },
@@ -608,8 +1142,15 @@
         "id": "fire_burn_ecology",
         "name": "Fire Burn Ecology",
         "country": "fire_burn",
-        "flora": ["fire_bloom_grass", "fire_bloom_lotus", "thunder_root_grass"],
-        "fauna": ["fire_beast", "fire_spirit_hawk"],
+        "flora": [
+          "fire_bloom_grass",
+          "fire_bloom_lotus",
+          "thunder_root_grass"
+        ],
+        "fauna": [
+          "fire_beast",
+          "fire_spirit_hawk"
+        ],
         "carrying_capacity": "low_dangerous",
         "_comment": "Volcanic ecology. Fire-type beasts. Dangerous."
       },
@@ -617,13 +1158,19 @@
         "id": "sea_of_devils_ecology",
         "name": "Sea of Devils Ecology",
         "country": null,
-        "flora": ["demon_corpse_mushroom", "heart_devil_flower"],
-        "fauna": ["sea_devil_beast", "corrupted_spirit_whale", "demon_cultivator_spawn"],
+        "flora": [
+          "demon_corpse_mushroom",
+          "heart_devil_flower"
+        ],
+        "fauna": [
+          "sea_devil_beast",
+          "corrupted_spirit_whale",
+          "demon_cultivator_spawn"
+        ],
         "carrying_capacity": "unknown_dangerous",
         "_comment": "Corrupted ocean ecology. Demon-type beasts. Extremely dangerous."
       }
     ],
-
     "simulation_seed_config": {
       "_comment": "The Simulation Seed is SEPARATE from the Canon Seed. It is random per world. It controls things that SHOULD vary per playthrough: exact herb placement, NPC personality rolls, weather patterns, event timing, beast migration paths, rumor generation, random inheritance discoveries. Geography is NEVER affected by the simulation seed.",
       "controls": [
