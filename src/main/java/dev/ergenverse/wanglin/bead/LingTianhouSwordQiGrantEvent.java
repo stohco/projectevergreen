@@ -80,9 +80,14 @@ import net.minecraft.world.item.ItemStack;
  *   </li>
  *   <li>Grants the player TWO SwordQiStrandItem stacks (one per strand):
  *     <ul>
- *       <li>Strand 1 (with NBT strand_index = 1)</li>
- *       <li>Strand 2 (with NBT strand_index = 2)</li>
+ *       <li>Strand 1 — {@code strand_index=1}, {@code strand_type=FLESH}
+ *           (化作王平的血肉之躯 — became Wang Ping's fleshly body)</li>
+ *       <li>Strand 2 — {@code strand_index=2}, {@code strand_type=SOUL_GUARD}
+ *           (守护其魂魄 — guarded his soul)</li>
  *     </ul>
+ *     CRON-122: the two strands are canon-faithfully differentiated via
+ *     {@link SwordQiStrandItem.StrandType}. The redemption prerequisite
+ *     now requires exactly 1 FLESH + 1 SOUL_GUARD (not ≥2 of either).
  *     If the player's inventory is full, the items are dropped at the player's
  *     feet (defensive — the grant is write-once, so losing the items is bad).
  *   </li>
@@ -96,12 +101,13 @@ import net.minecraft.world.item.ItemStack;
  * <pre>
  *   CRON-118: Player right-clicks Ling Tianhou at Da Luo Sword Sect
  *             →  Ling Tianhou runtime: sword_qi_granted = true
- *             →  Player inventory: +2 SwordQiStrandItem (strand 1, strand 2)
- *   CRON-117/118: Player right-clicks INHERITED Crystal at Suzaku Tomb
- *                 with 2 Sword Qi Strands in inventory + realm >= ASCENDANT
+ *             →  Player inventory: +1 FLESH strand + 1 SOUL_GUARD strand
+ *   CRON-117/118/122: Player right-clicks INHERITED Crystal at Suzaku Tomb
+ *                 with 1 FLESH + 1 SOUL_GUARD strand in inventory
+ *                 + realm >= ASCENDANT (= 问鼎)
  *                 + Wang Ping deadUntilRevived=true
- *                 → Wang Ping materializes as mortal boy
- *                 → 2 Sword Qi Strands consumed from player inventory
+ *                 → Wang Ping materializes as mortal boy on Ranyun Star
+ *                 → 1 FLESH + 1 SOUL_GUARD strand consumed from player inventory
  * </pre>
  *
  * <h2>Single-Player Maximalism (Article XLIII)</h2>
@@ -203,12 +209,26 @@ public final class LingTianhouSwordQiGrantEvent {
         runtime.updateNpcState(CHARACTER_ID, lingTianhouState);
 
         // Step 2: Grant the player TWO SwordQiStrandItem stacks
+        // CRON-122: canon-faithful strand-type differentiation —
+        // strand 1 = FLESH (化作王平的血肉之躯), strand 2 = SOUL_GUARD (守护其魂魄).
+        // The grant event already narrates this distinction in the chat
+        // message ("一道凝肉，一道凝魂"); CRON-122 makes the items themselves
+        // canon-faithfully distinct so the redemption prerequisite can
+        // enforce exactly 1 of each type.
         int granted = 0;
         for (int i = 1; i <= SWORD_QI_STRAND_COUNT; i++) {
             ItemStack strand = new ItemStack(ErgenverseItems.SWORD_QI_STRAND.get(), 1);
             // Set the strand index NBT for tooltip display
             if (strand.getItem() instanceof SwordQiStrandItem swordQiItem) {
                 swordQiItem.setStrandIndex(strand, i);
+                // CRON-122: set the strand type to match the canon-faithful
+                // strand-index → strand-type pairing.
+                //   strand 1 → FLESH (化作王平的血肉之躯)
+                //   strand 2 → SOUL_GUARD (守护其魂魄)
+                SwordQiStrandItem.StrandType type = (i == 1)
+                        ? SwordQiStrandItem.StrandType.FLESH
+                        : SwordQiStrandItem.StrandType.SOUL_GUARD;
+                swordQiItem.setStrandType(strand, type);
             }
             // Try to add to the player's inventory; if full, drop at feet
             if (!player.getInventory().add(strand)) {

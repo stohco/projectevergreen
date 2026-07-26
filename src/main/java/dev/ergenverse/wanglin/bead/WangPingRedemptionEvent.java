@@ -42,11 +42,19 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *       the Sword Venerable (剑尊) and founder of the 大罗剑宗 (Da Luo Sword
  *       Sect). Ling Tianhou is at 净涅后期 (Quiet Nirvana late stage); his
  *       true identity is a clone/servant of 灭生老人 (Mie Sheng Lao Ren),
- *       a Fourth-Step cultivator of the Ni Chen Realm. The sword qi was
- *       originally a life-saving treasure given by Ling Tianhou to his
- *       disciple; it eventually came into Wang Lin's hands.</li>
- *   <li>One strand of sword qi condensed into flesh; the other into soul
- *       and life force. The result is a <b>"False Life" (虚假生命)</b>:
+ *       a Fourth-Step cultivator of the Ni Chen Realm. Ling Tianhou
+ *       <b>personally</b> gave the sword qi to Wang Lin (canon: Sohu
+ *       https://www.sohu.com/a/849321229_568249) — not via an intermediary
+ *       disciple. (The earlier CRON-117 note that it was "originally a
+ *       life-saving treasure given by Ling Tianhou to his disciple" was
+ *       an UNVERIFIED claim from a research subagent and is now retracted;
+ *       the canon-faithful path is direct grant from Ling Tianhou to
+ *       Wang Lin, modeled in {@link LingTianhouSwordQiGrantEvent}.)</li>
+ *   <li><b>One strand condensed into flesh; the other guarded his soul.</b>
+ *       CRON-122 canon verification: Baidu Baike 王平 entry (PRIMARY,
+ *       https://baike.baidu.com/item/王平/62563845) — "一道化作王平的血肉之躯，
+ *       另一道守护其魂魄". Multiple secondary sources (Sohu, Zhihu, 163.com)
+ *       confirm. The result is a <b>"False Life" (虚假生命)</b>:
  *       outwardly human (handsome features, pure eyes, "no different from
  *       an ordinary person"), but inwardly a sword-qi construct that
  *       <b>cannot cry, cannot sire children, has no cultivation talent,
@@ -100,7 +108,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *   <li><b>Crystal is inherited.</b> Canon-chronological: Wang Lin
  *       inherits the Suzaku Son status (Ch 443-450+) BEFORE Wang Ping's
  *       redemption (Ch 680+). The inheritance is a strict prerequisite.</li>
- *   <li><b>Player has ≥2 Sword Qi Strand items in inventory.</b>
+ *   <li><b>Player has exactly 1 FLESH strand AND 1 SOUL_GUARD strand in inventory.</b>
  *       CRON-118 canon correction: the prior CRON-117 implementation
  *       checked the bead's {@code isLiMuwanRevived} flag as a proxy for
  *       "Wang Lin has the prerequisites to channel Ling Tianhou's sword
@@ -109,18 +117,25 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *       Wang Ping's redemption (Wang Lin at 问鼎). CRON-118 removes the
  *       Li Muwan revived proxy and replaces it with the canon-faithful
  *       Sword Qi Strand item (obtained from Ling Tianhou at the Da Luo
- *       Sword Sect, CRON-118). The player must have ≥2 sword qi strands
- *       in their inventory (canon: exactly two strands) to trigger the
- *       redemption. The 2 strands are consumed on successful redemption.</li>
+ *       Sword Sect, CRON-118).<br>
+ *       CRON-122 canon-faithful strand-type differentiation: the prior
+ *       CRON-118 check was "≥2 sword qi strands of any type". This
+ *       incorrectly accepted 2 strands of the same type. CRON-122
+ *       tightens the check to "exactly 1 FLESH + 1 SOUL_GUARD strand",
+ *       matching the Baidu Baike 王平 entry: "一道化作王平的血肉之躯，
+ *       另一道守护其魂魄" (one strand became Wang Ping's fleshly body,
+ *       the other guarded his soul). Both functions are canon-required;
+ *       the 2 strands (1 FLESH + 1 SOUL_GUARD) are consumed on successful
+ *       redemption. See {@link dev.ergenverse.item.SwordQiStrandItem.StrandType}
+ *       and {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}.</li>
  *   <li><b>Player's cultivation realm ≥ {@link dev.ergenverse.cultivation.RealmId#ASCENDANT}
  *       (问鼎 / Ascendant).</b> Canon: Wang Lin is at 问鼎 (Ascendant)
  *       during the redemption arc, breaking through to 问鼎中期 (Ascendant
- *       middle stage) by the arc's end. The mod's RealmId.ASCENDANT
- *       corresponds to the 合体 stage (note: the mod's realm mapping has
- *       a known discrepancy — ASCENDANT maps to 合体, not 问鼎; the mod
- *       is missing the 问鼎 realm entirely. This is documented in
- *       CRON-117 self-critique #2). The intent is "Wang Lin has reached
- *       the Ascendant-tier power needed to wield Ling Tianhou's sword qi".</li>
+ *       middle stage) by the arc's end. CRON-119 corrected the
+ *       {@code RealmId.ASCENDANT.nameCn} from {@code "合体"} (a realm from
+ *       凡人修仙传, NOT 仙逆) to the canon {@code "问鼎"} (WenDing). The
+ *       intent is "Wang Lin has reached the Ascendant-tier power needed
+ *       to wield Ling Tianhou's sword qi".</li>
  *   <li><b>Wang Ping's {@code deadUntilRevived} flag is true.</b> The
  *       redemption is a one-time event per save. Once Wang Ping is
  *       redeemed, the flag is cleared (persisted via

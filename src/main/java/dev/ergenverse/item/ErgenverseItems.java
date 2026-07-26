@@ -107,17 +107,33 @@ public final class ErgenverseItems {
     public static final RegistryObject<Item> CAVE_DWELLING_CORE = ITEMS.register("cave_dwelling_core",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
 
-    // ── Sword Qi Strand (CRON-COMPLETIONIST-118) ──────────────────────
+    // ── Sword Qi Strand (CRON-COMPLETIONIST-118, CRON-122 strand-type diff) ──
     // A strand of sword qi from 凌天侯 (Ling Tianhou), the 剑尊 of 大罗剑宗.
     // Canon: Ling Tianhou personally gave Wang Lin TWO strands of sword qi
     // (两道剑气) to rebuild Wang Ping's body. This item is the canon-faithful
-    // prerequisite for the Wang Ping redemption event (CRON-117/118),
+    // prerequisite for the Wang Ping redemption event (CRON-117/118/122),
     // replacing the chronologically-inverted Li Muwan revived proxy.
+    //
+    // CRON-122 — canon-faithful strand-type differentiation:
+    // Baidu Baike 王平 entry (verified 2026-07-27): "一道化作王平的血肉之躯，
+    // 另一道守护其魂魄" — ONE strand became Wang Ping's fleshly body (FLESH),
+    // the OTHER guarded his soul (SOUL_GUARD). The grant event now grants
+    // exactly 1 of each type; the redemption prerequisite now requires
+    // exactly 1 FLESH + 1 SOUL_GUARD (not ≥2 of either).
+    //
+    // stacksTo(1) — CRON-122: lowered from 2 to 1. Each strand is unique
+    // and stackable only with strands of the same type. Setting stacksTo(1)
+    // prevents a creative-mode player from spawning 2 FLESH strands in a
+    // single stack and bypassing the "1 of each type" requirement via
+    // stack-count checks. The grant event grants TWO separate stacks (one
+    // FLESH, one SOUL_GUARD), so the player still ends up with 2 items —
+    // they just don't stack together (different NBT strand_type).
+    //
     // Obtainable ONLY by right-clicking the Ling Tianhou NPC at the Da Luo
     // Sword Sect (5000, 5000). NOT craftable, NOT lootable, NOT tradeable.
     public static final RegistryObject<SwordQiStrandItem> SWORD_QI_STRAND =
             ITEMS.register("sword_qi_strand", () -> new SwordQiStrandItem(
-                    new Item.Properties().stacksTo(2).rarity(net.minecraft.world.item.Rarity.EPIC)));
+                    new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)));
 
     // ── Pills ──────────────────────────────────────────────────────────
     // CRON-COMPLETIONIST-57: Replaced generic Item pills with SpiritPillItem (real mechanics).

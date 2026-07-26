@@ -17,6 +17,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import dev.ergenverse.item.SwordQiStrandItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -409,8 +410,15 @@ public class CultivationPlanetCrystalBlock extends Block {
         // the CRON-117 canon research.
         if (state.getValue(INHERITED)) {
             // Check the redemption prerequisites.
-            int swordQiCount = countSwordQiStrands(serverPlayer);
-            if (swordQiCount >= 2
+            // CRON-122: prerequisite changed from "≥2 sword qi strands of any type"
+            // to "exactly 1 FLESH + 1 SOUL_GUARD strand". Canon source: Baidu Baike
+            // 王平 entry — "一道化作王平的血肉之躯，另一道守护其魂魄" (one strand
+            // became Wang Ping's fleshly body, the other guarded his soul). Both
+            // functions are canon-required; a player with 2 FLESH strands (e.g.,
+            // via creative mode) cannot trigger the redemption — the soul-guard
+            // function is missing.
+            boolean hasOneOfEach = hasOneFleshAndOneSoulGuardStrand(serverPlayer);
+            if (hasOneOfEach
                     && getPlayerRealm(serverPlayer).order >= RealmId.ASCENDANT.order
                     && isWangPingAwaitingRedemption()) {
                 // All redemption prerequisites met — fire the redemption.
@@ -421,8 +429,11 @@ public class CultivationPlanetCrystalBlock extends Block {
                     boolean redeemed = dev.ergenverse.wanglin.bead.WangPingRedemptionEvent
                             .redeemAtRanyunStar(serverPlayer, pos, level.getGameTime());
                     if (redeemed) {
-                        // Consume the 2 sword qi strands from the player's inventory.
-                        consumeSwordQiStrands(serverPlayer, 2);
+                        // CRON-122: consume exactly 1 FLESH + 1 SOUL_GUARD strand
+                        // (not "any 2 strands"). This is defensive — the prerequisite
+                        // check above guarantees the player has at least 1 of each;
+                        // we consume exactly that.
+                        consumeOneFleshAndOneSoulGuardStrand(serverPlayer);
                         return InteractionResult.CONSUME;
                     }
                     // If redemption failed (defensive), fall through to the
@@ -596,10 +607,151 @@ public class CultivationPlanetCrystalBlock extends Block {
     }
 
     /**
+     * CRON-122: Check whether the player has at least 1 FLESH strand AND at
+     * least 1 SOUL_GUARD strand in their inventory (main + off hand + main
+     * inventory). Replaces the prior {@code countSwordQiStrands(player) >= 2}
+     * check, which incorrectly accepted 2 strands of the same type.
+     *
+     * <p>Canon basis: Baidu Baike 王平 entry — "一道化作王平的血肉之躯，另一道
+     * 守护其魂魄" (one strand became Wang Ping's fleshly body, the other
+     * guarded his soul). Both functions are canon-required for the Wang Ping
+     * redemption event.
+     *
+     * @param player the server player
+     * @return true if the player has ≥1 FLESH strand AND ≥1 SOUL_GUARD strand
+     */
+    private static boolean hasOneFleshAndOneSoulGuardStrand(ServerPlayer player) {
+        boolean hasFlesh = false;
+        boolean hasSoulGuard = false;
+
+        // Main hand
+        ItemStack mainHand = player.getMainHandItem();
+        if (mainHand.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem sqi) {
+            SwordQiStrandItem.StrandType t = sqi.getStrandType(mainHand);
+            if (t == SwordQiStrandItem.StrandType.FLESH) hasFlesh = true;
+            else if (t == SwordQiStrandItem.StrandType.SOUL_GUARD) hasSoulGuard = true;
+        }
+        // Off hand
+        ItemStack offHand = player.getOffhandItem();
+        if (offHand.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem sqi) {
+            SwordQiStrandItem.StrandType t = sqi.getStrandType(offHand);
+            if (t == SwordQiStrandItem.StrandType.FLESH) hasFlesh = true;
+            else if (t == SwordQiStrandItem.StrandType.SOUL_GUARD) hasSoulGuard = true;
+        }
+        // Main inventory
+        for (ItemStack stack : player.getInventory().items) {
+            if (stack.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem sqi) {
+                SwordQiStrandItem.StrandType t = sqi.getStrandType(stack);
+                if (t == SwordQiStrandItem.StrandType.FLESH) hasFlesh = true;
+                else if (t == SwordQiStrandItem.StrandType.SOUL_GUARD) hasSoulGuard = true;
+            }
+            if (hasFlesh && hasSoulGuard) break;
+        }
+        return hasFlesh && hasSoulGuard;
+    }
+
+    /**
+     * CRON-122: Consume exactly 1 FLESH strand AND exactly 1 SOUL_GUARD
+     * strand from the player's inventory (main + off hand + main inventory).
+     * Replaces the prior {@code consumeSwordQiStrands(player, 2)} call, which
+     * could consume 2 strands of the same type (allowing a player with 2
+     * FLESH strands to bypass the canon-required soul-guard function).
+     *
+     * <p>Consumption order: main inventory first (for each type), then off
+     * hand, then main hand. This prioritizes keeping the player's hands free.
+     *
+     * <p>Defensive: if the player somehow lacks one type (should not happen
+     * because {@link #hasOneFleshAndOneSoulGuardStrand} is checked first),
+     * this method consumes whatever it can find and logs a warning for the
+     * missing type.
+     *
+     * @param player the server player
+     */
+    private static void consumeOneFleshAndOneSoulGuardStrand(ServerPlayer player) {
+        boolean fleshConsumed = false;
+        boolean soulGuardConsumed = false;
+
+        // Main inventory first — consume one FLESH
+        for (ItemStack stack : player.getInventory().items) {
+            if (fleshConsumed) break;
+            if (stack.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem sqi
+                    && sqi.getStrandType(stack) == SwordQiStrandItem.StrandType.FLESH
+                    && stack.getCount() >= 1) {
+                stack.shrink(1);
+                fleshConsumed = true;
+            }
+        }
+        // Main inventory — consume one SOUL_GUARD
+        for (ItemStack stack : player.getInventory().items) {
+            if (soulGuardConsumed) break;
+            if (stack.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem sqi
+                    && sqi.getStrandType(stack) == SwordQiStrandItem.StrandType.SOUL_GUARD
+                    && stack.getCount() >= 1) {
+                stack.shrink(1);
+                soulGuardConsumed = true;
+            }
+        }
+        // Off hand — FLESH fallback
+        if (!fleshConsumed) {
+            ItemStack offHand = player.getOffhandItem();
+            if (offHand.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem sqi
+                    && sqi.getStrandType(offHand) == SwordQiStrandItem.StrandType.FLESH
+                    && offHand.getCount() >= 1) {
+                offHand.shrink(1);
+                fleshConsumed = true;
+            }
+        }
+        // Off hand — SOUL_GUARD fallback
+        if (!soulGuardConsumed) {
+            ItemStack offHand = player.getOffhandItem();
+            if (offHand.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem sqi
+                    && sqi.getStrandType(offHand) == SwordQiStrandItem.StrandType.SOUL_GUARD
+                    && offHand.getCount() >= 1) {
+                offHand.shrink(1);
+                soulGuardConsumed = true;
+            }
+        }
+        // Main hand — FLESH fallback (last resort)
+        if (!fleshConsumed) {
+            ItemStack mainHand = player.getMainHandItem();
+            if (mainHand.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem sqi
+                    && sqi.getStrandType(mainHand) == SwordQiStrandItem.StrandType.FLESH
+                    && mainHand.getCount() >= 1) {
+                mainHand.shrink(1);
+                fleshConsumed = true;
+            }
+        }
+        // Main hand — SOUL_GUARD fallback (last resort)
+        if (!soulGuardConsumed) {
+            ItemStack mainHand = player.getMainHandItem();
+            if (mainHand.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem sqi
+                    && sqi.getStrandType(mainHand) == SwordQiStrandItem.StrandType.SOUL_GUARD
+                    && mainHand.getCount() >= 1) {
+                mainHand.shrink(1);
+                soulGuardConsumed = true;
+            }
+        }
+
+        if (!fleshConsumed || !soulGuardConsumed) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CRON-122: consumeOneFleshAndOneSoulGuardStrand "
+                    + "could not consume both strand types for player {} — FLESH consumed: {}, "
+                    + "SOUL_GUARD consumed: {}. This should not happen (prerequisite check "
+                    + "should guarantee both are present).",
+                    player.getName().getString(), fleshConsumed, soulGuardConsumed);
+        }
+    }
+
+    /**
      * CRON-118: Count the number of Sword Qi Strand items in the player's
      * inventory (main + off hand + main inventory). Used by the redemption
      * branch in {@link #use} to check if the player has the canon-required
      * 2 strands.
+     *
+     * <p><b>CRON-122:</b> this method is retained for the
+     * {@link dev.ergenverse.command.ErgenDebugCommand} debug inspection but
+     * is NO LONGER used by the redemption prerequisite logic. The redemption
+     * now uses {@link #hasOneFleshAndOneSoulGuardStrand} (canon-faithful
+     * strand-type differentiation).
      *
      * @param player the server player
      * @return the total count of Sword Qi Strand items in the player's inventory
