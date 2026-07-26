@@ -201,6 +201,45 @@ public class EntityCultivator extends PathfinderMob {
     @Nullable
     private JsonObject canonData;
 
+    // ── CRON-134: Qi (灵气) reserves for cultivator NPCs ────────────────
+    //
+    // The user's standing CRON priority (g): "3D MODELS / ANIMATIONS /
+    // COLLISION / AI for beasts and cultivators." CRON-130 added sword-flight
+    // (御剑飞行) for Foundation+ cultivators. CRON-133 added obstacle-aware
+    // navigation. CRON-130/132/133 self-critiques all flag the missing qi
+    // expenditure as a HIGH CANON FIDELITY gap (carried over 4 rounds).
+    //
+    // Canon fidelity: xianxia genre convention universally depicts sword
+    // flight as qi-consuming. Web-search 2026-07-27 (Baidu Baike 仙逆,
+    // Fandom, Zhihu, Qidian) found NO explicit 仙逆 chapter citation
+    // quantifying flight qi cost — the mechanic is mod-original
+    // interpretation grounded in genre convention. Flagged honestly.
+    //
+    // Design: qi is server-only (NOT synced — the client renderer doesn't
+    // need it). Normalized to maxQi per-realm so the flight goal can query
+    // absolute qi (consumeQi takes absolute units). Regen ticks in aiStep()
+    // when the cultivator is active (not hibernating, not flying — flying
+    // consumes, doesn't regen).
+    //
+    // maxQi scales with realm tier (Foundation=100, Core=500, Nascent=2000,
+    // Soul+=10000). This produces canon-intuitive flight ranges:
+    //   - Foundation: ~25s of flight (short hops, city-to-city)
+    //   - Core: ~125s (between sects)
+    //   - Nascent Soul: ~500s (~8 min, cross-country)
+    //   - Soul+: effectively unlimited (CRON-130's 30s timeout caps first)
+
+    /** Current qi reserves (absolute units, 0 to maxQi). Server-only. */
+    private double qi = 0.0;
+
+    /** Maximum qi reserves (absolute units, scales with cultivation realm). */
+    private double maxQi = 0.0;
+
+    /** Tick counter for qi regen throttling (regen fires every 20 ticks = 1s). */
+    private int qiTickCounter = 0;
+
+    /** Whether qi has been initialized for this entity's realm (lazy init). */
+    private boolean qiInitialized = false;
+
     // ═══════════════════════════════════════════════════════════════════
     //  Construction & registration helpers
     // ═══════════════════════════════════════════════════════════════════
@@ -503,6 +542,184 @@ public class EntityCultivator extends PathfinderMob {
                 || r.contains("化神") || r.contains("婴变")
                 || r.contains("问鼎") || r.contains("窥涅")
                 || r.contains("净涅") || r.contains("碎涅");
+    }
+
+    // ── CRON-134: Qi (灵气) reserves — accessors + regen ────────────────
+
+    /**
+     * CRON-134: Get the cultivator's current qi reserves (absolute units,
+     * 0 to maxQi). Server-only — returns 0 on the client.
+     */
+    public double getQi() {
+        return this.qi;
+    }
+
+    /**
+     * CRON-134: Get the cultivator's maximum qi reserves (absolute units,
+     * scales with cultivation realm). Server-only — returns 0 on the client.
+     */
+    public double getMaxQi() {
+        return this.maxQi;
+    }
+
+    /**
+     * CRON-134: Get the cultivator's current qi as a fraction of maxQi
+     * (0.0 to 1.0). Returns 0 if maxQi is 0 (mortal / qi-condensation).
+     */
+    public double getQiFraction() {
+        return this.maxQi > 0.0 ? Math.max(0.0, Math.min(1.0, this.qi / this.maxQi)) : 0.0;
+    }
+
+    /**
+     * CRON-134: Set the cultivator's current qi reserves (clamped to
+     * [0, maxQi]). Server-only. Used by flight goal + regen logic.
+     */
+    public void setQi(double amount) {
+        if (this.maxQi <= 0.0) {
+            this.qi = 0.0;
+            return;
+        }
+        this.qi = Math.max(0.0, Math.min(this.maxQi, amount));
+    }
+
+    /**
+     * CRON-134: Consume qi from the cultivator's reserves. Returns true if
+     * the consumption succeeded (enough qi available), false otherwise.
+     * On failure, qi is NOT modified (caller decides whether to abort or
+     * drain to zero).
+     *
+     * @param absoluteAmount the amount to consume (in absolute qi units)
+     * @return true if consumption succeeded; false if insufficient qi
+     */
+    public boolean consumeQi(double absoluteAmount) {
+        if (absoluteAmount <= 0.0) return true;
+        if (this.qi < absoluteAmount) return false;
+        this.qi -= absoluteAmount;
+        if (this.qi < 0.0) this.qi = 0.0;
+        return true;
+    }
+
+    /**
+     * CRON-134: Drain qi to zero regardless of current amount. Used when
+     * a cultivator aborts flight due to qi exhaustion — the residual qi
+     * is spent on the emergency landing.
+     */
+    public void drainAllQi() {
+        this.qi = 0.0;
+    }
+
+    /**
+     * CRON-134: Returns true if the cultivator has enough qi to ACTIVATE
+     * flight. The activation threshold is 10% of maxQi — below this, the
+     * cultivator is too exhausted to lift off and must walk instead.
+     *
+     * <p>Canon intuition: a cultivator at near-zero qi cannot start sword
+     * flight; they must rest (or absorb spiritual energy) first.
+     */
+    public boolean hasEnoughQiForFlightActivation() {
+        if (this.maxQi <= 0.0) return false;
+        return this.qi >= this.maxQi * 0.10;
+    }
+
+    /**
+     * CRON-134: Returns true if the cultivator has enough qi to CONTINUE
+     * flight for another tick. The continuation threshold is 5% of maxQi —
+     * below this, the cultivator must land (cannot sustain flight).
+     *
+     * <p>Canon intuition: a cultivator in flight whose qi drops to near-
+     * zero is forced to land; they cannot push past exhaustion.
+     */
+    public boolean hasEnoughQiForFlightTick() {
+        if (this.maxQi <= 0.0) return false;
+        return this.qi >= this.maxQi * 0.05;
+    }
+
+    /**
+     * CRON-134: Initialize the qi reserves for this cultivator's realm.
+     * Called lazily from {@link #tickQi()} on first server tick. Sets
+     * maxQi per-realm and fills qi to maxQi (cultivators spawn at full qi).
+     *
+     * <p>maxQi scaling (mod-original, grounded in xianxia genre convention):
+     * <ul>
+     *   <li>mortal / qi_condensation: 0 (no qi, cannot fly)</li>
+     *   <li>foundation (筑基): 100 — ~25s of flight at cost=0.2/tick</li>
+     *   <li>core_formation (结丹): 500 — ~125s of flight</li>
+     *   <li>nascent_soul (元婴): 2000 — ~500s (~8 min) of flight</li>
+     *   <li>soul_formation (化神) and higher: 10000 — effectively unlimited
+     *       (CRON-130's 30s MAX_FLIGHT_TICKS timeout caps first)</li>
+     * </ul>
+     */
+    private void initializeQiForRealm() {
+        String realm = getCultivationRealm();
+        if (realm == null || realm.isEmpty()) {
+            this.maxQi = 0.0;
+            this.qi = 0.0;
+            this.qiInitialized = true;
+            return;
+        }
+        String r = realm.trim().toLowerCase(java.util.Locale.ROOT);
+
+        // Mortal / Qi Condensation: no qi reserves (cannot fly)
+        if (r.equals("mortal") || r.equals("mortal_body")
+                || r.equals("qi_condensation") || r.equals("qi")
+                || r.equals("refining_qi") || r.equals("qi_refining")
+                || r.equals("练气") || r.equals("凡人")) {
+            this.maxQi = 0.0;
+            this.qi = 0.0;
+        } else if (r.contains("foundation") || r.contains("筑基")) {
+            this.maxQi = 100.0;
+        } else if (r.contains("core") || r.contains("结丹")) {
+            this.maxQi = 500.0;
+        } else if (r.contains("nascent") || r.contains("元婴")) {
+            this.maxQi = 2000.0;
+        } else {
+            // Soul Formation / Soul Transformation / Ascendant / Void / Ancient / Yang
+            // and any other Foundation+ realm not matched above.
+            this.maxQi = 10000.0;
+        }
+
+        // Spawn at full qi (cultivators are at peak when materialized).
+        this.qi = this.maxQi;
+        this.qiInitialized = true;
+    }
+
+    /**
+     * CRON-134: Tick the cultivator's qi reserves. Called from
+     * {@link #aiStep()} on the server when the cultivator is active (not
+     * hibernating). Regen fires every 20 ticks (1 second) at 1.0 absolute
+     * qi per second. Cultivators in flight (POSE_FLYING) do NOT regen —
+     * they are consuming qi, not absorbing it.
+     *
+     * <p>Regen rate is flat (1.0/sec) across all realms. This means:
+     * <ul>
+     *   <li>Foundation (maxQi=100): full refill in 100s (~1.7 min)</li>
+     *   <li>Core (maxQi=500): full refill in 500s (~8 min)</li>
+     *   <li>Nascent Soul (maxQi=2000): full refill in 2000s (~33 min)</li>
+     *   <li>Soul+ (maxQi=10000): full refill in 10000s (~2.8 hours)</li>
+     * </ul>
+     * Higher realms take longer to refill — a Soul+ cultivator who
+     * exhausts their qi is genuinely exhausted. This is canon-intuitive:
+     * higher-realm reserves don't refill quickly.
+     */
+    public void tickQi() {
+        if (this.level().isClientSide) return;
+        if (!this.qiInitialized) {
+            initializeQiForRealm();
+        }
+        if (this.maxQi <= 0.0) return;  // mortal / qi-condensation: no qi system
+
+        // Cultivators in flight do NOT regen qi (they are spending it).
+        if (isFlying()) return;
+
+        // Throttle regen to once per second (20 ticks).
+        qiTickCounter++;
+        if (qiTickCounter < 20) return;
+        qiTickCounter = 0;
+
+        // Regen 1.0 absolute qi per second.
+        if (this.qi < this.maxQi) {
+            this.qi = Math.min(this.maxQi, this.qi + 1.0);
+        }
     }
 
     // ── CRON-COMPLETIONIST-19: Cognitive look-target + attention lock ──
@@ -997,6 +1214,10 @@ public class EntityCultivator extends PathfinderMob {
             super.aiStep();
             return;
         }
+        // CRON-134: Active cultivator — tick qi reserves (regen if not flying).
+        // Hibernating cultivators (above branch) skip this — they don't regen
+        // while no player is nearby (avoids 100s of dormant NPCs ticking qi).
+        tickQi();
         super.aiStep();
     }
 
@@ -1045,6 +1266,10 @@ public class EntityCultivator extends PathfinderMob {
         compound.putString("CultivationRealm", this.getCultivationRealm());
         compound.putBoolean("Initialized", this.initialized);
         compound.putInt("CultivatorPose", this.getCultivatorPose());
+        // CRON-134: persist qi reserves across chunk unload/reload.
+        compound.putDouble("Qi", this.qi);
+        compound.putDouble("MaxQi", this.maxQi);
+        compound.putBoolean("QiInitialized", this.qiInitialized);
         // Sync to runtime layer on every NBT save (fires on chunk unload).
         // This is the dematerialization persistence hook.
         syncStateToRuntime();
@@ -1069,6 +1294,18 @@ public class EntityCultivator extends PathfinderMob {
         this.initialized = compound.getBoolean("Initialized");
         if (compound.contains("CultivatorPose")) {
             this.setCultivatorPose(compound.getInt("CultivatorPose"));
+        }
+        // CRON-134: restore qi reserves from NBT. Backward compat: if the
+        // tag predates CRON-134 (no Qi key), qiInitialized stays false and
+        // tickQi() will lazy-init on first tick.
+        if (compound.contains("Qi")) {
+            this.qi = compound.getDouble("Qi");
+        }
+        if (compound.contains("MaxQi")) {
+            this.maxQi = compound.getDouble("MaxQi");
+        }
+        if (compound.contains("QiInitialized")) {
+            this.qiInitialized = compound.getBoolean("QiInitialized");
         }
         // Re-establish the ActorEntityLink on chunk reload.
         // The entity is materializing from NBT — link it back to its Actor.

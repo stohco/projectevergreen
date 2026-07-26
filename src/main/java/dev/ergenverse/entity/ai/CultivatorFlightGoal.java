@@ -45,6 +45,9 @@ import java.util.UUID;
  * <ul>
  *   <li>Cultivator's realm is Foundation Establishment or higher
  *       ({@link EntityCultivator#isFoundationOrHigher()}).</li>
+ *   <li><b>CRON-134:</b> Cultivator has &ge;10% of maxQi in reserves
+ *       ({@link EntityCultivator#hasEnoughQiForFlightActivation()}). A
+ *       cultivator at near-zero qi cannot lift off; they must rest first.</li>
  *   <li>Cultivator is NOT currently in a higher-priority pose: not meditating,
  *       not casting, not observing, not guarding, not activity-locked.</li>
  *   <li>A flight-eligible target exists:
@@ -68,6 +71,9 @@ import java.util.UUID;
  *   <li>Flight exceeds {@value #MAX_FLIGHT_TICKS} ticks (30s timeout —
  *       target unreachable, give up and revert to walking).</li>
  *   <li>A higher-priority pose activates (meditation, cast, etc.).</li>
+ *   <li><b>CRON-134:</b> Qi drops below 5% of maxQi mid-flight (qi exhaustion
+ *       — the cultivator cannot sustain flight and must land). The canUse()
+ *       gate then prevents re-activation until qi regens above 10%.</li>
  * </ul>
  *
  * <h2>Movement</h2>
@@ -111,6 +117,20 @@ import java.util.UUID;
  * navigator reports blocked for {@value #MAX_BLOCKED_TICKS} consecutive
  * ticks (the cultivator cannot find a way around), the goal aborts and the
  * cultivator reverts to walking.
+ *
+ * <p><b>CRON-134 — Qi expenditure is no longer future work.</b>
+ * Each flight tick consumes {@value #FLIGHT_QI_COST_PER_TICK} absolute qi
+ * units from {@link EntityCultivator#getQi()}. The cultivator's maxQi
+ * scales with realm (Foundation=100, Core=500, Nascent=2000, Soul+=10000),
+ * producing canon-intuitive flight ranges: Foundation ~25s, Core ~125s,
+ * Nascent ~500s, Soul+ effectively unlimited (capped by 30s timeout).
+ * Qi regenerates at 1.0/sec when not flying. The canUse() gate refuses
+ * activation below 10% qi; canContinueToUse() aborts below 5% qi. This
+ * closes the 4-round carried-over self-critique (CRON-130 #5, CRON-132 #5,
+ * CRON-133 #7) about missing qi expenditure. Canon fidelity: xianxia genre
+ * convention universally depicts sword flight as qi-consuming. Web-search
+ * 2026-07-27 found NO explicit 仙逆 chapter citation quantifying flight qi
+ * cost — this is mod-original interpretation grounded in genre convention.
  */
 public class CultivatorFlightGoal extends Goal {
 
@@ -145,11 +165,33 @@ public class CultivatorFlightGoal extends Goal {
     /** Altitude offset above the surface (in blocks) when cruising. */
     private static final double CRUISE_ALTITUDE = 4.0D;
 
+    /**
+     * CRON-134: Qi cost of flight per tick (absolute qi units).
+     * At 20 TPS this is 0.2 * 20 = 4 qi/sec. For a Foundation cultivator
+     * (maxQi=100), full qi → 25 seconds of flight. For Core (maxQi=500),
+     * 125 seconds. For Nascent Soul (maxQi=2000), 500 seconds. For Soul+
+     * (maxQi=10000), effectively unlimited (CRON-130's MAX_FLIGHT_TICKS=600
+     * caps first at 30s).
+     *
+     * <p>Canon fidelity: xianxia genre convention universally depicts sword
+     * flight as qi-consuming. Web-search 2026-07-27 found NO explicit
+     * 仙逆 chapter citation quantifying flight qi cost — this constant is
+     * mod-original interpretation grounded in genre convention. Flagged
+     * honestly.
+     */
+    private static final double FLIGHT_QI_COST_PER_TICK = 0.2D;
+
     /** Ticks elapsed in current flight session. */
     private int flightTicks;
 
     /** Consecutive ticks the navigator has reported "blocked" — for stuck detection. */
     private int consecutiveBlockedTicks;
+
+    /**
+     * CRON-134: Total qi consumed this flight session (for logging).
+     * Reset to 0 in start(), accumulated in tick().
+     */
+    private double qiConsumedThisFlight;
 
     /** Last flight target position (for re-evaluation throttling). */
     private Vec3 lastTargetPos;
@@ -163,6 +205,13 @@ public class CultivatorFlightGoal extends Goal {
     public boolean canUse() {
         // Realm gate — Qi Condensation and mortal cultivators cannot fly.
         if (!cultivator.isFoundationOrHigher()) return false;
+
+        // CRON-134: Qi gate — even a Foundation+ cultivator cannot activate
+        // flight if their qi reserves are below 10% of maxQi. They must rest
+        // (or absorb spiritual energy) to replenish first. This closes the
+        // 4-round carried-over self-critique (CRON-130 #5, CRON-132 #5,
+        // CRON-133 self-critique #7) about missing qi expenditure in flight.
+        if (!cultivator.hasEnoughQiForFlightActivation()) return false;
 
         // Do not fly during higher-priority cognitive states.
         if (cultivator.isActivityLocked()) return false;
@@ -196,6 +245,20 @@ public class CultivatorFlightGoal extends Goal {
         // Timeout — don't fly forever.
         if (flightTicks >= MAX_FLIGHT_TICKS) return false;
 
+        // CRON-134: Qi exhaustion — if qi drops below 5% of maxQi mid-flight,
+        // the cultivator cannot sustain flight and must land. The canUse()
+        // gate already prevents re-activation until qi regens above 10%.
+        // We do NOT call this in tick() and force-stop — instead we return
+        // false here so stop() fires cleanly with the proper logging.
+        if (!cultivator.hasEnoughQiForFlightTick()) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CultivatorFlightGoal: '{}' qi exhausted (qi={}/{}={}), forcing landing.",
+                    cultivator.getCharacterId(),
+                    String.format(java.util.Locale.ROOT, "%.1f", cultivator.getQi()),
+                    String.format(java.util.Locale.ROOT, "%.1f", cultivator.getMaxQi()),
+                    String.format(java.util.Locale.ROOT, "%.1f%%", cultivator.getQiFraction() * 100.0));
+            return false;
+        }
+
         Vec3 target = resolveFlightTarget();
         if (target == null) return false;
 
@@ -210,13 +273,17 @@ public class CultivatorFlightGoal extends Goal {
     public void start() {
         flightTicks = 0;
         consecutiveBlockedTicks = 0;
+        qiConsumedThisFlight = 0.0;
         lastTargetPos = null;
         cultivator.setFlying(true);
         cultivator.setNoGravity(true);
         // Stop any pending ground navigation — we control movement now.
         cultivator.getNavigation().stop();
-        Ergenverse.LOGGER.info("[Ergenverse] CultivatorFlightGoal: '{}' takes flight (realm={}).",
-                cultivator.getCharacterId(), cultivator.getCultivationRealm());
+        Ergenverse.LOGGER.info("[Ergenverse] CultivatorFlightGoal: '{}' takes flight (realm={}, qi={}/{}={}).",
+                cultivator.getCharacterId(), cultivator.getCultivationRealm(),
+                String.format(java.util.Locale.ROOT, "%.1f", cultivator.getQi()),
+                String.format(java.util.Locale.ROOT, "%.1f", cultivator.getMaxQi()),
+                String.format(java.util.Locale.ROOT, "%.1f%%", cultivator.getQiFraction() * 100.0));
     }
 
     @Override
@@ -227,16 +294,45 @@ public class CultivatorFlightGoal extends Goal {
         // pull the cultivator down naturally to the surface.
         cultivator.setDeltaMovement(0, 0, 0);
         cultivator.getNavigation().stop();
+        // CRON-134: log total qi consumed this flight session for debugging.
+        if (qiConsumedThisFlight > 0.0) {
+            Ergenverse.LOGGER.info("[Ergenverse] CultivatorFlightGoal: '{}' lands (ticks={}, qi consumed={}, qi remaining={}/{}={}).",
+                    cultivator.getCharacterId(), flightTicks,
+                    String.format(java.util.Locale.ROOT, "%.1f", qiConsumedThisFlight),
+                    String.format(java.util.Locale.ROOT, "%.1f", cultivator.getQi()),
+                    String.format(java.util.Locale.ROOT, "%.1f", cultivator.getMaxQi()),
+                    String.format(java.util.Locale.ROOT, "%.1f%%", cultivator.getQiFraction() * 100.0));
+        } else {
+            Ergenverse.LOGGER.info("[Ergenverse] CultivatorFlightGoal: '{}' lands.",
+                    cultivator.getCharacterId());
+        }
         flightTicks = 0;
         consecutiveBlockedTicks = 0;
+        qiConsumedThisFlight = 0.0;
         lastTargetPos = null;
-        Ergenverse.LOGGER.info("[Ergenverse] CultivatorFlightGoal: '{}' lands.",
-                cultivator.getCharacterId());
     }
 
     @Override
     public void tick() {
         flightTicks++;
+
+        // CRON-134: consume qi for this flight tick. If consumption fails
+        // (insufficient qi), drain remaining qi and let canContinueToUse()
+        // return false on next check (which logs + forces landing).
+        // We consume BEFORE moving so a cultivator who can't afford to fly
+        // this tick doesn't get a free tick of flight.
+        boolean consumed = cultivator.consumeQi(FLIGHT_QI_COST_PER_TICK);
+        if (consumed) {
+            qiConsumedThisFlight += FLIGHT_QI_COST_PER_TICK;
+        } else {
+            // Insufficient qi for this tick — drain what remains and log.
+            // canContinueToUse() will return false on the next goal evaluation
+            // (which happens after this tick completes), forcing a clean stop().
+            qiConsumedThisFlight += cultivator.getQi();  // log the partial drain
+            cultivator.drainAllQi();
+            Ergenverse.LOGGER.warn("[Ergenverse] CultivatorFlightGoal: '{}' qi insufficient for tick {} (cost={}), draining remaining and landing next tick.",
+                    cultivator.getCharacterId(), flightTicks, FLIGHT_QI_COST_PER_TICK);
+        }
 
         Vec3 target = resolveFlightTarget();
         if (target == null) {

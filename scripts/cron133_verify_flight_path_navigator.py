@@ -182,18 +182,36 @@ check("consecutiveBlockedTicks field declared",
 # 8. start() and stop() reset state
 # ──────────────────────────────────────────────────────────────────────────
 print("\n[8] start() and stop() reset consecutiveBlockedTicks")
-# Find start() method and check it resets the field.
-start_match = re.search(r"public void start\(\)\s*\{(.*?)\}", goal_src, re.DOTALL)
-check("start() method exists", start_match is not None)
-if start_match:
-    check("start() resets consecutiveBlockedTicks = 0",
-          "consecutiveBlockedTicks = 0" in start_match.group(1))
+# Use brace-matching extraction (regex can't handle nested {} blocks,
+# which became necessary in CRON-134 when stop() gained an if/else block).
+def _extract_method_body_133(src: str, method_sig: str) -> str:
+    sig_idx = src.find(method_sig)
+    if sig_idx == -1:
+        return ""
+    brace_idx = src.find("{", sig_idx)
+    if brace_idx == -1:
+        return ""
+    depth = 1
+    i = brace_idx + 1
+    while i < len(src) and depth > 0:
+        if src[i] == "{":
+            depth += 1
+        elif src[i] == "}":
+            depth -= 1
+        i += 1
+    return src[brace_idx + 1 : i - 1]
 
-stop_match = re.search(r"public void stop\(\)\s*\{(.*?)\}", goal_src, re.DOTALL)
-check("stop() method exists", stop_match is not None)
-if stop_match:
+start_body = _extract_method_body_133(goal_src, "public void start()")
+check("start() method exists", len(start_body) > 0)
+if start_body:
+    check("start() resets consecutiveBlockedTicks = 0",
+          "consecutiveBlockedTicks = 0" in start_body)
+
+stop_body = _extract_method_body_133(goal_src, "public void stop()")
+check("stop() method exists", len(stop_body) > 0)
+if stop_body:
     check("stop() resets consecutiveBlockedTicks = 0",
-          "consecutiveBlockedTicks = 0" in stop_match.group(1))
+          "consecutiveBlockedTicks = 0" in stop_body)
 
 # ──────────────────────────────────────────────────────────────────────────
 # 9. tick() uses navigator
