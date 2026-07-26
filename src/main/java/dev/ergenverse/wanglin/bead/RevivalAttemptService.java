@@ -5,6 +5,7 @@ import dev.ergenverse.cultivation.CultivationCapability;
 import dev.ergenverse.cultivation.CultivationState;
 import dev.ergenverse.cultivation.RealmId;
 import dev.ergenverse.history.HistoryManager;
+import dev.ergenverse.item.WorldOriginEssenceItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -64,6 +65,15 @@ import net.minecraft.world.item.ItemStack;
  *   <li><b>Cap gate:</b> The counter cannot exceed 137. Once 137 failed
  *       attempts are recorded, additional attempts require TRANSCENDENCE
  *       realm (the final successful attempt).</li>
+ *   <li><b>Essence gate (CRON-COMPLETIONIST-101):</b> The final successful
+ *       revival (TRANSCENDENCE + 137 prior failures) additionally requires
+ *       the player to hold at least one {@link WorldOriginEssenceItem}
+ *       (一界本源) in their inventory. Canon: "王林踏入第四步后，成功运用
+ *       一界本源将之复活" — Wang Lin uses the origin of a world to revive
+ *       Li Muwan. Without this essence, even the Fourth Step cannot restore
+ *       her. On success, one essence item is consumed (the world is
+ *       irreversibly sacrificed). This gate is ONLY checked on the success
+ *       path — the 137 failed attempts do NOT require the essence.</li>
  * </ol>
  *
  * <h2>Outcomes</h2>
@@ -130,6 +140,15 @@ public final class RevivalAttemptService {
 
     /** Stable identifier for the HistoryManager subject on success. */
     public static final String SUBJECT_REVIVAL_SUCCEEDED = "li_muwan_revival_succeeded";
+
+    /**
+     * CRON-COMPLETIONIST-101: Stable identifier for the HistoryManager subject
+     * recorded when a World Origin Essence (一界本源) item is consumed by the
+     * successful revival. Distinct from {@link #SUBJECT_REVIVAL_SUCCEEDED}
+     * because the essence consumption is a separate canon beat — Wang Lin
+     * sacrificing one of his worlds to permanently restore Li Muwan.
+     */
+    public static final String SUBJECT_REVIVAL_ESSENCE_CONSUMED = "li_muwan_revival_essence_consumed";
 
     private RevivalAttemptService() {}
 
@@ -232,8 +251,39 @@ public final class RevivalAttemptService {
                         .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
                 return false;
             }
-            // TRANSCENDENCE + 137 attempts = SUCCESS!
-            return doSuccessfulRevival(player, beadItem, stack, currentTick);
+
+            // ── Gate 6: Essence gate (CRON-COMPLETIONIST-101) ──
+            // The final successful revival requires the World Origin Essence
+            // (一界本源). Canon: "王林踏入第四步后，成功运用一界本源将之复活".
+            // Without this essence, even the Fourth Step cannot restore her.
+            ItemStack essenceStack = WorldOriginEssenceItem.findInInventory(player);
+            if (essenceStack.isEmpty()) {
+                player.sendSystemMessage(Component.literal(
+                        "═══════════════════════════════════════")
+                        .withStyle(ChatFormatting.DARK_PURPLE));
+                player.sendSystemMessage(Component.literal(
+                        "你已踏入第四步，137次复活皆已失败。")
+                        .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+                player.sendSystemMessage(Component.literal(
+                        "但复活李慕婉还需最后一件至宝 —— 一界本源。")
+                        .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+                player.sendSystemMessage(Component.literal(
+                        "Canon: Wang Lin entered the Fourth Step, yet 137 attempts "
+                        + "have failed. The final reagent is 一界本源 (World Origin "
+                        + "Essence) — the condensed origin of an entire world. "
+                        + "Without it, even the Fourth Step cannot restore her.")
+                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+                player.sendSystemMessage(Component.literal(
+                        "Acquire World Origin Essence and attempt the revival again.")
+                        .withStyle(ChatFormatting.YELLOW));
+                player.sendSystemMessage(Component.literal(
+                        "═══════════════════════════════════════")
+                        .withStyle(ChatFormatting.DARK_PURPLE));
+                return false;
+            }
+
+            // TRANSCENDENCE + 137 attempts + World Origin Essence = SUCCESS!
+            return doSuccessfulRevival(player, beadItem, stack, currentTick, essenceStack);
         }
 
         // ── All gates passed. Perform the failed attempt. ──
@@ -324,11 +374,19 @@ public final class RevivalAttemptService {
      * <ul>
      *   <li>137 failed attempts already recorded</li>
      *   <li>Player realm is TRANSCENDENCE (Fourth Step)</li>
+     *   <li>Player holds at least one World Origin Essence (一界本源) — CRON-101</li>
      * </ul>
      *
      * <p>Canon: Wang Lin enters the Fourth Step, uses the origin of a
      * world (一界本源), and finally revives Li Muwan. They transcend
      * together, beyond life and death.
+     *
+     * <p><b>CRON-COMPLETIONIST-101:</b> This method now CONSUMES one
+     * World Origin Essence item from the player's inventory. Canon: the
+     * world whose origin is extracted is irreversibly sacrificed. The
+     * consumption is logged via {@link HistoryManager} under a separate
+     * subject ({@link #SUBJECT_REVIVAL_ESSENCE_CONSUMED}) to distinguish
+     * the essence-sacrifice beat from the general success beat.
      *
      * <p>This method does NOT remove Li Muwan's soul from the bead —
      * the soul remains as a permanent record. Instead, it sets a new
@@ -338,12 +396,29 @@ public final class RevivalAttemptService {
     private static boolean doSuccessfulRevival(ServerPlayer player,
                                                 HeavenDefyingBeadItem beadItem,
                                                 ItemStack stack,
-                                                long currentTick) {
+                                                long currentTick,
+                                                ItemStack essenceStack) {
         // The 138th "attempt" is the success — but we DON'T increment the
         // counter beyond 137. The counter stays at 137 (canon-attested cap).
         // Instead, we record the success via HistoryManager and (TODO) a
         // new NBT flag NBT_LI_MUWAN_REVIVED.
         beadItem.setLastRevivalAttemptTick(stack, currentTick);
+
+        // CRON-COMPLETIONIST-101: Consume the World Origin Essence.
+        // Canon: the world whose origin is extracted is irreversibly
+        // sacrificed. The shrink(1) reduces the stack by 1; if the stack
+        // size was 1 (which it always is — stacksTo(1)), the slot becomes
+        // empty. This is the canon-faithful permanent loss.
+        String sourceWorld = essenceStack.hasTag()
+                && essenceStack.getTag().contains(WorldOriginEssenceItem.NBT_SOURCE_WORLD)
+                ? essenceStack.getTag().getString(WorldOriginEssenceItem.NBT_SOURCE_WORLD)
+                : WorldOriginEssenceItem.DEFAULT_SOURCE_WORLD;
+        essenceStack.shrink(1);
+        // Defensive: if shrink didn't fully consume (e.g., stacked via
+        // creative pick-block), force-set to empty.
+        if (!essenceStack.isEmpty()) {
+            essenceStack.setCount(0);
+        }
 
         player.sendSystemMessage(Component.literal(
                 "═══════════════════════════════════════")
@@ -362,6 +437,14 @@ public final class RevivalAttemptService {
                 "Li Muwan opens her eyes. Together they transcend, beyond the "
                 + "cycle of life and death, for all eternity.")
                 .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+        // CRON-101: explicitly acknowledge the world that was sacrificed.
+        player.sendSystemMessage(Component.literal(
+                "「" + sourceWorld + "」 的本源已化作虚无。一个世界从此陨灭。")
+                .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+        player.sendSystemMessage(Component.literal(
+                "The origin of「" + sourceWorld + "」dissolves into nothing. "
+                + "A world has perished to restore her.")
+                .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
         player.sendSystemMessage(Component.literal(
                 "═══════════════════════════════════════")
                 .withStyle(ChatFormatting.GOLD));
@@ -372,10 +455,18 @@ public final class RevivalAttemptService {
                         + "They transcended together, beyond life and death.",
                 currentTick);
 
-        Ergenverse.LOGGER.info("[Ergenverse] CRON-100: Player {} achieved the SUCCESSFUL "
-                        + "revival of Li Muwan (TRANSCENDENCE realm, 137 prior failures). "
+        // CRON-101: separate subject for the essence-sacrifice beat.
+        HistoryManager.onDiscovery(player, SUBJECT_REVIVAL_ESSENCE_CONSUMED,
+                "Wang Lin sacrificed the origin of「" + sourceWorld + "」to revive "
+                        + "Li Muwan. The world is irreversibly consumed — its rules, "
+                        + "its essence, its very being, dissolved into her restoration.",
+                currentTick);
+
+        Ergenverse.LOGGER.info("[Ergenverse] CRON-101: Player {} achieved the SUCCESSFUL "
+                        + "revival of Li Muwan (TRANSCENDENCE realm, 137 prior failures, "
+                        + "World Origin Essence consumed from world「{}」). "
                         + "This is the endgame event of Wang Lin's central arc.",
-                player.getName().getString());
+                player.getName().getString(), sourceWorld);
 
         return true;
     }

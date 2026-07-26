@@ -71,8 +71,21 @@ public final class ErgenverseCommand {
             .then(Commands.literal("bead")
                 .then(Commands.literal("revive")
                     .executes(ctx -> beadRevive(ctx.getSource()))))
+            // CRON-COMPLETIONIST-101: Give World Origin Essence (一界本源) command.
+            // Usage: /ergenverse give_essence [world_name]
+            // Gives the player one World Origin Essence item. Optional world_name
+            // sets the source-world NBT tag (defaults to "未明之界").
+            // This is a testing/creative command — the canon-faithful acquisition
+            // path (Suzaku Tomb loot, Fourth Step ascension event, world-boss drop)
+            // is a future CRON. See WorldOriginEssenceItem javadoc.
+            .then(Commands.literal("give_essence")
+                .executes(ctx -> giveEssence(ctx.getSource(), null))
+                .then(Commands.argument("world_name", net.minecraft.commands.arguments.MessageArgument.message())
+                    .executes(ctx -> giveEssence(ctx.getSource(),
+                            net.minecraft.commands.arguments.MessageArgument.getMessage(ctx, "world_name")
+                                    .getString()))))
         );
-        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset|geography|desire_list|desire_fire|desire_targets|bead revive).");
+        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset|geography|desire_list|desire_fire|desire_targets|bead revive|give_essence).");
     }
 
     /**
@@ -131,6 +144,64 @@ public final class ErgenverseCommand {
             }
         }
         return net.minecraft.world.item.ItemStack.EMPTY;
+    }
+
+    /**
+     * CRON-COMPLETIONIST-101: /ergenverse give_essence [world_name]
+     *
+     * <p>Gives the player one World Origin Essence (一界本源) item. If
+     * {@code worldName} is null, defaults to {@code "未明之界"} (Unnamed
+     * World). Otherwise, sets the source-world NBT tag to the given name.
+     *
+     * <p><b>Canon basis:</b> Wang Lin uses 一界本源 — the origin of an
+     * entire world — to revive Li Muwan. The novel specifies that he
+     * extracts it from his own 逆尘界 (Ni Chen Realm). The optional
+     * {@code world_name} argument lets the player name their own world
+     * for canon-faithful role-play.
+     *
+     * <p><b>Testing/creative command:</b> The canon-faithful acquisition
+     * path (Suzaku Tomb loot table, Fourth Step ascension event,
+     * world-boss drop) is a future CRON. This command exists for testing
+     * the revival success path without requiring the player to defeat a
+     * world-tier boss.
+     */
+    private static int giveEssence(CommandSourceStack src, String worldName) {
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            src.sendFailure(Component.literal("This command can only be run by a player.")
+                    .withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        // Create the essence stack with optional source-world name.
+        net.minecraft.world.item.ItemStack essenceStack = (worldName == null || worldName.isEmpty())
+                ? dev.ergenverse.item.WorldOriginEssenceItem.createDefault()
+                : dev.ergenverse.item.WorldOriginEssenceItem.createFromWorld(worldName);
+
+        // Give to player (drop at feet if inventory full — vanilla behavior).
+        if (!player.getInventory().add(essenceStack)) {
+            player.drop(essenceStack, false);
+        }
+
+        String sourceWorld = essenceStack.hasTag()
+                && essenceStack.getTag().contains(dev.ergenverse.item.WorldOriginEssenceItem.NBT_SOURCE_WORLD)
+                ? essenceStack.getTag().getString(dev.ergenverse.item.WorldOriginEssenceItem.NBT_SOURCE_WORLD)
+                : dev.ergenverse.item.WorldOriginEssenceItem.DEFAULT_SOURCE_WORLD;
+
+        src.sendSuccess(() -> Component.literal(
+                "Granted World Origin Essence (一界本源). Source world: " + sourceWorld)
+                .withStyle(ChatFormatting.LIGHT_PURPLE), false);
+        src.sendSuccess(() -> Component.literal(
+                "Canon: Wang Lin uses 一界本源 to revive Li Muwan after entering the "
+                        + "Fourth Step. Hold this item when running "
+                        + "/ergenverse bead revive at TRANSCENDENCE realm with 137 prior "
+                        + "failed attempts to complete the endgame.")
+                .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), false);
+
+        Ergenverse.LOGGER.info("[Ergenverse] CRON-101: /ergenverse give_essence — gave "
+                        + "World Origin Essence (source world「{}」) to player {}.",
+                sourceWorld, player.getName().getString());
+        return 1;
     }
 
     /** /ergenverse status — print mod load + village + player state. */

@@ -386,6 +386,30 @@ public final class ErgenverseItems {
             ITEMS.register("billion_soul_flag", () -> new dev.ergenverse.item.BillionSoulFlagItem(
                     new Item.Properties().durability(2000).rarity(net.minecraft.world.item.Rarity.EPIC)));
 
+    // ── World Origin Essence (一界本源) — CRON-COMPLETIONIST-101 ──────────
+    // The canon-attested reagent Wang Lin uses to revive Li Muwan after
+    // entering the Fourth Step. Closes the CRON-100 documented mod-fidelity
+    // bridge where the success path required only TRANSCENDENCE realm but
+    // omitted the 一界本源 requirement.
+    //
+    // Canon (web-search 2026-07-26, multiple sources):
+    //   - Baidu Baike (李慕婉): "王林踏入第四步后，成功运用一界本源将之复活"
+    //   - 360娱乐: "最终王林终于找到了复活李慕婉的办法...用一个界面的本源来复活李慕婉"
+    //   - 批踢踢實業坊: "復活李慕婉的關鍵，是要以一界本源，加入她的肉身"
+    //
+    // The item is a passive reagent: no right-click use. The 6th gate of
+    // RevivalAttemptService checks for its presence when the player attempts
+    // the final successful revival (TRANSCENDENCE + 137 prior failures).
+    // On success, one essence item is consumed.
+    //
+    // Current sources (CRON-101): creative tab + /ergenverse give command.
+    // Future sources (NOT in CRON-101): Suzaku Tomb loot table, Fourth Step
+    // ascension event, world-boss drop. Documented in WorldOriginEssenceItem
+    // javadoc for canon-faithful future work.
+    public static final RegistryObject<dev.ergenverse.item.WorldOriginEssenceItem> WORLD_ORIGIN_ESSENCE =
+            ITEMS.register("world_origin_essence", () -> new dev.ergenverse.item.WorldOriginEssenceItem(
+                    new Item.Properties()));  // rarity/stacksTo/fireResistant set in constructor
+
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
@@ -455,6 +479,8 @@ public final class ErgenverseItems {
                             output.accept(CULTIVATION_JOURNAL.get());
                             // CRON-COMPLETIONIST-89: Billion Soul Flag — Wang Lin's signature soul weapon
                             output.accept(BILLION_SOUL_FLAG.get());
+                            // CRON-COMPLETIONIST-101: World Origin Essence — canon 一界本源 reagent for Li Muwan's revival
+                            output.accept(WORLD_ORIGIN_ESSENCE.get());
                         })
                         .build());
         Ergenverse.LOGGER.info("[Ergenverse] ErgenverseItems: registered jade_slip utility item.");

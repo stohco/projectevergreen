@@ -107,8 +107,11 @@ public class HeavenDefyingBeadItem extends WangLinItem {
      * </ul>
      *
      * <p>At 137 attempts, a special "final attempt" event fires. Actual
-     * success requires Fourth Step realm (TRANSCENDENCE) — a separate gate
-     * enforced by {@link RevivalAttemptService#attemptRevival}.
+     * success requires Fourth Step realm (TRANSCENDENCE) AND a World Origin
+     * Essence (一界本源) item in the player's inventory — separate gates
+     * enforced by {@link RevivalAttemptService#attemptRevival}. The World
+     * Origin Essence is consumed on success (CRON-COMPLETIONIST-101) —
+     * canon: the world whose origin is extracted is irreversibly sacrificed.
      *
      * <p>NO fabricated chapter citation. The 137 number is canon-attested
      * via web-search; the exact chapter is not cited to avoid fabrication.
