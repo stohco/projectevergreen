@@ -3,7 +3,9 @@ package dev.ergenverse.wanglin.bead;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.wanglin.HeavenDefyingBead;
 import dev.ergenverse.wanglin.WangLinItem;
+import dev.ergenverse.wanglin.WangLinItems;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +17,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -79,6 +83,21 @@ public class HeavenDefyingBeadItem extends WangLinItem {
     public static final String NBT_SAMARA_COUNT = "Ergen.Bead.SamsaraCount";
     public static final String NBT_ACTIVE_TAB = "Ergen.Bead.ActiveTab";
 
+    /**
+     * CRON-COMPLETIONIST-95: A bitfield tracking WHICH of the 9 Parts have
+     * been aligned. Bit i corresponds to {@link HeavenDefyingBead.Part}
+     * ordinal i (so bit 0 = CORE, bit 1 = METAL, ..., bit 8 = DEEP_MYSTERY_3).
+     * Stored as a single int. Bits beyond 8 are reserved.
+     *
+     * <p>This is required to prevent a player from absorbing the same
+     * essence twice (which would corrupt the parts-aligned count and
+     * break the BeadCapacityModel's stage calculation). Without this
+     * bitfield, the only state was a counter (0..9), and we couldn't
+     * distinguish "2 parts aligned, both metal" from "2 parts aligned,
+     * metal + wood".
+     */
+    public static final String NBT_ALIGNED_PARTS = "Ergen.Bead.AlignedParts";
+
     // ── Constants ───────────────────────────────────────────────────
 
     public HeavenDefyingBeadItem(Properties properties) {
@@ -97,8 +116,24 @@ public class HeavenDefyingBeadItem extends WangLinItem {
     // ── Interaction ─────────────────────────────────────────────────
 
     /**
-     * Right-click opens the bead's divine-sense storage menu.
-     * Shift+right-click enters the bead's interior dimension.
+     * Right-click interaction — dispatches to one of three behaviors based
+     * on context:
+     *
+     * <ol>
+     *   <li><b>If the off-hand holds an Element or Dao essence</b> →
+     *       absorb the essence into the bead (CRON-COMPLETIONIST-95).
+     *       This is the active side of bead progression — the player
+     *       aligns the 9 Parts by feeding essences to the bead. Consumes
+     *       one essence item per right-click.</li>
+     *   <li><b>Else if shift is held and the stage allows physical entry</b> →
+     *       teleport into the bead's interior dimension (existing behavior).</li>
+     *   <li><b>Else if the stage allows storage access</b> →
+     *       open the divine-sense storage menu (existing behavior).</li>
+     * </ol>
+     *
+     * <p>The essence-absorption branch takes priority over menu open so
+     * the player can absorb without accidental menu popups. To open the
+     * menu, the player must empty their off-hand first.
      */
     @Override
     public InteractionResultHolder<ItemStack> use(net.minecraft.world.level.Level level,
@@ -118,6 +153,17 @@ public class HeavenDefyingBeadItem extends WangLinItem {
                             + "of five elements is barely visible on its surface.")
                             .withStyle(ChatFormatting.GRAY));
             return InteractionResultHolder.fail(stack);
+        }
+
+        // CRON-COMPLETIONIST-95: Essence absorption (off-hand priority).
+        // If the off-hand holds an Element or Dao essence, absorb it into
+        // the bead. This takes priority over menu open and dimension entry.
+        ItemStack offHand = player.getItemInHand(InteractionHand.OFF_HAND);
+        if (!offHand.isEmpty()) {
+            EssenceType essence = identifyEssence(offHand);
+            if (essence != null) {
+                return tryAbsorbEssence(level, player, hand, stack, offHand, essence);
+            }
         }
 
         if (player.isShiftKeyDown() && stage.hasPhysicalEntry) {
@@ -143,6 +189,197 @@ public class HeavenDefyingBeadItem extends WangLinItem {
                         + "comprehend how to access it.")
                         .withStyle(ChatFormatting.DARK_GRAY));
         return InteractionResultHolder.fail(stack);
+    }
+
+    // ── Essence Absorption (CRON-COMPLETIONIST-95) ──────────────────────
+
+    /**
+     * Identifies which {@link HeavenDefyingBead.Part} a given off-hand
+     * stack would align. Returns {@code null} if the stack is not an
+     * essence used for bead alignment.
+     *
+     * <p><b>Canon mapping (mod-original — see HeavenDefyingBead.Part
+     * javadoc for canon vs. mod-original distinction):</b>
+     * <ul>
+     *   <li>{@code metal_essence} → Part METAL (canonical — Wang Lin aligns the Five Elements)</li>
+     *   <li>{@code wood_essence}  → Part WOOD  (canonical)</li>
+     *   <li>{@code water_essence} → Part WATER (canonical)</li>
+     *   <li>{@code fire_essence}  → Part FIRE  (canonical)</li>
+     *   <li>{@code earth_essence} → Part EARTH (canonical)</li>
+     *   <li>{@code dao_fragment}  → Part DEEP_MYSTERY_1 (mod-original — the canon mentions 3 hidden fragments but does not enumerate which Dao items map to which; this is a reasonable mod choice as dao_fragment is the most generic Dao piece)</li>
+     *   <li>{@code dao_karma}     → Part DEEP_MYSTERY_2 (mod-original — karmic resonance, matches the "reincarnation imprint" bridging-policy name)</li>
+     *   <li>{@code dao_life_death}→ Part DEEP_MYSTERY_3 (mod-original — life/death is the most transcendent Dao, matches the "Heaven-Trampling bridge resonance" bridging-policy name)</li>
+     * </ul>
+     *
+     * <p>The remaining Dao items ({@code dao_slaughter}, {@code dao_time})
+     * are NOT used for bead alignment — they are separate Dao items in
+     * Wang Lin's arsenal but do not correspond to a bead Part. This is
+     * a deliberate mod-design choice; canon does not specify how the 3
+     * hidden fragments align, so we picked the three most thematically
+     * resonant Dao items.
+     */
+    @Nullable
+    private EssenceType identifyEssence(ItemStack offHand) {
+        String itemId = ForgeRegistries.ITEMS.getKey(offHand.getItem()).toString();
+        return switch (itemId) {
+            case "ergenverse:metal_essence"     -> EssenceType.of(HeavenDefyingBead.Part.METAL,
+                    "Metal essence", "金源精魄 merges with the bead. The Metal pattern flares.");
+            case "ergenverse:wood_essence"      -> EssenceType.of(HeavenDefyingBead.Part.WOOD,
+                    "Wood essence",  "木源精魄 merges with the bead. The Wood pattern pulses.");
+            case "ergenverse:water_essence"     -> EssenceType.of(HeavenDefyingBead.Part.WATER,
+                    "Water essence", "水源精魄 merges with the bead. The Water pattern ripples.");
+            case "ergenverse:fire_essence"      -> EssenceType.of(HeavenDefyingBead.Part.FIRE,
+                    "Fire essence",  "火源精魄 merges with the bead. The Fire pattern blazes.");
+            case "ergenverse:earth_essence"     -> EssenceType.of(HeavenDefyingBead.Part.EARTH,
+                    "Earth essence", "土源精魄 merges with the bead. The Earth pattern stabilizes.");
+            case "ergenverse:dao_fragment"      -> EssenceType.of(HeavenDefyingBead.Part.DEEP_MYSTERY_1,
+                    "Dao Fragment",  "A fragment of the Dao sinks into the bead. A hidden resonance awakens.");
+            case "ergenverse:dao_karma"         -> EssenceType.of(HeavenDefyingBead.Part.DEEP_MYSTERY_2,
+                    "Dao of Karma",  "Karmic Dao sinks into the bead. The reincarnation imprint stirs.");
+            case "ergenverse:dao_life_death"    -> EssenceType.of(HeavenDefyingBead.Part.DEEP_MYSTERY_3,
+                    "Dao of Life and Death",  "The Dao of Life and Death sinks into the bead. The Heaven-Trampling bridge resonance awakens.");
+            default -> null;
+        };
+    }
+
+    /**
+     * Attempt to absorb one essence from the off-hand into the bead.
+     *
+     * <p>Behavior:
+     * <ol>
+     *   <li>If the corresponding Part is already aligned → fail with a
+     *       chat message ("This essence has already been absorbed.").
+     *       The essence is NOT consumed.</li>
+     *   <li>Otherwise: align the Part (sets the bit + increments the
+     *       counter), consumes one essence from the off-hand, spawns
+     *       celebration particles, and sends a canon-flavored chat
+     *       message describing the absorption.</li>
+     * </ol>
+     */
+    private InteractionResultHolder<ItemStack> tryAbsorbEssence(
+            net.minecraft.world.level.Level level, Player player,
+            InteractionHand hand, ItemStack beadStack, ItemStack offHand,
+            EssenceType essence) {
+
+        int partBitIndex = essence.part.ordinal();
+
+        // 1. Check if the Part is already aligned.
+        if (isPartAligned(beadStack, partBitIndex)) {
+            player.sendSystemMessage(
+                    Component.literal("The bead rejects the " + essence.displayName
+                            + " — that pattern is already aligned.")
+                            .withStyle(ChatFormatting.YELLOW));
+            return InteractionResultHolder.fail(beadStack);
+        }
+
+        // 2. Canon ordering check: the Five Elements must be aligned
+        //    in order (Metal → Wood → Water → Fire → Earth). The 3 hidden
+        //    fragments can only be aligned after all 5 Elements are done.
+        //    This is a soft canon-faithful gate — the novel depicts Wang
+        //    Lin aligning the Five Elements roughly in this order, and the
+        //    3 hidden fragments are late-game.
+        HeavenDefyingBead.Part[] order = HeavenDefyingBead.Part.values();
+        for (int i = 0; i < partBitIndex; i++) {
+            if (!isPartAligned(beadStack, i)) {
+                HeavenDefyingBead.Part prerequisite = order[i];
+                player.sendSystemMessage(
+                        Component.literal("The bead cannot yet accept the "
+                                + essence.displayName + ". The "
+                                + prerequisite.name
+                                + " must be aligned first.")
+                                .withStyle(ChatFormatting.RED));
+                return InteractionResultHolder.fail(beadStack);
+            }
+        }
+
+        // 3. Consume one essence from the off-hand.
+        if (!player.getAbilities().instabuild) {
+            offHand.shrink(1);
+        }
+
+        // 4. Align the Part (sets the bit + increments the counter).
+        alignPart(beadStack, partBitIndex);
+
+        // 5. Server-side feedback: chat message + particles.
+        if (player instanceof ServerPlayer serverPlayer) {
+            int newCount = getPartsAligned(beadStack);
+            serverPlayer.sendSystemMessage(
+                    Component.literal(essence.flavorText)
+                            .withStyle(ChatFormatting.GOLD));
+            serverPlayer.sendSystemMessage(
+                    Component.literal("  Parts Aligned: " + newCount + " / 9")
+                            .withStyle(ChatFormatting.AQUA));
+
+            // Spawn celebration particles around the player.
+            spawnAbsorptionParticles(serverPlayer);
+
+            Ergenverse.LOGGER.info("[Ergenverse] Player {} absorbed {} into the bead "
+                            + "(parts aligned: {}/9, part={}).",
+                    serverPlayer.getName().getString(), essence.displayName,
+                    newCount, essence.part.name());
+        }
+
+        return InteractionResultHolder.success(beadStack);
+    }
+
+    /**
+     * Spawn gold and dust particles around the player to celebrate the
+     * absorption. Visible at any light level.
+     */
+    private void spawnAbsorptionParticles(ServerPlayer player) {
+        if (!(player.level() instanceof net.minecraft.server.level.ServerLevel serverLevel)) return;
+        double x = player.getX();
+        double y = player.getY() + 1.0;  // chest height
+        double z = player.getZ();
+        // 20 gold particles in a sphere
+        for (int i = 0; i < 20; i++) {
+            double theta = (i / 20.0) * Math.PI * 2;
+            double phi = ((i * 13) % 7) / 7.0 * Math.PI;  // pseudo-random sphere
+            double r = 1.2;
+            double dx = Math.sin(phi) * Math.cos(theta) * r;
+            double dy = Math.cos(phi) * r;
+            double dz = Math.sin(phi) * Math.sin(theta) * r;
+            serverLevel.sendParticles(ParticleTypes.END_ROD,
+                    x + dx, y + dy, z + dz, 1,
+                    0.0, 0.0, 0.0, 0.0);
+        }
+        // Central flash
+        serverLevel.sendParticles(ParticleTypes.FIREWORK,
+                x, y, z, 5, 0.5, 0.5, 0.5, 0.05);
+    }
+
+    /**
+     * Returns true if the Part at {@code partIndex} (0..8) is aligned.
+     */
+    public boolean isPartAligned(ItemStack stack, int partIndex) {
+        if (partIndex < 0 || partIndex >= 9) return false;
+        if (stack.isEmpty() || !stack.hasTag()) return false;
+        int bits = stack.getTag().getInt(NBT_ALIGNED_PARTS);
+        return (bits & (1 << partIndex)) != 0;
+    }
+
+    /**
+     * Align the Part at {@code partIndex} (0..8). Sets the bit and
+     * increments the parts-aligned counter. Does NOT recompute the stage
+     * (the counter setter does that).
+     */
+    public void alignPart(ItemStack stack, int partIndex) {
+        if (partIndex < 0 || partIndex >= 9) return;
+        int bits = stack.getOrCreateTag().getInt(NBT_ALIGNED_PARTS);
+        if ((bits & (1 << partIndex)) != 0) return;  // already aligned
+        bits |= (1 << partIndex);
+        stack.getOrCreateTag().putInt(NBT_ALIGNED_PARTS, bits);
+        // Increment the parts-aligned counter (which calls recalculateStage).
+        setPartsAligned(stack, getPartsAligned(stack) + 1);
+    }
+
+    /**
+     * Returns the raw aligned-parts bitfield. Bit i corresponds to Part
+     * ordinal i. Useful for debugging or save-state inspection.
+     */
+    public int getAlignedPartsBits(ItemStack stack) {
+        if (stack.isEmpty() || !stack.hasTag()) return 0;
+        return stack.getTag().getInt(NBT_ALIGNED_PARTS);
     }
 
     /**
@@ -477,12 +714,24 @@ public class HeavenDefyingBeadItem extends WangLinItem {
      * <p>Canon: the bead starts as a stone (DORMANT_STONE). After Situ Nan
      * blasts it open, it reveals a small interior chamber (CRACK_OPENED).
      * This method simulates that first opening.
+     *
+     * <p><b>CRON-COMPLETIONIST-95 FIX:</b> Previously this returned
+     * {@link ItemStack#EMPTY}, leaving no programmatic way to create an
+     * initialized bead. Now resolves the bead item via {@link WangLinItems}
+     * and applies the opening event. Returns {@link ItemStack#EMPTY} only
+     * if the bead item is not yet registered (e.g., called before
+     * Forge registry event fires).
      */
     public static ItemStack createInitialBead() {
-        // Create via the registered item — will be populated when
-        // WangLinItems registers the bead item.
-        // For now, return null and let the registration handle it.
-        return ItemStack.EMPTY;
+        RegistryObject<Item> beadRO = WangLinItems.get("wanglin/heaven_defying_bead");
+        if (beadRO == null || !beadRO.isPresent()) {
+            Ergenverse.LOGGER.warn("[Ergenverse] HeavenDefyingBeadItem.createInitialBead: "
+                    + "heaven_defying_bead not registered — returning EMPTY.");
+            return ItemStack.EMPTY;
+        }
+        ItemStack stack = new ItemStack(beadRO.get());
+        applyInitialOpening(stack);
+        return stack;
     }
 
     /**
@@ -491,9 +740,19 @@ public class HeavenDefyingBeadItem extends WangLinItem {
      *
      * <p>Canon: Ch. 8 — Wang Lin finds the bead as a stone. Situ Nan's
      * remnant soul is inside. The bead cracks open, revealing a small chamber.
+     *
+     * <p><b>CRON-COMPLETIONIST-95:</b> Also sets the CORE bit in the
+     * AlignedParts bitfield, so the player cannot accidentally absorb a
+     * "core" essence (there is none — the core is the bead itself).
      */
     public static void applyInitialOpening(ItemStack stack) {
         if (!(stack.getItem() instanceof HeavenDefyingBeadItem beadItem)) return;
+
+        // CRON-95: align the CORE part (bit 0) BEFORE setting the counter,
+        // so the bitfield and counter stay in sync.
+        int bits = stack.getOrCreateTag().getInt(NBT_ALIGNED_PARTS);
+        bits |= (1 << HeavenDefyingBead.Part.CORE.ordinal());
+        stack.getOrCreateTag().putInt(NBT_ALIGNED_PARTS, bits);
 
         beadItem.setPartsAligned(stack, 1);  // CORE only
         beadItem.setSpatialStability(stack, 1000);  // unstable but present
@@ -501,5 +760,27 @@ public class HeavenDefyingBeadItem extends WangLinItem {
         beadItem.setInteriorGrowth(stack, 0);
         beadItem.setSpirit(stack, HeavenDefyingBead.Spirit.SITU_NAN);
         // recalculateStage is called inside setPartsAligned
+    }
+
+    // ── Essence Type Helper (CRON-COMPLETIONIST-95) ────────────────────
+
+    /**
+     * A resolved essence type — the Part it aligns plus display info.
+     * Used by {@link #identifyEssence} to dispatch absorption.
+     */
+    private static final class EssenceType {
+        final HeavenDefyingBead.Part part;
+        final String displayName;
+        final String flavorText;
+
+        private EssenceType(HeavenDefyingBead.Part part, String displayName, String flavorText) {
+            this.part = part;
+            this.displayName = displayName;
+            this.flavorText = flavorText;
+        }
+
+        static EssenceType of(HeavenDefyingBead.Part part, String displayName, String flavorText) {
+            return new EssenceType(part, displayName, flavorText);
+        }
     }
 }

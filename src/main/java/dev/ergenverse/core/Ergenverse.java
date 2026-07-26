@@ -254,6 +254,14 @@ public final class Ergenverse {
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.spawn.ErgenverseCommand.class);
         // ── Unified debug console: one command to inspect everything.
         MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ErgenDebugCommand.class);
+        // CRON-COMPLETIONIST-95: BeadProgressionService — drives passive
+        // progression of the Heaven-Defying Bead (InteriorGrowth, SpatialStability,
+        // OwnerAuthority) based on the player's cultivation realm. Without this
+        // service the bead's NBT factors were initialized once via
+        // applyInitialOpening and never changed — the bead was permanently stuck
+        // at CRACK_OPENED stage. The active side of progression (Parts Aligned
+        // via essence absorption) is handled in HeavenDefyingBeadItem.use().
+        MinecraftForge.EVENT_BUS.register(dev.ergenverse.wanglin.bead.BeadProgressionService.class);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ErgenConfig.SPEC);
         LOGGER.info("[Ergenverse] The world has existed for ten thousand years before you arrived.");
