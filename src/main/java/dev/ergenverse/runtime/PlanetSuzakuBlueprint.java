@@ -151,20 +151,29 @@ public final class PlanetSuzakuBlueprint {
             new CanonLocation("sea_of_devils", "Sea of Devils (修魔海)",
                     6000, 0, -1184, "geographic", "RI — 修魔海; 古神之地, 蚊兽, 十亿尊魂幡 events");
 
-    // Jue Ming Valley = 决明谷 (Jue Ming Gu) / also written 绝命谷 — Valley of Certain Death.
+    // Jue Ming Valley = 决明谷 (Jue Ming Gu) — Valley of Decisive Brightness.
     // Canon: Wang Lin flees here to await Teng Huayuan's revenge; his physical body is
     // destroyed here and his soul flees to the Foreign Battleground (域外战场) via the
     // 天逆珠. A trapping formation holds cultivators inside until the sect competition
     // for tokens ends. Wang Lin's Ji Realm (极境) awakening occurs here, driven by grief
     // over his clan's annihilation. Verified via Baidu Baike 仙逆编年史 + multiple chapter
-    // summaries. NOTE: the novel uses 决明 (Jue Ming = "decisive brightness") in some
-    // sources and 绝命 (Jue Ming = "certain death") in others; both romanize to
-    // "Jue Ming Valley". The enriched canon DB uses 绝命谷. The translation
-    // "Valley of Certain Death" is the common English rendering.
+    // summaries (Douban 仙逆王林编年史, Zhihu 仙逆故事线整理, Baidu Baike 仙逆).
+    //
+    // CRON-COMPLETIONIST-79: Canon name verification. The correct Chinese name is
+    // 决明谷 (jué míng gǔ, "decisive brightness valley"). An earlier round (CRON-68)
+    // incorrectly noted that "the novel uses 决明 in some sources and 绝命 in others"
+    // — this was WRONG. A web search on 2026-07-26 confirmed that ALL primary sources
+    // (Baidu Baike 仙逆编年史, Baidu Baike 仙逆, Douban, Zhihu) consistently use 决明谷.
+    // NO source uses 绝命谷 (jué mìng gǔ, "certain death valley"). The 绝命 character
+    // was a misreading/typo that propagated through the enriched canon DB and multiple
+    // code comments. CRON-79 unifies ALL occurrences project-wide to 决明谷. The English
+    // translation "Valley of Certain Death" is retained as the common English rendering
+    // (it captures the valley's narrative role even though the literal translation of
+    // 决明 is "decisive brightness", not "certain death").
     public static final CanonLocation JUE_MING_VALLEY =
-            new CanonLocation("jue_ming_valley", "Jue Ming Valley (决明谷 / 绝命谷)",
+            new CanonLocation("jue_ming_valley", "Jue Ming Valley (决明谷)",
                     4500, 0, -500, "dangerous_region",
-                    "RI — 决明谷 / 绝命谷; Wang Lin's physical body destroyed here, "
+                    "RI — 决明谷; Wang Lin's physical body destroyed here, "
                     + "Ji Realm awakening, Teng Huayuan confrontation, soul flees to 域外战场");
 
     // Suzaku Tomb (朱雀墓) — underground inheritance site of the 朱雀子 lineage.

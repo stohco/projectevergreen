@@ -92,7 +92,7 @@ public final class DeterministicTerrainGenerator {
     // ── Region accents ──────────────────────────────────────────────────
 
     /**
-     * Jue Ming Valley (决明谷 / 绝命谷) — Valley of Certain Death. Canon: Wang Lin's
+     * Jue Ming Valley (决明谷) — Valley of Certain Death. Canon: Wang Lin's
      * physical body destroyed here, soul flees to Foreign Battleground; a trapping
      * formation holds cultivators inside; ancient restrictions, sealed beasts.
      * Decoration: soul-sand + bone-block accents, reflecting the death-law ambiance.

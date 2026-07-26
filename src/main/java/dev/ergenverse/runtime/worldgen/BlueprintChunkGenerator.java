@@ -573,7 +573,7 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
             // Vermilion Bird Capital — central, moderate terrain
             case "vermilion_bird_capital" -> 5; // 朱雀国 — central continent
 
-            // Jue Ming Valley (决明谷 / 绝命谷) — Valley of Certain Death, slightly lower
+            // Jue Ming Valley (决明谷) — Valley of Certain Death, slightly lower
             case "jue_ming_valley" -> -3; // 决明谷 — valley, slightly lower
 
             // Other countries — slight variation

@@ -465,7 +465,7 @@
 - **Sealed?** Yes
 - **Canon confidence:** C5
 
-### L46. Jue Ming Valley / Jueming Valley (绝命谷)
+### L46. Jue Ming Valley / Jueming Valley (决明谷)
 - **Type:** valley
 - **Cosmological position:** on Planet Suzaku
 - **Description:** A valley where surrounding sects compete for tokens to enter the Foreign Battleground. A trapping formation holds cultivators inside until the competition ends.

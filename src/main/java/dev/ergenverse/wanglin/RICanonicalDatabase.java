@@ -2610,7 +2610,7 @@ public final class RICanonicalDatabase {
             "C5 - multi-source (Fandom + Baidu); no specific chapter"
         ),
         new CanonLocation(
-            "L46", "Jue Ming Valley", "绝命谷", LocType.OTHER,
+            "L46", "Jue Ming Valley", "决明谷", LocType.OTHER,
             "Planet Suzaku", "planet", "low",
             true, "Cultivation Planet Crystal", "Low-tier; trapping formation holds cultivators inside", 5,
             null,

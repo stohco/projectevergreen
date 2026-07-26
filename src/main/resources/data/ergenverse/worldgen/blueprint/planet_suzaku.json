@@ -42,7 +42,7 @@
         "capital": "zhao_capital",
         "biome_rule": "ergenverse:zhao_plains",
         "mountain_biome_rule": "ergenverse:zhao_mountains",
-        "terrain_description": "Temperate plains with mountain ranges to the north. Fertile farmland. Jue Ming Valley (决明谷 / 绝命谷, Valley of Certain Death) is embedded in the eastern region.",
+        "terrain_description": "Temperate plains with mountain ranges to the north. Fertile farmland. Jue Ming Valley (决明谷, Valley of Certain Death) is embedded in the eastern region.",
         "political_tier": "minor_mortal_kingdom",
         "cultivation_power": "low — only minor sects (Heng Yue) operate here"
       },
@@ -293,7 +293,7 @@
       {
         "id": "jue_ming_valley",
         "name": "Jue Ming Valley",
-        "canon_name": "Jue Ming Gu / 绝命谷 (Valley of Certain Death)",
+        "canon_name": "Jue Ming Gu / 决明谷 (Valley of Certain Death)",
         "canon_confidence": "EXPLICIT — extremely dangerous valley",
         "type": "dangerous_region",
         "x": 4500,
