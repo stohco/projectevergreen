@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.simulation.WorldStateDataLoader;
 import dev.ergenverse.simulation.WorldRuntimeState;
+import dev.ergenverse.wanglin.bead.LiMuwanSoulCaptureEvent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -958,6 +959,21 @@ public class EntityCultivator extends PathfinderMob {
             runtime.updateNpcState(this.getCharacterId(), state);
             Ergenverse.LOGGER.info("[EntityCultivator] Character '{}' died at tick {} (cause: {})",
                     this.getCharacterId(), serverLevel.getGameTime(), source.getMsgId());
+
+            // ── CRON-99: Li Muwan soul capture ──
+            // If this dying cultivator is Li Muwan, fire the Heaven-Defying
+            // Bead soul-capture event. This is the SOLE caller of
+            // HeavenDefyingBeadItem.setLiMuwanSoul — closes the CRON-95
+            // known gap where setLiMuwanSoul was defined but never invoked.
+            // Canon: 李慕婉 perishes after her 结婴 (Nascent Soul formation)
+            // fails; Wang Lin captures her 元婴 into the 天逆珠. This becomes
+            // his central motivation for the rest of the novel.
+            // See dev.ergenverse.wanglin.bead.LiMuwanSoulCaptureEvent for
+            // full canon basis and divergence safeguards.
+            if (LiMuwanSoulCaptureEvent.CHARACTER_ID.equals(this.getCharacterId())) {
+                LiMuwanSoulCaptureEvent.handleLiMuwanDeath(
+                        serverLevel, source, this.blockPosition());
+            }
 
             // ── Layer 3: Record NPC death in emergent history if player-caused ──
             if (source.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
