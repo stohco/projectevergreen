@@ -122,6 +122,31 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         // CharacterId "ling_tianhou" allows the renderer to pick a distinct
         // model/texture (a sword cultivator with a snake-shaped flying sword).
         profile(CanonUUID.LING_TIANHOU,  "ling_tianhou",  "Ling Tianhou 凌天侯",   "da_luo_sword_sect", "nirvana_cleanser");
+
+        // CRON-COMPLETIONIST-121: 青宜 (Qing Yi, with 宜 — NOT 青衣) — Wang
+        // Ping's wife on 冉云星 (Ranyun Star). Canon (web-search verified
+        // 2026-07-27, Baidu Baike https://baike.baidu.com/item/青宜/637430 +
+        // Sohu + QQ News + Zhihu timeline):
+        //   - Female, member of the Sun family (孙家) outer-surname affiliated
+        //     clan (外姓族人) on 冉云星 in the 罗天星域 north sub-region.
+        //   - First appears Vol 7 Ch 693 《青宜》 (Baidu Baike-attested).
+        //   - Initial cultivation: 炼气后期 (Qi Condensation Late Stage).
+        //   - Deal with Wang Lin: 60 years companionship with Wang Ping in
+        //     exchange for Wang Lin elevating her to 元婴后期大圆满.
+        //   - Became 皇后 (empress) of 天行帝国 during Wang Ping's 10-year reign.
+        //   - At Wang Ping's voluntary dispersal at age 72 (Ch 700), 青宜
+        //     followed him in death (殉情而亡); soul collected into 天逆珠.
+        // SectId "sun_family_ranyun" reflects her origin as a Sun family
+        // outer-surname affiliated clan member on Ranyun Star.
+        // Realm "qi_condensation" reflects her initial 炼气后期 cultivation
+        // (RealmId.QI_CONDENSATION). The later 元婴后期大圆满 state (after
+        // Wang Lin elevates her) is described in npc_qing_yi.json as her
+        // post-deal cultivation arc — a future questline state.
+        // CharacterId "qing_yi" allows the renderer to pick a distinct
+        // model/texture (a female cultivator in green robes — 青色 — the
+        // name 青宜 literally means "green-appropriate", and her green
+        // robe is the visual signature).
+        profile(CanonUUID.QING_YI,      "qing_yi",       "Qing Yi 青宜",          "sun_family_ranyun", "qi_condensation");
     }
 
     private static void profile(UUID uuid, String characterId, String displayName, String sectId, String realm) {

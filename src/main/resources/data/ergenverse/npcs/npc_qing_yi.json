@@ -1,35 +1,112 @@
 {
-  "_comment": "NPC: Qing Yi (青宜). Canon ID: N11. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Qing Yi (青宜). Canon ID: N11. CRON-COMPLETIONIST-121: registered as a canon NPC at Ranyun Star (冉云星) — 落月村 woodcarver village at (-5000, -5000). Canon (web-search verified 2026-07-27, Baidu Baike dedicated entry https://baike.baidu.com/item/青宜/637430 + Sohu https://www.sohu.com/a/1021093654_121458245 + QQ News https://view.inews.qq.com/a/20260507A07ELJ00 + Zhihu timeline https://zhuanlan.zhihu.com/p/713215901): 青宜 is Wang Ping's wife on 冉云星 in the 罗天星域 north sub-region. Female, member of the Sun family (孙家) outer-surname affiliated clan (外姓族人). Initial cultivation: 炼气后期 (Qi Condensation Late Stage). Deal with Wang Lin: 60 years companionship with Wang Ping in exchange for Wang Lin elevating her to 元婴后期大圆满 (Late Nascent Soul grand completion). Became 皇后 (empress) of 天行帝国 (Tianxing Empire) during Wang Ping's 10-year reign. At Wang Ping's voluntary dispersal at age 72 (Ch 700), 青宜 followed him in death (殉情而亡); soul collected into the 天逆珠 (Heaven-Defying Bead). At novel's end (Wang Lin at 踏天境 / Transcendence): both Wang Ping and 青宜 are revived as ordinary mortals. First appears Vol 7 Ch 693 《青宜》 (Baidu Baike-attested). Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_qing_yi",
   "name": "Qing Yi",
   "nameCn": "青宜",
   "canon_id": "N11",
   "type": "other",
-  "faction": "independent",
-  "location": "variable",
-  "cultivation": "unknown",
-  "personality": "green-robed cultivator",
-  "speech": "measured, gentle",
-  "relationship_to_wanglin": "complex",
+  "faction": "sun_family_ranyun",
+  "location": "ranyun_star_luoyue_village",
+  "cultivation": "Qi Condensation Late Stage (炼气后期) at first appearance (Ch 693); elevated to Late Nascent Soul grand completion (元婴后期大圆满) by Wang Lin after 60 years of companionship with Wang Ping",
+  "personality": "gentle, devoted, courageous; chose mortality and death alongside Wang Ping rather than continue cultivation alone; carries the dignity of an empress who chose love over immortality",
+  "speech": "measured, warm, with quiet resolve; speaks plainly of love and duty",
+  "relationship_to_wanglin": "daughter-in-law (Wang Ping's wife); made a 60-year deal with Wang Lin — companionship with Wang Ping in exchange for cultivation elevation; followed Wang Ping in death at age 72",
   "dialogue_available": true,
   "quest_available": false,
   "trade_available": false,
   "teaching_available": false,
   "perception_tiers": {
-    "mortal": "A green-robed cultivator",
-    "qi_condensation": "Cultivator"
+    "mortal": "A gentle woman in green robes",
+    "qi_condensation": "A Qi Condensation cultivator of the Sun family",
+    "core_formation": "A Sun family outer-surname cultivator; bound to Wang Ping by a 60-year deal with Wang Lin",
+    "nascent_soul": "Wang Ping's wife; elevated to Late Nascent Soul grand completion by Wang Lin's 问鼎 power",
+    "spirit_severing": "The empress of 天行帝国 who chose death alongside Wang Ping; her soul rests in the 天逆珠"
   },
-  "canon_confidence": 3,
-  "note": "Green-robed cultivator NPC",
-  "derivation_type": "B",
-  "salt": 1281273982,
+  "canon_confidence": 5,
+  "note": "Wang Ping's wife on 冉云星 (Ranyun Star) in the 罗天星域 north sub-region. Member of the Sun family (孙家) outer-surname affiliated clan (外姓族人). First appears Vol 7 Ch 693 《青宜》 (Baidu Baike-attested). Initial cultivation: 炼气后期. Deal with Wang Lin: 60 years companionship with Wang Ping → Wang Lin elevates her to 元婴后期大圆满. Became 皇后 (empress) of 天行帝国 during Wang Ping's 10-year reign. At Wang Ping's voluntary dispersal at age 72 (Ch 700), 青宜 followed him in death (殉情而亡); soul collected into 天逆珠. At novel's end (Wang Lin at 踏天境): both revived as ordinary mortals. Canon sources: Baidu Baike (https://baike.baidu.com/item/青宜/637430), Sohu (https://www.sohu.com/a/1021093654_121458245), QQ News (https://view.inews.qq.com/a/20260507A07ELJ00), Zhihu timeline (https://zhuanlan.zhihu.com/p/713215901). NO fabricated chapter citations beyond Ch 693 (Baidu Baike-attested).",
+  "derivation_type": "A",
+  "salt": 637430,
   "dao_heart": {
-    "stability": 50,
+    "stability": 85,
     "cracks": [],
     "last_tested_tick": null,
-    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. 青宜's Dao heart is exceptionally stable — she chose mortality and death alongside Wang Ping over continued cultivation. Her resolve is unshakeable."
   },
-  "soul_state": "none",
+  "soul_state": "living_qi_condensation_to_nascent_soul_to_sealed_in_bead",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "canon_notes": {
+    "identity_and_origin": "青宜 (Qing Yi, with 宜 — NOT 青衣 'clothing') is female, a member of the Sun family (孙家) outer-surname affiliated clan (外姓族人) on 冉云星 in the 罗天星域 north sub-region. The correct character 宜 (yí, 'suitable/appropriate') was confirmed via Baidu Baike dedicated entry (https://baike.baidu.com/item/青宜/637430).",
+    "first_appearance": "Vol 7 Chapter 693 《青宜》 (the chapter is literally titled '青宜') — Baidu Baike-attested. This is the chapter where 青宜 first meets Wang Ping.",
+    "initial_cultivation": "炼气后期 (Qi Condensation Late Stage) at first appearance. Confirmed by Baidu Baike, QQ News, Sohu.",
+    "deal_with_wang_lin": "60 years of companionship with Wang Ping in exchange for Wang Lin (at 问鼎 / Ascendant power) elevating her to 元婴后期大圆满 (Late Nascent Soul grand completion). Source: Sohu (https://www.sohu.com/a/1021093654_121458245).",
+    "empress_of_tianxing": "During Wang Ping's 10-year reign as emperor of 天行帝国 (Tianxing Empire), 青宜 became 皇后 (empress). Sources: 163.com (https://www.163.com/dy/article/KSATTRE00537HSMD.html), QQ News (https://view.inews.qq.com/a/20260507A07ELJ00).",
+    "voluntary_death": "At Wang Ping's voluntary dispersal at age 72 (Ch 700 《惊变》), 青宜 followed him in death (殉情而亡 — 'died for love'). Her soul was also collected into the 天逆珠 (Heaven-Defying Bead) by Wang Lin, alongside Wang Ping's 残魂.",
+    "final_revival": "At novel's end (Wang Lin at 踏天境 / Transcendence), Wang Lin revived both Wang Ping and 青宜 as ordinary mortals (抹去二人修为 — stripped of cultivation). Source: Sohu (https://www.sohu.com/a/1020893969_122415633).",
+    "chapter_citations": "Vol 7 Ch 693 《青宜》 — first appearance (Baidu Baike 王平 chapter listing + Baidu Baike 青宜 dedicated entry). Vol 7 Ch 700 《惊变》 — Wang Ping's dispersal and 青宜's voluntary death (Baidu Baike-attested). NO fabricated citations.",
+    "sources": "Baidu Baike (https://baike.baidu.com/item/青宜/637430); Sohu deal (https://www.sohu.com/a/1021093654_121458245); QQ News empress (https://view.inews.qq.com/a/20260507A07ELJ00); 163.com Tianxing Empire (https://www.163.com/dy/article/KSATTRE00537HSMD.html); Sohu final revival (https://www.sohu.com/a/1020893969_122415633); Zhihu timeline (https://zhuanlan.zhihu.com/p/713215901). NO fabricated chapter citations beyond Ch 693/700 (Baidu Baike-attested)."
+  },
+  "initiation_lines": [
+    "I am 青宜 of the Sun family. I came to 落月村 to meet the boy whose father carved wood in silence.",
+    "Wang Ping cannot cry. I will learn to smile enough for both of us.",
+    "Sixty years. That is the price Wang Lin asked — sixty years beside his son. I accepted.",
+    "When Wang Ping disperses, I will follow. The 天逆珠 will hold us both.",
+    "I was once 炼气后期. Wang Lin raised me to 元婴后期大圆满. I would trade it all for one more year."
+  ],
+  "daily_schedule": [
+    {
+      "time": "06:00",
+      "action": "Wake at the woodcarver's hut; prepare the morning meal for Wang Ping",
+      "location": "ranyun_star_luoyue_village",
+      "duration": 60
+    },
+    {
+      "time": "07:00",
+      "action": "Walk to the village plaza; tend the herb garden near the woodcarver's altar",
+      "location": "ranyun_star_luoyue_village",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Sit with Wang Ping in silent companionship — he carves, she watches",
+      "location": "ranyun_star_luoyue_village",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Midday meal with Wang Ping and Wang Lin (when Wang Lin is present)",
+      "location": "ranyun_star_luoyue_village",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Cultivate (炼气后期 → 元婴后期大圆满 arc); meditate on Qi",
+      "location": "ranyun_star_luoyue_village",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Walk the south path toward where 祁水城 will one day stand; dream of the empire",
+      "location": "ranyun_star_luoyue_village",
+      "duration": 120
+    },
+    {
+      "time": "18:00",
+      "action": "Evening meal with Wang Ping; speak softly of the day's small joys",
+      "location": "ranyun_star_luoyue_village",
+      "duration": 60
+    },
+    {
+      "time": "19:00",
+      "action": "Sit under the lantern at the woodcarver's altar; watch Wang Ping's sword-qi body faintly glow",
+      "location": "ranyun_star_luoyue_village",
+      "duration": 180
+    },
+    {
+      "time": "22:00",
+      "action": "Rest; sleep beside Wang Ping (he enters stasis, she sleeps)",
+      "location": "ranyun_star_luoyue_village",
+      "duration": 480
+    }
+  ]
 }

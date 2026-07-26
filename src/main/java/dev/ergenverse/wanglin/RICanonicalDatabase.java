@@ -340,12 +340,33 @@ public final class RICanonicalDatabase {
             "novel; Fandom wiki; Baidu Baike"
         ),
         new CanonCharacter(
+            // CRON-COMPLETIONIST-121: 青宜 (Qing Yi, with 宜 — NOT 青衣) —
+            // canon-corrected entry. Web-search verified 2026-07-27 via
+            // Baidu Baike dedicated entry (https://baike.baidu.com/item/青宜/637430)
+            // + Sohu + QQ News + Zhihu timeline.
+            // Prior entry had: faction="Wang family" (wrong — she's Sun family),
+            //                 cultivation="unknown" (wrong — 炼气后期 at first appearance),
+            //                 location="unknown" (wrong — 冉云星 落月村).
+            // CRON-121 corrects all three + adds the 60-year deal, empress of
+            // 天行帝国, voluntary death at 72, and final revival at novel's end.
             "N11", "Qing Yi", "青宜", CharType.OTHER,
-            "unknown", "Wang family", "alive", 4,
-            "unknown", "unknown",
-            java.util.List.of("Wang Ping's wife (daughter-in-law to Wang Lin)"),
-            List.of(new RelationShip("Wang Ping", "family"), new RelationShip("Wang Lin", "family")),
-            "novel; Fandom wiki"
+            "Qi Condensation Late Stage (炼气后期) → Late Nascent Soul grand completion (元婴后期大圆满)",
+            "Sun family (孙家) outer-surname affiliated clan on Ranyun Star", "alive", 5,
+            "Ranyun Star (冉云星) — 落月村 woodcarver village",
+            "Luo Tian Star Domain (罗天星域) north sub-region",
+            java.util.List.of(
+                "Wang Ping's wife (daughter-in-law to Wang Lin)",
+                "Empress (皇后) of 天行帝国 during Wang Ping's 10-year reign",
+                "60-year deal with Wang Lin: companionship with Wang Ping → cultivation elevation",
+                "Voluntarily followed Wang Ping in death at age 72 (殉情而亡); soul collected into 天逆珠",
+                "Revived as ordinary mortal at novel's end (Wang Lin at 踏天境)"
+            ),
+            List.of(
+                new RelationShip("Wang Ping", "family"),
+                new RelationShip("Wang Lin", "family"),
+                new RelationShip("Sun family (孙家)", "faction")
+            ),
+            "novel Vol 7 Ch 693 《青宜》; Baidu Baike (https://baike.baidu.com/item/青宜/637430); Sohu (https://www.sohu.com/a/1021093654_121458245); QQ News (https://view.inews.qq.com/a/20260507A07ELJ00); Zhihu timeline (https://zhuanlan.zhihu.com/p/713215901)"
         ),
         new CanonCharacter(
             "N12", "Song Yu", "宋玉", CharType.OTHER,

@@ -169,6 +169,49 @@ public final class CanonUUID {
     // NO fabricated chapter citation. Canon sources: Baidu Baike, Sohu, Zhihu, 163.
     public static final UUID LING_TIANHOU = of("npc:ling_tianhou");
 
+    // CRON-COMPLETIONIST-121: 青宜 (Qing Yi, with 宜 — NOT 青衣) — Wang Ping's
+    // wife on 冉云星 (Ranyun Star). Canon (web-search verified 2026-07-27,
+    // Baidu Baike dedicated entry https://baike.baidu.com/item/青宜/637430
+    // + Sohu https://www.sohu.com/a/1021093654_121458245 + QQ News
+    // https://view.inews.qq.com/a/20260507A07ELJ00 + Zhihu timeline
+    // https://zhuanlan.zhihu.com/p/713215901):
+    //   - 青宜 is female, a member of the Sun family (孙家) outer-surname
+    //     affiliated clan (外姓族人) on 冉云星 in the 罗天星域 north sub-region.
+    //   - First appears in Vol 7 Chapter 693 《青宜》 (the chapter is
+    //     literally titled "青宜") — Baidu Baike-attested.
+    //   - Initial cultivation: 炼气后期 (Qi Condensation Late Stage).
+    //   - Deal with Wang Lin: 60 years of companionship with Wang Ping
+    //     in exchange for Wang Lin (at 问鼎 / Ascendant power) elevating
+    //     her to 元婴后期大圆满 (Late Nascent Soul grand completion).
+    //   - Chose mortality alongside Wang Ping; became 皇后 (empress) of
+    //     天行帝国 (Tianxing Empire) during Wang Ping's 10-year reign.
+    //   - At Wang Ping's voluntary dispersal at age 72 (Ch 700), 青宜
+    //     followed him in death (殉情而亡); her soul was also collected
+    //     into the 天逆珠 (Heaven-Defying Bead) by Wang Lin.
+    //   - At novel's end (Wang Lin at 踏天境 / Transcendence): both Wang
+    //     Ping and 青宜 are revived as ordinary mortals.
+    //
+    // <b>CRON-121 placement:</b> 落月村 (Luo Yue Village) on Ranyun Star
+    // (-5000, 0, -5000), the woodcarver village materialized by
+    // RanyunStarBuilder in CRON-120. 青宜 is placed at the village center
+    // near Wang Ping (who materializes there after the redemption event).
+    // She is a LIVING NPC at story start (deadUntilRevived=false) — the
+    // player can find her at 落月村 after traveling to Ranyun Star via
+    // the CRON-120 redemption event teleport.
+    //
+    // <b>Canon name spelling:</b> the correct character is 宜 (yí,
+    // "suitable/appropriate"), NOT 衣 (yī, "clothing"). The CRON-117
+    // worklog entry corrected this from "青衣" to "青宜"; CRON-121
+    // materializes the NPC with the corrected spelling in the display
+    // name.
+    //
+    // NO fabricated chapter citation beyond Ch 693 (Baidu Baike-attested).
+    // Canon sources: Baidu Baike 青宜 (https://baike.baidu.com/item/青宜/637430),
+    // Sohu (https://www.sohu.com/a/1021093654_121458245),
+    // QQ News (https://view.inews.qq.com/a/20260507A07ELJ00),
+    // Zhihu timeline (https://zhuanlan.zhihu.com/p/713215901).
+    public static final UUID QING_YI = of("npc:qing_yi");
+
     // ── Spirit Beasts (named/canonical beasts, not generic spawns) ──
     public static final UUID WOLF_PACK_ALPHA_ZHAO = of("beast:wolf_pack_alpha_zhao");
     public static final UUID SPIRIT_TIGER_ZHAO_MOUNTAINS = of("beast:spirit_tiger_zhao_mountains");

@@ -211,6 +211,35 @@ public final class NPCRuntime {
         // Ling Tianhou is alive at story start — no deadUntilRevived flag.
         // (He is consumed by 天运子 later in canon, but that's a future event.)
 
+        // CRON-COMPLETIONIST-121: 青宜 (Qing Yi, with 宜 — NOT 青衣) — Wang
+        // Ping's wife on 冉云星 (Ranyun Star). Canon (web-search verified
+        // 2026-07-27, Baidu Baike dedicated entry https://baike.baidu.com/item/青宜/637430
+        // + Sohu https://www.sohu.com/a/1021093654_121458245 + QQ News
+        // https://view.inews.qq.com/a/20260507A07ELJ00 + Zhihu timeline):
+        //   - Female, member of the Sun family (孙家) outer-surname affiliated
+        //     clan (外姓族人) on 冉云星 in the 罗天星域 north sub-region.
+        //   - First appears Vol 7 Ch 693 《青宜》 (Baidu Baike-attested).
+        //   - Initial cultivation: 炼气后期 (Qi Condensation Late Stage).
+        //   - Deal with Wang Lin: 60 years companionship with Wang Ping in
+        //     exchange for Wang Lin elevating her to 元婴后期大圆满.
+        //   - Became 皇后 (empress) of 天行帝国 during Wang Ping's 10-year reign.
+        //   - At Wang Ping's voluntary dispersal at age 72 (Ch 700), 青宜
+        //     followed him in death (殉情而亡); soul collected into 天逆珠.
+        //   - At novel's end (Wang Lin at 踏天境): both revived as mortals.
+        // Placement: Ranyun Star (落月村 woodcarver village at -5000, -5000,
+        // materialized by RanyunStarBuilder in CRON-120). 青宜 is placed at
+        // the village center near Wang Ping (who materializes there after
+        // the CRON-120 redemption event teleport). She is a LIVING NPC at
+        // story start (deadUntilRevived=false) — the player can find her
+        // at 落月村 after traveling to Ranyun Star.
+        // NO fabricated chapter citation beyond Ch 693 (Baidu Baike-attested).
+        register(CanonUUID.QING_YI, "Qing Yi 青宜",
+                PlanetSuzakuBlueprint.RANYUN_STAR.x,
+                PlanetSuzakuBlueprint.RANYUN_STAR.z);
+        // 青宜 is alive at story start — no deadUntilRevived flag.
+        // (She dies at age 72 alongside Wang Ping in Ch 700, but that's
+        // a future event tied to the Wang Ping mortal-life arc questline.)
+
         loaded = true;
     }
 
