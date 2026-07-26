@@ -335,9 +335,21 @@ public final class TengFamilyCityBuilder {
     //  Idempotency guard
     // ═══════════════════════════════════════════════════════════════════
 
+    /**
+     * Idempotency guard: checks if the keep's foundation marker (GOLD_BLOCK)
+     * exists at {@code center.offset(0, 1, -20)}.
+     *
+     * <p><b>CRON-COMPLETIONIST-69 — provenance-aware rebuild guard.</b>
+     * If the player (or simulation) has recorded a delta at the marker
+     * position, returns {@code true} (city was built, then edited; don't
+     * rebuild). See
+     * {@link dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard}.
+     */
     public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
-        // Check if the keep's foundation marker exists
-        return level.getBlockState(center.offset(0, 1, -20)).getBlock() == Blocks.GOLD_BLOCK;
+        BlockPos markerPos = center.offset(0, 1, -20);
+        if (level.getBlockState(markerPos).getBlock() == Blocks.GOLD_BLOCK) return true;
+        if (dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard.shouldSkipRebuild(markerPos)) return true;
+        return false;
     }
 
     /** Convenience overload using the canon center. */

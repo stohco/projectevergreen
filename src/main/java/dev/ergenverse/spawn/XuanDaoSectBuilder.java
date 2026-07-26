@@ -292,11 +292,19 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
 
     /**
      * Check if the sect is already built by looking for the library tower's
-     * sea lantern marker at the expected position.
+     * sea lantern marker at the expected position ({@code center.offset(0, 3, -3)}).
+     *
+     * <p><b>CRON-COMPLETIONIST-69 — provenance-aware rebuild guard.</b>
+     * If the player (or simulation) has recorded a delta at the marker
+     * position, returns {@code true} (sect was built, then edited; don't
+     * rebuild). See
+     * {@link dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard}.
      */
     public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
-        // Library tower places a sea lantern at center + library offset
-        return level.getBlockState(center.offset(0, 3, -3)).getBlock() == Blocks.SEA_LANTERN;
+        BlockPos markerPos = center.offset(0, 3, -3);
+        if (level.getBlockState(markerPos).getBlock() == Blocks.SEA_LANTERN) return true;
+        if (dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard.shouldSkipRebuild(markerPos)) return true;
+        return false;
     }
 
     // ═══════════════════════════════════════════════════════════════════

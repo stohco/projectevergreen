@@ -176,11 +176,29 @@ public final class WangFamilyVillageBuilder {
     /**
      * Returns true if the village has already been built (the spirit vein
      * centerpiece block is present above the spawn point).
+     *
+     * <p><b>CRON-COMPLETIONIST-69 — provenance-aware rebuild guard.</b>
+     * If the player (or simulation) has recorded a delta at the centerpiece
+     * position — e.g., the player broke the spirit-vein stone — this method
+     * returns {@code true} (village was built, then edited; don't rebuild).
+     * Without this guard, breaking the centerpiece would cause the next
+     * server-start or {@code /ergenverse build} to re-place the centerpiece,
+     * undoing the player's edit. See
+     * {@link dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard}.
      */
     public static boolean isAlreadyBuilt(ServerLevel level) {
         BlockPos center = getVillageCenter(level);
-        return level.getBlockState(center.above()).getBlock()
-                == ErgenverseBlocks.SPIRIT_VEIN_STONE.get();
+        BlockPos markerPos = center.above();
+        // 1. Marker present → already built (canon state).
+        if (level.getBlockState(markerPos).getBlock() == ErgenverseBlocks.SPIRIT_VEIN_STONE.get()) {
+            return true;
+        }
+        // 2. Player/sim delta at marker → was built, then edited → don't rebuild.
+        if (dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard.shouldSkipRebuild(markerPos)) {
+            return true;
+        }
+        // 3. No marker, no delta → never built → rebuild.
+        return false;
     }
 
     // ── Chunk-scoped build infrastructure (CRON-COMPLETIONIST-62) ────────

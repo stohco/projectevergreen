@@ -149,8 +149,21 @@ public final class NanDouCityBuilder {
 
     private static boolean built = false;
 
+    /**
+     * Idempotency guard: checks if the center marker (POLISHED_DEEPSLATE)
+     * exists at {@code center.above(WALL_HEIGHT + 1)}.
+     *
+     * <p><b>CRON-COMPLETIONIST-69 — provenance-aware rebuild guard.</b>
+     * If the player (or simulation) has recorded a delta at the marker
+     * position, returns {@code true} (city was built, then edited; don't
+     * rebuild). See
+     * {@link dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard}.
+     */
     public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
-        return level.getBlockState(center.above(WALL_HEIGHT + 1)).getBlock() == Blocks.POLISHED_DEEPSLATE;
+        BlockPos markerPos = center.above(WALL_HEIGHT + 1);
+        if (level.getBlockState(markerPos).getBlock() == Blocks.POLISHED_DEEPSLATE) return true;
+        if (dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard.shouldSkipRebuild(markerPos)) return true;
+        return false;
     }
 
     /** Convenience overload using the canon center. */

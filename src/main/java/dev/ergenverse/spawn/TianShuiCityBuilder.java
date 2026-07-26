@@ -119,9 +119,21 @@ public final class TianShuiCityBuilder {
     /** Tracks whether this city has already been built. */
     private static boolean built = false;
 
+    /**
+     * Idempotency guard: checks if the center marker (QUARTZ_PILLAR) exists
+     * at {@code center.above(WALL_HEIGHT + 1)}.
+     *
+     * <p><b>CRON-COMPLETIONIST-69 — provenance-aware rebuild guard.</b>
+     * If the player (or simulation) has recorded a delta at the marker
+     * position, returns {@code true} (city was built, then edited; don't
+     * rebuild). See
+     * {@link dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard}.
+     */
     public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
-        // Check if the center block is already set to our material
-        return level.getBlockState(center.above(WALL_HEIGHT + 1)).getBlock() == Blocks.QUARTZ_PILLAR;
+        BlockPos markerPos = center.above(WALL_HEIGHT + 1);
+        if (level.getBlockState(markerPos).getBlock() == Blocks.QUARTZ_PILLAR) return true;
+        if (dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard.shouldSkipRebuild(markerPos)) return true;
+        return false;
     }
 
     /** Convenience overload using the canon center. */

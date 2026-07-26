@@ -285,8 +285,21 @@ public final class SoulRefiningSectBuilder {
         buildTrialGrounds(level, center);
     }
 
+    /**
+     * Idempotency guard: checks if the center marker (BLACKSTONE) exists at
+     * {@code center.above()}.
+     *
+     * <p><b>CRON-COMPLETIONIST-69 — provenance-aware rebuild guard.</b>
+     * If the player (or simulation) has recorded a delta at the marker
+     * position, returns {@code true} (sect was built, then edited; don't
+     * rebuild). See
+     * {@link dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard}.
+     */
     public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
-        return level.getBlockState(center.above()).getBlock() == Blocks.BLACKSTONE;
+        BlockPos markerPos = center.above();
+        if (level.getBlockState(markerPos).getBlock() == Blocks.BLACKSTONE) return true;
+        if (dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard.shouldSkipRebuild(markerPos)) return true;
+        return false;
     }
 
     /** Convenience overload using the canon center. */
