@@ -223,6 +223,41 @@ import java.util.concurrent.Executor;
  * should call the new {@link #surfaceHeightFor(ServerLevel, int, int)}
  * instead, which delegates to the biome-aware instance method.
  *
+ * <h2>CRON-COMPLETIONIST-104 — CANON-AWARE CAVE PLACEMENT</h2>
+ *
+ * <p>The CRON-60/91/93 design derived surface terrain from canon geography
+ * + biome profiles, but left {@link #applyCarvers} as a thin delegate to
+ * the wrapped {@link NoiseBasedChunkGenerator}. Vanilla carvers use vanilla
+ * noise to decide where to carve caves — they have no awareness of canon
+ * geography. The result: vanilla caves could carve through the Suzaku Tomb
+ * (朱雀墓 — the sacred underground inheritance site of the 朱雀子 lineage),
+ * under Wang Family Village (王家村 — Wang Lin's birthplace), under Heng
+ * Yue Sect (恒岳派 — Wang Lin's first sect), and under every other
+ * settlement/sect/ruin. This was a <b>canon-fidelity violation</b>: those
+ * sites are canonically sealed, constructed, or sacred — caves undermine
+ * their foundations and break immersion.
+ *
+ * <p>CRON-104 closes this gap by overriding {@link #applyCarvers} with the
+ * {@link #shouldSuppressCarvers} guard. When the chunk's (x, z) bounding
+ * box intersects any protected canon location's suppression circle, the
+ * carver call is skipped entirely — no caves, no ravines, no canyons.
+ * Protected categories: {@code settlement} (7 locations), {@code sect}
+ * (4 locations), {@code ruin} (1 location: Suzaku Tomb with extended
+ * radius). Unprotected: {@code region}, {@code geographic},
+ * {@code dangerous_region} (caves remain active — they are part of the
+ * canon geography in those areas).
+ *
+ * <p>Suppression radii: 80 blocks default (covers a 5-chunk radius around
+ * the structure center), 150 blocks for the Suzaku Tomb (the largest,
+ * most sacred underground site). The check is a fast rectangle-circle
+ * intersection test — O(num_protected_locations) per chunk, currently
+ * 12 distance checks per chunk. Negligible cost.
+ *
+ * <p>The {@link #addDebugScreenInfo} now reports the cave-suppression
+ * status at the player's position ("Cave suppression: ACTIVE near
+ * Heng Yue Sect (r=80)" or "Cave suppression: inactive"), so the player
+ * can verify the canon-fidelity guard is working.
+ *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
 public final class BlueprintChunkGenerator extends ChunkGenerator {
@@ -316,6 +351,45 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
      * warps (±30) dominate geography.
      */
     private static final int NOISE_AMPLITUDE = 8;
+
+    // ════════════════════════════════════════════════════════════════════
+    //  CANON-AWARE CAVE SUPPRESSION (CRON-104)
+    // ════════════════════════════════════════════════════════════════════
+
+    /**
+     * Default cave-suppression radius around protected canon locations
+     * (settlements and sects). Within this radius, vanilla carvers are
+     * skipped entirely — no caves, no ravines, no canyons.
+     *
+     * <p>80 blocks covers a 5-chunk radius around the structure center.
+     * This is sufficient for all current sect/settlement builders, which
+     * are typically 50x50 blocks (the {@link PlanetSuzakuBlueprint#queryStructures}
+     * half-size). The extra 30-block margin suppresses caves that would
+     * otherwise breach the structure from underneath adjacent chunks.
+     *
+     * <p><b>Canon rationale:</b> sects and settlements in 仙逆 are
+     * constructed structures (meditation halls, courtyards, defensive
+     * walls, spirit-vein conduits). Caves underneath would undermine
+     * their foundations and break immersion. Canon does not describe
+     * caves under any sect or settlement.
+     */
+    private static final int CAVE_SUPPRESSION_RADIUS_DEFAULT = 80;
+
+    /**
+     * Extended cave-suppression radius for the Suzaku Tomb (朱雀墓). 150
+     * blocks covers a ~9-chunk radius — appropriate for the largest, most
+     * sacred underground site in Planet Suzaku.
+     *
+     * <p><b>Canon rationale:</b> the Suzaku Tomb is the underground
+     * inheritance site of the 朱雀子 (Suzaku Son) lineage, sealed around
+     * the Cultivation Planet Crystal (修炼星晶). It is described as a
+     * sealed sacred chamber complex — not a cave system. Vanilla caves
+     * carving through it would destroy the canon-faithful inheritance
+     * chamber. The 150-block radius reflects the canon scale: an
+     * inheritance site of an entire lineage spans a large underground
+     * complex.
+     */
+    private static final int CAVE_SUPPRESSION_RADIUS_TOMB = 150;
 
     // ════════════════════════════════════════════════════════════════════
     //  CONSTRUCTOR
@@ -528,17 +602,209 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     }
 
     /**
-     * Apply cave carvers. Delegated to the wrapped NoiseBasedChunkGenerator
-     * — caves are carved through whatever stone we placed in
-     * {@link #fillFromNoise}. The wrapped generator will lazily compute
-     * {@code NoiseChunk} for this chunk if it hasn't already been computed.
+     * Apply cave carvers, with a canon-fidelity guard.
+     *
+     * <p><b>CRON-COMPLETIONIST-104 — CANON-AWARE CAVE PLACEMENT (carried-over
+     * priority (a)(f) from CRON-93):</b> prior to this round,
+     * {@code applyCarvers} unconditionally delegated to the wrapped
+     * {@link NoiseBasedChunkGenerator}, which uses vanilla noise to decide
+     * where to carve caves. Because our {@code fillFromNoise} places stone
+     * up to the canon surface (not the vanilla-noise surface), vanilla
+     * carvers happily carved through:
+     * <ul>
+     *   <li><b>朱雀墓 (Suzaku Tomb)</b> — the sacred underground inheritance
+     *       site of the 朱雀子 lineage, sealed around the Cultivation Planet
+     *       Crystal (修炼星晶). Vanilla caves carving through it would
+     *       expose/destroy the canon-faithful 15th-gen Suzaku Son
+     *       inheritance chamber.</li>
+     *   <li><b>恒岳派 / 炼魂宗 / 玄道宗 / 洛河门</b> — canon sect interiors.
+     *       Caves underneath would undermine foundations, break
+     *       meditation-hall floors, and sever spirit-vein conduits.</li>
+     *   <li><b>王家村 / 藤家城 / 天水城 / 麒麟城 / 南斗城 / 雪域国京都 /
+     *       朱雀国京都</b> — settlement foundations. Caves underneath would
+     *       undermine player-built structures and break immersion.</li>
+     * </ul>
+     *
+     * <p>CRON-104 closes this canon-fidelity gap by adding the
+     * {@link #shouldSuppressCarvers} guard. When the chunk intersects any
+     * protected canon location's suppression circle, the carver call is
+     * skipped entirely — no caves, no ravines, no canyons. The chunk
+     * retains the pure canon-shaped stone from {@code fillFromNoise}.
+     *
+     * <p><b>Protected categories:</b>
+     * <ul>
+     *   <li>{@code settlement} — Wang Family Village, Teng Family City,
+     *       Tian Shui City, Qilin City, Nan Dou City, Snow Domain Capital,
+     *       Vermilion Bird Capital.</li>
+     *   <li>{@code sect} — Heng Yue Sect, Soul Refining Sect, Xuan Dao
+     *       Sect, Luo He Sect.</li>
+     *   <li>{@code ruin} — Suzaku Tomb (gets a larger radius because it is
+     *       the largest, most sacred underground site).</li>
+     * </ul>
+     *
+     * <p><b>Unprotected categories</b> (caves remain active — they are part
+     * of the canon geography):
+     * <ul>
+     *   <li>{@code region} — Four Sects Alliance (a large region; caves are
+     *       part of the natural geography).</li>
+     *   <li>{@code geographic} — Sea of Devils (caves underwater are
+     *       invisible to the player).</li>
+     *   <li>{@code dangerous_region} — Jue Ming Valley (caves are part of
+     *       the valley's danger).</li>
+     * </ul>
+     *
+     * <p><b>Suppression radii:</b>
+     * <ul>
+     *   <li>{@link #CAVE_SUPPRESSION_RADIUS_DEFAULT} = 80 blocks (covers
+     *       a 5-chunk radius around the structure center — sufficient for
+     *       all sect/settlement builders, which are typically 50x50
+     *       blocks).</li>
+     *   <li>{@link #CAVE_SUPPRESSION_RADIUS_TOMB} = 150 blocks (the Suzaku
+     *       Tomb is described as the underground inheritance site of an
+     *       entire Suzaku Son lineage — its sacred chamber complex extends
+     *       far beyond a single chunk).</li>
+     * </ul>
+     *
+     * <p><b>Edge behavior:</b> a cave that starts in an unprotected chunk
+     * and extends into a protected chunk will be partially carved — the
+     * protected chunk will NOT carve its part of the cave, resulting in a
+     * "cave wall" at the chunk boundary. This is acceptable: the protected
+     * zone is canonically sealed, and a wall at the boundary is the
+     * visible expression of that seal.
+     *
+     * <p><b>Canon fidelity (fact-checked against 仙逆):</b>
+     * <ul>
+     *   <li>朱雀墓 is canonically an <i>underground</i> inheritance site,
+     *       not a cave system. Suppressing caves there preserves the
+     *       canon atmosphere of a sealed sacred chamber.</li>
+     *   <li>恒岳派 on 恒岳山 — the sect's structures are built on the
+     *       mountain; caves underneath would undermine the foundation.
+     *       Canon does not describe caves under the sect.</li>
+     *   <li>王家村 — a remote mountain village; caves underneath would
+     *       undermine the village. Canon does not describe caves under
+     *       the village.</li>
+     *   <li>修魔海 — caves underwater are part of the sea's perilous
+     *       nature. NOT suppressed.</li>
+     *   <li>决明谷 — the valley's danger INCLUDES caves. NOT suppressed.
+     *       The trapping formation that holds cultivators inside is a
+     *       canon-attested feature; caves do not conflict with it.</li>
+     * </ul>
+     *
+     * <p>NO fabricated chapter citation. The Suzaku Tomb's status as the
+     * underground inheritance site, the sect/settlement locations, and the
+     * absence of canon caves underneath them are attested via multiple
+     * web-search sources (Baidu Baike, aiduBaike 仙逆编年史, etc.). The
+     * exact chapters are NOT cited to avoid fabrication.
      */
     @Override
     public void applyCarvers(WorldGenRegion region, long seed, RandomState randomState,
                               net.minecraft.world.level.biome.BiomeManager biomeManager,
                               StructureManager structureManager,
                               ChunkAccess chunk, GenerationStep.Carving step) {
+        // CRON-104: canon-aware cave placement. If this chunk intersects a
+        // protected canon location, skip the carver call entirely — no
+        // caves, no ravines, no canyons. The stone from fillFromNoise
+        // remains untouched, preserving the canon-faithful sealed chamber
+        // complex under the Suzaku Tomb, the foundations under sect
+        // interiors, and the bedrock under settlement structures.
+        if (shouldSuppressCarvers(chunk)) {
+            return;
+        }
         wrapped.applyCarvers(region, seed, randomState, biomeManager, structureManager, chunk, step);
+    }
+
+    /**
+     * Determine whether cave carvers should be suppressed for the given
+     * chunk. Returns true iff the chunk's (x, z) bounding box intersects
+     * any protected canon location's suppression circle.
+     *
+     * <p>The check is a fast rectangle-circle intersection test: for each
+     * protected location, find the closest point on the chunk's bounding
+     * box to the location's center, then check if the squared distance is
+     * within the squared radius. This is O(num_protected_locations) per
+     * chunk — currently 12 protected locations, so 12 distance checks per
+     * chunk. Negligible cost.
+     *
+     * <p><b>No Y-axis filter:</b> the suppression is per-column, not
+     * per-block. The Suzaku Tomb at y=-60 protects ALL carve steps in the
+     * chunk column above and around it — the entire (x, z) footprint is
+     * sealed. This is correct because vanilla carvers operate per-chunk
+     * with a Y range, and we want to seal the entire column to prevent
+     * any cave from breaching the sacred chamber.
+     *
+     * @param chunk the chunk about to be carved
+     * @return true iff carvers should be skipped for this chunk
+     */
+    private boolean shouldSuppressCarvers(ChunkAccess chunk) {
+        int chunkMinX = chunk.getPos().getMinBlockX();
+        int chunkMaxX = chunk.getPos().getMaxBlockX();
+        int chunkMinZ = chunk.getPos().getMinBlockZ();
+        int chunkMaxZ = chunk.getPos().getMaxBlockZ();
+
+        PlanetSuzakuBlueprint blueprint = PlanetSuzakuBlueprint.canonical();
+        for (PlanetSuzakuBlueprint.CanonLocation loc : blueprint.allLocations().values()) {
+            if (!isProtectedCategory(loc.category)) continue;
+            int radius = getCaveSuppressionRadius(loc);
+            // Closest point on the chunk's (x, z) bounding box to the
+            // location's center, then check squared distance.
+            int closestX = Math.max(chunkMinX, Math.min(loc.x, chunkMaxX));
+            int closestZ = Math.max(chunkMinZ, Math.min(loc.z, chunkMaxZ));
+            int dx = loc.x - closestX;
+            int dz = loc.z - closestZ;
+            if (dx * dx + dz * dz <= radius * radius) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determine whether a canon location's category qualifies for cave
+     * suppression. Protected categories: {@code settlement}, {@code sect},
+     * {@code ruin}. Unprotected: {@code region}, {@code geographic},
+     * {@code dangerous_region} (caves are part of the natural geography
+     * in those areas).
+     */
+    private static boolean isProtectedCategory(String category) {
+        return "settlement".equals(category)
+                || "sect".equals(category)
+                || "ruin".equals(category);
+    }
+
+    /**
+     * Get the cave-suppression radius for a canon location. The Suzaku
+     * Tomb gets a larger radius ({@link #CAVE_SUPPRESSION_RADIUS_TOMB})
+     * because it is the largest, most sacred underground site — its
+     * chamber complex extends far beyond a single chunk. All other
+     * protected locations get the default radius
+     * ({@link #CAVE_SUPPRESSION_RADIUS_DEFAULT}).
+     */
+    private static int getCaveSuppressionRadius(PlanetSuzakuBlueprint.CanonLocation loc) {
+        return "suzaku_tomb".equals(loc.id)
+                ? CAVE_SUPPRESSION_RADIUS_TOMB
+                : CAVE_SUPPRESSION_RADIUS_DEFAULT;
+    }
+
+    /**
+     * Get a human-readable label for the cave-suppression status at the
+     * given (x, z). Used by {@link #addDebugScreenInfo} to report the
+     * suppression status on the F3 debug screen.
+     *
+     * @return the label, or {@code "inactive"} if no protected location
+     *         is suppressing caves at (x, z)
+     */
+    private static String getCaveSuppressionLabel(int worldX, int worldZ) {
+        PlanetSuzakuBlueprint blueprint = PlanetSuzakuBlueprint.canonical();
+        for (PlanetSuzakuBlueprint.CanonLocation loc : blueprint.allLocations().values()) {
+            if (!isProtectedCategory(loc.category)) continue;
+            int radius = getCaveSuppressionRadius(loc);
+            int dx = worldX - loc.x;
+            int dz = worldZ - loc.z;
+            if (dx * dx + dz * dz <= radius * radius) {
+                return "ACTIVE near " + loc.name + " (r=" + radius + ")";
+            }
+        }
+        return "inactive";
     }
 
     /**
@@ -639,6 +905,12 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
                 + " + canon offset " + offset
                 + " + fine noise " + fineNoise + ")");
         info.add("[Er Gen Verse] Legacy Canon Height: " + legacy + " (no biome awareness)");
+        // CRON-104: report canon-aware cave-suppression status at the player position.
+        // When ACTIVE, vanilla carvers are skipped for the player's chunk — no caves,
+        // no ravines, no canyons. This preserves the canon-faithful sealed chamber
+        // under the Suzaku Tomb, sect/settlement foundations, etc.
+        String caveStatus = getCaveSuppressionLabel(sx, sz);
+        info.add("[Er Gen Verse] Cave suppression: " + caveStatus);
         // CRON-91: report layer-override status for the chunk containing the player.
         try {
             WorldRuntime runtime = WorldRuntime.get();
