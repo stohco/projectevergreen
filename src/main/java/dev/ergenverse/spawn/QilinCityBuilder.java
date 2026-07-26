@@ -238,7 +238,7 @@ public final class QilinCityBuilder {
      * {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}.
      */
     public static BlockPos getSectCenter(ServerLevel level) {
-        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(CITY_X, CITY_Z);
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.surfaceHeightFor(level, CITY_X, CITY_Z);
         return new BlockPos(CITY_X, surfaceY, CITY_Z);
     }
 

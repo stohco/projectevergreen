@@ -14,11 +14,14 @@ import dev.ergenverse.spawn.DeterministicSeedHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -158,8 +161,8 @@ import java.util.concurrent.Executor;
  *       ±8 amplitude). This is intentionally crude — its purpose is to break
  *       the perfectly-flat plateau that pure canon warping would produce
  *       between canon locations, NOT to mimic natural terrain. Real terrain
- *       variety will come from biome surface rules (grass/sand/snow) applied
- *       by {@link #buildSurface}, not from terrain noise.</li>
+ *       variety now comes from biome-aware profiles (CRON-93) AND biome
+ *       surface rules (grass/sand/snow) applied by {@link #buildSurface}.</li>
  *   <li>Caves are carved by vanilla carvers, which use vanilla noise to
  *       determine WHERE to carve. Because our surface is canon-shaped (not
  *       vanilla-noise-shaped), caves may occasionally carve into air (above
@@ -182,6 +185,43 @@ import java.util.concurrent.Executor;
  *       {@code buildSurface}). This is fine — vanilla supports lazy
  *       NoiseChunk computation.</li>
  * </ul>
+ *
+ * <h2>CRON-COMPLETIONIST-93 — BIOME-AWARE TERRAIN PROFILES</h2>
+ *
+ * <p>The CRON-60/91 design derived surface height from canon geography +
+ * a flat ±8 fine noise, ignoring the biome entirely. A column in a
+ * {@code zhao_mountains} biome got the SAME surface height (Y=64 ± noise)
+ * as a column in a {@code zhao_plains} biome. This was a major visual
+ * regression from vanilla {@code minecraft:noise}, where mountains rise
+ * to Y=120+ and plains stay at Y=64. The world looked like a flat plateau
+ * with occasional canon-warped bumps — not a real cultivation world with
+ * mountains, plains, oceans, and valleys.
+ *
+ * <p>CRON-93 closes this gap by adding a {@link BiomeTerrainProfile}
+ * lookup to the height computation. The new
+ * {@link #biomeAwareSurfaceHeight(int, int, RandomState)} samples the biome
+ * source at (x, z) via {@link BiomeSource#getNoiseBiome}, looks up the
+ * profile for that biome, and uses the profile's base height + amplitude
+ * as the primary determinant of surface shape. Canon warps and fine noise
+ * still apply on top.
+ *
+ * <p><b>New formula (CRON-93):</b>
+ * <pre>{@code
+ *   biomeAwareSurfaceHeight(x, z) =
+ *       biomeProfile.baseHeight                  // plains=64, mountains=110, ocean=35
+ *     + biomeAmplitudeNoise(x, z, amplitude)     // ±amplitude, period 24
+ *     + canonTerrainOffset(x, z)                 // ±30 from canon locations
+ *     + canonNoiseVariation(x, z)                // ±8 fine noise (period 8)
+ *     clamped to [2, 256]
+ * }</pre>
+ *
+ * <p>The legacy static {@link #canonSurfaceHeight(int, int)} is RETAINED
+ * as a fallback for contexts where no {@link RandomState} is available
+ * (e.g., early chunk-gen race, non-Suzaku levels). It returns the
+ * pre-CRON-93 height (base 64 + canon warp + fine noise). Structure
+ * builders that have a {@link net.minecraft.server.level.ServerLevel}
+ * should call the new {@link #surfaceHeightFor(ServerLevel, int, int)}
+ * instead, which delegates to the biome-aware instance method.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
@@ -250,6 +290,27 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     private static final int NOISE_PERIOD = 8;
 
     /**
+     * Period of the CRON-93 biome-amplitude noise, in blocks. 24 means
+     * mountain-scale features (peaks/valleys every ~12 blocks, large enough
+     * to feel like real mountains, small enough to vary within a single
+     * chunk). Distinct from {@link #NOISE_PERIOD} (8) so the two noise layers
+     * produce decorrelated variation — biome amplitude gives the large-scale
+     * shape, fine noise gives the surface roughness.
+     */
+    static final int BIOME_NOISE_PERIOD = 24;
+
+    /**
+     * The quart Y used to sample the biome during chunk-gen. Biomes in
+     * {@code minecraft:multi_noise} are selected based on 4D parameters
+     * (temperature, humidity, continentalness, erosion, depth, weirdness)
+     * sampled at a quart position. Quart resolution is 4 blocks, so
+     * quartY = 16 corresponds to world Y = 64 (sea level). Sampling at
+     * sea level ensures we get the "surface" biome, not a cave biome or
+     * high-altitude variant.
+     */
+    private static final int BIOME_SAMPLE_QUART_Y = 16; // y=64 (sea level)
+
+    /**
      * Amplitude of the canon value-noise variation. ±8 blocks gives gentle
      * rolling hills; large enough to feel natural, small enough that canon
      * warps (±30) dominate geography.
@@ -315,7 +376,10 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
             for (int localZ = 0; localZ < 16; localZ++) {
                 int worldX = minChunkX + localX;
                 int worldZ = minChunkZ + localZ;
-                int surfaceHeight = canonSurfaceHeight(worldX, worldZ);
+                // CRON-93: biome-aware height (mountains=110, plains=64,
+                // ocean=35, etc.) — replaces the flat canonSurfaceHeight.
+                // Falls back to legacy static if randomState is null.
+                int surfaceHeight = biomeAwareSurfaceHeight(worldX, worldZ, randomState);
 
                 for (int y = minY; y < maxY; y++) {
                     BlockState state;
@@ -516,10 +580,10 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     // ════════════════════════════════════════════════════════════════════
 
     /**
-     * Get the surface height at (x, z), derived from canon geography.
+     * Get the surface height at (x, z), derived from canon geography + biome.
      * This is the ONLY method that determines surface terrain shape —
      * {@link #fillFromNoise}, {@link #getBaseHeight}, and
-     * {@link #getBaseColumn} all consult this.
+     * {@link #getBaseColumn} all consult {@link #biomeAwareSurfaceHeight}.
      *
      * <p>The height is deterministic: same x, z, CANON_SEED → same result,
      * every save, every chunk load.
@@ -527,12 +591,12 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     @Override
     public int getBaseHeight(int x, int z, Heightmap.Types heightmap,
                              LevelHeightAccessor level, RandomState randomState) {
-        return canonSurfaceHeight(x, z);
+        return biomeAwareSurfaceHeight(x, z, randomState);
     }
 
     /**
-     * Get the base noise column at (x, z), built from canon surface height.
-     * Returns bedrock at the bottom, stone up to the canon surface, water
+     * Get the base noise column at (x, z), built from biome-aware surface height.
+     * Returns bedrock at the bottom, stone up to the surface, water
      * up to sea level, air above.
      */
     @Override
@@ -540,7 +604,7 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
                                       RandomState randomState) {
         int minY = level.getMinBuildHeight();
         int height = level.getHeight();
-        int surfaceHeight = canonSurfaceHeight(x, z);
+        int surfaceHeight = biomeAwareSurfaceHeight(x, z, randomState);
 
         BlockState[] states = new BlockState[height];
         for (int i = 0; i < height; i++) {
@@ -561,13 +625,21 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     @Override
     public void addDebugScreenInfo(List<String> info, RandomState randomState, BlockPos pos) {
         wrapped.addDebugScreenInfo(info, randomState, pos);
-        info.add("[Er Gen Verse] Blueprint Chunk Generator (CANON-DRIVEN TERRAIN + LAYER OVERRIDE)");
+        info.add("[Er Gen Verse] Blueprint Chunk Generator (BIOME-AWARE + CANON + LAYER OVERRIDE)");
         info.add("[Er Gen Verse] Canon Seed: " + DeterministicSeedHandler.CANON_SEED);
         int sx = pos.getX();
         int sz = pos.getZ();
-        info.add("[Er Gen Verse] Canon Surface Height: " + canonSurfaceHeight(sx, sz)
-                + " (offset " + getCanonTerrainOffset(sx, sz)
-                + " + noise " + canonNoiseVariation(sx, sz) + ")");
+        // CRON-93: report biome-aware height + biome identity at the player position.
+        int biomeAware = biomeAwareSurfaceHeight(sx, sz, randomState);
+        int legacy = canonSurfaceHeight(sx, sz);
+        int offset = getCanonTerrainOffset(sx, sz);
+        int fineNoise = canonNoiseVariation(sx, sz);
+        BiomeTerrainProfile profile = sampleBiomeProfile(sx, sz, randomState);
+        info.add("[Er Gen Verse] Biome-Aware Height: " + biomeAware
+                + " (biome base " + profile.baseHeight() + " + amplitude " + profile.amplitude()
+                + " + canon offset " + offset
+                + " + fine noise " + fineNoise + ")");
+        info.add("[Er Gen Verse] Legacy Canon Height: " + legacy + " (no biome awareness)");
         // CRON-91: report layer-override status for the chunk containing the player.
         try {
             WorldRuntime runtime = WorldRuntime.get();
@@ -587,17 +659,158 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     }
 
     // ════════════════════════════════════════════════════════════════════
-    //  CANON SURFACE HEIGHT — pure deterministic function of (x, z)
+    //  BIOME-AWARE SURFACE HEIGHT (CRON-93) — the authoritative height
     // ════════════════════════════════════════════════════════════════════
 
     /**
-     * Compute the canon-derived surface height at (worldX, worldZ).
+     * Compute the biome-aware surface height at (worldX, worldZ), the
+     * authoritative height function used by {@link #fillFromNoise},
+     * {@link #getBaseHeight}, {@link #getBaseColumn}, and (via
+     * {@link #surfaceHeightFor}) structure builders.
+     *
+     * <p>Formula (CRON-93):
+     * <pre>{@code
+     *   biomeProfile.baseHeight                  // plains=64, mountains=110, ocean=35
+     *     + biomeAmplitudeNoise(x, z, amplitude) // ±amplitude, period 24
+     *     + canonTerrainOffset(x, z)             // ±30 from canon locations
+     *     + canonNoiseVariation(x, z)            // ±8 fine noise (period 8)
+     *     clamped to [2, 256]
+     * }</pre>
+     *
+     * <p>The biome is sampled at (worldX, worldZ) via
+     * {@link BiomeSource#getNoiseBiome} using the {@link RandomState}'s
+     * {@link RandomState#sampler() climate sampler}. The quart Y is
+     * {@link #BIOME_SAMPLE_QUART_Y} (sea level), ensuring we get the surface
+     * biome, not a cave or high-altitude variant.
+     *
+     * <p><b>Fallback behavior:</b> if {@code randomState} is {@code null}, or
+     * the biome lookup fails for any reason, this method falls back to the
+     * legacy {@link #canonSurfaceHeight(int, int)} (no biome awareness).
+     * This ensures robustness during edge cases (early chunk-gen race,
+     * non-Suzaku levels) at the cost of biome-blind height.
+     *
+     * @param worldX      the world X coordinate
+     * @param worldZ      the world Z coordinate
+     * @param randomState the world's random state (provides the climate sampler);
+     *                    may be {@code null} for fallback behavior
+     * @return the biome-aware surface height, clamped to [2, 256]
+     */
+    public int biomeAwareSurfaceHeight(int worldX, int worldZ, RandomState randomState) {
+        // Fallback: no randomState → use legacy static (no biome awareness)
+        if (randomState == null) {
+            return canonSurfaceHeight(worldX, worldZ);
+        }
+
+        BiomeTerrainProfile profile = sampleBiomeProfile(worldX, worldZ, randomState);
+        int offset = getCanonTerrainOffset(worldX, worldZ);
+        int fineNoise = canonNoiseVariation(worldX, worldZ);
+        int biomeNoise = biomeAmplitudeNoise(worldX, worldZ, profile.amplitude());
+
+        int h = profile.baseHeight() + biomeNoise + offset + fineNoise;
+        // Clamp: same [2, 256] bounds as canonSurfaceHeight
+        if (h < 2) return 2;
+        if (h > 256) return 256;
+        return h;
+    }
+
+    /**
+     * Sample the biome at (worldX, worldZ) and return its terrain profile.
+     *
+     * <p>Uses {@link BiomeSource#getNoiseBiome} with the climate sampler from
+     * {@code randomState}. The quart Y is {@link #BIOME_SAMPLE_QUART_Y}
+     * (sea level). Returns {@link BiomeTerrainProfile#DEFAULT} if the lookup
+     * fails for any reason (defensive — should not occur in practice).
+     */
+    private BiomeTerrainProfile sampleBiomeProfile(int worldX, int worldZ, RandomState randomState) {
+        try {
+            int quartX = worldX >> 2;
+            int quartZ = worldZ >> 2;
+            // In 1.20.1 Mojmaps, RandomState.sampler() returns the Climate.Sampler
+            // used by the multi-noise biome source. Quart resolution is 4 blocks;
+            // quartY = 16 corresponds to world Y = 64 (sea level) — see BIOME_SAMPLE_QUART_Y.
+            Climate.Sampler sampler = randomState.sampler();
+            Holder<Biome> biome = biomeSource.getNoiseBiome(quartX, BIOME_SAMPLE_QUART_Y, quartZ, sampler);
+            if (biome == null) return BiomeTerrainProfile.DEFAULT;
+            return biome.unwrapKey()
+                    .map(key -> BiomeTerrainProfile.forBiome(key.location()))
+                    .orElse(BiomeTerrainProfile.DEFAULT);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] BlueprintChunkGenerator: biome sample failed at ({},{}): {}",
+                    worldX, worldZ, t.getMessage());
+            return BiomeTerrainProfile.DEFAULT;
+        }
+    }
+
+    /**
+     * Get the biome-aware surface height at (worldX, worldZ) for the given
+     * {@link ServerLevel}. This is the entry point structure builders
+     * should use (CRON-93).
+     *
+     * <p>If the level's chunk generator is a {@link BlueprintChunkGenerator},
+     * this delegates to {@link #biomeAwareSurfaceHeight} with the level's
+     * {@link RandomState}. Otherwise (e.g., non-Suzaku levels, fallback
+     * generators), it falls back to the legacy {@link #canonSurfaceHeight}
+     * (no biome awareness).
+     *
+     * <p><b>Migration guide (CRON-93):</b> structure builders should replace
+     * calls to the static {@code canonSurfaceHeight(x, z)} with
+     * {@code surfaceHeightFor(level, x, z)}. Both return the same value when
+     * the level is Suzaku, but the new method accounts for the biome at
+     * (x, z), producing canon-faithful elevations (mountains at Y=110,
+     * plains at Y=64, oceans at Y=35, etc.).
+     *
+     * <pre>{@code
+     *   // BEFORE (CRON-67, no biome awareness):
+     *   int surfaceY = BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
+     *
+     *   // AFTER (CRON-93, biome-aware):
+     *   int surfaceY = BlueprintChunkGenerator.surfaceHeightFor(level, SECT_X, SECT_Z);
+     * }</pre>
+     *
+     * @param level  the server level (must be Planet Suzaku for biome-aware
+     *               results; other levels fall back to legacy behavior)
+     * @param worldX the world X coordinate
+     * @param worldZ the world Z coordinate
+     * @return the biome-aware surface height for Suzaku levels; legacy
+     *         canonSurfaceHeight for other levels
+     */
+    public static int surfaceHeightFor(ServerLevel level, int worldX, int worldZ) {
+        try {
+            ChunkGenerator gen = level.getChunkSource().getGenerator();
+            if (gen instanceof BlueprintChunkGenerator bcg) {
+                RandomState randomState = level.getChunkSource().randomState();
+                return bcg.biomeAwareSurfaceHeight(worldX, worldZ, randomState);
+            }
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.warn("[Ergenverse] BlueprintChunkGenerator.surfaceHeightFor: " +
+                    "failed to compute biome-aware height at ({},{}) on level {}: {}. " +
+                    "Falling back to legacy canonSurfaceHeight.",
+                    worldX, worldZ, level.dimension(), t.getMessage());
+        }
+        return canonSurfaceHeight(worldX, worldZ);
+    }
+
+    // ════════════════════════════════════════════════════════════════════
+    //  CANON SURFACE HEIGHT — legacy static (biome-blind fallback)
+    // ════════════════════════════════════════════════════════════════════
+
+    /**
+     * Compute the canon-derived surface height at (worldX, worldZ) — the
+     * <b>legacy, biome-blind</b> version.
      *
      * <p>{@code BASE_SURFACE_HEIGHT + canonTerrainOffset + canonNoiseVariation},
      * clamped to a non-negative minimum (bedrock layer at {@code minY} must
      * always have at least one stone block above it).
      *
-     * <p><b>CRON-COMPLETIONIST-67:</b> this method is now {@code public} so that
+     * <p><b>CRON-COMPLETIONIST-93:</b> this method is RETAINED as a fallback
+     * for contexts where no {@link RandomState} or {@link ServerLevel} is
+     * available (e.g., early chunk-gen race, non-Suzaku levels, defensive
+     * code paths). For all structure-builder contexts where a
+     * {@link ServerLevel} is available, prefer
+     * {@link #surfaceHeightFor(ServerLevel, int, int)} — it accounts for
+     * the biome at (x, z) and produces canon-faithful elevations.
+     *
+     * <p><b>CRON-COMPLETIONIST-67:</b> this method is {@code public} so that
      * structure builders can resolve their center Y from the <i>same canon
      * authority</i> that the chunk generator uses — eliminating the heightmap
      * race condition where {@code level.getHeightmapPos(MOTION_BLOCKING_NO_LEAVES, ...)}
@@ -607,10 +820,15 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
      * NOT depend on chunk-load state, so it returns the correct Y every time,
      * regardless of which chunks are loaded.
      *
-     * <p>Builders should call this instead of {@code level.getHeightmapPos(...)}:
+     * <p>For contexts without a {@link ServerLevel} (e.g., static helpers,
+     * tests), continue to call this directly:
      * <pre>{@code
      *   int surfaceY = BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
-     *   return new BlockPos(SECT_X, surfaceY, SECT_Z);
+     * }</pre>
+     *
+     * For contexts WITH a {@link ServerLevel}, prefer the biome-aware version:
+     * <pre>{@code
+     *   int surfaceY = BlueprintChunkGenerator.surfaceHeightFor(level, SECT_X, SECT_Z);
      * }</pre>
      */
     public static int canonSurfaceHeight(int worldX, int worldZ) {
@@ -624,6 +842,76 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
         if (h < 2) return 2;
         if (h > 256) return 256;
         return h;
+    }
+
+    /**
+     * Compute the biome-amplitude noise at (worldX, worldZ) — a bilinear
+     * value noise with period {@link #BIOME_NOISE_PERIOD} and the given
+     * amplitude. Used by {@link #biomeAwareSurfaceHeight} to produce
+     * biome-scale terrain variation (mountain peaks, valley undulations).
+     *
+     * <p>Returns 0 when {@code amplitude <= 0} (no variation needed for
+     * flat biomes like plains, though plains still use amplitude 4 for
+     * gentle rolling).
+     *
+     * <p>The hash function is the same splitmix64 mixer used by
+     * {@link #canonNoiseVariation}, but with a different cell period (24
+     * vs 8), so the two noise layers are decorrelated. Both are seeded by
+     * {@link DeterministicSeedHandler#CANON_SEED}, ensuring determinism.
+     */
+    static int biomeAmplitudeNoise(int worldX, int worldZ, int amplitude) {
+        if (amplitude <= 0) return 0;
+        int cellX = Math.floorDiv(worldX, BIOME_NOISE_PERIOD);
+        int cellZ = Math.floorDiv(worldZ, BIOME_NOISE_PERIOD);
+        int fracX = worldX - cellX * BIOME_NOISE_PERIOD;
+        int fracZ = worldZ - cellZ * BIOME_NOISE_PERIOD;
+
+        // Smoothstep interpolation weights
+        double sx = (double) fracX / BIOME_NOISE_PERIOD;
+        double sz = (double) fracZ / BIOME_NOISE_PERIOD;
+        sx = sx * sx * (3 - 2 * sx);
+        sz = sz * sz * (3 - 2 * sz);
+
+        // Four corner values in range [0, 2*amplitude]
+        double v00 = amplitudeHash(cellX,     cellZ,     amplitude);
+        double v10 = amplitudeHash(cellX + 1, cellZ,     amplitude);
+        double v01 = amplitudeHash(cellX,     cellZ + 1, amplitude);
+        double v11 = amplitudeHash(cellX + 1, cellZ + 1, amplitude);
+
+        double ix0 = v00 + (v10 - v00) * sx;
+        double ix1 = v01 + (v11 - v01) * sx;
+        double val = ix0 + (ix1 - ix0) * sz;
+
+        // Center around zero: range [-amplitude, +amplitude]
+        return (int) Math.round(val - amplitude);
+    }
+
+    /**
+     * Salt value mixed into the amplitude-noise hash to decorrelate it from
+     * the fine-noise hash (so the two noise layers don't produce correlated
+     * values). Arbitrary 64-bit constant; chosen to be distinct from any
+     * multiplier used in {@link #noiseHash}.
+     */
+    private static final long AMPLITUDE_HASH_SALT = 0xA5A5A5A5A5A5A5A5L;
+
+    /**
+     * Deterministic hash for the biome-amplitude noise → value in
+     * [0, 2 * amplitude]. Same splitmix64 mixing as {@link #noiseHash} but
+     * parameterized by amplitude (so different amplitudes produce different
+     * value ranges). Uses {@link #AMPLITUDE_HASH_SALT} to decorrelate from
+     * the fine noise (otherwise the two noise layers would be correlated,
+     * producing unrealistic terrain).
+     */
+    private static long amplitudeHash(int cellX, int cellZ, int amplitude) {
+        long h = DeterministicSeedHandler.CANON_SEED ^ AMPLITUDE_HASH_SALT;
+        h ^= (long) cellX * 0x9E3779B97F4A7C15L;
+        h ^= (long) cellZ * 0xC2B2AE3D27D4EB4FL;
+        h ^= h >>> 33;
+        h *= 0xFF51AFD7ED558CCDL;
+        h ^= h >>> 33;
+        h *= 0xC4CEB9FE1A85EC53L;
+        h ^= h >>> 33;
+        return (h & 0xFFFFFFFFL) % (2L * amplitude + 1);
     }
 
     /**

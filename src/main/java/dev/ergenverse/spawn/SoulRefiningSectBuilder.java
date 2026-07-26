@@ -195,7 +195,7 @@ public final class SoulRefiningSectBuilder {
      * of (x, z) — does NOT depend on chunk-load state.
      */
     public static BlockPos getSectCenter(ServerLevel level) {
-        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.surfaceHeightFor(level, SECT_X, SECT_Z);
         return new BlockPos(SECT_X, surfaceY, SECT_Z);
     }
 

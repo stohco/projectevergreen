@@ -194,7 +194,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
      * so a player breaking it actually triggers the guard.
      */
     public static BlockPos getSectCenter(ServerLevel level) {
-        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.surfaceHeightFor(level, SECT_X, SECT_Z);
         return new BlockPos(SECT_X, surfaceY, SECT_Z);
     }
 

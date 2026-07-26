@@ -137,8 +137,11 @@ public final class SpawnEventHandler {
                 // server-start. The canon surface height is the SAME function
                 // the chunk generator uses to shape the terrain, so the player
                 // spawns exactly on the canon surface every time.
+                // CRON-COMPLETIONIST-93: upgraded to surfaceHeightFor(level, x, z)
+                // — biome-aware (mountains=Y=110, plains=Y=64, ocean=Y=35) so
+                // the spawn point matches the actual biome-shaped surface.
                 int spawnY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator
-                        .canonSurfaceHeight(spawnX, spawnZ);
+                        .surfaceHeightFor(suzakuLevel, spawnX, spawnZ);
 
                 // Ensure the chunk is loaded.
                 suzakuLevel.getChunkAt(new BlockPos(spawnX, spawnY, spawnZ));

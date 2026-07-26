@@ -169,7 +169,7 @@ public final class WangFamilyVillageBuilder {
      * when this method is called.
      */
     public static BlockPos getVillageCenter(ServerLevel level) {
-        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(VILLAGE_X, VILLAGE_Z);
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.surfaceHeightFor(level, VILLAGE_X, VILLAGE_Z);
         return new BlockPos(VILLAGE_X, surfaceY, VILLAGE_Z);
     }
 

@@ -151,7 +151,7 @@ public final class SnowDomainCapitalBuilder {
      * {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}.
      */
     public static BlockPos getSectCenter(ServerLevel level) {
-        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(CAPITAL_X, CAPITAL_Z);
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.surfaceHeightFor(level, CAPITAL_X, CAPITAL_Z);
         return new BlockPos(CAPITAL_X, surfaceY, CAPITAL_Z);
     }
 

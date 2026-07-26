@@ -186,7 +186,7 @@ public final class HengYueSectBuilder {
      * function of (x, z) — it does NOT depend on chunk-load state.
      */
     public static BlockPos getSectCenter(ServerLevel level) {
-        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.surfaceHeightFor(level, SECT_X, SECT_Z);
         return new BlockPos(SECT_X, surfaceY, SECT_Z);
     }
 
@@ -1490,10 +1490,13 @@ public final class HengYueSectBuilder {
         // c.getY()-4 (which was buried underground). The stone sits on the
         // hillside east of the step-2 staircase, visible to a player looking
         // right while climbing the stairs.
+        // CRON-COMPLETIONIST-93: upgraded to surfaceHeightFor(level, x, z) —
+        // biome-aware, so the stone sits at the actual biome-shaped surface
+        // (zhao_mountains biome → Y≈110, not the legacy flat Y=64).
         int stoneX = c.getX() + 6;   // 2 blocks east of the right flanking wall (dx=+4)
         int stoneZ = c.getZ() + 24;  // between step 1 (z=cz+28) and step 3 (z=cz+24)
         int stoneY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator
-                .canonSurfaceHeight(stoneX, stoneZ);
+                .surfaceHeightFor(level, stoneX, stoneZ);
         BlockPos stonePos = new BlockPos(stoneX, stoneY, stoneZ);
         setBlock(level, stonePos, B.MYSTERIOUS_STONE);
     }
