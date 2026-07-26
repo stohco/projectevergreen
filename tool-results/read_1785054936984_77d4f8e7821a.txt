@@ -1,0 +1,450 @@
+     1→package dev.ergenverse.item;
+     2→
+     3→import dev.ergenverse.core.Ergenverse;
+     4→import net.minecraft.core.registries.Registries;
+     5→import net.minecraft.network.chat.Component;
+     6→import net.minecraft.world.item.CreativeModeTab;
+     7→import net.minecraft.world.item.Item;
+     8→import net.minecraft.world.item.ItemStack;
+     9→import net.minecraftforge.eventbus.api.IEventBus;
+    10→import net.minecraftforge.registries.DeferredRegister;
+    11→import net.minecraftforge.registries.ForgeRegistries;
+    12→import net.minecraftforge.registries.RegistryObject;
+    13→
+    14→/**
+    15→ * ErgenverseItems — DeferredRegister for utility items that don't belong to
+    16→ * Wang Lin's personal arsenal (which is in {@link dev.ergenverse.wanglin.WangLinItems}).
+    17→ *
+    18→ * <p>Currently registers:
+    19→ * <ul>
+    20→ *   <li><b>jade_slip</b> — a cultivator's jade slip. Used to channel Qi from
+    21→ *       spirit-vein and spirit-herb blocks. Canon: jade slips are the standard
+    22→ *       storage and Qi-channeling medium in xianxia; Wang Lin uses one for
+    23→ *       soul-searching and qi-gathering throughout the series.</li>
+    24→ * </ul>
+    25→ *
+    26→ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17 APIs only.
+    27→ */
+    28→public final class ErgenverseItems {
+    29→
+    30→    private ErgenverseItems() {}
+    31→
+    32→    public static final DeferredRegister<Item> ITEMS =
+    33→            DeferredRegister.create(ForgeRegistries.ITEMS, Ergenverse.MOD_ID);
+    34→
+    35→    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
+    36→            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Ergenverse.MOD_ID);
+    37→
+    38→    /**
+    39→     * Jade Slip — a Qi-channeling medium.
+    40→     * Right-click on a spirit-vein or spirit-herb block to gather Qi.
+    41→     * One-time use per block per MC day (recharges over time).
+    42→     */
+    43→    public static final RegistryObject<Item> JADE_SLIP = ITEMS.register("jade_slip",
+    44→            () -> new Item(new Item.Properties()
+    45→                    .durability(64)  // 64 uses before repair needed
+    46→                    .rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    47→
+    48→    /** Ergenverse utility items creative tab. */
+    49→    public static RegistryObject<CreativeModeTab> ERGENVERSE_ITEMS_TAB;
+    50→
+    51→
+    52→    // ── Crafting Materials ─────────────────────────────────────────────
+    53→    // NOTE: spirit_stone item is provided by ErgenverseBlocks.registerSimple("spirit_stone")
+    54→    // which auto-creates a block item. Do NOT register a duplicate here.
+    55→    public static final RegistryObject<Item> SPIRIT_STONE_FRAGMENT = ITEMS.register("spirit_stone_fragment",
+    56→            () -> new Item(new Item.Properties()));
+    57→    public static final RegistryObject<Item> IRON_SAND = ITEMS.register("iron_sand",
+    58→            () -> new Item(new Item.Properties()));
+    59→    public static final RegistryObject<Item> COLD_IRON_INGOT = ITEMS.register("cold_iron_ingot",
+    60→            () -> new Item(new Item.Properties()));
+    61→    public static final RegistryObject<Item> SPIRIT_IRON_INGOT = ITEMS.register("spirit_iron_ingot",
+    62→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    63→    public static final RegistryObject<Item> BEAST_BONE = ITEMS.register("beast_bone",
+    64→            () -> new Item(new Item.Properties()));
+    65→    public static final RegistryObject<Item> BEAST_CORE = ITEMS.register("beast_core",
+    66→            () -> new BeastCoreItem(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    67→    public static final RegistryObject<Item> WOLF_CORE = ITEMS.register("wolf_core",
+    68→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+    69→    /**
+    70→     * Qilin Core — the core of a divine qilin beast. Per the item_properties JSON:
+    71→     * condensed divine auspicious-essence, 3000 jin weight, requires Ascendant body
+    72→     * strength to lift. Referenced in the qilin entity loot table (60% drop chance
+    73→     * when killed by player). Canon: a qilin's core, analogous to beast_core but
+    74→     * from a divine-tier beast.
+    75→     */
+    76→    public static final RegistryObject<Item> QILIN_CORE = ITEMS.register("qilin_core",
+    77→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    78→    /**
+    79→     * Vermilion Bird Feather — a rare feather from the Vermilion Bird divine beast.
+    80→     * Referenced in the spirit_crane entity loot table and cloud_sky_pavilion chest.
+    81→     * The WangLin arsenal version (I105_vermilion_bird_feather) has an uppercase
+    82→     * prefix that is invalid in Minecraft ResourceLocations, so it fails to register.
+    83→     * This standalone registration provides the item with a valid lowercase name.
+    84→     */
+    85→    public static final RegistryObject<Item> VERMILION_BIRD_FEATHER = ITEMS.register("vermilion_bird_feather",
+    86→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+    87→    /**
+    88→     * Ji Realm Divine Sense — a divine-sense technique/item from the Ji Realm.
+    89→     * Referenced in the heavenly_fate_star_tower chest loot table.
+    90→     * The WangLin arsenal version (ji_realm_divine_sense) is not registered (likely
+    91→     * skipped or failed), so this standalone registration provides the item.
+    92→     */
+    93→    public static final RegistryObject<Item> JI_REALM = ITEMS.register("ji_realm",
+    94→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    95→    public static final RegistryObject<Item> RABBIT_BLOOD_ESSENCE = ITEMS.register("rabbit_blood_essence",
+    96→            () -> new Item(new Item.Properties()));
+    97→    public static final RegistryObject<Item> SPIRIT_HERB_SEED = ITEMS.register("spirit_herb_seed",
+    98→            () -> new Item(new Item.Properties()));
+    99→    public static final RegistryObject<Item> SPIRIT_INK = ITEMS.register("spirit_ink",
+   100→            () -> new Item(new Item.Properties()));
+   101→    public static final RegistryObject<Item> FORMATION_FLAG_BLANK = ITEMS.register("formation_flag_blank",
+   102→            () -> new Item(new Item.Properties()));
+   103→    public static final RegistryObject<Item> TALISMAN_PAPER_BLANK = ITEMS.register("talisman_paper_blank",
+   104→            () -> new Item(new Item.Properties()));
+   105→    public static final RegistryObject<Item> MEDITATION_MAT = ITEMS.register("meditation_mat",
+   106→            () -> new Item(new Item.Properties()));
+   107→    public static final RegistryObject<Item> CAVE_DWELLING_CORE = ITEMS.register("cave_dwelling_core",
+   108→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   109→
+   110→    // ── Pills ──────────────────────────────────────────────────────────
+   111→    // CRON-COMPLETIONIST-57: Replaced generic Item pills with SpiritPillItem (real mechanics).
+   112→    // Constitution Article III: "Never design progression. Design reality."
+   113→    // A pill is not a generic item — it is a substance with specific pharmacological effects.
+   114→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> QI_GATHERING_PILL =
+   115→            ITEMS.register("qi_gathering_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+   116→                    dev.ergenverse.item.PillType.QI_GATHERING,
+   117→                    new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   118→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> FOUNDATION_PILL =
+   119→            ITEMS.register("foundation_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+   120→                    dev.ergenverse.item.PillType.FOUNDATION,
+   121→                    new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   122→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> PURIFICATION_PILL =
+   123→            ITEMS.register("purification_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+   124→                    dev.ergenverse.item.PillType.PURIFICATION,
+   125→                    new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   126→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> SOUL_MENDING_PILL =
+   127→            ITEMS.register("soul_mending_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+   128→                    dev.ergenverse.item.PillType.SOUL_MENDING,
+   129→                    new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+   130→    // CRON-COMPLETIONIST-57: WASTE_PILL — failed alchemy product (Nausea + Poison)
+   131→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> WASTE_PILL =
+   132→            ITEMS.register("waste_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+   133→                    dev.ergenverse.item.PillType.WASTE_PILL,
+   134→                    new Item.Properties().stacksTo(16)));
+   135→
+   136→
+   137→    // ── Blank Jade Slip (for inscription) ──────────────────────────────
+   138→    public static final RegistryObject<Item> JADE_SLIP_BLANK = ITEMS.register("jade_slip_blank",
+   139→            () -> new Item(new Item.Properties()));
+   140→
+   141→    // ── Flying Swords (CRON-COMPLETIONIST-55/57) ───────────────────────────
+   142→    // NOTE: wealth_flying_sword, core_treasure_sword, blood_slaughter_sword, and
+   143→    // dark_green_flying_sword are registered by WangLinItems from the arsenal manifest.
+   144→    // Do NOT register them here to avoid duplicate item name crashes.
+   145→    // Only god_slaying_sword is exclusive to ErgenverseItems (not in the manifest).
+   146→    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> GOD_SLAYING_SWORD =
+   147→            ITEMS.register("god_slaying_sword", () -> new dev.ergenverse.item.FlyingSwordItem(28.0F,
+   148→                    dev.ergenverse.item.sword.SwordEffectType.RESTRICTION,
+   149→                    new Item.Properties().durability(3000).rarity(net.minecraft.world.item.Rarity.EPIC)));
+   150→
+   151→    // Talismans: single-use, right-click deploys the effect, consumed on use.
+   152→    public static final RegistryObject<dev.ergenverse.item.TalismanItem> FIREBALL_TALISMAN =
+   153→            ITEMS.register("fireball_talisman", () -> new dev.ergenverse.item.TalismanItem(
+   154→                    dev.ergenverse.item.TalismanType.FIREBALL, new Item.Properties().stacksTo(16)));
+   155→    public static final RegistryObject<dev.ergenverse.item.TalismanItem> BARRIER_TALISMAN =
+   156→            ITEMS.register("barrier_talisman", () -> new dev.ergenverse.item.TalismanItem(
+   157→                    dev.ergenverse.item.TalismanType.BARRIER, new Item.Properties().stacksTo(16)));
+   158→    public static final RegistryObject<dev.ergenverse.item.TalismanItem> LIGHTNING_TALISMAN =
+   159→            ITEMS.register("lightning_talisman", () -> new dev.ergenverse.item.TalismanItem(
+   160→                    dev.ergenverse.item.TalismanType.LIGHTNING, new Item.Properties().stacksTo(16)));
+   161→    public static final RegistryObject<dev.ergenverse.item.TalismanItem> SHIELD_TALISMAN =
+   162→            ITEMS.register("shield_talisman", () -> new dev.ergenverse.item.TalismanItem(
+   163→                    dev.ergenverse.item.TalismanType.SHIELD, new Item.Properties().stacksTo(16)));
+   164→    public static final RegistryObject<dev.ergenverse.item.TalismanItem> SWORD_QI_TALISMAN =
+   165→            ITEMS.register("sword_qi_talisman", () -> new dev.ergenverse.item.TalismanItem(
+   166→                    dev.ergenverse.item.TalismanType.SWORD_QI, new Item.Properties().stacksTo(16)));
+   167→    public static final RegistryObject<dev.ergenverse.item.TalismanItem> SPEED_BOOST_TALISMAN =
+   168→            ITEMS.register("speed_boost_talisman", () -> new dev.ergenverse.item.TalismanItem(
+   169→                    dev.ergenverse.item.TalismanType.SPEED_BOOST, new Item.Properties().stacksTo(16)));
+   170→    public static final RegistryObject<dev.ergenverse.item.TalismanItem> LIGHT_TALISMAN =
+   171→            ITEMS.register("light_talisman", () -> new dev.ergenverse.item.TalismanItem(
+   172→                    dev.ergenverse.item.TalismanType.LIGHT, new Item.Properties().stacksTo(16)));
+   173→    // CRON-COMPLETIONIST-7: Teleport Talisman — single-use warp back to world spawn.
+   174→    // Canon: spatial-array talismans (传送符) are the standard escape tool.
+   175→    public static final RegistryObject<dev.ergenverse.item.TalismanItem> TELEPORT_TALISMAN =
+   176→            ITEMS.register("teleport_talisman", () -> new dev.ergenverse.item.TalismanItem(
+   177→                    dev.ergenverse.item.TalismanType.TELEPORT, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   178→
+   179→    // CRON-COMPLETIONIST-7: Soul Bead — reusable soul-power accumulator.
+   180→    // Canon: cultivators carry soul beads as a reserve of spiritual qi.
+   181→    public static final RegistryObject<dev.ergenverse.item.SoulBeadItem> SOUL_BEAD =
+   182→            ITEMS.register("soul_bead", () -> new dev.ergenverse.item.SoulBeadItem(
+   183→                    new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
+   184→
+   185→    // Spirit pills: consumed via eat animation, apply realm-appropriate buffs.
+   186→    // CRON-COMPLETIONIST-57: _REAL suffix pills now alias the base names.
+   187→    // Kept as separate registrations for backward compatibility with saved-item NBT.
+   188→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> QI_GATHERING_PILL_REAL =
+   189→            ITEMS.register("qi_gathering_pill_real", () -> new dev.ergenverse.item.SpiritPillItem(
+   190→                    dev.ergenverse.item.PillType.QI_GATHERING, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   191→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> FOUNDATION_PILL_REAL =
+   192→            ITEMS.register("foundation_pill_real", () -> new dev.ergenverse.item.SpiritPillItem(
+   193→                    dev.ergenverse.item.PillType.FOUNDATION, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   194→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> PURIFICATION_PILL_REAL =
+   195→            ITEMS.register("purification_pill_real", () -> new dev.ergenverse.item.SpiritPillItem(
+   196→                    dev.ergenverse.item.PillType.PURIFICATION, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   197→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> SOUL_MENDING_PILL_REAL =
+   198→            ITEMS.register("soul_mending_pill_real", () -> new dev.ergenverse.item.SpiritPillItem(
+   199→                    dev.ergenverse.item.PillType.SOUL_MENDING, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+   200→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> BLOOD_SOUL_PILL =
+   201→            ITEMS.register("blood_soul_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+   202→                    dev.ergenverse.item.PillType.BLOOD_SOUL, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+   203→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> MINOR_HEALING_PILL =
+   204→            ITEMS.register("minor_healing_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+   205→                    dev.ergenverse.item.PillType.MINOR_HEALING, new Item.Properties().stacksTo(16)));
+   206→    // CRON-COMPLETIONIST-7: Spirit Pill — generic cultivation buff consumable.
+   207→    // Drink/eat animation, applies PillType effects (Regen/Absorption/Resistance family),
+   208→    // 60-tick cooldown, publishes spell_cast WorldEvent. Stackable to 16.
+   209→    public static final RegistryObject<dev.ergenverse.item.SpiritPillItem> SPIRIT_PILL =
+   210→            ITEMS.register("spirit_pill", () -> new dev.ergenverse.item.SpiritPillItem(
+   211→                    dev.ergenverse.item.PillType.QI_GATHERING,
+   212→                    new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   213→
+   214→
+   215→    // ── CRON-COMPLETIONIST-67: Canon Storage Ring & Soul Gourd ─────────────────
+   216→    // Storage Ring: 9-slot pocket-dimension inventory, persists across death.
+   217→    // Canon: THE standard storage tool for every cultivator above Qi Condensation.
+   218→    public static final RegistryObject<Item> STORAGE_RING = ITEMS.register("storage_ring",
+   219→            () -> new StorageRingItem(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   220→    // Soul Gourd: captures souls from slain entities, releases as area attack.
+   221→    // Canon: feared soul-capturing treasure, prevents reincarnation.
+   222→    public static final RegistryObject<Item> SOUL_GOURD = ITEMS.register("soul_gourd",
+   223→            () -> new SoulGourdItem(new Item.Properties().durability(500).rarity(net.minecraft.world.item.Rarity.RARE)));
+   224→    // Cultivation Journal: records observations, persists across death.
+   225→    // Canon: cultivators keep detailed journals of insights.
+   226→    public static final RegistryObject<Item> CULTIVATION_JOURNAL = ITEMS.register("cultivation_journal",
+   227→            () -> new JournalItem(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   228→
+   229→    // ── CRON-72: Spirit Stone Currency (loot table items) ──────────────
+   230→    // Canon: spirit stones are the universal currency of the cultivation world.
+   231→    // Low/Mid/High tiers correspond to Qi Condensation/Foundation/Core Formation value ranges.
+   232→    // NOTE: spirit_stone block item is registered by ErgenverseBlocks.registerSimple("spirit_stone").
+   233→    // Do NOT register a duplicate here — would crash at registry freeze.
+   234→    public static final RegistryObject<Item> SPIRIT_STONE_LOW = ITEMS.register("spirit_stone_low",
+   235→            () -> new Item(new Item.Properties()));
+   236→    public static final RegistryObject<Item> SPIRIT_STONE_MID = ITEMS.register("spirit_stone_mid",
+   237→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   238→    public static final RegistryObject<Item> SPIRIT_STONE_HIGH = ITEMS.register("spirit_stone_high",
+   239→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   240→    public static final RegistryObject<Item> IMMORTAL_STONE = ITEMS.register("immortal_stone",
+   241→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+   242→
+   243→    // ── CRON-72: Beast Cores & Essences (mob drops) ────────────────────
+   244→    // Canon: cores harvested from spirit beasts are used for beast taming,
+   245→    // alchemy, and restriction artifacts.
+   246→    public static final RegistryObject<Item> ANCIENT_GOD_CORE = ITEMS.register("ancient_god_core",
+   247→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+   248→    public static final RegistryObject<Item> ANCIENT_GOD_BONE = ITEMS.register("ancient_god_bone",
+   249→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+   250→    public static final RegistryObject<Item> AZURE_DRAGON_CORE = ITEMS.register("azure_dragon_core",
+   251→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   252→    public static final RegistryObject<Item> CLOUD_WHALE_CORE = ITEMS.register("cloud_whale_core",
+   253→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   254→    public static final RegistryObject<Item> LEI_JI_CORE = ITEMS.register("lei_ji_core",
+   255→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   256→    public static final RegistryObject<Item> NETHER_CORE = ITEMS.register("nether_core",
+   257→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+   258→    public static final RegistryObject<Item> THUNDER_TOAD_CORE = ITEMS.register("thunder_toad_core",
+   259→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   260→    public static final RegistryObject<Item> SOUL_FRAGMENT = ITEMS.register("soul_fragment",
+   261→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   262→    public static final RegistryObject<Item> SOUL_LASHER = ITEMS.register("soul_lasher",
+   263→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   264→    public static final RegistryObject<Item> SPIRIT_VEIN_ESSENCE = ITEMS.register("spirit_vein_essence",
+   265→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   266→    public static final RegistryObject<Item> BLOOD_ESSENCE = ITEMS.register("blood_essence",
+   267→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   268→    public static final RegistryObject<Item> DRAGON_SCALE = ITEMS.register("dragon_scale",
+   269→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   270→    // vermilion_bird_feather: registered by WangLinItems arsenal (do NOT duplicate)
+   271→    public static final RegistryObject<Item> NINE_COLOR_FLAME = ITEMS.register("nine_color_flame",
+   272→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+   273→    public static final RegistryObject<Item> TRIBULATION_FRAGMENT = ITEMS.register("tribulation_fragment",
+   274→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   275→    public static final RegistryObject<Item> DAO_FRAGMENT = ITEMS.register("dao_fragment",
+   276→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   277→    // ji_realm: registered by WangLinItems arsenal (do NOT duplicate)
+   278→
+   279→    // ── CRON-72: Equipment & Artifacts (treasure items) ──────────────────
+   280→    public static final RegistryObject<Item> SPIRIT_ARMOR = ITEMS.register("spirit_armor",
+   281→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   282→    // karma_whip: registered by WangLinItems arsenal (do NOT duplicate)
+   283→    public static final RegistryObject<Item> HEAVEN_FAN = ITEMS.register("heaven_fan",
+   284→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+   285→    // heaven_defying_bead: registered by WangLinItems arsenal (do NOT duplicate)
+   286→    public static final RegistryObject<Item> STAR_SEALING_FLAG = ITEMS.register("star_sealing_flag",
+   287→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   288→    public static final RegistryObject<Item> SOUL_REFINING_FLAG = ITEMS.register("soul_refining_flag",
+   289→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   290→    public static final RegistryObject<Item> CAVE_WORLD_KEY = ITEMS.register("cave_world_key",
+   291→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+   292→    public static final RegistryObject<Item> STARSKY_TOKEN = ITEMS.register("starry_sky_token",
+   293→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+   294→    public static final RegistryObject<Item> EIGHTEEN_HELL_STAMP = ITEMS.register("eighteen_hell_stamp",
+   295→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+   296→    public static final RegistryObject<Item> VERMILION_EMPEROR_SEAL = ITEMS.register("vermilion_emperor_seal",
+   297→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
+   298→    public static final RegistryObject<Item> STORAGE_POUCH = ITEMS.register("storage_pouch",
+   299→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   300→    public static final RegistryObject<Item> CULTIVATION_MAT = ITEMS.register("cultivation_mat",
+   301→            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   302→    // CRON-COMPLETIONIST-7: Generic flying sword upgraded from placeholder Item() to
+   303→    // FlyingSwordItem (real mechanics — projectile launch, cultivation-scaled damage,
+   304→    // event-bus publication, durability cost). Durability 512 per canon baseline.
+   305→    public static final RegistryObject<dev.ergenverse.item.FlyingSwordItem> FLYING_SWORD =
+   306→            ITEMS.register("flying_sword", () -> new dev.ergenverse.item.FlyingSwordItem(8.0F,
+   307→                    new Item.Properties().durability(512).rarity(net.minecraft.world.item.Rarity.RARE)));
+   308→
+   309→    // ── Spawn Eggs ────────────────────────────────────────────────────
+   310→    // Uses DeferredSpawnEggItem because SpawnEggItem requires EntityType at
+   311→    // construction time, but ITEM registry fires BEFORE ENTITY_TYPE registry.
+   312→    public static final RegistryObject<Item> SPIRIT_RABBIT_SPAWN_EGG = ITEMS.register("spirit_rabbit_spawn_egg",
+   313→            () -> new dev.ergenverse.item.DeferredSpawnEggItem(
+   314→                    () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_RABBIT.get(),
+   315→                    0xFFFFFF, 0xC0C0C0,
+   316→                    new Item.Properties()));
+   317→    public static final RegistryObject<Item> SPIRIT_WOLF_SPAWN_EGG = ITEMS.register("spirit_wolf_spawn_egg",
+   318→            () -> new dev.ergenverse.item.DeferredSpawnEggItem(
+   319→                    () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_WOLF.get(),
+   320→                    0x5A6E82, 0x00C8DC,
+   321→                    new Item.Properties()));
+   322→    public static final RegistryObject<Item> SPIRIT_DEER_SPAWN_EGG = ITEMS.register("spirit_deer_spawn_egg",
+   323→            () -> new dev.ergenverse.item.DeferredSpawnEggItem(
+   324→                    () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_DEER.get(),
+   325→                    0x8C643C, 0xFFC832,
+   326→                    new Item.Properties()));
+   327→    public static final RegistryObject<Item> SPIRIT_HAWK_SPAWN_EGG = ITEMS.register("spirit_hawk_spawn_egg",
+   328→            () -> new dev.ergenverse.item.DeferredSpawnEggItem(
+   329→                    () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_HAWK.get(),
+   330→                    0x785032, 0x00C8DC,
+   331→                    new Item.Properties()));
+   332→    // CRON-COMPLETIONIST-67: Spirit tiger spawn egg (orange + black stripes)
+   333→    public static final RegistryObject<Item> SPIRIT_TIGER_SPAWN_EGG = ITEMS.register("spirit_tiger_spawn_egg",
+   334→            () -> new dev.ergenverse.item.DeferredSpawnEggItem(
+   335→                    () -> (net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>) dev.ergenverse.entity.EREntityTypes.SPIRIT_TIGER.get(),
+   336→                    0xFF8C00, 0x1A1A1A,
+   337→                    new Item.Properties()));
+   338→
+   339→    // ── CRON-COMPLETIONIST-40: Canon Technique Scrolls ─────────────────────
+   340→    // Right-click to study, consumes scroll, grants temporary cultivation buff.
+   341→    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_QI_GATHERING =
+   342→            ITEMS.register("scroll_qi_gathering", () -> new dev.ergenverse.item.TechniqueScrollItem(
+   343→                    dev.ergenverse.item.ScrollType.QI_GATHERING, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   344→    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_SWORD_TECHNIQUE =
+   345→            ITEMS.register("scroll_sword_technique", () -> new dev.ergenverse.item.TechniqueScrollItem(
+   346→                    dev.ergenverse.item.ScrollType.SWORD_TECHNIQUE, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+   347→    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_BODY_REFINEMENT =
+   348→            ITEMS.register("scroll_body_refinement", () -> new dev.ergenverse.item.TechniqueScrollItem(
+   349→                    dev.ergenverse.item.ScrollType.BODY_REFINEMENT, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   350→    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_FIRE_CONTROL =
+   351→            ITEMS.register("scroll_fire_control", () -> new dev.ergenverse.item.TechniqueScrollItem(
+   352→                    dev.ergenverse.item.ScrollType.FIRE_CONTROL, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+   353→    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_SPIRITUAL_SENSE =
+   354→            ITEMS.register("scroll_spiritual_sense", () -> new dev.ergenverse.item.TechniqueScrollItem(
+   355→                    dev.ergenverse.item.ScrollType.SPIRITUAL_SENSE, new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   356→    public static final RegistryObject<dev.ergenverse.item.TechniqueScrollItem> SCROLL_RESTRICTION_ART =
+   357→            ITEMS.register("scroll_restriction_art", () -> new dev.ergenverse.item.TechniqueScrollItem(
+   358→                    dev.ergenverse.item.ScrollType.RESTRICTION_ART, new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)));
+   359→
+   360→    // ── CRON-COMPLETIONIST-40: Canon Sect Banners ─────────────────────────
+   361→    // Right-click to plant, 16-block aura, buffs allies, consumed.
+   362→    public static final RegistryObject<dev.ergenverse.item.SectBannerItem> BANNER_HENG_YUE =
+   363→            ITEMS.register("banner_heng_yue", () -> new dev.ergenverse.item.SectBannerItem(
+   364→                    dev.ergenverse.item.BannerType.HENG_YUE, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.RARE)));
+   365→    public static final RegistryObject<dev.ergenverse.item.SectBannerItem> BANNER_TENG_FAMILY =
+   366→            ITEMS.register("banner_teng_family", () -> new dev.ergenverse.item.SectBannerItem(
+   367→                    dev.ergenverse.item.BannerType.TENG_FAMILY, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.RARE)));
+   368→    public static final RegistryObject<dev.ergenverse.item.SectBannerItem> BANNER_TIAN_SHUI =
+   369→            ITEMS.register("banner_tian_shui", () -> new dev.ergenverse.item.SectBannerItem(
+   370→                    dev.ergenverse.item.BannerType.TIAN_SHUI, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
+   371→    public static final RegistryObject<dev.ergenverse.item.SectBannerItem> BANNER_SOUL_REFINING =
+   372→            ITEMS.register("banner_soul_refining", () -> new dev.ergenverse.item.SectBannerItem(
+   373→                    dev.ergenverse.item.BannerType.SOUL_REFINING, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.RARE)));
+   374→    public static final RegistryObject<dev.ergenverse.item.SectBannerItem> BANNER_XUAN_DAO =
+   375→            ITEMS.register("banner_xuan_dao", () -> new dev.ergenverse.item.SectBannerItem(
+   376→                    dev.ergenverse.item.BannerType.XUAN_DAO, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.RARE)));
+   377→
+   378→    public static void register(IEventBus modEventBus) {
+   379→        ITEMS.register(modEventBus);
+   380→        CREATIVE_TABS.register(modEventBus);
+   381→        ERGENVERSE_ITEMS_TAB = CREATIVE_TABS.register("ergenverse_items", () ->
+   382→                CreativeModeTab.builder()
+   383→                        .title(Component.literal("Ergenverse Items"))
+   384→                        .icon(() -> new ItemStack(JADE_SLIP.get()))
+   385→                        .displayItems((params, output) -> {
+   386→                            // CRON-COMPLETIONIST-57: Populate creative tab with ALL items
+   387→                            output.accept(JADE_SLIP.get());
+   388→                            output.accept(JADE_SLIP_BLANK.get());
+   389→                            output.accept(MEDITATION_MAT.get());
+   390→                            // Crafting materials
+   391→                            output.accept(dev.ergenverse.block.ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().asItem());
+   392→                            output.accept(SPIRIT_STONE_FRAGMENT.get());
+   393→                            output.accept(IRON_SAND.get());
+   394→                            output.accept(COLD_IRON_INGOT.get());
+   395→                            output.accept(SPIRIT_IRON_INGOT.get());
+   396→                            output.accept(BEAST_BONE.get());
+   397→                            output.accept(BEAST_CORE.get());
+   398→                            output.accept(WOLF_CORE.get());
+   399→                            output.accept(RABBIT_BLOOD_ESSENCE.get());
+   400→                            output.accept(SPIRIT_HERB_SEED.get());
+   401→                            output.accept(SPIRIT_INK.get());
+   402→                            output.accept(FORMATION_FLAG_BLANK.get());
+   403→                            output.accept(TALISMAN_PAPER_BLANK.get());
+   404→                            output.accept(CAVE_DWELLING_CORE.get());
+   405→                            // Pills
+   406→                            output.accept(QI_GATHERING_PILL.get());
+   407→                            output.accept(FOUNDATION_PILL.get());
+   408→                            output.accept(PURIFICATION_PILL.get());
+   409→                            output.accept(SOUL_MENDING_PILL.get());
+   410→                            output.accept(BLOOD_SOUL_PILL.get());
+   411→                            output.accept(MINOR_HEALING_PILL.get());
+   412→                            output.accept(WASTE_PILL.get());
+   413→                            output.accept(SPIRIT_PILL.get());
+   414→                            // Flying swords (registered by WangLinItems, not here)
+   415→                            output.accept(GOD_SLAYING_SWORD.get());
+   416→                            output.accept(FLYING_SWORD.get());
+   417→                            // Talismans
+   418→                            output.accept(FIREBALL_TALISMAN.get());
+   419→                            output.accept(BARRIER_TALISMAN.get());
+   420→                            output.accept(LIGHTNING_TALISMAN.get());
+   421→                            output.accept(SHIELD_TALISMAN.get());
+   422→                            output.accept(SWORD_QI_TALISMAN.get());
+   423→                            output.accept(SPEED_BOOST_TALISMAN.get());
+   424→                            output.accept(LIGHT_TALISMAN.get());
+   425→                            output.accept(TELEPORT_TALISMAN.get());
+   426→                            // CRON-COMPLETIONIST-7: Soul Bead
+   427→                            output.accept(SOUL_BEAD.get());
+   428→                            // Scrolls
+   429→                            output.accept(SCROLL_QI_GATHERING.get());
+   430→                            output.accept(SCROLL_SWORD_TECHNIQUE.get());
+   431→                            output.accept(SCROLL_BODY_REFINEMENT.get());
+   432→                            output.accept(SCROLL_FIRE_CONTROL.get());
+   433→                            output.accept(SCROLL_SPIRITUAL_SENSE.get());
+   434→                            output.accept(SCROLL_RESTRICTION_ART.get());
+   435→                            // Banners
+   436→                            output.accept(BANNER_HENG_YUE.get());
+   437→                            output.accept(BANNER_TENG_FAMILY.get());
+   438→                            output.accept(BANNER_TIAN_SHUI.get());
+   439→                            output.accept(BANNER_SOUL_REFINING.get());
+   440→                            output.accept(BANNER_XUAN_DAO.get());
+   441→                            // CRON-COMPLETIONIST-67: Canon items
+   442→                            output.accept(STORAGE_RING.get());
+   443→                            output.accept(SOUL_GOURD.get());
+   444→                            output.accept(CULTIVATION_JOURNAL.get());
+   445→                        })
+   446→                        .build());
+   447→        Ergenverse.LOGGER.info("[Ergenverse] ErgenverseItems: registered jade_slip utility item.");
+   448→    }
+   449→}
+   450→
