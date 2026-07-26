@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 /**
- * XuanDaoSectBuilder — FULLY hand-built Xuan Dao Sect (悬道宗).
+ * XuanDaoSectBuilder — FULLY hand-built Xuan Dao Sect (玄道宗).
  *
  * <p>Constitution: "The world is completely hand-crafted, accurate to the novels.
  * NEVER write a script that replaces vanilla blocks with other blocks as a shortcut.
@@ -34,8 +34,8 @@ import javax.annotation.Nullable;
  *       stones. Multiple practice arrays on flat ground.</li>
  *   <li>Sealed Meditation Chambers — individual stone rooms with restriction
  *       blocking the outside, used for deep cultivation comprehension.</li>
- *   <li>Library Tower — 3-story pagoda housing restriction art scrolls.
- *   *   <li>Refinement Furnace — spirit fire furnace for refining restriction
+ *   <li>Library Tower — 3-story pagoda housing restriction art scrolls.</li>
+ *   <li>Refinement Furnace — spirit fire furnace for refining restriction
  *       materials.</li>
  *   <li>Courtyard — open central plaza with a spirit spring.</li>
  * </ul>
@@ -129,10 +129,27 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     private static final BlockState SPRUCE_FENCE   = Blocks.SPRUCE_FENCE.defaultBlockState();
     private static final BlockState SMOOTH_SLAB    = Blocks.SMOOTH_STONE_SLAB.defaultBlockState();
 
-    /** Base Y level for the sect. All buildings sit on this plane. */
+    /**
+     * <b>DEPRECATED (CRON-COMPLETIONIST-70).</b> Prior to CRON-70, all 12
+     * district builders referenced this constant directly, which placed
+     * the entire sect at y=-2 (underground, unreachable). CRON-70 refactored
+     * every district builder to use {@code c.getY()} (the resolved canon
+     * surface Y from {@link #getSectCenter}). The constant is retained
+     * only as a defensive reference for the legacy Javadoc above; no live
+     * code path reads it. Do NOT add new usages.
+     *
+     * <p>History: this was originally {@code -2} as a placeholder during
+     * initial scaffolding (CRON-65). The intent was "y=0 relative to sea
+     * level", but {@code -2} was a typo that survived 5 cron rounds
+     * (CRON-65 through CRON-69) because the symptom — a buried, unreachable
+     * sect — was masked by the chunk-materializer's no-op behavior on
+     * already-loaded chunks. CRON-69 critique #4 flagged this as the
+     * highest-impact deferred fix.
+     */
+    @Deprecated
     private static final int BASE_Y = -2;
 
-    // ── Canon center (CRON-COMPLETIONIST-66) ───────────────────────────
+    // ── Canon center (CRON-COMPLETIONIST-66, fixed CRON-70) ────────────
     // The sect is ALWAYS at PlanetSuzakuBlueprint.XUAN_DAO_SECT coordinates.
     // This eliminates the prior bug where the registry passed BlockPos.ZERO
     // and the sect was built at (0,0,0) instead of its canon coordinate
@@ -145,24 +162,40 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     public static final int SECT_Z = PlanetSuzakuBlueprint.XUAN_DAO_SECT.z;
 
     /**
-     * Resolve the sect center BlockPos.
+     * Resolve the sect center BlockPos using the canon surface height from
+     * {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}.
      *
-     * <p><b>CRON-COMPLETIONIST-67 NOTE:</b> XuanDaoSectBuilder's district
-     * builders use absolute Y from {@code BASE_Y = -2}, NOT relative Y from
-     * {@code center.getY()}. Switching getSectCenter to use
-     * {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}
-     * would change the center Y but NOT the district placements (they'd
-     * still be at y=-2). This would create a worse inconsistency — the
-     * isAlreadyBuilt guard (which checks center.offset(0, 3, -3)) would
-     * check a surface position while the sect is buried at y=-2.
+     * <p><b>CRON-COMPLETIONIST-70:</b> the prior implementation returned
+     * {@code new BlockPos(SECT_X, BASE_Y, SECT_Z)} where {@code BASE_Y = -2},
+     * which placed the entire sect 2 blocks below the world's bedrock floor
+     * (effectively unreachable). All 12 district builders also referenced
+     * {@code BASE_Y} directly, so the entire sect was buried at y=-2.
      *
-     * <p>Leaving {@code BASE_Y} as the center Y for now. A future round must
-     * refactor all 12+ district builders to use {@code c.getY() + offset}
-     * instead of {@code BASE_Y + offset}, THEN switch getSectCenter to
-     * canonSurfaceHeight. Tracked as CRON-67 critique #4.
+     * <p>The fix has two parts:
+     * <ol>
+     *   <li>This method now returns the canon surface Y (same pure function
+     *       the chunk generator uses to shape the surface at (SECT_X, SECT_Z)).
+     *       The sect sits ON the surface, consistent with all other builders
+     *       (HengYue, TengFamily, TianShui, NanDou, SoulRefining) which
+     *       already use this pattern.</li>
+     *   <li>All 12 district builders were refactored to use {@code c.getY()}
+     *       instead of the {@code BASE_Y} constant. See the diff for the
+     *       mechanical replacement in buildEntryPath, buildOuterGate,
+     *       buildCentralCourtyard, buildRestrictionWorkshop, buildLibraryTower,
+     *       buildSealedMeditationWing, buildRefinery, buildElderHall,
+     *       buildDiscipleDormitories, buildOuterWall, buildSpiritHerbGarden,
+     *       buildLanterns.</li>
+     * </ol>
+     *
+     * <p>This closes the deferred y=-2 bug from CRON-67 critique #4 and
+     * CRON-69 critique #4. The provenance-aware rebuild guard (CRON-69)
+     * is now operationally useful for Xuan Dao: the marker at
+     * {@code center.offset(0, 3, -3)} is at a reachable surface position,
+     * so a player breaking it actually triggers the guard.
      */
     public static BlockPos getSectCenter(ServerLevel level) {
-        return new BlockPos(SECT_X, BASE_Y, SECT_Z);
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
+        return new BlockPos(SECT_X, surfaceY, SECT_Z);
     }
 
     // ── Chunk-scoped build infrastructure (CRON-COMPLETIONIST-66) ──────
@@ -286,8 +319,22 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
         buildSpiritHerbGarden(level, center);
         buildLanterns(level, center);
 
-        // Mark built (same pattern as HengYueSect).
-        sb(level, center.above(2), SMOOTH_SLAB, 3);
+        // ── Marker block (CRON-COMPLETIONIST-70 fix) ─────────────────────
+        // Place a SEA_LANTERN at center.offset(0, 3, -3) — the position
+        // isAlreadyBuilt checks. Prior to CRON-70, buildInternal placed a
+        // SMOOTH_SLAB at center.above(2) (cy+2) while isAlreadyBuilt
+        // checked center.offset(0, 3, -3) (cy+3, cz-3) for SEA_LANTERN.
+        // The two NEVER matched, so isAlreadyBuilt always returned false
+        // (unless a player/sim delta existed at the marker position),
+        // meaning build() always re-ran the full construction. This is
+        // a latent idempotency bug, separate from the y=-2 bug but in
+        // the same file — fixed together for coherence.
+        //
+        // The marker is a SEA_LANTERN at (cx, cy+3, cz-3): visually subtle
+        // (one of many lanterns in the sect), thematically appropriate
+        // (the sect is lantern-lit for scholarly atmosphere), and at a
+        // position the player is unlikely to disturb during normal play.
+        sb(level, center.offset(0, 3, -3), SEA_LANTERN, 3);
     }
 
     /**
@@ -313,22 +360,23 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
 
     /** Entry path: 20-block cobblestone road from south, ending at the outer gate. */
     private static void buildEntryPath(ServerLevel level, BlockPos c) {
+        int gy = c.getY(); // CRON-70: was BASE_Y (-2), now canon surface Y
         // 20-block cobblestone path from south
         for (int i = 0; i < 10; i++) {
-            set(level, c.getX() - 1, BASE_Y, c.getZ() + i * 2, COBBLE);
-            set(level, c.getX() + 1, BASE_Y, c.getZ() + i * 2, COBBLE);
+            set(level, c.getX() - 1, gy, c.getZ() + i * 2, COBBLE);
+            set(level, c.getX() + 1, gy, c.getZ() + i * 2, COBBLE);
         }
         // Decorative lanterns along the path
         for (int i = 1; i < 10; i += 2) {
-            set(level, c.getX() - 2, BASE_Y + 1, c.getZ() + i * 2, SEA_LANTERN);
-            set(level, c.getX() + 2, BASE_Y + 1, c.getZ() + i * 2, SEA_LANTERN);
+            set(level, c.getX() - 2, gy + 1, c.getZ() + i * 2, SEA_LANTERN);
+            set(level, c.getX() + 2, gy + 1, c.getZ() + i * 2, SEA_LANTERN);
         }
     }
 
     /** Outer gate: single arch, 5-wide × 5-tall, with iron-bar doors. */
     private static void buildOuterGate(ServerLevel level, BlockPos c) {
         int gz = c.getZ();
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // Pillars (2 blocks thick on each side)
         fill(level, c.getX() - 3, gy, gz - 1, 7, 5, BRICK_WALL);
         fill(level, c.getX() + 3, gy, gz - 1, 7, 5, BRICK_WALL);
@@ -348,7 +396,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     /** Central courtyard: 20×16 open plaza with cobblestone floor, spirit spring. */
     private static void buildCentralCourtyard(ServerLevel level, BlockPos c) {
         int gz = c.getZ();
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // Floor
         fill(level, c.getX() - 10, gy - 1, gz - 8, 20, 16, COBBLE);
         // Spirit spring pool (5×3 water source at center-north)
@@ -373,7 +421,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     /** Restriction workshop: 12×10 practice area with stone array markers. */
     private static void buildRestrictionWorkshop(ServerLevel level, BlockPos c) {
         int gz = c.getZ() + 18; // East of courtyard
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // Floor
         fill(level, c.getX() - 6, gy - 1, gz, 12, 10, COBBLE);
         // 4 practice array markers (2×2 lapis pillars)
@@ -403,7 +451,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     private static void buildLibraryTower(ServerLevel level, BlockPos c) {
         int gx = c.getX() - 12;
         int gz = c.getZ() - 12;
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // Foundation (5×5)
         fill(level, gx - 2, gy - 1, gz - 2, 5, 5, BRICK_WALL);
         fill(level, gx - 2, gy - 1, gz + 3, 5, 1, BRICK_WALL);
@@ -449,7 +497,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     /** Sealed meditation wing: 6 individual chambers (3 per side, mirrored). */
     private static void buildSealedMeditationWing(ServerLevel level, BlockPos c) {
         int gz = c.getZ() + 12;
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // East side — 3 chambers
         for (int i = 0; i < 3; i++) {
             int cz = gz + i * 4;
@@ -488,7 +536,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     private static void buildRefinery(ServerLevel level, BlockPos c) {
         int gx = c.getX() + 8;
         int gz = c.getZ() + 10;
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // Floor
         fill(level, gx - 3, gy - 1, gz - 2, 7, 5, COBBLE);
         // Walls
@@ -516,7 +564,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     private static void buildElderHall(ServerLevel level, BlockPos c) {
         int gx = c.getX() - 8;
         int gz = c.getZ() - 14;
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // Floor
         fill(level, gx - 3, gy - 1, gz - 2, 7, 6, SPRUCE_PLANK);
         // Walls
@@ -547,7 +595,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
 
     /** Disciple dormitories: 4 small rooms (2 per side of courtyard). */
     private static void buildDiscipleDormitories(ServerLevel level, BlockPos c) {
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // South side — 2 rooms
         int[][] southRooms = {{-6, -6}, {-2, -6}};
         for (int[] off : southRooms) {
@@ -579,7 +627,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
 
     /** Outer wall: perimeter wall with corner pillars and lanterns. */
     private static void buildOuterWall(ServerLevel level, BlockPos c) {
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // South wall (entry side)
         fill(level, c.getX() - 16, gy, c.getZ() - 8, 32, 4, BRICK_WALL);
         // North wall
@@ -604,7 +652,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     private static void buildSpiritHerbGarden(ServerLevel level, BlockPos c) {
         int gx = c.getX() + 10;
         int gz = c.getZ() + 10;
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // Soil floor
         fill(level, gx - 2, gy - 1, gz - 2, 5, 4, DIRT);
         // Water irrigation channel
@@ -631,7 +679,7 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
 
     /** Lanterns throughout the sect for atmosphere. */
     private static void buildLanterns(ServerLevel level, BlockPos c) {
-        int gy = BASE_Y;
+        int gy = c.getY(); // CRON-70: was BASE_Y
         // Along the entry path
         for (int i = 1; i < 10; i += 2) {
             set(level, c.getX() - 2, gy + 1, c.getZ() + i * 2, SEA_LANTERN);
