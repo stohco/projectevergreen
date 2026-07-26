@@ -41,11 +41,29 @@ import java.util.function.Supplier;
  *     still needed (no client available).
  *
  * SPIRIT_DEER (SpiritDeerModel.java, 474 lines):
- *   - Likely same defect as Qilin (body parts parented to root). Audit needed.
+ *   - FIXED (CRON-82): Same defect as Qilin — body_hind, neck_base, tail, and
+ *     all 4 thighs were ALL direct children of root. WORSE than Qilin: the deer
+ *     animated `this.root.xRot = spineFlex` (not bodyChest.xRot), which rotated
+ *     the ENTIRE deer as one rigid block — anatomically WRONG (a deer's spine
+ *     flexes between chest and hind, not the whole body).
+ *     FIX SHIPPED: Reparented body_hind/neck_base/front-thighs → body_chest;
+ *     tail/back-thighs → body_hind. All PartPose offsets recomputed via
+ *     subtraction. Verified by /home/z/my-project/scripts/cron82_verify_deer_reparent.py.
+ *     Animation fix: (1) moved spineFlex from root.xRot to bodyChest.xRot +
+ *     added bodyHind.xRot = -1.5*spineFlex for S-curve; (2) added
+ *     bodyChest/bodyHind xRot reset (0.0F) to resting/swimming/sprinting blocks
+ *     to prevent stale spine-flex state on pose transitions (a pre-existing bug
+ *     pattern that became visible once spine flex moved off root); (3) kept
+ *     whole-body rotations (swim pitch, sprint pitch, attack rear-up, death
+ *     collapse) on root — these are anatomically whole-body, not spine flex.
+ *     Score 9/10 — closes the second Tier 1 defect. Runtime verification still
+ *     needed (no client available).
  *
  * SPIRIT_HAWK (SpiritHawkModel.java, 510 lines):
  *   - Wings are visual-only (hitbox is body-only per vanilla parrot). Verify
  *     wings are parented to body so flap animation propagates correctly.
+ *   - AUDIT NEEDED (CRON-83 candidate): check if body parts are parented to
+ *     root like Qilin/Deer were.
  *
  * ── TIER 2 — Anatomy proportion issues ──────────────────────────────────────
  *
@@ -90,12 +108,13 @@ import java.util.function.Supplier;
  *
  * PRIORITIZED NEXT STEPS for future CRON rounds:
  *   1. DONE (CRON-81): Fix QilinModel parent hierarchy (Tier 1) — shipped.
- *   2. Audit SpiritDeerModel parent hierarchy (Tier 1) — likely same defect.
- *   3. Add ease-in/ease-out to walk cycles (Tier 3).
- *   4. Add pose-transition LERP to SpiritBeastEntity + models (Tier 3).
- *   5. Deepen Qilin chest and lengthen neck (Tier 2).
- *   6. Multi-tine deer antlers (Tier 2).
- *   7. Emissive qi layer on Qilin (Tier 4).
+ *   2. DONE (CRON-82): Audit + fix SpiritDeerModel parent hierarchy (Tier 1) — shipped.
+ *   3. Audit SpiritHawkModel parent hierarchy (Tier 1) — likely same defect.
+ *   4. Add ease-in/ease-out to walk cycles (Tier 3).
+ *   5. Add pose-transition LERP to SpiritBeastEntity + models (Tier 3).
+ *   6. Deepen Qilin chest and lengthen neck (Tier 2).
+ *   7. Multi-tine deer antlers (Tier 2) — CRON-28 already shipped 3-tine branched; refine.
+ *   8. Emissive qi layer on Qilin (Tier 4).
  */
 public final class SpiritBeastModelLayers {
 

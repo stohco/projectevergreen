@@ -52,6 +52,33 @@ package dev.ergenverse.client.model;
  *   - Texture UVs re-derived for new part layout — existing spirit_deer.png
  *     will scramble. Regeneration script required.
  *   - Graze/alert still blind sin wave (not driven by synced startled flag).
+ *
+ * CRON-COMPLETIONIST-82: PARENT HIERARCHY REFACTOR (closes CRON-80 audit Tier 1 #2).
+ *   BEFORE: body_hind, neck_base, tail, and all 4 thighs were ALL direct
+ *     children of root. NONE were parented to the body chain. WORSE than the
+ *     Qilin: the deer animated `this.root.xRot = spineFlex` (not bodyChest.xRot),
+ *     which rotated the ENTIRE deer as one rigid block — anatomically WRONG
+ *     (a deer's spine flexes between chest and hind, not the whole body).
+ *   AFTER: Proper quadruped hierarchy (matches Qilin post-CRON-81):
+ *     root → body_chest → {body_hind, neck_base, front_left_thigh, front_right_thigh}
+ *                 body_hind → {tail, back_left_thigh, back_right_thigh}
+ *     neck_base → neck_tip → head (already correct pre-CRON-82)
+ *     head → {ears, antlers} (already correct pre-CRON-82)
+ *     All PartPose offsets recomputed via simple subtraction (Rx-Px, Ry-Py, Rz-Pz)
+ *     since new parents (body_chest, body_hind) have no PartPose rotation.
+ *     Verified by /home/z/my-project/scripts/cron82_verify_deer_reparent.py.
+ *   ANIMATION FIX:
+ *     1. Walk/flee/idle block: changed `this.root.xRot = spineFlex` →
+ *        `this.bodyChest.xRot = spineFlex` + added `this.bodyHind.xRot = -spineFlex*1.5F`
+ *        (S-curve preservation: bodyHind world xRot = spineFlex + (-1.5*spineFlex)
+ *        = -0.5*spineFlex, same as a root-level -0.5*spineFlex would have been).
+ *     2. Resting/swimming/sprinting blocks: added `this.bodyChest.xRot = 0.0F;
+ *        this.bodyHind.xRot = 0.0F;` to reset spine flex (prevents stale state
+ *        when transitioning from walk to other poses — a pre-existing bug
+ *        pattern that became visible once spine flex moved off root).
+ *     3. Whole-body rotations (swim pitch -0.3, sprint pitch sin(sp+π/2)*0.08*lsa,
+ *        attack rear-up lunge*0.3, death collapse *-0.3) stay on root — these
+ *        are anatomically whole-body rotations, not spine flex.
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -88,20 +115,23 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
     public SpiritDeerModel(ModelPart root) {
         this.root = root;
         this.bodyChest = root.getChild("body_chest");
-        this.bodyHind = root.getChild("body_hind");
-        this.neckBase = root.getChild("neck_base");
+        // CRON-82: body_hind, neck_base now children of body_chest (was root)
+        this.bodyHind = this.bodyChest.getChild("body_hind");
+        this.neckBase = this.bodyChest.getChild("neck_base");
         this.neckTip = this.neckBase.getChild("neck_tip");
         this.head = this.neckTip.getChild("head");
         this.earLeft = this.head.getChild("ear_left");
         this.earRight = this.head.getChild("ear_right");
-        this.tail = root.getChild("tail");
-        this.frontLeftThigh = root.getChild("front_left_thigh");
+        // CRON-82: tail now child of body_hind (was root)
+        this.tail = this.bodyHind.getChild("tail");
+        // CRON-82: front thighs now children of body_chest; back thighs now children of body_hind (was root)
+        this.frontLeftThigh = this.bodyChest.getChild("front_left_thigh");
         this.frontLeftShin = this.frontLeftThigh.getChild("shin");
-        this.frontRightThigh = root.getChild("front_right_thigh");
+        this.frontRightThigh = this.bodyChest.getChild("front_right_thigh");
         this.frontRightShin = this.frontRightThigh.getChild("shin");
-        this.backLeftThigh = root.getChild("back_left_thigh");
+        this.backLeftThigh = this.bodyHind.getChild("back_left_thigh");
         this.backLeftShin = this.backLeftThigh.getChild("shin");
-        this.backRightThigh = root.getChild("back_right_thigh");
+        this.backRightThigh = this.bodyHind.getChild("back_right_thigh");
         this.backRightShin = this.backRightThigh.getChild("shin");
         this.antlerLeftTip = this.head.getChild("antler_left_base").getChild("mid").getChild("tip");
         this.antlerRightTip = this.head.getChild("antler_right_base").getChild("mid").getChild("tip");
@@ -121,17 +151,22 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offset(0.0F, 6.0F, -2.0F));
 
         // ── CRON-COMPLETIONIST-70: body_hind with CubeDeformation ──
+        // CRON-82: child of body_chest (was root).
+        // World pos preserved: old root-relative (0, 6, 2.5) - body_chest (0, 6, -2) = (0, 0, 4.5)
         CubeDeformation hindSoft = new CubeDeformation(0.2F);
-        PartDefinition bodyHind = root.addOrReplaceChild("body_hind",
+        PartDefinition bodyHind = bodyChest.addOrReplaceChild("body_hind",
                 CubeListBuilder.create().texOffs(14, 0)
                         .addBox(-1.25F, -2.25F, 0.0F, 2.5F, 4.5F, 5.0F, hindSoft),
-                PartPose.offset(0.0F, 6.0F, 2.5F));
+                PartPose.offset(0.0F, 0.0F, 4.5F));
 
         // ── neck_base : lower neck segment (wider, angled up-forward) ──────
-        PartDefinition neckBase = root.addOrReplaceChild("neck_base",
+        // CRON-82: child of body_chest (was root).
+        // World pos preserved: old root-relative (0, 3.5, -4) - body_chest (0, 6, -2) = (0, -2.5, -2)
+        // PartPose rotation (+0.9 xRot) preserved verbatim — body_chest has no PartPose rotation.
+        PartDefinition neckBase = bodyChest.addOrReplaceChild("neck_base",
                 CubeListBuilder.create().texOffs(24, 0)
                         .addBox(-0.6F, -2.5F, -0.6F, 1.2F, 2.5F, 1.2F),
-                PartPose.offsetAndRotation(0.0F, 3.5F, -4.0F, 0.9F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -2.5F, -2.0F, 0.9F, 0.0F, 0.0F));
 
         // ── neck_tip : upper neck segment (narrower, S-curve continuation) ─────
         PartDefinition neckTip = neckBase.addOrReplaceChild("neck_tip",
@@ -220,38 +255,47 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offsetAndRotation(0.0F, -0.5F, 0.0F, 0.35F, 0.0F, 0.6F));
 
         // ── CRON-COMPLETIONIST-70: tail with CubeDeformation for puffy look ──
+        // CRON-82: child of body_hind (was root).
+        // World pos preserved: old root-relative (0, 4, 4) - body_hind (0, 6, 2.5) = (0, -2, 1.5)
+        // PartPose rotation (+0.3 xRot) preserved verbatim — body_hind has no PartPose rotation.
+        // Tail now FOLLOWS body_hind's spine flex (S-curve propagation).
         CubeDeformation tailSoft = new CubeDeformation(0.3F);
-        root.addOrReplaceChild("tail",
+        bodyHind.addOrReplaceChild("tail",
                 CubeListBuilder.create().texOffs(40, 0)
                         .addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 2.0F, tailSoft),
-                PartPose.offsetAndRotation(0.0F, 4.0F, 4.0F, 0.3F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -2.0F, 1.5F, 0.3F, 0.0F, 0.0F));
 
         // ── legs : 4 slim legs, thigh + shin, feet at y=15 ───────────────
-        root.addOrReplaceChild("front_left_thigh",
+        // CRON-82: front thighs → body_chest (attach at shoulders);
+        //          back thighs → body_hind (attach at haunches). Was: all 4 at root.
+        // World pos preserved via subtraction (see cron82_verify_deer_reparent.py).
+        // Legs now follow body pitch (anatomically correct — quadruped legs
+        // pivot with the torso, not independently of it).
+        PartDefinition frontLeftThigh = bodyChest.addOrReplaceChild("front_left_thigh",
                 CubeListBuilder.create().texOffs(0, 28).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
-                PartPose.offset(-1.5F, 9.0F, -3.0F));
-        root.getChild("front_left_thigh").addOrReplaceChild("shin",
+                PartPose.offset(-1.5F, 3.0F, -1.0F));
+        frontLeftThigh.addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(0, 34).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        root.addOrReplaceChild("front_right_thigh",
+        PartDefinition frontRightThigh = bodyChest.addOrReplaceChild("front_right_thigh",
                 CubeListBuilder.create().texOffs(8, 28).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
-                PartPose.offset(1.5F, 9.0F, -3.0F));
-        root.getChild("front_right_thigh").addOrReplaceChild("shin",
+                PartPose.offset(1.5F, 3.0F, -1.0F));
+        frontRightThigh.addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(8, 34).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        root.addOrReplaceChild("back_left_thigh",
+        PartDefinition backLeftThigh = bodyHind.addOrReplaceChild("back_left_thigh",
                 CubeListBuilder.create().texOffs(0, 40).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
-                PartPose.offset(-1.5F, 9.0F, 3.0F));
-        root.getChild("back_left_thigh").addOrReplaceChild("shin",
+                PartPose.offset(-1.5F, 3.0F, 0.5F));
+        backLeftThigh.addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(0, 46).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        root.addOrReplaceChild("back_right_thigh",
+        PartDefinition backRightThigh = bodyHind.addOrReplaceChild("back_right_thigh",
                 CubeListBuilder.create().texOffs(8, 40).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
-                PartPose.offset(1.5F, 9.0F, 3.0F));
-        root.getChild("back_right_thigh").addOrReplaceChild("shin",
+                PartPose.offset(1.5F, 3.0F, 0.5F));
+        backRightThigh.addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(8, 46).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
@@ -284,6 +328,9 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         if (resting) {
             // Deer rests: body lowers, legs fold under, neck curls, head on ground
             // CRON-COMPLETIONIST-17: Added breathing, ear twitch, tail micro-sway
+            // CRON-82: Reset spine flex (was set by walk block; prevent stale state)
+            this.bodyChest.xRot = 0.0F;
+            this.bodyHind.xRot = 0.0F;
             float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.12F;
             float earTwitch = (ageInTicks % 80 < 4) ? (float) Math.sin(ageInTicks * 1.8F) * 0.08F : 0.0F;
             float tailSway = (float) Math.sin(ageInTicks * 0.1F) * 0.06F;
@@ -304,6 +351,11 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.earRight.zRot = 0.4F - earTwitch;
         } else if (swimming) {
             // CRON-COMPLETIONIST-17: Added vertical bob synchronized with paddle.
+            // CRON-82: Reset spine flex (was set by walk block; prevent stale state).
+            // Whole-body pitch (root.xRot = -0.3) is intentional — deer pitches
+            // down to swim, not spine-flexes.
+            this.bodyChest.xRot = 0.0F;
+            this.bodyHind.xRot = 0.0F;
             float paddle = ageInTicks * 1.0F;
             float bob = (float) Math.sin(paddle * 0.5F) * 0.12F;
             this.root.xRot = -0.3F;
@@ -324,6 +376,11 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
             this.earRight.zRot = 0.3F;
         } else if (sprinting) {
             // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — deer gallop, stotting bounce ──
+            // CRON-82: Reset spine flex (was set by walk block; prevent stale state).
+            // Whole-body pitch (root.xRot = sin(sp+π/2)*0.08*lsa) is intentional —
+            // deer pitches as a unit during sprint, not spine-flexes.
+            this.bodyChest.xRot = 0.0F;
+            this.bodyHind.xRot = 0.0F;
             float sprintPhase = limbSwing * 2.0F;
             float sprintAmp = 1.4F * limbSwingAmount;
             float sp = sprintPhase * 0.6662F;
@@ -370,8 +427,13 @@ public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
         this.backRightShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase))            * 0.6F * limbSwingAmount;
 
         // ── CRON-16: Spine flex on gait ──────────────────────────
+        // CRON-82: Moved from root.xRot to bodyChest.xRot (was rotating whole deer).
+        // Now only the chest flexes; body_hind counter-flexes for S-curve.
+        // bodyHind LOCAL xRot = -1.5*spineFlex (so world = spineFlex + (-1.5*spineFlex)
+        // = -0.5*spineFlex — same S-curve as a root-level -0.5*spineFlex would have been).
         float spineFlex = (float) Math.sin(phase + Math.PI * 0.5F) * 0.06F * limbSwingAmount;
-        this.root.xRot = spineFlex;
+        this.bodyChest.xRot = spineFlex;
+        this.bodyHind.xRot = -spineFlex * 1.5F;
 
         // ── head behaviour ───────────────────────────────────────────────
         // CRON-19: Neck bobs with walk cycle (was static sin(age) bob)
