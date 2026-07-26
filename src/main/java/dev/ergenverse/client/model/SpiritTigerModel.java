@@ -107,9 +107,17 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
 
     public SpiritTigerModel(ModelPart root) {
         this.root = root;
+        // CRON-COMPLETIONIST-85: Reparented neck/tail/thighs from root to body_chest/body_hip.
+        // Neck attaches to chest (anatomy: neck rises from shoulders/thorax).
+        // Tail attaches to hip (anatomy: tail extends from pelvis).
+        // Front thighs attach to chest (anatomy: front legs/shoulders).
+        // Back thighs attach to hip (anatomy: hind legs/pelvis).
+        // This makes spine-flex animation (bodyChest.xRot/bodyHip.xRot) propagate
+        // to the neck, tail, and legs — previously they were rigid because they
+        // were parented to root, which has no spine-flex animation.
         this.bodyChest = root.getChild("body_chest");
         this.bodyHip = root.getChild("body_hip");
-        this.neck = root.getChild("neck");
+        this.neck = this.bodyChest.getChild("neck");
         // CRON-COMPLETIONIST-78: Fix head/neck hierarchy — head must be child of neck
         this.head = this.neck.getChild("head");
         this.jaw = this.head.getChild("jaw");
@@ -117,17 +125,17 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
         this.earRight = this.head.getChild("ear_right");
         this.cheekLeft = this.head.getChild("cheek_left");
         this.cheekRight = this.head.getChild("cheek_right");
-        this.tailBase = root.getChild("tail_base");
+        this.tailBase = this.bodyHip.getChild("tail_base");
         this.tailMid1 = this.tailBase.getChild("mid1");
         this.tailMid2 = this.tailMid1.getChild("mid2");
         this.tailTip = this.tailMid2.getChild("tip");
-        this.frontLeftThigh = root.getChild("front_left_thigh");
+        this.frontLeftThigh = this.bodyChest.getChild("front_left_thigh");
         this.frontLeftShin = this.frontLeftThigh.getChild("shin");
-        this.frontRightThigh = root.getChild("front_right_thigh");
+        this.frontRightThigh = this.bodyChest.getChild("front_right_thigh");
         this.frontRightShin = this.frontRightThigh.getChild("shin");
-        this.backLeftThigh = root.getChild("back_left_thigh");
+        this.backLeftThigh = this.bodyHip.getChild("back_left_thigh");
         this.backLeftShin = this.backLeftThigh.getChild("shin");
-        this.backRightThigh = root.getChild("back_right_thigh");
+        this.backRightThigh = this.bodyHip.getChild("back_right_thigh");
         this.backRightShin = this.backRightThigh.getChild("shin");
         this.eyeLeft = this.head.getChild("eye_left");
         this.eyeRight = this.head.getChild("eye_right");
@@ -155,10 +163,13 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
 
         // ── neck : very short, thick — barely visible (big cat anatomy) ────
         // CRON-COMPLETIONIST-78: Capture neck PartDefinition for head parenting
-        PartDefinition neckDef = root.addOrReplaceChild("neck",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyChest.
+        // Old root-space offset was (0, 3.5, -6.0). body_chest is at (0, 5.5, -3.0).
+        // New offset = (0-0, 3.5-5.5, -6.0-(-3.0)) = (0, -2.0, -3.0). Rotation unchanged.
+        PartDefinition neckDef = bodyChest.addOrReplaceChild("neck",
                 CubeListBuilder.create().texOffs(20, 0)
                         .addBox(-1.5F, -1.0F, -1.5F, 3.0F, 2.0F, 2.5F, softDeform),
-                PartPose.offsetAndRotation(0.0F, 3.5F, -6.0F, -0.3F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -2.0F, -3.0F, -0.3F, 0.0F, 0.0F));
 
         // ── head : broad rounded skull + wide cheeks + rounded ears ──────
         PartDefinition head = neckDef.addOrReplaceChild("head",
@@ -213,10 +224,13 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
         // ── tail : 4-segment TAPERED chain (improvement over wolf's 3 uniform) ─
         // Widths: 1.0 → 0.8 → 0.6 → 0.4 → 0.2 (visible taper)
         // Tiger tail is very long and muscular, used for balance during turns.
-        PartDefinition tailBase = root.addOrReplaceChild("tail_base",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyHip.
+        // Old root-space offset was (0, 3.5, 5.5). body_hip is at (0, 5.0, 2.5).
+        // New offset = (0-0, 3.5-5.0, 5.5-2.5) = (0, -1.5, 3.0). Rotation unchanged.
+        PartDefinition tailBase = bodyHip.addOrReplaceChild("tail_base",
                 CubeListBuilder.create().texOffs(28, 14)
                         .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 3.0F, softDeform),
-                PartPose.offsetAndRotation(0.0F, 3.5F, 5.5F, 0.25F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -1.5F, 3.0F, 0.25F, 0.0F, 0.0F));
         PartDefinition tailMid1 = tailBase.addOrReplaceChild("mid1",
                 CubeListBuilder.create().texOffs(28, 20)
                         .addBox(-0.4F, -0.4F, 0.0F, 0.8F, 0.8F, 3.0F, softDeform),
@@ -232,41 +246,47 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
 
         // ── front legs : LARGER than rear (big cat anatomy) ─────────────
         // Front thigh wider (2.5 wide) vs rear (2.0 wide)
-        root.addOrReplaceChild("front_left_thigh",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyChest.
+        // Old root-space offset was (-2.5, 8.5, -5.0). body_chest at (0, 5.5, -3.0).
+        // New offset = (-2.5, 3.0, -2.0).
+        bodyChest.addOrReplaceChild("front_left_thigh",
                 CubeListBuilder.create().texOffs(10, 42)
                         .addBox(-1.25F, 0.0F, -1.0F, 2.5F, 3.5F, 2.0F),
-                PartPose.offset(-2.5F, 8.5F, -5.0F));
-        root.getChild("front_left_thigh").addOrReplaceChild("shin",
+                PartPose.offset(-2.5F, 3.0F, -2.0F));
+        bodyChest.getChild("front_left_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(10, 52)
                         .addBox(-1.25F, 0.0F, -1.0F, 2.5F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.5F, 0.0F));
 
-        root.addOrReplaceChild("front_right_thigh",
+        bodyChest.addOrReplaceChild("front_right_thigh",
                 CubeListBuilder.create().texOffs(20, 42)
                         .addBox(-1.25F, 0.0F, -1.0F, 2.5F, 3.5F, 2.0F),
-                PartPose.offset(2.5F, 8.5F, -5.0F));
-        root.getChild("front_right_thigh").addOrReplaceChild("shin",
+                PartPose.offset(2.5F, 3.0F, -2.0F));
+        bodyChest.getChild("front_right_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(20, 52)
                         .addBox(-1.25F, 0.0F, -1.0F, 2.5F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.5F, 0.0F));
 
         // ── rear legs : narrower, powerful haunches ────────────────────
-        root.addOrReplaceChild("back_left_thigh",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyHip.
+        // Old root-space offset was (-2.0, 8.5, 4.5). body_hip at (0, 5.0, 2.5).
+        // New offset = (-2.0, 3.5, 2.0).
+        bodyHip.addOrReplaceChild("back_left_thigh",
                 CubeListBuilder.create().texOffs(0, 42)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.5F, 2.0F),
-                PartPose.offset(-2.0F, 8.5F, 4.5F));
-        root.getChild("back_left_thigh").addOrReplaceChild("shin",
+                PartPose.offset(-2.0F, 3.5F, 2.0F));
+        bodyHip.getChild("back_left_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(0, 52)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.5F, 0.0F));
 
         // FIX (RE-APPLY-PHASE1): back_right_thigh/shin UVs were duplicates of
         // front_left (both at x=10) — moved to x=30 (free column, tiger tex is 64 wide).
-        root.addOrReplaceChild("back_right_thigh",
+        bodyHip.addOrReplaceChild("back_right_thigh",
                 CubeListBuilder.create().texOffs(30, 42)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.5F, 2.0F),
-                PartPose.offset(2.0F, 8.5F, 4.5F));
-        root.getChild("back_right_thigh").addOrReplaceChild("shin",
+                PartPose.offset(2.0F, 3.5F, 2.0F));
+        bodyHip.getChild("back_right_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(30, 52)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.5F, 0.0F));
@@ -524,6 +544,14 @@ public class SpiritTigerModel extends HierarchicalModel<SpiritBeastEntity> {
         if (entity.deathTime > 0) {
             float t = Math.min(entity.deathTime / 10.0F, 1.0F);
             float collapse = t * t;
+            // CRON-COMPLETIONIST-85: Reset spine rotations to prevent stale-state leak.
+            // Without this, bodyChest.xRot/bodyHip.xRot from the previous pose (walk/sprint
+            // spine flex) would persist and propagate to the reparented neck/tail/thighs,
+            // causing the death collapse to start from a flexed position instead of neutral.
+            this.bodyChest.xRot = 0.0F;
+            this.bodyChest.yRot = 0.0F;
+            this.bodyHip.xRot = 0.0F;
+            this.bodyHip.yRot = 0.0F;
             // Sideways collapse (unlike wolf's forward collapse)
             this.root.xRot = collapse * -0.3F;
             this.root.zRot = collapse * 0.8F; // rolls onto side

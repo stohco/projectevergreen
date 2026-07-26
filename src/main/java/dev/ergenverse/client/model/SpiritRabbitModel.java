@@ -61,16 +61,23 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
 
     public SpiritRabbitModel(ModelPart root) {
         this.root = root;
-        this.head = root.getChild("head");
+        // CRON-COMPLETIONIST-85: Reparented head/front_legs from root to body_chest,
+        // hind_thighs/tail from root to body_rump. Neck attaches to chest, tail to rump,
+        // front legs to chest (shoulders), hind legs to rump (haunches). This is
+        // purely structural — the Rabbit animation doesn't use spine flex, so no
+        // animation changes were needed. World coordinates preserved by offset recalc.
+        ModelPart bodyChest = root.getChild("body_chest");
+        ModelPart bodyRump = root.getChild("body_rump");
+        this.head = bodyChest.getChild("head");
         this.earLeft = this.head.getChild("ear_left");
         this.earRight = this.head.getChild("ear_right");
-        this.frontLegLeft = root.getChild("front_leg_left");
-        this.frontLegRight = root.getChild("front_leg_right");
-        this.hindThighLeft = root.getChild("hind_thigh_left");
+        this.frontLegLeft = bodyChest.getChild("front_leg_left");
+        this.frontLegRight = bodyChest.getChild("front_leg_right");
+        this.hindThighLeft = bodyRump.getChild("hind_thigh_left");
         this.hindHockLeft = this.hindThighLeft.getChild("hock");
-        this.hindThighRight = root.getChild("hind_thigh_right");
+        this.hindThighRight = bodyRump.getChild("hind_thigh_right");
         this.hindHockRight = this.hindThighRight.getChild("hock");
-        this.tail = root.getChild("tail");
+        this.tail = bodyRump.getChild("tail");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -81,20 +88,23 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
         // Previously hard-edged boxes — looked noticeably blockier than all other
         // updated quadrupeds (wolf, tiger, fire_beast, boar all use CubeDeformation).
         CubeDeformation chestSoft = new CubeDeformation(0.3F);
-        root.addOrReplaceChild("body_chest",
+        PartDefinition bodyChest = root.addOrReplaceChild("body_chest",
                 CubeListBuilder.create().texOffs(0, 0)
                         .addBox(-1.5F, -1.75F, -1.5F, 3.0F, 3.5F, 3.0F, chestSoft),
                 PartPose.offset(0.0F, 11.5F, -2.0F));
 
         CubeDeformation rumpSoft = new CubeDeformation(0.35F);
-        root.addOrReplaceChild("body_rump",
+        PartDefinition bodyRump = root.addOrReplaceChild("body_rump",
                 CubeListBuilder.create().texOffs(12, 0)
                         .addBox(-1.75F, -2.0F, -2.0F, 3.5F, 4.0F, 4.0F, rumpSoft),
                 PartPose.offset(0.0F, 11.0F, 1.0F));
 
         // ── CRON-COMPLETIONIST-70: head with CubeDeformation ──
         CubeDeformation headSoft = new CubeDeformation(0.25F);
-        PartDefinition head = root.addOrReplaceChild("head",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyChest.
+        // Old root-space offset was (0, 10.5, -4.0). body_chest is at (0, 11.5, -2.0).
+        // New offset = (0-0, 10.5-11.5, -4.0-(-2.0)) = (0, -1.0, -2.0).
+        PartDefinition head = bodyChest.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 14)
                         .addBox(-1.25F, -1.25F, -1.25F, 2.5F, 2.5F, 2.5F, headSoft)   // skull
                         .texOffs(0, 22)
@@ -103,7 +113,7 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-1.25F, -0.25F, -0.5F, 1.25F, 0.75F, 1.0F)  // cheek left
                         .texOffs(10, 16)
                         .addBox(0.0F, -0.25F, -0.5F, 1.25F, 0.75F, 1.0F),  // cheek right
-                PartPose.offset(0.0F, 10.5F, -4.0F));
+                PartPose.offset(0.0F, -1.0F, -2.0F));
 
         // ears : TALLER and THINNER (0.8x5x0.8 instead of 1x4x1)
         head.addOrReplaceChild("ear_left",
@@ -116,41 +126,50 @@ public class SpiritRabbitModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offset(0.8F, -1.25F, 0.0F));
 
         // ── front legs : thin short legs ─────────────────────────────────
-        root.addOrReplaceChild("front_leg_left",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyChest.
+        // Old root-space offset was (-0.8, 13.0, -3.0). body_chest at (0, 11.5, -2.0).
+        // New offset = (-0.8, 1.5, -1.0).
+        bodyChest.addOrReplaceChild("front_leg_left",
                 CubeListBuilder.create().texOffs(0, 24)
                         .addBox(-0.4F, 0.0F, -0.4F, 0.8F, 2.0F, 0.8F),
-                PartPose.offset(-0.8F, 13.0F, -3.0F));
-        root.addOrReplaceChild("front_leg_right",
+                PartPose.offset(-0.8F, 1.5F, -1.0F));
+        bodyChest.addOrReplaceChild("front_leg_right",
                 CubeListBuilder.create().texOffs(4, 24)
                         .addBox(-0.4F, 0.0F, -0.4F, 0.8F, 2.0F, 0.8F),
-                PartPose.offset(0.8F, 13.0F, -3.0F));
+                PartPose.offset(0.8F, 1.5F, -1.0F));
 
         // ── hind legs : 2-SEGMENT with thigh + hock (rabbit power legs) ──
         // Thigh — thick, angled back
-        root.addOrReplaceChild("hind_thigh_left",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyRump.
+        // Old root-space offset was (-1.5, 12.0, 2.0). body_rump at (0, 11.0, 1.0).
+        // New offset = (-1.5, 1.0, 1.0).
+        bodyRump.addOrReplaceChild("hind_thigh_left",
                 CubeListBuilder.create().texOffs(0, 28)
                         .addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
-                PartPose.offset(-1.5F, 12.0F, 2.0F));
-        root.getChild("hind_thigh_left").addOrReplaceChild("hock",
+                PartPose.offset(-1.5F, 1.0F, 1.0F));
+        bodyRump.getChild("hind_thigh_left").addOrReplaceChild("hock",
                 CubeListBuilder.create().texOffs(0, 34)
                         .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        root.addOrReplaceChild("hind_thigh_right",
+        bodyRump.addOrReplaceChild("hind_thigh_right",
                 CubeListBuilder.create().texOffs(8, 28)
                         .addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
-                PartPose.offset(1.5F, 12.0F, 2.0F));
-        root.getChild("hind_thigh_right").addOrReplaceChild("hock",
+                PartPose.offset(1.5F, 1.0F, 1.0F));
+        bodyRump.getChild("hind_thigh_right").addOrReplaceChild("hock",
                 CubeListBuilder.create().texOffs(8, 34)
                         .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
         // ── CRON-COMPLETIONIST-70: puff tail with CubeDeformation ──
         CubeDeformation tailSoft = new CubeDeformation(0.4F);
-        root.addOrReplaceChild("tail",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyRump.
+        // Old root-space offset was (0, 10.5, 4.0). body_rump at (0, 11.0, 1.0).
+        // New offset = (0, -0.5, 3.0).
+        bodyRump.addOrReplaceChild("tail",
                 CubeListBuilder.create().texOffs(28, 14)
                         .addBox(-0.75F, -0.75F, 0.0F, 1.5F, 1.5F, 1.5F, tailSoft),
-                PartPose.offset(0.0F, 10.5F, 4.0F));
+                PartPose.offset(0.0F, -0.5F, 3.0F));
 
         return LayerDefinition.create(mesh, 64, 64);
     }

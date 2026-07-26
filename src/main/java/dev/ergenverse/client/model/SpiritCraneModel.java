@@ -96,8 +96,12 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
 
     public SpiritCraneModel(ModelPart root) {
         this.root = root;
+        // CRON-COMPLETIONIST-85: Reparented neck/wings/tail/legs from root to body.
+        // All appendages attach to the body (thorax/torso). This is purely structural —
+        // the Crane animation doesn't use body rotation, so no animation changes needed.
+        ModelPart body = root.getChild("body");
         // ── Neck: 4-segment chain ──────────────────────────────────────
-        this.neckBase = root.getChild("neck_base");
+        this.neckBase = body.getChild("neck_base");
         this.neckMid = this.neckBase.getChild("neck_mid");
         this.neckUpper = this.neckMid.getChild("neck_upper");
         this.neckTop = this.neckUpper.getChild("neck_top");
@@ -105,17 +109,17 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
         this.head = this.neckTop.getChild("head");
         this.crown = this.head.getChild("crown");
         // ── Wings ──────────────────────────────────────────────────────
-        this.leftWing = root.getChild("left_wing");
-        this.rightWing = root.getChild("right_wing");
+        this.leftWing = body.getChild("left_wing");
+        this.rightWing = body.getChild("right_wing");
         this.leftShoulder = leftWing.getChild("shoulder");
         this.rightShoulder = rightWing.getChild("shoulder");
         this.leftForearm = leftShoulder.getChild("forearm");
         this.rightForearm = rightShoulder.getChild("forearm");
         // ── Tail ──────────────────────────────────────────────────────
-        this.tail = root.getChild("tail");
+        this.tail = body.getChild("tail");
         // ── Legs ──────────────────────────────────────────────────────
-        this.leftLeg = root.getChild("left_leg");
-        this.rightLeg = root.getChild("right_leg");
+        this.leftLeg = body.getChild("left_leg");
+        this.rightLeg = body.getChild("right_leg");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -124,7 +128,8 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
 
         // ── body : compact streamlined torso (2 x 3 x 7) ───────────────
         // Real crane: wider across the shoulders than the hips, narrow.
-        root.addOrReplaceChild("body",
+        // CRON-COMPLETIONIST-85: Capture body PartDefinition for child reparenting.
+        PartDefinition body = root.addOrReplaceChild("body",
                 CubeListBuilder.create().texOffs(0, 0)
                         .addBox(-1.0F, -1.5F, -3.5F, 2.0F, 3.0F, 7.0F),
                 PartPose.offset(0.0F, 9.0F, 0.0F));
@@ -132,10 +137,13 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
         // ── CRON-22: Neck — 4-segment chain for sinuous S-curve ──────────
         // Real crane neck: thick at body, pencil-thin at head.
         // Segment 1 (base): 1x4x1 — connects to body
-        PartDefinition neckBase = root.addOrReplaceChild("neck_base",
+        // CRON-COMPLETIONIST-85: Reparented from root to body.
+        // Old root-space offset was (0, 10.5, -3.5). body is at (0, 9.0, 0.0).
+        // New offset = (0-0, 10.5-9, -3.5-0) = (0, 1.5, -3.5). Rotation unchanged.
+        PartDefinition neckBase = body.addOrReplaceChild("neck_base",
                 CubeListBuilder.create().texOffs(0, 16)
                         .addBox(-1.0F, -2.0F, -0.5F, 2.0F, 4.0F, 1.0F),
-                PartPose.offsetAndRotation(0.0F, 10.5F, -3.5F, -0.3F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, 1.5F, -3.5F, -0.3F, 0.0F, 0.0F));
         // Segment 2 (mid): 1x4x1
         PartDefinition neckMid = neckBase.addOrReplaceChild("neck_mid",
                 CubeListBuilder.create().texOffs(0, 22)
@@ -167,9 +175,12 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offsetAndRotation(0.0F, -1.0F, -0.5F, 0.0F, 0.0F, -0.2F));
 
         // ── left wing : shoulder -> forearm -> hand -> 5 feathers ─────────
-        PartDefinition leftWing = root.addOrReplaceChild("left_wing",
+        // CRON-COMPLETIONIST-85: Reparented from root to body.
+        // Old root-space offset was (-1.0, 9.0, 0.0). body is at (0, 9.0, 0.0).
+        // New offset = (-1.0, 0.0, 0.0).
+        PartDefinition leftWing = body.addOrReplaceChild("left_wing",
                 CubeListBuilder.create(),
-                PartPose.offset(-1.0F, 9.0F, 0.0F));
+                PartPose.offset(-1.0F, 0.0F, 0.0F));
         // CRON-COMPLETIONIST-63: Thinner wing bones (0.5px instead of 1.0px)
         PartDefinition leftShoulder = leftWing.addOrReplaceChild("shoulder",
                 CubeListBuilder.create().texOffs(0, 12)
@@ -231,9 +242,12 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offsetAndRotation(-2.0F, -0.5F, 1.5F, 0.0F, 0.0F, 0.05F));
 
         // ── right wing : mirror ──────────────────────────────────────────
-        PartDefinition rightWing = root.addOrReplaceChild("right_wing",
+        // CRON-COMPLETIONIST-85: Reparented from root to body.
+        // Old root-space offset was (1.0, 9.0, 0.0). body is at (0, 9.0, 0.0).
+        // New offset = (1.0, 0.0, 0.0).
+        PartDefinition rightWing = body.addOrReplaceChild("right_wing",
                 CubeListBuilder.create(),
-                PartPose.offset(1.0F, 9.0F, 0.0F));
+                PartPose.offset(1.0F, 0.0F, 0.0F));
         // CRON-COMPLETIONIST-63: Thinner right wing bones
         PartDefinition rightShoulder = rightWing.addOrReplaceChild("shoulder",
                 CubeListBuilder.create().texOffs(0, 32)
@@ -291,9 +305,12 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offsetAndRotation(2.0F, -0.5F, 1.5F, 0.0F, 0.0F, -0.05F));
 
         // ── tail : short black fan projecting past wings ───────────────
-        PartDefinition tail = root.addOrReplaceChild("tail",
+        // CRON-COMPLETIONIST-85: Reparented from root to body.
+        // Old root-space offset was (0, 9.0, 3.5). body is at (0, 9.0, 0.0).
+        // New offset = (0, 0.0, 3.5).
+        PartDefinition tail = body.addOrReplaceChild("tail",
                 CubeListBuilder.create(),
-                PartPose.offset(0.0F, 9.0F, 3.5F));
+                PartPose.offset(0.0F, 0.0F, 3.5F));
         tail.addOrReplaceChild("feather1",
                 CubeListBuilder.create().texOffs(40, 12)
                         .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 6.0F),
@@ -313,58 +330,64 @@ public class SpiritCraneModel extends HierarchicalModel<SpiritBeastEntity> {
         // Shin:  1x4x1 (long, black from "knee" down)
         // Foot: 1x1x1 with 3 forward toes + 1 rear hallux
         // Left leg
-        root.addOrReplaceChild("left_leg",
+        // CRON-COMPLETIONIST-85: Reparented from root to body.
+        // Old root-space offset was (-1.5, 12.0, 0.0). body is at (0, 9.0, 0.0).
+        // New offset = (-1.5, 3.0, 0.0).
+        body.addOrReplaceChild("left_leg",
                 CubeListBuilder.create().texOffs(0, 40)
                         .addBox(-1.0F, 0.0F, -0.75F, 2.0F, 3.0F, 1.5F)  // thigh
                         .texOffs(0, 46)
                         .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 4.0F, 1.0F),  // shin
-                PartPose.offset(-1.5F, 12.0F, 0.0F));
+                PartPose.offset(-1.5F, 3.0F, 0.0F));
         // Left foot (child of left_leg — gets thigh+shin rotation via hierarchy)
-        root.getChild("left_leg").addOrReplaceChild("foot",
+        body.getChild("left_leg").addOrReplaceChild("foot",
                 CubeListBuilder.create().texOffs(4, 46)
                         .addBox(-1.0F, 0.0F, -0.75F, 2.0F, 1.0F, 1.5F),  // foot base
                 PartPose.offset(0.0F, 7.0F, 0.0F));
-        root.getChild("left_leg").getChild("foot").addOrReplaceChild("toe1",
+        body.getChild("left_leg").getChild("foot").addOrReplaceChild("toe1",
                 CubeListBuilder.create().texOffs(4, 40)
                         .addBox(-1.0F, 0.0F, -1.25F, 1.0F, 1.0F, 1.0F),
                 PartPose.ZERO);
-        root.getChild("left_leg").getChild("foot").addOrReplaceChild("toe2",
+        body.getChild("left_leg").getChild("foot").addOrReplaceChild("toe2",
                 CubeListBuilder.create().texOffs(8, 40)
                         .addBox(0.0F, 0.0F, -1.25F, 1.0F, 1.0F, 1.0F),
                 PartPose.ZERO);
-        root.getChild("left_leg").getChild("foot").addOrReplaceChild("toe3",
+        body.getChild("left_leg").getChild("foot").addOrReplaceChild("toe3",
                 CubeListBuilder.create().texOffs(4, 42)
                         .addBox(-1.0F, 0.0F, -1.75F, 1.0F, 1.0F, 1.0F),
                 PartPose.ZERO);
-        root.getChild("left_leg").getChild("foot").addOrReplaceChild("hallux",
+        body.getChild("left_leg").getChild("foot").addOrReplaceChild("hallux",
                 CubeListBuilder.create().texOffs(8, 42)
                         .addBox(0.0F, 0.0F, 0.5F, 1.0F, 1.0F, 1.0F),
                 PartPose.ZERO);
 
         // Right leg
-        root.addOrReplaceChild("right_leg",
+        // CRON-COMPLETIONIST-85: Reparented from root to body.
+        // Old root-space offset was (1.5, 12.0, 0.0). body is at (0, 9.0, 0.0).
+        // New offset = (1.5, 3.0, 0.0).
+        body.addOrReplaceChild("right_leg",
                 CubeListBuilder.create().texOffs(0, 50)
                         .addBox(-1.0F, 0.0F, -0.75F, 2.0F, 3.0F, 1.5F)   // thigh
                         .texOffs(0, 56)
                         .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 4.0F, 1.0F),   // shin
-                PartPose.offset(1.5F, 12.0F, 0.0F));
-        root.getChild("right_leg").addOrReplaceChild("foot",
+                PartPose.offset(1.5F, 3.0F, 0.0F));
+        body.getChild("right_leg").addOrReplaceChild("foot",
                 CubeListBuilder.create().texOffs(4, 56)
                         .addBox(-1.0F, 0.0F, -0.75F, 2.0F, 1.0F, 1.5F),
                 PartPose.offset(0.0F, 7.0F, 0.0F));
-        root.getChild("right_leg").getChild("foot").addOrReplaceChild("toe1",
+        body.getChild("right_leg").getChild("foot").addOrReplaceChild("toe1",
                 CubeListBuilder.create().texOffs(4, 50)
                         .addBox(-1.0F, 0.0F, -1.25F, 1.0F, 1.0F, 1.0F),
                 PartPose.ZERO);
-        root.getChild("right_leg").getChild("foot").addOrReplaceChild("toe2",
+        body.getChild("right_leg").getChild("foot").addOrReplaceChild("toe2",
                 CubeListBuilder.create().texOffs(8, 50)
                         .addBox(0.0F, 0.0F, -1.25F, 1.0F, 1.0F, 1.0F),
                 PartPose.ZERO);
-        root.getChild("right_leg").getChild("foot").addOrReplaceChild("toe3",
+        body.getChild("right_leg").getChild("foot").addOrReplaceChild("toe3",
                 CubeListBuilder.create().texOffs(4, 52)
                         .addBox(-1.0F, 0.0F, -1.75F, 1.0F, 1.0F, 1.0F),
                 PartPose.ZERO);
-        root.getChild("right_leg").getChild("foot").addOrReplaceChild("hallux",
+        body.getChild("right_leg").getChild("foot").addOrReplaceChild("hallux",
                 CubeListBuilder.create().texOffs(8, 52)
                         .addBox(0.0F, 0.0F, 0.5F, 1.0F, 1.0F, 1.0F),
                 PartPose.ZERO);

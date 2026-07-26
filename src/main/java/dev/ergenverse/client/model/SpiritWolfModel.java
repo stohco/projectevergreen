@@ -82,7 +82,7 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         this.root = root;
         this.bodyChest = root.getChild("body_chest");
         this.bodyHip = root.getChild("body_hip");
-        this.neck = root.getChild("neck");
+        this.neck = this.bodyChest.getChild("neck");
         // CRON-COMPLETIONIST-78: Fix head/neck hierarchy — head must be child of neck
         // so head rotation inherits from neck. Previously head was root child,
         // causing floating-head glitch during gait.
@@ -90,16 +90,16 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         this.jaw = this.head.getChild("jaw");
         this.earLeft = this.head.getChild("ear_left");
         this.earRight = this.head.getChild("ear_right");
-        this.tailBase = root.getChild("tail_base");
+        this.tailBase = this.bodyHip.getChild("tail_base");
         this.tailMid = this.tailBase.getChild("mid");
         this.tailTip = this.tailMid.getChild("tip");
-        this.frontLeftThigh = root.getChild("front_left_thigh");
+        this.frontLeftThigh = this.bodyChest.getChild("front_left_thigh");
         this.frontLeftShin = this.frontLeftThigh.getChild("shin");
-        this.frontRightThigh = root.getChild("front_right_thigh");
+        this.frontRightThigh = this.bodyChest.getChild("front_right_thigh");
         this.frontRightShin = this.frontRightThigh.getChild("shin");
-        this.backLeftThigh = root.getChild("back_left_thigh");
+        this.backLeftThigh = this.bodyHip.getChild("back_left_thigh");
         this.backLeftShin = this.backLeftThigh.getChild("shin");
-        this.backRightThigh = root.getChild("back_right_thigh");
+        this.backRightThigh = this.bodyHip.getChild("back_right_thigh");
         this.backRightShin = this.backRightThigh.getChild("shin");
         this.eyeLeft = this.head.getChild("eye_left");
         this.eyeRight = this.head.getChild("eye_right");
@@ -125,10 +125,13 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
 
         // ── neck : short tilted connector at the front ───────────────────
         // CRON-COMPLETIONIST-78: Capture PartDefinition for head parenting
-        PartDefinition neckDef = root.addOrReplaceChild("neck",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyChest.
+        // Old root-space offset was (0, 4.0, -5.0). body_chest is at (0, 6.0, -2.5).
+        // New offset = (0-0, 4.0-6.0, -5.0-(-2.5)) = (0, -2.0, -2.5). Rotation unchanged.
+        PartDefinition neckDef = bodyChest.addOrReplaceChild("neck",
                 CubeListBuilder.create().texOffs(28, 0)
                         .addBox(-1.0F, -1.0F, -2.0F, 2.0F, 2.0F, 3.0F, new CubeDeformation(0.08F)),
-                PartPose.offsetAndRotation(0.0F, 4.0F, -5.0F, -0.4F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -2.0F, -2.5F, -0.4F, 0.0F, 0.0F));
 
         // ── head : skull + snout + ears + jaw + fangs (child of neck) ─────
         PartDefinition head = neckDef.addOrReplaceChild("head",
@@ -196,10 +199,13 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offset(0.0F, 0.5F, -4.5F));
 
         // ── tail : 3-segment chain curving down from the rear ────────────
-        PartDefinition tailBase = root.addOrReplaceChild("tail_base",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyHip.
+        // Old root-space offset was (0, 4.0, 5.0). body_hip is at (0, 5.5, 2.5).
+        // New offset = (0-0, 4.0-5.5, 5.0-2.5) = (0, -1.5, 2.5). Rotation unchanged.
+        PartDefinition tailBase = bodyHip.addOrReplaceChild("tail_base",
                 CubeListBuilder.create().texOffs(36, 8)
                         .addBox(-0.45F, -0.45F, 0.0F, 0.9F, 0.9F, 3.0F),
-                PartPose.offsetAndRotation(0.0F, 4.0F, 5.0F, 0.3F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -1.5F, 2.5F, 0.3F, 0.0F, 0.0F));
         PartDefinition tailMid = tailBase.addOrReplaceChild("mid",
                 CubeListBuilder.create().texOffs(36, 14)
                         .addBox(-0.35F, -0.35F, 0.0F, 0.7F, 0.7F, 3.0F),
@@ -210,38 +216,44 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offsetAndRotation(0.0F, 0.0F, 3.0F, 0.2F, 0.0F, 0.0F));
 
         // ── legs : 4 legs, thigh + shin, feet at y=15 ────────────────────
-        root.addOrReplaceChild("front_left_thigh",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyChest.
+        // Old root-space offset was (-2.0, 9.0, -4.0). body_chest at (0, 6.0, -2.5).
+        // New offset = (-2.0, 3.0, -1.5).
+        bodyChest.addOrReplaceChild("front_left_thigh",
                 CubeListBuilder.create().texOffs(0, 32)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
-                PartPose.offset(-2.0F, 9.0F, -4.0F));
-        root.getChild("front_left_thigh").addOrReplaceChild("shin",
+                PartPose.offset(-2.0F, 3.0F, -1.5F));
+        bodyChest.getChild("front_left_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(0, 40)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        root.addOrReplaceChild("front_right_thigh",
+        bodyChest.addOrReplaceChild("front_right_thigh",
                 CubeListBuilder.create().texOffs(8, 32)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
-                PartPose.offset(2.0F, 9.0F, -4.0F));
-        root.getChild("front_right_thigh").addOrReplaceChild("shin",
+                PartPose.offset(2.0F, 3.0F, -1.5F));
+        bodyChest.getChild("front_right_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(8, 40)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        root.addOrReplaceChild("back_left_thigh",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyHip.
+        // Old root-space offset was (-2.0, 9.0, 4.0). body_hip at (0, 5.5, 2.5).
+        // New offset = (-2.0, 3.5, 1.5).
+        bodyHip.addOrReplaceChild("back_left_thigh",
                 CubeListBuilder.create().texOffs(0, 48)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
-                PartPose.offset(-2.0F, 9.0F, 4.0F));
-        root.getChild("back_left_thigh").addOrReplaceChild("shin",
+                PartPose.offset(-2.0F, 3.5F, 1.5F));
+        bodyHip.getChild("back_left_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(0, 56)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
-        root.addOrReplaceChild("back_right_thigh",
+        bodyHip.addOrReplaceChild("back_right_thigh",
                 CubeListBuilder.create().texOffs(8, 48)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
-                PartPose.offset(2.0F, 9.0F, 4.0F));
-        root.getChild("back_right_thigh").addOrReplaceChild("shin",
+                PartPose.offset(2.0F, 3.5F, 1.5F));
+        bodyHip.getChild("back_right_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(8, 56)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
@@ -498,6 +510,11 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         if (entity.deathTime > 0) {
             float t = Math.min(entity.deathTime / 8.0F, 1.0F);
             float collapse = t * t;
+            // CRON-COMPLETIONIST-85: Reset spine rotations to prevent stale-state leak.
+            // Without this, bodyChest.xRot/bodyHip.xRot from the previous pose (walk/sprint
+            // spine flex) would persist and propagate to the reparented neck/tail/thighs.
+            this.bodyChest.xRot = 0.0F;
+            this.bodyHip.xRot = 0.0F;
             this.root.xRot = collapse * -0.4F;
             this.root.zRot = collapse * 0.6F;
             this.head.xRot = collapse * 0.8F;

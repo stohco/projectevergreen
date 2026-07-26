@@ -78,15 +78,15 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
         this.neckBase = this.bodyChest.getChild("neck_base");
         this.neckTip = this.neckBase.getChild("neck_tip");
         this.head = this.neckTip.getChild("head");
-        this.tail = root.getChild("tail");
+        this.tail = this.bodyHip.getChild("tail");
         this.tailTip = this.tail.getChild("tip");
-        this.frontLeftThigh = root.getChild("front_left_thigh");
+        this.frontLeftThigh = this.bodyChest.getChild("front_left_thigh");
         this.frontLeftShin = this.frontLeftThigh.getChild("shin");
-        this.frontRightThigh = root.getChild("front_right_thigh");
+        this.frontRightThigh = this.bodyChest.getChild("front_right_thigh");
         this.frontRightShin = this.frontRightThigh.getChild("shin");
-        this.backLeftThigh = root.getChild("back_left_thigh");
+        this.backLeftThigh = this.bodyHip.getChild("back_left_thigh");
         this.backLeftShin = this.backLeftThigh.getChild("shin");
-        this.backRightThigh = root.getChild("back_right_thigh");
+        this.backRightThigh = this.bodyHip.getChild("back_right_thigh");
         this.backRightShin = this.backRightThigh.getChild("shin");
         this.stoneCenter = this.bodyChest.getChild("stone_center");
     }
@@ -203,38 +203,47 @@ public class StoneBackBoarModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offsetAndRotation(0.0F, 1.0F, 0.0F, -0.8F, 0.0F, 0.0F));
 
         // ── tail — 2-segment curly tail ─────────────────────────────────
-        PartDefinition tail = root.addOrReplaceChild("tail",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyHip.
+        // Old root-space offset was (0, 5.0, 6.0). body_hip is at (0, 6.5, 3.5).
+        // New offset = (0-0, 5.0-6.5, 6.0-3.5) = (0, -1.5, 2.5). Rotation unchanged.
+        PartDefinition tail = bodyHip.addOrReplaceChild("tail",
                 CubeListBuilder.create().texOffs(40, 20)
                         .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 1.5F),
-                PartPose.offsetAndRotation(0.0F, 5.0F, 6.0F, 0.4F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -1.5F, 2.5F, 0.4F, 0.0F, 0.0F));
         tail.addOrReplaceChild("tip",
                 CubeListBuilder.create().texOffs(42, 20)
                         .addBox(-0.3F, -0.3F, 0.0F, 0.6F, 0.6F, 1.0F),
                 PartPose.offsetAndRotation(0.0F, 0.0F, 1.5F, 0.0F, 0.0F, -0.5F));
 
         // ── legs : 4 short thick legs ────────────────────────────────────
-        root.addOrReplaceChild("front_left_thigh",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyChest.
+        // Old root-space offset was (-2.2, 12.0, -3.0). body_chest at (0, 7.0, -2.0).
+        // New offset = (-2.2, 5.0, -1.0).
+        bodyChest.addOrReplaceChild("front_left_thigh",
                 CubeListBuilder.create().texOffs(0, 32).addBox(-0.9F, 0.0F, -0.9F, 1.8F, 3.0F, 1.8F),
-                PartPose.offset(-2.2F, 12.0F, -3.0F));
-        root.getChild("front_left_thigh").addOrReplaceChild("shin",
+                PartPose.offset(-2.2F, 5.0F, -1.0F));
+        bodyChest.getChild("front_left_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(0, 38).addBox(-0.7F, 0.0F, -0.7F, 1.4F, 3.0F, 1.4F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
-        root.addOrReplaceChild("front_right_thigh",
+        bodyChest.addOrReplaceChild("front_right_thigh",
                 CubeListBuilder.create().texOffs(8, 32).addBox(-0.9F, 0.0F, -0.9F, 1.8F, 3.0F, 1.8F),
-                PartPose.offset(2.2F, 12.0F, -3.0F));
-        root.getChild("front_right_thigh").addOrReplaceChild("shin",
+                PartPose.offset(2.2F, 5.0F, -1.0F));
+        bodyChest.getChild("front_right_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(8, 38).addBox(-0.7F, 0.0F, -0.7F, 1.4F, 3.0F, 1.4F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
-        root.addOrReplaceChild("back_left_thigh",
+        // CRON-COMPLETIONIST-85: Reparented from root to bodyHip.
+        // Old root-space offset was (-2.0, 11.5, 3.0). body_hip at (0, 6.5, 3.5).
+        // New offset = (-2.0, 5.0, -0.5).
+        bodyHip.addOrReplaceChild("back_left_thigh",
                 CubeListBuilder.create().texOffs(0, 44).addBox(-0.8F, 0.0F, -0.8F, 1.6F, 3.0F, 1.6F),
-                PartPose.offset(-2.0F, 11.5F, 3.0F));
-        root.getChild("back_left_thigh").addOrReplaceChild("shin",
+                PartPose.offset(-2.0F, 5.0F, -0.5F));
+        bodyHip.getChild("back_left_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(0, 50).addBox(-0.65F, 0.0F, -0.65F, 1.3F, 3.0F, 1.3F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
-        root.addOrReplaceChild("back_right_thigh",
+        bodyHip.addOrReplaceChild("back_right_thigh",
                 CubeListBuilder.create().texOffs(8, 44).addBox(-0.8F, 0.0F, -0.8F, 1.6F, 3.0F, 1.6F),
-                PartPose.offset(2.0F, 11.5F, 3.0F));
-        root.getChild("back_right_thigh").addOrReplaceChild("shin",
+                PartPose.offset(2.0F, 5.0F, -0.5F));
+        bodyHip.getChild("back_right_thigh").addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(8, 50).addBox(-0.65F, 0.0F, -0.65F, 1.3F, 3.0F, 1.3F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
 
