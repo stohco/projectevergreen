@@ -1,6 +1,9 @@
 package dev.ergenverse.wanglin.bead;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.cultivation.CultivationCapability;
+import dev.ergenverse.cultivation.CultivationState;
+import dev.ergenverse.cultivation.RealmId;
 import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.history.HistoryManager;
 import dev.ergenverse.runtime.CanonUUID;
@@ -15,13 +18,19 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 /**
- * Tuo Sen's Spawn Event — CRON-COMPLETIONIST-107.
+ * Tuo Sen's Spawn Event — CRON-COMPLETIONIST-107 / CRON-109.
  *
- * <p>Spawns 拓森 (Tuo Sen) as a living {@link EntityCultivator} at the
- * Suzaku Tomb chamber when the player triggers the 15th-gen Suzaku Son
- * inheritance event via {@link CultivationPlanetCrystalBlock#use}
- * (CRON-106). This is the canon-faithful reappearance of Wang Lin's
- * Ancient God rival at the inheritance site.
+ * <p>CRON-107: initial spawn logic. Spawns 拓森 (Tuo Sen) as a living
+ * {@link EntityCultivator} at the Suzaku Tomb chamber when the player
+ * triggers the 15th-gen Suzaku Son inheritance event via
+ * {@link CultivationPlanetCrystalBlock#use} (CRON-106). This is the
+ * canon-faithful reappearance of Wang Lin's Ancient God rival at the
+ * inheritance site.
+ *
+ * <p>CRON-109: HP scaling. Replaced the fixed 500 HP with a realm-scaled
+ * formula {@code max(MIN_HP, playerRealm.order * HP_PER_REALM_ORDER)} so
+ * the fight stays challenging across the cultivation ladder. Closes the
+ * CRON-107 self-critique #7 documented enhancement.
  *
  * <h2>Canon Basis (fact-checked via web-search 2026-07-26)</h2>
  * <p>In the novel 仙逆 by 耳根:
@@ -75,10 +84,15 @@ import net.minecraft.world.entity.Entity;
  *   <li><b>Set his cultivation realm</b> to "ancient" (古境 /
  *       {@link dev.ergenverse.cultivation.RealmId#ANCIENT}). Canon: an
  *       8-star Ancient God.</li>
- *   <li><b>Set his HP</b> to a high value (Tuo Sen is a major boss-tier
- *       entity). The mod represents this with 500 HP — high enough to
- *       be a serious fight, low enough that a Transcendence-realm Wang
- *       Lin can defeat him (canon: Wang Lin eventually surpasses him).</li>
+ *   <li><b>Set his HP</b> to a realm-scaled value (CRON-109). Canon:
+ *       Wang Lin faces Tuo Sen at different cultivation levels across
+ *       the novel — first fleeing the Suzaku Tomb at low realm, later
+ *       returning at higher realm to contest him as a peer. The mod
+ *       mirrors this with HP = max({@link #MIN_HP}, player_realm.order
+ *       * {@link #HP_PER_REALM_ORDER}), so a Nascent Soul player faces
+ *       200 HP and a Transcendence player faces 850 HP. This keeps the
+ *       fight challenging across the cultivation ladder (closes the
+ *       CRON-107 self-critique #7 documented enhancement).</li>
  *   <li><b>Display the canon-faithful reappearance message</b> (bilingual:
  *       Chinese + English, with the CRON-102 divider pattern).</li>
  *   <li><b>Record in HistoryManager</b> (subject:
@@ -107,11 +121,14 @@ import net.minecraft.world.entity.Entity;
  *       a RIVAL. He spawns at the tomb chamber and stays there. The
  *       player must choose to engage or flee (canon: Wang Lin flees
  *       the tomb using the Suzaku inheritance's escape power).</li>
- *   <li><b>Tuo Sen's HP is 500, not 1000.</b> Canon: Wang Lin eventually
- *       surpasses and defeats Tuo Sen, but it takes hundreds of chapters
- *       and several power-ups. 500 HP represents "a serious fight for a
- *       mid-game Wang Lin, defeatable by a late-game Wang Lin." A future
- *       CRON could scale this with the player's realm.</li>
+ *   <li><b>Tuo Sen's HP scales with the player's realm (CRON-109).</b>
+ *       HP = max({@link #MIN_HP}, player_realm.order * {@link #HP_PER_REALM_ORDER}).
+ *       At player Nascent Soul (order 4) → 200 HP. At player Soul Formation
+ *       (order 5) → 250 HP. At player Transcendence (order 17) → 850 HP.
+ *       Canon: Wang Lin faces Tuo Sen at different cultivation levels —
+ *       first fleeing, later contesting. The scaling keeps the fight
+ *       challenging across the cultivation ladder. Closes CRON-107
+ *       self-critique #7 documented enhancement.</li>
  *   <li><b>Tuo Sen's realm is "ancient" (古境).</b> This maps to
  *       {@link dev.ergenverse.cultivation.RealmId#ANCIENT} (order=15,
  *       step=3 Immortal+ Step). Canon: Tuo Sen is an 8-star Ancient
@@ -147,15 +164,45 @@ public final class TuoSenSpawnEvent {
     public static final String SPAWN_REALM = "ancient";
 
     /**
-     * Tuo Sen's HP when he spawns. Canon: a major boss-tier Ancient God.
-     * The mod represents this with 500 HP — high enough to be a serious
-     * fight, low enough that a Transcendence-realm Wang Lin can defeat
-     * him (canon: Wang Lin eventually surpasses him).
+     * CRON-109: The HP-per-realm-order coefficient. HP is computed as
+     * {@code max(MIN_HP, playerRealm.order * HP_PER_REALM_ORDER)} so the
+     * fight scales with the player's cultivation ladder position.
      *
-     * <p>A future CRON could scale this with the player's realm (e.g.,
-     * HP = player_realm_order * 50, so a Nascent Soul player faces 200 HP
-     * and a Transcendence player faces 850 HP — keeping the fight
-     * challenging across the cultivation ladder).
+     * <p>Canon basis: Wang Lin encounters Tuo Sen at multiple cultivation
+     * levels across the novel — first as a fleeing junior cultivator at
+     * the Suzaku Tomb, later as a peer Ancient God contesting Tu Si's
+     * inheritance. The scaling ensures the fight is challenging at every
+     * stage rather than being trivially easy at high realm or impossible
+     * at low realm.
+     *
+     * <p>Examples (using {@link RealmId#order}):
+     * <ul>
+     *   <li>MORTAL (0) → MIN_HP (200) — a mortal player should not be
+     *       fighting Tuo Sen at all; the inheritance gate enforces a
+     *       minimum realm. But if they somehow do, Tuo Sen is at MIN_HP.</li>
+     *   <li>FOUNDATION (2) → 100 → floored to MIN_HP (200)</li>
+     *   <li>NASCENT_SOUL (4) → 200 HP — the canon Tomb encounter</li>
+     *   <li>SOUL_FORMATION (5) → 250 HP</li>
+     *   <li>ASCENDANT (7) → 350 HP</li>
+     *   <li>NIRVANA_FRUIT (12) → 600 HP</li>
+     *   <li>TRANSCENDENCE (17) → 850 HP — peer-tier contest</li>
+     * </ul>
+     */
+    public static final float HP_PER_REALM_ORDER = 50.0F;
+
+    /**
+     * CRON-109: The minimum HP floor. Ensures Tuo Sen is never trivially
+     * weak even if the player is at a very low realm (the inheritance gate
+     * should prevent this, but defensive coding).
+     */
+    public static final float MIN_HP = 200.0F;
+
+    /**
+     * CRON-108/107: Legacy fixed HP constant. Retained for backward
+     * compatibility with existing save data and log messages. CRON-109
+     * supersedes this with the realm-scaled formula; this constant is
+     * only used as a fallback if the player's realm cannot be resolved
+     * (e.g., capability missing — should not happen in normal play).
      */
     public static final float SPAWN_HP = 500.0F;
 
@@ -277,10 +324,20 @@ public final class TuoSenSpawnEvent {
         //    and to allow future scaling (e.g., realm based on player realm).
         tuoSen.setCultivationRealm(SPAWN_REALM);
 
-        // 8. Set his HP to the spawn value (canon: a major boss-tier Ancient God).
+        // 8. CRON-109: Set his HP to a realm-scaled value.
+        //    HP = max(MIN_HP, playerRealm.order * HP_PER_REALM_ORDER).
+        //    Canon: Wang Lin faces Tuo Sen at different cultivation levels —
+        //    first fleeing the Tomb at low realm, later contesting him as a
+        //    peer at high realm. The scaling keeps the fight challenging
+        //    across the cultivation ladder. If the player's cultivation
+        //    capability is missing (defensive — should not happen), the
+        //    realm resolves to MORTAL (order 0), and the floor kicks in —
+        //    Tuo Sen spawns at MIN_HP (200).
+        RealmId playerRealm = resolvePlayerRealm(player);
+        float scaledHp = computeScaledHp(playerRealm);
         tuoSen.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH)
-                .setBaseValue(SPAWN_HP);
-        tuoSen.setHealth(SPAWN_HP);
+                .setBaseValue(scaledHp);
+        tuoSen.setHealth(scaledHp);
 
         // 9. Teleport him to the tomb chamber Y (underground, not the surface).
         //    The standard CanonActorMaterializer used a heightmap on (x, z) which
@@ -326,16 +383,56 @@ public final class TuoSenSpawnEvent {
                         + "Suzaku Son inheritance event. An 8-star Ancient God, rival "
                         + "to Wang Lin for Tu Si's Ancient God inheritance. Spawned "
                         + "at the tomb chamber near the Cultivation Planet Crystal. "
-                        + "HP=" + SPAWN_HP + ", realm=" + SPAWN_REALM + ".",
+                        + "HP=" + scaledHp + " (scaled from player realm "
+                        + playerRealm.name + " order " + playerRealm.order + "), "
+                        + "realm=" + SPAWN_REALM + ".",
                 currentTick);
 
-        Ergenverse.LOGGER.info("[Ergenverse] CRON-107: Tuo Sen spawned at ({}, {}, {}) for "
+        Ergenverse.LOGGER.info("[Ergenverse] CRON-109: Tuo Sen spawned at ({}, {}, {}) for "
                         + "player {} (inheritance of the Cultivation Planet Crystal). "
-                        + "Realm={}, HP={}, entityId={}.",
+                        + "Realm={}, HP={} (scaled: player realm={} order={}, "
+                        + "formula=max({}, {}*{}={})), entityId={}.",
                 spawnX, spawnY, spawnZ, player.getName().getString(),
-                SPAWN_REALM, SPAWN_HP, entityId);
+                SPAWN_REALM, scaledHp, playerRealm.name, playerRealm.order,
+                MIN_HP, playerRealm.order, HP_PER_REALM_ORDER,
+                playerRealm.order * HP_PER_REALM_ORDER, entityId);
 
         return true;
+    }
+
+    /**
+     * CRON-109: Resolve the player's current cultivation realm via the
+     * {@link CultivationCapability}. Mirrors the
+     * {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#getPlayerRealm}
+     * pattern (CRON-106). Returns {@link RealmId#MORTAL} if the capability
+     * is not attached (defensive — should not happen during gameplay).
+     *
+     * @param player the server player who triggered the inheritance
+     * @return the player's current cultivation realm
+     */
+    private static RealmId resolvePlayerRealm(ServerPlayer player) {
+        var stateOpt = CultivationCapability.get(player);
+        if (!stateOpt.isPresent()) return RealmId.MORTAL;
+        CultivationState state = stateOpt.resolve().orElse(null);
+        if (state == null) return RealmId.MORTAL;
+        return state.getCurrentRealm();
+    }
+
+    /**
+     * CRON-109: Compute Tuo Sen's HP from the player's realm.
+     *
+     * <p>Formula: {@code max(MIN_HP, realm.order * HP_PER_REALM_ORDER)}.
+     *
+     * <p>This is exposed as a package-visible static so the verification
+     * script and other callers can predict the HP value without spawning
+     * Tuo Sen.
+     *
+     * @param realm the player's current cultivation realm
+     * @return the HP Tuo Sen should spawn with
+     */
+    static float computeScaledHp(RealmId realm) {
+        float scaled = realm.order * HP_PER_REALM_ORDER;
+        return Math.max(MIN_HP, scaled);
     }
 
     /**

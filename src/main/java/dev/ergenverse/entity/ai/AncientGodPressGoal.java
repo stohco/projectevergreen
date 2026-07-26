@@ -1,11 +1,16 @@
 package dev.ergenverse.entity.ai;
 
+import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.EntityCultivator;
+import dev.ergenverse.runtime.WorldRuntime;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -73,12 +78,13 @@ import java.util.List;
  *   <li>The particle burst is server-side ({@code sendParticles}). On
  *       single-player maximalism (Article XLIII), this is correct —
  *       every nearby player sees the burst.</li>
- *   <li>No block breaking on impact. Canon: an 8-star Ancient God's press
- *       would crater the ground. Implementing this would conflict with
- *       the "blueprint never modified" rule (block changes must go through
- *       the simulation layer's public write API as SIMULATION provenance).
- *       A future CRON could send simulation-block write calls for the
- *       crater — but that's out of scope for CRON-108.</li>
+ *   <li><b>CRON-109: Block cratering now implemented.</b> The crash-down
+ *     carves a 3-block-radius crater around the impact center via
+ *     {@code runtime.world().setSimulationBlock(...)}. The center becomes
+ *     coarse_dirt (the impact divot), the ring becomes cracked_stone
+ *     (the shattered ground), and the outer ring becomes cobblestone
+ *     (loose debris). Bedrock and air are skipped. This closes the
+ *     CRON-108 self-critique #4 documented enhancement.</li>
  *   <li>The leap height (1.2 y-velocity = ~7 blocks peak) is high enough
  *       to clear most terrain but not so high that Tuo Sen flies out of
  *       the tomb chamber (the Suzaku Tomb chamber is ~10 blocks tall).</li>
@@ -94,6 +100,15 @@ public class AncientGodPressGoal extends Goal {
 
     /** AoE damage radius (in blocks, not squared). 6 blocks = devastating. */
     private static final double AOE_RADIUS = 6.0D;
+
+    /**
+     * CRON-109: Block crater radius. 3 blocks = the visually obvious
+     * crater without being so large it eats the entire tomb chamber.
+     * Canon: an 8-star Ancient God's ground pound would crater the
+     * ground, but the Suzaku Tomb chamber is finite — we cap the crater
+     * at 3 blocks to preserve playability.
+     */
+    private static final int CRATER_RADIUS = 3;
 
     /** Base damage of the press. 80 = one-shots a mortal, badly hurts a cultivator. */
     private static final float PRESS_DAMAGE = 80.0F;
@@ -250,5 +265,227 @@ public class AncientGodPressGoal extends Goal {
 
         // Secondary sound: a heavy THUD
         mob.playSound(net.minecraft.sounds.SoundEvents.WITHER_BREAK_BLOCK, 1.0F, 0.5F);
+
+        // ── CRON-109: Carve a crater in the ground ──
+        // Canon: an 8-star Ancient God's ground pound would crater the
+        // ground. The crater is carved via the WorldFacade's simulation
+        // block-write API, which journals each change as SIMULATION
+        // provenance — survives world reload, doesn't modify the blueprint.
+        carveCrater(sl, impact);
+    }
+
+    /**
+     * CRON-109: Carve a 3-block-radius crater around the impact center.
+     *
+     * <p>The crater has three concentric rings:
+     * <ul>
+     *   <li><b>Core (distance &le; 1):</b> coarse_dirt — the impact divot,
+     *       where the god-body directly struck.</li>
+     *   <li><b>Inner ring (1 &lt; distance &le; 2):</b> cracked_stone — the
+     *       shattered ground around the impact.</li>
+     *   <li><b>Outer ring (2 &lt; distance &le; 3):</b> cobblestone — loose
+     *       debris where the shockwave fractured the surface.</li>
+     * </ul>
+     *
+     * <p><b>Skip rules:</b>
+     * <ul>
+     *   <li><b>Air:</b> no-op (can't crater nothing).</li>
+     *   <li><b>Bedrock:</b> no-op (canon: even an Ancient God can't
+     *       shatter bedrock — it's the world's foundation).</li>
+     *   <li><b>Already-cratered blocks:</b> the simulation layer's
+     *       journal naturally handles this — re-writing the same block
+     *       at the same position just appends a new delta, which is
+     *       idempotent on apply.</li>
+     *   <li><b>Fragile blocks (plants, snow, torches):</b> converted to
+     *       air instead of cracked_stone. Canon: these would be
+     *       obliterated by the press, not cracked.</li>
+     * </ul>
+     *
+     * <p><b>Provenance:</b> all writes go through
+     * {@code runtime.world().setSimulationBlock(...)} — the WorldFacade
+     * routes them to BOTH the live level (immediate visibility) AND the
+     * WorldDeltaStore journal (persistence + provenance = SIMULATION).
+     * This is the canonical CRON-69 pattern: gameplay never touches the
+     * store directly, only the facade.
+     *
+     * <p><b>Defensive:</b> silently no-ops if WorldRuntime is not yet
+     * initialized (should not happen during combat, but defensive coding
+     * in case of early-tick edge cases).
+     *
+     * @param level   the server level
+     * @param impact  the impact position (the mob's crash-down location)
+     */
+    private void carveCrater(ServerLevel level, Vec3 impact) {
+        WorldRuntime runtime;
+        try {
+            runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) {
+                Ergenverse.LOGGER.warn("[Ergenverse] CRON-109: WorldRuntime not initialized — "
+                        + "Tuo Sen press crater at ({}, {}, {}) will not be carved.",
+                        (int) impact.x, (int) impact.y, (int) impact.z);
+                return;
+            }
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CRON-109: WorldRuntime unavailable — "
+                    + "Tuo Sen press crater at ({}, {}, {}) will not be carved: {}",
+                    (int) impact.x, (int) impact.y, (int) impact.z, t.getMessage());
+            return;
+        }
+
+        int cx = (int) Math.floor(impact.x);
+        int cy = (int) Math.floor(impact.y);
+        int cz = (int) Math.floor(impact.z);
+        int blocksCarved = 0;
+
+        for (int dx = -CRATER_RADIUS; dx <= CRATER_RADIUS; dx++) {
+            for (int dy = -CRATER_RADIUS; dy <= CRATER_RADIUS; dy++) {
+                for (int dz = -CRATER_RADIUS; dz <= CRATER_RADIUS; dz++) {
+                    // Sphere mask — skip corners outside the radius
+                    double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                    if (dist > CRATER_RADIUS) continue;
+
+                    // Only carve at or below the impact Y — the crater
+                    // goes DOWN (god-body presses into the ground), not
+                    // up (we don't want to delete the ceiling).
+                    if (dy > 0) continue;
+                    // Allow dy == 0 (the impact layer) and dy < 0 (below)
+
+                    BlockPos pos = new BlockPos(cx + dx, cy + dy, cz + dz);
+                    BlockState existing = level.getBlockState(pos);
+
+                    // Skip air
+                    if (existing.isAir()) continue;
+                    // Skip bedrock — canon: even Ancient Gods respect the world's foundation
+                    if (existing.getBlock() == Blocks.BEDROCK) continue;
+
+                    // Determine the crater material based on distance
+                    String targetBlockId;
+                    if (dist <= 1.0D) {
+                        // Core: coarse_dirt (the impact divot)
+                        targetBlockId = "minecraft:coarse_dirt";
+                    } else if (dist <= 2.0D) {
+                        // Inner ring: cracked_stone (shattered ground)
+                        // BUT: if the existing block is fragile (plant,
+                        // snow, torch, etc.), obliterate it to air instead.
+                        if (isFragile(existing)) {
+                            targetBlockId = "minecraft:air";
+                        } else {
+                            targetBlockId = "minecraft:cracked_stone";
+                        }
+                    } else {
+                        // Outer ring: cobblestone (loose debris)
+                        // Fragile blocks are still obliterated to air.
+                        if (isFragile(existing)) {
+                            targetBlockId = "minecraft:air";
+                        } else {
+                            targetBlockId = "minecraft:cobblestone";
+                        }
+                    }
+
+                    // Skip no-ops: if the existing block is already the
+                    // target block, don't write a redundant delta.
+                    if (blockIdMatches(existing, targetBlockId)) continue;
+
+                    // Write through the WorldFacade — journals as SIMULATION
+                    // provenance AND mirrors to the live level.
+                    try {
+                        runtime.world().setSimulationBlock(
+                                pos.getX(), pos.getY(), pos.getZ(), targetBlockId);
+                        blocksCarved++;
+                    } catch (Throwable t) {
+                        Ergenverse.LOGGER.debug("[Ergenverse] CRON-109: carveCrater failed at "
+                                + "({}, {}, {}): {}", pos.getX(), pos.getY(), pos.getZ(),
+                                t.getMessage());
+                    }
+                }
+            }
+        }
+
+        if (blocksCarved > 0) {
+            Ergenverse.LOGGER.info("[Ergenverse] CRON-109: Tuo Sen press crater carved {} "
+                    + "blocks at ({}, {}, {}) (radius={}, provenance=SIMULATION).",
+                    blocksCarved, cx, cy, cz, CRATER_RADIUS);
+        }
+    }
+
+    /**
+     * CRON-109: Is the given block state "fragile" — should it be
+     * obliterated to air rather than converted to cracked_stone?
+     *
+     * <p>Fragile blocks are: plants (saplings, grass, flowers), crops,
+     * snow layers, torches, ladders, buttons, levers, pressure plates,
+     * signs, banners, redstone dust, rails, and similar non-structural
+     * blocks. An 8-star Ancient God's press would obliterate them, not
+     * crack them.
+     *
+     * <p>Implementation: use the vanilla {@code Block.tags} system where
+     * possible (DRY), with explicit block checks for edge cases.
+     *
+     * @param state the block state to test
+     * @return {@code true} if the block should be obliterated to air
+     */
+    private static boolean isFragile(BlockState state) {
+        // Tag-based checks (most plants, etc. are in these tags)
+        if (state.is(net.minecraft.tags.BlockTags.SAPLINGS)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.FLOWERS)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.CROPS)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.BUTTONS)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.PRESSURE_PLATES)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.WOODEN_BUTTONS)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.WOODEN_PRESSURE_PLATES)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.SIGNS)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.STANDING_SIGNS)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.WALL_SIGNS)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.BANNERS)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.RAILS)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.LEAVES)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.REPLACEABLE)) return true;
+        if (state.is(net.minecraft.tags.BlockTags.REPLACEABLE_BY_TREES)) return true;
+
+        // Explicit block checks for blocks not in convenient tags
+        net.minecraft.world.level.block.Block block = state.getBlock();
+        if (block == Blocks.TORCH) return true;
+        if (block == Blocks.WALL_TORCH) return true;
+        if (block == Blocks.SOUL_TORCH) return true;
+        if (block == Blocks.SOUL_WALL_TORCH) return true;
+        if (block == Blocks.REDSTONE_TORCH) return true;
+        if (block == Blocks.REDSTONE_WALL_TORCH) return true;
+        if (block == Blocks.LADDER) return true;
+        if (block == Blocks.LEVER) return true;
+        if (block == Blocks.SNOW) return true;          // snow layer
+        if (block == Blocks.SNOW_BLOCK) return false;   // snow block is solid
+        if (block == Blocks.REDSTONE_WIRE) return true;
+        if (block == Blocks.REPEATER) return true;
+        if (block == Blocks.COMPARATOR) return true;
+        if (block == Blocks.TRIPWIRE) return true;
+        if (block == Blocks.TRIPWIRE_HOOK) return true;
+        if (block == Blocks.COBWEB) return true;
+        if (block == Blocks.SUGAR_CANE) return true;
+        if (block == Blocks.BAMBOO) return true;
+        if (block == Blocks.BAMBOO_SAPLING) return true;
+        if (block == Blocks.TALL_GRASS) return true;
+        if (block == Blocks.LARGE_FERN) return true;
+        if (block == Blocks.GRASS) return true;
+        if (block == Blocks.FERN) return true;
+
+        return false;
+    }
+
+    /**
+     * CRON-109: Does the existing block state already match the target
+     * block-id string? Used to skip redundant writes (no-op carving).
+     *
+     * @param existing      the current block state in the world
+     * @param targetBlockId the target block-id string (e.g. "minecraft:coarse_dirt")
+     * @return {@code true} if the existing block already matches the target
+     */
+    private static boolean blockIdMatches(BlockState existing, String targetBlockId) {
+        var existingKey = net.minecraftforge.registries.ForgeRegistries.BLOCKS
+                .getKey(existing.getBlock());
+        if (existingKey == null) return false;
+        String existingId = existingKey.toString();
+        // For air target, also treat existing air as a match (handled by
+        // the isAir() check above, but defensive here too).
+        return existingId.equals(targetBlockId);
     }
 }

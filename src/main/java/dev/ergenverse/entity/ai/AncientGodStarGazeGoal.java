@@ -1,5 +1,8 @@
 package dev.ergenverse.entity.ai;
 
+import dev.ergenverse.cultivation.CultivationCapability;
+import dev.ergenverse.cultivation.CultivationState;
+import dev.ergenverse.cultivation.RealmId;
 import dev.ergenverse.entity.EntityCultivator;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -8,6 +11,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
@@ -95,10 +99,15 @@ import java.util.EnumSet;
  *     the gaze fizzles — no damage, no paralysis, but the cooldown still
  *     applies. This is canon-faithful: the Ancient God Eye requires
  *     sustained eye contact.</li>
- *   <li>No defense against the gaze for high-realm cultivators. Canon:
- *     Soul Formation+ cultivators can resist the gaze. A future CRON
- *     could check {@code target}'s realm and reduce/disable the paralysis
- *     for cultivators at or above Tuo Sen's tier. Out of scope for CRON-108.</li>
+ *   <li><b>CRON-109: High-realm resistance now implemented.</b>
+ *     Cultivators at or above Soul Formation (order 5) take 50% paralysis
+ *     duration (50 ticks slowness/weakness, 30 ticks darkness).
+ *     Cultivators at or above Ancient (order 15, matching Tuo Sen's own
+ *     tier) take NO paralysis — they fully resist the god-gaze. The 30
+ *     damage still applies in all cases (canon: even a peer-tier
+ *     cultivator takes some damage from an Ancient God's gaze, but
+ *     they're not paralyzed by it). Closes the CRON-108 self-critique #5
+ *     documented enhancement.</li>
  * </ul>
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.
@@ -123,6 +132,20 @@ public class AncientGodStarGazeGoal extends Goal {
 
     /** Cooldown in ticks (14 seconds = 280 ticks). */
     private static final int COOLDOWN_TICKS = 280;
+
+    /**
+     * CRON-109: Realm threshold at which the target takes 50% paralysis.
+     * Canon: Soul Formation (化神) cultivators can partially resist the
+     * Ancient God Eye. Below this realm, full paralysis applies.
+     */
+    private static final RealmId PARTIAL_RESIST_THRESHOLD = RealmId.SOUL_FORMATION;
+
+    /**
+     * CRON-109: Realm threshold at which the target fully resists paralysis.
+     * Canon: Ancient (古境) cultivators — peer-tier to Tuo Sen — are
+     * immune to the gaze's paralyzing effect. They still take damage.
+     */
+    private static final RealmId FULL_RESIST_THRESHOLD = RealmId.ANCIENT;
 
     private final Mob mob;
     private int cooldown;
@@ -240,18 +263,52 @@ public class AncientGodStarGazeGoal extends Goal {
             return;
         }
 
-        // ── Apply paralysis effects ──
-        // SLOWNESS IV (slowness amplifier 3 = IV) for 5s
-        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
-                PARALYSIS_DURATION, 3, false, true, true));
-        // WEAKNESS II for 5s
-        target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,
-                PARALYSIS_DURATION, 1, false, true, true));
-        // DARKNESS for 3s (visual impairment — the god-gaze darkens the target's vision)
-        target.addEffect(new MobEffectInstance(MobEffects.DARKNESS,
-                DARKNESS_DURATION, 0, false, true, true));
+        // ── CRON-109: Resolve the target's cultivation realm ──
+        // Canon: Soul Formation+ cultivators can partially resist the
+        // Ancient God Eye. Ancient+ cultivators fully resist the paralysis.
+        // The 30 damage still applies in all cases.
+        RealmId targetRealm = resolveTargetRealm(target);
+        float paralysisMultiplier;
+        String resistLabel;
+        if (targetRealm.order >= FULL_RESIST_THRESHOLD.order) {
+            // Full resist — no paralysis effects, damage still applies
+            paralysisMultiplier = 0.0F;
+            resistLabel = "FULL_RESIST";
+        } else if (targetRealm.order >= PARTIAL_RESIST_THRESHOLD.order) {
+            // Partial resist — 50% paralysis duration
+            paralysisMultiplier = 0.5F;
+            resistLabel = "PARTIAL_RESIST";
+        } else {
+            // No resist — full paralysis
+            paralysisMultiplier = 1.0F;
+            resistLabel = "NO_RESIST";
+        }
 
-        // ── Apply damage ──
+        // ── Apply paralysis effects (realm-gated) ──
+        // Only apply if the multiplier > 0 (i.e., target is not full-resist)
+        if (paralysisMultiplier > 0.0F) {
+            int paralysisTicks = (int) Math.round(PARALYSIS_DURATION * paralysisMultiplier);
+            int darknessTicks = (int) Math.round(DARKNESS_DURATION * paralysisMultiplier);
+
+            // SLOWNESS IV (slowness amplifier 3 = IV) for the (possibly reduced) duration
+            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
+                    paralysisTicks, 3, false, true, true));
+            // WEAKNESS II for the (possibly reduced) duration
+            target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,
+                    paralysisTicks, 1, false, true, true));
+            // DARKNESS for the (possibly reduced) duration (visual impairment)
+            target.addEffect(new MobEffectInstance(MobEffects.DARKNESS,
+                    darknessTicks, 0, false, true, true));
+        } else {
+            // Full resist — send a feedback particle to show the resistance
+            // (gold sparkles around the target's head — canon: a cultivator
+            // at Ancient tier deflects the gaze with their own god-body)
+            sl.sendParticles(ParticleTypes.END_ROD,
+                    target.getX(), target.getY() + target.getEyeHeight() + 0.5, target.getZ(),
+                    12, 0.4, 0.2, 0.4, 0.1);
+        }
+
+        // ── Apply damage (always — realm-gating only applies to paralysis) ──
         target.hurt(mob.damageSources().mobAttack(mob), GAZE_DAMAGE);
 
         // ── Particle beam from Tuo Sen's head to the target ──
@@ -276,6 +333,63 @@ public class AncientGodStarGazeGoal extends Goal {
         mob.playSound(net.minecraft.sounds.SoundEvents.WITHER_DEATH, 1.0F, 1.2F);
         // Secondary: a deep ENDER_DRAGON_GROWL
         mob.playSound(net.minecraft.sounds.SoundEvents.ENDER_DRAGON_GROWL, 0.6F, 0.5F);
+
+        // ── CRON-109: Log the resistance outcome (for debugging) ──
+        dev.ergenverse.core.Ergenverse.LOGGER.debug("[Ergenverse] CRON-109: Tuo Sen Star Gaze "
+                + "fired on target {} (realm={}, order={}) → resist={}, damage={}, "
+                + "paralysisMultiplier={}.",
+                target.getName().getString(), targetRealm.name, targetRealm.order,
+                resistLabel, GAZE_DAMAGE, paralysisMultiplier);
+    }
+
+    /**
+     * CRON-109: Resolve the target's cultivation realm.
+     *
+     * <p>Three cases:
+     * <ul>
+     *   <li><b>Player target:</b> use the {@link CultivationCapability}
+     *       attached to the player entity (the canonical path).</li>
+     *   <li><b>EntityCultivator target:</b> use its
+     *       {@link EntityCultivator#getCultivationRealm()} string and
+     *       parse it to a {@link RealmId} via {@link RealmId#valueOf}.
+     *       This handles canon NPCs caught in the gaze (e.g., a peer
+     *       cultivator caught in crossfire).</li>
+     *   <li><b>Other LivingEntity (vanilla mob):</b> no cultivation
+     *       realm → return {@link RealmId#MORTAL} (full paralysis).</li>
+     * </ul>
+     *
+     * @param target the gaze target
+     * @return the target's cultivation realm (never null)
+     */
+    private static RealmId resolveTargetRealm(LivingEntity target) {
+        // Case 1: Player target — use the capability
+        if (target instanceof Player player) {
+            var stateOpt = CultivationCapability.get(player);
+            if (stateOpt.isPresent()) {
+                CultivationState state = stateOpt.resolve().orElse(null);
+                if (state != null) {
+                    return state.getCurrentRealm();
+                }
+            }
+            return RealmId.MORTAL;
+        }
+
+        // Case 2: EntityCultivator target — parse its realm string
+        if (target instanceof EntityCultivator ec) {
+            String realmStr = ec.getCultivationRealm();
+            if (realmStr != null && !realmStr.isEmpty()) {
+                try {
+                    return RealmId.valueOf(realmStr.toUpperCase());
+                } catch (IllegalArgumentException ex) {
+                    // Unknown realm string — fall back to MORTAL
+                    return RealmId.MORTAL;
+                }
+            }
+            return RealmId.MORTAL;
+        }
+
+        // Case 3: Vanilla mob — no cultivation realm
+        return RealmId.MORTAL;
     }
 
     /**
