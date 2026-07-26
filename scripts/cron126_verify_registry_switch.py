@@ -21,14 +21,17 @@ Checks:
 import sys
 from pathlib import Path
 
+# NOTE: CRON-127 relocated CanonSettlementBuilder from canon/structure → materialization,
+# and VolumePlacer from canon/structure → materialization. The paths below reflect the
+# current (post-CRON-127) layout; the checks remain semantically identical to CRON-126.
 ROOT = Path("/home/z/my-project/forge-mod/src/main/java/dev/ergenverse")
 REGISTRY = ROOT / "runtime/materialize/StructureBuilderRegistry.java"
-BUILDER = ROOT / "canon/structure/CanonSettlementBuilder.java"
+BUILDER = ROOT / "materialization/CanonSettlementBuilder.java"
 COMPOSITION = ROOT / "canon/structure/WangFamilyVillageComposition.java"
 SETTLEMENT = ROOT / "canon/structure/CanonSettlement.java"
 ROOM = ROOT / "canon/structure/CanonRoom.java"
 FURNITURE = ROOT / "canon/structure/CanonFurniture.java"
-PLACER = ROOT / "canon/structure/VolumePlacer.java"
+PLACER = ROOT / "materialization/VolumePlacer.java"
 
 errors = []
 passed = 0
@@ -79,10 +82,17 @@ check(
     "WangFamilyVillageComposition.create()" in builder_text,
     "delegation missing"
 )
+# CRON-127: CanonSettlementBuilder now calls WorldAssembler.assemble + VoxelMaterializer.materialize
+# (VolumePlacer.forChunk is invoked inside VoxelMaterializer.materialize, not in the builder directly).
 check(
-    "Builder uses VolumePlacer.forChunk",
-    "VolumePlacer.forChunk(level, bounds)" in builder_text,
-    "VolumePlacer.forChunk not used"
+    "Builder uses WorldAssembler.assemble (CRON-127 pipeline)",
+    "WorldAssembler.assemble" in builder_text,
+    "WorldAssembler.assemble not used"
+)
+check(
+    "Builder uses VoxelMaterializer.materialize (CRON-127 pipeline)",
+    "VoxelMaterializer.materialize" in builder_text,
+    "VoxelMaterializer.materialize not used"
 )
 check(
     "Builder resolves canon coordinate from PlanetSuzakuBlueprint",

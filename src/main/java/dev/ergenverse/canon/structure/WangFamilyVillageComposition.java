@@ -8,11 +8,15 @@ import java.util.List;
  * {@link CanonSettlement} composed of buildings → rooms → furniture.
  *
  * <p><b>CRON-COMPLETIONIST-125 — STRUCTURE COMPOSITION SYSTEM (user roadmap #2)</b>
+ * <b>CRON-127 — WORLD ASSEMBLY COMPILER (user architectural directive)</b>
  *
  * <p>This is the semantic replacement for the legacy 1220-line
  * {@code WangFamilyVillageBuilder}. The legacy builder placed ~80,000 blocks
  * via 79 {@code setBlock} call sites; this composition class expresses the
- * village as a tree of lore objects.
+ * village as a tree of lore objects. CRON-127 made the tree fully Minecraft-free
+ * — no {@code materializeInto}, no {@code BlockState}, no {@code BlockPos}. The
+ * {@link dev.ergenverse.assembly.WorldAssembler} compiles the tree into a flat
+ * list of {@link dev.ergenverse.assembly.VoxelInstruction}s.
  *
  * <h2>Canon fidelity — honest classification</h2>
  *
@@ -39,12 +43,18 @@ import java.util.List;
  *
  * <h2>Migration path</h2>
  *
- * <p>CRON-125 ships the composition system alongside the legacy builder —
- * both coexist. The legacy {@code WangFamilyVillageBuilder.buildForChunk}
- * remains the registered builder in
- * {@link dev.ergenverse.runtime.materialize.StructureBuilderRegistry}. The
- * composition system is exercised via the new {@code /ergen debug canon-build
- * wang_family_village} command. A future CRON will switch the registry entry.
+ * <p>CRON-125 shipped the composition system alongside the legacy builder. CRON-126
+ * switched {@link dev.ergenverse.runtime.materialize.StructureBuilderRegistry} to
+ * route {@code wang_family_village} through
+ * {@link dev.ergenverse.materialization.CanonSettlementBuilder} (the adapter that
+ * compiles + materializes a CanonSettlement). CRON-127 rewrote the adapter
+ * internals to use the {@link dev.ergenverse.assembly.WorldAssembler} +
+ * {@link dev.ergenverse.assembly.VoxelInstruction} IR +
+ * {@link dev.ergenverse.materialization.VoxelMaterializer} pipeline, removing
+ * the old direct {@code materializeInto(VolumePlacer)} call. The legacy
+ * 1220-line {@code WangFamilyVillageBuilder} is RETAINED as reference + fallback
+ * but is no longer on the live materialization path. The composition system is
+ * the live path for every chunk load in the Wang Family Village footprint.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */

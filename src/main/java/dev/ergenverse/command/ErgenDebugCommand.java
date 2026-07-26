@@ -1446,26 +1446,34 @@ public class ErgenDebugCommand {
      * journaled under SIMULATION) prevents double-builds.
      */
     // ── CRON-125: Canon structure composition ──────────────────────────
+    // ── CRON-127: World Assembly Compiler pipeline ────────────────────
 
     /**
      * /ergen debug canon-build — materialize Wang Family Village via the
-     * semantic composition system (Village → Buildings → Rooms → Furniture).
+     * CRON-127 five-layer pipeline:
+     * <pre>
+     *   Canon (lore) → Semantic AST (CanonSettlement tree)
+     *       → WorldAssembler → VoxelInstruction IR
+     *       → VoxelMaterializer → MaterialResolver → ServerLevel
+     * </pre>
      * Delegates to {@link CanonSettlementBuilder#buildWangFamilyVillage}.
      */
     private static int canonBuildWangFamilyVillage(CommandContext<CommandSourceStack> ctx) {
         ServerLevel level = ctx.getSource().getLevel();
         ctx.getSource().sendSuccess(() -> Component.literal(
-            "\u00a76\u00a7l=== CANON BUILD (Composition) ===\u00a7r"), false);
+            "\u00a76\u00a7l=== CANON BUILD (CRON-127 World Assembly Compiler) ===\u00a7r"), false);
         ctx.getSource().sendSuccess(() -> Component.literal(
-            "\u00a77System:\u00a7r semantic composition (Village \u2192 Buildings \u2192 Rooms \u2192 Furniture)"), false);
+            "\u00a77Pipeline:\u00a7r Canon \u2192 Semantic AST \u2192 WorldAssembler \u2192 VoxelInstruction IR \u2192 VoxelMaterializer \u2192 ServerLevel"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Layers:\u00a7r L1 canon/structure (no Minecraft) \u2192 L2 assembly (IR + 4 libraries) \u2192 L3 materialization (MaterialResolver seam)"), false);
         ctx.getSource().sendSuccess(() -> Component.literal(
             "\u00a77Settlement:\u00a7r Wang Family Village (\u738b\u6c0f\u6751)"), false);
         ctx.getSource().sendSuccess(() -> Component.literal(
             "\u00a77Canon:\u00a7r \u8d75\u56fd\u67d0\u504f\u50fb\u5c0f\u5c71\u6751 (RI Ch.1-10). 'Wang Family Village' is mod-original."), false);
         try {
-            CanonSettlementBuilder.buildWangFamilyVillage(level, null);
+            int voxels = CanonSettlementBuilder.buildWangFamilyVillage(level, null);
             ctx.getSource().sendSuccess(() -> Component.literal(
-                "\u00a7aSUCCESS\u00a7r — Wang Family Village composition materialized at canon coordinate."), false);
+                "\u00a7aSUCCESS\u00a7r — Wang Family Village compiled + materialized (" + voxels + " voxels written)."), false);
         } catch (Throwable t) {
             ctx.getSource().sendFailure(Component.literal(
                 "\u00a7cFailed: " + t.getMessage() + "\u00a7r"));
