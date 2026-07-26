@@ -1,57 +1,74 @@
 /**
- * Semantic structure composition — the "Canon Database" layer of the engine.
+ * Semantic structure composition — the <b>Canon Database</b> layer of the engine.
  *
- * <p><b>CRON-COMPLETIONIST-125 — STRUCTURE COMPOSITION SYSTEM (user roadmap #2)</b>
+ * <p><b>CRON-127 — WORLD ASSEMBLY COMPILER (user architectural directive)</b>
  *
- * <p>The user's 2026-07-27 architectural redirection:
+ * <p>Per the user's constitutional rule:
  * <blockquote>
- *   The bottleneck has become <b>content representation</b>. Not AI. Not chunk
- *   generation. Not deltas. Representation. […] I'd eventually replace builders
- *   entirely. Village → Buildings → Rooms → Furniture → Blocks. Each object
- *   should know how to materialize itself. […] Now the world actually understands
- *   "This is Wang Lin's bedroom." rather than "Stone brick at (3844,72,-1182)."
+ *   Minecraft classes (BlockState, BlockPos, Blocks, ServerLevel, Entity, etc.)
+ *   may not appear in the Canon or Semantic World layers. They are backend
+ *   implementation details and belong exclusively to the world
+ *   assembly/materialization backend.
  * </blockquote>
  *
- * <p>This package implements that vision. It contains:
- * <ul>
- *   <li>{@link dev.ergenverse.canon.structure.CanonObject} — the root interface
- *       for all canon world objects. Lore-only: no BlockStates, no entities,
- *       no chunks. Knows how to {@code materializeInto} a {@link dev.ergenverse.canon.structure.VolumePlacer}.</li>
- *   <li>{@link dev.ergenverse.canon.structure.CanonSettlement} — a composition
- *       of {@link dev.ergenverse.canon.structure.CanonBuilding}s.</li>
- *   <li>{@link dev.ergenverse.canon.structure.CanonBuilding} — a composition
- *       of {@link dev.ergenverse.canon.structure.CanonRoom}s + owner + era +
- *       purpose + shell type.</li>
- *   <li>{@link dev.ergenverse.canon.structure.CanonRoom} — a composition of
- *       {@link dev.ergenverse.canon.structure.CanonFurniture}s + a semantic
- *       function (BEDROOM, KITCHEN, MEDITATION, STORAGE, COURTYARD, WORKSHOP)
- *       + owner + bounding volume.</li>
- *   <li>{@link dev.ergenverse.canon.structure.CanonFurniture} — an enum of
- *       semantic furniture (BED, MEDITATION_MAT, BOOKSHELF, HIDDEN_STORAGE,
- *       DESK, LAMP, ALCHEMY_FURNACE, SPIRIT_WELL, etc.).</li>
- *   <li>{@link dev.ergenverse.canon.structure.VolumePlacer} — the chunk-filtered,
- *       provenance-aware sink for block placements.</li>
- *   <li>{@link dev.ergenverse.canon.structure.WangFamilyVillageComposition} —
- *       authors Wang Family Village as a CanonSettlement.</li>
- *   <li>{@link dev.ergenverse.canon.structure.CanonSettlementBuilder} — the
- *       adapter that lets a CanonSettlement plug into the existing
- *       {@link dev.ergenverse.runtime.materialize.StructureBuilderRegistry}.</li>
- * </ul>
+ * <p>Consequently, <b>this package contains zero {@code net.minecraft} imports.</b>
+ * It is a pure domain model of the Er Gen world: settlements, buildings, rooms,
+ * furniture, themes, anchors, and intents — all expressed as plain Java records
+ * and enums with {@code int} coordinates. The world is not "rendered" here; it
+ * is <i>described</i>.
  *
- * <h2>Architectural layering (per the user's five-layer model)</h2>
+ * <h2>The compilation pipeline (CRON-127)</h2>
  * <pre>
  *   Er Gen Canon (lore)
  *         │
- *   Canon Database (this package — semantic world objects, NO Minecraft world imports)
+ *   ┌─────┴───────────────────────────────────┐  ◄── this package (Layer 1)
+ *   │  CanonSettlement → CanonBuilding →       │      Pure semantic. No Minecraft.
+ *   │  CanonRoom → CanonFurniture               │      Knows: id, evidence, theme,
+ *   │  + BuildingTheme + Anchor + Intent        │      owner, era, anchors, bounds.
+ *   └─────┬───────────────────────────────────┘
  *         │
- *   Blueprint (PlanetSuzakuBlueprint — coordinates + queries)
+ *   dev.ergenverse.assembly (Layer 2-3)
+ *   WorldAssembler + 4 libraries + VoxelInstruction IR
  *         │
- *   World Runtime (WorldDeltaStore + CompositeWorldLayer + WorldFacade)
+ *   dev.ergenverse.materialization (Layer 4)
+ *   MaterialResolver (MaterialID→BlockState) + VoxelMaterializer
  *         │
- *   Chunk Materializer (PlanetSuzakuChunkMaterializer + BlueprintChunkGenerator)
- *         │
- *   Minecraft Engine (rendering, physics, chunk I/O)
+ *   Minecraft Engine (Layer 5 — rendering, physics, lighting)
  * </pre>
+ *
+ * <h2>Contents</h2>
+ * <ul>
+ *   <li>{@link dev.ergenverse.canon.structure.CanonObject} — root interface:
+ *       {@code canonId}, {@code canonEvidence}, {@code relativeBounds},
+ *       {@code anchors}. No {@code materializeInto} (removed in CRON-127).</li>
+ *   <li>{@link dev.ergenverse.canon.structure.CanonSettlement} — composition of
+ *       {@link dev.ergenverse.canon.structure.CanonBuilding}s + open features.</li>
+ *   <li>{@link dev.ergenverse.canon.structure.CanonBuilding} — rooms +
+ *       {@link dev.ergenverse.canon.structure.BuildingTheme}.</li>
+ *   <li>{@link dev.ergenverse.canon.structure.CanonRoom} — furniture +
+ *       {@link dev.ergenverse.canon.structure.CanonRoom.RoomFunction} + owner.</li>
+ *   <li>{@link dev.ergenverse.canon.structure.CanonFurniture} — semantic enum
+ *       (kind + evidence + {@link dev.ergenverse.canon.structure.Intent} +
+ *       anchors). No block references.</li>
+ *   <li>{@link dev.ergenverse.canon.structure.BuildingTheme} — pure-enum
+ *       construction style (POOR_VILLAGE, ELDER_HOME, …).</li>
+ *   <li>{@link dev.ergenverse.canon.structure.Anchor} — named attachment point
+ *       with a {@link dev.ergenverse.canon.structure.SemanticRole}.</li>
+ *   <li>{@link dev.ergenverse.canon.structure.SemanticRole} — navigational role
+ *       (BED, MEDITATION, ENTRANCE, WELL, …).</li>
+ *   <li>{@link dev.ergenverse.canon.structure.Intent} — semantic purpose
+ *       (SLEEP, CULTIVATE, STUDY, …).</li>
+ *   <li>{@link dev.ergenverse.canon.structure.CanonVolume} — pure-{@code int}
+ *       AABB spatial primitive.</li>
+ *   <li>{@link dev.ergenverse.canon.structure.WangFamilyVillageComposition} —
+ *       authors Wang Family Village as a CanonSettlement.</li>
+ * </ul>
+ *
+ * <p>The adapter that compiles + materializes a CanonSettlement lives in the
+ * {@link dev.ergenverse.materialization} package
+ * ({@link dev.ergenverse.materialization.CanonSettlementBuilder}), because it
+ * references {@code ServerLevel} and therefore cannot reside in this
+ * Minecraft-free layer.
  *
  * <h2>Canon fidelity</h2>
  *
@@ -60,6 +77,6 @@
  * mod but honestly flagged), or inferred (derived from canon). Every class's
  * Javadoc explicitly states which. No fabricated chapter citations.
  *
- * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
+ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17. No Minecraft import.</p>
  */
 package dev.ergenverse.canon.structure;

@@ -1,4 +1,4 @@
-package dev.ergenverse.canon.structure;
+package dev.ergenverse.materialization;
 
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.runtime.ChunkBounds;
@@ -12,24 +12,30 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 /**
- * VolumePlacer — the chunk-filtered, provenance-aware sink for block placements
- * during structure materialization.
+ * VolumePlacer — the chunk-filtered, provenance-aware sink for
+ * {@code setBlock} calls during voxel materialization.
  *
- * <p><b>CRON-COMPLETIONIST-125 — STRUCTURE COMPOSITION SYSTEM (user roadmap #2)</b>
+ * <p><b>CRON-127 — WORLD ASSEMBLY COMPILER</b>
  *
- * <p>This is the bridge between the {@code canon.structure} package (lore-only,
- * no Minecraft world imports) and the existing CRON-62/63/69/72/104 chunk-scoped
- * builder architecture. A {@link CanonObject} (e.g. a {@link CanonFurniture})
- * emits block placements into a {@code VolumePlacer}; the placer applies the
- * same two guards the monolithic {@code WangFamilyVillageBuilder.sb()} applied:
+ * <p>This is the final hop in the pipeline: {@link VoxelMaterializer} resolves
+ * each {@link dev.ergenverse.assembly.VoxelInstruction} into a
+ * {@code BlockState} via {@link MaterialResolver} and hands it here. The placer
+ * applies the same two guards the legacy monolithic
+ * {@code WangFamilyVillageBuilder.sb()} applied:
  *
  * <ol>
  *   <li><b>Chunk filter</b> (CRON-62): if a {@link ChunkBounds} is set,
- *       placements whose (x, z) fall outside the bounds are skipped.</li>
+ *       placements whose (x, z) fall outside the bounds are skipped — the
+ *       settlement IR is assembled in full but only the current chunk is
+ *       written.</li>
  *   <li><b>Provenance-aware rebuild guard</b> (CRON-63): if a PLAYER or
  *       SIMULATION delta exists at the target position, the CANON placement is
  *       skipped. The player's edits take priority over CANON.</li>
  * </ol>
+ *
+ * <p>CRON-125 placed this class in {@code canon.structure}; CRON-127 moves it
+ * here ({@code materialization}) because it references {@code ServerLevel} and
+ * {@code BlockState} — Minecraft types that must not appear in the canon layer.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */

@@ -124,7 +124,7 @@ public final class StructureBuilderRegistry {
         // materialize either). A future CRON will delete it once the composition
         // system is fully playtested.
         register(PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.id,
-                (level, bounds) -> dev.ergenverse.canon.structure.CanonSettlementBuilder
+                (level, bounds) -> dev.ergenverse.materialization.CanonSettlementBuilder
                         .buildWangFamilyVillage(level, bounds));
 
         // CRON-COMPLETIONIST-65: Heng Yue Sect is now chunk-scoped — same pattern

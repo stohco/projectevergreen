@@ -73,7 +73,7 @@ public final class WangFamilyVillageComposition {
                 "village",
                 "Early Zhao",
                 "communal",
-                CanonBuilding.ShellType.COMMON_PLAZA,
+                BuildingTheme.COMMON_PLAZA,
                 "Central Plaza",
                 9, 1, 9,
                 List.of(new CanonBuilding.RoomPlacement(plazaRoom, 0, 0, 0))
@@ -124,7 +124,7 @@ public final class WangFamilyVillageComposition {
                 "wang_family",
                 "Early Zhao",
                 "residence",
-                CanonBuilding.ShellType.POOR_HOUSE,
+                BuildingTheme.POOR_VILLAGE,
                 "Wang Family Home",
                 7, 4, 5,
                 List.of(
@@ -163,7 +163,7 @@ public final class WangFamilyVillageComposition {
                 "elder",
                 "Early Zhao",
                 "residence",
-                CanonBuilding.ShellType.ELDER_HOUSE,
+                BuildingTheme.ELDER_HOME,
                 "Elder's Home",
                 7, 4, 7,
                 List.of(
@@ -204,7 +204,7 @@ public final class WangFamilyVillageComposition {
                     "commoner_" + (i + 1),
                     "Early Zhao",
                     "residence",
-                    CanonBuilding.ShellType.POOR_HOUSE,
+                    BuildingTheme.POOR_VILLAGE,
                     "Commoner Home " + (i + 1),
                     5, 4, 5,
                     List.of(
@@ -250,7 +250,7 @@ public final class WangFamilyVillageComposition {
                     "village",
                     "Early Zhao",
                     "farming",
-                    CanonBuilding.ShellType.FARM_PLOT,
+                    BuildingTheme.FARM_PLOT,
                     "Farm Plot " + (i + 1),
                     5, 1, 5,
                     List.of(new CanonBuilding.RoomPlacement(farmRoom, 0, 0, 0))
@@ -336,7 +336,7 @@ public final class WangFamilyVillageComposition {
                 "village",
                 "Early Zhao",
                 "storage",
-                CanonBuilding.ShellType.STORAGE_SHED,
+                BuildingTheme.STORAGE_SHED,
                 name,
                 3, 3, 3,
                 List.of(new CanonBuilding.RoomPlacement(interior, 0, 0, 0))

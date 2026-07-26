@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * CanonRoom — a semantic room in a building. Composed of
+ * CanonRoom — a <b>semantic</b> room in a building. Composed of
  * {@link CanonFurniture} placements + a {@link RoomFunction} + owner +
- * bounding volume.
+ * bounding volume + named anchors.
  *
- * <p><b>CRON-COMPLETIONIST-125 — STRUCTURE COMPOSITION SYSTEM (user roadmap #2)</b>
+ * <p><b>CRON-127 — WORLD ASSEMBLY COMPILER (user architectural directive)</b>
  *
- * <p>A {@code CanonRoom} is a semantic marker. It carries:
+ * <p>A {@code CanonRoom} is a pure domain object. It carries:
  * <ul>
  *   <li><b>{@link #function}</b> — the room's purpose (BEDROOM, KITCHEN,
  *       MEDITATION, STORAGE, COURTYARD, WORKSHOP, COMMON_AREA, ALCHEMY_LAB).
@@ -19,12 +19,20 @@ import java.util.Objects;
  *   <li><b>{@link #owner}</b> — who owns this room (e.g. "wang_lin").</li>
  *   <li><b>{@link #furniturePlacements}</b> — the (furniture, offset) pairs.</li>
  *   <li><b>{@link #sizeX}, {@link #sizeY}, {@link #sizeZ}</b> — bounding volume.</li>
+ *   <li><b>{@link #anchors}</b> — named attachment points for AI navigation.</li>
  * </ul>
  *
- * <p>The room does NOT place its own walls/floor/ceiling — those are the
- * building's responsibility.
+ * <p>The room does <b>not</b> place its own walls/floor/ceiling — those are the
+ * {@link dev.ergenverse.assembly.BuildingLibrary}'s responsibility. The room
+ * does <b>not</b> know any Minecraft types.
  *
- * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
+ * <p>CRON-125 originally gave {@code CanonRoom} a {@code materializeInto} that
+ * delegated to its furniture. CRON-127 removes that — the
+ * {@link dev.ergenverse.assembly.WorldAssembler} walks the room tree and asks
+ * the {@link dev.ergenverse.assembly.FurnitureLibrary} for each furniture's
+ * voxel geometry.
+ *
+ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17. No Minecraft import.</p>
  */
 public final class CanonRoom implements CanonObject {
 
@@ -47,11 +55,21 @@ public final class CanonRoom implements CanonObject {
     private final int sizeY;
     private final int sizeZ;
     private final List<FurniturePlacement> furniturePlacements;
+    private final List<Anchor> anchors;
 
     public CanonRoom(String canonId, String canonEvidenceStr, RoomFunction function,
                      String owner, String name,
                      int sizeX, int sizeY, int sizeZ,
                      List<FurniturePlacement> furniturePlacements) {
+        this(canonId, canonEvidenceStr, function, owner, name,
+                sizeX, sizeY, sizeZ, furniturePlacements, List.of());
+    }
+
+    public CanonRoom(String canonId, String canonEvidenceStr, RoomFunction function,
+                     String owner, String name,
+                     int sizeX, int sizeY, int sizeZ,
+                     List<FurniturePlacement> furniturePlacements,
+                     List<Anchor> anchors) {
         this.canonId = Objects.requireNonNull(canonId, "canonId");
         this.canonEvidenceStr = Objects.requireNonNull(canonEvidenceStr, "canonEvidenceStr");
         this.function = Objects.requireNonNull(function, "function");
@@ -66,6 +84,9 @@ public final class CanonRoom implements CanonObject {
         this.furniturePlacements = furniturePlacements == null
                 ? List.of()
                 : Collections.unmodifiableList(List.copyOf(furniturePlacements));
+        this.anchors = anchors == null
+                ? List.of()
+                : Collections.unmodifiableList(List.copyOf(anchors));
     }
 
     @Override
@@ -94,16 +115,17 @@ public final class CanonRoom implements CanonObject {
         return furniturePlacements;
     }
 
+    public int sizeX() { return sizeX; }
+    public int sizeY() { return sizeY; }
+    public int sizeZ() { return sizeZ; }
+
     @Override
     public RelativeBounds relativeBounds() {
         return new RelativeBounds(0, 0, 0, sizeX - 1, sizeY - 1, sizeZ - 1);
     }
 
     @Override
-    public void materializeInto(VolumePlacer placer, int dx, int dy, int dz) {
-        if (!intersectsChunk(dx, dz, placer.bounds())) return;
-        for (FurniturePlacement fp : furniturePlacements) {
-            fp.furniture().materializeInto(placer, dx + fp.dx(), dy + fp.dy(), dz + fp.dz());
-        }
+    public List<Anchor> anchors() {
+        return anchors;
     }
 }

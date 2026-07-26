@@ -1,85 +1,96 @@
 package dev.ergenverse.canon.structure;
 
-import dev.ergenverse.runtime.ChunkBounds;
-
-import javax.annotation.Nullable;
+import java.util.List;
 
 /**
- * CanonObject — the root interface for all semantic canon world objects.
+ * CanonObject — the root interface for all <b>semantic</b> canon world objects.
  *
- * <p><b>CRON-COMPLETIONIST-125 — STRUCTURE COMPOSITION SYSTEM (user roadmap #2)</b>
+ * <p><b>CRON-127 — WORLD ASSEMBLY COMPILER (user architectural directive)</b>
  *
- * <p>Every canon world object implements this interface. The defining property
- * is: <b>a CanonObject knows how to materialize itself into a
- * {@link VolumePlacer}</b>. The object is lore (owner, era, purpose, semantic
- * function); the placer is the bridge to Minecraft blocks.
+ * <p>Per the user's constitutional rule: <i>"Minecraft classes (BlockState,
+ * BlockPos, Blocks, ServerLevel, Entity, etc.) may not appear in the Canon or
+ * Semantic World layers. They are backend implementation details and belong
+ * exclusively to the world assembly/materialization backend."</i>
  *
- * <h2>The composition pattern</h2>
+ * <p>Consequently, a {@code CanonObject} <b>knows nothing about Minecraft</b>.
+ * It does not know how to place blocks, does not reference {@code BlockState},
+ * does not even know strings like {@code "minecraft:oak_planks"}. It is a pure
+ * domain object — lore + semantic role + relative volume + named anchors. The
+ * {@link dev.ergenverse.assembly.WorldAssembler} compiles a tree of
+ * {@code CanonObject}s into a flat list of
+ * {@link dev.ergenverse.assembly.VoxelInstruction}s; the
+ * {@link dev.ergenverse.materialization.VoxelMaterializer} turns those into
+ * Minecraft blocks.
  *
- * <p>A {@link CanonSettlement} is a composition of {@link CanonBuilding}s.
- * A {@link CanonBuilding} is a composition of {@link CanonRoom}s. A
- * {@link CanonRoom} is a composition of {@link CanonFurniture}s. Each level
- * delegates {@link #materializeInto} to its children, with an offset
- * translation. The result is a tree of semantic objects whose leaves emit
- * block placements.
+ * <h2>The compilation pipeline</h2>
+ * <pre>
+ *   CanonSettlement  ─┐
+ *   CanonBuilding     ├──► WorldAssembler ──► List&lt;VoxelInstruction&gt; ──► VoxelMaterializer ──► ServerLevel
+ *   CanonRoom         ─┘        (populates AnchorRegistry)                                  (MaterialID→BlockState)
+ *   CanonFurniture
+ * </pre>
  *
- * <h2>Why this is better than a monolithic builder</h2>
- *
- * <p>The legacy {@code WangFamilyVillageBuilder} is 1220 lines with 79 setBlock
- * call sites in a deep call tree. The world knows "stone brick at
- * (3844,72,-1182)" — it does not know "this is Wang Lin's bedroom." The
- * composition system fixes this:
- *
+ * <h2>What a CanonObject provides</h2>
  * <ul>
- *   <li><b>AI reasonability.</b> A future cognition engine can query
- *       {@code village.findRoomAt(pos)} and get back a {@link CanonRoom} with
- *       function=BEDROOM, owner=wang_lin.</li>
- *   <li><b>Canon-error resilience.</b> If we discover Wang Lin's room actually
- *       faced east, we change one offset on one {@code CanonRoom} — not 50
- *       block placements in a 1220-line file.</li>
- *   <li><b>Chunk-scoping for free.</b> Each object's {@link #materializeInto}
- *       queries the placer's bounds and short-circuits if its volume does not
- *       intersect.</li>
- *   <li><b>Composability.</b> A {@link CanonSettlement} can contain another
- *       settlement.</li>
+ *   <li>{@link #canonId()} — stable identifier (e.g. {@code "wang_lin_bedroom"}).</li>
+ *   <li>{@link #canonEvidence()} — honest provenance: canon / inferred / mod-original.</li>
+ *   <li>{@link #relativeBounds()} — the object's volume relative to its parent's
+ *       origin (pure {@code int}s). Used by the assembler for chunk-culling.</li>
+ *   <li>{@link #anchors()} — named attachment points ({@link Anchor}) that the
+ *       assembler resolves to world coordinates for AI navigation.</li>
  * </ul>
  *
- * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
+ * <p>CRON-125 originally gave {@code CanonObject} a {@code materializeInto}
+ * method that emitted {@code BlockState}s into a {@code VolumePlacer}. CRON-127
+ * <b>removes</b> that — materialization is now the assembler's job, and the
+ * canon layer is finally Minecraft-free.
+ *
+ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17. No Minecraft import.</p>
  */
 public interface CanonObject {
 
+    /** Stable semantic identifier (e.g. {@code "wang_lin_bedroom"}). */
     String canonId();
 
+    /** Honest provenance string: canon / inferred / mod-original. */
     String canonEvidence();
 
-    void materializeInto(VolumePlacer placer, int dx, int dy, int dz);
-
-    default void materializeInto(VolumePlacer placer) {
-        materializeInto(placer, 0, 0, 0);
-    }
-
-    @Nullable
+    /**
+     * The object's bounding volume relative to its parent's origin, or
+     * {@code null} if the object has no meaningful volume. Pure {@code int}s.
+     */
     default RelativeBounds relativeBounds() {
         return null;
     }
 
-    default boolean intersectsChunk(int originX, int originZ, @Nullable ChunkBounds bounds) {
-        if (bounds == null) return true;
-        RelativeBounds rb = relativeBounds();
-        if (rb == null) return true;
-        return bounds.contains(originX + rb.minX(), originZ + rb.minZ())
-                || bounds.contains(originX + rb.maxX(), originZ + rb.minZ())
-                || bounds.contains(originX + rb.minX(), originZ + rb.maxZ())
-                || bounds.contains(originX + rb.maxX(), originZ + rb.maxZ())
-                || (bounds.minX >= originX + rb.minX() && bounds.minX <= originX + rb.maxX()
-                    && bounds.minZ >= originZ + rb.minZ() && bounds.minZ <= originZ + rb.maxZ());
+    /**
+     * Named attachment points ({@link Anchor}) relative to this object's
+     * origin. The assembler resolves these to absolute world coordinates and
+     * registers them for AI navigation. Defaults to none.
+     */
+    default List<Anchor> anchors() {
+        return List.of();
     }
 
+    /**
+     * Immutable integer AABB relative to a parent's origin.
+     *
+     * @param minX min X (inclusive)
+     * @param minY min Y (inclusive)
+     * @param minZ min Z (inclusive)
+     * @param maxX max X (inclusive)
+     * @param maxY max Y (inclusive)
+     * @param maxZ max Z (inclusive)
+     */
     record RelativeBounds(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         public RelativeBounds {
             if (maxX < minX || maxY < minY || maxZ < minZ) {
-                throw new IllegalArgumentException("Invalid RelativeBounds");
+                throw new IllegalArgumentException("Invalid RelativeBounds: max < min");
             }
         }
+
+        public int sizeX() { return maxX - minX + 1; }
+        public int sizeY() { return maxY - minY + 1; }
+        public int sizeZ() { return maxZ - minZ + 1; }
     }
 }

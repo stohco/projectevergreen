@@ -28,7 +28,7 @@ import dev.ergenverse.simulation.event.EnergyType;
 import dev.ergenverse.simulation.event.WorldEventBus;
 import dev.ergenverse.simulation.opportunity.OpportunityRegistry;
 import dev.ergenverse.simulation.settlement.CultivatorMindRegistry;
-import dev.ergenverse.canon.structure.CanonSettlementBuilder;
+import dev.ergenverse.materialization.CanonSettlementBuilder;
 import dev.ergenverse.simulation.residence.WangLinHomeBuilder;
 import dev.ergenverse.world.blueprint.WorldBlueprintManager;
 import net.minecraft.commands.CommandSourceStack;
