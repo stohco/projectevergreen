@@ -1,0 +1,186 @@
+{
+  "_comment": "CRON-COMPLETIONIST-105: Suzaku Tomb inheritance chamber loot table. The Suzaku Tomb (朱雀墓) is the underground inheritance site of the 朱雀子 (Suzaku Son) lineage, sealed around the Cultivation Planet Crystal (修炼星晶). This loot table drops World Origin Essence (一界本源) as a very rare drop — closing the CRON-101 acquisition bridge where World Origin Essence was creative/command only. Canon fidelity: the tomb is the most canon-appropriate source for a world-tier reagent. Mod-original acquisition path: canon does not explicitly state Wang Lin found 一界本源 in the tomb (he later extracts it from the 逆尘界 / Ni Chen Realm), but placing it here is the most canon-faithful option for a Minecraft loot table. NO fabricated chapter citation.",
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "_comment_pool": "Pool 1: Rare inheritance drops. World Origin Essence is the rarest drop (weight 1 / 20 = 5% chance per roll). This is intentional — 一界本源 is a world-tier reagent, not a common find.",
+      "rolls": {
+        "min": 1,
+        "max": 2
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "name": "ergenverse:world_origin_essence"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 3,
+          "name": "ergenverse:spirit_stone_high",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 3
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "name": "ergenverse:spirit_stone_mid",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 8,
+          "name": "ergenverse:spirit_stone",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 10
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "_comment_pool": "Pool 2: Canon-flavored inheritance loot. Jade slips (canon: cultivators record techniques on jade slips), dao fragments, soul fragments. These are the 'inheritance' — the knowledge and essence of the prior Suzaku Sons.",
+      "rolls": {
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "name": "ergenverse:jade_slip"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 4,
+          "name": "ergenverse:dao_fragment",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 3
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 3,
+          "name": "ergenverse:soul_fragment",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 2,
+          "name": "ergenverse:tribulation_fragment",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "name": "ergenverse:heart_devil_flower"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 5
+        }
+      ]
+    },
+    {
+      "_comment_pool": "Pool 3: Common loot. Spirit stones and soul-nourishing lotus — the 'everyday' treasures an inheritance site would accumulate over generations.",
+      "rolls": {
+        "min": 2,
+        "max": 4
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "name": "ergenverse:spirit_stone",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 8
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 6,
+          "name": "ergenverse:soul_nourishing_lotus",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 4,
+          "name": "ergenverse:blood_essence",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 5
+        }
+      ]
+    }
+  ]
+}

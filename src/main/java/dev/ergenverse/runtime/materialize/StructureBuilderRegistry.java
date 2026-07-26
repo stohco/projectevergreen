@@ -9,6 +9,7 @@ import dev.ergenverse.spawn.NanDouCityBuilder;
 import dev.ergenverse.spawn.QilinCityBuilder;
 import dev.ergenverse.spawn.SnowDomainCapitalBuilder;
 import dev.ergenverse.spawn.SoulRefiningSectBuilder;
+import dev.ergenverse.spawn.SuzakuTombBuilder;
 import dev.ergenverse.spawn.TengFamilyCityBuilder;
 import dev.ergenverse.spawn.TianShuiCityBuilder;
 import dev.ergenverse.spawn.VermilionBirdImperialCityBuilder;
@@ -48,6 +49,15 @@ import java.util.Map;
  * buildForChunk and apply the sb() chunk-filter + provenance-guard helper.
  * The legacy "ignore bounds, full build" path is gone; every builder now
  * respects the chunk-materializer's incremental contract.
+ *
+ * <p><b>CRON-COMPLETIONIST-105 (Suzaku Tomb):</b> the 12th builder —
+ * {@link SuzakuTombBuilder} — is now registered for the
+ * {@link PlanetSuzakuBlueprint#SUZAKU_TOMB} canon location (category
+ * "ruin"). It materializes the underground inheritance chamber at
+ * (0, -60, 0) with the Cultivation Planet Crystal, spirit-vein conduits,
+ * sealing formation, and an inheritance chest that drops World Origin
+ * Essence. This closes the CRON-101 acquisition bridge and fills the
+ * last canon-location gap.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
@@ -130,6 +140,16 @@ public final class StructureBuilderRegistry {
         register(PlanetSuzakuBlueprint.SOUL_REFINING_SECT.id, (l, b) -> SoulRefiningSectBuilder.buildForChunk(l, b));
         register(PlanetSuzakuBlueprint.XUAN_DAO_SECT.id, (l, b) -> XuanDaoSectBuilder.buildForChunk(l, b));
         register(PlanetSuzakuBlueprint.LUO_HE_SECT.id, (l, b) -> LuoHeSectBuilder.buildForChunk(l, b));
+
+        // CRON-COMPLETIONIST-105: Suzaku Tomb (朱雀墓) — the underground
+        // inheritance site of the 朱雀子 lineage. Materializes a sealed
+        // inheritance chamber at (0, -60, 0) with the Cultivation Planet
+        // Crystal (diamond block placeholder), four spirit-vein conduits,
+        // four sealing formation cores, and an inheritance chest that drops
+        // World Origin Essence (一界本源) as a very rare drop. Closes the
+        // CRON-101 acquisition bridge. Protected by CRON-104's 150-block
+        // cave-suppression radius — no caves can breach the chamber.
+        register(PlanetSuzakuBlueprint.SUZAKU_TOMB.id, (l, b) -> SuzakuTombBuilder.buildForChunk(l, b));
     }
 
     /** Register (or replace) the builder for a canon location id. */
