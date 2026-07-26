@@ -76,144 +76,142 @@ public class EREntityTypes {
                             .build("cultivator")
             );
 
-    // ── Spirit Beast entities — per-type bounding boxes matching custom model anatomy ──
+    // ── Spirit Beast entities ──────────────────────────────────────────
+    // CRON-COMPLETIONIST-84: SINGLE SOURCE OF TRUTH for hitboxes.
+    // Each .sized(w, h) call reads from SpiritBeastEntity.BeastType.XXX.width/height.
+    // SpiritBeastEntity.getDimensions() reads from the SAME enum fields.
+    // There is ONE place to change a beast's hitbox: the BeastType enum constant.
     // All use the unified SpiritBeastEntity shell. The custom models
     // (SpiritWolfModel, SpiritHawkModel, etc.) define the visual shape;
     // the bounding box here is sized to the model's actual footprint.
     // MobCategory.CREATURE so they spawn naturally.
 
-    // SpiritRabbitModel: body 4x4x5, feet at y=15, model origin y=11. Hitbox: ~0.4 wide, ~0.5 tall.
+    // SpiritRabbitModel: body 4x4x5, feet at y=15, model origin y=11.
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_RABBIT =
             ENTITY_TYPES.register("spirit_rabbit", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.4F, 0.5F)
+                            .sized(SpiritBeastEntity.BeastType.RABBIT.width,
+                                   SpiritBeastEntity.BeastType.RABBIT.height)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("spirit_rabbit"));
 
-    // SpiritWolfModel: body 4x6x10, legs to y=15. Hitbox: 0.6 wide, 0.9 tall.
-    // CRON-COMPLETIONIST-80: was 0.7x1.0 — slightly too wide and tall vs model.
+    // SpiritWolfModel: body 4x6x10, legs to y=15.
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_WOLF =
             ENTITY_TYPES.register("spirit_wolf", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.6F, 0.9F)
+                            .sized(SpiritBeastEntity.BeastType.WOLF.width,
+                                   SpiritBeastEntity.BeastType.WOLF.height)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("spirit_wolf"));
 
-    // SpiritDeerModel: body 3x5x8, long neck + antlers. Hitbox: 0.7 wide, 1.8 tall.
-    // CRON-COMPLETIONIST-80: was 0.8x1.4 — antlers and head were unhittable.
-    // Capped at 1.8 tall (doorway clearance) even though model stands 2.2.
+    // SpiritDeerModel: body 3x5x8, long neck + antlers. Height capped at 1.8
+    // (doorway clearance) even though model stands 2.2.
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_DEER =
             ENTITY_TYPES.register("spirit_deer", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.7F, 1.8F)
+                            .sized(SpiritBeastEntity.BeastType.DEER.width,
+                                   SpiritBeastEntity.BeastType.DEER.height)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("spirit_deer"));
 
-    // SpiritFireBeastModel: body 5x6x10, flame mane extends higher. Hitbox: 1.2 wide, 1.4 tall — biggest predator.
-    // CRON-COMPLETIONIST-80: was 1.0 wide — model is 1.4, player walked through flanks.
-    // Capped at 1.2 wide (door navigation).
+    // SpiritFireBeastModel: body 5x6x10, flame mane extends higher. Biggest predator.
     public static final RegistryObject<EntityType<SpiritBeastEntity>> FIRE_BEAST =
             ENTITY_TYPES.register("fire_beast", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.2F, 1.4F)
+                            .sized(SpiritBeastEntity.BeastType.FIRE_BEAST.width,
+                                   SpiritBeastEntity.BeastType.FIRE_BEAST.height)
                             .clientTrackingRange(12)
                             .updateInterval(2)
                             .fireImmune()
                             .build("fire_beast"));
 
-    // StoneBackBoarModel: body 5x5x10, stone plate adds width. Hitbox: 1.2 wide, 1.0 tall.
-    // CRON-COMPLETIONIST-80: was 1.0 wide — model is 1.4, player walked through stone plate.
-    // Capped at 1.2 wide (door navigation).
+    // StoneBackBoarModel: body 5x5x10, stone plate adds width.
     public static final RegistryObject<EntityType<SpiritBeastEntity>> STONE_BACK_BOAR =
             ENTITY_TYPES.register("stone_back_boar", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.2F, 1.0F)
+                            .sized(SpiritBeastEntity.BeastType.STONE_BACK_BOAR.width,
+                                   SpiritBeastEntity.BeastType.STONE_BACK_BOAR.height)
                             .clientTrackingRange(10)
                             .updateInterval(3)
                             .build("stone_back_boar"));
 
     // SpiritHawkModel: body 6x4x6, wingspan 14+ each side (visual only).
-    // Hitbox: 0.5 wide, 0.6 tall — body-only collision (vanilla parrot convention).
-    // CRON-COMPLETIONIST-80: was 0.5x0.6 (correct for body-only); updated comment
-    // to reflect the design intent — wings are visual, hitbox covers body+head only.
+    // Body-only collision (vanilla parrot convention — wings are visual).
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_HAWK =
             ENTITY_TYPES.register("spirit_hawk", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.5F, 0.6F)
+                            .sized(SpiritBeastEntity.BeastType.HAWK.width,
+                                   SpiritBeastEntity.BeastType.HAWK.height)
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build("spirit_hawk"));
 
     // CRON-COMPLETIONIST-22/24: SpiritCraneModel — red-crowned crane, long neck, narrow body.
-    // Hitbox: 0.6 wide, 1.8 tall (capped at door clearance; model stands 2.0).
-    // CRON-COMPLETIONIST-80: was 0.6x1.6 — head was unhittable.
+    // Height capped at 1.8 (doorway clearance; model stands 2.0).
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_CRANE =
             ENTITY_TYPES.register("spirit_crane", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.6F, 1.8F)
+                            .sized(SpiritBeastEntity.BeastType.CRANE.width,
+                                   SpiritBeastEntity.BeastType.CRANE.height)
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build("spirit_crane"));
 
     // CRON-COMPLETIONIST-33: SpiritBatModel — small aerial insectivore.
-    // Hitbox: ~0.4 wide, ~0.5 tall (compact body, wings visual only).
+    // Compact body, wings visual only.
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_BAT =
             ENTITY_TYPES.register("spirit_bat", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.4F, 0.5F)
+                            .sized(SpiritBeastEntity.BeastType.BAT.width,
+                                   SpiritBeastEntity.BeastType.BAT.height)
                             .clientTrackingRange(5)
                             .updateInterval(2)
                             .build("spirit_bat"));
 
     // CRON-COMPLETIONIST-33: QilinModel — winged wolf-quadruped with antlers + mane.
-    // Hitbox: 1.0 wide, 1.5 tall (antlers and mane add height).
-    // CRON-COMPLETIONIST-80: was 1.0x1.4 — antler tips were unhittable.
     public static final RegistryObject<EntityType<SpiritBeastEntity>> QILIN =
             ENTITY_TYPES.register("qilin", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.0F, 1.5F)
+                            .sized(SpiritBeastEntity.BeastType.QILIN.width,
+                                   SpiritBeastEntity.BeastType.QILIN.height)
                             .clientTrackingRange(10)
                             .updateInterval(2)
                             .fireImmune()
                             .build("qilin"));
 
     // CRON-COMPLETIONIST-33: SeaSerpentModel — undulating aquatic predator.
-    // Hitbox: 1.0 wide, 0.8 tall (elongated body, visual segments extend).
-    // CRON-COMPLETIONIST-80: was 0.8x1.0 — model is 1.2 wide, player walked
-    // through flanks. Capped at 1.0 wide for water navigation. Height lowered
-    // to 0.8 (sea serpents are flatter than tall when swimming).
+    // Elongated body, visual segments extend. Flatter than tall when swimming.
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SEA_SERPENT =
             ENTITY_TYPES.register("sea_serpent", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.0F, 0.8F)
+                            .sized(SpiritBeastEntity.BeastType.SEA_SERPENT.width,
+                                   SpiritBeastEntity.BeastType.SEA_SERPENT.height)
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build("sea_serpent"));
 
     // CRON-COMPLETIONIST-60: SoulFishModel v3 — doubled model dimensions.
-    // Hitbox: 0.6×0.5 (was 0.3×0.3 — too small to see any model detail).
-    // CRON-COMPLETIONIST-80: CRITICAL FIX. The CRON-60 sizing was undone by
-    // SpiritBeastEntity.reassessDimensions() which still returned 0.3×0.3.
-    // The runtime override won, so for ~10 rounds the soul fish was half
-    // the intended size. Both sources now reconcile at 0.6×0.5.
+    // CRON-80: reconciled EntityType.sized with runtime getDimensions.
+    // CRON-84: both now read from BeastType.SOUL_FISH — single source of truth.
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SOUL_FISH =
             ENTITY_TYPES.register("soul_fish", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(0.6F, 0.5F)
+                            .sized(SpiritBeastEntity.BeastType.SOUL_FISH.width,
+                                   SpiritBeastEntity.BeastType.SOUL_FISH.height)
                             .clientTrackingRange(5)
                             .updateInterval(3)
                             .build("soul_fish"));
 
     // CRON-COMPLETIONIST-67: SpiritTigerModel — barrel-chested apex land predator.
     // Model existed since CRON-75 but entity type was never registered. NOW FIXED.
-    // Hitbox: ~1.0 wide, ~1.0 tall (big cat, belly close to ground when stalking).
     public static final RegistryObject<EntityType<SpiritBeastEntity>> SPIRIT_TIGER =
             ENTITY_TYPES.register("spirit_tiger", () ->
                     EntityType.Builder.<SpiritBeastEntity>of(SpiritBeastEntity::new, MobCategory.CREATURE)
-                            .sized(1.0F, 1.0F)
+                            .sized(SpiritBeastEntity.BeastType.TIGER.width,
+                                   SpiritBeastEntity.BeastType.TIGER.height)
                             .clientTrackingRange(8)
                             .updateInterval(2)
                             .build("spirit_tiger"));

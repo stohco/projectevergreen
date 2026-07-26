@@ -48,26 +48,93 @@ import net.minecraft.world.level.Level;
  */
 public class SpiritBeastEntity extends PathfinderMob {
 
-    /** The v1 beast types. */
+    /** The v1 beast types.
+     *
+     * <p><b>CRON-COMPLETIONIST-84 — SINGLE SOURCE OF TRUTH for hitboxes.</b>
+     * Each enum constant carries its own {@code (width, height, eyeHeight)}.
+     * Both {@link EREntityTypes} (for {@code EntityType.Builder.sized()}) and
+     * {@link SpiritBeastEntity#getDimensions} / {@link SpiritBeastEntity#getEyeHeight}
+     * read from THESE fields. There is no longer a dual-source footgun where
+     * {@code EntityType.sized} and {@code getDimensions} can disagree — they
+     * are literally the same value.
+     *
+     * <p>Prior to CRON-84, three sources of truth existed:
+     * <ul>
+     *   <li>(A) {@code EntityType.Builder.sized(w, h)} in EREntityTypes</li>
+     *   <li>(B) {@code SpiritBeastEntity.reassessDimensions()} inline switch
+     *       (runtime override — WINS at runtime, making A stale documentation)</li>
+     *   <li>(C) "Hitbox: ~W wide, ~H tall" comment in EREntityTypes</li>
+     * </ul>
+     * When A and B disagreed, B won — this silently undid CRON-60's SOUL_FISH
+     * fix for ~10 rounds. CRON-80 reconciled all three by hand; CRON-84
+     * eliminates the dual-source architecture so future changes can't desync.
+     *
+     * <p><b>Hitbox design constraints (preserved from CRON-80):</b>
+     * <ul>
+     *   <li>Width ≤ 1.2 (door navigation; vanilla horse is 1.4 but uses a
+     *       separate size handler — we keep ours at 1.2 max so beasts can
+     *       path through doors).</li>
+     *   <li>Height ≤ 1.8 (2-block doorway clearance; deer/crane models are
+     *       ~2.0-2.2 tall but capped to fit doors).</li>
+     *   <li>Eye height ~80% of total height (vanilla Mob pattern).</li>
+     *   <li>Wings on flyers (hawk, bat) are body-only collision per vanilla
+     *       parrot convention — wings are visual, hitbox covers body+head.</li>
+     * </ul>
+     */
     public enum BeastType {
-        RABBIT("rabbit"),
-        WOLF("wolf"),
-        DEER("deer"),
-        HAWK("hawk"),
-        FIRE_BEAST("fire_beast"),
-        STONE_BACK_BOAR("stone_back_boar"),
-        CRANE("spirit_crane"),
-        BAT("spirit_bat"),
-        QILIN("qilin"),
-        SEA_SERPENT("sea_serpent"),
-        SOUL_FISH("soul_fish"),
-        TIGER("spirit_tiger");
+        RABBIT("rabbit", 0.4F, 0.5F, 0.4F),
+        WOLF("wolf", 0.6F, 0.9F, 0.75F),
+        DEER("deer", 0.7F, 1.8F, 1.45F),
+        HAWK("hawk", 0.5F, 0.6F, 0.5F),
+        FIRE_BEAST("fire_beast", 1.2F, 1.4F, 1.15F),
+        STONE_BACK_BOAR("stone_back_boar", 1.2F, 1.0F, 0.8F),
+        CRANE("spirit_crane", 0.6F, 1.8F, 1.6F),
+        BAT("spirit_bat", 0.4F, 0.5F, 0.4F),
+        QILIN("qilin", 1.0F, 1.5F, 1.25F),
+        SEA_SERPENT("sea_serpent", 1.0F, 0.8F, 0.65F),
+        SOUL_FISH("soul_fish", 0.6F, 0.5F, 0.25F),
+        TIGER("spirit_tiger", 1.0F, 1.0F, 0.85F);
 
         public final String id;
-        BeastType(String id) { this.id = id; }
+        /** Hitbox width in blocks. ≤ 1.2 for door navigation. */
+        public final float width;
+        /** Hitbox height in blocks. ≤ 1.8 for doorway clearance. */
+        public final float height;
+        /** Eye height in blocks. ~80% of total height (vanilla Mob pattern). */
+        public final float eyeHeight;
+
+        BeastType(String id, float width, float height, float eyeHeight) {
+            this.id = id;
+            this.width = width;
+            this.height = height;
+            this.eyeHeight = eyeHeight;
+        }
 
         public static BeastType byId(String id) {
             for (BeastType t : values()) if (t.id.equals(id)) return t;
+            return RABBIT;
+        }
+
+        /**
+         * Infer the BeastType from a registry name (e.g. "spirit_rabbit",
+         * "fire_beast", "qilin"). Used by {@link SpiritBeastEntity#defineSynchedData}
+         * to set the default BeastType from the EntityType, so spawn-egg and
+         * vanilla-spawn beasts get the correct hitbox immediately without
+         * waiting for {@code setBeastType()} to be called.
+         *
+         * <p>Matching: tries exact match first, then suffix match (registry
+         * "spirit_rabbit" → id "rabbit"). Falls back to RABBIT if no match.
+         */
+        public static BeastType byRegistryName(String registryName) {
+            if (registryName == null || registryName.isEmpty()) return RABBIT;
+            // Exact match first (e.g. "fire_beast", "qilin", "spirit_crane").
+            for (BeastType t : values()) {
+                if (t.id.equals(registryName)) return t;
+            }
+            // Suffix match (e.g. "spirit_rabbit" → "rabbit", "spirit_hawk" → "hawk").
+            for (BeastType t : values()) {
+                if (registryName.endsWith(t.id)) return t;
+            }
             return RABBIT;
         }
 
@@ -259,7 +326,20 @@ public class SpiritBeastEntity extends PathfinderMob {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_BEAST_TYPE, "rabbit");
+        // CRON-COMPLETIONIST-84: Infer the default BeastType from the EntityType's
+        // registry name, so spawn-egg and vanilla-spawn beasts get the correct
+        // hitbox + navigation immediately. Pre-CRON-84, the default was always
+        // "rabbit", which meant a SPIRIT_WOLF spawn-egg beast had a rabbit-sized
+        // hitbox (0.4x0.5) until setBeastType() was called — but setBeastType()
+        // was NEVER called for spawn-egg beasts, so they kept the wrong hitbox
+        // forever. This fix infers WOLF from "spirit_wolf", DEER from "spirit_deer",
+        // etc., so the default is correct from tick 0.
+        String regName = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
+                .getKey(this.getType()) != null
+                ? net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
+                        .getKey(this.getType()).getPath()
+                : "rabbit";
+        this.entityData.define(DATA_BEAST_TYPE, BeastType.byRegistryName(regName).id);
         this.entityData.define(DATA_CULTIVATION_TIER, 0);
         this.entityData.define(DATA_POSE, POSE_STANDING);
         reassessMoveControl();
@@ -558,88 +638,59 @@ public class SpiritBeastEntity extends PathfinderMob {
         } else {
             this.moveControl = new SprintMoveControl(this);
         }
-        this.reassessDimensions();
+        // CRON-COMPLETIONIST-84: reassessDimensions() removed — dimensions now
+        // read directly from BeastType enum in getDimensions()/getEyeHeight().
+        // No caching fields, no stale state, no dual-source footgun.
     }
 
     // ── Per-species dimensions (bounding box) ──────────────────────────
     //
-    // CRON-COMPLETIONIST-80: HITBOX RECONCILIATION
-    // ---------------------------------------------
-    // Prior to CRON-80, three sources of truth disagreed for 8 of 12 beasts:
+    // CRON-COMPLETIONIST-84: SINGLE SOURCE OF TRUTH.
+    // ----------------------------------------------
+    // Prior to CRON-84, three sources of truth existed for each beast's hitbox:
     //   (A) EntityType.Builder.sized(w, h) in EREntityTypes
-    //   (B) THIS method (runtime override — WINS)
+    //   (B) SpiritBeastEntity.reassessDimensions() inline switch (WINS at runtime)
     //   (C) "Hitbox: ~W x H" comment in EREntityTypes (design intent)
     //
-    // The CRITICAL bug: SOUL_FISH had (A)=0.6×0.5 (CRON-60 doubled it) but
-    // (B)=0.3×0.3 — the runtime override silently undid CRON-60's fix.
+    // When A and B disagreed, B won — this silently undid CRON-60's SOUL_FISH
+    // fix for ~10 rounds (CRON-60 doubled EntityType.sized but didn't update
+    // reassessDimensions, so the runtime override kept the old 0.3x0.3).
     //
-    // The B≠C mismatches meant the runtime hitbox didn't cover the visible
-    // model: deer antlers, crane head, fire beast flanks, stone boar sides,
-    // sea serpent body were all unhittable. The player's sword would pass
-    // through the visible beast without connecting.
+    // CRON-80 reconciled all three by hand. CRON-84 eliminates the dual-source
+    // architecture: BeastType enum constants now carry (width, height, eyeHeight),
+    // and BOTH EREntityTypes.sized() AND getDimensions()/getEyeHeight() read
+    // from those enum fields. There is literally ONE place to change a beast's
+    // hitbox — the enum constant. Future changes cannot silently desync.
     //
-    // FIX: Reconcile (A), (B), (C) for all 12 beasts. Eye height is set to
-    // ~80% of total height (vanilla Mob pattern). Hitbox caps:
-    //   - Width  ≤ 1.2 (door navigation; vanilla horse is 1.4 but uses
-    //     a separate size handler — we keep ours at 1.2 max)
+    // BONUS FIX: pre-CRON-84, spawn-egg and vanilla-spawn beasts never had
+    // setBeastType() called, so reassessDimensions() never ran, and the caching
+    // fields stayed at their default (0.6x1.8) — the WRONG hitbox for every
+    // beast except those spawned via WorldStateEngine or loaded from NBT.
+    // CRON-84 fixes this by (1) removing the caching fields entirely (reads
+    // directly from the enum) and (2) inferring the default BeastType from
+    // the EntityType's registry name in defineSynchedData().
+    //
+    // Hitbox design constraints (preserved from CRON-80):
+    //   - Width  ≤ 1.2 (door navigation; vanilla horse is 1.4 but uses a
+    //     separate size handler — we keep ours at 1.2 max)
     //   - Height ≤ 1.8 (2-block doorway clearance)
-    // Wings on flyers (hawk, bat) are body-only collision per vanilla
-    // parrot convention — wings are visual, hitbox covers body+head.
-    private float beastWidth = 0.6F;
-    private float beastHeight = 1.8F;
-    private float beastEyeHeight = 1.6F;
-
-    private void reassessDimensions() {
-        switch (getBeastType()) {
-            // Small herbivore — rabbit-sized. Body 4x4x5 model. Eye at 80%.
-            case RABBIT -> { beastWidth = 0.4F; beastHeight = 0.5F; beastEyeHeight = 0.4F; }
-            // Wolf-sized quadruped. Body 4x6x10 model. Slightly narrowed from
-            // 0.7→0.6 to match the model (player walked through 0.05 of fur).
-            case WOLF   -> { beastWidth = 0.6F; beastHeight = 0.9F; beastEyeHeight = 0.75F; }
-            // Deer: body 3.5x5.5x4 + long neck + antlers. Model stands ~2.2
-            // blocks tall but we cap at 1.8 for door navigation. Eye at 1.45
-            // (head height when neck is up). Was 0.8x1.4 — antlers unhittable.
-            case DEER   -> { beastWidth = 0.7F; beastHeight = 1.8F; beastEyeHeight = 1.45F; }
-            // Hawk: body 6x4x6, wingspan 14+ each side (visual only). Hitbox
-            // covers body+head only — vanilla parrot convention. Was 0.5x0.6
-            // which is correct for body-only; eye raised slightly.
-            case HAWK   -> { beastWidth = 0.5F; beastHeight = 0.6F; beastEyeHeight = 0.5F; }
-            // Fire beast: body 5x6x10. Was 1.0 wide — model is 1.4. Widened
-            // to 1.2 (capped for door nav). Height 1.4 unchanged.
-            case FIRE_BEAST -> { beastWidth = 1.2F; beastHeight = 1.4F; beastEyeHeight = 1.15F; }
-            // Stone back boar: body 5x5x10 + stone plate. Was 1.0 wide —
-            // model is 1.4. Widened to 1.2 (cap). Height unchanged.
-            case STONE_BACK_BOAR -> { beastWidth = 1.2F; beastHeight = 1.0F; beastEyeHeight = 0.8F; }
-            // Red-crowned crane: long neck + head. Model stands ~2.0 tall.
-            // Capped at 1.8 for door nav. Was 1.6 — head unhittable.
-            case CRANE  -> { beastWidth = 0.6F; beastHeight = 1.8F; beastEyeHeight = 1.6F; }
-            // Spirit bat — small aerial insectivore. Body-only hitbox.
-            case BAT    -> { beastWidth = 0.4F; beastHeight = 0.5F; beastEyeHeight = 0.4F; }
-            // Qilin: winged wolf-quadruped. Antlers add ~0.1 height. Was
-            // 1.0x1.4 — antler tips unhittable. Raised to 1.5.
-            case QILIN  -> { beastWidth = 1.0F; beastHeight = 1.5F; beastEyeHeight = 1.25F; }
-            // Sea serpent: elongated aquatic. Was 0.8x1.0 — model is 1.2
-            // wide. Widened to 1.0 (cap for water navigation). Lowered
-            // height to 0.8 (sea serpents are flatter than tall).
-            case SEA_SERPENT -> { beastWidth = 1.0F; beastHeight = 0.8F; beastEyeHeight = 0.65F; }
-            // CRITICAL FIX: Soul fish was 0.3x0.3 in runtime but 0.6x0.5 in
-            // EntityType (CRON-60 doubled it). Runtime override won — CRON-60
-            // was silently undone. Now matches CRON-60 intent.
-            case SOUL_FISH -> { beastWidth = 0.6F; beastHeight = 0.5F; beastEyeHeight = 0.25F; }
-            // Spirit tiger — barrel-chested apex predator. Already correct.
-            case TIGER  -> { beastWidth = 1.0F; beastHeight = 1.0F; beastEyeHeight = 0.85F; }
-            default -> { beastWidth = 0.6F; beastHeight = 1.8F; beastEyeHeight = 1.6F; }
-        }
-    }
+    //   - Eye height ~80% of total height (vanilla Mob pattern)
+    //   - Wings on flyers (hawk, bat) are body-only collision per vanilla
+    //     parrot convention — wings are visual, hitbox covers body+head.
 
     @Override
     public float getEyeHeight(net.minecraft.world.entity.Pose pose) {
-        return this.beastEyeHeight;
+        // CRON-84: read directly from BeastType enum — single source of truth.
+        return getBeastType().eyeHeight;
     }
 
     @Override
     public net.minecraft.world.entity.EntityDimensions getDimensions(net.minecraft.world.entity.Pose pose) {
-        return net.minecraft.world.entity.EntityDimensions.scalable(beastWidth, beastHeight);
+        // CRON-84: read directly from BeastType enum — single source of truth.
+        // EREntityTypes.sized() reads from the SAME enum fields, so the
+        // EntityType dimensions and this runtime override ALWAYS agree.
+        BeastType type = getBeastType();
+        return net.minecraft.world.entity.EntityDimensions.scalable(type.width, type.height);
     }
 
     // ── tick(): pose heuristic with goal-priority guard ──────────────────
