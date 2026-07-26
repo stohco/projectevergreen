@@ -217,8 +217,8 @@ public final class WangFamilyVillageComposition {
         }
 
         // 5. STORAGE SHEDS (2)
-        CanonBuilding shed1 = makeStorageShed("storage_shed_1", "Storage Shed 1");
-        CanonBuilding shed2 = makeStorageShed("storage_shed_2", "Storage Shed 2");
+        CanonBuilding shed1 = makeStorageShed("storage_shed_1", "Storage Shed 1", -30, -28);
+        CanonBuilding shed2 = makeStorageShed("storage_shed_2", "Storage Shed 2", 24, 18);
         buildings.add(new CanonSettlement.BuildingPlacement(shed1, -30, 0, -28));
         buildings.add(new CanonSettlement.BuildingPlacement(shed2, 24, 0, 18));
 
