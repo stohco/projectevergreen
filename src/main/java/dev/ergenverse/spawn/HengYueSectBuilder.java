@@ -1,6 +1,12 @@
 package dev.ergenverse.spawn;
 
 import dev.ergenverse.block.ErgenverseBlocks;
+import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
+import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+import dev.ergenverse.runtime.Provenance;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +24,8 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
+
+import javax.annotation.Nullable;
 
 /**
  * HengYueSectBuilder — a FULLY hand-built Heng Yue Sect (恒岳派), Wang Lin's
@@ -37,16 +45,60 @@ import net.minecraft.world.level.block.state.properties.BedPart;
  * a geometric skeleton with zero interior storytelling — every room was empty
  * geometry. Now each key building contains written books with in-character
  * narrative, item frames with specific artifacts, chests with canon-appropriate
- * loot, and distinct personalities per cave/dormitory. The Library contains Elder
- * Xu's cultivation lecture notes and a beginner's technique manual on lecterns.
- * The Ancestor Hall has memorial tablets bearing the names and deeds of past sect
- * elders, with incense notes from the current elder. The Sword Tomb contains a
- * fallen disciple's diary recounting the trial. The three Seclusion Caves are now
- * distinct: the Elder's retreat (highest, with forbidden texts), a senior
- * disciple's cave (with progress notes), and an abandoned cave (with evidence
- * of a failed breakthrough — cracked restriction diagram, discarded pills).
- * Dormitory chests contain basic disciple supplies. Connection paths link all
- * buildings to the main plaza.
+ * loot, and distinct personalities per cave/dormitory. The Library contains
+ * lectures on cultivation and a beginner's technique manual on lecterns.
+ * The Ancestor Hall has memorial tablets bearing the names and deeds of past
+ * sect elders, with incense notes from the current elder. The Sword Tomb
+ * contains a fallen disciple's diary recounting the trial. The three Seclusion
+ * Caves are now distinct: the Elder's retreat (highest, with forbidden texts),
+ * a senior disciple's cave (with progress notes), and an abandoned cave (with
+ * evidence of a failed breakthrough — cracked restriction diagram, discarded
+ * pills). Dormitory chests contain basic disciple supplies. Connection paths
+ * link all buildings to the main plaza.
+ *
+ * <p><b>CRON-COMPLETIONIST-65: Canon vetting + chunk-scoped materialization.</b>
+ * Three corrections shipped this round:
+ * <ol>
+ *   <li><b>Canon names corrected.</b> Verified against Baidu Baike (恒岳派),
+ *       知乎专栏 (小说仙逆中人物解读), and 搜狐 (《仙逆》中，王林的七位师傅).
+ *       The sect leader (掌门) is <b>黄龙真人 (Huang Long Zhenren)</b> —
+ *       secretly a clone of the 5th-generation Vermilion Bird Holy Emperor
+ *       (朱雀圣皇) 鲁云 (Lu Yun) of the Four Sages Sect (四圣宗). Wang Lin's
+ *       first master is <b>孙大柱 (Sun Da Zhu)</b> — a普通长老 (ordinary elder)
+ *       who accepted Wang Lin as disciple to covet his 宝葫芦 (precious gourd),
+ *       and repeatedly schemed against him. Another elder is <b>欧阳华 (Ouyang
+ *       Hua)</b>. Prior books incorrectly attributed authorship to "Sect Master
+ *       Liu" and "Elder Xu" and "Alchemist Zhang" — all three were mod-original
+ *       names with no canon basis. Corrected: Sect Master Liu → Sect Master
+ *       Huang Long; Elder Xu → Elder Ouyang; Alchemist Zhang → anonymous
+ *       "Heng Yue Sect — Alchemy Hall" (avoid misattributing alchemy to Sun Da
+ *       Zhu, whose canon character is scheming, not scholarly).</li>
+ *   <li><b>Chunk-scoped buildForChunk (CRON-62 pattern).</b> The sect has a
+ *       70×70 footprint (~5K ground blocks + walls + 14 buildings = ~30K
+ *       setBlock calls spanning a 5×5-chunk area). Prior behavior: the registry
+ *       called {@code build(level, BlockPos.ZERO)} on every chunk-load in the
+ *       sect's footprint — passing BlockPos.ZERO meant the sect was built at
+ *       (0,0,0) instead of its canon coordinate (4200, 0, -1400). Worse, the
+ *       isAlreadyBuilt guard checks a single block, so the first chunk-load
+ *       would build the whole sect at (0,0,0), and every subsequent chunk-load
+ *       would either no-op (if the guard happened to hit) or rebuild. Fixed:
+ *       {@link #buildForChunk} now sets a {@link ChunkBounds} ThreadLocal and
+ *       the {@link #sb} helper filters placements to the loaded chunk — ~30K
+ *       candidate placements collapse to ~256 actual level.setBlock calls per
+ *       chunk-load.</li>
+ *   <li><b>Provenance-aware rebuild guard (CRON-63 pattern).</b> The {@link #sb}
+ *       helper consults the {@link WorldDeltaStore} before each CANON placement.
+ *       If a PLAYER or SIMULATION delta exists at the position, the CANON
+ *       placement is skipped — player intent wins. This closes the edge case
+ *       where a player breaks a wall and the next chunk-load rebuilds it.</li>
+ * </ol>
+ *
+ * <p><b>CRON-COMPLETIONIST-65 canon note on memorial tablets:</b> the four
+ * memorial tablet names in the Ancestor Hall (Elder Mei, Alchemist Guan, Sect
+ * Master Zhao, Elder Sister Yun) are <b>mod-original</b> — the novel does not
+ * name specific past sect ancestors. They are plausible Chinese cultivation-names
+ * and serve the narrative purpose of showing the sect's history, but they are
+ * not canon. Flagged honestly here; do not cite as canon.
  *
  * <h2>Harsh Self-Critique</h2>
  * <ul>
@@ -106,6 +158,200 @@ public final class HengYueSectBuilder {
 
     private HengYueSectBuilder() {}
 
+    // ── Canon center (CRON-COMPLETIONIST-65) ───────────────────────────
+    // The sect is ALWAYS at PlanetSuzakuBlueprint.HENG_YUE_SECT coordinates.
+    // The Y is resolved from the surface heightmap at runtime. This eliminates
+    // the prior bug where the registry passed BlockPos.ZERO and the sect was
+    // built at (0,0,0) instead of (4200, 0, -1400).
+
+    /** Canonical sect X coordinate (fixed for every world/seed/player). */
+    public static final int SECT_X = PlanetSuzakuBlueprint.HENG_YUE_SECT.x;
+
+    /** Canonical sect Z coordinate (fixed for every world/seed/player). */
+    public static final int SECT_Z = PlanetSuzakuBlueprint.HENG_YUE_SECT.z;
+
+    /**
+     * Resolve the sect center BlockPos by sampling the surface heightmap at
+     * (SECT_X, SECT_Z). The Y coordinate is the tallest non-leaves block at
+     * that column (typically the canon terrain height set by
+     * BlueprintChunkGenerator). If the heightmap returns a bogus Y (e.g. the
+     * chunk isn't loaded and MC returns y=0), we fall back to a sane minimum.
+     */
+    public static BlockPos getSectCenter(ServerLevel level) {
+        int surfaceY = level.getHeightmapPos(
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                new BlockPos(SECT_X, 0, SECT_Z)).getY();
+        if (surfaceY <= 0) surfaceY = 64; // defensive fallback
+        return new BlockPos(SECT_X, surfaceY, SECT_Z);
+    }
+
+    // ── Chunk-scoped build infrastructure (CRON-COMPLETIONIST-65) ──────
+    //
+    // Mirrors the WangFamilyVillageBuilder pattern (CRON-COMPLETIONIST-62/63).
+    // The chunk-materializer invokes buildForChunk(level, bounds) for EACH
+    // chunk that overlaps the sect footprint. The ThreadLocal CURRENT_BOUNDS
+    // holds the active bounds during a buildInternal() call; the sb() helper
+    // checks it and skips any placement outside the bounds. When bounds is null
+    // (full-build path — commands, login events, CanonGeographyPlacer), no
+    // filtering occurs and every setBlock lands.
+    //
+    // Thread-safety: chunk materialization is single-threaded on the server
+    // tick thread. The ThreadLocal guards against re-entrancy only if a builder
+    // were to call another builder (which it does not today).
+
+    /** Active chunk bounds during a buildInternal() pass, or null for full-build. */
+    private static final ThreadLocal<ChunkBounds> CURRENT_BOUNDS = new ThreadLocal<>();
+
+    /**
+     * Filtered setBlock — the ONLY block-placement call site in this class.
+     * Three guards, in order:
+     *
+     * <p><b>1. Chunk filter (CRON-COMPLETIONIST-62 pattern):</b> if
+     * CURRENT_BOUNDS is non-null and (x, z) falls outside the bounds, skip.
+     * This is what makes buildForChunk chunk-scoped: ~30K candidate placements
+     * collapse to ~256 actual level.setBlock calls per chunk-load.
+     *
+     * <p><b>2. Provenance-aware rebuild guard (CRON-COMPLETIONIST-63 pattern):</b>
+     * if CURRENT_BOUNDS is non-null (i.e. we are in the chunk-materializer path),
+     * consult the {@link WorldDeltaStore} for a PLAYER or SIMULATION delta at
+     * (x, y, z). If either exists, skip the placement. The player's edits and
+     * the simulation's edits take priority over CANON — re-placing a CANON
+     * block on top of a player edit would be a wasted write.
+     *
+     * <p>The provenance guard is <b>only active in the chunk-scoped path</b>
+     * (CURRENT_BOUNDS != null). The full-build path does NOT consult the delta
+     * store, because at server-start there are no player deltas yet, and the
+     * /ergenverse build command explicitly wants a full rebuild.
+     *
+     * <p><b>3. Placement:</b> if both guards pass, call level.setBlock.
+     */
+    private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null) {
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
+        level.setBlock(pos, state, flags);
+    }
+
+    /**
+     * Provenance-aware guard helper (CRON-COMPLETIONIST-63 pattern). Returns
+     * true if a PLAYER or SIMULATION delta is recorded at {@code pos}. O(1)
+     * per call.
+     *
+     * <p>Defensive: returns false (no delta → proceed with placement) if the
+     * WorldRuntime is not yet initialized.
+     */
+    private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+            WorldDeltaStore store = runtime.deltaStore();
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            return store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
+                    pos, t.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Chunk-scoped build entry point — invoked by the chunk-materializer for
+     * each chunk that overlaps the sect footprint.
+     *
+     * <p>When {@code bounds} is non-null, only blocks whose (x, z) fall inside
+     * the bounds are placed; the rest are skipped by {@link #sb}. When
+     * {@code bounds} is null, the full sect is built (command/login path).
+     *
+     * <p>This method does NOT call {@link #isAlreadyBuilt} — chunk-scoped
+     * placement is naturally incremental: each chunk places its own slice,
+     * and re-placing an already-present block with the same state is a
+     * harmless no-op. The isAlreadyBuilt guard lives in {@link #build(ServerLevel)}
+     * (the full-build path) to keep command/login calls idempotent.
+     */
+    public static void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds) {
+        ChunkBounds prev = CURRENT_BOUNDS.get();
+        CURRENT_BOUNDS.set(bounds);
+        try {
+            buildInternal(level, getSectCenter(level));
+        } finally {
+            if (prev == null) CURRENT_BOUNDS.remove();
+            else CURRENT_BOUNDS.set(prev);
+        }
+    }
+
+    /**
+     * Full-build entry point using the canon center resolved from
+     * {@link #getSectCenter}. Idempotent: guarded by {@link #isAlreadyBuilt}.
+     * Used by SpawnEventHandler (server-start) and ErgenverseCommand.
+     */
+    public static void build(ServerLevel level) {
+        BlockPos center = getSectCenter(level);
+        if (isAlreadyBuilt(level, center)) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Heng Yue Sect already built — build() is a no-op.");
+            return;
+        }
+        Ergenverse.LOGGER.info("[Ergenverse] Building Heng Yue Sect at {}", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Heng Yue Sect construction complete.");
+    }
+
+    /**
+     * Legacy 2-arg full-build entry point — kept for {@link dev.ergenverse.world.blueprint.CanonGeographyPlacer}
+     * which resolves its own center from the JSON blueprint (different coordinate
+     * source than {@link PlanetSuzakuBlueprint}). Future rounds should consolidate
+     * the JSON and Java coordinate sources; for now, this method preserves
+     * backward compat by building at the passed center.
+     *
+     * @param level the server overworld
+     * @param center the plaza center block position (at ground level)
+     * @deprecated prefer {@link #build(ServerLevel)} or {@link #buildForChunk}
+     */
+    @Deprecated
+    public static void build(ServerLevel level, BlockPos center) {
+        if (isAlreadyBuilt(level, center)) return;
+        Ergenverse.LOGGER.info("[Ergenverse] Building Heng Yue Sect at {} (legacy 2-arg path)", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Heng Yue Sect construction complete.");
+    }
+
+    /**
+     * The actual construction body — shared by all three entry points
+     * ({@link #build(ServerLevel)}, {@link #buildForChunk}, legacy
+     * {@link #build(ServerLevel, BlockPos)}). Placements flow through
+     * {@link #sb} which applies the chunk filter and provenance guard when
+     * CURRENT_BOUNDS is set.
+     */
+    private static void buildInternal(ServerLevel level, BlockPos center) {
+        buildMountainBase(level, center);
+        buildStoneSteps(level, center);
+        buildOuterGate(level, center);
+        buildMainPlaza(level, center);
+        buildConnectionPaths(level, center);
+        buildLibraryPavilion(level, center);
+        buildAlchemyCourtyard(level, center);
+        buildSwordPeak(level, center);
+        buildAncestorHall(level, center);
+        buildSpiritSpring(level, center);
+        buildSwordTombEntrance(level, center);
+        buildSeclusionCaves(level, center);
+        buildDormitories(level, center);
+        buildLanterns(level, center);
+        buildDefensiveWalls(level, center);
+    }
+
+    /** Idempotency guard: checks for SMOOTH_STONE above the center. */
+    public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
+        return level.getBlockState(center.above()).getBlock() == Blocks.SMOOTH_STONE;
+    }
+
+    /** Convenience overload using the canon center. */
+    public static boolean isAlreadyBuilt(ServerLevel level) {
+        return isAlreadyBuilt(level, getSectCenter(level));
+    }
+
     // ── Block palette (ErgenverseBlocks — canon-correct spirit materials) ──
     private static final BlockState COBBLE         = Blocks.COBBLESTONE.defaultBlockState();
     private static final BlockState LANTERN        = Blocks.LANTERN.defaultBlockState();
@@ -144,36 +390,6 @@ public final class HengYueSectBuilder {
     private static final BlockState AIR            = Blocks.AIR.defaultBlockState();
     private static final BlockState SPRUCE_DOOR    = Blocks.SPRUCE_DOOR.defaultBlockState();
     private static final BlockState CRAFTING_TABLE = Blocks.CRAFTING_TABLE.defaultBlockState();
-
-    /**
-     * Build the full Heng Yue Sect centered at (x, groundY, z).
-     * @param level the server overworld
-     * @param center the plaza center block position (at ground level)
-     */
-    public static void build(ServerLevel level, BlockPos center) {
-        if (isAlreadyBuilt(level, center)) return;
-        dev.ergenverse.core.Ergenverse.LOGGER.info("[Ergenverse] Building Heng Yue Sect at {}", center);
-        buildMountainBase(level, center);
-        buildStoneSteps(level, center);
-        buildOuterGate(level, center);
-        buildMainPlaza(level, center);
-        buildConnectionPaths(level, center);
-        buildLibraryPavilion(level, center);
-        buildAlchemyCourtyard(level, center);
-        buildSwordPeak(level, center);
-        buildAncestorHall(level, center);
-        buildSpiritSpring(level, center);
-        buildSwordTombEntrance(level, center);
-        buildSeclusionCaves(level, center);
-        buildDormitories(level, center);
-        buildLanterns(level, center);
-        buildDefensiveWalls(level, center);
-        dev.ergenverse.core.Ergenverse.LOGGER.info("[Ergenverse] Heng Yue Sect construction complete.");
-    }
-
-    public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
-        return level.getBlockState(center.above()).getBlock() == Blocks.SMOOTH_STONE;
-    }
 
     // ═══════════════════════════════════════════════════════════════════
     //  District builders
@@ -373,7 +589,7 @@ public final class HengYueSectBuilder {
         setBlock(level, base.offset(0, 13, 0), END_ROD);
 
         // ═══ CRON-COMPLETIONIST-78: Narrative enrichment ═══
-        // Ground floor: Elder Xu's cultivation lecture notes on the lectern
+        // Ground floor: Elder Ouyang's cultivation lecture notes on the lectern
         enrichLibraryGroundFloor(level, base);
         // Second floor: technique scrolls and a sword manual
         enrichLibrarySecondFloor(level, base);
@@ -382,12 +598,12 @@ public final class HengYueSectBuilder {
     }
 
     private static void enrichLibraryGroundFloor(ServerLevel level, BlockPos base) {
-        // Lectern at center with Elder Xu's lecture notes
+        // Lectern at center with Elder Ouyang's lecture notes
         setBlock(level, base.offset(0, 1, 0), LECTERN);
         if (level.getBlockEntity(base.offset(0, 1, 0)) instanceof LecternBlockEntity lectern) {
             lectern.setBook(createWrittenBook(
-                "Elder Xu's Foundation Lectures",
-                "Elder Xu — Heng Yue Sect",
+                "Elder Ouyang's Foundation Lectures",
+                "Elder Ouyang — Heng Yue Sect",
                 "Lesson One: The Nature of Qi",
                 "Qi exists in all things. The earth beneath your feet, the air in your lungs, the water you drink — all carry qi. Most mortals pass through life unaware. A cultivator learns to feel it.",
                 "Close your eyes. Breathe slowly. The warmth at the base of your spine — that is qi gathering at your dantian. Do not force it. Do not chase it. Simply observe.",
@@ -462,7 +678,7 @@ public final class HengYueSectBuilder {
         if (level.getBlockEntity(base.offset(0, y + 1, 0)) instanceof LecternBlockEntity lectern) {
             lectern.setBook(createWrittenBook(
                 "[RESTRICTED] Soul Refining Observations",
-                "Sect Master Liu — Sealed Record",
+                "Sect Master Huang Long — Sealed Record",
                 "I have observed something in the deep meditation caves that I dare not speak of aloud. This text is restricted because the knowledge within is dangerous — not to enemies, but to the cultivator who reads it.",
                 "During the seventh month of my seclusion, I perceived a second consciousness within my dantian. Not a voice. Not a presence. More like the shadow of a thought that was not my own.",
                 "I attempted to communicate with it. It responded by showing me a memory — a battlefield, a sky the color of dried blood, cultivators falling like rain. I do not know whose memory this was. I do not know if it was real.",
@@ -515,7 +731,7 @@ public final class HengYueSectBuilder {
         if (level.getBlockEntity(deskPos.offset(0, 1, 0)) instanceof LecternBlockEntity lectern) {
             lectern.setBook(createWrittenBook(
                 "Spirit Condensation Pill Recipe",
-                "Alchemist Zhang — Heng Yue Sect",
+                "Heng Yue Sect — Alchemy Hall",
                 "Ingredients:",
                 "Three-leaf spirit grass, freshly harvested before dawn. If harvested after sunrise, the qi has already begun to disperse and the pill will be 30% weaker.",
                 "Foundation root vine, cleaned but NOT peeled. The bark contains a binding compound essential for pill cohesion. Discard the inner root — it is toxic.",
@@ -790,7 +1006,7 @@ public final class HengYueSectBuilder {
                 "Disciple Huang — Heng Yue Sect",
                 "Month 3 of seclusion:",
                 "My qi circulation has stabilized at the 12th meridian. The blockage at the heart chakra persists — every time I try to push qi through, I feel resistance that is not physical. It is as though something is guarding that passage.",
-                "Elder Xu says this is normal. He says the heart chakra is the gate between the body and the spirit. Many cultivators spend years at this gate. He says impatience is the only true failure.",
+                "Elder Ouyang says this is normal. He says the heart chakra is the gate between the body and the spirit. Many cultivators spend years at this gate. He says impatience is the only true failure.",
                 "I have been patient for three months. I meditate twelve hours each day. I eat once. I sleep on the stone floor. The cold helps — it sharpens my focus.",
                 "",
                 "Month 6 of seclusion:",
@@ -852,7 +1068,7 @@ public final class HengYueSectBuilder {
         if (level.getBlockEntity(caveBase.offset(0, 1, 4)) instanceof LecternBlockEntity lectern) {
             lectern.setBook(createWrittenBook(
                 "Forbidden: Observations on the Ancient Array",
-                "Elder Xu — Highest Seal",
+                "Elder Ouyang — Highest Seal",
                 "This text is sealed with my blood. Only another elder may read it. If you are not an elder and you are reading this, the formation will know. It always knows.",
                 "The spirit vein beneath Heng Yue Mountain is not natural. I have meditated above it for forty years. In the last decade, I have felt it change. It is growing. Not slowly — exponentially. Every year it pulses twice as strong as the last.",
                 "I believe this mountain was chosen by whoever created the formation. The sect was built here not because the vein was discovered, but because someone wanted a sect here to protect it. We are not the owners of this place. We are its guards. We have always been its guards.",
@@ -928,7 +1144,7 @@ public final class HengYueSectBuilder {
             lectern.setBook(createWrittenBook(
                 "Disciple Chen's Notes — INCOMPLETE",
                 "Disciple Chen — Heng Yue Sect",
-                "The formation is ready. I have spent seven months on this restriction diagram. Every line is correct. Every junction is aligned with the compass directions. The qi flow pattern matches Elder Xu's lecture notes exactly.",
+                "The formation is ready. I have spent seven months on this restriction diagram. Every line is correct. Every junction is aligned with the compass directions. The qi flow pattern matches Elder Ouyang's lecture notes exactly.",
                 "I will attempt the breakthrough tonight.",
                 "If you are reading this and I am not here, the breakthrough failed. Destroy the formation diagram. Do not attempt it yourself — the qi residue from a failed breakthrough is unstable and will corrupt any subsequent attempt at this location for at least a year.",
                 "Tell my family I was not afraid. Tell them I chose this. Tell them the mountain was beautiful from inside.",
@@ -1079,14 +1295,33 @@ public final class HengYueSectBuilder {
     //  Helpers
     // ═══════════════════════════════════════════════════════════════════
 
+    /**
+     * Legacy block-placement helper — now delegates to {@link #sb} so all 217
+     * setBlock call sites automatically get the chunk filter and provenance
+     * guard. This avoids a mechanical replace_all (which bit CRON-62 with
+     * infinite recursion when sb() itself was rewritten). The delegation
+     * pattern keeps the call sites unchanged while routing every placement
+     * through the single guarded entry point.
+     */
     private static void setBlock(ServerLevel level, BlockPos pos, BlockState state) {
-        level.setBlock(pos, state, 3);
+        sb(level, pos, state, 3);
     }
 
+    /**
+     * Bulk fill — delegates to {@link #sb} so each placement in the box is
+     * chunk-filtered and provenance-guarded. BlockPos.betweenClosedStream
+     * yields mutable BlockPos positions; {@code p.immutable()} defensively
+     * copies each one before passing to sb (the underlying setBlock stores
+     * the BlockPos, so mutability would be a bug).
+     */
     private static void fill(ServerLevel level, BlockPos from, BlockPos to, BlockState state) {
-        BlockPos.betweenClosedStream(from, to).forEach(p -> level.setBlock(p, state, 3));
+        BlockPos.betweenClosedStream(from, to).forEach(p -> sb(level, p.immutable(), state, 3));
     }
 
+    /**
+     * Ring placement — delegates to {@link #setBlock} which delegates to
+     * {@link #sb}. Each ring point is chunk-filtered individually.
+     */
     private static void ring(ServerLevel level, BlockPos center, int radius, int yOffset, BlockState state) {
         for (int angle = 0; angle < 360; angle += 5) {
             double rad = Math.toRadians(angle);

@@ -92,16 +92,24 @@ public final class StructureBuilderRegistry {
         register(PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.id,
                 (level, bounds) -> WangFamilyVillageBuilder.buildForChunk(level, bounds));
 
-        // CRON-COMPLETIONIST-83: all 11 builders now wired. Each guards on
-        // isAlreadyBuilt (idempotent). The Blueprint+Layer architecture materializes
-        // these on chunk load — no vanilla random terrain dependency.
-        // 6 builders take (ServerLevel, BlockPos); 5 take (ServerLevel).
+        // CRON-COMPLETIONIST-65: Heng Yue Sect is now chunk-scoped — same pattern
+        // as Wang Family Village. The registry forwards ChunkBounds to
+        // buildForChunk, which filters placements to the loaded chunk and applies
+        // the provenance-aware rebuild guard. The builder resolves its own center
+        // from PlanetSuzakuBlueprint.HENG_YUE_SECT (fixes the prior BlockPos.ZERO
+        // bug that built the sect at (0,0,0) instead of its canon coordinate).
+        register(PlanetSuzakuBlueprint.HENG_YUE_SECT.id, (l, b) -> HengYueSectBuilder.buildForChunk(l, b));
+
+        // CRON-COMPLETIONIST-83: remaining 9 builders still use the legacy path.
+        // Each guards on isAlreadyBuilt (idempotent). They IGNORE the ChunkBounds
+        // and do a full build on every call — they rely on isAlreadyBuilt for
+        // idempotency. Migrating them to chunk-scoped buildForChunk is a future
+        // round (same pattern as Wang Family Village and Heng Yue Sect).
+        // 5 builders take (ServerLevel, BlockPos); 4 take (ServerLevel).
         // The 2-arg builders are wrapped with lambdas that discard the BlockPos
-        // (the builder resolves its own center internally).
-        // CRON-COMPLETIONIST-62: these 10 builders IGNORE the ChunkBounds and do a
-        // full build on every call — they rely on isAlreadyBuilt for idempotency.
-        // Migrating them to chunk-scoped buildForChunk is a future round.
-        register(PlanetSuzakuBlueprint.HENG_YUE_SECT.id, (l, b) -> HengYueSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        // (the builder resolves its own center internally — CRON-65 verified this
+        // comment was FALSE for HengYueSectBuilder; the other 5 may have the same
+        // bug. Future rounds must audit each.).
         register(PlanetSuzakuBlueprint.TENG_FAMILY_CITY.id, (l, b) -> TengFamilyCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
         register(PlanetSuzakuBlueprint.TIAN_SHUI_CITY.id, (l, b) -> TianShuiCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
         register(PlanetSuzakuBlueprint.QILIN_CITY.id, (l, b) -> QilinCityBuilder.build(l));
