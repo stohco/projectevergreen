@@ -47,6 +47,25 @@ package dev.ergenverse.client.model;
  *   - PRIMARY FEATHERS are individual 1x0.2x3 boxes — they look like sticks.
  *     Real primaries have width, curvature, and barb detail. The best we can do
  *     with vanilla addBox API is thin rectangular slabs.
+ *
+ * CRON-COMPLETIONIST-81: PARENT HIERARCHY REFACTOR (closes CRON-80 audit Tier 1).
+ *   BEFORE: body_hip, neck, head, tail_base, both wing roots, all 4 thighs were
+ *     ALL direct children of root. When bodyChest.xRot animated (spineFlex),
+ *     body_hip/neck/head/tail/wings/legs did NOT follow — Qilin visibly
+ *     "hinged" at the waist during walk, wings stayed level during sprint pitch,
+ *     tail didn't follow rump rotation, legs didn't follow body pitch.
+ *   AFTER: Proper quadruped hierarchy:
+ *     root → body_chest → {body_hip, neck, head, left_wing_root, right_wing_root,
+ *                         front_left_thigh, front_right_thigh, mane, scale_fl, scale_fr}
+ *                 body_hip → {tail_base, back_left_thigh, back_right_thigh, scale_bl, scale_br}
+ *     All PartPose offsets recomputed via simple subtraction (Rx-Px, Ry-Py, Rz-Pz)
+ *     since new parents (body_chest, body_hip) have no PartPose rotation.
+ *     Verified by /home/z/my-project/scripts/cron81_verify_qilin_reparent.py.
+ *   ANIMATION FIX: body_hip.xRot was -spineFlex*0.5 (local=world at root).
+ *     After reparenting, body_hip's WORLD rotation = body_chest.xRot + body_hip.xRot.
+ *     To preserve the S-curve spine flex (chest forward, hip backward), the LOCAL
+ *     xRot must be -spineFlex*1.5 (so world = spineFlex + (-1.5*spineFlex) = -0.5*spineFlex).
+ *     Without this fix, body_hip would rotate SAME direction as body_chest (C-curve).
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -108,9 +127,10 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
     public QilinModel(ModelPart root) {
         this.root = root;
         this.bodyChest = root.getChild("body_chest");
-        this.bodyHip = root.getChild("body_hip");
-        this.neck = root.getChild("neck");
-        this.head = root.getChild("head");
+        // CRON-81: body_hip, neck, head now children of body_chest (was root)
+        this.bodyHip = this.bodyChest.getChild("body_hip");
+        this.neck = this.bodyChest.getChild("neck");
+        this.head = this.bodyChest.getChild("head");
         this.jaw = this.head.getChild("jaw");
         this.antlerLeftBase = this.head.getChild("antler_left_base");
         this.antlerLeftMid = this.antlerLeftBase.getChild("mid");
@@ -124,11 +144,12 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
         this.mane2 = body.getChild("mane_2");
         this.mane3 = body.getChild("mane_3");
         this.mane4 = body.getChild("mane_4");
-        this.tailBase = root.getChild("tail_base");
+        // CRON-81: tail_base now child of body_hip; wing roots now children of body_chest (was root)
+        this.tailBase = this.bodyHip.getChild("tail_base");
         this.tailMid = this.tailBase.getChild("mid");
         this.tailFan = this.tailMid.getChild("fan");
-        this.leftWingRoot = root.getChild("left_wing_root");
-        this.rightWingRoot = root.getChild("right_wing_root");
+        this.leftWingRoot = this.bodyChest.getChild("left_wing_root");
+        this.rightWingRoot = this.bodyChest.getChild("right_wing_root");
         this.leftWingMid = this.leftWingRoot.getChild("mid");
         this.rightWingMid = this.rightWingRoot.getChild("mid");
         this.leftWingTip = this.leftWingMid.getChild("tip");
@@ -143,13 +164,14 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
         this.scaleBL = this.bodyHip.getChild("scale_bl");
         this.scaleFR = this.bodyChest.getChild("scale_fr");
         this.scaleBR = this.bodyHip.getChild("scale_br");
-        this.frontLeftThigh = root.getChild("front_left_thigh");
+        // CRON-81: front thighs now children of body_chest; back thighs now children of body_hip (was root)
+        this.frontLeftThigh = this.bodyChest.getChild("front_left_thigh");
         this.frontLeftShin = this.frontLeftThigh.getChild("shin");
-        this.frontRightThigh = root.getChild("front_right_thigh");
+        this.frontRightThigh = this.bodyChest.getChild("front_right_thigh");
         this.frontRightShin = this.frontRightThigh.getChild("shin");
-        this.backLeftThigh = root.getChild("back_left_thigh");
+        this.backLeftThigh = this.bodyHip.getChild("back_left_thigh");
         this.backLeftShin = this.backLeftThigh.getChild("shin");
-        this.backRightThigh = root.getChild("back_right_thigh");
+        this.backRightThigh = this.bodyHip.getChild("back_right_thigh");
         this.backRightShin = this.backRightThigh.getChild("shin");
     }
 
@@ -164,11 +186,12 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-2.0F, -3.0F, -5.0F, 4.0F, 6.0F, 5.0F, bodyRound),
                 PartPose.offset(0.0F, 6.0F, -2.5F));
 
-        // ── body_hip : rear torso, narrower ────────────────────────────
-        PartDefinition bodyHip = root.addOrReplaceChild("body_hip",
+        // ── body_hip : rear torso, narrower (CRON-81: child of body_chest, was root) ──
+        // World pos preserved: old root-relative (0, 5.5, 2.5) - body_chest (0, 6, -2.5) = (0, -0.5, 5)
+        PartDefinition bodyHip = bodyChest.addOrReplaceChild("body_hip",
                 CubeListBuilder.create().texOffs(0, 12)
                         .addBox(-1.5F, -2.5F, -1.0F, 3.0F, 5.0F, 6.0F, bodyRound),
-                PartPose.offset(0.0F, 5.5F, 2.5F));
+                PartPose.offset(0.0F, -0.5F, 5.0F));
 
         // ── mane : 5 segments along neck/spine ──────────────────────────
         for (int i = 0; i < 5; i++) {
@@ -197,19 +220,24 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(0.0F, 0.0F, -2.0F, 0.2F, 2.5F, 3.0F),
                 PartPose.offset(1.5F, -1.5F, 0.0F));
 
-        // ── neck : tilted connector ────────────────────────────────────
-        root.addOrReplaceChild("neck",
+        // ── neck : tilted connector (CRON-81: child of body_chest, was root) ──
+        // World pos preserved: old root-relative (0, 4, -5) - body_chest (0, 6, -2.5) = (0, -2, -2.5)
+        // PartPose rotation (-0.4 xRot) preserved verbatim — body_chest has no PartPose rotation.
+        bodyChest.addOrReplaceChild("neck",
                 CubeListBuilder.create().texOffs(28, 0)
                         .addBox(-1.0F, -1.0F, -2.0F, 2.0F, 2.0F, 3.0F, new CubeDeformation(0.2F)),
-                PartPose.offsetAndRotation(0.0F, 4.0F, -5.0F, -0.4F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -2.0F, -2.5F, -0.4F, 0.0F, 0.0F));
 
-        // ── head : skull + jaw + antlers ───────────────────────────────
-        PartDefinition head = root.addOrReplaceChild("head",
+        // ── head : skull + jaw + antlers (CRON-81: child of body_chest, was root) ──
+        // World pos preserved: old root-relative (0, -1, -4) - body_chest (0, 6, -2.5) = (0, -7, -1.5)
+        // NOTE: head is sibling of neck, both under body_chest. When body_chest.xRot
+        // animates (spineFlex), head FOLLOWS — anatomically correct (head bobs with body).
+        PartDefinition head = bodyChest.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 18)
                         .addBox(-1.5F, -1.5F, -1.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.15F))
                         .texOffs(0, 26)
                         .addBox(-1.0F, 0.0F, -3.5F, 2.0F, 2.0F, 2.0F),
-                PartPose.offset(0.0F, -1.0F, -4.0F));
+                PartPose.offset(0.0F, -7.0F, -1.5F));
         head.addOrReplaceChild("jaw",
                 CubeListBuilder.create().texOffs(28, 18)
                         .addBox(-1.0F, 0.0F, -2.5F, 2.0F, 1.0F, 2.0F),
@@ -242,11 +270,14 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-0.15F, -1.5F, -0.15F, 0.3F, 1.5F, 0.3F),
                 PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, -0.2F, 0.0F, 0.0F));
 
-        // ── tail : 3-segment chain with fan tip ────────────────────────
-        PartDefinition tailBase = root.addOrReplaceChild("tail_base",
+        // ── tail : 3-segment chain with fan tip (CRON-81: child of body_hip, was root) ──
+        // World pos preserved: old root-relative (0, 4, 5) - body_hip (0, 5.5, 2.5) = (0, -1.5, 2.5)
+        // PartPose rotation (0.3 xRot) preserved verbatim — body_hip has no PartPose rotation.
+        // Tail now FOLLOWS body_hip's spine flex (S-curve propagation).
+        PartDefinition tailBase = bodyHip.addOrReplaceChild("tail_base",
                 CubeListBuilder.create().texOffs(36, 8)
                         .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 3.0F),
-                PartPose.offsetAndRotation(0.0F, 4.0F, 5.0F, 0.3F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -1.5F, 2.5F, 0.3F, 0.0F, 0.0F));
         PartDefinition tailMid = tailBase.addOrReplaceChild("mid",
                 CubeListBuilder.create().texOffs(36, 14)
                         .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 3.0F),
@@ -264,11 +295,13 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
         //         → 3 individual primary feathers (1x0.2x3 each, splayed)
         // Total wingspan: ~12 blocks fully extended — grand for a divine beast.
         //
-        // Left wing (extends in -X direction):
-        PartDefinition leftWingRoot = root.addOrReplaceChild("left_wing_root",
+        // Left wing (extends in -X direction) — CRON-81: child of body_chest (was root)
+        // World pos preserved: old root-relative (-2, 4, -3) - body_chest (0, 6, -2.5) = (-2, -2, -0.5)
+        // Wings now follow body_chest pitch during sprint (root.xRot = -0.15).
+        PartDefinition leftWingRoot = bodyChest.addOrReplaceChild("left_wing_root",
                 CubeListBuilder.create().texOffs(20, 0)
                         .addBox(-3.0F, -0.2F, -2.0F, 3.0F, 0.4F, 4.0F),
-                PartPose.offsetAndRotation(-2.0F, 4.0F, -3.0F, 0.0F, 0.0F, -0.8F));
+                PartPose.offsetAndRotation(-2.0F, -2.0F, -0.5F, 0.0F, 0.0F, -0.8F));
         // Mid segment — secondary feathers (wider, thinner)
         PartDefinition leftWingMid = leftWingRoot.addOrReplaceChild("mid",
                 CubeListBuilder.create().texOffs(20, 5)
@@ -293,11 +326,12 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(-2.5F, -0.1F, -0.5F, 2.5F, 0.2F, 1.0F),
                 PartPose.offsetAndRotation(-3.0F, 0.15F, 1.5F, 0.0F, 0.0F, 0.0F));
 
-        // Right wing (mirror — extends in +X direction):
-        PartDefinition rightWingRoot = root.addOrReplaceChild("right_wing_root",
+        // Right wing (mirror — extends in +X direction) — CRON-81: child of body_chest (was root)
+        // World pos preserved: old root-relative (2, 4, -3) - body_chest (0, 6, -2.5) = (2, -2, -0.5)
+        PartDefinition rightWingRoot = bodyChest.addOrReplaceChild("right_wing_root",
                 CubeListBuilder.create().texOffs(32, 0)
                         .addBox(0.0F, -0.2F, -2.0F, 3.0F, 0.4F, 4.0F),
-                PartPose.offsetAndRotation(2.0F, 4.0F, -3.0F, 0.0F, 0.0F, 0.8F));
+                PartPose.offsetAndRotation(2.0F, -2.0F, -0.5F, 0.0F, 0.0F, 0.8F));
         PartDefinition rightWingMid = rightWingRoot.addOrReplaceChild("mid",
                 CubeListBuilder.create().texOffs(33, 5)
                         .addBox(0.0F, -0.15F, -1.5F, 4.0F, 0.3F, 3.0F),
@@ -319,37 +353,42 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(0.0F, -0.1F, -0.5F, 2.5F, 0.2F, 1.0F),
                 PartPose.offsetAndRotation(3.0F, 0.15F, 1.5F, 0.0F, 0.0F, 0.0F));
 
-        // ── legs : 4 legs, thigh + shin, with CubeDeformation ────────────
+        // ── legs : 4 legs, thigh + shin, with CubeDeformation ────────────────────
+        // CRON-81: front thighs → body_chest (attach at shoulders);
+        //          back thighs → body_hip (attach at haunches). Was: all 4 at root.
+        // World pos preserved via subtraction (see cron81_verify_qilin_reparent.py).
+        // Legs now follow body pitch (anatomically correct — quadruped legs
+        // pivot with the torso, not independently of it).
         CubeDeformation legRound = new CubeDeformation(0.15F);
-        root.addOrReplaceChild("front_left_thigh",
+        PartDefinition frontLeftThigh = bodyChest.addOrReplaceChild("front_left_thigh",
                 CubeListBuilder.create().texOffs(0, 32)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, legRound),
-                PartPose.offset(-2.0F, 9.0F, -4.0F));
-        root.getChild("front_left_thigh").addOrReplaceChild("shin",
+                PartPose.offset(-2.0F, 3.0F, -1.5F));
+        frontLeftThigh.addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(0, 40)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, legRound),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
-        root.addOrReplaceChild("front_right_thigh",
+        PartDefinition frontRightThigh = bodyChest.addOrReplaceChild("front_right_thigh",
                 CubeListBuilder.create().texOffs(8, 32)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, legRound),
-                PartPose.offset(2.0F, 9.0F, -4.0F));
-        root.getChild("front_right_thigh").addOrReplaceChild("shin",
+                PartPose.offset(2.0F, 3.0F, -1.5F));
+        frontRightThigh.addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(8, 40)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, legRound),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
-        root.addOrReplaceChild("back_left_thigh",
+        PartDefinition backLeftThigh = bodyHip.addOrReplaceChild("back_left_thigh",
                 CubeListBuilder.create().texOffs(0, 48)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, legRound),
-                PartPose.offset(-2.0F, 9.0F, 4.0F));
-        root.getChild("back_left_thigh").addOrReplaceChild("shin",
+                PartPose.offset(-2.0F, 3.5F, 1.5F));
+        backLeftThigh.addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(0, 56)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, legRound),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
-        root.addOrReplaceChild("back_right_thigh",
+        PartDefinition backRightThigh = bodyHip.addOrReplaceChild("back_right_thigh",
                 CubeListBuilder.create().texOffs(8, 48)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, legRound),
-                PartPose.offset(2.0F, 9.0F, 4.0F));
-        root.getChild("back_right_thigh").addOrReplaceChild("shin",
+                PartPose.offset(2.0F, 3.5F, 1.5F));
+        backRightThigh.addOrReplaceChild("shin",
                 CubeListBuilder.create().texOffs(8, 56)
                         .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F, legRound),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
@@ -466,10 +505,14 @@ public class QilinModel extends HierarchicalModel<SpiritBeastEntity> {
             this.backLeftShin.xRot   = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI)) * 0.6F * limbSwingAmount;
             this.backRightShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase)) * 0.6F * limbSwingAmount;
 
-            // Spine flex
+            // Spine flex — CRON-81: body_hip is now child of body_chest, so its LOCAL
+            // xRot must be -1.5*spineFlex (not -0.5*spineFlex) to preserve the S-curve.
+            // body_hip WORLD xRot = body_chest.xRot + body_hip.xRot = spineFlex + (-1.5*spineFlex)
+            //                      = -0.5*spineFlex  (SAME as pre-CRON-81 when hip was at root).
+            // Without this fix, hip would rotate SAME direction as chest (C-curve, not S-curve).
             float spineFlex = (float) Math.sin(phase + Math.PI * 0.5F) * 0.08F * limbSwingAmount;
             this.bodyChest.xRot = spineFlex;
-            this.bodyHip.xRot = -spineFlex * 0.5F;
+            this.bodyHip.xRot = -spineFlex * 1.5F;
 
             // Breathing
             this.root.y = (float) Math.sin(ageInTicks * 0.1F) * 0.08F;

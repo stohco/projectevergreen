@@ -24,19 +24,21 @@ import java.util.function.Supplier;
  *
  * ── TIER 1 — Structural defects (animation coherence) ──────────────────────
  *
- * QILIN (QilinModel.java, 577 lines):
- *   - body_chest, body_hip, neck, tail_base, all 4 legs, AND wing roots are
- *     ALL direct children of root. NONE are parented to the body chain.
- *   - Consequence: when bodyChest.xRot is set (spineFlex), body_hip does NOT
- *     follow. The chest rotates, the hip stays put — the Qilin visibly
- *     "hinges" at the waist during walk. Same for neck (doesn't follow chest
- *     rotation) and tail (doesn't follow hip rotation).
- *   - Wings attach at root level, not at body_chest's shoulder — they don't
- *     follow body pitch during sprint (root.xRot = -0.15).
- *   - FIX: Reparent body_hip → body_chest; neck → body_chest; tail_base →
- *     body_hip; wing roots → body_chest. Recompute PartPose offsets to be
- *     relative to new parents. ~30 line refactor, low risk if offsets are
- *     recomputed carefully. HIGH VISUAL IMPACT.
+ * QILIN (QilinModel.java, 600+ lines):
+ *   - FIXED (CRON-81): body_chest, body_hip, neck, tail_base, all 4 legs, AND
+ *     wing roots were ALL direct children of root. NONE were parented to the
+ *     body chain. When bodyChest.xRot animated (spineFlex), body_hip/neck/
+ *     head/tail/wings/legs did NOT follow — Qilin visibly "hinged" at the waist
+ *     during walk, wings stayed level during sprint pitch, tail didn't follow
+ *     rump rotation, legs didn't follow body pitch.
+ *     FIX SHIPPED: Reparented body_hip/neck/head/wing-roots/front-thighs →
+ *     body_chest; tail_base/back-thighs → body_hip. All PartPose offsets
+ *     recomputed via subtraction (Rx-Px, Ry-Py, Rz-Pz). Verified by
+ *     /home/z/my-project/scripts/cron81_verify_qilin_reparent.py. Animation
+ *     fix: body_hip.xRot changed from -0.5*spineFlex to -1.5*spineFlex to
+ *     preserve S-curve (hip LOCAL now compensates for inheriting chest rotation).
+ *     Score 9/10 — closes the highest-impact Tier 1 defect. Runtime verification
+ *     still needed (no client available).
  *
  * SPIRIT_DEER (SpiritDeerModel.java, 474 lines):
  *   - Likely same defect as Qilin (body parts parented to root). Audit needed.
@@ -87,8 +89,8 @@ import java.util.function.Supplier;
  *   - No breath particles, no footstep dust, no flight wake.
  *
  * PRIORITIZED NEXT STEPS for future CRON rounds:
- *   1. Fix QilinModel parent hierarchy (Tier 1) — highest visual impact.
- *   2. Audit SpiritDeerModel parent hierarchy (Tier 1).
+ *   1. DONE (CRON-81): Fix QilinModel parent hierarchy (Tier 1) — shipped.
+ *   2. Audit SpiritDeerModel parent hierarchy (Tier 1) — likely same defect.
  *   3. Add ease-in/ease-out to walk cycles (Tier 3).
  *   4. Add pose-transition LERP to SpiritBeastEntity + models (Tier 3).
  *   5. Deepen Qilin chest and lengthen neck (Tier 2).
