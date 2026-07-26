@@ -208,14 +208,15 @@ public final class WangLinTraits {
     );
 
     /**
-     * PATERNAL_LOVE — Wang Lin's love for his children. Wang Ping (mortal
-     * adopted son, raised intentionally as mortal, E50) and Wang Yiyi
+     * PATERNAL_LOVE — Wang Lin's love for his children. Wang Ping (biological
+     * son by Mu Bingmei/Liu Mei, rebuilt from sword qi, raised as mortal, E50) and Wang Yiyi
      * (daughter, eventually brought back to the Immortal Astral Continent).
      */
     public static final Trait PATERNAL_LOVE = new Trait(
             "PATERNAL_LOVE",
-            "Paternal Love — For Wang Ping (Adopted Son) and Wang Yiyi (Daughter)",
-            "Wang Lin lived a mortal lifetime raising his adopted son Wang Ping in a "
+            "Paternal Love — For Wang Ping (Biological Son) and Wang Yiyi (Daughter)",
+            "Wang Lin lived a mortal lifetime raising his biological son Wang Ping (rebuilt "
+                    + "from sword qi after Liu Mei 怨婴 refinement) in a "
                     + "desolate village (E50, Ch. 701). Wang Ping was raised intentionally as a "
                     + "mortal — Wang Lin wanted him to experience ordinary life free from the "
                     + "cultivation world's horrors. Wang Ping's death triggered Wang Lin's Karma "

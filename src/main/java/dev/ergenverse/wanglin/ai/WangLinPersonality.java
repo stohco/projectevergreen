@@ -273,7 +273,7 @@ public final class WangLinPersonality {
 
                 // ── Wang Ping — the mortal lifetime (E50, CD-31) ──────────
                 new WangLinMemory("E50_wang_ping_mortal_life",
-                        "Lived a mortal lifetime raising his adopted son Wang Ping in a desolate village.",
+                        "Lived a mortal lifetime raising his biological son Wang Ping (rebuilt from sword qi) in a desolate village.",
                         +0.4,
                         "PATERNAL_LOVE, MORTAL_WORLD_ATTACHMENT, PATIENCE",
                         Provenance.explicit("Renegade Immortal",

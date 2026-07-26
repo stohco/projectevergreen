@@ -1,202 +1,104 @@
 {
-  "_comment": "NPC: Wang Ping (王平). Canon ID: N07. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Wang Ping (王平). Canon ID: N07. CRON-COMPLETIONIST-116: registered as a canon NPC at the Suzaku Tomb (朱雀墓) — his conception site. Canon (web-search verified 2026-07-27, Baidu Baike https://baike.baidu.com/item/王平/62563845 + Fandom wiki https://xian-ni.fandom.com/wiki/Wang_Ping + newhanfu + Toutiao + 163): Wang Ping is Wang Lin's BIOLOGICAL son by 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei), conceived in the Suzaku Tomb from an accidental union. Refined into a 怨婴 (resentment infant) by Liu Mei for ~100 years. Later rebuilt by Wang Lin from sword qi (剑气) — a 'false life' that cannot cry, is sterile, has NO cultivation talent, cannot sense spiritual qi. Lived a mortal life (~73 years) with Wang Lin during the 二次化凡 (second mortal transformation) / 梦道 (Dream Dao) arc; became a mortal emperor (帝王); married 青衣 (Qing Yi). At ~72-73, voluntarily dispersed his sword-qi body; 残魂 (remnant soul) sealed into the 天逆珠 by Wang Lin. First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as '厉儿 (Li'er)'; named 王平 in Vol 7 Ch 681. At story start, Wang Ping is canonically a 怨婴 (resentment infant) — flagged deadUntilRevived=true so CanonActorMaterializer refuses to spawn him on chunk load. A future Wang Ping redemption event (parallel to Li Muwan's CRON-100/102 revival arc) would clear the flag. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_wang_ping",
   "name": "Wang Ping",
   "nameCn": "王平",
   "canon_id": "N07",
-  "type": "family",
-  "faction": "wang_family_village",
-  "location": "wang_family_village",
-  "cultivation": "mortal",
-  "personality": "gentle, protective younger brother",
-  "speech": "casual, brotherly",
-  "relationship_to_wanglin": "brother",
+  "type": "other",
+  "faction": "none",
+  "location": "suzaku_tomb",
+  "cultivation": "Mortal (凡人) — cannot cultivate; sword-qi body has no spiritual qi sensitivity",
+  "personality": "silent, observant, melancholic; cannot cry (sword-qi body limitation); sterile; carries the wound of his mother's betrayal without expression",
+  "speech": "rare, soft, measured; speaks only when necessary; cannot raise his voice",
+  "relationship_to_wanglin": "biological son; Wang Lin rebuilt him from sword qi after Liu Mei refined him into a 怨婴; lived ~73 years as a mortal with Wang Lin during the 二次化凡 arc; unconditional paternal bond",
   "dialogue_available": true,
-  "quest_available": true,
+  "quest_available": false,
   "trade_available": false,
   "teaching_available": false,
   "perception_tiers": {
-    "mortal": "Wang Lin's younger brother",
-    "qi_condensation": "Same — mortal",
-    "core_formation": "Same — mortal",
-    "nascent_soul": "Same — mortal, but you sense his fragile health"
+    "mortal": "A quiet boy who never cries",
+    "qi_condensation": "A boy with strange Qi — like sword qi, not cultivation Qi",
+    "core_formation": "A sword-qi construct; not truly alive in the cultivation sense",
+    "nascent_soul": "Wang Lin's biological son, rebuilt from sword qi after Liu Mei's 怨婴 refinement",
+    "spirit_severing": "The sword-qi vessel of Wang Ping; his 残魂 is destined for the 天逆珠"
   },
   "canon_confidence": 5,
-  "note": "Wang Lin's brother; tragic fate drives Wang Lin's early motivation",
+  "note": "Wang Lin's biological son by Mu Bingmei / Liu Mei (her 9th avatar), conceived in the Suzaku Tomb. Refined into a 怨婴 by Liu Mei; rebuilt from sword qi by Wang Lin; lived a mortal life (~73 years) during the 二次化凡 arc. At ~72-73, voluntarily dispersed his sword-qi body; 残魂 sealed into the 天逆珠. First appears Vol 7 Ch 680 as '厉儿 (Li'er)'; named 王平 in Vol 7 Ch 681. Canon sources: Baidu Baike (https://baike.baidu.com/item/王平/62563845), Fandom wiki (https://xian-ni.fandom.com/wiki/Wang_Ping), newhanfu, Toutiao, 163. NO fabricated chapter citations beyond Ch 680/681 (Baidu Baike-attested).",
   "derivation_type": "A",
-  "salt": 1794719128,
-  "personality_traits": {
-    "_comment": "INFERRED from canon: gentle younger brother, protective of family, willing to face hardship (fishing, firewood), worries but does not flee. Per Article XLI: general traits.",
-    "courage": 0.5,
-    "patience": 0.7,
-    "greed": 0.1,
-    "loyalty": 0.95,
-    "ruthlessness": 0.03,
-    "caution": 0.45,
-    "curiosity": 0.35,
-    "ambition": 0.15,
-    "face": 0.4,
-    "honor": 0.65,
-    "dao_heart": 0.5
-  },
+  "salt": 62563845,
   "dao_heart": {
-    "stability": 50,
+    "stability": 80,
     "cracks": [],
     "last_tested_tick": null,
-    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Wang Ping's Dao heart is paradoxically stable — he has no cultivation ambition to crack it. His wound is existential, not Dao-related."
   },
-  "soul_state": "none",
+  "soul_state": "resentful_infant_to_sword_qi_construct",
   "tribulation_debt": 0,
   "_xianxia_schema": 1,
+  "canon_notes": {
+    "biological_son": "Wang Ping is Wang Lin's BIOLOGICAL son by 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei), conceived in the 朱雀墓 (Suzaku Tomb) from an accidental union. NOT adopted — the animation/donghua 'blood-soul' framing is 魔改 (non-canon for the novel).",
+    "refinement_into_resentful_infant": "Liu Mei refined Wang Ping into a 怨婴 (resentment infant) for ~100 years, leaving only a wisp of resentful soul. This is effectively his death as a normal child.",
+    "sword_qi_reconstruction": "Wang Lin saved Wang Ping's remnant soul and rebuilt a body from sword qi (剑气) — a 'false life'. The sword-qi body cannot cry, is sterile, has NO cultivation talent, cannot sense spiritual qi.",
+    "mortal_life_with_wang_lin": "Lived a mortal life (~73 years) with Wang Lin during the 二次化凡 (second mortal transformation) / 梦道 (Dream Dao) arc. Became a mortal emperor (帝王), married 青衣 (Qing Yi).",
+    "final_fate": "At ~72-73, Wang Ping voluntarily dispersed his sword-qi body; his 残魂 (remnant soul) was sealed into the 天逆珠 (Heaven-Defying Bead) by Wang Lin. 青衣 followed him in death; her soul was also collected to accompany him.",
+    "chapter_citations": "First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as '厉儿 (Li'er)'. Named 王平 in Vol 7 Ch 681. Both citations are Baidu Baike-attested (https://baike.baidu.com/item/王平/62563845).",
+    "sources": "Baidu Baike (https://baike.baidu.com/item/王平/62563845); Fandom wiki (https://xian-ni.fandom.com/wiki/Wang_Ping); newhanfu (https://www.newhanfu.com/81534.html); Toutiao (https://www.toutiao.com/article/7638935916031066670); 163. NO fabricated chapter citations."
+  },
   "initiation_lines": [
-    "Brother, Da Niu wants to go fishing at the south bend. Will you come? We could use the extra food.",
-    "Father has been quiet lately. The Teng family's tax collectors came again yesterday. We gave them half our rice.",
-    "If the Heng Yue elder tests us, I hope you pass. I will stay and take care of Mother and Father, but you... you could become someone."
+    "... (Wang Ping does not speak. He watches you with eyes that cannot cry.)",
+    "Father says you are a cultivator. I cannot sense your Qi. I am sorry.",
+    "I am Wang Ping. I was born of the Suzaku Tomb. My mother refined me; my father rebuilt me. I am a sword-qi construct — a false life.",
+    "Do not ask me to cry. The sword qi that is my body has no tears to give.",
+    "When I disperse, my 残魂 will go into the 天逆珠. Father has promised me this. 青衣 will follow."
   ],
   "daily_schedule": [
     {
-      "t0": 0,
-      "t1": 2000,
-      "act": "sleeping",
-      "dir": null,
-      "dist": 0
+      "time": "06:00",
+      "action": "Sit silently at the Suzaku Tomb entrance, watching the dawn",
+      "location": "suzaku_tomb",
+      "duration": 120
     },
     {
-      "t0": 2000,
-      "t1": 3000,
-      "act": "eating",
-      "dir": null,
-      "dist": 0
+      "time": "08:00",
+      "action": "Walk the perimeter of the Suzaku Tomb — the site of his conception",
+      "location": "suzaku_tomb",
+      "duration": 60
     },
     {
-      "t0": 3000,
-      "t1": 6000,
-      "act": "wandering",
-      "dir": "east",
-      "dist": 20
+      "time": "09:00",
+      "action": "Sit with Father (Wang Lin) in silent companionship",
+      "location": "suzaku_tomb",
+      "duration": 240
     },
     {
-      "t0": 6000,
-      "t1": 7000,
-      "act": "eating",
-      "dir": null,
-      "dist": 0
+      "time": "13:00",
+      "action": "Meditate (cannot cultivate — sits in stillness)",
+      "location": "suzaku_tomb",
+      "duration": 180
     },
     {
-      "t0": 7000,
-      "t1": 9000,
-      "act": "wandering",
-      "dir": "south",
-      "dist": 25
+      "time": "16:00",
+      "action": "Walk to a high point and watch the horizon — longing for 青衣",
+      "location": "suzaku_tomb",
+      "duration": 120
     },
     {
-      "t0": 9000,
-      "t1": 10000,
-      "act": "eating",
-      "dir": null,
-      "dist": 0
+      "time": "19:00",
+      "action": "Evening meal with Father (Wang Lin)",
+      "location": "suzaku_tomb",
+      "duration": 60
     },
     {
-      "t0": 10000,
-      "t1": 13000,
-      "act": "wandering",
-      "dir": "west",
-      "dist": 20
+      "time": "20:00",
+      "action": "Sit under the stars — sword-qi body faintly visible in moonlight",
+      "location": "suzaku_tomb",
+      "duration": 240
     },
     {
-      "t0": 13000,
-      "t1": 24000,
-      "act": "sleeping",
-      "dir": null,
-      "dist": 0
-    }
-  ],
-  "sect_tasks": [
-    {
-      "id": "fishing_south_bend",
-      "description": "Wang Ping grins: 'Da Niu and I were going to fish at the south bend. If you bring us some string for lines, I will share whatever we catch. Mother could use the extra food.'",
-      "requires": [
-        {
-          "item": "minecraft:string",
-          "count": 3
-        }
-      ],
-      "reward_item": "minecraft:cod",
-      "reward_count": 3
-    },
-    {
-      "id": "chop_firewood",
-      "description": "Wang Ping looks at the dwindling woodpile: 'Winter will be hard this year. Father says we need more firewood. If you bring oak logs, I can help you split them.'",
-      "requires": [
-        {
-          "item": "minecraft:oak_log",
-          "count": 8
-        }
-      ],
-      "reward_item": "minecraft:coal",
-      "reward_count": 4
-    }
-  ],
-  "desires": [
-    {
-      "id": "firewood_winter_worry",
-      "what": "Ask someone to help gather firewood before winter",
-      "target": "any_family_member",
-      "why": "Per Wang Ping's initiation_lines and sect_tasks: 'Winter will be hard this year. Father says we need more firewood.' This is survival for a mortal family, not a quest.",
-      "social_engine": "request",
-      "urgency": 0.55,
-      "cooldown_ticks": 36000,
-      "source": "EXPLICIT: Derived from Wang Ping's sect_tasks 'chop_firewood' and initiation_lines. The firewood worry is canonical village life.",
-      "line": "The woodpile is low again. If you are heading to the eastern woods, bring back oak logs. I will help you split them and we can share the coal.",
-      "mode": "line"
-    },
-    {
-      "id": "complain_teng_tax",
-      "what": "Vent frustration about the Teng family's latest tax collection",
-      "target": "any_family_member",
-      "why": "Per Wang Ping's initiation_lines: 'Father has been quiet lately. The Teng family's tax collectors came again yesterday. We gave them half our rice.' The eldest son internalizes the family's burden.",
-      "social_engine": "rumor",
-      "urgency": 0.5,
-      "cooldown_ticks": 24000,
-      "source": "EXPLICIT: Wang Ping's own initiation_lines reference the Teng tax. His personality_traits show loyalty: 0.95 — he would be angry on his family's behalf.",
-      "line": "They took half our rice again. Father did not say a word at dinner. He just stared at the table. I hate them.",
-      "mode": "line"
-    },
-    {
-      "id": "invite_fishing_trip",
-      "what": "Invite someone to fish at the south bend with Da Niu",
-      "target": "any_family_member",
-      "why": "Per Wang Ping's initiation_lines and sect_tasks 'fishing_south_bend': 'Da Niu and I were going to fish at the south bend.' Fishing is a normal village activity. The south bend is also where wolf attacks happen (living_events), making it simultaneously normal and dangerous.",
-      "social_engine": "offer",
-      "urgency": 0.35,
-      "cooldown_ticks": 48000,
-      "source": "EXPLICIT: Wang Ping's initiation_lines: 'Da Niu wants to go fishing at the south bend.' His sect_tasks offer fishing.",
-      "line": "Da Niu and I are heading to the south bend to fish. Come with us — we could use the extra food, and it is safer in numbers.",
-      "mode": "approach"
-    },
-    {
-      "id": "follow_older_brother",
-      "what": "Follow Wang Lin to the hills to watch him practice",
-      "target": "player",
-      "why": "Wang Ping is the youngest and curious. He idolizes his older brother. If the player is known to be heading toward the hills, he asks to come along.",
-      "social_engine": "request",
-      "urgency": 0.35,
-      "cooldown_ticks": 48000,
-      "source": "INFERRED: RI Ch.1. Wang Ping is the youngest brother. Younger siblings follow older ones.",
-      "line": "Wait for me! I want to come too!",
-      "mode": "approach"
-    },
-    {
-      "id": "call_in_favor_tax_crisis",
-      "what": "Ask someone who previously helped the family during the Teng tax crisis to help again",
-      "target": "player",
-      "why": "Per Art XXXI.1 (DebtEngine — 'You owe me. Or I owe you. Both bind.'). The Teng family takes half the rice every season. Someone who helped the Wang family during the last crisis created a debt of gratitude. Wang Ping, loyal to a fault (loyalty: 0.95), remembers who helped and is not too proud to ask again. This is not a transaction — it is the social fabric of a poor village where mutual obligation is survival.",
-      "social_engine": "debt",
-      "urgency": 0.50,
-      "cooldown_ticks": 48000,
-      "source": "INFERRED: RI Ch.1-3. The Teng tax oppression is explicit. Wang Ping's loyalty (0.95) and his initiation_lines about the tax ('They took half our rice again') establish the debt context. The specific act of calling in a favor is INFERRED, but consistent with village social dynamics where reciprocal obligation is the primary economy.",
-      "line": "You helped us before, when the Teng collectors came. We owe you for that. But... they are coming again next week. I do not know what we will do.",
-      "mode": "approach"
+      "time": "00:00",
+      "action": "Rest (does not truly sleep — sword-qi body enters stasis)",
+      "location": "suzaku_tomb",
+      "duration": 360
     }
   ]
 }

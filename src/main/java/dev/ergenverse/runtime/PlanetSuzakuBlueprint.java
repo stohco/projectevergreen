@@ -243,6 +243,22 @@ public final class PlanetSuzakuBlueprint {
     // when she is near Mu Bingmei — modeling the disciple-master cultivation.
     public static final String NPC_MU_BINGMEI = "mu_bingmei";  // 木冰眉 / 柳眉
 
+    // CRON-COMPLETIONIST-116: 王平 (Wang Ping) — Wang Lin's biological son by
+    // 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei). Canon (web-search verified
+    // 2026-07-27, Baidu Baike + Fandom wiki + newhanfu + Toutiao + 163):
+    //   - Conceived in the 朱雀墓 (Suzaku Tomb) from an accidental union.
+    //   - Refined into a 怨婴 (resentment infant) by Liu Mei for ~100 years.
+    //   - Redeemed by Wang Lin: rebuilt a body from sword qi (剑气); lived a
+    //     mortal life (~73 years) with Wang Lin during the 二次化凡 arc.
+    //   - At ~72-73, voluntarily dispersed his sword-qi body; 残魂 sealed into
+    //     the 天逆珠 by Wang Lin.
+    //   - First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as "厉儿 (Li'er)";
+    //     named 王平 in Vol 7 Ch 681. (Safe citations per Baidu Baike.)
+    // At story start, Wang Ping is canonically a 怨婴 (resentment infant) —
+    // flagged deadUntilRevived=true. Mod-original placement: Suzaku Tomb
+    // (his conception site). A future redemption event would clear the flag.
+    public static final String NPC_WANG_PING = "wang_ping";  // 王平
+
     /**
      * All canonical locations, indexed by id. Immutable. Built fresh each call
      * (the set is tiny — 15 entries — so this is negligible).

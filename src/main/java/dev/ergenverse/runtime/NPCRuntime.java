@@ -158,6 +158,38 @@ public final class NPCRuntime {
         register(CanonUUID.MU_BINGMEI, "Mu Bingmei 木冰眉 / 柳眉",
                 PlanetSuzakuBlueprint.KUNXU_REALM.x,
                 PlanetSuzakuBlueprint.KUNXU_REALM.z);
+        // CRON-COMPLETIONIST-116: 王平 (Wang Ping) — Wang Lin's biological son
+        // by 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei). Canon (web-search
+        // verified 2026-07-27, Baidu Baike https://baike.baidu.com/item/王平/62563845
+        // + Fandom wiki + newhanfu + Toutiao + 163):
+        //   - Conceived in the 朱雀墓 (Suzaku Tomb) from an accidental union.
+        //     BIOLOGICAL son, NOT adopted (the animation/donghua "blood-soul"
+        //     framing is 魔改 — non-canon for the novel).
+        //   - Refined into a 怨婴 (resentment infant) by Liu Mei for ~100 years,
+        //     leaving only a wisp of resentful soul. This is effectively his
+        //     death as a normal child.
+        //   - Redeemed by Wang Lin: rebuilt a body from sword qi (剑气); lived
+        //     a mortal life (~73 years) with Wang Lin during the 二次化凡 arc.
+        //     Became a mortal emperor (帝王), married 青衣 (Qing Yi).
+        //   - At ~72-73, voluntarily dispersed his sword-qi body; 残魂 sealed
+        //     into the 天逆珠 by Wang Lin.
+        //   - First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as "厉儿 (Li'er)";
+        //     named 王平 in Vol 7 Ch 681. (Safe citations per Baidu Baike.)
+        // Placement: Suzaku Tomb (0, 0) — his conception site. Mod-original
+        // concrete placement; canon does not specify a "day-0 location" for
+        // Wang Ping because he is canonically a 怨婴 (resentment infant) at
+        // story start, not a roaming NPC.
+        // Flagged deadUntilRevived=true — CanonActorMaterializer refuses to
+        // spawn him on chunk load. A future Wang Ping redemption event
+        // (parallel to Li Muwan's CRON-100/102 revival arc) would clear the
+        // flag and materialize him as a mortal boy at the Suzaku Tomb.
+        register(CanonUUID.WANG_PING, "Wang Ping 王平",
+                PlanetSuzakuBlueprint.SUZAKU_TOMB.x,
+                PlanetSuzakuBlueprint.SUZAKU_TOMB.z);
+        ActorState wangPingState = actors.get(CanonUUID.WANG_PING);
+        if (wangPingState != null) {
+            wangPingState.deadUntilRevived = true;
+        }
         loaded = true;
     }
 

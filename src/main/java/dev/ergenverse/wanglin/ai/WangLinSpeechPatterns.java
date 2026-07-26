@@ -183,7 +183,7 @@ public final class WangLinSpeechPatterns {
     public static final SpeechPattern GENTLE_WITH_FAMILY = new SpeechPattern(
             "GENTLE_WITH_FAMILY",
             "Gentle with Family — The Cold Mask Drops",
-            "With Li Muwan (his wife), Wang Ping (his adopted son), Wang Yiyi (his daughter), "
+            "With Li Muwan (his wife), Wang Ping (his biological son), Wang Yiyi (his daughter), "
                     + "and his parents Wang Tianshui and Zhou Tingsu, Wang Lin's speech softens "
                     + "entirely. The cold, terse register vanishes. He uses endearments, asks "
                     + "after their well-being, tells small jokes, recounts the day's small "

@@ -343,7 +343,7 @@ public final class WangLinHabits {
             "Wang Lin's Dao-deepening habit. To comprehend Life-Death — the bridge between "
                     + "mortality and immortality, and the foundation of his Samsara Dao — he "
                     + "periodically sheds his cultivation identity and lives as a mortal. The most "
-                    + "attested instance is the mortal lifetime raising his adopted son Wang Ping in "
+                    + "attested instance is the mortal lifetime raising his biological son Wang Ping (rebuilt from sword qi) in "
                     + "a desolate village (E50, Ch. 701). He worked the soil, aged with his family, "
                     + "watched his son grow old and die. Each mortal lifetime deepens his grasp of "
                     + "the Life-Death restriction and the Samsara Essence.",

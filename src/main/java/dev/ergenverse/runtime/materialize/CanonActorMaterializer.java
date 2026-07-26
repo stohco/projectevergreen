@@ -91,6 +91,21 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         // The ZhouRuCultivationGrowthService advances Zhou Ru's realm when
         // she is near Mu Bingmei — modeling the disciple-master cultivation.
         profile(CanonUUID.MU_BINGMEI,    "mu_bingmei",    "Mu Bingmei 木冰眉 / 柳眉", "kunxu_realm",   "ascendant");
+        // CRON-COMPLETIONIST-116: 王平 (Wang Ping) — Wang Lin's biological son
+        // by 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei). Canon (web-search
+        // verified 2026-07-27, Baidu Baike + Fandom wiki + newhanfu + Toutiao
+        // + 163): conceived in the 朱雀墓 (Suzaku Tomb); refined into a 怨婴
+        // (resentment infant) by Liu Mei; later rebuilt by Wang Lin from sword
+        // qi (剑气) and lived a mortal life (~73 years) during the 二次化凡 arc.
+        // At story start he is canonically a 怨婴 — flagged deadUntilRevived=true
+        // in NPCRuntime, so this materializer refuses to spawn him on chunk
+        // load. A future Wang Ping redemption event would clear the flag.
+        // SectId "none" reflects his mortal status (no cultivation sect).
+        // Realm "mortal" reflects his state — he has NO cultivation talent,
+        // cannot sense spiritual qi (canon: his sword-qi body cannot cultivate).
+        // CharacterId "wang_ping" allows the renderer to pick a distinct
+        // model/texture (a young boy with sword-qi visual cues).
+        profile(CanonUUID.WANG_PING,     "wang_ping",     "Wang Ping 王平",         "none",          "mortal");
     }
 
     private static void profile(UUID uuid, String characterId, String displayName, String sectId, String realm) {

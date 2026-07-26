@@ -120,6 +120,38 @@ public final class CanonUUID {
     // N19, L74, Baidu Baike (木冰眉 — https://baike.baidu.com/item/木冰眉/8802287), Fandom wiki.
     public static final UUID MU_BINGMEI = of("npc:mu_bingmei");
 
+    // CRON-COMPLETIONIST-116: 王平 (Wang Ping) — Wang Lin's biological son by
+    // 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei). Canon (web-search verified
+    // 2026-07-27, Baidu Baike https://baike.baidu.com/item/王平/62563845 +
+    // Fandom wiki https://xian-ni.fandom.com/wiki/Wang_Ping + newhanfu +
+    // Toutiao + 163):
+    //   - Conceived in the 朱雀墓 (Suzaku Tomb) from an accidental union between
+    //     Wang Lin and Liu Mei (Mu Bingmei's 9th avatar). BIOLOGICAL son, NOT
+    //     adopted. (The "adopted"/"blood-soul" framing in the animation/donghua
+    //     is 魔改 — non-canon for the novel.)
+    //   - Refined into a 怨婴 (resentment infant) by Liu Mei for ~100 years,
+    //     leaving only a wisp of resentful soul. This is effectively his death
+    //     as a normal child.
+    //   - Redeemed by Wang Lin: rebuilt a body from sword qi (剑气) — a "false
+    //     life". Cannot cry, sterile, has NO cultivation talent, cannot sense
+    //     spiritual qi.
+    //   - Lived a mortal life (~73 years) with Wang Lin during the 二次化凡
+    //     (second mortal transformation) / 梦道 (Dream Dao) arc. Became a mortal
+    //     emperor (帝王), married 青衣 (Qing Yi).
+    //   - At ~72-73, voluntarily dispersed his sword-qi body; his 残魂
+    //     (remnant soul) was sealed into the 天逆珠 (Heaven-Defying Bead) by
+    //     Wang Lin.
+    //   - First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as "厉儿 (Li'er)";
+    //     named 王平 in Vol 7 Ch 681. (Safe citations per Baidu Baike entry.)
+    // At story start, Wang Ping is canonically a 怨婴 (resentment infant) —
+    // NOT a living boy. Flagged deadUntilRevived=true so CanonActorMaterializer
+    // refuses to spawn him on chunk load. A future Wang Ping redemption event
+    // (parallel to Li Muwan's revival arc) would clear the flag and materialize
+    // him as a mortal boy at the Suzaku Tomb (his conception site).
+    // NO fabricated chapter citations beyond Ch 680/681 (which are Baidu Baike-
+    // attested). Canon sources: Baidu Baike, Fandom wiki, newhanfu, Toutiao, 163.
+    public static final UUID WANG_PING = of("npc:wang_ping");
+
     // ── Spirit Beasts (named/canonical beasts, not generic spawns) ──
     public static final UUID WOLF_PACK_ALPHA_ZHAO = of("beast:wolf_pack_alpha_zhao");
     public static final UUID SPIRIT_TIGER_ZHAO_MOUNTAINS = of("beast:spirit_tiger_zhao_mountains");

@@ -37,8 +37,8 @@ import net.minecraft.server.level.ServerLevel;
  *       ultimately reliable. Moderate trust, high familiarity, low predictability.</li>
  *   <li>Wang Lin &amp; Teng Clan: extreme hostility. The Teng Clan destroyed Wang Lin's
  *       family in Zhao Country. High grievance, high fear (on Teng side).</li>
- *   <li>Wang Ping &amp; Wang Lin: father-son. Wang Ping is Wang Lin's adopted son.
- *       Unconditional trust, deep protectiveness.</li>
+ *   <li>Wang Ping &amp; Wang Lin: father-son. Wang Ping is Wang Lin's biological son
+ *       by Mu Bingmei/Liu Mei (CRON-116 canon correction). Unconditional trust, deep protectiveness.</li>
  *   <li>Heng Yue Sect &amp; Wang Lin: complicated. Wang Lin was a disciple but left.
  *       The sect has mixed feelings — some respect his power, some resent his departure.</li>
  *   <li>Soul Refining Sect &amp; Wang Lin: adversarial. The Soul Refining Sect is a
@@ -111,14 +111,41 @@ public final class CanonRelationshipSeeder {
                         + "Situ Nan's loyalty shifts with his mood.",
                 tick);
 
-        // Wang Lin ↔ Wang Ping (adopted son)
-        // Canon: Wang Lin adopted Wang Ping as a child. Unconditional paternal bond.
+        // Wang Lin ↔ Wang Ping (biological son)
+        // CRON-COMPLETIONIST-116 canon correction: Wang Ping is Wang Lin's
+        // BIOLOGICAL son by 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei),
+        // conceived in the 朱雀墓 (Suzaku Tomb) — NOT adopted. The prior
+        // framing (used in the animation/donghua 魔改, not the novel) was
+        // corrected in CRON-116 to "biological son".
+        // Canon: refined into a 怨婴 by Liu Mei; later rebuilt by Wang Lin
+        // from sword qi (剑气) and lived a mortal life (~73 years) with Wang
+        // Lin during the 二次化凡 arc. Unconditional paternal bond — Wang Lin
+        // would sacrifice everything for his safety. Trust is absolute.
         store.recordMultiAxis(
                 "wang_lin", "wang_ping",
                 95, 40, 0, 90, 5, 0,  // trust=95, respect=40 (son, not cultivator), familiarity=90
-                "Canon: Wang Ping is Wang Lin's adopted son. The relationship "
-                        + "transcends cultivation politics. Wang Lin would sacrifice "
-                        + "everything for his safety. Trust is absolute.",
+                "Canon: Wang Ping is Wang Lin's biological son by Mu Bingmei / "
+                        + "Liu Mei (her 9th avatar), conceived in the Suzaku Tomb. "
+                        + "Refined into a 怨婴 (resentment infant) by Liu Mei; later "
+                        + "rebuilt by Wang Lin from sword qi (剑气) and lived a mortal "
+                        + "life (~73 years) with Wang Lin during the 二次化凡 arc. "
+                        + "The relationship transcends cultivation politics. Wang Lin "
+                        + "would sacrifice everything for his safety. Trust is absolute.",
+                tick);
+
+        // Wang Ping ↔ Mu Bingmei (mother)
+        // CRON-COMPLETIONIST-116: Wang Ping's biological mother is 木冰眉 /
+        // 柳眉 (Mu Bingmei's 9th avatar Liu Mei). She refined him into a 怨婴
+        // for ~100 years — maximal maternal grievance from Wang Lin's side,
+        // complex guilt/hostility from Mu Bingmei's side.
+        store.recordMultiAxis(
+                "wang_ping", "mu_bingmei",
+                10, 30, 60, 40, 0, 80,  // trust=10, respect=30, fear=60, grievance=80
+                "Canon: Mu Bingmei (via her 9th avatar Liu Mei) is Wang Ping's "
+                        + "biological mother — but she refined him into a 怨婴 "
+                        + "(resentment infant) for ~100 years. The maternal bond is "
+                        + "twisted into maximal grievance. Wang Ping's sword-qi body "
+                        + "cannot cry; he cannot express the wound directly.",
                 tick);
 
         // Wang Lin ↔ Teng Huayuan (Teng Clan Patriarch)
@@ -283,15 +310,27 @@ public final class CanonRelationshipSeeder {
                         + "Professional respect for each other's power.",
                 tick);
 
-        // Wang Ping ↔ Zhou Tingsu (village girl)
-        // Canon: Childhood sweethearts in Wang Family Village.
-        // Pure, innocent bond.
+        // Wang Ping ↔ Qing Yi (wife)
+        // CRON-COMPLETIONIST-116 canon correction: removed the fabricated
+        // "Wang Ping ↔ Zhou Tingsu (village girl) / childhood sweethearts in
+        // Wang Family Village" relationship — Wang Ping was NOT raised in
+        // Wang Family Village (he was conceived in the Suzaku Tomb, refined
+        // into a 怨婴, then lived his mortal life with Wang Lin during the
+        // 二次化凡 arc elsewhere). The Zhou Tingsu link was non-canon
+        // fabrication. Replaced with the canon-attested wife 青衣 (Qing Yi) —
+        // a female cultivator who chose mortality to stay with Wang Ping
+        // during his mortal emperor (帝王) life. She followed him in death;
+        // her soul was collected by Wang Lin to accompany Wang Ping's 残魂
+        // in the 天逆珠.
         store.recordMultiAxis(
-                "wang_ping", "zhou_tingsu",
-                60, 10, 0, 85, 0, 0,
-                "Canon: Wang Ping and Zhou Tingsu are childhood friends from "
-                        + "the village. Their bond is innocent and unaffected by "
-                        + "cultivation politics.",
+                "wang_ping", "qing_yi",
+                85, 30, 0, 95, 0, 0,  // trust=85, familiarity=95
+                "Canon: Qing Yi (青衣) is Wang Ping's wife — a female cultivator "
+                        + "who chose mortality to stay with him during his mortal "
+                        + "emperor (帝王) life in the 二次化凡 arc. Their bond is "
+                        + "innocent and unaffected by cultivation politics. She "
+                        + "followed him in death; her soul was collected by Wang Lin "
+                        + "to accompany Wang Ping's 残魂 in the 天逆珠.",
                 tick);
 
         // Old Chen ↔ Da Niu (village elder & village youth)
