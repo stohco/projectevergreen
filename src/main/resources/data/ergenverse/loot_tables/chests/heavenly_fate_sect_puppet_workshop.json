@@ -1,5 +1,5 @@
 {
-  "_comment": "Heavenly Fate Sect \u2014 puppet_workshop. Fate-predictive construct puppets. INFERRED.",
+  "_comment": "Heavenly Fate Sect — puppet_workshop. Fate-predictive construct puppets. INFERRED.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -74,6 +74,20 @@
               "count": {
                 "min": 2,
                 "max": 6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:metal_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
               }
             }
           ]

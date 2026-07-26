@@ -1,5 +1,5 @@
 {
-  "_comment": "Soul Refining Sect \u2014 soul_refining_sect_puppet_workshop. Soul puppet workshop. Puppet parts and soul-binding materials.",
+  "_comment": "Soul Refining Sect — soul_refining_sect_puppet_workshop. Soul puppet workshop. Puppet parts and soul-binding materials.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -88,6 +88,20 @@
               "count": {
                 "min": 1,
                 "max": 3
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:metal_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
               }
             }
           ]

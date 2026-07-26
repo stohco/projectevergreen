@@ -1,5 +1,5 @@
 {
-  "_comment": "Corpse Yin Sect \u2014 core_formation_hall. Elder core formation. Advanced corpse refinement.",
+  "_comment": "Corpse Yin Sect — core_formation_hall. Elder core formation. Advanced corpse refinement.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -82,6 +82,34 @@
           "type": "minecraft:item",
           "weight": 2,
           "name": "ergenverse:spirit_stone_high",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:fire_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:earth_essence",
+          "weight": 3,
           "functions": [
             {
               "function": "minecraft:set_count",

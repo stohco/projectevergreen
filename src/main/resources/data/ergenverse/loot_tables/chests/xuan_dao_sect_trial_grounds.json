@@ -1,5 +1,5 @@
 {
-  "_comment": "Xuan Dao Sect \u2014 trial_grounds. Formation comprehension trials.",
+  "_comment": "Xuan Dao Sect — trial_grounds. Formation comprehension trials.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -68,6 +68,20 @@
           "type": "minecraft:item",
           "weight": 3,
           "name": "ergenverse:cold_iron_ingot",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:fire_essence",
+          "weight": 3,
           "functions": [
             {
               "function": "minecraft:set_count",

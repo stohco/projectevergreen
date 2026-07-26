@@ -1,5 +1,5 @@
 {
-  "_comment": "Soul Refining Sect \u2014 soul_refining_sect_ancestor_hall. Ancestor worship hall. Sacred relics and ancestor's legacy.",
+  "_comment": "Soul Refining Sect — soul_refining_sect_ancestor_hall. Ancestor worship hall. Sacred relics and ancestor's legacy.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -77,6 +77,25 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:wood_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:dao_karma",
+          "weight": 1
         }
       ]
     },

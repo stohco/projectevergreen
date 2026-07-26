@@ -100,6 +100,20 @@
         {
           "type": "minecraft:empty",
           "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:water_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
         }
       ]
     },

@@ -1,5 +1,5 @@
 {
-  "_comment": "Heavenly Fate Sect \u2014 alchemy_courtyard. Fate pills and star-essence elixirs.",
+  "_comment": "Heavenly Fate Sect — alchemy_courtyard. Fate pills and star-essence elixirs.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -83,6 +83,34 @@
           "weight": 2,
           "name": "ergenverse:dao_fragment",
           "functions": []
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:wood_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:fire_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
         }
       ]
     },

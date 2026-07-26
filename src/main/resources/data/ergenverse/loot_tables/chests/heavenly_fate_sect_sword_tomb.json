@@ -1,5 +1,5 @@
 {
-  "_comment": "Heavenly Fate Sect \u2014 sword_tomb. Weapons of fated cultivators. INFERRED.",
+  "_comment": "Heavenly Fate Sect — sword_tomb. Weapons of fated cultivators. INFERRED.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -77,6 +77,25 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:metal_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:dao_life_death",
+          "weight": 1
         }
       ]
     },

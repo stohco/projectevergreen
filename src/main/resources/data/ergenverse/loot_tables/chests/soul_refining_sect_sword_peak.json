@@ -1,5 +1,5 @@
 {
-  "_comment": "Soul Refining Sect \u2014 soul_refining_sect_sword_peak. Sword cultivation peak. Weapon materials and ancient swords.",
+  "_comment": "Soul Refining Sect — soul_refining_sect_sword_peak. Sword cultivation peak. Weapon materials and ancient swords.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -68,6 +68,20 @@
           "type": "minecraft:item",
           "weight": 3,
           "name": "ergenverse:jade_slip"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:metal_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
         }
       ]
     },

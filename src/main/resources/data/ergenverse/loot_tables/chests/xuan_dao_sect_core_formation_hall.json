@@ -1,5 +1,5 @@
 {
-  "_comment": "Xuan Dao Sect \u2014 core_formation_hall. Advanced formation research.",
+  "_comment": "Xuan Dao Sect — core_formation_hall. Advanced formation research.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -82,6 +82,20 @@
           "type": "minecraft:item",
           "weight": 2,
           "name": "ergenverse:spirit_stone_high",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:fire_essence",
+          "weight": 3,
           "functions": [
             {
               "function": "minecraft:set_count",

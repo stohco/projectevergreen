@@ -95,6 +95,16 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:dao_karma",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:dao_life_death",
+          "weight": 1
         }
       ]
     },

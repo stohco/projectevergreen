@@ -1,5 +1,5 @@
 {
-  "_comment": "Heavenly Fate Sect \u2014 ancestor_hall. Heavenly Fate Ancestor's shrine. Fate convergence point.",
+  "_comment": "Heavenly Fate Sect — ancestor_hall. Heavenly Fate Ancestor's shrine. Fate convergence point.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -91,6 +91,25 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:wood_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:dao_karma",
+          "weight": 1
         }
       ]
     },

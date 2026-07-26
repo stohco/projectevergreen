@@ -1,5 +1,5 @@
 {
-  "_comment": "Cloud Sky Sect \u2014 hidden_treasury. Cloud-hidden treasury. Vault concealed within a permanent thunderhead.",
+  "_comment": "Cloud Sky Sect — hidden_treasury. Cloud-hidden treasury. Vault concealed within a permanent thunderhead.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -91,6 +91,39 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:metal_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:earth_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:dao_karma",
+          "weight": 1
         }
       ]
     },

@@ -1,5 +1,5 @@
 {
-  "_comment": "Soul Refining Sect \u2014 soul_refining_sect_alchemy_courtyard. Alchemy area. Pills and soul-refining reagents.",
+  "_comment": "Soul Refining Sect — soul_refining_sect_alchemy_courtyard. Alchemy area. Pills and soul-refining reagents.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -82,6 +82,34 @@
           "type": "minecraft:item",
           "weight": 2,
           "name": "ergenverse:tribulation_fragment"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:wood_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:fire_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
         }
       ]
     },

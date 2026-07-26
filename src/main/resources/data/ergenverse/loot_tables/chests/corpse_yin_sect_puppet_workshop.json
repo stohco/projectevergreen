@@ -1,5 +1,5 @@
 {
-  "_comment": "Corpse Yin Sect \u2014 puppet_workshop. Corpse soldier construction. INFERRED.",
+  "_comment": "Corpse Yin Sect — puppet_workshop. Corpse soldier construction. INFERRED.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -88,6 +88,34 @@
               "count": {
                 "min": 2,
                 "max": 6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:metal_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:earth_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
               }
             }
           ]

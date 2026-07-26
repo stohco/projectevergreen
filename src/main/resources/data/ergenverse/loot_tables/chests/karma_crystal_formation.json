@@ -104,6 +104,11 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:dao_karma",
+          "weight": 1
         }
       ]
     },

@@ -1,5 +1,5 @@
 {
-  "_comment": "Corpse Yin Sect \u2014 inner_sect. Elder quarters, refined corpse soldiers.",
+  "_comment": "Corpse Yin Sect — inner_sect. Elder quarters, refined corpse soldiers.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -88,6 +88,20 @@
               "count": {
                 "min": 1,
                 "max": 3
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:earth_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
               }
             }
           ]

@@ -1,5 +1,5 @@
 {
-  "_comment": "Corpse Yin Sect \u2014 sword_tomb. Weapons of fallen cultivators. INFERRED.",
+  "_comment": "Corpse Yin Sect — sword_tomb. Weapons of fallen cultivators. INFERRED.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -91,6 +91,39 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:metal_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:earth_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:dao_life_death",
+          "weight": 1
         }
       ]
     },

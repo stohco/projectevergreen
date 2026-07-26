@@ -1,5 +1,5 @@
 {
-  "_comment": "Corpse Yin Sect \u2014 main_plaza. Open gathering area. Minimal loot.",
+  "_comment": "Corpse Yin Sect — main_plaza. Open gathering area. Minimal loot.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -54,6 +54,20 @@
           "type": "minecraft:item",
           "weight": 3,
           "name": "ergenverse:spirit_ink",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:earth_essence",
+          "weight": 3,
           "functions": [
             {
               "function": "minecraft:set_count",

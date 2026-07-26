@@ -1,5 +1,5 @@
 {
-  "_comment": "Corpse Yin Sect \u2014 alchemy_courtyard. Yin-attribute alchemy. Corpse pills.",
+  "_comment": "Corpse Yin Sect — alchemy_courtyard. Yin-attribute alchemy. Corpse pills.",
   "type": "minecraft:chest",
   "pools": [
     {
@@ -82,6 +82,48 @@
           "type": "minecraft:item",
           "weight": 3,
           "name": "ergenverse:dao_fragment",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:wood_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:fire_essence",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ergenverse:earth_essence",
+          "weight": 3,
           "functions": [
             {
               "function": "minecraft:set_count",
