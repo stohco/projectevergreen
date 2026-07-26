@@ -1,38 +1,56 @@
 {
-  "_comment": "NPC: Tuo Sen (拓山). Canon ID: N63. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Tuo Sen (拓森). Canon ID: N63. CRON-107: corrected the name character from 拓山 (Tuò Shān, 'mountain') to 拓森 (Tuò Sēn, 'forest') — the latter is the canon-attested spelling (web-search verified 2026-07-26 via Sohu, 163, Baidu Baike). Also updated location to 'suzaku_tomb' (canon: 拓森 reappears at the 朱雀墓 during the 15th-gen Suzaku Son inheritance event — '时隔300年，王林在朱雀墓再遇拓森' Sohu 2024-06-17). Added initiation_lines, daily_schedule, sect_tasks mirroring npc_li_muwan.json. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_tuo_sen",
   "name": "Tuo Sen",
-  "nameCn": "拓山",
+  "nameCn": "拓森",
   "canon_id": "N63",
   "type": "antagonist",
   "faction": "ancient_god_clan",
-  "location": "ancient_god_territory",
-  "cultivation": "Ancient God 8-Star (potential)",
-  "personality": "rival Ancient God; ambitious, powerful",
-  "speech": "god-deep, resonant",
-  "relationship_to_wanglin": "rival for Ancient God inheritance",
+  "location": "suzaku_tomb",
+  "cultivation": "Ancient God 8-Star (古境 / Ancient realm)",
+  "personality": "rival Ancient God; ambitious, powerful, relentless; born from Tu Si's failed Ink Flow Split Soul Technique — inherited Tu Si's 'power' portion, rival to Wang Lin's 'knowledge' portion",
+  "speech": "god-deep, resonant, commanding; speaks with the weight of an Ancient God",
+  "relationship_to_wanglin": "rival for Tu Si's Ancient God inheritance; recurring antagonist; contests the Cultivation Planet Crystal at the Suzaku Tomb",
   "dialogue_available": true,
   "quest_available": true,
   "trade_available": false,
   "teaching_available": false,
   "perception_tiers": {
-    "mortal": "Impossible to perceive",
-    "qi_condensation": "A vast god-presence",
-    "core_formation": "Ancient God; 8-Star potential",
-    "nascent_soul": "Ancient God rival; 8-Star potential",
-    "spirit_severing": "Rival for Tu Si's Ancient God inheritance"
+    "mortal": "Impossible to perceive — an 8-star Ancient God's presence is invisible to mortals",
+    "qi_condensation": "A vast god-presence; the air feels heavy",
+    "core_formation": "An Ancient God; 8-Star potential; rival presence",
+    "nascent_soul": "Ancient God rival; 8-Star; born from Tu Si's Ink Flow Split Soul Technique",
+    "spirit_severing": "Rival for Tu Si's Ancient God inheritance; contests the Crystal"
   },
   "canon_confidence": 5,
-  "note": "Rival Ancient God; competed with Wang Lin for Tu Si's inheritance",
+  "note": "Rival Ancient God; competed with Wang Lin for Tu Si's inheritance. Canon: reappears at the Suzaku Tomb during the 15th-gen Suzaku Son inheritance event (Sohu 2024-06-17, 163 2025-07-29). Spawns via TuoSenSpawnEvent when CultivationPlanetCrystalBlock.use() triggers the inheritance (CRON-106/107). NO fabricated chapter citation.",
   "derivation_type": "A",
   "salt": 33001930,
   "dao_heart": {
     "stability": 50,
     "cracks": [],
     "last_tested_tick": null,
-    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Tuo Sen's Dao heart is hardened by ambition — his rivalry with Wang Lin is his defining wound."
   },
-  "soul_state": "none",
+  "soul_state": "ancient_god",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "initiation_lines": [
+    "So... you have inherited the Crystal. The 15th-gen Suzaku Son. I have waited three hundred years for this moment, Wang Lin.",
+    "Tu Si's power is mine by right. Your 'knowledge' inheritance is a thief's scrap. Today, I reclaim what is mine.",
+    "You flee the Ancient God Land with my memory inheritance. Now you claim the Crystal. There is no hole deep enough to hide you from me.",
+    "Stand and fight, little cultivator. Or flee, as you did before. Either way — I will have what is mine."
+  ],
+  "daily_schedule": [
+    { "time": "00:00", "action": "Standing vigil at the Cultivation Planet Crystal, channeling Ancient God Qi", "location": "suzaku_tomb", "duration": 1440 }
+  ],
+  "sect_tasks": [
+    {
+      "task_id": "tuo_sen_rivalry_confrontation",
+      "name": "Confront Tuo Sen",
+      "description": "Tuo Sen contests your inheritance of the Cultivation Planet Crystal. Defeat him or flee the Suzaku Tomb — there is no negotiation with an Ancient God's ambition.",
+      "required_items": {},
+      "rewards": { "experience": 500 }
+    }
+  ]
 }

@@ -167,7 +167,8 @@ public class HeavenDefyingBeadItem extends WangLinItem {
      * <p>Set by {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}
      * when the inheritance event triggers. Read by future code that grants
      * Suzaku Son privileges (e.g., access to sealed chambers, recognition
-     * by 拓森 when registered as a canon NPC).
+     * by 拓森 (Tuo Sen) — now registered as a canon NPC via CRON-107,
+     * {@link dev.ergenverse.runtime.CanonUUID#TUO_SEN}).
      */
     public static final String NBT_SUZAKU_SON = "Ergen.Bead.SuzakuSon";
 

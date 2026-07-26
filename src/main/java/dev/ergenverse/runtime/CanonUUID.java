@@ -68,6 +68,19 @@ public final class CanonUUID {
     public static final UUID TENG_LI = of("npc:teng_li");
     public static final UUID SITU_NAN = of("npc:situ_nan");
     public static final UUID WANG_HAO = of("npc:wang_hao");
+    // CRON-COMPLETIONIST-107: 拓森 (Tuo Sen) — Wang Lin's Ancient God rival.
+    // Canon (web-search verified 2026-07-26 via Sohu/163/Tencent sources):
+    //   - 拓森 reappears at the 朱雀墓 (Suzaku Tomb) during the inheritance event
+    //     ("时隔300年，王林在朱雀墓再遇拓森" — Sohu 2024-06-17).
+    //   - He is an 8-star Ancient God (古神), rival to Wang Lin for Tu Si's
+    //     Ancient God inheritance (born from Tu Si's failed Ink Flow Split
+    //     Soul Technique — inherited Tu Si's 'power' portion, while Wang Lin
+    //     received the 'knowledge' portion).
+    //   - He appears at the tomb to contest the 修星之晶 (Cultivation Planet Crystal).
+    // NO fabricated chapter citation. Canon sources: Baidu Baike, Sohu, 163, Tencent.
+    // NOTE: the prior data files used the wrong character 拓山 (Tuò Shān, "mountain")
+    // — the correct character is 拓森 (Tuò Sēn, "forest"). CRON-107 fixes this.
+    public static final UUID TUO_SEN = of("npc:tuo_sen");
 
     // ── Spirit Beasts (named/canonical beasts, not generic spawns) ──
     public static final UUID WOLF_PACK_ALPHA_ZHAO = of("beast:wolf_pack_alpha_zhao");

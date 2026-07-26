@@ -191,6 +191,12 @@ public final class PlanetSuzakuBlueprint {
     public static final String NPC_TENG_LI = "teng_li";             // 藤厉 (not "Teng Lijun")
     public static final String NPC_SITU_NAN = "situ_nan";
     public static final String NPC_WANG_HAO = "wang_hao";
+    // CRON-COMPLETIONIST-107: 拓森 (Tuo Sen) — Ancient God rival who reappears
+    // at the Suzaku Tomb during the 15th-gen Suzaku Son inheritance event.
+    // Canon: web-search verified 2026-07-26 (Sohu, 163, Tencent sources).
+    // Spawns via TuoSenSpawnEvent when CultivationPlanetCrystalBlock.use()
+    // triggers the inheritance (CRON-106). Until then, deadUntilRevived=true.
+    public static final String NPC_TUO_SEN = "tuo_sen";  // 拓森 (NOT 拓山)
 
     /**
      * All canonical locations, indexed by id. Immutable. Built fresh each call

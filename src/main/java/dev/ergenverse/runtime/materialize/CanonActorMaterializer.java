@@ -64,6 +64,14 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         profile(CanonUUID.TENG_LI,       "teng_li",       "Teng Li 藤厉",          "teng_family",   "foundation_establishment");
         profile(CanonUUID.SITU_NAN,      "situ_nan",      "Situ Nan 司徒南",       "suzaku_country","soul_formation");
         profile(CanonUUID.WANG_HAO,      "wang_hao",      "Wang Hao 王浩",         "wang_family",   "mortal");
+        // CRON-COMPLETIONIST-107: 拓森 (Tuo Sen) — Wang Lin's Ancient God rival.
+        // Canon: 8-star Ancient God (古神), rival to Wang Lin for Tu Si's
+        // Ancient God inheritance. Reappears at the Suzaku Tomb during the
+        // 15th-gen Suzaku Son inheritance event (CRON-106). CharacterId
+        // "tuo_sen" allows the renderer to pick a distinct model/texture.
+        // SectId "ancient_god_clan" reflects his origin (Tu Si's power
+        // inheritance). Realm "ancient" maps to RealmId.ANCIENT (古境).
+        profile(CanonUUID.TUO_SEN,       "tuo_sen",       "Tuo Sen 拓森",          "ancient_god_clan", "ancient");
     }
 
     private static void profile(UUID uuid, String characterId, String displayName, String sectId, String realm) {

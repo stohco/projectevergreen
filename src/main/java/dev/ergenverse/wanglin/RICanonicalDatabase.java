@@ -883,7 +883,7 @@ public final class RICanonicalDatabase {
             "novel; Fandom wiki"
         ),
         new CanonCharacter(
-            "N63", "Tuo Sen", "拓山", CharType.ANTAGONIST,
+            "N63", "Tuo Sen", "拓森", CharType.ANTAGONIST,
             "Ancient God 8-Star (potential)", "Ancient Clan", "alive", 5,
             "unknown", "Chaotic Broken Stars / IAC",
             java.util.List.of(

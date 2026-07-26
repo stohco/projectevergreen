@@ -103,6 +103,22 @@ public final class NPCRuntime {
         register(CanonUUID.WANG_HAO, "Wang Hao 王浩",
                 PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.x,
                 PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.z);
+        // CRON-COMPLETIONIST-107: 拓森 (Tuo Sen) — Wang Lin's Ancient God rival.
+        // Canon (web-search verified 2026-07-26): reappears at the 朱雀墓 (Suzaku
+        // Tomb) during the 15th-gen Suzaku Son inheritance event. An 8-star
+        // Ancient God; rival to Wang Lin for Tu Si's Ancient God inheritance.
+        // Until the inheritance event triggers (CultivationPlanetCrystalBlock.use,
+        // CRON-106), 拓森 is canonically ABSENT from the tomb — flagged
+        // deadUntilRevived=true so CanonActorMaterializer refuses to spawn him
+        // on chunk load. TuoSenSpawnEvent.spawnAtSuzakuTomb clears the flag
+        // and materializes him at the tomb chamber when the inheritance fires.
+        register(CanonUUID.TUO_SEN, "Tuo Sen 拓森",
+                PlanetSuzakuBlueprint.SUZAKU_TOMB.x,
+                PlanetSuzakuBlueprint.SUZAKU_TOMB.z);
+        ActorState tuoSenState = actors.get(CanonUUID.TUO_SEN);
+        if (tuoSenState != null) {
+            tuoSenState.deadUntilRevived = true;
+        }
         loaded = true;
     }
 

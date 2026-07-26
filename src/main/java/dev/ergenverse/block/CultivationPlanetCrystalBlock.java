@@ -89,8 +89,11 @@ import java.util.List;
  *   <li><b>15th-generation Suzaku Son:</b> Wang Lin becomes the 15th-gen
  *       Suzaku Son through the inheritance event at the Suzaku Tomb.</li>
  *   <li><b>拓森 (Tuo Sen):</b> reappears at the Suzaku Tomb during the
- *       inheritance event. (Registering 拓森 as a canon NPC is a future
- *       CRON — see CRON-105 self-critique #10.)</li>
+ *       inheritance event. <b>CRON-107:</b> Tuo Sen is now registered as a
+ *       canon NPC (CanonUUID.TUO_SEN) with a deadUntilRevived flag. The
+ *       inheritance event spawns him at the tomb chamber via
+ *       {@link dev.ergenverse.wanglin.bead.TuoSenSpawnEvent#spawnAtSuzakuTomb}.
+ *       Canon: "时隔300年，王林在朱雀墓再遇拓森" (Sohu 2024-06-17).</li>
  * </ul>
  *
  * <p><b>Canon honesty:</b> NO fabricated chapter citation. The Cultivation
@@ -453,6 +456,25 @@ public class CultivationPlanetCrystalBlock extends Block {
         Ergenverse.LOGGER.info("[Ergenverse] CRON-106: Suzaku Son inheritance triggered at {} "
                         + "for player {} (realm={}, bead present).",
                 pos, serverPlayer.getName().getString(), playerRealm.name);
+
+        // 5. CRON-107: Spawn Tuo Sen (拓森) at the Suzaku Tomb chamber.
+        //    Canon (web-search verified 2026-07-26): 拓森 reappears at the
+        //    朱雀墓 during the inheritance event — "时隔300年，王林在朱雀墓再遇拓森"
+        //    (Sohu 2024-06-17). He is Wang Lin's Ancient God rival, an 8-star
+        //    Ancient God, born from Tu Si's failed Ink Flow Split Soul Technique.
+        //    He contests the Crystal and the inheritance.
+        //
+        //    This spawn is a CONSEQUENCE of the inheritance, not a prerequisite.
+        //    It is DEFENSIVE: if it fails, the inheritance still succeeded (the
+        //    player already has the Suzaku Son status). The spawn method logs
+        //    warnings and sends the player a message on failure.
+        try {
+            dev.ergenverse.wanglin.bead.TuoSenSpawnEvent.spawnAtSuzakuTomb(
+                    serverPlayer, pos, currentTick);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CRON-107: Tuo Sen spawn failed at {}: {} "
+                    + "(inheritance still succeeded).", pos, t.getMessage());
+        }
 
         return InteractionResult.CONSUME;
     }
