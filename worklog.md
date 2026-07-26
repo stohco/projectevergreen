@@ -5303,3 +5303,137 @@ NEXT PRIORITY (in order):
 (f) **Runtime verification of CRON-80 hitboxes + CRON-81 Qilin + CRON-82 Deer + CRON-83 Hawk** — boot a client, spawn each beast, verify combat feels right, door navigation works, the Qilin walks with S-curve, the deer walks with S-curve, and the hawk flies with thorax heave propagating to body. Score N/A — cannot do without a running client.
 (g) **PIVOT to priority (h) ITEMS & MECHANICS** — forge canon items (flying swords, beads, talismans, pills, flags, scrolls, banners) with custom models + real mechanics. The 天逆珠 (Heaven-Defying Bead) is Wang Lin's defining artifact — currently not implemented as a real item. Score 9/10 for canon impact, completely new territory.
 (h) **JSON vs Java coordinate audit (CRON-65 priority e, deferred 14 rounds)** — Score 5/10. Now the longest-standing deferral.
+
+---
+Task ID: CRON-COMPLETIONIST-84
+Agent: cron-completionist
+Task: Refactor SpiritBeastEntity to single source of truth for hitboxes — closes the dual-source footgun that caused SOUL_FISH's CRON-60 fix to be silently undone for ~10 rounds (CRON-83 NEXT PRIORITY b, Score 8/10). Prior to CRON-84, three sources of truth existed for each beast's hitbox: (A) EntityType.Builder.sized() literals in EREntityTypes, (B) SpiritBeastEntity.reassessDimensions() inline switch (runtime override — WINS), (C) "Hitbox: ~W wide, ~H tall" comments. When A and B disagreed, B won at runtime, making A stale documentation. CRON-80 reconciled all three by hand; CRON-84 architecturally eliminates the dual-source so future changes can't silently desync.
+
+Work Log:
+- STEP 1 — RECON: Read worklog.md tail (CRON-83 stage summary + NEXT PRIORITY list). CRON-83 shipped the SpiritHawkModel parent hierarchy refactor (7 parts reparented, thorax heave propagation, stale-state bug fix, BUILD SUCCESSFUL). All 3 Tier 1 structural defects from CRON-80's audit are now CLOSED (Qilin CRON-81, Deer CRON-82, Hawk CRON-83). The CRON-83 NEXT PRIORITY list had (a) audit remaining 9 beasts (Score 7/10), (b) refactor SpiritBeastEntity single-source hitboxes (Score 8/10), (c) ease-in/ease-out (Score 6/10), (d) pose-transition LERP (Score 7/10), (e) deepen Qilin chest (Score 6/10), (f) runtime verification (N/A), (g) items & mechanics (Score 9/10 but I verified items are extensively done), (h) JSON vs Java coordinate audit (Score 5/10).
+
+  SELECTED priority (b) from CRON-83's NEXT PRIORITY list — the highest-scored UNFINISHED item that's actually achievable. This is a clean architectural refactor with measurable impact: it eliminates the footgun that caused the SOUL_FISH regression and fixes a pre-existing spawn-egg hitbox bug discovered during the audit.
+
+  SURVEYED priorities (a)-(h) from the original task spec to confirm the highest-impact gap:
+  - (a) BlueprintChunkGenerator — DONE in CRON-60 (BlueprintChunkGenerator.java exists, registered as ergenverse:blueprint, planet_suzaku.json uses it).
+  - (b) WIRE SIMULATION WRITERS — DONE in CRON-61 (SpiritBeastFeedGoal, BlockPlacementEngine, WeatherDamageSubscriber, WangLinHomeBuilder all wire setSimulationBlock).
+  - (c) CHUNK-SCOPED STRUCTURE BUILDERS — DONE in CRON-72 (all 11 builders forward ChunkBounds to buildForChunk).
+  - (d) PROVENANCE-AWARE REBUILD GUARD — DONE in CRON-69 (ProvenanceAwareRebuildGuard.java exists, consulted by all builders).
+  - (e) REMAP Forest of Distorted Sense → Jue Ming Valley — DONE in CRON-79 (jue_ming_valley biomes exist; "Forest of Distorted Sense" only in .disabled files).
+  - (f) VET + REGISTER remaining builders — DONE in CRON-72 (all 11 builders registered).
+  - (g) 3D MODELS / ANIMATIONS / COLLISION / AI — CRON-80/81/82/83 closed the Tier 1 structural defects.
+  - (h) ITEMS & MECHANICS — VERIFIED extensively done: HeavenDefyingBeadItem.java (504 lines) + 7 supporting classes (BeadAccessMode, BeadCapacityModel, BeadDimension, BeadFunctionMenu, BeadFunctionTab, BeadInteriorStage); fully registered in WangLinItems (line 561-563); has model (heaven_defying_bead.json), texture (heaven_defying_bead.png), lang entry, creative tab entry, loot table entry, karma entry, opportunity entry. FlyingSwordItem (208 lines), SpiritPillItem (124 lines), TalismanItem (190 lines), SectBannerItem (100 lines), TechniqueScrollItem (75 lines) all exist with real mechanics. 534 item model files, 460 item textures. The CRON-83 worklog's claim that "the 天逆珠 is currently not implemented as a real item" was WRONG — it's fully implemented.
+
+  Conclusion: priorities (a)-(h) from the original task spec are ALL shipped. The real highest-impact unfinished gap is CRON-83's NEXT PRIORITY (b) — refactor SpiritBeastEntity to single source of truth for hitboxes. Score 8/10, closes the SOUL_FISH footgun, fixes a pre-existing spawn-egg bug.
+
+- STEP 2 — DUAL-SOURCE AUDIT (via direct file reads):
+  * SpiritBeastEntity.java (666 lines pre-CRON-84): Read the BeastType enum (lines 52-78), the reassessDimensions() inline switch (lines 592-633), the beastWidth/beastHeight/beastEyeHeight caching fields (lines 588-590), and the getDimensions()/getEyeHeight() overrides (lines 636-643).
+  * EREntityTypes.java (219 lines pre-CRON-84): Read all 12 SpiritBeastEntity .sized() calls (lines 89, 99, 110, 121, 133, 145, 156, 166, 177, 191, 205, 216) + 1 MosquitoSwarm (line 44) + 1 Cultivator (line 72).
+  * CRON-80 audit script (cron80_audit_beast_hitboxes.py): Read the 3-source audit logic. Ran it: ALL 12 beasts A=B=C OK after CRON-80's manual reconciliation. The values agree; the refactor is purely architectural (eliminating the footgun for future changes).
+
+  CRITICAL FINDING #1 — The dual-source footgun: When EntityType.sized() (Source A) and getDimensions() override (Source B) disagree, Source B wins at runtime. Source A becomes stale documentation. This is exactly what happened to SOUL_FISH: CRON-60 doubled Source A (0.3→0.6) but didn't update Source B, so Source B kept returning 0.3×0.3 for ~10 rounds. CRON-80 fixed it by hand; CRON-84 eliminates the architecture so it can't happen again.
+
+  CRITICAL FINDING #2 — Spawn-egg hitbox bug (pre-existing, discovered during audit): setBeastType() is only called from readAdditionalSaveData() (saved entities) and WorldStateEngine (simulation spawns). It is NEVER called for spawn-egg or vanilla-spawn beasts. This means:
+  - defineSynchedData() sets DATA_BEAST_TYPE to "rabbit" (default).
+  - reassessDimensions() is never called (no setBeastType() call).
+  - beastWidth/beastHeight/beastEyeHeight stay at their default field values (0.6, 1.8, 1.6).
+  - getDimensions() returns (0.6, 1.8) — the WRONG hitbox for every spawn-egg beast.
+  A spawn-egg SPIRIT_WOLF would have a 0.6×1.8 hitbox (too tall — should be 0.6×0.9) until setBeastType is called, which never happens. This bug existed since CRON-13 (when SpiritBeastEntity was added) and was never caught because nobody spawn-egged a beast and measured its hitbox. CRON-84 fixes this as a bonus.
+
+- STEP 3 — REFACTOR DESIGN:
+  The fix: extract BeastType enum as the SINGLE source of truth, with each constant carrying (width, height, eyeHeight). Both EREntityTypes.sized() and SpiritBeastEntity.getDimensions()/getEyeHeight() read from those enum fields. There is literally ONE place to change a beast's hitbox — the enum constant. Future changes cannot silently desync.
+
+  Design decisions:
+  1. BeastType enum gets per-constant (width, height, eyeHeight) constructor params. 12 constants, each with 4 fields (id, width, height, eyeHeight). Values match CRON-80's reconciled values exactly (no regression).
+  2. EREntityTypes.sized() reads from BeastType.XXX.width / .height. Verbose but explicit — `SpiritBeastEntity.BeastType.RABBIT.width` makes it obvious this is a shared source.
+  3. SpiritBeastEntity: remove beastWidth/beastHeight/beastEyeHeight caching fields entirely. Remove reassessDimensions() inline switch method. getDimensions() reads directly from getBeastType().width/.height. getEyeHeight() reads from getBeastType().eyeHeight.
+  4. defineSynchedData(): infer default BeastType from EntityType registry name via new BeastType.byRegistryName() method. Maps "spirit_rabbit"→RABBIT, "spirit_wolf"→WOLF, "fire_beast"→FIRE_BEAST, "qilin"→QILIN, etc. (exact match first, then suffix match). Fixes the spawn-egg hitbox bug — spawn-egg beasts now get the correct hitbox from tick 0.
+  5. reassessMoveControl(): remove the reassessDimensions() call (no longer exists). MoveControl/Navigation reassessment is unchanged — those still need to run when BeastType changes.
+
+  Why NOT keep the caching fields:
+  - The caching fields were the root cause of the spawn-egg bug (fields stayed at default when reassessDimensions wasn't called).
+  - getBeastType() is a HashMap lookup on entityData — fast enough to call every frame from getDimensions().
+  - The "flash" concern (client renders before DATA_BEAST_TYPE syncs) is theoretical — the entity is invisible for the first tick anyway, and EntityType.sized() now ALSO reads from the enum, so the initial hitbox matches the per-type hitbox.
+  - Removing the fields eliminates an entire class of stale-state bugs.
+
+- STEP 4 — VERIFICATION SCRIPT (per Rule 9, Script Persistence):
+  Wrote /home/z/my-project/scripts/cron84_verify_hitbox_single_source.py. The script verifies 5 properties:
+  1. BeastType enum has (width, height, eyeHeight) for all 12 constants, with values matching CRON-80's reconciled values (no regression).
+  2. All 12 SpiritBeastEntity .sized() calls in EREntityTypes reference BeastType.XXX.width/.height (not literals). Excludes MosquitoSwarm and Cultivator (which are different entity classes without BeastType).
+  3. No beastWidth/beastHeight/beastEyeHeight caching fields remain. No reassessDimensions() method remains.
+  4. getDimensions()/getEyeHeight() read from getBeastType() (the enum).
+  5. BeastType.byRegistryName() method exists (spawn-egg hitbox fix).
+
+  Verification result: ALL 4 CHECKS PASSED ✓ (check 5 is bundled into check 4's pass). The BeastType enum carries all 12 constants with correct values. All 12 SpiritBeastEntity .sized() calls reference the enum. No caching fields or reassessDimensions() remain. getDimensions/getEyeHeight read from the enum. byRegistryName() exists.
+
+  Also deprecated the CRON-80 audit script (cron80_audit_beast_hitboxes.py) with a header notice pointing to the CRON-84 script. The CRON-80 script's regexes no longer match the new architecture (sized() now references BeastType.XXX.width instead of literals; reassessDimensions() is gone; Hitbox comments are removed). It shows "—" for all sources, which is technically correct but misleading. The deprecation notice preserves the historical script while directing future audits to the correct tool.
+
+- STEP 5 — CODE EDITS (via MultiEdit on SpiritBeastEntity.java + EREntityTypes.java):
+
+  SpiritBeastEntity.java (+148/-89):
+  * BeastType enum: expanded from 12 simple ("id") constants to 12 full (id, width, height, eyeHeight) constants. Added 38-line Javadoc documenting the CRON-84 single-source-of-truth architecture, the 3-source problem it replaces, and the hitbox design constraints (width ≤ 1.2, height ≤ 1.8, eye ~80%, wings visual-only). Added width/height/eyeHeight public final fields with Javadoc. Added byRegistryName() static method (exact match + suffix match, falls back to RABBIT).
+  * defineSynchedData(): replaced `this.entityData.define(DATA_BEAST_TYPE, "rabbit")` with a 10-line block that infers the default BeastType from the EntityType's registry name via ForgeRegistries.ENTITY_TYPES.getKey(this.getType()).getPath() + BeastType.byRegistryName(). Added 8-line comment explaining the spawn-egg hitbox bug this fixes.
+  * reassessMoveControl(): removed `this.reassessDimensions()` call. Added 3-line comment explaining dimensions now read directly from the enum.
+  * Removed: beastWidth/beastHeight/beastEyeHeight caching fields (3 lines). reassessDimensions() inline switch method (42 lines, including all 12 case statements + default).
+  * getDimensions(): changed from `EntityDimensions.scalable(beastWidth, beastHeight)` to `EntityDimensions.scalable(type.width, type.height)` where type = getBeastType(). Added 3-line comment.
+  * getEyeHeight(): changed from `return this.beastEyeHeight` to `return getBeastType().eyeHeight`. Added 1-line comment.
+  * Replaced the 24-line CRON-80 audit comment block with a 36-line CRON-84 single-source-of-truth comment block documenting the architecture, the 3-source problem, the bonus spawn-egg fix, and the preserved design constraints.
+
+  EREntityTypes.java (+24/-60):
+  * Replaced the 6-line Spirit Beast section header with a 9-line CRON-84 single-source-of-truth header.
+  * All 12 .sized(W, H) calls changed from literals to `BeastType.XXX.width, BeastType.XXX.height`. Each call now reads from the enum.
+  * Removed all "Hitbox: ~W wide, ~H tall" comments (Source C) — they're now redundant since the sized() call directly references BeastType.RABBIT.width etc. Replaced with shorter comments that describe the model anatomy without restating the hitbox numbers (which are in the enum).
+  * Removed CRON-80 reconciliation comments (e.g., "was 0.7x1.0 — slightly too wide") — the reconciliation is now architectural, not per-beast documentation.
+
+- STEP 6 — VERIFICATION:
+  * Re-ran cron84_verify_hitbox_single_source.py: ALL 4 CHECKS PASSED ✓.
+  * Re-ran cron80_audit_beast_hitboxes.py: shows "—" for all sources (expected — the old regexes don't match the new architecture). The deprecation notice explains this.
+  * Clean rebuild (JAVA_HOME=/tmp/my-project/.jdks/jdk-17.0.13+11 ./gradlew clean compileJava): BUILD SUCCESSFUL in 28s, 0 errors, 100 pre-existing warnings (unchanged from CRON-83 baseline — all deprecation warnings, no new ones from CRON-84).
+
+- STEP 7 — GIT: Committed as d65949b. Push failed (remote had advanced — CRON-83 worklog append a161782 was pushed from the parent repo). Ran git pull --rebase origin main (rebased 1 commit, no conflicts), then git push. Pushed as a40c78d (a161782..a40c78d). 2 files changed, +172/-123 lines.
+
+Stage Summary:
+- Shipped: SpiritBeastEntity single-source-of-truth hitbox refactor. BeastType enum now carries (width, height, eyeHeight) for all 12 constants — ONE place to change a beast's hitbox. EREntityTypes.sized() reads from BeastType.XXX.width/.height. SpiritBeastEntity.getDimensions()/getEyeHeight() read from getBeastType(). Removed beastWidth/beastHeight/beastEyeHeight caching fields and reassessDimensions() inline switch method. Bonus fix: defineSynchedData() now infers default BeastType from EntityType registry name via new byRegistryName() method — fixes a pre-existing spawn-egg hitbox bug where spawn-egg beasts had the wrong hitbox (default 0.6×1.8) because setBeastType() was never called. The dual-source footgun that silently undid CRON-60's SOUL_FISH fix for ~10 rounds is ARCHITECTURALLY ELIMINATED. Future changes cannot silently desync EntityType.sized and getDimensions because they read from the same enum field.
+- Build status: BUILD SUCCESSFUL, 0 errors, 100 pre-existing warnings (unchanged from CRON-83 baseline), 28s clean rebuild.
+- Git hash: a40c78d on main, pushed to stohco/projectevergreen. 2 files changed, +172/-123 lines.
+
+HARSHEST SELF-CRITIQUE (hyper-analytical, fact-checked against canon):
+1. **The dual-source footgun survived ~24 rounds (CRON-13 through CRON-83) because the architecture was never questioned.** Every round that touched hitboxes (CRON-60 SOUL_FISH doubling, CRON-80 reconciliation) treated the symptoms — manually syncing A and B by hand — without fixing the root cause: two sources of truth that CAN disagree. CRON-80's audit script even catalogued the 3-source problem but didn't propose eliminating it. CRON-84 is the first round to ask "why are there two sources at all?" and answer "there don't need to be." Score 9/10 for architectural root-cause fix. Score 3/10 for the 24 rounds it took to get here.
+
+2. **The spawn-egg hitbox bug is a PRE-EXISTING BUG that CRON-84 discovered and fixed, but it was never caught before.** Spawn-egg beasts had the wrong hitbox (0.6×1.8 default) since CRON-13. Nobody noticed because: (a) no runtime verification was ever done (no client available), (b) the bug is invisible in the code review — the default field values (0.6, 1.8, 1.6) look "reasonable" for a generic beast, (c) the bug only manifests for spawn-egg/vanilla spawns, not for WorldStateEngine or NBT-loaded beasts (which call setBeastType). Score 8/10 for finding and fixing it. Score 2/10 for the 24 rounds it survived.
+
+3. **The byRegistryName() suffix matching is fragile.** The method tries exact match first (e.g., "fire_beast" → FIRE_BEAST), then suffix match (e.g., "spirit_rabbit" → RABBIT via suffix "rabbit"). The suffix matching works for all 12 current beasts, but could break if a future beast has an id that's a suffix of another beast's registry name. For example, if a future "spirit_bat_swarm" registry name is added, suffix matching would match "bat" (BAT) instead of the intended "bat_swarm". Score 6/10 — works for current beasts, fragile for future additions. A future round could make the matching explicit (a static map from registry name to BeastType) instead of suffix-based.
+
+4. **The refactor is runtime-unverified.** Same critique as CRON-81/82/83. The verification script proves the architecture is correct (single source, no caching fields, enum references). The build passes. But I cannot boot a client and spawn a beast to confirm: (a) spawn-egg beasts now get the correct hitbox, (b) the hitbox values match CRON-80's reconciled values at runtime, (c) no regression in door navigation or combat feel. Score 9/10 for code correctness, 4/10 for runtime confidence — same pattern as prior rounds.
+
+5. **The getDimensions() override is STILL necessary even though EntityType.sized() now reads from the same enum.** This is because BeastType is a runtime-synced field (DATA_BEAST_TYPE), not a static EntityType property. A SPIRIT_RABBIT entity could theoretically have BeastType.WOLF if setBeastType(WOLF) is called (e.g., via a command or mod interaction). The getDimensions() override handles this edge case by returning the runtime BeastType's dimensions, not the EntityType's dimensions. Without the override, changing BeastType at runtime wouldn't change the hitbox. Score 8/10 — the override is necessary for correctness, but it means there ARE still two code paths (EntityType.sized for the initial hitbox, getDimensions for runtime changes). They read from the same enum, so they can't desync, but the architecture is still dual-path. A future round could eliminate the override entirely by making BeastType a static EntityType property (e.g., separate EntityType per BeastType, which is already the case) and removing the runtime BeastType-changing API. Score 7/10 for architectural purity.
+
+6. **The byRegistryName() fallback to RABBIT is a silent failure mode.** If a new EntityType is registered (e.g., "spirit_dragon") without a corresponding BeastType, byRegistryName() returns RABBIT — the beast would have a rabbit-sized hitbox (0.4×0.5) and rabbit navigation. This is the same class of bug as the original spawn-egg bug, just relocated. Score 5/10 — the fallback is defensive (never crashes) but silent (no log warning). A future round could add a log warning when byRegistryName falls back to RABBIT.
+
+7. **The verification script checks STRUCTURE but not VALUES at runtime.** The script verifies that the enum has values matching CRON-80's reconciled values. But it doesn't verify that the runtime getDimensions() actually returns those values — that requires booting the game. Score 7/10 — structural verification is strong, runtime verification is absent.
+
+8. **The "do NOT spread thin — finish one to a high bar" directive was respected.** This round focused exclusively on the hitbox single-source refactor. It did NOT touch the remaining 9 beast models (Tier 1 extended), walk-cycle easing (Tier 3), pose-transition LERP (Tier 3), or any other audit item. Score 10/10 for scope discipline.
+
+9. **Canon fidelity: this round has NO direct canon impact.** Hitboxes are a gameplay mechanic, not a canon element. The refactor doesn't change any beast's appearance, behavior, or lore — it only changes how the hitbox dimensions are sourced in code. The values are identical to CRON-80's reconciled values. Score N/A for canon fidelity (no change).
+
+10. **The fix is REVERSIBLE.** If runtime testing reveals a problem (e.g., the byRegistryName inference breaks a specific beast), the fix can be reverted by: (a) restoring the beastWidth/beastHeight/beastEyeHeight fields and reassessDimensions() method, (b) restoring the literal .sized() calls, (c) restoring the defineSynchedData default to "rabbit". The verification script can confirm the revert. Score 8/10 for reversibility.
+
+11. **The CRON-80 audit script is now deprecated but preserved.** This is the right call — the script documented the 3-source problem that CRON-80 manually reconciled. Preserving it (with a deprecation notice) maintains the historical record. Future developers can see what the old architecture looked like and why CRON-84 eliminated it. Score 9/10 for documentation discipline.
+
+12. **The refactor reduces total code volume: +172/-123 = net +49 lines, but the +49 is almost entirely Javadoc and comments.** The actual CODE is smaller: removed 42-line reassessDimensions() switch + 3 caching fields + 12 literal sized() values; added 12 enum field initializers + 12 enum-based sized() references + byRegistryName() method. Net code reduction ~30 lines; net documentation increase ~80 lines. Score 8/10 — less code, more documentation, cleaner architecture.
+
+13. **The byRegistryName() method handles the 12 current beasts correctly, but I didn't write a unit test for it.** The verification script checks that the method EXISTS, not that it returns the correct BeastType for each of the 12 registry names. A future round could add a unit test: `assertEquals(BeastType.WOLF, BeastType.byRegistryName("spirit_wolf"))` for all 12. Score 6/10 — method is correct by inspection, but not test-verified.
+
+14. **The defineSynchedData() change calls ForgeRegistries.ENTITY_TYPES.getKey(this.getType()) which could return null if the EntityType isn't registered yet.** The code handles this: `!= null ? ... : "rabbit"`. But if the EntityType IS null (shouldn't happen, but defensive), the beast defaults to RABBIT — the same behavior as pre-CRON-84. Score 8/10 — defensive handling is correct.
+
+15. **This round closes the hitbox thread that started with CRON-60.** CRON-60 doubled SOUL_FISH's EntityType.sized but didn't update reassessDimensions → 10 rounds of silent undoing. CRON-80 audited and manually reconciled all 12 beasts → A=B=C OK, but the dual-source footgun remained. CRON-84 architecturally eliminates the dual-source → the footgun can't fire again. The thread is complete. Score 10/10 for thread closure.
+
+NEXT PRIORITY (in order):
+(a) **Audit the remaining 9 beast models for the same parent-hierarchy defect class (CRON-83 NEXT PRIORITY a, Score 7/10)** — SpiritCrane, SpiritBat, SpiritTiger, SeaSerpent, StoneBackBoar, FireBeast, SoulFish, SpiritWolf, SpiritRabbit. The CRON-80 audit only catalogued Qilin/Deer/Hawk as the highest-impact targets; the other 9 may have the same defect at smaller scale. Now that hitboxes are single-source, any parent-hierarchy fix can confidently adjust the enum dimensions without worrying about desyncing EntityType.sized.
+(b) **Add ease-in/ease-out to beast walk cycles (CRON-80 audit Tier 3, Score 6/10)** — vanilla Mob does this; our custom models don't. Now that the hitbox architecture is clean, animation smoothing is the next highest-impact artwork improvement.
+(c) **Add pose-transition LERP to SpiritBeastEntity + models (CRON-80 audit Tier 3, Score 7/10)** — pose transitions are instant (1 tick); should LERP over 5-10 ticks.
+(d) **Deepen Qilin chest and lengthen neck (CRON-80 audit Tier 2, Score 6/10)** — body_chest is 4×6×5, should be ~6×9×6 for proper qilin silhouette. With the single-source enum, this is now a ONE-LINE change (update QILIN's width/height in the enum) instead of a 3-source reconciliation.
+(e) **Runtime verification of CRON-80 hitboxes + CRON-81/82/83 model fixes + CRON-84 hitbox refactor** — boot a client, spawn each beast via spawn egg AND via WorldStateEngine, verify combat feels right, door navigation works, and the hitbox matches the visible model. Score N/A — cannot do without a running client.
+(f) **JSON vs Java coordinate audit (CRON-65 priority e, deferred 15 rounds, Score 5/10)** — now the longest-standing deferral. Should be picked up before it becomes untrackable.
+(g) **Add a unit test for BeastType.byRegistryName() (CRON-84 critique #13, Score 6/10)** — verifies all 12 registry names map to the correct BeastType. Small polish, prevents future regression.
+(h) **PIVOT to a completely new thread** — e.g., canon NPC dialogue, sect reputation system, or cultivation technique mechanics. The artwork + hitbox threads are both at natural milestones (all Tier 1 structural defects closed, hitbox architecture eliminated). A new thread would bring fresh momentum.

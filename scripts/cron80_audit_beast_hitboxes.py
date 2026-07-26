@@ -1,13 +1,31 @@
 #!/usr/bin/env python3
-"""CRON-80: Per-entity hitbox audit for SpiritBeastEntity.
+"""CRON-80: Per-entity hitbox audit for SpiritBeastEntity. (DEPRECATED — see below)
 
-Three sources of truth exist for each beast's hitbox:
+DEPRECATED in CRON-84: This script audited the OLD dual-source architecture
+where three sources of truth existed for each beast's hitbox:
   (A) EntityType.Builder.sized(w, h) in EREntityTypes.java
   (B) SpiritBeastEntity.reassessDimensions() — runtime override (WINS at runtime)
   (C) Model comment "Hitbox: ~W wide, ~H tall" in EREntityTypes (design intent)
 
-When (A) and (B) disagree, (B) wins at runtime — so (A) is stale documentation.
-When (B) and (C) disagree, the runtime hitbox doesn't match the visible model.
+CRON-84 eliminated the dual-source architecture: BeastType enum constants now
+carry (width, height, eyeHeight), and both EREntityTypes.sized() and
+SpiritBeastEntity.getDimensions()/getEyeHeight() read from those enum fields.
+There is ONE source of truth — the BeastType enum.
+
+This script's regexes no longer match the new architecture (sized() now
+references BeastType.XXX.width instead of literals; reassessDimensions() is
+gone; Hitbox comments are removed). It shows "—" for all sources, which is
+technically correct (no mismatches because no data found) but misleading.
+
+USE INSTEAD: /home/z/my-project/scripts/cron84_verify_hitbox_single_source.py
+That script verifies the new single-source architecture: enum constants carry
+the values, both EREntityTypes and SpiritBeastEntity reference them, no
+caching fields, no reassessDimensions(), and byRegistryName() exists for the
+spawn-egg hitbox fix.
+
+This script is preserved for historical reference — it documents the
+3-source problem that CRON-80 manually reconciled and CRON-84 architecturally
+eliminated.
 """
 import re
 from pathlib import Path

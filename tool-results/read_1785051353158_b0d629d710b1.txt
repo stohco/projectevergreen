@@ -1,0 +1,706 @@
+     1→package dev.ergenverse.wanglin;
+     2→
+     3→import com.google.gson.Gson;
+     4→import com.google.gson.JsonObject;
+     5→import com.google.gson.JsonArray;
+     6→import com.google.gson.JsonElement;
+     7→import dev.ergenverse.core.Ergenverse;
+     8→import dev.ergenverse.item.FlyingSwordItem;
+     9→import dev.ergenverse.item.sword.SwordEffectType;
+    10→import dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem;
+    11→import net.minecraft.core.registries.Registries;
+    12→import net.minecraft.network.chat.Component;
+    13→import net.minecraft.world.item.CreativeModeTab;
+    14→import net.minecraft.world.item.Item;
+    15→import net.minecraft.world.item.ItemStack;
+    16→import net.minecraftforge.eventbus.api.IEventBus;
+    17→import net.minecraftforge.registries.DeferredRegister;
+    18→import net.minecraftforge.registries.ForgeRegistries;
+    19→import net.minecraftforge.registries.RegistryObject;
+    20→
+    21→import java.io.InputStreamReader;
+    22→import java.nio.charset.StandardCharsets;
+    23→import java.util.ArrayList;
+    24→import java.util.HashMap;
+    25→import java.util.List;
+    26→import java.util.Map;
+    27→
+    28→/**
+    29→ * WangLinItems — the DeferredRegister for ALL of Wang Lin's arsenal.
+    30→ *
+    31→ * <p>This is the single most important class for the "completionist Wang Lin branch"
+    32→ * directive: it registers EVERY item, technique, pet, clone, and companion Wang Lin
+    33→ * encountered or owned across the full Renegade Immortal narrative as an actual
+    34→ * pickable Minecraft {@link Item}.
+    35→ *
+    36→ * <h2>Data-Driven Registration</h2>
+    37→ * <p>The item list is loaded from {@code assets/ergenverse/wanglin_arsenal_manifest.json}
+    38→ * (extracted from the Next.js prototype's {@code protagonist-arsenals.ts}). This manifest
+    39→ * contains 309 entries — every Wang Lin arsenal asset with its canonical itemId,
+    40→ * unlock threshold, and canon flag. The manifest is the single source of truth for
+    41→ * what gets registered; adding a new Wang Lin item means adding it to the manifest,
+    42→ * not hand-editing this class.
+    43→ *
+    44→ * <h2>Registration</h2>
+    45→ * <p>Call {@link #register(IEventBus)} once during mod construction (from
+    46→ * {@link dev.ergenverse.core.Ergenverse#Ergenverse}). This wires the DeferredRegister
+    47→ * to the mod event bus. Forge then fires the RegisterEvent and all 309 items become
+    48→ * real, holdable, creative-tab-listed Minecraft items.
+    49→ *
+    50→ * <h2>Access Pattern</h2>
+    51→ * <p>After registration, look up any item by its canonId:
+    52→ * <pre>{@code
+    53→ * RegistryObject<Item> flag = WangLinItems.get("wanglin/restriction_flag");
+    54→ * ItemStack stack = new ItemStack(flag.get());
+    55→ * }</pre>
+    56→ *
+    57→ * <h2>Prime Directive Compliance</h2>
+    58→ * <p>Every registered item is an objective world object — it exists regardless of
+    59→ * player perception. The item's tooltip always shows its full canon info; perception
+    60→ * gating (what the player UNDERSTANDS about the item) is handled by the
+    61→ * {@link dev.ergenverse.perception.PerceptionEngine}, not by hiding the item.
+    62→ */
+    63→public final class WangLinItems {
+    64→
+    65→    public static final DeferredRegister<Item> ITEMS =
+    66→            DeferredRegister.create(ForgeRegistries.ITEMS, Ergenverse.MOD_ID);
+    67→
+    68→    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
+    69→            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Ergenverse.MOD_ID);
+    70→
+    71→    /** All registered arsenal entries, keyed by canonId (e.g. "wanglin/restriction_flag"). */
+    72→    private static final Map<String, RegistryObject<Item>> ARSENAL = new HashMap<>();
+    73→
+    74→    /** The loaded manifest entries (preserved for queries). */
+    75→    private static final List<ManifestEntry> MANIFEST = new ArrayList<>();
+    76→
+    77→    /** Whether the manifest has been loaded and items registered. */
+    78→    private static boolean registered = false;
+    79→
+    80→    /** Tracks which registry names have already been registered, to skip duplicates. */
+    81→    private static final java.util.Set<String> REGISTERED_NAMES = new java.util.HashSet<>();
+    82→
+    83→    /**
+    84→     * Registry names that are OWNED by {@link dev.ergenverse.item.ErgenverseItems}
+    85→     * with real mechanics (SoulGourdItem, StorageRingItem, JournalItem, etc.).
+    86→     * The WangLin arsenal manifest also lists these (as tooltip-only WangLinItem
+    87→     * duplicates), so we must skip them here to avoid a same-namespace collision
+    88→     * that crashes the server at registry freeze.
+    89→     * Add to this set whenever ErgenverseItems gains a new functional item that
+    90→     * also appears in wanglin_arsenal_manifest.json.
+    91→     */
+    92→    private static final java.util.Set<String> ERGENVERSE_ITEMS_OWNED_NAMES = java.util.Set.of(
+    93→            "soul_gourd",
+    94→            "storage_ring",
+    95→            "cultivation_journal",
+    96→            "beast_core",
+    97→            // CRON-COMPLETIONIST-76: Added ji_realm and vermilion_bird_feather — both
+    98→            // are registered as standalone items in ErgenverseItems with valid lowercase
+    99→            // names. The WangLinItems manifest maps them to ji_realm_divine_sense and
+   100→            // I105_vermilion_bird_feather, but the manifest's bare-id (ji_realm,
+   101→            // vermilion_bird_feather) is used as the registry name, causing a duplicate
+   102→            // registration that crashes the server at registry freeze with
+   103→            // "One or more entry values did not copy to the correct id."
+   104→            "ji_realm",
+   105→            "vermilion_bird_feather"
+   106→    );
+   107→
+   108→    /**
+   109→     * Manifest bare-id -> canonical registry entry id.
+   110→     *
+   111→     * <p>Built by analyzing the 309-entry {@code wanglin_arsenal_manifest.json}
+   112→     * against the 482+ entries in {@link WangLinMasterRegistry}. Items whose
+   113→     * bare id is NOT in this map have no confident registry match - their
+   114→     * {@code canonId} is left {@code null}, and the tooltip enrichment is
+   115→     * silently skipped (no fabricated matches).
+   116→     *
+   117→     * <p>Matching strategies used (in priority order):
+   118→     * <ol>
+   119→     *   <li>Exact id match (e.g. {@code karma_whip} -> {@code karma_whip})</li>
+   120→     *   <li>Inventory/Technique prefix code (e.g. {@code attractive_force_art}
+   121→     *       -> {@code T122_attractive_force_art})</li>
+   122→     *   <li>Suffix variant (e.g. {@code soul_flag_production}
+   123→     *       -> {@code soul_flag_production_method})</li>
+   124→     *   <li>Pet/Companion/Ally/Enemy prefix (e.g. {@code mosquito_beast}
+   125→     *       -> {@code pet_mosquito_beast})</li>
+   126→     *   <li>Word-order swap (e.g. {@code karma_essence} -> {@code essence_karma})</li>
+   127→     *   <li>US/UK spelling variant (e.g. {@code ancient_god_leather_armor}
+   128→     *       -> {@code ancient_god_leather_armour})</li>
+   129→     * </ol>
+   130→     */
+   131→    private static final Map<String, String> MANIFEST_TO_REGISTRY = buildManifestToRegistryMap();
+   132→
+   133→    private static Map<String, String> buildManifestToRegistryMap() {
+   134→        Map<String, String> m = new HashMap<>();
+   135→        m.put("ancient_ancestors_finger_attack", "T77_ancient_ancestors_finger_attack");
+   136→        m.put("ancient_demon", "ancient_demon_clone");
+   137→        m.put("ancient_devil", "ancient_devil_clone");
+   138→        m.put("ancient_god_bracer", "I39_ancient_god_bracer");
+   139→        m.put("ancient_god_furnace", "I35_ancient_god_furnace");
+   140→        m.put("ancient_god_leather_armor", "ancient_god_leather_armour");
+   141→        m.put("ancient_god_tactic", "ancient_god_tactic");
+   142→        m.put("ancient_god_trident", "ancient_god_trident");
+   143→        m.put("ancient_leaf", "I163_ancient_leaf");
+   144→        m.put("ancient_restrictions", "ancient_restrictions");
+   145→        m.put("ancient_soul_restriction", "ancient_soul_restriction");
+   146→        m.put("ancient_soul_restriction_tortoise_beast", "ancient_soul_restriction_tortoise_beast");
+   147→        m.put("ancient_thunder_dragon_form", "ancient_thunder_dragon_form");
+   148→        m.put("annihilation_restriction", "annihilation_restriction");
+   149→        m.put("attractive_force_art", "T122_attractive_force_art");
+   150→        m.put("azure_ancient_god_shield", "azure_ancient_god_shield");
+   151→        m.put("basic_formation_book", "I74_basic_formation_book");
+   152→        m.put("battle_will_domain", "I141_battle_will_domain");
+   153→        m.put("beads_seven_colored_realm", "I85_beads_seven_colored_realm");
+   154→        m.put("bell_sealing_tracking", "I97_bell_sealing_tracking");
+   155→        m.put("billion_soul_flag", "I51_billion_soul_flag");
+   156→        m.put("black_comb_19_teeth", "I94_black_comb_19_teeth");
+   157→        m.put("blood_ancestors_blood_body", "I61_blood_ancestors_blood_body");
+   158→        m.put("blood_jades_yao_xixue", "I171_blood_jades_yao_xixue");
+   159→        m.put("blood_pavilion", "blood_pavilion");
+   160→        m.put("blood_red_nascent_soul", "I60_blood_red_nascent_soul");
+   161→        m.put("blood_refining_technique", "T133_blood_refining_technique");
+   162→        m.put("blood_slaughter_sword", "I22_blood_slaughter_sword");
+   163→        m.put("blue_flames", "T85_blue_flames");
+   164→        m.put("blue_umbrella", "I46_blue_umbrella");
+   165→        m.put("body_fixation_art", "body_fixation_art");
+   166→        m.put("body_formation", "body_formation");
+   167→        m.put("brilliant_void_sea_dragon", "pet_brilliant_void_sea_dragon");
+   168→        m.put("burning_realm_ancient_umbrella", "T47_burning_realm_ancient_umbrella");
+   169→        m.put("carving_domain_of_time", "I54_carving_domain_of_time");
+   170→        m.put("celestial_body", "celestial_body_mid");
+   171→        m.put("celestial_capture_net", "celestial_capture_net");
+   172→        m.put("celestial_emperor_crown", "celestial_emperor_crown");
+   173→        m.put("celestial_mountain_soul", "I100_celestial_mountain_soul");
+   174→        m.put("celestial_sealing_stamp", "celestial_sealing_stamp_18_hell");
+   175→        m.put("celestial_slaughter_art", "celestial_slaughter_art");
+   176→        m.put("celestial_wine_jug", "I88_celestial_wine_jug");
+   177→        m.put("cloak_vermilion_bird_emperor", "I102_cloak_vermilion_bird_emperor");
+   178→        m.put("collection_pavilion", "collection_pavilion");
+   179→        m.put("copper_celestial_guard_du_jian", "companion_celestial_guard_copper_du_jian");
+   180→        m.put("core_treasure_sword", "core_treasure_sword");
+   181→        m.put("crystal_sword", "I16_crystal_sword");
+   182→        m.put("dagger_ge_hong", "I48_dagger_ge_hong");
+   183→        m.put("dao_fusion", "dao_fusion");
+   184→        m.put("dao_karma", "dao_karma");
+   185→        m.put("dao_life_death", "dao_life_death");
+   186→        m.put("dao_slaughter", "dao_slaughter");
+   187→        m.put("dao_time", "dao_time");
+   188→        m.put("dao_transformation_yellow_springs", "T53_dao_transformation_yellow_springs");
+   189→        m.put("dark_green_flying_sword", "dark_green_flying_sword");
+   190→        m.put("dark_heaven_stone", "I166_dark_heaven_stone");
+   191→        m.put("dark_moon_clear_skies", "T29_dark_moon_clear_skies");
+   192→        m.put("demon_blade_earth_burial", "I25_demon_blade_earth_burial");
+   193→        m.put("demon_spell_wind_fire_mountain", "T44_demon_spell_wind_fire_mountain");
+   194→        m.put("demonic_finger", "demonic_finger");
+   195→        m.put("destruction_restriction", "destruction_restriction");
+   196→        m.put("devil_dao_life_death_reverse", "T45_devil_dao_life_death_reverse");
+   197→        m.put("devil_sky_cloud_monkey", "pet_devil_sky_cloud_monkey");
+   198→        m.put("devil_soul_bottle", "I52_devil_soul_bottle");
+   199→        m.put("devil_soul_tornado_leader", "companion_devil_soul_tornado_leader");
+   200→        m.put("disguising_technique", "T120_disguising_technique");
+   201→        m.put("divine_path", "T129_divine_path");
+   202→        m.put("divine_path_clone", "divine_path_clone");
+   203→        m.put("dream_dao", "dream_dao");
+   204→        m.put("earth_escape_technique", "earth_escape_technique");
+   205→        m.put("earth_essence", "earth_essence_true_body");
+   206→        m.put("earth_palace", "I79_earth_palace");
+   207→        m.put("emerald_bracelet_li_qianmei", "I107_emerald_bracelet_li_qianmei");
+   208→        m.put("emperor_furnace", "I37_emperor_furnace");
+   209→        m.put("eternal_wood_spirit", "I164_eternal_wood_spirit");
+   210→        m.put("ethereal_fire", "T164_ethereal_fire");
+   211→        m.put("extreme_earth_dao", "T71_extreme_earth_dao");
+   212→        m.put("extreme_fire_dao", "T67_extreme_fire_dao");
+   213→        m.put("extreme_life_death_dao", "T72_extreme_life_death_dao");
+   214→        m.put("extreme_metal_dao", "T69_extreme_metal_dao");
+   215→        m.put("extreme_sky_dao", "T74_extreme_sky_dao");
+   216→        m.put("extreme_water_dao", "T68_extreme_water_dao");
+   217→        m.put("extreme_wood_dao", "T70_extreme_wood_dao");
+   218→        m.put("falling_star", "T17_falling_star");
+   219→        m.put("fate_sealing_ring", "fate_sealing_ring");
+   220→        m.put("finger_of_death", "finger_of_death");
+   221→        m.put("fire_bone", "I106_fire_bone");
+   222→        m.put("fire_essence", "fire_essence_true_body");
+   223→        m.put("five_elements_true_body", "five_elements_true_body");
+   224→        m.put("flowing_time", "flowing_time");
+   225→        m.put("fog_devil_lance", "I26_fog_devil_lance");
+   226→        m.put("foundation_stealing_technique", "T132_foundation_stealing_technique");
+   227→        m.put("fragment_stamp_celestial_sealing", "I169_fragment_stamp_celestial_sealing");
+   228→        m.put("ghostly_sail_main", "ghostly_sail_main");
+   229→        m.put("giant_head_skull_ancient_clansman", "I57_giant_head_skull_ancient_clansman");
+   230→        m.put("god_demon_devil_ancient_dao_no_celestial", "T30_god_demon_devil_ancient_dao_no_celestial");
+   231→        m.put("god_punch", "T31_god_punch");
+   232→        m.put("god_slaying_spear", "god_slaying_spear_illusory");
+   233→        m.put("god_slaying_war_chariot", "god_slaying_war_chariot_mid");
+   234→        m.put("god_tremble_army_formation", "god_tremble_army_formation");
+   235→        m.put("golden_print_xuan_luo", "I173_golden_print_xuan_luo");
+   236→        m.put("great_heavenly_venerable_sun", "great_heavenly_venerable_sun");
+   237→        m.put("great_teleportation_forbidden", "great_teleportation_forbidden");
+   238→        m.put("green_fragment_power_heaven", "I84_green_fragment_heaven_power");
+   239→        m.put("gui_yi_sect_earth_armor", "I44_gui_yi_sect_earth_armor");
+   240→        m.put("hairpin_thousand_illusion_ruthless", "I93_hairpin_thousand_illusion_ruthless");
+   241→        m.put("half_moon_blade", "I18_half_moon_blade");
+   242→        m.put("heart_compass_annihilation", "heart_compass_annihilation");
+   243→        m.put("heart_of_slaughter", "T80_heart_of_slaughter");
+   244→        m.put("heart_pounding_thunder", "T63_heart_pounding_thunder");
+   245→        m.put("heart_restriction", "heart_restriction");
+   246→        m.put("heaven_avoiding_coffin", "heaven_avoiding_coffin");
+   247→        m.put("heaven_dao_crystal", "I86_heaven_dao_crystal");
+   248→        m.put("heaven_defying_bead", "heaven_defying_bead");
+   249→        m.put("heaven_extinction", "T18_heaven_extinction");
+   250→        m.put("heaven_reversal_stamp", "T19_heaven_reversal_stamp");
+   251→        m.put("heaven_ripping", "T34_heaven_ripping");
+   252→        m.put("heaven_splitting_axe_ancestral", "I24_heaven_splitting_axe_ancestral");
+   253→        m.put("heaven_technique", "heaven_technique_ancient_god");
+   254→        m.put("heaven_tiger_flag", "heaven_tiger_flag");
+   255→        m.put("heavenly_bull_bead", "I175_heavenly_bull_bead");
+   256→        m.put("heavenly_bull_soul_armour", "I45_heavenly_bull_soul_armour");
+   257→        m.put("heavenly_chop", "T13_heavenly_chop");
+   258→        m.put("heavenly_devil_sound", "T37_heavenly_devil_sound");
+   259→        m.put("heavenly_fate_finger", "T27_heavenly_fate_finger");
+   260→        m.put("heavenly_flame", "T118_heavenly_flame");
+   261→        m.put("holy_treasure_white_stone", "I104_holy_treasure_white_stone");
+   262→        m.put("illusionary_circle", "illusionary_circle");
+   263→        m.put("immortal_celestial_body", "immortal_celestial_body");
+   264→        m.put("immortal_dream", "T33_immortal_dream");
+   265→        m.put("isolation_restriction_compass", "I71_isolation_restriction_compass");
+   266→        m.put("jade_bottle_black_liquid", "I108_jade_bottle_black_liquid");
+   267→        m.put("jade_thunder_defense", "I47_jade_thunder_defense");
+   268→        m.put("ji_qiong_head", "I83_ji_qiong_head");
+   269→        m.put("ji_realm", "ji_realm_divine_sense");
+   270→        m.put("karma_domain", "I139_karma_domain");
+   271→        m.put("karma_essence", "essence_karma");
+   272→        m.put("karma_whip", "karma_whip");
+   273→        m.put("lands_collapse", "T28_lands_collapse");
+   274→        m.put("lantern_origin_soul_protection", "I174_lantern_origin_soul_protection");
+   275→        m.put("lei_ji_thunder_beast", "pet_lei_ji_thunder_beast");
+   276→        m.put("li_guang_arrow", "I28_li_guang_arrow");
+   277→        m.put("li_guang_bow", "I27_li_guang_bow");
+   278→        m.put("life_death_essence", "essence_life_death");
+   279→        m.put("life_death_restriction", "life_death_restriction");
+   280→        m.put("light_shadow_shield", "light_shadow_shield");
+   281→        m.put("lu_fu_blood_balls", "I82_lu_fu_blood_balls");
+   282→        m.put("lu_mo_slaughter_clone", "lu_mo_slaughter_clone");
+   283→        m.put("memory_erasing_technique", "T121_memory_erasing_technique");
+   284→        m.put("merit_spirit", "T39_merit_spirit");
+   285→        m.put("metal_essence", "metal_essence_true_body");
+   286→        m.put("mosquito_beast", "pet_mosquito_beast");
+   287→        m.put("mosquito_swarm_10000", "pet_mosquito_swarm_10000");
+   288→        m.put("mountain_and_river_screen", "mountain_and_river_screen");
+   289→        m.put("multi_layered_illusion_spell", "T66_multi_layered_illusion_spell");
+   290→        m.put("mysterious_god_star", "T42_mysterious_god_star");
+   291→        m.put("nether_beast", "pet_nether_beast");
+   292→        m.put("nether_guide", "nether_guide");
+   293→        m.put("nine_cycle_celestial_refining", "nine_cycle_celestial_refining");
+   294→        m.put("nine_tribulation_karma_fires", "T159_nine_tribulation_karma_fires");
+   295→        m.put("one_step_trample_heavens", "one_step_trample_heavens");
+   296→        m.put("pair_metal_flints", "I89_pair_metal_flints");
+   297→        m.put("planet_soul_extraction", "T88_planet_soul_extraction");
+   298→        m.put("rain_celestial_sword", "rain_celestial_sword");
+   299→        m.put("realm_defining_compass", "realm_defining_compass");
+   300→        m.put("reincarnation_essence", "essence_reincarnation");
+   301→        m.put("restriction_breaking_ancient_mirror", "I66_restriction_breaking_ancient_mirror");
+   302→        m.put("restriction_essence", "essence_restriction");
+   303→        m.put("restriction_flag", "restriction_flag_1st");
+   304→        m.put("restriction_flag_method", "restriction_flag_method");
+   305→        m.put("rusted_iron_sword", "I20_rusted_iron_sword");
+   306→        m.put("scattered_devil_armour", "scattered_devil_armour");
+   307→        m.put("seven_colored_lance", "I29_seven_colored_lance");
+   308→        m.put("seven_star_sword_formation", "seven_star_sword_formation");
+   309→        m.put("silver_celestial_guard_ta_shan", "companion_celestial_guard_silver_ta_shan");
+   310→        m.put("silver_celestial_guard_thunder_daoist", "companion_celestial_guard_silver_thunder_daoist");
+   311→        m.put("silver_dragon_star_compass", "I99_silver_dragon_star_compass");
+   312→        m.put("silver_poison_female_corpse", "companion_silver_poison_female_corpse");
+   313→        m.put("slash_luo_art", "slash_luo_art");
+   314→        m.put("slaughter_crystal", "slaughter_crystal");
+   315→        m.put("slaughter_essence", "slaughter_essence_true_body");
+   316→        m.put("soul_devil_ship", "soul_devil_ship");
+   317→        m.put("soul_devourer_nature", "T110_soul_devourer_nature");
+   318→        m.put("soul_eye_dao", "T64_soul_eye_dao");
+   319→        m.put("soul_fantasy_origin", "T65_soul_fantasy_origin");
+   320→        m.put("soul_flag_production", "soul_flag_production_method");
+   321→        m.put("soul_gourd", "I56_soul_gourd");
+   322→        m.put("soul_piercing_eyes", "soul_piercing_eyes");
+   323→        m.put("soul_searching", "soul_searching");
+   324→        m.put("space_stone", "space_stone");
+   325→        m.put("spatial_bending", "T87_spatial_bending");
+   326→        m.put("spirit_transformation", "T38_spirit_transformation");
+   327→        m.put("star_compass", "I98_star_compass");
+   328→        m.put("star_of_law", "I142_star_of_law");
+   329→        m.put("star_rotation", "T86_star_rotation");
+   330→        m.put("straw_hat", "I96_straw_hat");
+   331→        m.put("sundered_night", "sundered_night");
+   332→        m.put("sword_teleportation_spell", "I92_sword_teleportation_spell");
+   333→        m.put("teleportation_restriction", "teleportation_restriction");
+   334→        m.put("ten_million_swords", "T14_ten_million_swords");
+   335→        m.put("third_eye_spell", "T48_third_eye_spell");
+   336→        m.put("three_bells_shield", "I42_three_bells_shield");
+   337→        m.put("three_life_spell", "T55_three_life_spell");
+   338→        m.put("three_purple_flags_defensive", "three_purple_flags_defensive");
+   339→        m.put("thunder_body", "thunder_body");
+   340→        m.put("thunder_celestial_beast", "pet_thunder_celestial_beast");
+   341→        m.put("thunder_essence", "thunder_essence_true_body");
+   342→        m.put("thunder_origin_spell", "T59_thunder_origin_spell");
+   343→        m.put("thunder_toad", "pet_thunder_toad");
+   344→        m.put("time_restriction", "time_restriction");
+   345→        m.put("tortoise_shell", "I176_tortoise_shell");
+   346→        m.put("true_false_domain", "I140_true_false_domain");
+   347→        m.put("true_false_essence", "essence_true_false");
+   348→        m.put("underworld_ascension_method", "underworld_ascension_method");
+   349→        m.put("underworld_finger", "underworld_finger");
+   350→        m.put("undying_ancient_body", "undying_ancient_body");
+   351→        m.put("undying_ancient_finger", "undying_ancient_finger");
+   352→        m.put("unnamed_wheel_formation", "unnamed_wheel_formation");
+   353→        m.put("vermilion_bird_feather", "I105_vermilion_bird_feather");
+   354→        m.put("vermilion_bird_holy_token", "I103_vermilion_bird_holy_token");
+   355→        m.put("vice_ghostly_sail", "ghostly_sail_vice");
+   356→        m.put("void_avatar", "void_avatar");
+   357→        m.put("void_spell_8_star", "T41_void_8_star_spell");
+   358→        m.put("void_stop_spell", "T58_void_stop_spell");
+   359→        m.put("wandering_souls", "I62_wandering_souls");
+   360→        m.put("war_spirit_print", "T57_war_spirit_print");
+   361→        m.put("water_essence", "water_essence_true_body");
+   362→        m.put("wealth_flying_sword", "wealth_flying_sword");
+   363→        m.put("white_hair_strand", "I59_white_hair_strand");
+   364→        m.put("wood_carving_black_fiend", "I165_wood_carving_black_fiend");
+   365→        m.put("wood_essence", "wood_essence_true_body");
+   366→        m.put("yi_si_puppet", "companion_yi_si_puppet");
+   367→        m.put("yin_blade", "I23_yin_blade");
+   368→        m.put("five_sword_sheaths", "I05_five_sword_sheaths");
+   369→        m.put("bronze_mirror_time_domain", "I37_bronze_mirror");
+   370→        m.put("soul_flag_soul_refining_sect", "I49_soul_flag_soul_refining_sect");
+   371→        m.put("seven_colored_nails", "I82_seven_colored_nails");
+   372→        m.put("celestial_spirit_clock", "I76_celestial_spirit_clock");
+   373→        m.put("dot_immortal_pen", "I90_dot_immortal_pen");
+   374→        m.put("golden_print", "I92_golden_print");
+   375→        m.put("beast_skin_tattoo", "I115_beast_skin_tattoo");
+   376→        m.put("three_ink_stones_restriction", "I03_three_ink_stones");
+   377→        m.put("infant_skull_da_yi", "I100_infant_skull_da_yi");
+   378→        m.put("three_battle_scrolls_zhan", "I65_three_battle_scrolls");
+   379→        m.put("human_shaped_armor_green_bull", "I40_human_shaped_armor");
+   380→        m.put("dream_dao_mirror", "I160_dream_dao_mirror");
+   381→        m.put("red_lightning_ji_realm", "AT01_red_lightning_ji_realm");
+   382→        m.put("blood_nascent_soul_seven_colored", "I60_blood_nascent_soul_seven_colored");
+   383→        m.put("ancient_bloodline_ancestor", "I167_ancient_bloodline_ancestor");
+   384→        m.put("celestial_bloodline_ancestor", "I168_celestial_bloodline_ancestor");
+   385→        m.put("vermilion_bird_spirit", "I169_vermilion_bird_spirit");
+   386→        m.put("call_wind_summon_rain_magic_arsenal", "I170_call_wind_summon_rain");
+   387→        m.put("devouring_technique", "T01_devouring_technique");
+   388→        m.put("fiend_transformation_art", "T03_fiend_transformation_art");
+   389→        m.put("yin_energy_detection", "T09_yin_energy_detection");
+   390→        m.put("mountains_crumble", "T16_mountains_crumble");
+   391→        m.put("fog_transformation_thunder_spell", "T21_fog_transformation_thunder");
+   392→        m.put("giant_thunder_stamp", "T22_giant_thunder_stamp");
+   393→        m.put("open_ancient_thunder_realm", "T24_open_ancient_thunder_realm");
+   394→        m.put("rapid_spell_art_xu_decai", "T31_rapid_spell_art_xu_decai");
+   395→        m.put("rapid_spell_technique", "T33_rapid_spell_technique");
+   396→        m.put("body_fixation_art_xiangang", "T34_body_fixation_art_xiangang");
+   397→        m.put("life_transformation_spell", "T38_life_transformation_spell");
+   398→        m.put("slaughter_immortal_art", "T41_slaughter_immortal_art");
+   399→        m.put("god_slaying_seal_origin", "T44_god_slaying_seal_origin");
+   400→        m.put("life_seizing_hex", "T50_life_seizing_hex");
+   401→        m.put("nine_mysterious_transformations", "T55_nine_mysterious_transformations");
+   402→        m.put("ji_realm_execution", "T90_ji_realm_execution");
+   403→        m.put("eyes_suppressing_world", "T96_eyes_suppressing_world");
+   404→        m.put("ice_imitation_dongling_pool", "T100_ice_imitation_dongling_pool");
+   405→        m.put("nine_drops_poison_miao_yin", "T105_nine_drops_poison_miao_yin");
+   406→        m.put("three_life_spell_william", "T110_three_life_spell");
+   407→        m.put("defying_thunder", "T135_defying_thunder");
+   408→        m.put("nine_revolutions_refining_immortal", "T140_nine_revolutions_refining");
+   409→        m.put("extreme_fire_dao_imitation", "T145_extreme_fire_dao_imitation");
+   410→        m.put("store_all_ji_thunder", "AT07_store_all_ji_thunder");
+   411→        m.put("karma_print", "OS04_karma_print");
+   412→        m.put("life_death_seal", "OS05_life_death_seal");
+   413→        m.put("true_false_eternal_seal", "OS06_true_false_eternal_seal");
+   414→        m.put("life_death_domain", "I138_life_death_domain");
+   415→        m.put("blood_lines_rules_restriction", "I153_blood_lines_rules");
+   416→        m.put("bloodline_thunder", "T136_bloodline_thunder");
+   417→        m.put("flame_dragon", "T95_flame_dragon");
+   418→        m.put("nine_star_ancient_god_power", "T150_nine_star_ancient_god");
+   419→        m.put("extreme_land_sky_life_dao", "T155_extreme_land_sky_life");
+   420→        m.put("mother_child_dao_withered", "T160_mother_child_dao");
+   421→        m.put("wither_dao_pair", "T165_wither_dao_pair");
+   422→        m.put("taichu_essence", "E08_taichu_essence");
+   423→        m.put("miemie_essence", "E09_miemie_essence");
+   424→        m.put("cultivator_dao_avatar", "T170_cultivator_dao_avatar");
+   425→        m.put("ancient_god_body", "B01_ancient_god_body");
+   426→        m.put("undying_ancient_body_version", "B02_undying_ancient_body");
+   427→        m.put("xu_liguo_devil", "companion_xu_liguo_devil");
+   428→        m.put("devil_xu_liguo_first", "companion_xu_liguo_first");
+   429→        m.put("xie_qing_immortal_guard", "companion_xie_qing_guard");
+   430→        m.put("tattoo_talisman_speed_boost", "I130_tattoo_talisman_speed");
+   431→        m.put("short_sword_seals_shadows", "I20_short_sword_seals_shadows");
+   432→        m.put("burning_realm_ancient_umbrella_dao", "I46_blue_umbrella"); // DAO variant — bridges to base item
+   433→        m.put("li_guang_heaven_shattering_bow", "I47_silver_dragon_star_compass"); // DAO variant — bridges to base item
+   434→        m.put("li_guang_heaven_shattering_bow_dao", "I47_silver_dragon_star_compass"); // DAO variant — bridges to base item
+   435→        m.put("seven_colored_lance_dao", "I48_soul_lasser_karma_whip"); // DAO variant — bridges to base item
+   436→        m.put("seven_colored_lance_dao_spell", "I48_soul_lasser_karma_whip"); // DAO variant — bridges to base item
+   437→        m.put("devilish_flames_fire_dragon", "T95_flame_dragon"); // bridges to flame dragon technique
+   438→        return java.util.Collections.unmodifiableMap(m);
+   439→    }
+   440→
+   441→
+   442→    private WangLinItems() {}
+   443→
+   444→    /** A single entry from the arsenal manifest. */
+   445→    public record ManifestEntry(String itemId, boolean isCanonical, int count, float unlockThreshold) {
+   446→        /** The canonId portion (e.g. "wanglin/restriction_flag" from "ergen:wanglin/restriction_flag"). */
+   447→        public String canonId() {
+   448→            return itemId.replace("ergen:", "");
+   449→        }
+   450→        /** The registry name portion (e.g. "restriction_flag"). */
+   451→        public String registryName() {
+   452→            String id = itemId.replace("ergen:wanglin/", "");
+   453→            return id;
+   454→        }
+   455→    }
+   456→
+   457→    /**
+   458→     * Load the arsenal manifest from the embedded JSON resource and register every
+   459→     * entry as a {@link WangLinItem}. This runs once at class-init (before the mod
+   460→     * event bus fires the RegisterEvent).
+   461→     */
+   462→    private static synchronized void loadManifestAndRegister() {
+   463→        if (registered) return;
+   464→        Ergenverse.LOGGER.info("[WangLin] Loading arsenal manifest from assets/ergenverse/wanglin_arsenal_manifest.json...");
+   465→
+   466→        try (var is = WangLinItems.class.getResourceAsStream("/assets/ergenverse/wanglin_arsenal_manifest.json")) {
+   467→            if (is == null) {
+   468→                Ergenverse.LOGGER.error("[WangLin] ARSENAL MANIFEST NOT FOUND! No Wang Lin items will be registered.");
+   469→                Ergenverse.LOGGER.error("[WangLin] Expected: src/main/resources/assets/ergenverse/wanglin_arsenal_manifest.json");
+   470→                registered = true;
+   471→                return;
+   472→            }
+   473→            var reader = new InputStreamReader(is, StandardCharsets.UTF_8);
+   474→            JsonObject root = new Gson().fromJson(reader, JsonObject.class);
+   475→            JsonArray entries = root.getAsJsonArray("entries");
+   476→            int count = 0;
+   477→            for (JsonElement el : entries) {
+   478→                JsonObject e = el.getAsJsonObject();
+   479→                String itemId = e.get("itemId").getAsString();
+   480→                boolean isCanonical = e.get("isCanonical").getAsBoolean();
+   481→                int cnt = e.has("count") ? e.get("count").getAsInt() : 1;
+   482→                float unlock = e.has("unlockThreshold") ? e.get("unlockThreshold").getAsFloat() : 0f;
+   483→
+   484→                ManifestEntry me = new ManifestEntry(itemId, isCanonical, cnt, unlock);
+   485→                MANIFEST.add(me);
+   486→                registerArsenalItem(me);
+   487→                count++;
+   488→            }
+   489→            Ergenverse.LOGGER.info("[WangLin] Arsenal manifest loaded: {} items registered.", count);
+   490→        } catch (Exception e) {
+   491→            Ergenverse.LOGGER.error("[WangLin] Failed to load arsenal manifest!", e);
+   492→        }
+   493→        registered = true;
+   494→    }
+   495→
+   496→    /**
+   497→     * Register a single arsenal item. The item is created as a {@link WangLinItem}
+   498→     * with category inferred from the canonId prefix and evolution chain looked up
+   499→     * from {@link ItemEvolutionRegistry}.
+   500→     *
+   501→     * <p>The {@code canonId} passed to {@link WangLinItem} is the <b>canonical
+   502→     * registry entry id</b> (looked up from {@link #MANIFEST_TO_REGISTRY}), NOT
+   503→     * the manifest's {@code itemId}. This ensures {@link WangLinItem}'s tooltip
+   504→     * can call {@link WangLinMasterRegistry#lookup(String)} and find a match.
+   505→     * Items whose manifest bare-id has no confident registry match get a
+   506→     * {@code null} canonId — their tooltip enrichment is silently skipped
+   507→     * (no fabricated matches).
+   508→     */
+   509→    private static void registerArsenalItem(ManifestEntry me) {
+   510→        String registryName = me.registryName();
+   511→        String manifestCanonId = me.canonId();
+   512→
+   513→        // CRON-SMOKE-TEST FIX: Skip items whose registry name is ALREADY owned by
+   514→        // ErgenverseItems. Both DeferredRegisters target the "ergenverse" namespace,
+   515→        // so if ErgenverseItems registers "ergenverse:soul_gourd" (the real
+   516→        // SoulGourdItem with capture/release mechanics) and WangLinItems ALSO
+   517→        // registers "ergenverse:soul_gourd" (a tooltip-only WangLinItem), Forge
+   518→        // creates an override that maps to `air`, crashing the server at registry
+   519→        // freeze with "One or more entry values did not copy to the correct id."
+   520→        // The ErgenverseItems version is always the one with real mechanics, so we
+   521→        // defer to it and skip the arsenal's display-only duplicate.
+   522→        if (ERGENVERSE_ITEMS_OWNED_NAMES.contains(registryName)) {
+   523→            Ergenverse.LOGGER.info("[WangLin] Skipping arsenal duplicate of ErgenverseItems-owned item: {}", registryName);
+   524→            return;
+   525→        }
+   526→
+   527→        // Skip duplicate entries — the manifest has 6 duplicate registry names.
+   528→        // Without this check, DeferredRegister.register() throws IllegalArgumentException
+   529→        // on the 2nd occurrence, aborting the loop and leaving all subsequent items unregistered.
+   530→        if (!REGISTERED_NAMES.add(registryName)) {
+   531→            Ergenverse.LOGGER.warn("[WangLin] Skipping duplicate arsenal item: {}", registryName);
+   532→            return;
+   533→        }
+   534→
+   535→        // Look up the actual canonical registry entry id from the manifest->registry map.
+   536→        // If no confident match, leave canonId null (tooltip enrichment silently skipped).
+   537→        String registryCanonId = MANIFEST_TO_REGISTRY.get(registryName);
+   538→        if (registryCanonId == null) {
+   539→            Ergenverse.LOGGER.debug("[WangLin] No registry match for arsenal item '{}' — tooltip enrichment will be skipped.",
+   540→                    registryName);
+   541→        }
+   542→        WangLinItem.ArsenalCategory category = inferCategory(manifestCanonId);
+   543→        String displayName = humanizeName(registryName);
+   544→
+   545→        // CANON-ONLY: We do NOT create default chains for items without explicit
+   546→        // canon histories. Per the rewritten Prime Directive, items with a single
+   547→        // documented canon form exist in that form — period. No invented "Peak"
+   548→        // or "Awakened" stages. The ItemEvolutionRegistry contains ONLY chains
+   549→        // for items with explicitly documented canon transformations.
+   550→        ItemEvolutionRegistry.bootstrap();
+   551→
+   552→        // SPECIAL CASES: Items that need their own Item subclass with real mechanics.
+   553→        // These are canon-critical items where WangLinItem's tooltip-only behavior
+   554→        // is insufficient — the player must be able to LAUNCH a flying sword,
+   555→        // STORE items in a ring, or CAPTURE souls with the gourd.
+   556→        //
+   557→        // CRON-COMPLETIONIST-67: Wired 4 flying swords from WangLinItem (display-only)
+   558→        // to FlyingSwordItem (launchable projectile with cultivation-scaled damage
+   559→        // and per-sword supernatural effects).
+   560→        final RegistryObject<Item> ro;
+   561→        if ("heaven_defying_bead".equals(registryName)) {
+   562→            ro = ITEMS.register(registryName, () -> new HeavenDefyingBeadItem(
+   563→                    new Item.Properties()));
+   564→        } else if ("wealth_flying_sword".equals(registryName)) {
+   565→            // Wang Lin's FIRST flying sword — the iconic Wealth Sword.
+   566→            // Canon: basic qi blade, no special effect, but reliable.
+   567→            // Damage: 8.0 (low — it's his weakest sword). Effect: NONE.
+   568→            ro = ITEMS.register(registryName, () -> new FlyingSwordItem(
+   569→                    8.0F, SwordEffectType.NONE,
+   570→                    new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)
+   571→            ));
+   572→        } else if ("core_treasure_sword".equals(registryName)) {
+   573→            // Core Treasure Sword — can teleport targets on hit.
+   574→            // Canon: a refined treasure-tier sword that displaces enemies.
+   575→            // Damage: 12.0 (mid-tier). Effect: TELEPORT.
+   576→            ro = ITEMS.register(registryName, () -> new FlyingSwordItem(
+   577→                    12.0F, SwordEffectType.TELEPORT,
+   578→                    new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)
+   579→            ));
+   580→        } else if ("dark_green_flying_sword".equals(registryName)) {
+   581→            // Dark Green Flying Sword — seeps poison into wounds.
+   582→            // Canon: a sinister sword that poisons those it cuts.
+   583→            // Damage: 10.0 (mid-tier). Effect: POISON (Wither II, 3s).
+   584→            ro = ITEMS.register(registryName, () -> new FlyingSwordItem(
+   585→                    10.0F, SwordEffectType.POISON,
+   586→                    new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)
+   587→            ));
+   588→        } else if ("blood_slaughter_sword".equals(registryName)) {
+   589→            // Blood Slaughter Sword — drains life force from those it cuts.
+   590→            // Canon: one of the Seven Swords of the Ancient Dao, absorbs blood qi.
+   591→            // Damage: 15.0 (high-tier). Effect: LIFESTEAL (30% damage healed).
+   592→            ro = ITEMS.register(registryName, () -> new FlyingSwordItem(
+   593→                    15.0F, SwordEffectType.LIFESTEAL,
+   594→                    new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)
+   595→            ));
+   596→        } else {
+   597→            ro = ITEMS.register(registryName, () -> new WangLinItem(
+   598→                    new Item.Properties(),
+   599→                    registryCanonId,
+   600→                    displayName,
+   601→                    "",  // CN name filled in by evolution-chain stages if available
+   602→                    category,
+   603→                    me.isCanonical() ? 5 : 3,
+   604→                    manifestCanonId,
+   605→                    me.unlockThreshold(),
+   606→                    "Renegade Immortal \u2014 Wang Lin's arsenal"
+   607→            ));
+   608→        }
+   609→        ARSENAL.put(manifestCanonId, ro);
+   610→    }
+   611→
+   612→    /** Infer the arsenal category from the canonId naming conventions. */
+   613→    private static WangLinItem.ArsenalCategory inferCategory(String canonId) {
+   614→        if (canonId.contains("essence")) return WangLinItem.ArsenalCategory.ESSENCE;
+   615→        if (canonId.contains("domain")) return WangLinItem.ArsenalCategory.DOMAIN;
+   616→        if (canonId.contains("bridge")) return WangLinItem.ArsenalCategory.DOMAIN;
+   617→        if (canonId.contains("pet") || canonId.contains("dragon") || canonId.contains("soul_tornado")
+   618→                || canonId.contains("monkey") || canonId.contains("beast")) return WangLinItem.ArsenalCategory.PET;
+   619→        if (canonId.contains("devil") || canonId.contains("clone") || canonId.contains("xu_liguo")) return WangLinItem.ArsenalCategory.CLONE;
+   620→        if (canonId.contains("companion")) return WangLinItem.ArsenalCategory.COMPANION;
+   621→        if (canonId.contains("formation") || canonId.contains("array")) return WangLinItem.ArsenalCategory.FORMATION;
+   622→        if (canonId.contains("flag") || canonId.contains("sword") || canonId.contains("blade")
+   623→                || canonId.contains("chariot") || canonId.contains("crown") || canonId.contains("hat")
+   624→                || canonId.contains("pen") || canonId.contains("coffin") || canonId.contains("compass")
+   625→                || canonId.contains("net") || canonId.contains("shield") || canonId.contains("screen")
+   626→                || canonId.contains("pavilion")) return WangLinItem.ArsenalCategory.ARTIFACT;
+   627→        if (canonId.contains("art") || canonId.contains("technique") || canonId.contains("spell")
+   628→                || canonId.contains("hex") || canonId.contains("print") || canonId.contains("sound")
+   629→                || canonId.contains("method") || canonId.contains("refining") || canonId.contains("detection")
+   630→                || canonId.contains("escape") || canonId.contains("transformation") || canonId.contains("searching")
+   631→                || canonId.contains("rotation") || canonId.contains("bending") || canonId.contains("tactic")
+   632→                || canonId.contains("extraction") || canonId.contains("devouring") || canonId.contains("disguising")
+   633→                || canonId.contains("erasing") || canonId.contains("stealing") || canonId.contains("ascension")) return WangLinItem.ArsenalCategory.TECHNIQUE;
+   634→        return WangLinItem.ArsenalCategory.MISCELLANEOUS;
+   635→    }
+   636→
+   637→    /** Convert a registry name like "restriction_flag" to "Restriction Flag". */
+   638→    private static String humanizeName(String registryName) {
+   639→        StringBuilder sb = new StringBuilder();
+   640→        for (String word : registryName.split("_")) {
+   641→            if (!word.isEmpty()) {
+   642→                if (sb.length() > 0) sb.append(' ');
+   643→                sb.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
+   644→            }
+   645→        }
+   646→        return sb.toString();
+   647→    }
+   648→
+   649→    // ── Public API ────────────────────────────────────────────────────
+   650→
+   651→    /**
+   652→     * Wire the items + creative tabs to the mod event bus. Call from
+   653→     * {@link dev.ergenverse.core.Ergenverse#Ergenverse}.
+   654→     */
+   655→    public static void register(IEventBus modEventBus) {
+   656→        loadManifestAndRegister();
+   657→        registerCreativeTab();
+   658→        ITEMS.register(modEventBus);
+   659→        CREATIVE_TABS.register(modEventBus);
+   660→        Ergenverse.LOGGER.info("[WangLin] Arsenal DeferredRegister wired to mod event bus. {} items pending Forge registration.",
+   661→                MANIFEST.size());
+   662→    }
+   663→
+   664→    /**
+   665→     * Look up a registered item by canonId. Returns null if not found or not yet resolved.
+   666→     */
+   667→    public static RegistryObject<Item> get(String canonId) {
+   668→        return ARSENAL.get(canonId);
+   669→    }
+   670→
+   671→    /** All registered arsenal entries. */
+   672→    public static List<ManifestEntry> allEntries() {
+   673→        return List.copyOf(MANIFEST);
+   674→    }
+   675→
+   676→    // ── Creative Tab ──────────────────────────────────────────────────
+   677→
+   678→    /** The RegistryObject for the Wang Lin creative tab. */
+   679→    public static RegistryObject<CreativeModeTab> WANG_LIN_TAB;
+   680→
+   681→    /**
+   682→     * Register a creative mode tab showing ALL Wang Lin arsenal items, organized by category.
+   683→     * This fulfills the "access to ALL arsenal" directive — every item is available in creative mode.
+   684→     */
+   685→    private static void registerCreativeTab() {
+   686→        WANG_LIN_TAB = CREATIVE_TABS.register("wanglin_arsenal", () -> CreativeModeTab.builder()
+   687→                .title(Component.literal("Wang Lin's Arsenal"))
+   688→                .icon(() -> {
+   689→                    RegistryObject<Item> bead = ARSENAL.get("wanglin/heaven_defying_bead");
+   690→                    return bead != null ? new ItemStack(bead.get()) : ItemStack.EMPTY;
+   691→                })
+   692→                .displayItems((params, output) -> {
+   693→                    // Add ALL registered Wang Lin items to the creative tab.
+   694→                    for (ManifestEntry me : MANIFEST) {
+   695→                        String registryName = me.registryName();
+   696→                        // Look up the RegistryObject from the ITEMS deferred register
+   697→                        var ro = ITEMS.getEntries().stream()
+   698→                                .filter(r -> r.getId().getPath().equals(registryName))
+   699→                                .findFirst();
+   700→                        ro.ifPresent(r -> output.accept(r.get()));
+   701→                    }
+   702→                })
+   703→                .build());
+   704→    }
+   705→}
+   706→
