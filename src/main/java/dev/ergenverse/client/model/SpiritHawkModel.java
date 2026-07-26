@@ -62,6 +62,53 @@ package dev.ergenverse.client.model;
  *   - Banking animation (root.zRot) now SKIPS during death pose to fix
  *     the "corpse sways in the breeze forever" bug.
  *   - Added rear hallux toe on each leg (raptors have 3 forward + 1 hind toe).
+ *
+ * CRON-COMPLETIONIST-83 — PARENT HIERARCHY REFACTOR (Tier 1 #3 from CRON-80 audit):
+ *   Same defect class as CRON-81 (Qilin) and CRON-82 (Deer): 7 parts were
+ *   direct children of root instead of the body chain. The defect meant
+ *   bodyChest.xRot (the "thorax heave" in the FLAP block) animated ONLY the
+ *   chest — body_hind, neck, wings, tail, legs did NOT follow. After CRON-83:
+ *   - body_hind:  root → body_chest  (body chain: chest → hind)
+ *   - neck:       root → body_chest  (neck rises from cervico-thoracic junction)
+ *   - left_wing:  root → body_chest  (wings on shoulder blades / thorax)
+ *   - right_wing: root → body_chest  (mirror)
+ *   - tail:       root → body_hind   (pygostyle at base of tail)
+ *   - left_leg:   root → body_hind   (legs on pelvis)
+ *   - right_leg:  root → body_hind   (mirror)
+ *
+ *   PartPose offsets recomputed via subtraction (Rx-Px, Ry-Py, Rz-Pz) and
+ *   verified by /home/z/my-project/scripts/cron83_verify_hawk_reparent.py.
+ *   All 7 parts preserve world position. The neck's PartPose rotation
+ *   (-0.3 xRot) is preserved verbatim (body_chest has no rotation).
+ *
+ * HAWK-SPECIFIC ANIMATION NOTES (different from quadrupeds):
+ *   - Birds have a RIGID torso (fused thoracic vertebrae, synsacrum). The
+ *     spine does NOT flex like a quadruped's. There is NO S-curve animation
+ *     fix for birds (unlike CRON-81 Qilin and CRON-82 Deer which added
+ *     bodyHind.xRot = -1.5*spineFlex for S-curve).
+ *   - The existing bodyChest.xRot = sin(age*0.6)*0.08*lsa in the FLAP block
+ *     is a "thorax heave" (respiratory pulse during flight), not a spine
+ *     flex. After CRON-83, body_hind INHERITS this heave (whole torso heaves
+ *     together) — anatomically correct for a bird breathing hard during
+ *     flight.
+ *   - Wings now inherit body_chest's heave — anatomically correct (wings
+ *     attach to thorax, so they move with the chest).
+ *   - Tail now inherits body_hind's rotation (which inherits body_chest's
+ *     heave) — anatomically correct (pygostyle is part of the synsacrum).
+ *   - Legs now inherit body_hind's rotation — anatomically correct (pelvis
+ *     is part of the synsacrum).
+ *   - Neck now inherits body_chest's heave — anatomically correct (cervical-
+ *     thoracic junction moves with the thorax).
+ *
+ * STALE-STATE BUG FIX (pre-existing, made visible by CRON-83):
+ *   Pre-CRON-83, bodyChest.xRot was set ONLY in the FLAP block. Other pose
+ *   blocks (resting, swimming, sprinting, perched, glide) did NOT reset it,
+ *   leaving stale spine flex from the last FLAP frame. This bug was barely
+ *   visible pre-CRON-83 (bodyChest was an isolated part). Post-CRON-83, the
+ *   bug would propagate to body_hind, neck, wings, tail, legs (all inherit
+ *   body_chest's rotation). FIXED by adding `this.bodyChest.xRot = 0.0F;`
+ *   resets to the resting, swimming, sprinting, perched, and glide blocks.
+ *   (The FLAP block sets it every frame, so no reset needed there.)
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -93,19 +140,21 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
 
     public SpiritHawkModel(ModelPart root) {
         this.root = root;
-        this.neck = root.getChild("neck");
+        this.bodyChest = root.getChild("body_chest");
+        // CRON-83: body_hind, neck, wings now children of body_chest.
+        this.bodyHind = this.bodyChest.getChild("body_hind");
+        this.neck = this.bodyChest.getChild("neck");
         this.head = this.neck.getChild("head");
-        this.leftWing = root.getChild("left_wing");
-        this.rightWing = root.getChild("right_wing");
+        this.leftWing = this.bodyChest.getChild("left_wing");
+        this.rightWing = this.bodyChest.getChild("right_wing");
         this.leftShoulder = leftWing.getChild("shoulder");
         this.rightShoulder = rightWing.getChild("shoulder");
         this.leftForearm = leftShoulder.getChild("forearm");
         this.rightForearm = rightShoulder.getChild("forearm");
-        this.bodyChest = root.getChild("body_chest");
-        this.bodyHind = root.getChild("body_hind");
-        this.tail = root.getChild("tail");
-        this.leftLeg = root.getChild("left_leg");
-        this.rightLeg = root.getChild("right_leg");
+        // CRON-83: tail + legs now children of body_hind.
+        this.tail = this.bodyHind.getChild("tail");
+        this.leftLeg = this.bodyHind.getChild("left_leg");
+        this.rightLeg = this.bodyHind.getChild("right_leg");
         this.eyeLeft = this.head.getChild("eye_left");
         this.eyeRight = this.head.getChild("eye_right");
     }
@@ -115,21 +164,27 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         PartDefinition root = mesh.getRoot();
 
         // ── body : horizontal torso, hovering around y=10 ────────────────
-        // CRON-COMPLETIONIST-59: body split into chest + hind for raptor taper
-        root.addOrReplaceChild("body_chest",
+        // CRON-COMPLETIONIST-59: body split into chest + hind for raptor taper.
+        // CRON-COMPLETIONIST-83: body_hind REPARENTED root → body_chest.
+        // body_chest at root (0, 10, -1); body_hind at body_chest-rel (0, 0, 3)
+        // (was root-rel (0, 10, 2); 2 - (-1) = 3). World position unchanged.
+        PartDefinition bodyChest = root.addOrReplaceChild("body_chest",
                 CubeListBuilder.create().texOffs(0, 0)
                         .addBox(-3.0F, -2.0F, -3.0F, 6.0F, 4.0F, 4.0F),
                 PartPose.offset(0.0F, 10.0F, -1.0F));
-        root.addOrReplaceChild("body_hind",
+        PartDefinition bodyHind = bodyChest.addOrReplaceChild("body_hind",
                 CubeListBuilder.create().texOffs(0, 8)
                         .addBox(-2.5F, -1.75F, -1.5F, 5.0F, 3.5F, 3.0F),
-                PartPose.offset(0.0F, 10.0F, 2.0F));
+                PartPose.offset(0.0F, 0.0F, 3.0F));
 
         // ── CRON-COMPLETIONIST-21: neck — short connector between body and head ──
-        PartDefinition neck = root.addOrReplaceChild("neck",
+        // CRON-COMPLETIONIST-83: neck REPARENTED root → body_chest.
+        // neck at body_chest-rel (0, -0.5, -2) [was root-rel (0, 9.5, -3);
+        // 9.5-10=-0.5, -3-(-1)=-2]. xRot=-0.3 preserved verbatim.
+        PartDefinition neck = bodyChest.addOrReplaceChild("neck",
                 CubeListBuilder.create().texOffs(0, 12)
                         .addBox(-1.0F, -1.5F, -1.0F, 2.0F, 3.0F, 2.0F),
-                PartPose.offsetAndRotation(0.0F, 9.5F, -3.0F, -0.3F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -0.5F, -2.0F, -0.3F, 0.0F, 0.0F));
 
         // ── head : skull + hooked beak + crest, NOW child of neck ────────
         // CRON-COMPLETIONIST-65: Beak extracted from skull CubeListBuilder into
@@ -167,9 +222,12 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offset(0.0F, 0.0F, 0.0F));
 
         // ── left wing : shoulder -> forearm -> hand -> 3 feathers ────────
-        PartDefinition leftWing = root.addOrReplaceChild("left_wing",
+        // CRON-COMPLETIONIST-83: left_wing REPARENTED root → body_chest.
+        // left_wing at body_chest-rel (-3, -1, 1) [was root-rel (-3, 9, 0);
+        // 9-10=-1, 0-(-1)=1]. Wings attach to shoulder blades on thorax.
+        PartDefinition leftWing = bodyChest.addOrReplaceChild("left_wing",
                 CubeListBuilder.create(),
-                PartPose.offset(-3.0F, 9.0F, 0.0F));
+                PartPose.offset(-3.0F, -1.0F, 1.0F));
         PartDefinition leftShoulder = leftWing.addOrReplaceChild("shoulder",
                 CubeListBuilder.create().texOffs(0, 16)
                         .addBox(-5.0F, -0.5F, -2.0F, 5.0F, 1.0F, 4.0F),
@@ -220,9 +278,11 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offsetAndRotation(-2.0F, -0.5F, 2.0F, 0.0F, 0.0F, 0.05F));
 
         // ── right wing : mirror ──────────────────────────────────────────
-        PartDefinition rightWing = root.addOrReplaceChild("right_wing",
+        // CRON-COMPLETIONIST-83: right_wing REPARENTED root → body_chest.
+        // right_wing at body_chest-rel (3, -1, 1) [was root-rel (3, 9, 0)].
+        PartDefinition rightWing = bodyChest.addOrReplaceChild("right_wing",
                 CubeListBuilder.create(),
-                PartPose.offset(3.0F, 9.0F, 0.0F));
+                PartPose.offset(3.0F, -1.0F, 1.0F));
         PartDefinition rightShoulder = rightWing.addOrReplaceChild("shoulder",
                 CubeListBuilder.create().texOffs(0, 40)
                         .addBox(0.0F, -0.5F, -2.0F, 5.0F, 1.0F, 4.0F),
@@ -271,9 +331,12 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offsetAndRotation(2.0F, -0.5F, 2.0F, 0.0F, 0.0F, -0.05F));
 
         // ── tail : 3 feather slabs fanning from the rear (+Z) ────────────
-        PartDefinition tail = root.addOrReplaceChild("tail",
+        // CRON-COMPLETIONIST-83: tail REPARENTED root → body_hind.
+        // tail at body_hind-rel (0, -1, 1) [was root-rel (0, 9, 3);
+        // 9-10=-1, 3-2=1]. Pygostyle attaches to hind.
+        PartDefinition tail = bodyHind.addOrReplaceChild("tail",
                 CubeListBuilder.create(),
-                PartPose.offset(0.0F, 9.0F, 3.0F));
+                PartPose.offset(0.0F, -1.0F, 1.0F));
         tail.addOrReplaceChild("feather1",
                 CubeListBuilder.create().texOffs(40, 16)
                         .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 6.0F),
@@ -288,7 +351,10 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.3F, 0.0F));
 
         // ── legs : thin shin + foot + 2 forward talons + rear hallux ─────
-        root.addOrReplaceChild("left_leg",
+        // CRON-COMPLETIONIST-83: legs REPARENTED root → body_hind.
+        // left_leg at body_hind-rel (-1.5, 2, -2) [was root-rel (-1.5, 12, 0);
+        // 12-10=2, 0-2=-2]. right_leg mirror. Legs attach to pelvis (synsacrum).
+        bodyHind.addOrReplaceChild("left_leg",
                 CubeListBuilder.create().texOffs(50, 16)
                         .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F)    // shin
                         .texOffs(50, 22)
@@ -299,8 +365,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(0.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F)    // toe 2
                         .texOffs(56, 16)
                         .addBox(0.0F, 3.0F, 0.5F, 1.0F, 1.0F, 1.0F),    // CRON-21: rear hallux
-                PartPose.offset(-1.5F, 12.0F, 0.0F));
-        root.addOrReplaceChild("right_leg",
+                PartPose.offset(-1.5F, 2.0F, -2.0F));
+        bodyHind.addOrReplaceChild("right_leg",
                 CubeListBuilder.create().texOffs(50, 36)
                         .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F)
                         .texOffs(50, 42)
@@ -311,7 +377,7 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(0.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F)
                         .texOffs(56, 36)
                         .addBox(-1.0F, 3.0F, 0.5F, 1.0F, 1.0F, 1.0F),    // CRON-21: rear hallux
-                PartPose.offset(1.5F, 12.0F, 0.0F));
+                PartPose.offset(1.5F, 2.0F, -2.0F));
 
         return LayerDefinition.create(mesh, 64, 64);
     }
@@ -346,6 +412,9 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         if (resting) {
             // Hawk rests: beak tucks under wing, wings fold tight, legs grip perch
             // CRON-COMPLETIONIST-17: Added breathing, occasional head micro-adjust
+            // CRON-83: Reset bodyChest.xRot — closes the stale-state bug where
+            // bodyChest.xRot (set by FLAP block) would persist into resting.
+            this.bodyChest.xRot = 0.0F;
             float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.12F;
             float headShift = (ageInTicks % 100 < 3) ? (float) Math.sin(ageInTicks * 1.5F) * 0.05F : 0.0F;
             this.root.y = -1.0F + breath;
@@ -363,6 +432,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
             this.tail.xRot = 0.3F;
         } else if (swimming) {
             // CRON-COMPLETIONIST-17: Added vertical bob synchronized with row cycle.
+            // CRON-83: Reset bodyChest.xRot — closes the stale-state bug.
+            this.bodyChest.xRot = 0.0F;
             float row = ageInTicks * 0.8F;
             float bob = (float) Math.sin(row * 0.5F) * 0.1F;
             this.root.xRot = -0.2F;
@@ -393,6 +464,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         if (!resting && !swimming) {
         if (sprinting) {
             // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — fast diving stoop ──
+            // CRON-83: Reset bodyChest.xRot — closes the stale-state bug.
+            this.bodyChest.xRot = 0.0F;
             this.root.xRot = 0.4F;                    // body pitches steeply down
             this.root.y = (float) Math.sin(ageInTicks * 0.15F) * 0.05F;
             // Wings swept back tight (minimal drag)
@@ -411,6 +484,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
             this.head.xRot = 0.2F;
         } else if (perched) {
             // PERCHED : wings fold against body, legs straight down
+            // CRON-83: Reset bodyChest.xRot — closes the stale-state bug.
+            this.bodyChest.xRot = 0.0F;
             this.leftWing.zRot = -0.7F;   // wings fold flat
             this.rightWing.zRot = 0.7F;
             this.leftWing.xRot = 0.6F;    // wings tuck down
@@ -424,6 +499,8 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
             this.rightLeg.xRot = 0.0F;
         } else if (limbSwingAmount < 0.1F) {
             // GLIDE : wings hold flat with slow rise-fall
+            // CRON-83: Reset bodyChest.xRot — closes the stale-state bug.
+            this.bodyChest.xRot = 0.0F;
             float glide = (float) Math.sin(ageInTicks * 0.15F) * 0.15F;
             this.leftWing.zRot = -0.1F + glide;
             this.rightWing.zRot = 0.1F - glide;
@@ -489,6 +566,9 @@ public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
         if (entity.deathTime > 0) {
             float t = Math.min(entity.deathTime / 8.0F, 1.0F); // 0→1 over 0.4s (visible before fade)
             float collapse = t * t;
+            // CRON-83: Reset bodyChest.xRot — closes the stale-state bug where
+            // the flap-cycle heave would persist into the death animation.
+            this.bodyChest.xRot = 0.0F;
             // body pitches forward and rolls
             this.root.xRot = collapse * 0.5F;
             this.root.zRot = collapse * -0.4F;

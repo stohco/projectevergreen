@@ -59,11 +59,33 @@ import java.util.function.Supplier;
  *     Score 9/10 — closes the second Tier 1 defect. Runtime verification still
  *     needed (no client available).
  *
- * SPIRIT_HAWK (SpiritHawkModel.java, 510 lines):
- *   - Wings are visual-only (hitbox is body-only per vanilla parrot). Verify
- *     wings are parented to body so flap animation propagates correctly.
- *   - AUDIT NEEDED (CRON-83 candidate): check if body parts are parented to
- *     root like Qilin/Deer were.
+ * SPIRIT_HAWK (SpiritHawkModel.java, 577 lines):
+ *   - FIXED (CRON-83): Same defect class as Qilin/Deer — 7 parts were direct
+ *     children of root instead of the body chain. body_hind, neck, left_wing,
+ *     right_wing, tail, left_leg, right_leg were ALL at root. The bodyChest.xRot
+ *     "thorax heave" in the FLAP block animated ONLY the chest — body_hind,
+ *     wings, tail, legs, neck did NOT follow.
+ *     FIX SHIPPED: Reparented body_hind/neck/left_wing/right_wing → body_chest;
+ *     tail/left_leg/right_leg → body_hind. All PartPose offsets recomputed via
+ *     subtraction (Rx-Px, Ry-Py, Rz-Pz). Verified by
+ *     /home/z/my-project/scripts/cron83_verify_hawk_reparent.py (7/7 parts
+ *     preserve world position).
+ *     HAWK-SPECIFIC NOTES (different from quadrupeds): birds have a RIGID torso
+ *     (fused thoracic vertebrae / synsacrum); the spine does NOT flex. There is
+ *     NO S-curve animation fix for birds (unlike CRON-81 Qilin and CRON-82 Deer
+ *     which added bodyHind.xRot = -1.5*spineFlex). The existing bodyChest.xRot
+ *     = sin(age*0.6)*0.08*lsa is a "thorax heave" (respiratory pulse) — after
+ *     CRON-83, body_hind INHERITS this heave (whole torso heaves together),
+ *     which is anatomically correct for a bird in flight.
+ *     STALE-STATE BUG FIX: pre-CRON-83, bodyChest.xRot was set ONLY in the FLAP
+ *     block; other pose blocks (resting, swimming, sprinting, perched, glide)
+ *     did NOT reset it, leaving stale heave from the last FLAP frame. CRON-83
+ *     added `this.bodyChest.xRot = 0.0F;` resets to ALL non-flap blocks (resting,
+ *     swimming, sprinting, perched, glide, AND death) — closes a pre-existing
+ *     bug that became visible once body_hind/neck/wings/tail/legs inherited
+ *     body_chest's rotation.
+ *     Score 9/10 — closes the third and final Tier 1 structural defect from the
+ *     CRON-80 audit. Runtime verification still needed (no client available).
  *
  * ── TIER 2 — Anatomy proportion issues ──────────────────────────────────────
  *
@@ -109,12 +131,19 @@ import java.util.function.Supplier;
  * PRIORITIZED NEXT STEPS for future CRON rounds:
  *   1. DONE (CRON-81): Fix QilinModel parent hierarchy (Tier 1) — shipped.
  *   2. DONE (CRON-82): Audit + fix SpiritDeerModel parent hierarchy (Tier 1) — shipped.
- *   3. Audit SpiritHawkModel parent hierarchy (Tier 1) — likely same defect.
+ *   3. DONE (CRON-83): Audit + fix SpiritHawkModel parent hierarchy (Tier 1) — shipped.
+ *      All 3 Tier 1 structural defects from CRON-80 audit are now CLOSED.
  *   4. Add ease-in/ease-out to walk cycles (Tier 3).
  *   5. Add pose-transition LERP to SpiritBeastEntity + models (Tier 3).
  *   6. Deepen Qilin chest and lengthen neck (Tier 2).
  *   7. Multi-tine deer antlers (Tier 2) — CRON-28 already shipped 3-tine branched; refine.
  *   8. Emissive qi layer on Qilin (Tier 4).
+ *   9. Audit SpiritCraneModel, SpiritBatModel, SpiritTigerModel, SeaSerpentModel,
+ *      StoneBackBoarModel, FireBeastModel, SoulFishModel, SpiritWolfModel,
+ *      SpiritRabbitModel for the same parent-hierarchy defect class (Tier 1
+ *      extended — the CRON-80 audit only catalogued Qilin/Deer/Hawk as the
+ *      highest-impact targets; the other 9 beasts may have the same defect at
+ *      smaller scale).
  */
 public final class SpiritBeastModelLayers {
 
