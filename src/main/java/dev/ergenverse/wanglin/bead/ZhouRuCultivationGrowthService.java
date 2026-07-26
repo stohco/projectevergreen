@@ -60,6 +60,18 @@ import java.util.List;
  *       {@code "pregnant_with_li_muwan_soul"} flag (set by CRON-110's
  *       ZhouRuSoulTransferEvent). If the flag is absent, no-op — the
  *       cultivation growth only happens AFTER the soul transfer.</li>
+ *   <li><b>CRON-114 gate:</b> Checks 周茹's runtime state for the
+ *       {@code "accepted_as_disciple"} flag (set by CRON-113's
+ *       MuBingmeiAcceptanceEvent). If the flag is absent, no-op — the
+ *       cultivation growth only happens AFTER Mu Bingmei has formally
+ *       accepted 周茹 as her disciple. This enforces strict narrative
+ *       order: transfer (CRON-110) → depart (CRON-112) → accept
+ *       (CRON-113) → cultivate (CRON-111). Before CRON-114, this gate
+ *       was missing — CRON-111 could theoretically advance 周茹's realm
+ *       before the acceptance fired (if 周茹 wandered within 64 blocks
+ *       of Mu Bingmei but not yet within 32 blocks for the acceptance).
+ *       In practice the throttle differential (24000 vs 200 ticks)
+ *       made this unlikely, but CRON-114 closes the gap for correctness.</li>
  *   <li>Finds Mu Bingmei's materialized EntityCultivator (if any). If
  *       Mu Bingmei is not materialized, no-op — the cultivation growth
  *       requires the master's presence.</li>
@@ -100,7 +112,11 @@ import java.util.List;
  *   CRON-99:  Li Muwan dies → bead.hasLiMuwanSoul = true
  *   CRON-110: Player interacts with Zhou Ru → bead.hasSoulTransferredToZhouRu = true
  *                                            → Zhou Ru runtime: pregnant_with_li_muwan_soul = true
- *   CRON-111: Zhou Ru near Mu Bingmei (daily tick) → Zhou Ru realm advances:
+ *   CRON-112: Player interacts with Zhou Ru (2nd right-click) → Zhou Ru teleports to KUNXU_REALM
+ *                                            → Zhou Ru runtime: sent_to_kunxu = true
+ *   CRON-113: Zhou Ru near Mu Bingmei (automatic tick, every 200 ticks) → accepted_as_disciple = true
+ *   CRON-111: Zhou Ru near Mu Bingmei (daily tick, REQUIRES accepted_as_disciple since CRON-114)
+ *            → Zhou Ru realm advances:
  *            mortal → qi_condensation → foundation → core_formation
  *            → nascent_soul → soul_formation → soul_transformation (CANON_CAP)
  *   CRON-100: Player invokes /ergenverse bead revive → revivalAttempts++
@@ -110,6 +126,8 @@ import java.util.List;
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.
  *
  * @see ZhouRuSoulTransferEvent (predecessor — CRON-110)
+ * @see ZhouRuKunxuDepartureEvent (predecessor — CRON-112)
+ * @see MuBingmeiAcceptanceEvent (predecessor — CRON-113, sets the accepted_as_disciple gate)
  * @see dev.ergenverse.runtime.CanonUUID#ZHOU_RU
  * @see dev.ergenverse.runtime.CanonUUID#MU_BINGMEI
  * @see dev.ergenverse.runtime.PlanetSuzakuBlueprint#KUNXU_REALM
@@ -188,7 +206,7 @@ public final class ZhouRuCultivationGrowthService {
             return;
         }
 
-        // ── 2. Check 周茹's runtime state for the soul-transferred flag ──
+        // ── 2. Check 周茹's runtime state for the soul-transferred flag (CRON-110) ──
         WorldRuntimeState runtime = WorldRuntimeState.get(level);
         CompoundTag zhouRuState = runtime.getNpcState(ZHOU_RU_CHARACTER_ID);
         if (zhouRuState == null || !zhouRuState.getBoolean("pregnant_with_li_muwan_soul")) {
@@ -196,7 +214,22 @@ public final class ZhouRuCultivationGrowthService {
             return;
         }
 
-        // ── 3. Find Mu Bingmei's materialized EntityCultivator ──
+        // ── 3. CRON-114 gate: Check 周茹's runtime state for the accepted_as_disciple flag (CRON-113) ──
+        // Before CRON-114, this gate was missing. CRON-111 could theoretically
+        // advance 周茹's realm before CRON-113's acceptance fired (if 周茹
+        // wandered within 64 blocks of Mu Bingmei but not yet within 32 blocks
+        // for the acceptance). In practice the throttle differential
+        // (24000 vs 200 ticks) made this unlikely, but CRON-114 closes the
+        // gap for correctness. The strict narrative order is now:
+        //   transfer (CRON-110) → depart (CRON-112) → accept (CRON-113) → cultivate (CRON-111)
+        if (!zhouRuState.getBoolean("accepted_as_disciple")) {
+            // Mu Bingmei has not yet formally accepted 周茹 as her disciple — no-op.
+            // The cultivation growth only begins AFTER the disciple-master bond
+            // is canonically established (CRON-113).
+            return;
+        }
+
+        // ── 4. Find Mu Bingmei's materialized EntityCultivator ──
         EntityCultivator muBingmei = findCultivatorByCharacterId(level, MU_BINGMEI_CHARACTER_ID);
         if (muBingmei == null) {
             // Mu Bingmei not materialized — no-op. The cultivation growth
@@ -204,14 +237,14 @@ public final class ZhouRuCultivationGrowthService {
             return;
         }
 
-        // ── 4. Check proximity (周茹 must be near Mu Bingmei) ──
+        // ── 5. Check proximity (周茹 must be near Mu Bingmei) ──
         double distSq = zhouRu.distanceToSqr(muBingmei);
         if (distSq > PROXIMITY_RADIUS_SQ) {
             // 周茹 too far from Mu Bingmei — no-op.
             return;
         }
 
-        // ── 5. Check 周茹's current cultivation realm ──
+        // ── 6. Check 周茹's current cultivation realm ──
         String currentRealmStr = zhouRu.getCultivationRealm();
         RealmId currentRealm = parseRealmId(currentRealmStr);
         if (currentRealm == null) {
@@ -220,14 +253,14 @@ public final class ZhouRuCultivationGrowthService {
             return;
         }
 
-        // ── 6. Check canon cap ──
+        // ── 7. Check canon cap ──
         if (currentRealm.order >= CANON_CAP.order) {
             // 周茹 has reached the canon-attested cultivation cap (Soul Transformation).
             // No further growth.
             return;
         }
 
-        // ── 7. All checks pass — advance 周茹's cultivation realm ──
+        // ── 8. All checks pass — advance 周茹's cultivation realm ──
         RealmId nextRealm = currentRealm.next();
         if (nextRealm == null) {
             // Already at the top of the ladder — defensive (shouldn't happen
@@ -238,7 +271,7 @@ public final class ZhouRuCultivationGrowthService {
         // Update 周茹's entity cultivation realm.
         zhouRu.setCultivationRealm(nextRealm.name().toLowerCase());
 
-        // ── 8. Update 周茹's persistent runtime state ──
+        // ── 9. Update 周茹's persistent runtime state ──
         zhouRuState.putInt("cultivation_realm_order", nextRealm.order);
         zhouRuState.putString("cultivation_realm_name", nextRealm.name());
         zhouRuState.putString("cultivation_realm_name_cn", nextRealm.nameCn);
@@ -246,15 +279,15 @@ public final class ZhouRuCultivationGrowthService {
         zhouRuState.putBoolean("under_mu_bingmei_guidance", true);
         runtime.updateNpcState(ZHOU_RU_CHARACTER_ID, zhouRuState);
 
-        // ── 9. Spawn breakthrough particle + sound effects at 周茹 ──
+        // ── 10. Spawn breakthrough particle + sound effects at 周茹 ──
         spawnBreakthroughEffects(level, zhouRu, nextRealm);
 
-        // ── 10. Display bilingual message to nearby players (if any) ──
+        // ── 11. Display bilingual message to nearby players (if any) ──
         ServerPlayer nearbyPlayer = findNearbyPlayer(level, zhouRu, 32.0);
         if (nearbyPlayer != null) {
             announceBreakthrough(nearbyPlayer, zhouRu, nextRealm);
 
-            // ── 11. Record in HistoryManager ──
+            // ── 12. Record in HistoryManager ──
             HistoryManager.onDiscovery(nearbyPlayer,
                     "zhou_ru_cultivation_breakthrough",
                     "Zhou Ru (周茹) broke through to " + nextRealm.name
