@@ -250,34 +250,50 @@ public class SpiritBeastFeedGoal extends Goal {
      * Route a block-state change through the {@link dev.ergenverse.runtime.layer.WorldFacade}
      * under {@link dev.ergenverse.runtime.Provenance#SIMULATION}.
      *
-     * <p>If the WorldRuntime is not initialized yet (e.g. beast feeding in
-     * an unloaded dimension before init), falls back to direct level.setBlock
-     * so the feed at least visibly happens. The change won't be journaled in
-     * that case, but that scenario is degenerate (beasts should not exist
-     * before the runtime is initialized).
+     * <p><b>CRON-COMPLETIONIST-92 — ELIMINATED FALLBACK LEAK:</b> the prior
+     * implementation fell back to direct {@code level.setBlock(pos, state, 3)}
+     * when {@link WorldRuntime} was not initialized. That fallback created an
+     * <b>unjournaled write</b> — the block changed in the live world but was
+     * NOT recorded in the {@link dev.ergenverse.runtime.delta.WorldDeltaStore},
+     * so on reload the block reverted (the SimulationLayer stayed empty for
+     * that position). This violated the architectural promise in point 5:
+     * "Gameplay writes {@code runtime.world().setBlock(...)}, NEVER the delta
+     * store or layers directly."
+     *
+     * <p>The fix matches the clean pattern in
+     * {@link dev.ergenverse.simulation.weather.WeatherDamageSubscriber#onServerTick}
+     * (line 128): if the runtime is not initialized, log a warning and SKIP
+     * the write entirely. The beast simply doesn't eat in that tick. This is
+     * correct because:
+     * <ul>
+     *   <li>Entity ticks do not fire before server start.</li>
+     *   <li>{@link WorldRuntime#initialize} is called on
+     *       {@code ServerStartingEvent} (see {@code SpawnEventHandler.onServerStarting}).</li>
+     *   <li>So by the time a beast's feed goal can fire, the runtime IS
+     *       initialized — the fallback was a "should never happen" defensive
+     *       path that created a persistence leak.</li>
+     * </ul>
      *
      * <p>If the runtime IS initialized, the facade mirrors the change into
-     * the live level internally — we must NOT also call level.setBlock
+     * the live level internally — we must NOT also call {@code level.setBlock}
      * ourselves, or Minecraft will log a "already updating" warning.
      */
     private void simulationSetBlock(BlockPos pos, String blockId) {
         try {
-            if (WorldRuntime.get().isInitialized()) {
-                WorldRuntime.get().world().setSimulationBlock(
-                        pos.getX(), pos.getY(), pos.getZ(), blockId);
+            WorldRuntime rt = WorldRuntime.get();
+            if (!rt.isInitialized()) {
+                Ergenverse.LOGGER.warn("[Ergenverse] SpiritBeastFeedGoal: WorldRuntime not initialized — skipping feed write at {} (block {}). " +
+                        "This should not happen (entity ticks fire after server start).",
+                        pos, blockId);
                 return;
             }
+            rt.world().setSimulationBlock(
+                    pos.getX(), pos.getY(), pos.getZ(), blockId);
         } catch (Throwable t) {
-            Ergenverse.LOGGER.debug("[Ergenverse] SpiritBeastFeedGoal facade write failed at {}: {}",
-                    pos, t.getMessage());
+            Ergenverse.LOGGER.warn("[Ergenverse] SpiritBeastFeedGoal: facade write FAILED at {} (block {}): {}. " +
+                    "Feed skipped — no fallback write to avoid unjournaled state.",
+                    pos, blockId, t.getMessage());
         }
-        // Fallback: direct write (degenerate case, not journaled)
-        BlockState fallback = "minecraft:air".equals(blockId)
-                ? Blocks.AIR.defaultBlockState()
-                : net.minecraftforge.registries.ForgeRegistries.BLOCKS.getValue(
-                        new net.minecraft.resources.ResourceLocation(blockId))
-                        .defaultBlockState();
-        beast.level().setBlock(pos, fallback, 3);
     }
 
     private void spawnEatParticles(BlockPos pos) {

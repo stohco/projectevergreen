@@ -160,23 +160,51 @@ public final class WangLinHomeBuilder {
     /**
      * Place the marker block via the WorldFacade (SIMULATION provenance) so it
      * is journaled and persists across save/load.
+     *
+     * <p><b>CRON-COMPLETIONIST-92 — ELIMINATED FALLBACK LEAK:</b> the prior
+     * implementation fell back to direct {@code level.setBlock(markerPos, MARKER, 3)}
+     * when the runtime was not initialized or the target level was not Suzaku.
+     * That fallback created an <b>unjournaled write</b> — the marker appeared
+     * in the live world but was NOT recorded in the delta journal, so on reload
+     * the marker vanished (breaking the {@link #isAlreadyBuilt} check and
+     * causing the residence to rebuild on every chunk load). This violated
+     * the architectural promise in point 5.
+     *
+     * <p>The fix matches the clean pattern in
+     * {@link dev.ergenverse.simulation.weather.WeatherDamageSubscriber}:
+     * if the runtime is not initialized or the level is not Suzaku, log a
+     * warning and SKIP the write. The marker simply isn't placed — which means
+     * {@code isAlreadyBuilt} returns false and the residence rebuild is
+     * attempted again next tick (when the runtime IS ready). This is correct
+     * because {@code WangLinHomeBuilder.build()} is only called from
+     * {@code SpawnEventHandler.onServerStarting} (deferred 20 ticks, after
+     * {@link WorldRuntime#initialize}), so the fallback was a "should never
+     * happen" defensive path.
      */
     private static void placeMarker(ServerLevel level, BlockPos origin) {
         BlockPos markerPos = origin.offset(MARKER_OFFSET);
         try {
             WorldRuntime rt = WorldRuntime.get();
-            if (rt.isInitialized() && rt.suzakuLevel() == level) {
-                rt.world().setSimulationBlock(
-                        markerPos.getX(), markerPos.getY(), markerPos.getZ(),
-                        "minecraft:chiseled_stone_bricks");
+            if (!rt.isInitialized()) {
+                Ergenverse.LOGGER.warn("[WangLinHomeBuilder] WorldRuntime not initialized — skipping marker placement at {}. " +
+                        "This should not happen (build is called after server start).",
+                        markerPos);
                 return;
             }
+            if (rt.suzakuLevel() != level) {
+                Ergenverse.LOGGER.warn("[WangLinHomeBuilder] target level is not Planet Suzaku — skipping marker placement at {}. " +
+                        "Residence markers belong only on Suzaku.",
+                        markerPos);
+                return;
+            }
+            rt.world().setSimulationBlock(
+                    markerPos.getX(), markerPos.getY(), markerPos.getZ(),
+                    "minecraft:chiseled_stone_bricks");
         } catch (Throwable t) {
-            Ergenverse.LOGGER.debug("[WangLinHomeBuilder] Facade write failed for marker at {}: {}",
+            Ergenverse.LOGGER.warn("[WangLinHomeBuilder] Facade write FAILED for marker at {}: {}. " +
+                    "Marker not placed — no fallback write to avoid unjournaled state.",
                     markerPos, t.getMessage());
         }
-        // Fallback: direct write (non-Suzaku level or runtime not initialized)
-        level.setBlock(markerPos, MARKER, 3);
     }
 
     /**

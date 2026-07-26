@@ -693,11 +693,33 @@ public final class BlockPlacementEngine {
      * it is journaled under {@link dev.ergenverse.runtime.Provenance#SIMULATION}
      * and persists across save/load via {@link dev.ergenverse.runtime.persist.WorldDeltaSavedData}.
      *
-     * <p>Otherwise (non-Suzaku level, or runtime not yet initialized), it
-     * falls back to direct {@code level.setBlock}. This preserves the
-     * engine's behavior for ad-hoc uses outside the simulation (e.g. test
-     * worlds) while ensuring the canonical Suzaku simulation writes flow
-     * through the journal.
+     * <p><b>CRON-COMPLETIONIST-92 — ELIMINATED FALLBACK LEAK:</b> the prior
+     * implementation fell back to direct {@code level.setBlock(pos, state, 3)}
+     * when the target level was not the Suzaku level or the runtime was not
+     * initialized. That fallback created an <b>unjournaled write</b> — the
+     * block changed in the live world but was NOT recorded in the
+     * {@link dev.ergenverse.runtime.delta.WorldDeltaStore}, so on reload the
+     * block reverted (the SimulationLayer stayed empty for that position).
+     * This violated the architectural promise in point 5: "Gameplay writes
+     * {@code runtime.world().setBlock(...)}, NEVER the delta store or layers
+     * directly."
+     *
+     * <p>The fix matches the clean pattern in
+     * {@link dev.ergenverse.simulation.weather.WeatherDamageSubscriber#onServerTick}
+     * (line 128): if the runtime is not initialized OR the target level is
+     * not the bound Suzaku level, log a warning and SKIP the write entirely.
+     * The residence block simply isn't placed. This is correct because:
+     * <ul>
+     *   <li>The engine is only called from {@link WangLinHomeBuilder#build},
+     *       which is called from {@code SpawnEventHandler.onServerStarting}
+     *       (deferred 20 ticks, after {@link WorldRuntime#initialize}).</li>
+     *   <li>So by the time the engine runs, the runtime IS initialized and
+     *       the target level IS Suzaku — the fallback was a "should never
+     *       happen" defensive path that created a persistence leak.</li>
+     *   <li>Ad-hoc uses outside the simulation (e.g. test worlds, non-Suzaku
+     *       dimensions) now correctly fail to write — they were never the
+     *       intended use case for this engine.</li>
+     * </ul>
      *
      * <p>Architectural rationale: residences are SIMULATION, not CANON.
      * They are placed in response to a resident's existence (Article XLVII:
@@ -711,20 +733,31 @@ public final class BlockPlacementEngine {
     private static void setBlock(ServerLevel level, BlockPos pos, BlockState state) {
         try {
             WorldRuntime rt = WorldRuntime.get();
-            if (rt.isInitialized() && rt.suzakuLevel() == level) {
-                ResourceLocation rl = ForgeRegistries.BLOCKS.getKey(state.getBlock());
-                if (rl != null) {
-                    rt.world().setSimulationBlock(
-                            pos.getX(), pos.getY(), pos.getZ(), rl.toString());
-                    return;
-                }
+            if (!rt.isInitialized()) {
+                Ergenverse.LOGGER.warn("[Ergenverse] BlockPlacementEngine: WorldRuntime not initialized — skipping placement at {} (block {}). " +
+                        "This should not happen (engine is called after server start).",
+                        pos, state);
+                return;
             }
+            if (rt.suzakuLevel() != level) {
+                Ergenverse.LOGGER.warn("[Ergenverse] BlockPlacementEngine: target level is not Planet Suzaku — skipping placement at {} (block {}). " +
+                        "Residence blocks belong only on Suzaku.",
+                        pos, state);
+                return;
+            }
+            ResourceLocation rl = ForgeRegistries.BLOCKS.getKey(state.getBlock());
+            if (rl == null) {
+                Ergenverse.LOGGER.warn("[Ergenverse] BlockPlacementEngine: block has no registry key — skipping placement at {} (block {}).",
+                        pos, state);
+                return;
+            }
+            rt.world().setSimulationBlock(
+                    pos.getX(), pos.getY(), pos.getZ(), rl.toString());
         } catch (Throwable t) {
-            Ergenverse.LOGGER.debug("[Ergenverse] BlockPlacementEngine facade write failed at {}: {}",
-                    pos, t.getMessage());
+            Ergenverse.LOGGER.warn("[Ergenverse] BlockPlacementEngine: facade write FAILED at {} (block {}): {}. " +
+                    "Placement skipped — no fallback write to avoid unjournaled state.",
+                    pos, state, t.getMessage());
         }
-        // Fallback: direct write (non-Suzaku level or runtime not initialized)
-        level.setBlock(pos, state, 3);
     }
 
     // ═══════════════════════════════════════════════════════════════════
