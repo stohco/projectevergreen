@@ -1,6 +1,7 @@
 package dev.ergenverse.runtime.materialize;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
 import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
 import dev.ergenverse.spawn.HengYueSectBuilder;
 import dev.ergenverse.spawn.LuoHeSectBuilder;
@@ -15,6 +16,7 @@ import dev.ergenverse.spawn.WangFamilyVillageBuilder;
 import dev.ergenverse.spawn.XuanDaoSectBuilder;
 import net.minecraft.server.level.ServerLevel;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,18 +24,27 @@ import java.util.Map;
  * StructureBuilderRegistry — maps a canon location id to the hand-authored
  * builder that materializes it.
  *
- * <p><b>Architectural directive (CRON-69, points 6 &amp; 7):</b> the
- * {@link ChunkMaterializer} is a stateless pure function: it asks each layer
+ * <p><b>Architectural directive (CRON-69, points 6 &amp; 7; CRON-COMPLETIONIST-62, priority c):</b>
+ * the {@link ChunkMaterializer} is a stateless pure function: it asks each layer
  * "what intersects this chunk?" and the blueprint layer answers with canon
  * {@link PlanetSuzakuBlueprint.CanonLocation}s. To turn a location into blocks,
- * the materializer looks up its builder here and invokes it (idempotent — each
- * builder's {@code isAlreadyBuilt} guards against double-placement).
+ * the materializer looks up its builder here and invokes it with the
+ * {@link ChunkBounds} of the loaded chunk. The builder is responsible for
+ * filtering its placements to those bounds — eliminating the prior bug where
+ * every chunk load in a structure's footprint triggered a full-structure
+ * rebuild that wrote blocks into unloaded neighbor chunks (cascading loads).
  *
- * <p>Today only Wang Family Village is fully wired (the others' builder classes
- * exist but are not yet canon-accurate enough to auto-build — see the canon
- * fact-check in CRON-69). Registering them is a one-line addition per builder
- * once each is vetted. Unregistered locations are logged and skipped, so an
- * unfinished builder never crashes chunk materialization.
+ * <p><b>Builder interface (CRON-COMPLETIONIST-62):</b> the primary abstract
+ * method is {@link Builder#buildForChunk}; the legacy {@link #build(String, ServerLevel)}
+ * is preserved as a convenience default for command/login paths that want a
+ * full build with no chunk filtering. A {@code null} {@link ChunkBounds}
+ * signals "build everything".
+ *
+ * <p>Today only Wang Family Village is chunk-scoped (it is the largest and the
+ * worst offender — 83&times;83 footprint, ~80K blocks). The other 10 builders
+ * ignore the bounds and do a full build on first call, guarded by
+ * {@code isAlreadyBuilt} so subsequent calls are no-ops. Each can be migrated
+ * to chunk-scoped buildForChunk in a future round.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
@@ -41,17 +52,45 @@ public final class StructureBuilderRegistry {
 
     private StructureBuilderRegistry() {}
 
-    /** A builder: given the Planet Suzaku level, materialize the structure (idempotent). */
+    /**
+     * A builder: given the Planet Suzaku level (and optional chunk bounds),
+     * materialize the structure.
+     *
+     * <p><b>Chunk-scoped contract (CRON-COMPLETIONIST-62):</b> when
+     * {@code bounds} is non-null, the builder MUST skip any placement whose
+     * (x, z) falls outside {@link ChunkBounds#contains(int, int)}. When
+     * {@code bounds} is null, the builder places ALL blocks (full build).
+     *
+     * <p>Builders that do not yet implement chunk-scoping can ignore
+     * {@code bounds} and always do a full build — but they MUST be idempotent
+     * (guard on {@code isAlreadyBuilt}) so repeated chunk-load calls are cheap.
+     */
     @FunctionalInterface
     public interface Builder {
-        void build(ServerLevel level);
+        /**
+         * Materialize the structure, filtered to the given chunk bounds if non-null.
+         *
+         * @param level  the Planet Suzaku level
+         * @param bounds optional inclusive block-coordinate rectangle; null means full build
+         */
+        void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds);
+
+        /**
+         * Convenience: full build (no chunk filtering). Equivalent to
+         * {@code buildForChunk(level, null)}. Used by command/login paths.
+         */
+        default void build(ServerLevel level) {
+            buildForChunk(level, null);
+        }
     }
 
     private static final Map<String, Builder> BUILDERS = new HashMap<>();
 
     static {
-        // Wang Family Village — fully wired, canon-faithful (Wang Lin's birthplace, RI Ch.1).
-        register(PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.id, WangFamilyVillageBuilder::build);
+        // Wang Family Village — fully chunk-scoped (CRON-COMPLETIONIST-62).
+        // The lambda forwards the bounds to buildForChunk, which filters placements.
+        register(PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.id,
+                (level, bounds) -> WangFamilyVillageBuilder.buildForChunk(level, bounds));
 
         // CRON-COMPLETIONIST-83: all 11 builders now wired. Each guards on
         // isAlreadyBuilt (idempotent). The Blueprint+Layer architecture materializes
@@ -59,16 +98,19 @@ public final class StructureBuilderRegistry {
         // 6 builders take (ServerLevel, BlockPos); 5 take (ServerLevel).
         // The 2-arg builders are wrapped with lambdas that discard the BlockPos
         // (the builder resolves its own center internally).
-        register(PlanetSuzakuBlueprint.HENG_YUE_SECT.id, l -> HengYueSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
-        register(PlanetSuzakuBlueprint.TENG_FAMILY_CITY.id, l -> TengFamilyCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
-        register(PlanetSuzakuBlueprint.TIAN_SHUI_CITY.id, l -> TianShuiCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
-        register(PlanetSuzakuBlueprint.QILIN_CITY.id, QilinCityBuilder::build);
-        register(PlanetSuzakuBlueprint.NAN_DOU_CITY.id, l -> NanDouCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
-        register(PlanetSuzakuBlueprint.SNOW_DOMAIN_CAPITAL.id, SnowDomainCapitalBuilder::build);
-        register(PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.id, VermilionBirdImperialCityBuilder::build);
-        register(PlanetSuzakuBlueprint.SOUL_REFINING_SECT.id, l -> SoulRefiningSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
-        register(PlanetSuzakuBlueprint.XUAN_DAO_SECT.id, l -> XuanDaoSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
-        register(PlanetSuzakuBlueprint.LUO_HE_SECT.id, LuoHeSectBuilder::build);
+        // CRON-COMPLETIONIST-62: these 10 builders IGNORE the ChunkBounds and do a
+        // full build on every call — they rely on isAlreadyBuilt for idempotency.
+        // Migrating them to chunk-scoped buildForChunk is a future round.
+        register(PlanetSuzakuBlueprint.HENG_YUE_SECT.id, (l, b) -> HengYueSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.TENG_FAMILY_CITY.id, (l, b) -> TengFamilyCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.TIAN_SHUI_CITY.id, (l, b) -> TianShuiCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.QILIN_CITY.id, (l, b) -> QilinCityBuilder.build(l));
+        register(PlanetSuzakuBlueprint.NAN_DOU_CITY.id, (l, b) -> NanDouCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.SNOW_DOMAIN_CAPITAL.id, (l, b) -> SnowDomainCapitalBuilder.build(l));
+        register(PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.id, (l, b) -> VermilionBirdImperialCityBuilder.build(l));
+        register(PlanetSuzakuBlueprint.SOUL_REFINING_SECT.id, (l, b) -> SoulRefiningSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.XUAN_DAO_SECT.id, (l, b) -> XuanDaoSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.LUO_HE_SECT.id, (l, b) -> LuoHeSectBuilder.build(l));
     }
 
     /** Register (or replace) the builder for a canon location id. */
@@ -77,18 +119,31 @@ public final class StructureBuilderRegistry {
     }
 
     /**
-     * Materialize a canon location on the given level. Idempotent: each builder
-     * guards on {@code isAlreadyBuilt}. Returns true if a builder ran (or was
-     * already built), false if no builder is registered for the location.
+     * Materialize a canon location on the given level — full build (no chunk
+     * filtering). Idempotent: each builder guards on {@code isAlreadyBuilt}.
+     * Returns true if a builder ran, false if no builder is registered.
+     *
+     * <p>Used by command/login paths that want a full build.
      */
     public static boolean build(String locationId, ServerLevel level) {
+        return build(locationId, level, null);
+    }
+
+    /**
+     * Materialize a canon location on the given level, filtered to the given
+     * chunk bounds. Used by the chunk-materializer for chunk-scoped placement.
+     * Returns true if a builder ran, false if no builder is registered.
+     *
+     * @param bounds optional inclusive block-coordinate rectangle; null means full build
+     */
+    public static boolean build(String locationId, ServerLevel level, @Nullable ChunkBounds bounds) {
         Builder b = BUILDERS.get(locationId);
         if (b == null) {
             Ergenverse.LOGGER.debug("[Ergenverse] No structure builder registered for '{}'.", locationId);
             return false;
         }
         try {
-            b.build(level);
+            b.buildForChunk(level, bounds);
             return true;
         } catch (Throwable t) {
             Ergenverse.LOGGER.error("[Ergenverse] Structure builder for '{}' failed: {}", locationId, t.getMessage(), t);

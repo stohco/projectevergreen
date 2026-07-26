@@ -2,6 +2,7 @@ package dev.ergenverse.spawn;
 
 import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +18,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 /**
  * WangFamilyVillageBuilder — a FULLY hand-built Wang Family Village (王氏村),
@@ -175,6 +178,76 @@ public final class WangFamilyVillageBuilder {
                 == ErgenverseBlocks.SPIRIT_VEIN_STONE.get();
     }
 
+    // ── Chunk-scoped build infrastructure (CRON-COMPLETIONIST-62) ────────
+    //
+    // The chunk-materializer invokes buildForChunk(level, bounds) for EACH
+    // chunk that overlaps the village footprint. The ThreadLocal CURRENT_BOUNDS
+    // holds the active bounds during a buildInternal() call; the sb() helper
+    // checks it and skips any placement outside the bounds. When bounds is null
+    // (full-build path — commands, login events, SpawnEventHandler), no
+    // filtering occurs and every setBlock lands.
+    //
+    // Why ThreadLocal rather than threading bounds through 14 sub-methods:
+    // the village build tree (flattenTerrain, buildRoads, buildCentralPlaza,
+    // buildPerimeterFence, buildWangFamilyHome -> buildWangLinCorner, ...) has
+    // 79 setBlock call sites and a deep call hierarchy. Adding a ChunkBounds
+    // parameter to every method would touch every signature and obscure the
+    // geometric intent. The ThreadLocal is set once at the top of buildForChunk
+    // and read by sb() at each leaf placement — a single global per build pass.
+    //
+    // Thread-safety: chunk materialization is single-threaded on the server
+    // tick thread, so there is no contention. The ThreadLocal guards against
+    // re-entrancy only if a builder were to call another builder (which it
+    // does not today).
+
+    /**
+     * The active chunk bounds during a buildInternal() pass, or null if the
+     * full village is being built (no filtering).
+     */
+    private static final ThreadLocal<ChunkBounds> CURRENT_BOUNDS = new ThreadLocal<>();
+
+    /**
+     * Filtered setBlock — the ONLY block-placement call site in this class.
+     * If CURRENT_BOUNDS is set, blocks whose (x, z) fall outside the bounds
+     * are silently skipped. This is what makes buildForChunk chunk-scoped:
+     * ~80K candidate placements per full build collapse to ~256 actual
+     * level.setBlock calls per chunk (a 300x reduction).
+     *
+     * <p>Y is intentionally not filtered — structures are vertically thin
+     * and some builders place blocks at Y offsets relative to a runtime
+     * surface scan. X/Z filtering alone captures the chunk-scoping win.
+     */
+    private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null && !b.contains(pos.getX(), pos.getZ())) return;
+        level.setBlock(pos, state, flags);
+    }
+
+    /**
+     * Chunk-scoped build entry point — invoked by the chunk-materializer for
+     * each chunk that overlaps the village footprint.
+     *
+     * <p>When {@code bounds} is non-null, only blocks whose (x, z) fall inside
+     * the bounds are placed; the rest are skipped by {@link #sb}. When
+     * {@code bounds} is null, the full village is built (command/login path).
+     *
+     * <p>This method does NOT call {@link #isAlreadyBuilt} — chunk-scoped
+     * placement is naturally incremental: each chunk places its own slice,
+     * and re-placing an already-present block with the same state is a
+     * harmless no-op. The isAlreadyBuilt guard lives in {@link #build} (the
+     * full-build path) to keep command/login calls idempotent.
+     */
+    public static void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds) {
+        ChunkBounds prev = CURRENT_BOUNDS.get();
+        CURRENT_BOUNDS.set(bounds);
+        try {
+            buildInternal(level);
+        } finally {
+            if (prev == null) CURRENT_BOUNDS.remove();
+            else CURRENT_BOUNDS.set(prev);
+        }
+    }
+
     // ── Block palette ─────────────────────────────────────────────────────
     private static final BlockState AIR = Blocks.AIR.defaultBlockState();
     private static final BlockState WATER = Blocks.WATER.defaultBlockState();
@@ -182,16 +255,44 @@ public final class WangFamilyVillageBuilder {
 
     // ── Herb blocks ─────────────────────────────────────────────────────
     /**
-     * Build the full village. Flattens an 83x83 area and places all 14 districts.
+     * Build the full village — the legacy full-build entry point used by
+     * SpawnEventHandler (server-start) and ErgenverseCommand (manual /ergenverse
+     * build). Idempotent: guarded by {@link #isAlreadyBuilt} so repeated calls
+     * are a no-op once the spirit-vein centerpiece is in place.
+     *
+     * <p>For chunk-load materialization, use {@link #buildForChunk} instead —
+     * it filters placements to a single chunk and avoids the cascading-load
+     * catastrophe where a full 80K-block build fires on every chunk load.
      */
     public static void build(ServerLevel level) {
+        if (isAlreadyBuilt(level)) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Wang Family Village already built — build() is a no-op.");
+            return;
+        }
+        buildInternal(level);
+    }
+
+    /**
+     * The actual village construction — flattens an 83x83 area and places all
+     * 14 districts. Called from {@link #build} (idempotent full-build path)
+     * and {@link #buildForChunk} (chunk-scoped path). Both paths share this
+     * body; chunk-scoping is enforced by {@link #sb} reading the ThreadLocal
+     * {@link #CURRENT_BOUNDS} set by the caller.
+     */
+    private static void buildInternal(ServerLevel level) {
         BlockPos center = getVillageCenter(level);
         int cx = center.getX();
         int cy = center.getY();
         int cz = center.getZ();
 
-        Ergenverse.LOGGER.info("[Ergenverse] Building Wang Family Village v2 at ({}, {}, {}).",
-                cx, cy, cz);
+        ChunkBounds bounds = CURRENT_BOUNDS.get();
+        if (bounds == null) {
+            Ergenverse.LOGGER.info("[Ergenverse] Building Wang Family Village v2 (full) at ({}, {}, {}).",
+                    cx, cy, cz);
+        } else {
+            Ergenverse.LOGGER.debug("[Ergenverse] Building Wang Family Village v2 (chunk-scoped {}) at center ({}, {}, {}).",
+                    bounds, cx, cy, cz);
+        }
 
         // ── 1. Flatten and terrain the area ───────────────────────────
         flattenTerrain(level, cx, cy, cz);
@@ -293,14 +394,14 @@ public final class WangFamilyVillageBuilder {
         // family's home. The gap also lets Wang Lin watch the sky at
         // night without leaving his corner.
         // Iron bars fill the gap — it's not a window, it's a crack.
-        level.setBlock(new BlockPos(x + 5, y + 3, z + 0),
+        sb(level, new BlockPos(x + 5, y + 3, z + 0),
                 Blocks.IRON_BARS.defaultBlockState(), 3);
 
         // ── 0b. Worn threshold at the door ──────────────────────────
         // The plank at the doorway has been worn smooth by years of
         // feet. Replace it with cobblestone — the original plank eroded.
         // Door is at dx=3, dz=4. Threshold is the floor block just inside.
-        level.setBlock(new BlockPos(x + 3, y + 0, z + 3),
+        sb(level, new BlockPos(x + 3, y + 0, z + 3),
                 Blocks.COBBLESTONE.defaultBlockState(), 3);
 
         // ── 1. Sleeping mat (white carpet) + HIDDEN journal ───────────
@@ -310,7 +411,7 @@ public final class WangFamilyVillageBuilder {
         // A player must break the sleeping mat to discover the chest below.
         // This is the "carefully hidden notebook" the user's vision required.
         BlockPos journalPos = new BlockPos(x + 5, y + 0, z + 1);
-        level.setBlock(journalPos, Blocks.TRAPPED_CHEST.defaultBlockState(), 2);
+        sb(level, journalPos, Blocks.TRAPPED_CHEST.defaultBlockState(), 2);
         if (level.getBlockEntity(journalPos) instanceof ChestBlockEntity chest) {
             // Page 1: The private journal (original 7 pages + 4 new)
             chest.setItem(0, createWrittenBook(
@@ -340,7 +441,7 @@ public final class WangFamilyVillageBuilder {
         }
         // Carpet on TOP of the chest. This IS the sleeping mat.
         // The chest is invisible beneath it.
-        level.setBlock(new BlockPos(x + 5, y + 1, z + 1),
+        sb(level, new BlockPos(x + 5, y + 1, z + 1),
                 Blocks.WHITE_CARPET.defaultBlockState(), 3);
 
         // ── 2. Cultivation notes (lectern with worn book) ───────────
@@ -348,7 +449,7 @@ public final class WangFamilyVillageBuilder {
         // before dawn. The book is his own handwriting — observations,
         // not technique. He is self-taught.
         BlockPos lecternPos = new BlockPos(x + 5, y + 1, z + 2);
-        level.setBlock(lecternPos, Blocks.LECTERN.defaultBlockState(), 2);
+        sb(level, lecternPos, Blocks.LECTERN.defaultBlockState(), 2);
         if (level.getBlockEntity(lecternPos) instanceof LecternBlockEntity lectern) {
             lectern.setBook(createWrittenBook(
                     "Cultivation Notes",
@@ -429,23 +530,23 @@ public final class WangFamilyVillageBuilder {
         // The gap at (x+4, y+1, z+1) is the missing corner — the part he
         // cannot draw.
         // Horizontal arm: z=1, x=2 through x=3
-        level.setBlock(new BlockPos(x + 2, y + 1, z + 1),
+        sb(level, new BlockPos(x + 2, y + 1, z + 1),
                 Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
-        level.setBlock(new BlockPos(x + 3, y + 1, z + 1),
+        sb(level, new BlockPos(x + 3, y + 1, z + 1),
                 Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
         // GAP at (x+4, y+1, z+1) — the missing corner
         // Vertical arm: x=2, z=2 through z=3
-        level.setBlock(new BlockPos(x + 2, y + 1, z + 2),
+        sb(level, new BlockPos(x + 2, y + 1, z + 2),
                 Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
-        level.setBlock(new BlockPos(x + 2, y + 1, z + 3),
+        sb(level, new BlockPos(x + 2, y + 1, z + 3),
                 Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
         // Second horizontal arm at z=3 (south edge): x=3 through x=4
-        level.setBlock(new BlockPos(x + 3, y + 1, z + 3),
+        sb(level, new BlockPos(x + 3, y + 1, z + 3),
                 Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
-        level.setBlock(new BlockPos(x + 4, y + 1, z + 3),
+        sb(level, new BlockPos(x + 4, y + 1, z + 3),
                 Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
         // Cross piece: x=3, z=2 (connects the two arms through the middle)
-        level.setBlock(new BlockPos(x + 3, y + 1, z + 2),
+        sb(level, new BlockPos(x + 3, y + 1, z + 2),
                 Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
         // Total: 8 pieces. The shape is an open rectangle with the NW corner
         // missing. A player who notices the pattern will realize: this is a
@@ -496,10 +597,10 @@ public final class WangFamilyVillageBuilder {
                 BlockPos ground = new BlockPos(cx + dx, cy, cz + dz);
                 // Clear 6 blocks above for headroom + tree space.
                 for (int h = 1; h <= 6; h++) {
-                    level.setBlock(ground.above(h), AIR, 3);
+                    sb(level, ground.above(h), AIR, 3);
                 }
                 // Ground: spirit grass everywhere inside the village.
-                level.setBlock(ground, B.SPIRIT_GRASS, 3);
+                sb(level, ground, B.SPIRIT_GRASS, 3);
             }
         }
     }
@@ -510,31 +611,31 @@ public final class WangFamilyVillageBuilder {
         // N-S main road (width 3, running full N-S length of village)
         for (int dz = -VILLAGE_RADIUS; dz <= VILLAGE_RADIUS; dz++) {
             for (int dx = -1; dx <= 1; dx++) {
-                level.setBlock(new BlockPos(cx + dx, cy, cz + dz), B.SPIRIT_SAND, 3);
+                sb(level, new BlockPos(cx + dx, cy, cz + dz), B.SPIRIT_SAND, 3);
             }
         }
         // E-W crossroad (width 3)
         for (int dx = -VILLAGE_RADIUS; dx <= VILLAGE_RADIUS; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
-                level.setBlock(new BlockPos(cx + dx, cy, cz + dz), B.SPIRIT_SAND, 3);
+                sb(level, new BlockPos(cx + dx, cy, cz + dz), B.SPIRIT_SAND, 3);
             }
         }
         // Narrow paths to key buildings (width 1)
         // Path to Wang home (NW)
         for (int i = 1; i <= 14; i++) {
-            level.setBlock(new BlockPos(cx - i, cy, cz - 14), B.SPIRIT_SAND, 3);
+            sb(level, new BlockPos(cx - i, cy, cz - 14), B.SPIRIT_SAND, 3);
         }
         // Path to Elder home (NE)
         for (int i = 1; i <= 14; i++) {
-            level.setBlock(new BlockPos(cx + i, cy, cz - 14), B.SPIRIT_SAND, 3);
+            sb(level, new BlockPos(cx + i, cy, cz - 14), B.SPIRIT_SAND, 3);
         }
         // Path to SW homes
         for (int i = 1; i <= 8; i++) {
-            level.setBlock(new BlockPos(cx - 8, cy, cz + i), B.SPIRIT_SAND, 3);
+            sb(level, new BlockPos(cx - 8, cy, cz + i), B.SPIRIT_SAND, 3);
         }
         // Path to SE homes
         for (int i = 1; i <= 8; i++) {
-            level.setBlock(new BlockPos(cx + 8, cy, cz + i), B.SPIRIT_SAND, 3);
+            sb(level, new BlockPos(cx + 8, cy, cz + i), B.SPIRIT_SAND, 3);
         }
     }
 
@@ -544,19 +645,19 @@ public final class WangFamilyVillageBuilder {
         // 9x9 spirit stone plaza around center (wider than road)
         for (int dx = -4; dx <= 4; dx++) {
             for (int dz = -4; dz <= 4; dz++) {
-                level.setBlock(new BlockPos(cx + dx, cy, cz + dz), B.SPIRIT_STONE, 3);
+                sb(level, new BlockPos(cx + dx, cy, cz + dz), B.SPIRIT_STONE, 3);
             }
         }
 
         // Spirit vein centerpiece (the hidden vein the village sits on)
-        level.setBlock(new BlockPos(cx, cy, cz), B.SPIRIT_VEIN, 3);
-        level.setBlock(new BlockPos(cx, cy + 1, cz), B.SPIRIT_VEIN, 3);
+        sb(level, new BlockPos(cx, cy, cz), B.SPIRIT_VEIN, 3);
+        sb(level, new BlockPos(cx, cy + 1, cz), B.SPIRIT_VEIN, 3);
 
         // 4 formation core stones at cardinal positions (2 blocks out)
-        level.setBlock(new BlockPos(cx, cy, cz - 3), B.FORMATION_CORE, 3);
-        level.setBlock(new BlockPos(cx, cy, cz + 3), B.FORMATION_CORE, 3);
-        level.setBlock(new BlockPos(cx - 3, cy, cz), B.FORMATION_CORE, 3);
-        level.setBlock(new BlockPos(cx + 3, cy, cz), B.FORMATION_CORE, 3);
+        sb(level, new BlockPos(cx, cy, cz - 3), B.FORMATION_CORE, 3);
+        sb(level, new BlockPos(cx, cy, cz + 3), B.FORMATION_CORE, 3);
+        sb(level, new BlockPos(cx - 3, cy, cz), B.FORMATION_CORE, 3);
+        sb(level, new BlockPos(cx + 3, cy, cz), B.FORMATION_CORE, 3);
 
         // Village well: 3x3 water pit with spirit stone rim, 2 blocks deep
         BlockPos wellCenter = new BlockPos(cx + 6, cy, cz + 1);
@@ -564,14 +665,14 @@ public final class WangFamilyVillageBuilder {
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
                 if (dx == 0 && dz == 0) continue; // water in center
-                level.setBlock(wellCenter.offset(dx, 0, dz), B.SPIRIT_STONE, 3);
+                sb(level, wellCenter.offset(dx, 0, dz), B.SPIRIT_STONE, 3);
             }
         }
         // Water inside
-        level.setBlock(wellCenter, WATER, 3);
+        sb(level, wellCenter, WATER, 3);
         // Well column above water (spirit vein stone)
-        level.setBlock(wellCenter.above(), B.SPIRIT_VEIN, 3);
-        level.setBlock(wellCenter.above(2), B.SPIRIT_VEIN, 3);
+        sb(level, wellCenter.above(), B.SPIRIT_VEIN, 3);
+        sb(level, wellCenter.above(2), B.SPIRIT_VEIN, 3);
 
         // 8 spirit vein light stones around plaza perimeter
         int[][] lightPositions = {
@@ -579,7 +680,7 @@ public final class WangFamilyVillageBuilder {
             {-6, 0}, {6, 0}, {0, -6}, {0, 6}
         };
         for (int[] pos : lightPositions) {
-            level.setBlock(new BlockPos(cx + pos[0], cy + 1, cz + pos[1]), B.SPIRIT_VEIN, 3);
+            sb(level, new BlockPos(cx + pos[0], cy + 1, cz + pos[1]), B.SPIRIT_VEIN, 3);
         }
     }
 
@@ -594,7 +695,7 @@ public final class WangFamilyVillageBuilder {
             int fz = cz + (int) Math.round(Math.sin(rad) * r);
             // Skip gaps at N (angle ≈ 270°) and S (angle ≈ 90°) entries (10° wide each)
             if ((angle >= 265 && angle <= 275) || (angle >= 85 && angle <= 95)) continue;
-            level.setBlock(new BlockPos(fx, cy + 1, fz), B.LOG, 3);
+            sb(level, new BlockPos(fx, cy + 1, fz), B.LOG, 3);
         }
     }
 
@@ -608,13 +709,13 @@ public final class WangFamilyVillageBuilder {
         // Stone foundation (slightly wider than house)
         for (int dx = -1; dx <= 7; dx++) {
             for (int dz = -1; dz <= 5; dz++) {
-                level.setBlock(new BlockPos(x + dx, y - 1, z + dz), B.SPIRIT_STONE, 3);
+                sb(level, new BlockPos(x + dx, y - 1, z + dz), B.SPIRIT_STONE, 3);
             }
         }
         // Floor
         for (int dx = 0; dx < 7; dx++) {
             for (int dz = 0; dz < 5; dz++) {
-                level.setBlock(new BlockPos(x + dx, y, z + dz), B.PLANKS, 3);
+                sb(level, new BlockPos(x + dx, y, z + dz), B.PLANKS, 3);
             }
         }
         // Walls (y+1, y+2, y+3) with doorway on south face (dz=4, dx=3)
@@ -628,29 +729,29 @@ public final class WangFamilyVillageBuilder {
                     boolean isRoof = dy == 4;
 
                     if (isDoorway) {
-                        level.setBlock(pos, AIR, 3);
+                        sb(level, pos, AIR, 3);
                     } else if (isRoof) {
                         // Roof: spirit wood leaves with log ridge beam on top
                         if (dz == 2) {
-                            level.setBlock(pos, B.LOG, 3); // ridge beam
+                            sb(level, pos, B.LOG, 3); // ridge beam
                         } else {
-                            level.setBlock(pos, B.LEAVES, 3);
+                            sb(level, pos, B.LEAVES, 3);
                         }
                     } else if (corner) {
-                        level.setBlock(pos, B.LOG, 3);
+                        sb(level, pos, B.LOG, 3);
                     } else if (edge) {
-                        level.setBlock(pos, B.PLANKS, 3);
+                        sb(level, pos, B.PLANKS, 3);
                     } else {
-                        level.setBlock(pos, AIR, 3);
+                        sb(level, pos, AIR, 3);
                     }
                 }
             }
         }
         // Alchemy Furnace inside (Wang Tian's legacy)
-        level.setBlock(new BlockPos(x + 3, y + 1, z + 2),
+        sb(level, new BlockPos(x + 3, y + 1, z + 2),
                 ErgenverseBlocks.ALCHEMY_FURNACE.get().defaultBlockState(), 3);
         // Herb pot outside the door
-        level.setBlock(new BlockPos(x + 5, y + 1, z + 5), B.QI_GRASS, 3);
+        sb(level, new BlockPos(x + 5, y + 1, z + 5), B.QI_GRASS, 3);
         // Chest with family keepsakes
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, y + 1, z + 1),
                 new ResourceLocation("ergenverse", "chests/wang_family_village_main"));
@@ -672,18 +773,18 @@ public final class WangFamilyVillageBuilder {
     private static void buildElderHome(ServerLevel level, int x, int y, int z) {
         // Jade stone steps at entrance
         for (int dx = 2; dx <= 4; dx++) {
-            level.setBlock(new BlockPos(x + dx, y - 1, z + 7), B.JADE_STONE, 3);
+            sb(level, new BlockPos(x + dx, y - 1, z + 7), B.JADE_STONE, 3);
         }
         // Stone foundation
         for (int dx = -1; dx <= 7; dx++) {
             for (int dz = -1; dz <= 7; dz++) {
-                level.setBlock(new BlockPos(x + dx, y - 1, z + dz), B.SPIRIT_STONE, 3);
+                sb(level, new BlockPos(x + dx, y - 1, z + dz), B.SPIRIT_STONE, 3);
             }
         }
         // Floor
         for (int dx = 0; dx < 7; dx++) {
             for (int dz = 0; dz < 7; dz++) {
-                level.setBlock(new BlockPos(x + dx, y, z + dz), B.PLANKS, 3);
+                sb(level, new BlockPos(x + dx, y, z + dz), B.PLANKS, 3);
             }
         }
         // Walls (y+1..y+3), roof at y+4, doorway on south (dz=6, dx=3)
@@ -697,28 +798,28 @@ public final class WangFamilyVillageBuilder {
                     boolean isRoof = dy == 4;
 
                     if (isDoorway) {
-                        level.setBlock(pos, AIR, 3);
+                        sb(level, pos, AIR, 3);
                     } else if (isRoof) {
                         if (dz == 3) {
-                            level.setBlock(pos, B.LOG, 3); // ridge beam
+                            sb(level, pos, B.LOG, 3); // ridge beam
                         } else {
-                            level.setBlock(pos, B.LEAVES, 3);
+                            sb(level, pos, B.LEAVES, 3);
                         }
                     } else if (corner) {
-                        level.setBlock(pos, B.LOG, 3);
+                        sb(level, pos, B.LOG, 3);
                     } else if (edge) {
-                        level.setBlock(pos, B.PLANKS, 3);
+                        sb(level, pos, B.PLANKS, 3);
                     } else {
-                        level.setBlock(pos, AIR, 3);
+                        sb(level, pos, AIR, 3);
                     }
                 }
             }
         }
         // Formation Flag Base inside (elder's status symbol)
-        level.setBlock(new BlockPos(x + 3, y + 1, z + 3),
+        sb(level, new BlockPos(x + 3, y + 1, z + 3),
                 ErgenverseBlocks.FORMATION_FLAG_BASE.get().defaultBlockState(), 3);
         // Jade stone decoration outside
-        level.setBlock(new BlockPos(x + 3, y + 1, z + 7), B.JADE_STONE, 3);
+        sb(level, new BlockPos(x + 3, y + 1, z + 7), B.JADE_STONE, 3);
         // Chest with elder's valuables
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 5, y + 1, z + 1),
                 new ResourceLocation("ergenverse", "chests/wang_family_village_governor_mansion"));
@@ -734,7 +835,7 @@ public final class WangFamilyVillageBuilder {
         // Floor
         for (int dx = 0; dx < 5; dx++) {
             for (int dz = 0; dz < 5; dz++) {
-                level.setBlock(new BlockPos(x + dx, y, z + dz), B.PLANKS, 3);
+                sb(level, new BlockPos(x + dx, y, z + dz), B.PLANKS, 3);
             }
         }
         // Walls (y+1, y+2), roof at y+3, doorway on south (dz=4, dx=2)
@@ -748,15 +849,15 @@ public final class WangFamilyVillageBuilder {
                     boolean isRoof = dy == 3;
 
                     if (isDoorway) {
-                        level.setBlock(pos, AIR, 3);
+                        sb(level, pos, AIR, 3);
                     } else if (isRoof) {
-                        level.setBlock(pos, B.LEAVES, 3);
+                        sb(level, pos, B.LEAVES, 3);
                     } else if (corner) {
-                        level.setBlock(pos, B.LOG, 3);
+                        sb(level, pos, B.LOG, 3);
                     } else if (edge) {
-                        level.setBlock(pos, B.PLANKS, 3);
+                        sb(level, pos, B.PLANKS, 3);
                     } else {
-                        level.setBlock(pos, AIR, 3);
+                        sb(level, pos, AIR, 3);
                     }
                 }
             }
@@ -765,7 +866,7 @@ public final class WangFamilyVillageBuilder {
         BlockState[] herbs = {B.QI_GRASS, B.SNOW_HERB, B.DAO_VINE, B.FOUNDATION_VINE,
                 B.FIRE_LOTUS, B.SOUL_LOTUS, B.SWORD_MOSS, B.NINE_CLOVER, B.FIVE_GINSENG,
                 B.VERMILION_GINSENG};
-        level.setBlock(new BlockPos(x + 2, y + 1, z + 5),
+        sb(level, new BlockPos(x + 2, y + 1, z + 5),
                 herbs[(x * 7 + z) % herbs.length], 3);
         // Chest inside for personal belongings
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, y + 1, z + 1),
@@ -800,16 +901,16 @@ public final class WangFamilyVillageBuilder {
                 BlockPos pos = new BlockPos(x + dx, y, z + dz);
                 // Spirit grass border around field
                 if (dx == 0 || dx == width - 1 || dz == 0 || dz == depth - 1) {
-                    level.setBlock(pos, B.SPIRIT_GRASS, 3);
+                    sb(level, pos, B.SPIRIT_GRASS, 3);
                 } else {
-                    level.setBlock(pos, FARMLAND, 3);
+                    sb(level, pos, FARMLAND, 3);
                 }
             }
         }
         // Plant herbs in every 3rd row
         for (int dz = 1; dz < depth - 1; dz += 3) {
             for (int dx = 1; dx < width - 1; dx += 2) {
-                level.setBlock(new BlockPos(x + dx, y + 1, z + dz),
+                sb(level, new BlockPos(x + dx, y + 1, z + dz),
                         rowHerbs[(dx + dz) % rowHerbs.length], 3);
             }
         }
@@ -826,7 +927,7 @@ public final class WangFamilyVillageBuilder {
         // Floor: spirit dirt (herbs grow better here)
         for (int dx = 0; dx < 10; dx++) {
             for (int dz = 0; dz < 8; dz++) {
-                level.setBlock(new BlockPos(x + dx, y, z + dz), B.SPIRIT_DIRT, 3);
+                sb(level, new BlockPos(x + dx, y, z + dz), B.SPIRIT_DIRT, 3);
             }
         }
         // Fence (log pillars at y+1 and y+2)
@@ -834,10 +935,10 @@ public final class WangFamilyVillageBuilder {
             for (int dz = -1; dz <= 8; dz++) {
                 boolean edge = dx == -1 || dx == 10 || dz == -1 || dz == 8;
                 if (!edge) continue;
-                level.setBlock(new BlockPos(x + dx, y + 1, z + dz), B.LOG, 3);
+                sb(level, new BlockPos(x + dx, y + 1, z + dz), B.LOG, 3);
                 // Gate gap at south (dz=8, dx=4..5)
                 if (dz == 8 && (dx == 4 || dx == 5)) {
-                    level.setBlock(new BlockPos(x + dx, y + 1, z + dz), AIR, 3);
+                    sb(level, new BlockPos(x + dx, y + 1, z + dz), AIR, 3);
                 }
             }
         }
@@ -850,7 +951,7 @@ public final class WangFamilyVillageBuilder {
         int idx = 0;
         for (int dz = 1; dz <= 7; dz += 2) {
             for (int dx = 1; dx <= 9; dx += 2) {
-                level.setBlock(new BlockPos(x + dx, y + 1, z + dz), rareHerbs[idx % rareHerbs.length], 3);
+                sb(level, new BlockPos(x + dx, y + 1, z + dz), rareHerbs[idx % rareHerbs.length], 3);
                 idx++;
             }
         }
@@ -864,8 +965,8 @@ public final class WangFamilyVillageBuilder {
     private static void buildStorageShed(ServerLevel level, int x, int y, int z) {
         for (int dx = 0; dx < 3; dx++) {
             for (int dz = 0; dz < 3; dz++) {
-                level.setBlock(new BlockPos(x + dx, y, z + dz), B.PLANKS, 3); // floor
-                level.setBlock(new BlockPos(x + dx, y + 2, z + dz), B.LEAVES, 3); // roof
+                sb(level, new BlockPos(x + dx, y, z + dz), B.PLANKS, 3); // floor
+                sb(level, new BlockPos(x + dx, y + 2, z + dz), B.LEAVES, 3); // roof
             }
         }
         // Walls
@@ -876,11 +977,11 @@ public final class WangFamilyVillageBuilder {
                     boolean edge = dx == 0 || dx == 2 || dz == 0 || dz == 2;
                     boolean isDoorway = dz == 2 && dx == 1;
                     if (isDoorway) {
-                        level.setBlock(pos, AIR, 3);
+                        sb(level, pos, AIR, 3);
                     } else if (edge) {
-                        level.setBlock(pos, B.PLANKS, 3);
+                        sb(level, pos, B.PLANKS, 3);
                     } else {
-                        level.setBlock(pos, AIR, 3);
+                        sb(level, pos, AIR, 3);
                     }
                 }
             }
@@ -895,7 +996,7 @@ public final class WangFamilyVillageBuilder {
     private static void buildTree(ServerLevel level, int x, int y, int z) {
         // trunk (5 blocks)
         for (int dy = 0; dy < 5; dy++) {
-            level.setBlock(new BlockPos(x, y + dy, z), B.LOG, 3);
+            sb(level, new BlockPos(x, y + dy, z), B.LOG, 3);
         }
         // canopy (radius 3, layers 4-7)
         for (int dx = -3; dx <= 3; dx++) {
@@ -906,7 +1007,7 @@ public final class WangFamilyVillageBuilder {
                     if (dist <= 3.0) {
                         BlockPos pos = new BlockPos(x + dx, y + dy, z + dz);
                         if (level.getBlockState(pos).isAir()) {
-                            level.setBlock(pos, B.LEAVES, 3);
+                            sb(level, pos, B.LEAVES, 3);
                         }
                     }
                 }
@@ -919,13 +1020,13 @@ public final class WangFamilyVillageBuilder {
     private static void buildPathLights(ServerLevel level, int cx, int cy, int cz) {
         // Spirit vein lights along N-S road every 8 blocks
         for (int dz = -VILLAGE_RADIUS + 4; dz <= VILLAGE_RADIUS - 4; dz += 8) {
-            level.setBlock(new BlockPos(cx - 2, cy + 1, cz + dz), B.SPIRIT_VEIN, 3);
-            level.setBlock(new BlockPos(cx + 2, cy + 1, cz + dz), B.SPIRIT_VEIN, 3);
+            sb(level, new BlockPos(cx - 2, cy + 1, cz + dz), B.SPIRIT_VEIN, 3);
+            sb(level, new BlockPos(cx + 2, cy + 1, cz + dz), B.SPIRIT_VEIN, 3);
         }
         // Along E-W road
         for (int dx = -VILLAGE_RADIUS + 4; dx <= VILLAGE_RADIUS - 4; dx += 8) {
-            level.setBlock(new BlockPos(cx + dx, cy + 1, cz - 2), B.SPIRIT_VEIN, 3);
-            level.setBlock(new BlockPos(cx + dx, cy + 1, cz + 2), B.SPIRIT_VEIN, 3);
+            sb(level, new BlockPos(cx + dx, cy + 1, cz - 2), B.SPIRIT_VEIN, 3);
+            sb(level, new BlockPos(cx + dx, cy + 1, cz + 2), B.SPIRIT_VEIN, 3);
         }
     }
 }

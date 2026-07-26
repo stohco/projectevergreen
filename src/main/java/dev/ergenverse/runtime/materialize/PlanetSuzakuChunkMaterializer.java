@@ -1,6 +1,7 @@
 package dev.ergenverse.runtime.materialize;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
 import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
 import dev.ergenverse.runtime.WorldRuntime;
 import dev.ergenverse.runtime.delta.BlockChangeDelta;
@@ -78,9 +79,14 @@ public final class PlanetSuzakuChunkMaterializer implements ChunkMaterializer {
             if (c.isEmpty()) continue;
 
             // Canon structures: delegate to the registered builder (idempotent).
+            // CRON-COMPLETIONIST-62: pass chunk bounds so chunk-scoped builders
+            // (e.g. WangFamilyVillageBuilder) only place blocks inside this chunk.
+            // Builders that don't yet implement chunk-scoping ignore the bounds
+            // and fall back to a full build (guarded by isAlreadyBuilt).
             if (layer.provenance() == dev.ergenverse.runtime.Provenance.CANON) {
+                ChunkBounds bounds = ChunkBounds.forChunk(chunkX, chunkZ);
                 for (PlanetSuzakuBlueprint.CanonLocation loc : c.structures) {
-                    StructureBuilderRegistry.build(loc.id, level);
+                    StructureBuilderRegistry.build(loc.id, level, bounds);
                 }
             } else {
                 // Sim/player block changes: replay onto the live level.
