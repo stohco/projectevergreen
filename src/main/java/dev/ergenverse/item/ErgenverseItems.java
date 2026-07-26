@@ -375,6 +375,17 @@ public final class ErgenverseItems {
             ITEMS.register("banner_xuan_dao", () -> new dev.ergenverse.item.SectBannerItem(
                     dev.ergenverse.item.BannerType.XUAN_DAO, new Item.Properties().stacksTo(8).rarity(net.minecraft.world.item.Rarity.RARE)));
 
+    // ── Billion Soul Flag (CRON-COMPLETIONIST-89) ────────────────────────
+    // Wang Lin's signature soul weapon (十亿魂幡). Soul Refining Sect guardian
+    // treasure. Passive soul absorption on kill, reusable soul storm release,
+    // permanent soul refinement (grows stronger over time).
+    // Canon: 37 main souls + 1 billion ordinary souls; sentient; pseudo-immortal tier.
+    // Provenance: data/ergenverse/provenance/billion_soul_flag___ten_billion_soul_banner.json
+    // Previously registered as display-only WangLinItem — now wired to real mechanics.
+    public static final RegistryObject<dev.ergenverse.item.BillionSoulFlagItem> BILLION_SOUL_FLAG =
+            ITEMS.register("billion_soul_flag", () -> new dev.ergenverse.item.BillionSoulFlagItem(
+                    new Item.Properties().durability(2000).rarity(net.minecraft.world.item.Rarity.EPIC)));
+
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
@@ -442,6 +453,8 @@ public final class ErgenverseItems {
                             output.accept(STORAGE_RING.get());
                             output.accept(SOUL_GOURD.get());
                             output.accept(CULTIVATION_JOURNAL.get());
+                            // CRON-COMPLETIONIST-89: Billion Soul Flag — Wang Lin's signature soul weapon
+                            output.accept(BILLION_SOUL_FLAG.get());
                         })
                         .build());
         Ergenverse.LOGGER.info("[Ergenverse] ErgenverseItems: registered jade_slip utility item.");

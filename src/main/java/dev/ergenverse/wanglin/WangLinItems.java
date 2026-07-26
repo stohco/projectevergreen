@@ -102,7 +102,13 @@ public final class WangLinItems {
             // registration that crashes the server at registry freeze with
             // "One or more entry values did not copy to the correct id."
             "ji_realm",
-            "vermilion_bird_feather"
+            "vermilion_bird_feather",
+            // CRON-COMPLETIONIST-89: billion_soul_flag now registered as BillionSoulFlagItem
+            // in ErgenverseItems with full soul-absorption mechanics. WangLinItems must skip
+            // it to avoid the duplicate-registration crash. This is Wang Lin's MOST ICONIC
+            // soul weapon (十亿魂幡, Soul Refining Sect guardian treasure) — previously
+            // display-only, now fully functional.
+            "billion_soul_flag"
     );
 
     /**
