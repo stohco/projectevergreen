@@ -4,14 +4,22 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.BlockChangeDelta;
+import dev.ergenverse.runtime.layer.ChunkContribution;
+import dev.ergenverse.runtime.layer.CompositeWorldLayer;
+import dev.ergenverse.runtime.layer.WorldLayer;
+import dev.ergenverse.runtime.Provenance;
 import dev.ergenverse.spawn.DeterministicSeedHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -22,6 +30,7 @@ import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -73,6 +82,50 @@ import java.util.concurrent.Executor;
  *     + canonNoiseVariation(x, z)   // bilinear value noise, 8-block period,
  *                                    // amplitude ±8, seeded by CANON_SEED
  * }</pre>
+ *
+ * <h2>CRON-COMPLETIONIST-91 — BLUEPRINT+LAYERS INTEGRATION (point 10 full fidelity)</h2>
+ *
+ * <p>The CRON-60 design (this class's prior form) derived surface terrain from
+ * {@link PlanetSuzakuBlueprint} canon geography alone. That closed the
+ * "algorithmic independence from {@code minecraft:overworld} noise" gap, but
+ * left a deeper architectural promise unfulfilled: <i>"Terrain columns come
+ * from the blueprint+<b>layers</b>, not minecraft:overworld noise."</i>
+ *
+ * <p>The <b>layers</b> in that promise are the {@link CompositeWorldLayer}'s
+ * {@link WorldLayer}s — specifically the {@link Provenance#PLAYER} and
+ * {@link Provenance#SIMULATION} layers, which hold the journal of every
+ * block change since day 0. Before CRON-91, those layers were only consulted
+ * by {@link dev.ergenverse.runtime.materialize.PlanetSuzakuChunkMaterializer#onChunkLoad}
+ * — <b>deferred by 1 tick</b> to avoid mutating a chunk during its own assembly.
+ * The result: when a player walked back to a previously-edited area and the
+ * chunk regenerated from the canon base, there was a 1-tick window (50ms) where
+ * the player saw the unedited canon terrain <i>before</i> their PLAYER deltas
+ * were re-applied. A visible "flash of unedited terrain."
+ *
+ * <p>CRON-91 closes that gap. {@link #fillFromNoise} now does a <b>two-phase
+ * fill</b>:
+ * <ol>
+ *   <li><b>Phase 1 — canon base terrain.</b> Bedrock, stone up to
+ *       {@link #canonSurfaceHeight}, water up to {@link #SEA_LEVEL}, air above.
+ *       Unchanged from CRON-60.</li>
+ *   <li><b>Phase 2 — layer override.</b> If {@link WorldRuntime#get()} is
+ *       initialized, iterate {@link CompositeWorldLayer#layersInMaterializationOrder()}
+ *       and for each non-CANON layer, apply that layer's
+ *       {@link ChunkContribution#blockChanges} directly to the chunk via
+ *       {@link ChunkAccess#setBlockState}. This is safe during chunk-gen
+ *       (uses {@code isMoving=false}, no lighting/tick updates) and is
+ *       <b>idempotent</b> — {@code PlanetSuzakuChunkMaterializer.onChunkLoad}
+ *       will re-apply the same deltas 1 tick later as a safety net for the
+ *       chunk-from-disk reload path, where {@code fillFromNoise} does not fire.</li>
+ * </ol>
+ *
+ * <p><b>Why CANON structures are NOT built during {@code fillFromNoise}:</b>
+ * the {@link dev.ergenverse.runtime.materialize.StructureBuilderRegistry} builders
+ * need a live {@link net.minecraft.server.level.ServerLevel} (for entity spawns,
+ * heightmap resolution, etc.), but {@code fillFromNoise} only has a
+ * {@link ChunkAccess} (no level). CANON structure building stays in the
+ * materializer. PLAYER/SIMULATION block changes have no such dependency — they
+ * are pure (x, y, z, blockState) tuples — so they're safe to apply here.
  *
  * <p>The result: Heng Yue Mountain is always raised +30 near (4200, -1400),
  * the Sea of Devils is always lowered −30 near (6000, -1184), Wang Family
@@ -246,6 +299,7 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
         int minChunkX = chunk.getPos().getMinBlockX();
         int minChunkZ = chunk.getPos().getMinBlockZ();
 
+        // ── Phase 1: canon base terrain (bedrock / stone / water / air) ──
         // Cache block states — BlockState lookup is cheap but de-virtualized
         // local refs are still marginally faster in a hot loop.
         final BlockState stone = Blocks.STONE.defaultBlockState();
@@ -284,11 +338,130 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
             }
         }
 
+        // ── Phase 2: apply PLAYER + SIMULATION layer overrides (CRON-91) ──
+        // The architectural promise in point 10 is "terrain columns come from
+        // the blueprint+LAYERS" — not just the blueprint. Before CRON-91, the
+        // PLAYER/SIMULATION layers were only consulted by the chunk materializer
+        // on ChunkEvent.Load (deferred 1 tick), causing a visible flash of
+        // unedited canon terrain when a player walked back to a previously-edited
+        // area. Applying the layer overrides directly during fillFromNoise closes
+        // that 1-tick window: the player sees their edits immediately when the
+        // chunk first becomes visible.
+        //
+        // Safety:
+        //   - chunk.setBlockState(pos, state, false) is the SAME write path
+        //     vanilla's NoiseBasedChunkGenerator.fillFromNoise uses; it writes
+        //     the section state without triggering lighting/tick updates.
+        //   - This is NOT the same as level.setBlock(pos, state, UPDATE_ALL),
+        //     which is what the materializer defers to avoid. We are writing
+        //     to the ProtoChunk during its own assembly — exactly what
+        //     fillFromNoise is designed to do.
+        //   - Idempotent with the materializer: setting the same block to the
+        //     same state is a no-op. The materializer is still needed for the
+        //     chunk-from-disk reload path (where fillFromNoise does NOT fire).
+        //   - CANON structures (c.structures) are intentionally NOT built here
+        //     — StructureBuilderRegistry builders need a live ServerLevel, but
+        //     fillFromNoise only has a ChunkAccess. CANON stays in the materializer.
+        applyLayerOverrides(chunk, pos);
+
         // Synchronous fill — return already-completed future. Vanilla's
         // NoiseBasedChunkGenerator runs fillFromNoise on a worker thread via
         // supplyAsync(executor); we don't need to because our fill is
         // CPU-bound and fast (no noise sampling, no aquifer computation).
         return CompletableFuture.completedFuture(chunk);
+    }
+
+    /**
+     * Apply PLAYER and SIMULATION layer overrides to a chunk during fillFromNoise.
+     *
+     * <p>For each non-CANON layer in {@link CompositeWorldLayer#layersInMaterializationOrder()},
+     * queries {@link WorldLayer#getChunkContribution(int, int)} and applies any
+     * {@link BlockChangeDelta}s directly to the chunk via
+     * {@link ChunkAccess#setBlockState}. This is the CRON-91 upgrade that makes
+     * "terrain columns come from the blueprint+LAYERS" literally true — the
+     * layer journal is consulted during chunk-gen, not deferred to ChunkEvent.Load.
+     *
+     * <p><b>No-op when:</b>
+     * <ul>
+     *   <li>{@link WorldRuntime#get()} is not yet initialized (race during
+     *       server start — the runtime binds to the level on ServerStartingEvent,
+     *       which may fire AFTER the initial spawn chunks generate). In this
+     *       case, the materializer's onChunkLoad will apply the deltas 1 tick
+     *       later as a fallback.</li>
+     *   <li>The chunk has no PLAYER or SIMULATION deltas (the common case —
+     *       most chunks are unedited). The contribution is empty and the loop
+     *       is a near-noop.</li>
+     * </ul>
+     *
+     * @param chunk the chunk being assembled (Phase 1 base terrain already placed)
+     * @param pos   a reusable MutableBlockPos (avoids per-delta allocation)
+     */
+    private void applyLayerOverrides(ChunkAccess chunk, BlockPos.MutableBlockPos pos) {
+        // Defensive: WorldRuntime may not be initialized yet during the very
+        // first chunk-gen pass at server start. The materializer will catch up.
+        WorldRuntime runtime;
+        try {
+            runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return;
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] BlueprintChunkGenerator: WorldRuntime unavailable during fillFromNoise — deferring layer overrides to materializer. Reason: {}",
+                    t.getMessage());
+            return;
+        }
+
+        CompositeWorldLayer worldLayer = runtime.worldLayer();
+        if (worldLayer == null) return;
+
+        int chunkX = chunk.getPos().x;
+        int chunkZ = chunk.getPos().z;
+
+        // Iterate in materialization order: CANON first → SIMULATION → PLAYER.
+        // PLAYER wins on conflict (applied last). CANON layer's c.structures
+        // are skipped (need a live ServerLevel — materializer handles those).
+        for (WorldLayer layer : worldLayer.layersInMaterializationOrder()) {
+            if (layer.provenance() == Provenance.CANON) continue;
+
+            ChunkContribution contribution;
+            try {
+                contribution = layer.getChunkContribution(chunkX, chunkZ);
+            } catch (Throwable t) {
+                Ergenverse.LOGGER.debug("[Ergenverse] BlueprintChunkGenerator: layer {} getChunkContribution failed for chunk ({},{}): {}",
+                        layer.provenance(), chunkX, chunkZ, t.getMessage());
+                continue;
+            }
+            if (contribution == null || contribution.isEmpty()) continue;
+
+            for (BlockChangeDelta delta : contribution.blockChanges) {
+                BlockState state = resolveBlockState(delta.blockState());
+                if (state == null) continue;
+                pos.set(delta.x(), delta.y(), delta.z());
+                chunk.setBlockState(pos, state, false);
+            }
+        }
+    }
+
+    /**
+     * Resolve a registry id string (e.g. {@code "minecraft:stone"}) to a
+     * {@link BlockState}. Returns the default block state (no property
+     * overrides — the WorldDeltaStore journals block ids, not full state
+     * strings, so default state is the correct interpretation). Returns
+     * {@code null} for unresolvable ids.
+     *
+     * <p>Mirrors {@link dev.ergenverse.runtime.layer.WorldFacade#resolveBlockState}
+     * — kept private here to avoid pulling WorldFacade into the chunk-gen
+     * dependency graph (chunk-gen must remain pure w.r.t. the blueprint and
+     * the layer journal, not depend on the facade's live-level mirror logic).
+     */
+    private static BlockState resolveBlockState(String blockId) {
+        if (blockId == null || blockId.isEmpty()) return null;
+        try {
+            ResourceLocation rl = new ResourceLocation(blockId);
+            Block block = ForgeRegistries.BLOCKS.getValue(rl);
+            if (block == null) return null;
+            return block.defaultBlockState();
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
     /**
@@ -388,13 +561,29 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     @Override
     public void addDebugScreenInfo(List<String> info, RandomState randomState, BlockPos pos) {
         wrapped.addDebugScreenInfo(info, randomState, pos);
-        info.add("[Er Gen Verse] Blueprint Chunk Generator (CANON-DRIVEN TERRAIN)");
+        info.add("[Er Gen Verse] Blueprint Chunk Generator (CANON-DRIVEN TERRAIN + LAYER OVERRIDE)");
         info.add("[Er Gen Verse] Canon Seed: " + DeterministicSeedHandler.CANON_SEED);
         int sx = pos.getX();
         int sz = pos.getZ();
         info.add("[Er Gen Verse] Canon Surface Height: " + canonSurfaceHeight(sx, sz)
                 + " (offset " + getCanonTerrainOffset(sx, sz)
                 + " + noise " + canonNoiseVariation(sx, sz) + ")");
+        // CRON-91: report layer-override status for the chunk containing the player.
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (runtime.isInitialized()) {
+                int chunkX = sx >> 4;
+                int chunkZ = sz >> 4;
+                int playerDeltas = runtime.deltaStore().blockChangeCount(Provenance.PLAYER);
+                int simDeltas = runtime.deltaStore().blockChangeCount(Provenance.SIMULATION);
+                info.add("[Er Gen Verse] Layer journal: PLAYER=" + playerDeltas
+                        + " SIMULATION=" + simDeltas + " (chunk " + chunkX + "," + chunkZ + ")");
+            } else {
+                info.add("[Er Gen Verse] Layer journal: WorldRuntime not initialized (deferred to materializer)");
+            }
+        } catch (Throwable t) {
+            info.add("[Er Gen Verse] Layer journal: unavailable (" + t.getMessage() + ")");
+        }
     }
 
     // ════════════════════════════════════════════════════════════════════

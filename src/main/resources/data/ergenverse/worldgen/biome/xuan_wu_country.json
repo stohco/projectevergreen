@@ -1,0 +1,78 @@
+{
+  "_comment": "xuan_wu_country — country-level biome (aggregated) for 玄武帝 (Xuan Wu Country / Black Tortoise Country). CRON-91: created to close the latent biome-source bug where planet_suzaku.json referenced ergenverse:xuan_wu_country but no JSON existed. Templated from xuan_wu_valley (the most-referenced Xuan Wu sub-biome) with country-level aggregation. Canon: 玄武 in Chinese mythology is the Black Tortoise of the North, associated with water and winter — the mod-original country is named for this association and represents a cool-temperate northern region. Prime Directive: this region exists objectively as part of the Er Gen world. (Mod-original country — name follows the Xuan Wu mythological motif; not explicitly named in 仙逆 canon but consistent with the planet's geography.)",
+  "temperature": -0.4,
+  "downfall": 0.5,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 7907327,
+    "fog_color": 7907327,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 10,
+        "minCount": 8,
+        "maxCount": 8
+      }
+    ],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:spider",
+        "weight": 40,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:zombie",
+        "weight": 30,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 25,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:creeper",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}
