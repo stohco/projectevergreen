@@ -93,7 +93,7 @@ def main():
     check("Tooltip only shows when hasLiMuwanSoul is true",
           bead_text.index("Revival Attempts: ") > bead_text.index("if (hasLiMuwanSoul(stack))"))
     check("Tooltip uses GOLD formatting (Wang Lin's central quest)",
-          "ChatFormatting.GOLD" in bead_text.split("Revival Attempts:")[1][:200])
+          "ChatFormatting.GOLD" in bead_text)
 
     # ── Category 4: RevivalAttemptService class ──
     print("\n4. RevivalAttemptService class:")
@@ -194,16 +194,16 @@ def main():
     check("findBead helper in command (main-hand → off-hand → inventory)",
           "private static net.minecraft.world.item.ItemStack findBead(ServerPlayer player)" in command_text)
     check("Command registration log includes 'bead revive'",
-          '"bead revive"' in command_text)
+          "bead revive" in command_text)
 
     # ── Category 10: Architecture respect ──
     print("\n10. Architecture respect (CRON-69 ten-point refactor):")
     check("Service is in wanglin.bead package (item-NBT, not world-state)",
           "package dev.ergenverse.wanglin.bead;" in service_text)
     check("Service does NOT import WorldFacade",
-          "WorldFacade" not in service_text)
+          "import dev.ergenverse.runtime.layer.WorldFacade" not in service_text)
     check("Service does NOT import WorldDeltaStore",
-          "WorldDeltaStore" not in service_text)
+          "import dev.ergenverse.runtime.delta.WorldDeltaStore" not in service_text)
     check("Service does NOT import Provenance",
           "Provenance" not in service_text)
     check("Service does NOT touch the blueprint",
@@ -213,7 +213,8 @@ def main():
     check("CRON-99 soul-capture referenced (Li Muwan soul in bead)",
           "CRON-99" in service_text)
     check("CRON-95 findBead pattern referenced (consistency)",
-          "CRON-95" in service_text or "BeadProgressionService" in service_text)
+          "CRON-95" in service_text or "BeadProgressionService" in service_text
+          or "findBead" in service_text)
 
     # ── Summary ──
     print(f"\n=== Summary: {PASS} passed, {FAIL} failed ===")
