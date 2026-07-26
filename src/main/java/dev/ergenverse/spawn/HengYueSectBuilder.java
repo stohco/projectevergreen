@@ -1390,10 +1390,21 @@ public final class HengYueSectBuilder {
      * above the path. This is canon-accurate: Wang Lin found the stone on
      * the mountain, not buried underground.
      *
-     * <p><b>Loot:</b> When broken, the block drops {@code ergenverse:heaven_defying_bead}
-     * with NBT matching {@code HeavenDefyingBeadItem.applyInitialOpening()}
+     * <p><b>Loot (CRON-77):</b> When broken, the block drops
+     * {@code ergenverse:heaven_defying_bead} with NBT initialized by
+     * {@link dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem#applyInitialOpening}
      * (CRACK_OPENED stage, Situ Nan's spirit, parts=1, stability=1000,
-     * authority=500). See {@code data/ergenverse/loot_tables/blocks/mysterious_stone.json}.
+     * authority=500). The drop is generated PROGRAMMATICALLY by
+     * {@link dev.ergenverse.block.MysteriousStoneBlock#getDrops} — there
+     * is exactly ONE source of truth for the bead's initial state. The
+     * loot table JSON at {@code data/ergenverse/loot_tables/blocks/mysterious_stone.json}
+     * is emptied (pools: []) as a safety net.
+     *
+     * <p><b>Particles (CRON-77):</b> The block also emits subtle MYCELIUM
+     * particles via {@link dev.ergenverse.block.MysteriousStoneBlock#animateTick}
+     * — matching the violet-crack-vein texture and the hint book's "veins
+     * like frozen lightning" description. Light level stays at 0 (matching
+     * "darker than the others" — no glow).
      *
      * <p><b>Provenance:</b> The stone is placed via {@link #sb}, so it's
      * chunk-filtered and provenance-guarded. If the player breaks the stone

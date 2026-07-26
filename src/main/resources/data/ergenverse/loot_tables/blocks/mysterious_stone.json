@@ -1,25 +1,4 @@
 {
   "type": "minecraft:block",
-  "pools": [
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "ergenverse:heaven_defying_bead",
-          "functions": [
-            {
-              "function": "minecraft:set_nbt",
-              "tag": "{Ergen.Bead.Stage:1,Ergen.Bead.PartsAligned:1,Ergen.Bead.SpatialStability:1000,Ergen.Bead.OwnerAuthority:500,Ergen.Bead.InteriorGrowth:0,Ergen.Bead.Spirit:1}"
-            }
-          ]
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
-    }
-  ]
+  "pools": []
 }

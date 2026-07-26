@@ -243,16 +243,21 @@ public final class ErgenverseBlocks {
     public static final RegistryObject<Block> RESTRICTION_STONE = registerSimple("restriction_stone", 4.0F, 4.0F);
     public static final RegistryObject<Block> SPIRIT_VEIN_STONE = registerSimple("spirit_vein_stone", 3.0F, 3.0F);
 
-    // ── CRON-COMPLETIONIST-75: Canon discovery block ───────────────────
+    // ── CRON-COMPLETIONIST-75 / CRON-77: Canon discovery block ────────
     // The "Mysterious Stone" (神秘石头) — the stone on Heng Yue Mountain
     // in which Wang Lin found the Heaven-Defying Bead (天逆珠) per RI Ch. 8.
     // Canon: 仙逆编年史 — "王林不合格被拒门外，凭借毅力独自上山遇险后
     // 发现天逆珠法宝" (Wang Lin failed the entry test, climbed the mountain
     // alone with perseverance, encountered danger, THEN discovered the bead).
-    // When broken, drops ergenverse:heaven_defying_bead with NBT matching
-    // HeavenDefyingBeadItem.applyInitialOpening() (CRACK_OPENED stage,
-    // Situ Nan's spirit, parts=1, stability=1000, authority=500).
-    public static final RegistryObject<Block> MYSTERIOUS_STONE = registerSimple(
+    //
+    // CRON-77: Promoted from a plain Block to MysteriousStoneBlock — now
+    // overrides getDrops() to call HeavenDefyingBeadItem.applyInitialOpening()
+    // programmatically (eliminates NBT duplication with the loot table JSON),
+    // and overrides animateTick() to emit subtle MYCELIUM particles matching
+    // the violet-crack-vein texture and the "veins like frozen lightning"
+    // hint-book description. Light level stays at 0 (the hint book says
+    // "darker than the others" — no glow). See MysteriousStoneBlock Javadoc.
+    public static final RegistryObject<Block> MYSTERIOUS_STONE = registerMysteriousStone(
             "mysterious_stone", 3.0F, 6.0F);
 
     // ── Terrain Blocks ─────────────────────────────────────────────────
@@ -268,6 +273,23 @@ public final class ErgenverseBlocks {
 
     private static RegistryObject<Block> registerSimple(String name, float hardness, float resistance) {
         RegistryObject<Block> block = BLOCKS.register(name, () -> new Block(
+                BlockBehaviour.Properties.of()
+                        .strength(hardness, resistance)
+                        .sound(SoundType.STONE)));
+        BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        return block;
+    }
+
+    /**
+     * CRON-77: Register a MysteriousStoneBlock with the given hardness and
+     * resistance. Same default sound (STONE) and item registration as
+     * {@link #registerSimple}, but uses the MysteriousStoneBlock subclass
+     * which overrides getDrops (programmatic bead drop via
+     * {@link dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem#applyInitialOpening})
+     * and animateTick (subtle MYCELIUM particles).
+     */
+    private static RegistryObject<Block> registerMysteriousStone(String name, float hardness, float resistance) {
+        RegistryObject<Block> block = BLOCKS.register(name, () -> new MysteriousStoneBlock(
                 BlockBehaviour.Properties.of()
                         .strength(hardness, resistance)
                         .sound(SoundType.STONE)));
