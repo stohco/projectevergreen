@@ -329,7 +329,7 @@ public final class RICanonicalDatabase {
         ),
         new CanonCharacter(
             "N10", "Zhou Ru", "周茹", CharType.OTHER,
-            "Soul Transformation", "Kunxu Realm (disciple of Mu Bingmei)", "reincarnated", 5,
+            "Infant Transformation", "Kunxu Realm (disciple of Mu Bingmei)", "reincarnated", 5,  // CRON-119: was "Soul Transformation" (炼虚), corrected to "Infant Transformation" (婴变)
             "unknown", "Planet Suzaku / IAC",
             java.util.List.of(
                 "Wang Lin's adopted daughter; vessel for Li Muwan's soul (intended)",
@@ -1195,7 +1195,7 @@ public final class RICanonicalDatabase {
         ),
         new CanonCharacter(
             "N92", "Xu Liqing", "徐立清 / 六欲魔尊", CharType.ANTAGONIST,
-            "Soul Transformation", "Six Desires Demon Lord", "deceased", 4,
+            "Infant Transformation", "Six Desires Demon Lord", "deceased", 4,  // CRON-119: was "Soul Transformation" (炼虚), corrected to "Infant Transformation" (婴变)
             "unknown", "Chaotic Broken Stars",
             java.util.List.of(
                 "Demon Lord of Six Desires; modified Restriction Mountain restrictions (adding panic)",
@@ -1717,7 +1717,7 @@ public final class RICanonicalDatabase {
         ),
         new CanonCharacter(
             "N140", "Zhao Xingsha", "赵星煞", CharType.DISCIPLE,
-            "Soul Transformation", "Heavenly Fate Sect", "alive", 4,
+            "Infant Transformation", "Heavenly Fate Sect", "alive", 4,  // CRON-119: was "Soul Transformation" (炼虚), corrected to "Infant Transformation" (婴变)
             "unknown", "Planet Tian Yun",
             java.util.List.of(
                 "Heavenly Fate Sect purple division rival; trapped Wang Lin with Sima Rufeng and others",

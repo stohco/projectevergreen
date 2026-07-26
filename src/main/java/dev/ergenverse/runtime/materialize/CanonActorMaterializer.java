@@ -87,9 +87,11 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         // (RICanonicalDatabase N19): Ascendant+ cultivation. SectId
         // "kunxu_realm" reflects her placement at the Kunxu Realm where she
         // takes Zhou Ru as her disciple. Realm "ascendant" maps to
-        // RealmId.ASCENDANT (合体) — the canon-attested cultivation level.
-        // The ZhouRuCultivationGrowthService advances Zhou Ru's realm when
-        // she is near Mu Bingmei — modeling the disciple-master cultivation.
+        // RealmId.ASCENDANT (问鼎 / WenDing, corrected in CRON-119 from the wrong
+        // label "合体" which is from 凡人修仙传, NOT 仙逆) — the canon-attested
+        // cultivation level. The ZhouRuCultivationGrowthService advances Zhou
+        // Ru's realm when she is near Mu Bingmei — modeling the disciple-master
+        // cultivation.
         profile(CanonUUID.MU_BINGMEI,    "mu_bingmei",    "Mu Bingmei 木冰眉 / 柳眉", "kunxu_realm",   "ascendant");
         // CRON-COMPLETIONIST-116: 王平 (Wang Ping) — Wang Lin's biological son
         // by 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei). Canon (web-search

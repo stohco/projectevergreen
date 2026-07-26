@@ -309,7 +309,7 @@ public final class RIEcologyEngine {
         new RuinDecayEntry("Core Formation", 50, 200, "Scavenger ecology"),
         new RuinDecayEntry("Nascent Soul", 200, 500, "Low-spirit-herb ecology"),
         new RuinDecayEntry("Soul Formation", 500, 2000, "Residual Qi wisps"),
-        new RuinDecayEntry("Soul Transformation", 2000, 5000, "Faint spiritual remnants"),
+        new RuinDecayEntry("Infant Transformation", 2000, 5000, "Faint spiritual remnants"),  // CRON-119: was "Soul Transformation" (炼虚), corrected to "Infant Transformation" (婴变)
         new RuinDecayEntry("Nirvana", 5000, 99999, "Effectively permanent"),
         new RuinDecayEntry("Third Step", 99999, 99999, "Permanent")
     );

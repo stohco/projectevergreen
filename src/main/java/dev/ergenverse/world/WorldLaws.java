@@ -302,7 +302,7 @@ public final class WorldLaws {
             .origin(Origin.DAO_LAW_SATURATION)
             .affinity("fire", 1.5).affinity("lightning", 1.2).affinity("blood", 1.3)
             .spaceStability(0.95).lightningSuppression(0.05)
-            .ceiling("Soul Transformation")
+            .ceiling("Infant Transformation")  // CRON-119: was "Soul Transformation" (炼虚), corrected to "Infant Transformation" (婴变) per canon
             .regionStatus(CanonEngine.RegionStatus.KNOWN_CANON)
             .canon(CanonEngine.Confidence.NOVEL_STATEMENT)
             .description("The ruling cultivation nation of Planet Suzaku — level-6 (raised by Situ Nan). The Vermilion Bird Master is a renewable office: Situ Nan was 2nd-Gen, Ye Wuyou 1st, the 3rd betrayed Situ Nan, the 13th was Qian Pinghai, the 14th severed Situ Nan's arm, the 15th was Zhou Wutai, the 16th was Wang Lin. The Vermilion Bird Divine Sect headquarters is here. Highest-tier ecology on the planet — the elevated Qi density is objective.")

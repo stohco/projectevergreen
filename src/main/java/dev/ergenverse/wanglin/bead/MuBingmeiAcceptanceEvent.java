@@ -44,7 +44,7 @@ import java.util.List;
  * <h2>Canon Basis (fact-checked against RICanonicalDatabase)</h2>
  * <p>In the novel 仙逆 (Renegade Immortal) by 耳根:
  * <ul>
- *   <li><b>N10 (Zhou Ru)</b>: cultivation = "Soul Transformation",
+ *   <li><b>N10 (Zhou Ru)</b>: cultivation = "Infant Transformation" (婴变; CRON-119: was "Soul Transformation" / 炼虚, corrected per canon — 炼虚 is from 凡人修仙传, NOT 仙逆; the canon 6th First Step realm is 婴变 / Infant Transformation),
  *       location = "Kunxu Realm (disciple of Mu Bingmei)",
  *       relationships include {@code Mu Bingmei: disciple}.
  *       Traits: "Wang Lin's adopted daughter; vessel for Li Muwan's soul

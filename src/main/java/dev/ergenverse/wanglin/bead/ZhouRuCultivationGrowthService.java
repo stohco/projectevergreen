@@ -161,9 +161,12 @@ public final class ZhouRuCultivationGrowthService {
     public static final double PROXIMITY_RADIUS_SQ = PROXIMITY_RADIUS * PROXIMITY_RADIUS;
 
     /**
-     * Canon-attested cultivation cap for 周茹: Soul Transformation (炼虚).
-     * Per RICanonicalDatabase N10: 周茹's cultivation is "Soul Transformation".
+     * Canon-attested cultivation cap for 周茹: Infant Transformation (婴变).
+     * Per RICanonicalDatabase N10: 周茹's cultivation is "Infant Transformation".
      * The growth service advances 周茹's realm up to but not beyond this cap.
+     * <p>CRON-119 canon correction: was "Soul Transformation" (炼虚), corrected to
+     * "Infant Transformation" (婴变) per canon. 炼虚 is from 凡人修仙传, NOT 仙逆.
+     * The canon 仙逆 6th First Step realm is 婴变 (Infant Transformation).
      */
     public static final RealmId CANON_CAP = RealmId.SOUL_TRANSFORMATION;
 

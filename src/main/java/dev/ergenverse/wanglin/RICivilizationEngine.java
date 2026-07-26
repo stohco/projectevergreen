@@ -427,7 +427,7 @@ public final class RICivilizationEngine {
                     "Gave 3 gifts to Wang Lin. Self-erased to become soul in Ten Billion Soul Banner."),
                 new FactionMember("Nian Tian", "念天", "Senior Brother", "Nirvana Scryer",
                     "Dun Tian's senior brother."),
-                new FactionMember("Wang Lin", "王林", "Inheritor", "Soul Transformation",
+                new FactionMember("Wang Lin", "王林", "Inheritor", "Infant Transformation",  // CRON-119: was "Soul Transformation" (炼虚), corrected to "Infant Transformation" (婴变)
                     "Inherited the sect and Ten Billion Soul Banner. Became 'Ancestor of the Soul Refining Tribe.'")
             ),
             Arrays.asList(
@@ -615,12 +615,12 @@ public final class RICivilizationEngine {
                     "Plots to absorb source origins of Wang Lin, Ling Tianhou, Blood Ancestor. NOT the same as Allheaven. Killed by Wang Lin ~Year 300."),
                 new FactionMember("Tianyunzi", "天运子", "Clone / Artifact Spirit", "Unknown",
                     "Clone of All-Seer AND artifact spirit of the Realm-Defining Compass / Heaven Defying Bead. True body hides in Primordial Divine Realm."),
-                new FactionMember("Zhao Xingsha", "赵星沙", "Purple Division Disciple", "Soul Transformation",
+                new FactionMember("Zhao Xingsha", "赵星沙", "Purple Division Disciple", "Infant Transformation",  // CRON-119: corrected
                     "Wang Lin's rival within the Purple Division."),
                 new FactionMember("Sima Rufeng", "司马如风", "Purple Division Disciple", "Unknown", "Purple Division member."),
                 new FactionMember("Zhao Xinming", "赵心明", "Purple Division (4th sister)", "Unknown", "Purple Division member."),
                 new FactionMember("Chen Tao", "陈涛", "Purple Division (6th brother)", "Mid-Ascendant", "Purple Division member."),
-                new FactionMember("Wang Lin", "王林", "7th Purple Division Disciple", "Soul Transformation",
+                new FactionMember("Wang Lin", "王林", "7th Purple Division Disciple", "Infant Transformation",  // CRON-119: corrected
                     "Recruited as 7th purple disciple. Later killed All-Seer.")
             ),
             Arrays.asList(

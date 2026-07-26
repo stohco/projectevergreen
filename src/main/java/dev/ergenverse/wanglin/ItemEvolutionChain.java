@@ -70,7 +70,7 @@ public class ItemEvolutionChain {
         CORE_FORMATION(3, "Core Formation"),
         NASCENT_SOUL(4, "Nascent Soul"),
         SOUL_FORMATION(5, "Soul Formation"),
-        SOUL_TRANSFORMATION(6, "Soul Transformation"),
+        SOUL_TRANSFORMATION(6, "Infant Transformation"),  // CRON-119: was "Soul Transformation" (炼虚), corrected to "Infant Transformation" (婴变)
         ASCENDANT(7, "Ascendant"),
         ILLUSORY_YIN(8, "Illusory Yin"),
         CRIMSON_YIN(9, "Crimson Yin"),

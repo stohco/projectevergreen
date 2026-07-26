@@ -198,7 +198,7 @@ public final class StarrySkySimulation {
     };
     private static final String[] REALMS = {
             "Qi Condensation", "Foundation Establishment", "Core Formation",
-            "Nascent Soul", "Soul Formation", "Soul Transformation",
+            "Nascent Soul", "Soul Formation", "Infant Transformation",  // CRON-119: was "Soul Transformation", corrected to "Infant Transformation" (婴变)
             "Nirvana Scryer", "Heaven Blight", "Third Step"
     };
 

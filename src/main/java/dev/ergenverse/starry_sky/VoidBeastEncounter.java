@@ -174,7 +174,7 @@ public final class VoidBeastEncounter {
                 return LOSS_CHANCE_PER_TICK * 0.6;
             case "Soul Formation":
                 return LOSS_CHANCE_PER_TICK * 0.3;
-            case "Soul Transformation":
+            case "Infant Transformation":  // CRON-119: was "Soul Transformation" (炼虚), corrected to "Infant Transformation" (婴变)
                 return LOSS_CHANCE_PER_TICK * 0.1;
             case "Nirvana Scryer":
             case "Heaven Blight":

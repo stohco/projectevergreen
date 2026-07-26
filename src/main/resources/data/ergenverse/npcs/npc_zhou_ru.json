@@ -7,7 +7,7 @@
   "type": "other",
   "faction": "independent",
   "location": "heng_yue_sect",
-  "cultivation": "Soul Transformation",
+  "cultivation": "Infant Transformation",
   "personality": "powerful cultivator",
   "speech": "measured",
   "relationship_to_wanglin": "complex",
@@ -17,12 +17,12 @@
   "teaching_available": false,
   "perception_tiers": {
     "mortal": "A powerful cultivator",
-    "qi_condensation": "Soul Transformation; overwhelming",
-    "core_formation": "Soul Transformation",
-    "nascent_soul": "Zhou Ru; Soul Transformation"
+    "qi_condensation": "Infant Transformation; overwhelming",
+    "core_formation": "Infant Transformation",
+    "nascent_soul": "Zhou Ru; Infant Transformation"
   },
   "canon_confidence": 3,
-  "note": "Soul Transformation cultivator NPC",
+  "note": "Infant Transformation cultivator NPC (CRON-119: was 'Soul Transformation' / lianxu, corrected per canon to yingbian / Infant Transformation)",
   "derivation_type": "B",
   "salt": 1262485011,
   "dao_heart": {

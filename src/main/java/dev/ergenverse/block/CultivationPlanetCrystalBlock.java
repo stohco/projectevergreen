@@ -362,9 +362,10 @@ public class CultivationPlanetCrystalBlock extends Block {
         }
 
         // Prerequisite 1: Crystal must not already be inherited.
-        // ── CRON-117/118: Wang Ping Redemption Event branch ──
+        // ── CRON-117/118/119: Wang Ping Redemption Event branch ──
         // If the Crystal IS inherited AND the player meets the redemption
-        // prerequisites (sword qi strands in inventory, realm ≥ ASCENDANT,
+        // prerequisites (sword qi strands in inventory, realm ≥ ASCENDANT
+        // (= 问鼎 / WenDing, corrected in CRON-119 from the wrong label "合体"),
         // Wang Ping's deadUntilRevived flag still true), fire the redemption
         // event instead of showing the "Crystal is silent" message. This
         // reuses the right-click interaction on the inherited Crystal as
@@ -386,6 +387,16 @@ public class CultivationPlanetCrystalBlock extends Block {
         // Sect, CRON-118). The player must have ≥2 sword qi strands in
         // their inventory (canon: exactly two strands) to trigger the
         // redemption.
+        //
+        // CRON-119 CANON CORRECTION: the ASCENDANT realm was previously
+        // labeled "合体" (HeTi / Body Integration) — a realm from
+        // 凡人修仙传 (A Record of a Mortal's Journey) by 忘语, NOT
+        // 仙逆 by 耳根. CRON-119 corrects the nameCn to "问鼎" (WenDing),
+        // which is the canon 7th First Step realm in 仙逆. The prerequisite
+        // logic (RealmId.ASCENDANT, order 7) was ALREADY correct — only
+        // the display name was wrong. The prerequisite now correctly
+        // corresponds to Wang Lin at 问鼎中期 (Ascendant middle stage) per
+        // the CRON-117 canon research.
         if (state.getValue(INHERITED)) {
             // Check the redemption prerequisites.
             int swordQiCount = countSwordQiStrands(serverPlayer);
