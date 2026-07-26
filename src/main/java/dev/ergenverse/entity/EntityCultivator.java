@@ -813,6 +813,33 @@ public class EntityCultivator extends PathfinderMob {
         this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.CultivatorCombatGoal(this, 1.0D));
         this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.CultivatorSwordQiGoal(this));
 
+        // ── CRON-COMPLETIONIST-108: Ancient God combat goals (Tuo Sen only) ──
+        // These goals are registered globally but no-op for every cultivator
+        // except Tuo Sen (characterId == "tuo_sen"). The activation gate is
+        // in each goal's canUse(): if characterId doesn't match, return false.
+        // This avoids needing a per-entity TuoSenEntityCultivator subclass —
+        // the standard EntityCultivator handles all canon NPCs, with character-
+        // specific behavior gated inside the goals' canUse().
+        //
+        // AncientGodPressGoal: AoE ground pound (4-16 block range, 80 damage,
+        //   leap + crash + 6-block AoE knockback). Priority 2 (same tier as
+        //   CultivatorCombatGoal — they share MOVE+LOOK+JUMP flags, so MC's
+        //   scheduler picks whichever is ready first; canUse() gating ensures
+        //   only one fires per tick).
+        // AncientGodStarGazeGoal: long-range paralysis (10-30 block range,
+        //   1.5s charge + SLOWNESS IV + WEAKNESS II + DARKNESS + 30 damage).
+        //   Priority 2 (LOOK only — Tuo Sen can't move during the charge, so
+        //   this goal doesn't claim MOVE; the press goal claims MOVE for the
+        //   closing phase).
+        //
+        // Canon (web-search verified 2026-07-26 via Baidu Baike + Sohu + 163):
+        //   - 8-star Ancient God, born from Tu Si's Ink Flow Split Soul Technique
+        //   - '拓森现身朱雀墓' — reappears at Suzaku Tomb
+        //   - Ancient Gods fight with raw god-body power, not mortal weapons
+        // Closes the CRON-107 self-critique #14 documented gap.
+        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.AncientGodPressGoal(this));
+        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.AncientGodStarGazeGoal(this));
+
         // ── Target selectors — WITHOUT these, getTarget() is always null and combat goals never fire ──
         // HurtByTargetGoal: retaliate when attacked (canon: a cultivator does not stand idle when struck).
         // NearestAttackableTargetGoal(Monster): defend the sect against hostile mobs (zombies, skeletons, etc.).

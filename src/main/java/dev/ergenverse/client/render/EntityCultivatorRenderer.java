@@ -131,6 +131,13 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
         if (lower.contains("wang_family") || lower.contains("wang_family_village")) {
             return wangFamilyTex();
         }
+        // CRON-COMPLETIONIST-108: Tuo Sen's sectId is "ancient_god_clan"
+        // (set by CanonActorMaterializer CRON-107 profile). The texture
+        // features the iconic 8-star forehead array to evoke Tuo Sen's
+        // 8-star Ancient God status. Falls through to default if missing.
+        if (lower.contains("ancient_god")) {
+            return ancientGodTex();
+        }
         if (lower.contains("independent") || lower.contains("rogue") || lower.contains("wander")) {
             return independentTex();
         }
@@ -143,7 +150,7 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
     private static ResourceLocation _corpseYin, _xuanDao, _luoHe, _fightingEvil;
     private static ResourceLocation _heavenlyFate, _vermilion, _qingLin, _sevenColored;
     private static ResourceLocation _jiMo, _luYun, _wangLin, _zhaoGov, _zhaoMilitary;
-    private static ResourceLocation _wangFamily, _independent;
+    private static ResourceLocation _wangFamily, _independent, _ancientGod;
 
     private static ResourceLocation hengYueTex() { if (_hengYue == null) _hengYue = tex("heng_yue_sect"); return _hengYue; }
     private static ResourceLocation tengTex() { if (_teng == null) _teng = tex("teng_family"); return _teng; }
@@ -163,6 +170,14 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
     private static ResourceLocation zhaoGovTex() { if (_zhaoGov == null) _zhaoGov = tex("zhao_country_government"); return _zhaoGov; }
     private static ResourceLocation zhaoMilitaryTex() { if (_zhaoMilitary == null) _zhaoMilitary = tex("zhao_country_military"); return _zhaoMilitary; }
     private static ResourceLocation wangFamilyTex() { if (_wangFamily == null) _wangFamily = tex("wang_family_village"); return _wangFamily; }
+    /**
+     * CRON-COMPLETIONIST-108: Ancient God clan texture for Tuo Sen (拓森).
+     * Dark violet god-body with an 8-star gold forehead array. Selected
+     * when sectId contains "ancient_god". Returns a ResourceLocation —
+     * Minecraft will fall back to the missing-texture pink/black checker
+     * if the file is absent, but the texture ships with CRON-108.
+     */
+    private static ResourceLocation ancientGodTex() { if (_ancientGod == null) _ancientGod = tex("ancient_god_clan"); return _ancientGod; }
     private static ResourceLocation independentTex() { if (_independent == null) _independent = tex("independent"); return _independent; }
 
     private static ResourceLocation tex(String name) {

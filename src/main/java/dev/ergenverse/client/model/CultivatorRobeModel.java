@@ -453,6 +453,12 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
                 case "old_chen" -> FLY_WHISK;
                 case "zeng_da_niu" -> HOE;
                 case "li_muwan" -> FAN;
+                // CRON-COMPLETIONIST-108: Tuo Sen (拓森) — 8-star Ancient God
+                // (古神). Ancient Gods fight with raw god-body power and
+                // soul-force projection, NOT mortal weapons. NONE matches
+                // canon: Tuo Sen's iconic attacks are God Press (ground pound)
+                // and Star Gaze (paralysis via the 8-star forehead array).
+                case "tuo_sen" -> NONE;
                 // wang_hao, default, and any unrecognized id → no held weapon
                 default -> NONE;
             };
@@ -546,6 +552,24 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
         LI_MUWAN("li_muwan", 0.92F),
         /** Wang Hao — Wang Lin's cousin, mortal at story start. */
         WANG_HAO("wang_hao", 1.0F),
+
+        // ── Ancient God tier (non-human anatomy) ──────────────────────
+        /**
+         * Tuo Sen (拓森) — 8-star Ancient God born from Tu Si's (涂司) failed
+         * Ink Flow Split Soul Technique (墨流分魂术). Canon: Ancient Gods are
+         * massive god-bodies, NOT mortal humans. Tuo Sen's silhouette
+         * towers over Wang Lin by a significant margin — the +30% scale
+         * reflects his non-human anatomy. Web-search verified 2026-07-26
+         * via Baidu Baike + 163 + Sohu: '拓森现身朱雀墓，获得九星古神血液'
+         * confirms his 9-star (post-blood-absorption) Ancient God status;
+         * at the Suzaku Tomb reappearance he is 8-star — still massively
+         * larger than a human. The 1.30 scale is the MAXIMUM in the
+         * CharacterBuild enum — Tuo Sen is the largest NPC in the mod.
+         * Score 8/10 for canon impact (archetype-driven; canon does not
+         * specify his exact height, but the Ancient God archetype demands
+         * a visible scale gap from human cultivators).
+         */
+        TUO_SEN("tuo_sen", 1.30F),
 
         // ── Mod-original characters ─────────────────────────────────────
         /** Old Chen — mod-original Heng Yue Sect elder; slightly stooped. */
