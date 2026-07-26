@@ -64,8 +64,73 @@ public final class ErgenverseCommand {
                 .executes(ctx -> desireFire(ctx.getSource())))
             .then(Commands.literal("desire_targets")
                 .executes(ctx -> desireTargets(ctx.getSource())))
+            // CRON-COMPLETIONIST-100: Bead revival command.
+            // Usage: /ergenverse bead revive
+            // Attempts to revive Li Muwan using the Heaven-Defying Bead.
+            // See dev.ergenverse.wanglin.bead.RevivalAttemptService for canon basis.
+            .then(Commands.literal("bead")
+                .then(Commands.literal("revive")
+                    .executes(ctx -> beadRevive(ctx.getSource()))))
         );
-        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset|geography|desire_list|desire_fire|desire_targets).");
+        Ergenverse.LOGGER.info("[Ergenverse] /ergenverse command registered (status|village|book|gear|reset|geography|desire_list|desire_fire|desire_targets|bead revive).");
+    }
+
+    /**
+     * CRON-COMPLETIONIST-100: /ergenverse bead revive
+     *
+     * <p>Attempts to revive Li Muwan using the Heaven-Defying Bead.
+     * Delegates to {@link RevivalAttemptService#attemptRevival}. The
+     * player must hold the bead in their inventory (main-hand, off-hand,
+     * or main inventory — first match is used).
+     *
+     * <p>Canon: Wang Lin attempts revival 137 times across millennia.
+     * The 137th attempt fails (the Vermilion Bird Tomb scene). Final
+     * success requires the Fourth Step (TRANSCENDENCE realm).
+     */
+    private static int beadRevive(CommandSourceStack src) {
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            src.sendFailure(Component.literal("This command can only be run by a player.")
+                    .withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        // Locate the player's bead (mirrors BeadProgressionService.findBead pattern).
+        net.minecraft.world.item.ItemStack beadStack = findBead(player);
+        if (beadStack.isEmpty()) {
+            player.sendSystemMessage(Component.literal(
+                    "You do not possess the Heaven-Defying Bead.")
+                    .withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        // Delegate to the service for all gate checks and outcome handling.
+        boolean attempted = dev.ergenverse.wanglin.bead.RevivalAttemptService
+                .attemptRevival(player, beadStack);
+        return attempted ? 1 : 0;
+    }
+
+    /**
+     * Scan the player's inventory for a Heaven-Defying Bead. Search order:
+     * main-hand → off-hand → main inventory. Mirrors the
+     * {@link dev.ergenverse.wanglin.bead.BeadProgressionService} findBead
+     * pattern (CRON-95) for consistency.
+     */
+    private static net.minecraft.world.item.ItemStack findBead(ServerPlayer player) {
+        net.minecraft.world.item.ItemStack mainHand = player.getMainHandItem();
+        if (mainHand.getItem() instanceof dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem) {
+            return mainHand;
+        }
+        net.minecraft.world.item.ItemStack offHand = player.getOffhandItem();
+        if (offHand.getItem() instanceof dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem) {
+            return offHand;
+        }
+        for (net.minecraft.world.item.ItemStack stack : player.getInventory().items) {
+            if (stack.getItem() instanceof dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem) {
+                return stack;
+            }
+        }
+        return net.minecraft.world.item.ItemStack.EMPTY;
     }
 
     /** /ergenverse status — print mod load + village + player state. */

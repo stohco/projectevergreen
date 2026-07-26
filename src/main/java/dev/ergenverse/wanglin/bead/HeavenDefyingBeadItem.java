@@ -84,6 +84,48 @@ public class HeavenDefyingBeadItem extends WangLinItem {
     public static final String NBT_ACTIVE_TAB = "Ergen.Bead.ActiveTab";
 
     /**
+     * CRON-COMPLETIONIST-100: The revival-attempt counter.
+     *
+     * <p>Canon basis (fact-checked via web-search 2026-07-26): Wang Lin
+     * attempts to revive Li Muwan <b>137 times</b> across millennia — all
+     * fail. The 137th attempt is the final failed attempt, depicted in
+     * the novel as: "血色残阳笼罩着朱雀墓，王林怀中抱着生机尽散的李慕婉，
+     * 她白发如雪的身体正在化作星芒消散，这是他第137次尝试复活失败"
+     * (blood-red sun over the Vermilion Bird Tomb, Wang Lin cradles the
+     * lifeless Li Muwan, her white-haired body dissolving into starlight —
+     * this is his 137th failed revival attempt). Final success requires
+     * the Fourth Step (第四步) + 一界本源 (origin of a world).
+     *
+     * <p>This counter tracks the player's revival attempts. Each attempt
+     * is gated by:
+     * <ul>
+     *   <li>{@code hasLiMuwanSoul(stack)} must be true (CRON-99 event fired)</li>
+     *   <li>Bead stage must have special functions (SMALL_WORLD+)</li>
+     *   <li>Player realm must be at least SOUL_FORMATION (化神) — canon:
+     *       Wang Lin attempts revival only after reaching high realms</li>
+     *   <li>Cooldown of {@code REVIVAL_COOLDOWN_TICKS} between attempts</li>
+     * </ul>
+     *
+     * <p>At 137 attempts, a special "final attempt" event fires. Actual
+     * success requires Fourth Step realm (TRANSCENDENCE) — a separate gate
+     * enforced by {@link RevivalAttemptService#attemptRevival}.
+     *
+     * <p>NO fabricated chapter citation. The 137 number is canon-attested
+     * via web-search; the exact chapter is not cited to avoid fabrication.
+     */
+    public static final String NBT_REVIVAL_ATTEMPTS = "Ergen.Bead.RevivalAttempts";
+
+    /**
+     * CRON-COMPLETIONIST-100: The game tick of the last revival attempt.
+     * Used to enforce the cooldown between attempts. Stored as a long
+     * because game time is a long.
+     */
+    public static final String NBT_LAST_REVIVAL_TICK = "Ergen.Bead.LastRevivalTick";
+
+    /** Canon-attested maximum number of failed revival attempts. */
+    public static final int CANON_REVIVAL_ATTEMPT_CAP = 137;
+
+    /**
      * CRON-COMPLETIONIST-95: A bitfield tracking WHICH of the 9 Parts have
      * been aligned. Bit i corresponds to {@link HeavenDefyingBead.Part}
      * ordinal i (so bit 0 = CORE, bit 1 = METAL, ..., bit 8 = DEEP_MYSTERY_3).
@@ -528,6 +570,16 @@ public class HeavenDefyingBeadItem extends WangLinItem {
                     .withStyle(ChatFormatting.DARK_GRAY)
                     .append(Component.literal("Li Muwan's Nascent Soul")
                             .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC)));
+
+            // CRON-COMPLETIONIST-100: Revival attempt counter.
+            // Only shown when Li Muwan's soul is present (the counter is
+            // meaningless without it). Displays "Revival Attempts: X / 137"
+            // in GOLD for visibility — this is Wang Lin's central quest.
+            int attempts = getRevivalAttempts(stack);
+            tooltip.add(Component.literal("Revival Attempts: ")
+                    .withStyle(ChatFormatting.DARK_GRAY)
+                    .append(Component.literal(attempts + " / " + CANON_REVIVAL_ATTEMPT_CAP)
+                            .withStyle(ChatFormatting.GOLD)));
         }
 
         // Available tabs
@@ -659,6 +711,64 @@ public class HeavenDefyingBeadItem extends WangLinItem {
             Ergenverse.LOGGER.info("[Ergenverse] Heaven-Defying Bead: Li Muwan's "
                     + "Nascent Soul stored. The motivation is now absolute.");
         }
+    }
+
+    // ── CRON-COMPLETIONIST-100: Revival Attempt Accessors ──────────────
+
+    /**
+     * Get the number of failed revival attempts (0..137).
+     *
+     * <p>Canon: Wang Lin attempts revival 137 times, all fail. The counter
+     * caps at {@link #CANON_REVIVAL_ATTEMPT_CAP} (137) — additional attempts
+     * beyond 137 are rejected by {@link RevivalAttemptService}.
+     *
+     * @param stack the bead stack
+     * @return the attempt count, clamped to [0, 137]
+     */
+    public int getRevivalAttempts(ItemStack stack) {
+        if (stack.isEmpty() || !stack.hasTag()) return 0;
+        return Math.min(CANON_REVIVAL_ATTEMPT_CAP,
+                Math.max(0, stack.getTag().getInt(NBT_REVIVAL_ATTEMPTS)));
+    }
+
+    /**
+     * Set the revival attempt count. Clamped to [0, 137].
+     *
+     * <p>Does NOT call {@code recalculateStage} — the attempt count does
+     * not affect the bead's interior stage (it's a quest tracker, not a
+     * progression factor).
+     *
+     * @param stack the bead stack
+     * @param count the new attempt count
+     */
+    public void setRevivalAttempts(ItemStack stack, int count) {
+        stack.getOrCreateTag().putInt(NBT_REVIVAL_ATTEMPTS,
+                Math.min(CANON_REVIVAL_ATTEMPT_CAP, Math.max(0, count)));
+    }
+
+    /**
+     * Get the game tick of the last revival attempt.
+     *
+     * <p>Used by {@link RevivalAttemptService} to enforce the cooldown.
+     * Returns 0 if no attempt has been made (treated as "cooldown expired"
+     * by the service).
+     *
+     * @param stack the bead stack
+     * @return the game tick, or 0 if never attempted
+     */
+    public long getLastRevivalAttemptTick(ItemStack stack) {
+        if (stack.isEmpty() || !stack.hasTag()) return 0L;
+        return stack.getTag().getLong(NBT_LAST_REVIVAL_TICK);
+    }
+
+    /**
+     * Set the game tick of the last revival attempt.
+     *
+     * @param stack the bead stack
+     * @param tick  the game tick
+     */
+    public void setLastRevivalAttemptTick(ItemStack stack, long tick) {
+        stack.getOrCreateTag().putLong(NBT_LAST_REVIVAL_TICK, Math.max(0L, tick));
     }
 
     /** Get the Samsara incarnation count stored in the bead. */
