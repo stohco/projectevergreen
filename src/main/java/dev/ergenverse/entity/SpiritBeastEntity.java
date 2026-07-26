@@ -562,23 +562,71 @@ public class SpiritBeastEntity extends PathfinderMob {
     }
 
     // ── Per-species dimensions (bounding box) ──────────────────────────
+    //
+    // CRON-COMPLETIONIST-80: HITBOX RECONCILIATION
+    // ---------------------------------------------
+    // Prior to CRON-80, three sources of truth disagreed for 8 of 12 beasts:
+    //   (A) EntityType.Builder.sized(w, h) in EREntityTypes
+    //   (B) THIS method (runtime override — WINS)
+    //   (C) "Hitbox: ~W x H" comment in EREntityTypes (design intent)
+    //
+    // The CRITICAL bug: SOUL_FISH had (A)=0.6×0.5 (CRON-60 doubled it) but
+    // (B)=0.3×0.3 — the runtime override silently undid CRON-60's fix.
+    //
+    // The B≠C mismatches meant the runtime hitbox didn't cover the visible
+    // model: deer antlers, crane head, fire beast flanks, stone boar sides,
+    // sea serpent body were all unhittable. The player's sword would pass
+    // through the visible beast without connecting.
+    //
+    // FIX: Reconcile (A), (B), (C) for all 12 beasts. Eye height is set to
+    // ~80% of total height (vanilla Mob pattern). Hitbox caps:
+    //   - Width  ≤ 1.2 (door navigation; vanilla horse is 1.4 but uses
+    //     a separate size handler — we keep ours at 1.2 max)
+    //   - Height ≤ 1.8 (2-block doorway clearance)
+    // Wings on flyers (hawk, bat) are body-only collision per vanilla
+    // parrot convention — wings are visual, hitbox covers body+head.
     private float beastWidth = 0.6F;
     private float beastHeight = 1.8F;
     private float beastEyeHeight = 1.6F;
 
     private void reassessDimensions() {
         switch (getBeastType()) {
+            // Small herbivore — rabbit-sized. Body 4x4x5 model. Eye at 80%.
             case RABBIT -> { beastWidth = 0.4F; beastHeight = 0.5F; beastEyeHeight = 0.4F; }
-            case WOLF   -> { beastWidth = 0.7F; beastHeight = 1.0F; beastEyeHeight = 0.85F; }
-            case DEER   -> { beastWidth = 0.8F; beastHeight = 1.4F; beastEyeHeight = 1.2F; }
-            case HAWK   -> { beastWidth = 0.5F; beastHeight = 0.6F; beastEyeHeight = 0.45F; }
-            case FIRE_BEAST -> { beastWidth = 1.0F; beastHeight = 1.4F; beastEyeHeight = 1.1F; }
-            case STONE_BACK_BOAR -> { beastWidth = 1.0F; beastHeight = 1.0F; beastEyeHeight = 0.8F; }
-            case CRANE  -> { beastWidth = 0.6F; beastHeight = 1.6F; beastEyeHeight = 1.4F; }
-            case BAT    -> { beastWidth = 0.4F; beastHeight = 0.5F; beastEyeHeight = 0.35F; }
-            case QILIN  -> { beastWidth = 1.0F; beastHeight = 1.4F; beastEyeHeight = 1.2F; }
-            case SEA_SERPENT -> { beastWidth = 0.8F; beastHeight = 1.0F; beastEyeHeight = 0.8F; }
-            case SOUL_FISH -> { beastWidth = 0.3F; beastHeight = 0.3F; beastEyeHeight = 0.15F; }
+            // Wolf-sized quadruped. Body 4x6x10 model. Slightly narrowed from
+            // 0.7→0.6 to match the model (player walked through 0.05 of fur).
+            case WOLF   -> { beastWidth = 0.6F; beastHeight = 0.9F; beastEyeHeight = 0.75F; }
+            // Deer: body 3.5x5.5x4 + long neck + antlers. Model stands ~2.2
+            // blocks tall but we cap at 1.8 for door navigation. Eye at 1.45
+            // (head height when neck is up). Was 0.8x1.4 — antlers unhittable.
+            case DEER   -> { beastWidth = 0.7F; beastHeight = 1.8F; beastEyeHeight = 1.45F; }
+            // Hawk: body 6x4x6, wingspan 14+ each side (visual only). Hitbox
+            // covers body+head only — vanilla parrot convention. Was 0.5x0.6
+            // which is correct for body-only; eye raised slightly.
+            case HAWK   -> { beastWidth = 0.5F; beastHeight = 0.6F; beastEyeHeight = 0.5F; }
+            // Fire beast: body 5x6x10. Was 1.0 wide — model is 1.4. Widened
+            // to 1.2 (capped for door nav). Height 1.4 unchanged.
+            case FIRE_BEAST -> { beastWidth = 1.2F; beastHeight = 1.4F; beastEyeHeight = 1.15F; }
+            // Stone back boar: body 5x5x10 + stone plate. Was 1.0 wide —
+            // model is 1.4. Widened to 1.2 (cap). Height unchanged.
+            case STONE_BACK_BOAR -> { beastWidth = 1.2F; beastHeight = 1.0F; beastEyeHeight = 0.8F; }
+            // Red-crowned crane: long neck + head. Model stands ~2.0 tall.
+            // Capped at 1.8 for door nav. Was 1.6 — head unhittable.
+            case CRANE  -> { beastWidth = 0.6F; beastHeight = 1.8F; beastEyeHeight = 1.6F; }
+            // Spirit bat — small aerial insectivore. Body-only hitbox.
+            case BAT    -> { beastWidth = 0.4F; beastHeight = 0.5F; beastEyeHeight = 0.4F; }
+            // Qilin: winged wolf-quadruped. Antlers add ~0.1 height. Was
+            // 1.0x1.4 — antler tips unhittable. Raised to 1.5.
+            case QILIN  -> { beastWidth = 1.0F; beastHeight = 1.5F; beastEyeHeight = 1.25F; }
+            // Sea serpent: elongated aquatic. Was 0.8x1.0 — model is 1.2
+            // wide. Widened to 1.0 (cap for water navigation). Lowered
+            // height to 0.8 (sea serpents are flatter than tall).
+            case SEA_SERPENT -> { beastWidth = 1.0F; beastHeight = 0.8F; beastEyeHeight = 0.65F; }
+            // CRITICAL FIX: Soul fish was 0.3x0.3 in runtime but 0.6x0.5 in
+            // EntityType (CRON-60 doubled it). Runtime override won — CRON-60
+            // was silently undone. Now matches CRON-60 intent.
+            case SOUL_FISH -> { beastWidth = 0.6F; beastHeight = 0.5F; beastEyeHeight = 0.25F; }
+            // Spirit tiger — barrel-chested apex predator. Already correct.
             case TIGER  -> { beastWidth = 1.0F; beastHeight = 1.0F; beastEyeHeight = 0.85F; }
             default -> { beastWidth = 0.6F; beastHeight = 1.8F; beastEyeHeight = 1.6F; }
         }
