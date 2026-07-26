@@ -8,6 +8,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
+import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+import dev.ergenverse.runtime.Provenance;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
+import javax.annotation.Nullable;
 
 /**
  * TianShuiCityBuilder — FULLY hand-built Tian Shui City (天水城 / Heavenly Water City).
@@ -117,7 +124,100 @@ public final class TianShuiCityBuilder {
         return level.getBlockState(center.above(WALL_HEIGHT + 1)).getBlock() == Blocks.QUARTZ_PILLAR;
     }
 
+    /** Convenience overload using the canon center. */
+    public static boolean isAlreadyBuilt(ServerLevel level) {
+        return isAlreadyBuilt(level, getSectCenter(level));
+    }
+
+        // ═══════════════════════════════════════════════════════════════════
+    //  Canon center + chunk-scoped infrastructure (CRON-COMPLETIONIST-66)
+    // ═══════════════════════════════════════════════════════════════════
+
+    /** Canonical X coordinate. */
+    public static final int SECT_X = PlanetSuzakuBlueprint.TIAN_SHUI_CITY.x;
+
+    /** Canonical Z coordinate. */
+    public static final int SECT_Z = PlanetSuzakuBlueprint.TIAN_SHUI_CITY.z;
+
+    /**
+     * Resolve the center BlockPos by sampling the surface heightmap at
+     * (SECT_X, SECT_Z). Defensive fallback to y=64 if heightmap returns bogus.
+     */
+    public static BlockPos getSectCenter(ServerLevel level) {
+        int surfaceY = level.getHeightmapPos(
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                new BlockPos(SECT_X, 0, SECT_Z)).getY();
+        if (surfaceY <= 0) surfaceY = 64;
+        return new BlockPos(SECT_X, surfaceY, SECT_Z);
+    }
+
+    private static final ThreadLocal<ChunkBounds> CURRENT_BOUNDS = new ThreadLocal<>();
+
+    private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null) {
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
+        level.setBlock(pos, state, flags);
+    }
+
+    private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+            WorldDeltaStore store = runtime.deltaStore();
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            return store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
+                    pos, t.getMessage());
+            return false;
+        }
+    }
+
+    /** Filtered setBlock — delegates to sb. ALL existing level.setBlock calls
+     *  in this class are replaced to call this method instead. */
+    private static void setBlock(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        sb(level, pos, state, flags);
+    }
+
+    private static void setBlock(ServerLevel level, BlockPos pos, BlockState state) {
+        sb(level, pos, state, 2);
+    }
+
+    public static void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds) {
+        ChunkBounds prev = CURRENT_BOUNDS.get();
+        CURRENT_BOUNDS.set(bounds);
+        try {
+            buildInternal(level, getSectCenter(level));
+        } finally {
+            if (prev == null) CURRENT_BOUNDS.remove();
+            else CURRENT_BOUNDS.set(prev);
+        }
+    }
+
+    public static void build(ServerLevel level) {
+        BlockPos center = getSectCenter(level);
+        if (isAlreadyBuilt(level, center)) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Tian Shui City already built — build() is a no-op.");
+            return;
+        }
+        Ergenverse.LOGGER.info("[Ergenverse] Building Tian Shui City at {}", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Tian Shui City construction complete.");
+    }
+
+    @Deprecated
     public static void build(ServerLevel level, BlockPos center) {
+        if (isAlreadyBuilt(level, center)) return;
+        Ergenverse.LOGGER.info("[Ergenverse] Building Tian Shui City at {} (legacy 2-arg path)", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Tian Shui City construction complete.");
+    }
+
+    private static void buildInternal(ServerLevel level, BlockPos center) {
         if (built) return;
         int baseY = center.getY();
         int cx = center.getX();
@@ -162,12 +262,14 @@ public final class TianShuiCityBuilder {
         buildTavernDistrict(level, cx, baseY, cz);
 
         // Landmark beacon
-        level.setBlock(new BlockPos(cx, baseY + WALL_HEIGHT + 2, cz), QUARTZ_PILLAR, 2);
-        level.setBlock(new BlockPos(cx, baseY + WALL_HEIGHT + 3, cz), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(cx, baseY + WALL_HEIGHT + 2, cz), QUARTZ_PILLAR, 2);
+        setBlock(level, new BlockPos(cx, baseY + WALL_HEIGHT + 3, cz), GOLD_BLOCK, 2);
 
         built = true;
         Ergenverse.LOGGER.info("[TianShuiCity] Tian Shui City complete at ({}, {}, {}).", cx, baseY, cz);
     }
+
+
 
     // ════════════════════════════════════════════════════════════════════
     // DISTRICT BUILDERS
@@ -177,10 +279,10 @@ public final class TianShuiCityBuilder {
         for (int dx = -CITY_RADIUS - 5; dx <= CITY_RADIUS + 5; dx++) {
             for (int dz = -CITY_RADIUS - 5; dz <= CITY_RADIUS + 5; dz++) {
                 BlockPos p = new BlockPos(cx + dx, baseY - 1, cz + dz);
-                level.setBlock(p, DIRT, 2);
+                setBlock(level, p, DIRT, 2);
                 // Clear above ground for building space
                 for (int y = baseY; y <= baseY + WALL_HEIGHT + 3; y++) {
-                    level.setBlock(new BlockPos(cx + dx, y, cz + dz), AIR, 2);
+                    setBlock(level, new BlockPos(cx + dx, y, cz + dz), AIR, 2);
                 }
             }
         }
@@ -192,24 +294,24 @@ public final class TianShuiCityBuilder {
             int wallY = baseY;
             // North wall
             for (int y = 0; y < WALL_HEIGHT; y++) {
-                level.setBlock(new BlockPos(cx + i, wallY + y, cz - r), POLISHED_GRANITE, 2);
-                level.setBlock(new BlockPos(cx + i, wallY + y, cz + r), POLISHED_GRANITE, 2);
-                level.setBlock(new BlockPos(cx - r, wallY + y, cz + i), POLISHED_GRANITE, 2);
-                level.setBlock(new BlockPos(cx + r, wallY + y, cz + i), POLISHED_GRANITE, 2);
+                setBlock(level, new BlockPos(cx + i, wallY + y, cz - r), POLISHED_GRANITE, 2);
+                setBlock(level, new BlockPos(cx + i, wallY + y, cz + r), POLISHED_GRANITE, 2);
+                setBlock(level, new BlockPos(cx - r, wallY + y, cz + i), POLISHED_GRANITE, 2);
+                setBlock(level, new BlockPos(cx + r, wallY + y, cz + i), POLISHED_GRANITE, 2);
             }
             // Crenellations on top
             if (i % 3 != 0) {
-                level.setBlock(new BlockPos(cx + i, wallY + WALL_HEIGHT, cz - r), QUARTZ, 2);
-                level.setBlock(new BlockPos(cx + i, wallY + WALL_HEIGHT, cz + r), QUARTZ, 2);
-                level.setBlock(new BlockPos(cx - r, wallY + WALL_HEIGHT, cz + i), QUARTZ, 2);
-                level.setBlock(new BlockPos(cx + r, wallY + WALL_HEIGHT, cz + i), QUARTZ, 2);
+                setBlock(level, new BlockPos(cx + i, wallY + WALL_HEIGHT, cz - r), QUARTZ, 2);
+                setBlock(level, new BlockPos(cx + i, wallY + WALL_HEIGHT, cz + r), QUARTZ, 2);
+                setBlock(level, new BlockPos(cx - r, wallY + WALL_HEIGHT, cz + i), QUARTZ, 2);
+                setBlock(level, new BlockPos(cx + r, wallY + WALL_HEIGHT, cz + i), QUARTZ, 2);
             }
             // Battlement walkway
             if (i % 3 == 0) {
-                level.setBlock(new BlockPos(cx + i, wallY + WALL_HEIGHT, cz - r), QUARTZ_SLAB, 2);
-                level.setBlock(new BlockPos(cx + i, wallY + WALL_HEIGHT, cz + r), QUARTZ_SLAB, 2);
-                level.setBlock(new BlockPos(cx - r, wallY + WALL_HEIGHT, cz + i), QUARTZ_SLAB, 2);
-                level.setBlock(new BlockPos(cx + r, wallY + WALL_HEIGHT, cz + i), QUARTZ_SLAB, 2);
+                setBlock(level, new BlockPos(cx + i, wallY + WALL_HEIGHT, cz - r), QUARTZ_SLAB, 2);
+                setBlock(level, new BlockPos(cx + i, wallY + WALL_HEIGHT, cz + r), QUARTZ_SLAB, 2);
+                setBlock(level, new BlockPos(cx - r, wallY + WALL_HEIGHT, cz + i), QUARTZ_SLAB, 2);
+                setBlock(level, new BlockPos(cx + r, wallY + WALL_HEIGHT, cz + i), QUARTZ_SLAB, 2);
             }
         }
 
@@ -227,11 +329,11 @@ public final class TianShuiCityBuilder {
                     boolean isEdge = dx == 0 || dx == TOWER_SIZE - 1 || dz == 0 || dz == TOWER_SIZE - 1;
                     boolean isDoor = y == 0 && dx == 2 && dz == 0;
                     if (isEdge && !isDoor) {
-                        level.setBlock(new BlockPos(tx + dx, baseY + y, tz + dz), POLISHED_GRANITE, 2);
+                        setBlock(level, new BlockPos(tx + dx, baseY + y, tz + dz), POLISHED_GRANITE, 2);
                     } else if (!isEdge && y == 0) {
-                        level.setBlock(new BlockPos(tx + dx, baseY, tz + dz), POLISHED_GRANITE, 2);
+                        setBlock(level, new BlockPos(tx + dx, baseY, tz + dz), POLISHED_GRANITE, 2);
                     } else if (!isEdge) {
-                        level.setBlock(new BlockPos(tx + dx, baseY + y, tz + dz), AIR, 2);
+                        setBlock(level, new BlockPos(tx + dx, baseY + y, tz + dz), AIR, 2);
                     }
                 }
             }
@@ -239,11 +341,11 @@ public final class TianShuiCityBuilder {
         // Gold cap on top
         for (int dx = 0; dx < TOWER_SIZE; dx++) {
             for (int dz = 0; dz < TOWER_SIZE; dz++) {
-                level.setBlock(new BlockPos(tx + dx, baseY + TOWER_HEIGHT, tz + dz), QUARTZ_SLAB, 2);
+                setBlock(level, new BlockPos(tx + dx, baseY + TOWER_HEIGHT, tz + dz), QUARTZ_SLAB, 2);
             }
         }
-        level.setBlock(new BlockPos(tx + 2, baseY + TOWER_HEIGHT + 1, tz + 2), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(tx + 2, baseY + TOWER_HEIGHT, tz + 2), LANTERN, 2);
+        setBlock(level, new BlockPos(tx + 2, baseY + TOWER_HEIGHT + 1, tz + 2), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(tx + 2, baseY + TOWER_HEIGHT, tz + 2), LANTERN, 2);
     }
 
     private static void buildMainStreets(ServerLevel level, int cx, int baseY, int cz) {
@@ -251,27 +353,27 @@ public final class TianShuiCityBuilder {
         // N-S avenue (6 wide, birch plank)
         for (int dz = -r + 2; dz <= r - 2; dz++) {
             for (int dx = -2; dx <= 2; dx++) {
-                level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), BIRCH_PLANK, 2);
+                setBlock(level, new BlockPos(cx + dx, baseY, cz + dz), BIRCH_PLANK, 2);
             }
         }
         // E-W avenue (5 wide, light gray carpet center)
         for (int dx = -r + 2; dx <= r - 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
-                level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), BIRCH_PLANK, 2);
+                setBlock(level, new BlockPos(cx + dx, baseY, cz + dz), BIRCH_PLANK, 2);
             }
-            level.setBlock(new BlockPos(cx + dx, baseY + 1, cz - 1), LIGHT_GRAY_CARPET, 2);
-            level.setBlock(new BlockPos(cx + dx, baseY + 1, cz), LIGHT_GRAY_CARPET, 2);
-            level.setBlock(new BlockPos(cx + dx, baseY + 1, cz + 1), LIGHT_GRAY_CARPET, 2);
+            setBlock(level, new BlockPos(cx + dx, baseY + 1, cz - 1), LIGHT_GRAY_CARPET, 2);
+            setBlock(level, new BlockPos(cx + dx, baseY + 1, cz), LIGHT_GRAY_CARPET, 2);
+            setBlock(level, new BlockPos(cx + dx, baseY + 1, cz + 1), LIGHT_GRAY_CARPET, 2);
         }
 
         // Central circular plaza (radius 8) with fountain
         for (int dx = -8; dx <= 8; dx++) {
             for (int dz = -8; dz <= 8; dz++) {
                 if (dx * dx + dz * dz <= 64) {
-                    level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), QUARTZ, 2);
+                    setBlock(level, new BlockPos(cx + dx, baseY, cz + dz), QUARTZ, 2);
                     // Clear building space
                     for (int y = baseY + 1; y <= baseY + WALL_HEIGHT; y++) {
-                        level.setBlock(new BlockPos(cx + dx, y, cz + dz), AIR, 2);
+                        setBlock(level, new BlockPos(cx + dx, y, cz + dz), AIR, 2);
                     }
                 }
             }
@@ -280,23 +382,23 @@ public final class TianShuiCityBuilder {
         for (int dx = -3; dx <= 3; dx++) {
             for (int dz = -3; dz <= 3; dz++) {
                 if (Math.abs(dx) == 3 || Math.abs(dz) == 3) {
-                    level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), PRISMARINE, 2);
-                    level.setBlock(new BlockPos(cx + dx, baseY + 1, cz + dz), PRISMARINE, 2);
+                    setBlock(level, new BlockPos(cx + dx, baseY, cz + dz), PRISMARINE, 2);
+                    setBlock(level, new BlockPos(cx + dx, baseY + 1, cz + dz), PRISMARINE, 2);
                 } else {
-                    level.setBlock(new BlockPos(cx + dx, baseY, cz + dz), WATER, 2);
-                    level.setBlock(new BlockPos(cx + dx, baseY + 1, cz + dz), AIR, 2);
+                    setBlock(level, new BlockPos(cx + dx, baseY, cz + dz), WATER, 2);
+                    setBlock(level, new BlockPos(cx + dx, baseY + 1, cz + dz), AIR, 2);
                 }
             }
         }
-        level.setBlock(new BlockPos(cx, baseY + 2, cz), QUARTZ_PILLAR, 2);
-        level.setBlock(new BlockPos(cx, baseY + 3, cz), SEA_LANTERN, 2);
+        setBlock(level, new BlockPos(cx, baseY + 2, cz), QUARTZ_PILLAR, 2);
+        setBlock(level, new BlockPos(cx, baseY + 3, cz), SEA_LANTERN, 2);
 
         // Street lanterns every 8 blocks along N-S avenue
         for (int dz = -r + 10; dz <= r - 10; dz += 8) {
-            level.setBlock(new BlockPos(cx - 3, baseY + 1, cz + dz), IRON_BARS, 2);
-            level.setBlock(new BlockPos(cx - 3, baseY + 2, cz + dz), LANTERN, 2);
-            level.setBlock(new BlockPos(cx + 3, baseY + 1, cz + dz), IRON_BARS, 2);
-            level.setBlock(new BlockPos(cx + 3, baseY + 2, cz + dz), LANTERN, 2);
+            setBlock(level, new BlockPos(cx - 3, baseY + 1, cz + dz), IRON_BARS, 2);
+            setBlock(level, new BlockPos(cx - 3, baseY + 2, cz + dz), LANTERN, 2);
+            setBlock(level, new BlockPos(cx + 3, baseY + 1, cz + dz), IRON_BARS, 2);
+            setBlock(level, new BlockPos(cx + 3, baseY + 2, cz + dz), LANTERN, 2);
         }
     }
 
@@ -306,23 +408,23 @@ public final class TianShuiCityBuilder {
         // Gate opening (clear 5 wide, 7 tall in the wall)
         for (int dx = -2; dx <= 2; dx++) {
             for (int y = 0; y < 7; y++) {
-                level.setBlock(new BlockPos(cx + dx, baseY + y, gz), AIR, 2);
+                setBlock(level, new BlockPos(cx + dx, baseY + y, gz), AIR, 2);
             }
         }
         // Quartz frame arch
         for (int dx = -3; dx <= 3; dx++) {
-            level.setBlock(new BlockPos(cx + dx, baseY + 7, gz), QUARTZ, 2);
-            level.setBlock(new BlockPos(cx + dx, baseY + 8, gz), QUARTZ_STAIRS, 2);
+            setBlock(level, new BlockPos(cx + dx, baseY + 7, gz), QUARTZ, 2);
+            setBlock(level, new BlockPos(cx + dx, baseY + 8, gz), QUARTZ_STAIRS, 2);
         }
         // Guard barracks (west side, 5×4×4)
         buildGuardBarracks(level, cx - 7, baseY, gz - 2);
         // Guard barracks (east side)
         buildGuardBarracks(level, cx + 3, baseY, gz - 2);
         // Gold plaque above gate
-        level.setBlock(new BlockPos(cx, baseY + 8, gz - 1), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(cx, baseY + 8, gz - 1), GOLD_BLOCK, 2);
         // Iron doors
-        level.setBlock(new BlockPos(cx - 1, baseY + 1, gz), IRON_BARS, 2);
-        level.setBlock(new BlockPos(cx + 1, baseY + 1, gz), IRON_BARS, 2);
+        setBlock(level, new BlockPos(cx - 1, baseY + 1, gz), IRON_BARS, 2);
+        setBlock(level, new BlockPos(cx + 1, baseY + 1, gz), IRON_BARS, 2);
     }
 
     private static void buildGuardBarracks(ServerLevel level, int x, int baseY, int z) {
@@ -332,21 +434,21 @@ public final class TianShuiCityBuilder {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 4 || dz == 0 || dz == 3;
                     boolean isDoor = y < 2 && dx == 2 && dz == 0;
-                    if (isEdge && !isDoor) level.setBlock(p, POLISHED_GRANITE, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, COBBLE, 2);
-                    else if (!isEdge && y > 0) level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor) setBlock(level, p, POLISHED_GRANITE, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, COBBLE, 2);
+                    else if (!isEdge && y > 0) setBlock(level, p, AIR, 2);
                 }
             }
         }
         // Roof
         for (int dx = 0; dx < 5; dx++) {
             for (int dz = 0; dz < 4; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 4, z + dz), QUARTZ_STAIRS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 4, z + dz), QUARTZ_STAIRS, 2);
             }
         }
         // Interior: bunks
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 1), OAK_PLANK, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 1), OAK_PLANK, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 1, z + 1), OAK_PLANK, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z + 1), OAK_PLANK, 2);
     }
 
     private static void buildMerchantQuarter(ServerLevel level, int cx, int baseY, int cz) {
@@ -368,9 +470,9 @@ public final class TianShuiCityBuilder {
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
                 if (Math.abs(dx) == 2 || Math.abs(dz) == 2) {
-                    level.setBlock(new BlockPos(startX + 40 + dx, baseY, startZ + 10 + dz), PRISMARINE, 2);
+                    setBlock(level, new BlockPos(startX + 40 + dx, baseY, startZ + 10 + dz), PRISMARINE, 2);
                 } else {
-                    level.setBlock(new BlockPos(startX + 40 + dx, baseY, startZ + 10 + dz), WATER, 2);
+                    setBlock(level, new BlockPos(startX + 40 + dx, baseY, startZ + 10 + dz), WATER, 2);
                 }
             }
         }
@@ -385,13 +487,13 @@ public final class TianShuiCityBuilder {
                     boolean isDoor = y < 2 && dx == 3 && dz == 0;
                     boolean isWindow = y >= 2 && y <= 3 && ((dx == 0 && dz == 2) || (dx == 5 && dz == 2));
                     if (isEdge && !isDoor && !isWindow) {
-                        level.setBlock(p, BIRCH_PLANK, 2);
+                        setBlock(level, p, BIRCH_PLANK, 2);
                     } else if (isWindow) {
-                        level.setBlock(p, GLASS_PANE, 2);
+                        setBlock(level, p, GLASS_PANE, 2);
                     } else if (!isEdge && y == 0) {
-                        level.setBlock(p, BIRCH_PLANK, 2);
+                        setBlock(level, p, BIRCH_PLANK, 2);
                     } else if (!isEdge) {
-                        level.setBlock(p, AIR, 2);
+                        setBlock(level, p, AIR, 2);
                     }
                 }
             }
@@ -399,16 +501,16 @@ public final class TianShuiCityBuilder {
         // Roof
         for (int dx = 0; dx < 6; dx++) {
             for (int dz = 0; dz < 5; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 4, z + dz), BIRCH_STAIRS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 4, z + dz), BIRCH_STAIRS, 2);
             }
         }
         // Counter (spruce plank)
         for (int dx = 1; dx <= 4; dx++) {
-            level.setBlock(new BlockPos(x + dx, baseY + 1, z + 2), SPRUCE_PLANK, 2);
+            setBlock(level, new BlockPos(x + dx, baseY + 1, z + 2), SPRUCE_PLANK, 2);
         }
         // Barrel storage
-        if (col % 3 == 0) level.setBlock(new BlockPos(x + 1, baseY + 1, z + 3), BARREL, 2);
-        if (col % 3 == 1) level.setBlock(new BlockPos(x + 4, baseY + 1, z + 3), BARREL, 2);
+        if (col % 3 == 0) setBlock(level, new BlockPos(x + 1, baseY + 1, z + 3), BARREL, 2);
+        if (col % 3 == 1) setBlock(level, new BlockPos(x + 4, baseY + 1, z + 3), BARREL, 2);
         // Chest
         if (col % 2 == 0) ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 1),
                 new ResourceLocation("ergenverse", "chests/tian_shui_city_market_district"));
@@ -422,32 +524,32 @@ public final class TianShuiCityBuilder {
                     boolean isEdge = dx == 0 || dx == 9 || dz == 0 || dz == 7;
                     boolean isDoor = y < 3 && dx == 5 && dz == 0;
                     boolean isWindow = y >= 3 && y <= 4 && dz == 0 && (dx == 3 || dx == 7);
-                    if (isEdge && !isDoor && !isWindow) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (isWindow) level.setBlock(p, GLASS_PANE, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (!isEdge) level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor && !isWindow) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (isWindow) setBlock(level, p, GLASS_PANE, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (!isEdge) setBlock(level, p, AIR, 2);
                 }
             }
         }
         // Birch stage (front platform)
         for (int dx = 2; dx <= 7; dx++) {
             for (int dz = 1; dz <= 2; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 1, z + dz), WHITE_CARPET, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 1, z + dz), WHITE_CARPET, 2);
             }
         }
         // Glowstone chandeliers
-        level.setBlock(new BlockPos(x + 4, baseY + 5, z + 3), GLOWSTONE, 2);
-        level.setBlock(new BlockPos(x + 5, baseY + 5, z + 3), GLOWSTONE, 2);
+        setBlock(level, new BlockPos(x + 4, baseY + 5, z + 3), GLOWSTONE, 2);
+        setBlock(level, new BlockPos(x + 5, baseY + 5, z + 3), GLOWSTONE, 2);
         // Roof
         for (int dx = 0; dx < 10; dx++) {
             for (int dz = 0; dz < 8; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 6, z + dz), BIRCH_STAIRS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 6, z + dz), BIRCH_STAIRS, 2);
             }
         }
         // Benches (oak plank rows)
         for (int dz = 3; dz <= 5; dz++) {
-            level.setBlock(new BlockPos(x + 1, baseY + 1, z + dz), OAK_PLANK, 2);
-            level.setBlock(new BlockPos(x + 8, baseY + 1, z + dz), OAK_PLANK, 2);
+            setBlock(level, new BlockPos(x + 1, baseY + 1, z + dz), OAK_PLANK, 2);
+            setBlock(level, new BlockPos(x + 8, baseY + 1, z + dz), OAK_PLANK, 2);
         }
     }
 
@@ -458,15 +560,15 @@ public final class TianShuiCityBuilder {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 6 || dz == 0 || dz == 4;
                     boolean isDoor = y < 3 && dx == 3 && dz == 0;
-                    if (isEdge && !isDoor) level.setBlock(p, SPRUCE_PLANK, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, COBBLE, 2);
-                    else if (!isEdge) level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor) setBlock(level, p, SPRUCE_PLANK, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, COBBLE, 2);
+                    else if (!isEdge) setBlock(level, p, AIR, 2);
                 }
             }
         }
         // Counter
         for (int dx = 1; dx <= 5; dx++) {
-            level.setBlock(new BlockPos(x + dx, baseY + 1, z + 3), SPRUCE_PLANK, 2);
+            setBlock(level, new BlockPos(x + dx, baseY + 1, z + 3), SPRUCE_PLANK, 2);
         }
         // Storage chests
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 1),
@@ -476,7 +578,7 @@ public final class TianShuiCityBuilder {
         // Roof
         for (int dx = 0; dx < 7; dx++) {
             for (int dz = 0; dz < 5; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), SPRUCE_STAIRS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 5, z + dz), SPRUCE_STAIRS, 2);
             }
         }
     }
@@ -489,10 +591,10 @@ public final class TianShuiCityBuilder {
             int px = cx - 15 + pier * 12;
             for (int dz = 0; dz < 20; dz++) {
                 for (int dx = 0; dx < 3; dx++) {
-                    level.setBlock(new BlockPos(px + dx, baseY - 1, pz + dz), PRISMARINE_BRICKS, 2);
-                    level.setBlock(new BlockPos(px + dx, baseY, pz + dz), AIR, 2);
+                    setBlock(level, new BlockPos(px + dx, baseY - 1, pz + dz), PRISMARINE_BRICKS, 2);
+                    setBlock(level, new BlockPos(px + dx, baseY, pz + dz), AIR, 2);
                     // Mooring posts
-                    if (dz == 19) level.setBlock(new BlockPos(px + 1, baseY + 1, pz + dz), SPRUCE_FENCE, 2);
+                    if (dz == 19) setBlock(level, new BlockPos(px + 1, baseY + 1, pz + dz), SPRUCE_FENCE, 2);
                 }
             }
             // Warehouse at the pier base
@@ -509,21 +611,21 @@ public final class TianShuiCityBuilder {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 7 || dz == 0 || dz == 5;
                     boolean isDoor = y < 4 && dx == 4 && dz == 0;
-                    if (isEdge && !isDoor) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, PRISMARINE_BRICKS, 2);
-                    else if (!isEdge) level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, PRISMARINE_BRICKS, 2);
+                    else if (!isEdge) setBlock(level, p, AIR, 2);
                 }
             }
         }
         for (int dx = 0; dx < 8; dx++) {
             for (int dz = 0; dz < 6; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), BIRCH_STAIRS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 5, z + dz), BIRCH_STAIRS, 2);
             }
         }
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 2, baseY + 1, z + 2),
                 new ResourceLocation("ergenverse", "chests/tian_shui_city_port_docks"));
-        level.setBlock(new BlockPos(x + 5, baseY + 1, z + 3), BARREL, 2);
-        level.setBlock(new BlockPos(x + 6, baseY + 1, z + 4), BARREL, 2);
+        setBlock(level, new BlockPos(x + 5, baseY + 1, z + 3), BARREL, 2);
+        setBlock(level, new BlockPos(x + 6, baseY + 1, z + 4), BARREL, 2);
     }
 
     private static void buildCustomsHouse(ServerLevel level, int x, int baseY, int z) {
@@ -534,19 +636,19 @@ public final class TianShuiCityBuilder {
                     boolean isEdge = dx == 0 || dx == 6 || dz == 0 || dz == 4;
                     boolean isDoor = y < 4 && dx == 3 && dz == 0;
                     boolean isWindow = y >= 2 && dz == 0 && (dx == 2 || dx == 5);
-                    if (isEdge && !isDoor && !isWindow) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (isWindow) level.setBlock(p, GLASS_PANE, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, QUARTZ, 2);
-                    else if (!isEdge) level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor && !isWindow) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (isWindow) setBlock(level, p, GLASS_PANE, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, QUARTZ, 2);
+                    else if (!isEdge) setBlock(level, p, AIR, 2);
                 }
             }
         }
         // Gold accent on corners
-        level.setBlock(new BlockPos(x, baseY + 4, z), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 6, baseY + 4, z), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x, baseY + 4, z), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 6, baseY + 4, z), GOLD_BLOCK, 2);
         // Counter
         for (int dx = 1; dx <= 5; dx++) {
-            level.setBlock(new BlockPos(x + dx, baseY + 1, z + 3), BIRCH_PLANK, 2);
+            setBlock(level, new BlockPos(x + dx, baseY + 1, z + 3), BIRCH_PLANK, 2);
         }
         // Chest for confiscated goods
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 1),
@@ -554,7 +656,7 @@ public final class TianShuiCityBuilder {
         // Roof
         for (int dx = 0; dx < 7; dx++) {
             for (int dz = 0; dz < 5; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), QUARTZ_STAIRS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 5, z + dz), QUARTZ_STAIRS, 2);
             }
         }
     }
@@ -575,23 +677,23 @@ public final class TianShuiCityBuilder {
         int wellZ = startZ + 34;
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
-                level.setBlock(new BlockPos(wellX + dx, baseY, wellZ + dz), COBBLE, 2);
+                setBlock(level, new BlockPos(wellX + dx, baseY, wellZ + dz), COBBLE, 2);
                 if (Math.abs(dx) + Math.abs(dz) == 2) {
-                    level.setBlock(new BlockPos(wellX + dx, baseY + 1, wellZ + dz), COBBLE, 2);
+                    setBlock(level, new BlockPos(wellX + dx, baseY + 1, wellZ + dz), COBBLE, 2);
                 }
             }
         }
-        level.setBlock(new BlockPos(wellX, baseY + 1, wellZ), WATER, 2);
+        setBlock(level, new BlockPos(wellX, baseY + 1, wellZ), WATER, 2);
         // Beggar's corner
         for (int dx = 0; dx < 3; dx++) {
             for (int dz = 0; dz < 3; dz++) {
-                level.setBlock(new BlockPos(startX + 40 + dx, baseY, startZ + 5 + dz), DIRT, 2);
+                setBlock(level, new BlockPos(startX + 40 + dx, baseY, startZ + 5 + dz), DIRT, 2);
             }
         }
-        level.setBlock(new BlockPos(startX + 41, baseY + 1, startZ + 6), SPRUCE_FENCE, 2);
+        setBlock(level, new BlockPos(startX + 41, baseY + 1, startZ + 6), SPRUCE_FENCE, 2);
         // Laundry cauldrons
-        level.setBlock(new BlockPos(startX + 2, baseY, startZ + 34), COBBLE, 2);
-        level.setBlock(new BlockPos(startX + 2, baseY + 1, startZ + 34), CAULDRON, 2);
+        setBlock(level, new BlockPos(startX + 2, baseY, startZ + 34), COBBLE, 2);
+        setBlock(level, new BlockPos(startX + 2, baseY + 1, startZ + 34), CAULDRON, 2);
     }
 
     private static void buildRowHouse(ServerLevel level, int x, int baseY, int z, int variant) {
@@ -603,17 +705,17 @@ public final class TianShuiCityBuilder {
                     boolean isEdge = dx == 0 || dx == 3 || dz == 0 || dz == 2;
                     boolean isDoor = y < 2 && dx == 2 && dz == 0;
                     boolean isWindow = y >= 2 && dz == 0 && dx == 1;
-                    if (isEdge && !isDoor && !isWindow) level.setBlock(p, COBBLE, 2);
-                    else if (isWindow) level.setBlock(p, GLASS_PANE, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, COBBLE, 2);
-                    else if (!isEdge) level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor && !isWindow) setBlock(level, p, COBBLE, 2);
+                    else if (isWindow) setBlock(level, p, GLASS_PANE, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, COBBLE, 2);
+                    else if (!isEdge) setBlock(level, p, AIR, 2);
                 }
             }
         }
         // Roof
         for (int dx = 0; dx < 4; dx++) {
             for (int dz = 0; dz < 3; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + h, z + dz), OAK_STAIRS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + h, z + dz), OAK_STAIRS, 2);
             }
         }
     }
@@ -647,15 +749,15 @@ public final class TianShuiCityBuilder {
                     boolean isCourtyard = dx >= 2 && dx <= 5 && dz >= 2 && dz <= 5;
                     boolean isWindow = y >= 2 && y <= 3 && (dx == 0 || dx == size - 1) && dz >= 2 && dz <= 5;
                     if (isEdge && !isDoor && !isWindow) {
-                        level.setBlock(p, BIRCH_PLANK, 2);
+                        setBlock(level, p, BIRCH_PLANK, 2);
                     } else if (isWindow) {
-                        level.setBlock(p, GLASS_PANE, 2);
+                        setBlock(level, p, GLASS_PANE, 2);
                     } else if (isCourtyard && y == 0) {
-                        level.setBlock(p, BIRCH_PLANK, 2);
+                        setBlock(level, p, BIRCH_PLANK, 2);
                     } else if (!isEdge && !isCourtyard && y == 0) {
-                        level.setBlock(p, BIRCH_PLANK, 2);
+                        setBlock(level, p, BIRCH_PLANK, 2);
                     } else {
-                        level.setBlock(p, AIR, 2);
+                        setBlock(level, p, AIR, 2);
                     }
                 }
             }
@@ -663,15 +765,15 @@ public final class TianShuiCityBuilder {
         // Roof
         for (int dx = 0; dx < size; dx++) {
             for (int dz = 0; dz < size; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 4, z + dz), BIRCH_STAIRS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 4, z + dz), BIRCH_STAIRS, 2);
             }
         }
         // Birch tree in courtyard
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 3), BIRCH_LOG, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 2, z + 3), BIRCH_LOG, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 3, z + 3), BIRCH_LOG, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z + 3), BIRCH_LOG, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 2, z + 3), BIRCH_LOG, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 3, z + 3), BIRCH_LOG, 2);
         // Carpet
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 4), WHITE_CARPET, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z + 4), WHITE_CARPET, 2);
         // Chest
         if (idx % 3 == 0) ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 1),
                 new ResourceLocation("ergenverse", "chests/tian_shui_city_residential_district"));
@@ -685,39 +787,39 @@ public final class TianShuiCityBuilder {
                     boolean isEdge = dx == 0 || dx == 9 || dz == 0 || dz == 9;
                     boolean isDoor = y < 3 && dx == 5 && dz == 0;
                     boolean isWindow = y >= 2 && y <= 4 && (dz == 0 && (dx == 3 || dx == 7) || (dx == 0 || dx == 9) && dz >= 3 && dz <= 6);
-                    if (isEdge && !isDoor && !isWindow) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (isWindow) level.setBlock(p, GLASS_PANE, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (!isEdge) level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor && !isWindow) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (isWindow) setBlock(level, p, GLASS_PANE, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (!isEdge) setBlock(level, p, AIR, 2);
                 }
             }
         }
         // Gold trim on corners
-        level.setBlock(new BlockPos(x, baseY + 4, z), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 9, baseY + 4, z), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x, baseY + 4, z + 9), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 9, baseY + 4, z + 9), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x, baseY + 4, z), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 9, baseY + 4, z), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x, baseY + 4, z + 9), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 9, baseY + 4, z + 9), GOLD_BLOCK, 2);
         // Second floor
         for (int dx = 1; dx <= 8; dx++) {
             for (int dz = 1; dz <= 8; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), BIRCH_PLANK, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 5, z + dz), BIRCH_PLANK, 2);
             }
         }
         // Roof
         for (int dx = 0; dx < 10; dx++) {
             for (int dz = 0; dz < 10; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 6, z + dz), BIRCH_STAIRS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 6, z + dz), BIRCH_STAIRS, 2);
             }
         }
         // Red carpet aisle
         for (int dz = 1; dz <= 8; dz++) {
-            level.setBlock(new BlockPos(x + 5, baseY + 1, z + dz), RED_CARPET, 2);
+            setBlock(level, new BlockPos(x + 5, baseY + 1, z + dz), RED_CARPET, 2);
         }
         // Bookshelves
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 1), BOOKSHELF, 2);
-        level.setBlock(new BlockPos(x + 8, baseY + 1, z + 1), BOOKSHELF, 2);
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 8), BOOKSHELF, 2);
-        level.setBlock(new BlockPos(x + 8, baseY + 1, z + 8), BOOKSHELF, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 1, z + 1), BOOKSHELF, 2);
+        setBlock(level, new BlockPos(x + 8, baseY + 1, z + 1), BOOKSHELF, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 1, z + 8), BOOKSHELF, 2);
+        setBlock(level, new BlockPos(x + 8, baseY + 1, z + 8), BOOKSHELF, 2);
         // Chests
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 2, baseY + 1, z + 5),
                 new ResourceLocation("ergenverse", "chests/tian_shui_merchant"));
@@ -725,7 +827,7 @@ public final class TianShuiCityBuilder {
                 new ResourceLocation("ergenverse", "chests/tian_shui_merchant"));
         // Staircase to 2nd floor
         for (int sy = 0; sy < 4; sy++) {
-            level.setBlock(new BlockPos(x + 8 - sy, baseY + sy + 1, z + 8), OAK_STAIRS, 2);
+            setBlock(level, new BlockPos(x + 8 - sy, baseY + sy + 1, z + 8), OAK_STAIRS, 2);
         }
     }
 
@@ -736,23 +838,23 @@ public final class TianShuiCityBuilder {
         for (int dx = -14; dx <= 14; dx++) {
             for (int dz = -14; dz <= 14; dz++) {
                 for (int dy = 0; dy < 3; dy++) {
-                    level.setBlock(new BlockPos(mx + dx, baseY - 1 - dy, mz + dz), GRANITE, 2);
+                    setBlock(level, new BlockPos(mx + dx, baseY - 1 - dy, mz + dz), GRANITE, 2);
                 }
             }
         }
         // Outer compound wall (quartz, 25×25)
         for (int i = -12; i <= 12; i++) {
             for (int y = 0; y < 5; y++) {
-                level.setBlock(new BlockPos(mx + i, baseY + y, mz - 12), QUARTZ, 2);
-                level.setBlock(new BlockPos(mx + i, baseY + y, mz + 12), QUARTZ, 2);
-                level.setBlock(new BlockPos(mx - 12, baseY + y, mz + i), QUARTZ, 2);
-                level.setBlock(new BlockPos(mx + 12, baseY + y, mz + i), QUARTZ, 2);
+                setBlock(level, new BlockPos(mx + i, baseY + y, mz - 12), QUARTZ, 2);
+                setBlock(level, new BlockPos(mx + i, baseY + y, mz + 12), QUARTZ, 2);
+                setBlock(level, new BlockPos(mx - 12, baseY + y, mz + i), QUARTZ, 2);
+                setBlock(level, new BlockPos(mx + 12, baseY + y, mz + i), QUARTZ, 2);
             }
         }
         // Gate
         for (int y = 0; y < 4; y++) {
-            level.setBlock(new BlockPos(mx, baseY + y, mz - 12), AIR, 2);
-            level.setBlock(new BlockPos(mx + 1, baseY + y, mz - 12), AIR, 2);
+            setBlock(level, new BlockPos(mx, baseY + y, mz - 12), AIR, 2);
+            setBlock(level, new BlockPos(mx + 1, baseY + y, mz - 12), AIR, 2);
         }
         // Main Hall (15×10×8)
         buildMainHall(level, mx - 7, baseY, mz - 5);
@@ -774,51 +876,51 @@ public final class TianShuiCityBuilder {
                     boolean isEdge = dx == 0 || dx == 14 || dz == 0 || dz == 9;
                     boolean isDoor = y < 4 && dx >= 6 && dx <= 8 && dz == 0;
                     boolean isWindow = y >= 4 && y <= 6 && dz == 0 && (dx == 3 || dx == 11);
-                    if (isEdge && !isDoor && !isWindow) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (isWindow) level.setBlock(p, GLASS_PANE, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, QUARTZ, 2);
-                    else if (!isEdge) level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor && !isWindow) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (isWindow) setBlock(level, p, GLASS_PANE, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, QUARTZ, 2);
+                    else if (!isEdge) setBlock(level, p, AIR, 2);
                 }
             }
         }
         // Roof
         for (int dx = 0; dx < 15; dx++) {
             for (int dz = 0; dz < 10; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 8, z + dz), BIRCH_STAIRS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 8, z + dz), BIRCH_STAIRS, 2);
             }
         }
         // Gold pillars (4)
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 2), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 2, z + 2), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 3, z + 2), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 11, baseY + 1, z + 2), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 11, baseY + 2, z + 2), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 11, baseY + 3, z + 2), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 7), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 2, z + 7), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 3, z + 7), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 11, baseY + 1, z + 7), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 11, baseY + 2, z + 7), GOLD_BLOCK, 2);
-        level.setBlock(new BlockPos(x + 11, baseY + 3, z + 7), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z + 2), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 2, z + 2), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 3, z + 2), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 11, baseY + 1, z + 2), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 11, baseY + 2, z + 2), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 11, baseY + 3, z + 2), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z + 7), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 2, z + 7), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 3, z + 7), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 11, baseY + 1, z + 7), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 11, baseY + 2, z + 7), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 11, baseY + 3, z + 7), GOLD_BLOCK, 2);
         // Red carpet aisle
         for (int dz = 1; dz <= 8; dz++) {
-            level.setBlock(new BlockPos(x + 7, baseY + 1, z + dz), RED_CARPET, 2);
+            setBlock(level, new BlockPos(x + 7, baseY + 1, z + dz), RED_CARPET, 2);
         }
         // Throne (gold block on quartz platform)
         for (int dx = 6; dx <= 8; dx++) {
             for (int dz = 7; dz <= 8; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 1, z + dz), QUARTZ_SLAB, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 1, z + dz), QUARTZ_SLAB, 2);
             }
         }
-        level.setBlock(new BlockPos(x + 7, baseY + 2, z + 8), GOLD_BLOCK, 2);
+        setBlock(level, new BlockPos(x + 7, baseY + 2, z + 8), GOLD_BLOCK, 2);
         // Bookshelves
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 4), BOOKSHELF, 2);
-        level.setBlock(new BlockPos(x + 1, baseY + 2, z + 4), BOOKSHELF, 2);
-        level.setBlock(new BlockPos(x + 13, baseY + 1, z + 4), BOOKSHELF, 2);
-        level.setBlock(new BlockPos(x + 13, baseY + 2, z + 4), BOOKSHELF, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 1, z + 4), BOOKSHELF, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 2, z + 4), BOOKSHELF, 2);
+        setBlock(level, new BlockPos(x + 13, baseY + 1, z + 4), BOOKSHELF, 2);
+        setBlock(level, new BlockPos(x + 13, baseY + 2, z + 4), BOOKSHELF, 2);
         // Lanterns
-        level.setBlock(new BlockPos(x + 7, baseY + 7, z + 5), GLOWSTONE, 2);
-        level.setBlock(new BlockPos(x + 7, baseY + 7, z + 4), GLOWSTONE, 2);
+        setBlock(level, new BlockPos(x + 7, baseY + 7, z + 5), GLOWSTONE, 2);
+        setBlock(level, new BlockPos(x + 7, baseY + 7, z + 4), GLOWSTONE, 2);
     }
 
     private static void buildPrivateChamber(ServerLevel level, int x, int baseY, int z) {
@@ -828,14 +930,14 @@ public final class TianShuiCityBuilder {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 5 || dz == 0 || dz == 4;
                     boolean isDoor = y < 3 && dx == 3 && dz == 0;
-                    if (isEdge && !isDoor) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, BIRCH_PLANK, 2);
-                    else level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, BIRCH_PLANK, 2);
+                    else setBlock(level, p, AIR, 2);
                 }
             }
         }
-        for (int dx = 0; dx < 6; dx++) for (int dz = 0; dz < 5; dz++) level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), BIRCH_STAIRS, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 3), RED_CARPET, 2);
+        for (int dx = 0; dx < 6; dx++) for (int dz = 0; dz < 5; dz++) setBlock(level, new BlockPos(x + dx, baseY + 5, z + dz), BIRCH_STAIRS, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z + 3), RED_CARPET, 2);
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 2),
                 new ResourceLocation("ergenverse", "chests/tian_shui_city_governor_mansion"));
     }
@@ -847,18 +949,18 @@ public final class TianShuiCityBuilder {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 7 || dz == 0 || dz == 7;
                     boolean isDoor = y < 3 && dx == 4 && dz == 0;
-                    if (isEdge && !isDoor) level.setBlock(p, STONE_BRICK, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, STONE_BRICK, 2);
-                    else level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor) setBlock(level, p, STONE_BRICK, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, STONE_BRICK, 2);
+                    else setBlock(level, p, AIR, 2);
                 }
             }
         }
-        for (int dx = 0; dx < 8; dx++) for (int dz = 0; dz < 8; dz++) level.setBlock(new BlockPos(x + dx, baseY + 4, z + dz), STONE_STAIRS, 2);
+        for (int dx = 0; dx < 8; dx++) for (int dz = 0; dz < 8; dz++) setBlock(level, new BlockPos(x + dx, baseY + 4, z + dz), STONE_STAIRS, 2);
         // Strategy table
-        level.setBlock(new BlockPos(x + 4, baseY + 1, z + 4), OAK_PLANK, 2);
+        setBlock(level, new BlockPos(x + 4, baseY + 1, z + 4), OAK_PLANK, 2);
         // Map walls (bookshelves as scroll storage)
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 3), BOOKSHELF, 2);
-        level.setBlock(new BlockPos(x + 6, baseY + 1, z + 3), BOOKSHELF, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 1, z + 3), BOOKSHELF, 2);
+        setBlock(level, new BlockPos(x + 6, baseY + 1, z + 3), BOOKSHELF, 2);
     }
 
     private static void buildTreasuryVault(ServerLevel level, int x, int baseY, int z) {
@@ -867,22 +969,22 @@ public final class TianShuiCityBuilder {
                 for (int y = 0; y < 4; y++) {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 4 || dz == 0 || dz == 4;
-                    if (isEdge) level.setBlock(p, OBSIDIAN, 2);
-                    else if (y == 0) level.setBlock(p, OBSIDIAN, 2);
-                    else level.setBlock(p, AIR, 2);
+                    if (isEdge) setBlock(level, p, OBSIDIAN, 2);
+                    else if (y == 0) setBlock(level, p, OBSIDIAN, 2);
+                    else setBlock(level, p, AIR, 2);
                 }
             }
         }
         // Iron door
-        level.setBlock(new BlockPos(x + 2, baseY + 1, z), IRON_DOOR, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z), AIR, 2);
+        setBlock(level, new BlockPos(x + 2, baseY + 1, z), IRON_DOOR, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z), AIR, 2);
         // Chests
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, baseY + 1, z + 2),
                 new ResourceLocation("ergenverse", "chests/tian_shui_city_governor_mansion"));
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 3, baseY + 1, z + 3),
                 new ResourceLocation("ergenverse", "chests/tian_shui_city_governor_mansion"));
         // Lantern
-        level.setBlock(new BlockPos(x + 2, baseY + 3, z + 2), GLOWSTONE, 2);
+        setBlock(level, new BlockPos(x + 2, baseY + 3, z + 2), GLOWSTONE, 2);
     }
 
     private static void buildCultivatorGuild(ServerLevel level, int cx, int baseY, int cz) {
@@ -891,21 +993,21 @@ public final class TianShuiCityBuilder {
         // Training yard (20×20, hay targets, weapon racks)
         for (int dx = 0; dx < 20; dx++) {
             for (int dz = 0; dz < 20; dz++) {
-                level.setBlock(new BlockPos(gx + dx, baseY, gz + dz), COBBLE, 2);
+                setBlock(level, new BlockPos(gx + dx, baseY, gz + dz), COBBLE, 2);
                 // Clear above
                 for (int y = baseY + 1; y <= baseY + 10; y++) {
-                    level.setBlock(new BlockPos(gx + dx, y, gz + dz), AIR, 2);
+                    setBlock(level, new BlockPos(gx + dx, y, gz + dz), AIR, 2);
                 }
             }
         }
         // Hay bale targets (north wall)
         for (int i = 0; i < 5; i++) {
-            level.setBlock(new BlockPos(gx + 2 + i * 4, baseY + 1, gz + 1), HAY_BLOCK_PLACEHOLDER, 2);
+            setBlock(level, new BlockPos(gx + 2 + i * 4, baseY + 1, gz + 1), HAY_BLOCK_PLACEHOLDER, 2);
         }
         // Weapon racks (stone brick along east wall)
         for (int dz = 2; dz < 18; dz += 4) {
-            level.setBlock(new BlockPos(gx + 19, baseY + 1, gz + dz), STONE_BRICK, 2);
-            level.setBlock(new BlockPos(gx + 19, baseY + 2, gz + dz), IRON_BARS, 2);
+            setBlock(level, new BlockPos(gx + 19, baseY + 1, gz + dz), STONE_BRICK, 2);
+            setBlock(level, new BlockPos(gx + 19, baseY + 2, gz + dz), IRON_BARS, 2);
         }
         // Meditation hall (10×8×6)
         buildMeditationHall(level, gx + 2, baseY, gz + 22);
@@ -924,21 +1026,21 @@ public final class TianShuiCityBuilder {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 9 || dz == 0 || dz == 7;
                     boolean isDoor = y < 3 && dx == 5 && dz == 0;
-                    if (isEdge && !isDoor) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, BIRCH_PLANK, 2);
-                    else level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, BIRCH_PLANK, 2);
+                    else setBlock(level, p, AIR, 2);
                 }
             }
         }
-        for (int dx = 0; dx < 10; dx++) for (int dz = 0; dz < 8; dz++) level.setBlock(new BlockPos(x + dx, baseY + 6, z + dz), BIRCH_STAIRS, 2);
+        for (int dx = 0; dx < 10; dx++) for (int dz = 0; dz < 8; dz++) setBlock(level, new BlockPos(x + dx, baseY + 6, z + dz), BIRCH_STAIRS, 2);
         // Meditation mats (white carpet)
         for (int dx = 2; dx <= 7; dx++) {
             for (int dz = 2; dz <= 5; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 1, z + dz), WHITE_CARPET, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 1, z + dz), WHITE_CARPET, 2);
             }
         }
         // Glowstone lanterns
-        level.setBlock(new BlockPos(x + 5, baseY + 5, z + 4), GLOWSTONE, 2);
+        setBlock(level, new BlockPos(x + 5, baseY + 5, z + 4), GLOWSTONE, 2);
     }
 
     private static void buildGuildLibrary(ServerLevel level, int x, int baseY, int z) {
@@ -948,30 +1050,30 @@ public final class TianShuiCityBuilder {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 7 || dz == 0 || dz == 5;
                     boolean isDoor = y < 3 && dx == 4 && dz == 0;
-                    if (isEdge && !isDoor) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, BIRCH_PLANK, 2);
-                    else level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, BIRCH_PLANK, 2);
+                    else setBlock(level, p, AIR, 2);
                 }
             }
         }
-        for (int dx = 0; dx < 8; dx++) for (int dz = 0; dz < 6; dz++) level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), BIRCH_STAIRS, 2);
+        for (int dx = 0; dx < 8; dx++) for (int dz = 0; dz < 6; dz++) setBlock(level, new BlockPos(x + dx, baseY + 5, z + dz), BIRCH_STAIRS, 2);
         // Bookshelves on all walls
         for (int dz = 1; dz <= 4; dz++) {
-            level.setBlock(new BlockPos(x + 1, baseY + 1, z + dz), BOOKSHELF, 2);
-            level.setBlock(new BlockPos(x + 1, baseY + 2, z + dz), BOOKSHELF, 2);
-            level.setBlock(new BlockPos(x + 6, baseY + 1, z + dz), BOOKSHELF, 2);
-            level.setBlock(new BlockPos(x + 6, baseY + 2, z + dz), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + 1, baseY + 1, z + dz), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + 1, baseY + 2, z + dz), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + 6, baseY + 1, z + dz), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + 6, baseY + 2, z + dz), BOOKSHELF, 2);
         }
         for (int dx = 2; dx <= 5; dx++) {
-            level.setBlock(new BlockPos(x + dx, baseY + 1, z + 1), BOOKSHELF, 2);
-            level.setBlock(new BlockPos(x + dx, baseY + 2, z + 1), BOOKSHELF, 2);
-            level.setBlock(new BlockPos(x + dx, baseY + 1, z + 4), BOOKSHELF, 2);
-            level.setBlock(new BlockPos(x + dx, baseY + 2, z + 4), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + dx, baseY + 1, z + 1), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + dx, baseY + 2, z + 1), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + dx, baseY + 1, z + 4), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + dx, baseY + 2, z + 4), BOOKSHELF, 2);
         }
         // Enchanting table = technique copy desk
-        level.setBlock(new BlockPos(x + 4, baseY + 1, z + 3), ENCHANTING_TABLE_PLACEHOLDER, 2);
+        setBlock(level, new BlockPos(x + 4, baseY + 1, z + 3), ENCHANTING_TABLE_PLACEHOLDER, 2);
         // Lantern
-        level.setBlock(new BlockPos(x + 4, baseY + 4, z + 3), LANTERN, 2);
+        setBlock(level, new BlockPos(x + 4, baseY + 4, z + 3), LANTERN, 2);
     }
 
     private static final BlockState ENCHANTING_TABLE_PLACEHOLDER = Blocks.ENCHANTING_TABLE.defaultBlockState();
@@ -983,15 +1085,15 @@ public final class TianShuiCityBuilder {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 5 || dz == 0 || dz == 4;
                     boolean isDoor = y < 3 && dx == 3 && dz == 0;
-                    if (isEdge && !isDoor) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, BIRCH_PLANK, 2);
-                    else level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, BIRCH_PLANK, 2);
+                    else setBlock(level, p, AIR, 2);
                 }
             }
         }
-        for (int dx = 0; dx < 6; dx++) for (int dz = 0; dz < 5; dz++) level.setBlock(new BlockPos(x + dx, baseY + 4, z + dz), BIRCH_STAIRS, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 3), RED_CARPET, 2);
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 1), BOOKSHELF, 2);
+        for (int dx = 0; dx < 6; dx++) for (int dz = 0; dz < 5; dz++) setBlock(level, new BlockPos(x + dx, baseY + 4, z + dz), BIRCH_STAIRS, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z + 3), RED_CARPET, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 1, z + 1), BOOKSHELF, 2);
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 4, baseY + 1, z + 1),
                 new ResourceLocation("ergenverse", "chests/tian_shui_city_cultivator_quarter"));
     }
@@ -1014,29 +1116,29 @@ public final class TianShuiCityBuilder {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 11 || dz == 0 || dz == 7;
                     boolean isDoor = y < 5 && dx >= 5 && dx <= 6 && dz == 0;
-                    if (isEdge && !isDoor) level.setBlock(p, QUARTZ, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, QUARTZ, 2);
-                    else level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor) setBlock(level, p, QUARTZ, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, QUARTZ, 2);
+                    else setBlock(level, p, AIR, 2);
                 }
             }
         }
         // Tiered roof
-        for (int dx = 0; dx < 12; dx++) for (int dz = 0; dz < 8; dz++) level.setBlock(new BlockPos(x + dx, baseY + 8, z + dz), QUARTZ_STAIRS, 2);
-        for (int dx = 1; dx < 11; dx++) for (int dz = 1; dz < 7; dz++) level.setBlock(new BlockPos(x + dx, baseY + 9, z + dz), QUARTZ_STAIRS, 2);
+        for (int dx = 0; dx < 12; dx++) for (int dz = 0; dz < 8; dz++) setBlock(level, new BlockPos(x + dx, baseY + 8, z + dz), QUARTZ_STAIRS, 2);
+        for (int dx = 1; dx < 11; dx++) for (int dz = 1; dz < 7; dz++) setBlock(level, new BlockPos(x + dx, baseY + 9, z + dz), QUARTZ_STAIRS, 2);
         // Red carpet aisle
         for (int dz = 1; dz <= 6; dz++) {
-            level.setBlock(new BlockPos(x + 6, baseY + 1, z + dz), RED_CARPET, 2);
-            level.setBlock(new BlockPos(x + 5, baseY + 1, z + dz), RED_CARPET, 2);
+            setBlock(level, new BlockPos(x + 6, baseY + 1, z + dz), RED_CARPET, 2);
+            setBlock(level, new BlockPos(x + 5, baseY + 1, z + dz), RED_CARPET, 2);
         }
         // Altar with cauldron
         for (int dx = 4; dx <= 7; dx++) {
-            level.setBlock(new BlockPos(x + dx, baseY + 1, z + 6), QUARTZ_SLAB, 2);
+            setBlock(level, new BlockPos(x + dx, baseY + 1, z + 6), QUARTZ_SLAB, 2);
         }
-        level.setBlock(new BlockPos(x + 5, baseY + 2, z + 6), CAULDRON, 2);
-        level.setBlock(new BlockPos(x + 6, baseY + 2, z + 6), CAULDRON, 2);
+        setBlock(level, new BlockPos(x + 5, baseY + 2, z + 6), CAULDRON, 2);
+        setBlock(level, new BlockPos(x + 6, baseY + 2, z + 6), CAULDRON, 2);
         // Soul lanterns
-        level.setBlock(new BlockPos(x + 1, baseY + 7, z + 4), SOUL_LANTERN, 2);
-        level.setBlock(new BlockPos(x + 10, baseY + 7, z + 4), SOUL_LANTERN, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 7, z + 4), SOUL_LANTERN, 2);
+        setBlock(level, new BlockPos(x + 10, baseY + 7, z + 4), SOUL_LANTERN, 2);
     }
 
     private static void buildMemorialHall(ServerLevel level, int x, int baseY, int z) {
@@ -1046,48 +1148,48 @@ public final class TianShuiCityBuilder {
                     BlockPos p = new BlockPos(x + dx, baseY + y, z + dz);
                     boolean isEdge = dx == 0 || dx == 7 || dz == 0 || dz == 5;
                     boolean isDoor = y < 3 && dx == 4 && dz == 0;
-                    if (isEdge && !isDoor) level.setBlock(p, DARK_OAK_PLANK, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, DARK_OAK_PLANK, 2);
-                    else level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor) setBlock(level, p, DARK_OAK_PLANK, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, DARK_OAK_PLANK, 2);
+                    else setBlock(level, p, AIR, 2);
                 }
             }
         }
-        for (int dx = 0; dx < 8; dx++) for (int dz = 0; dz < 6; dz++) level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), SPRUCE_STAIRS, 2);
+        for (int dx = 0; dx < 8; dx++) for (int dz = 0; dz < 6; dz++) setBlock(level, new BlockPos(x + dx, baseY + 5, z + dz), SPRUCE_STAIRS, 2);
         // Ancestor tablets (bookshelves)
         for (int dz = 1; dz <= 4; dz++) {
-            level.setBlock(new BlockPos(x + 1, baseY + 1, z + dz), BOOKSHELF, 2);
-            level.setBlock(new BlockPos(x + 1, baseY + 2, z + dz), BOOKSHELF, 2);
-            level.setBlock(new BlockPos(x + 6, baseY + 1, z + dz), BOOKSHELF, 2);
-            level.setBlock(new BlockPos(x + 6, baseY + 2, z + dz), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + 1, baseY + 1, z + dz), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + 1, baseY + 2, z + dz), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + 6, baseY + 1, z + dz), BOOKSHELF, 2);
+            setBlock(level, new BlockPos(x + 6, baseY + 2, z + dz), BOOKSHELF, 2);
         }
         // Soul lanterns
-        level.setBlock(new BlockPos(x + 4, baseY + 4, z + 3), SOUL_LANTERN, 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 4, z + 3), SOUL_LANTERN, 2);
+        setBlock(level, new BlockPos(x + 4, baseY + 4, z + 3), SOUL_LANTERN, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 4, z + 3), SOUL_LANTERN, 2);
     }
 
     private static void buildShrineGarden(ServerLevel level, int x, int baseY, int z) {
         for (int dx = 0; dx < 10; dx++) {
             for (int dz = 0; dz < 8; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY, z + dz), GRASS, 2);
+                setBlock(level, new BlockPos(x + dx, baseY, z + dz), GRASS, 2);
             }
         }
         // Stone path
         for (int dz = 0; dz < 8; dz++) {
-            level.setBlock(new BlockPos(x + 5, baseY, z + dz), SANDSTONE, 2);
+            setBlock(level, new BlockPos(x + 5, baseY, z + dz), SANDSTONE, 2);
         }
         // Flowers (using poppy and bone meal grass)
-        level.setBlock(new BlockPos(x + 2, baseY + 1, z + 2), Blocks.POPPY.defaultBlockState(), 2);
-        level.setBlock(new BlockPos(x + 7, baseY + 1, z + 4), Blocks.POPPY.defaultBlockState(), 2);
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 6), Blocks.RED_TULIP.defaultBlockState(), 2);
-        level.setBlock(new BlockPos(x + 8, baseY + 1, z + 1), Blocks.OXEYE_DAISY.defaultBlockState(), 2);
+        setBlock(level, new BlockPos(x + 2, baseY + 1, z + 2), Blocks.POPPY.defaultBlockState(), 2);
+        setBlock(level, new BlockPos(x + 7, baseY + 1, z + 4), Blocks.POPPY.defaultBlockState(), 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z + 6), Blocks.RED_TULIP.defaultBlockState(), 2);
+        setBlock(level, new BlockPos(x + 8, baseY + 1, z + 1), Blocks.OXEYE_DAISY.defaultBlockState(), 2);
         // Birch fence border
         for (int dx = 0; dx < 10; dx++) {
-            level.setBlock(new BlockPos(x + dx, baseY, z), BIRCH_FENCE, 2);
-            level.setBlock(new BlockPos(x + dx, baseY, z + 7), BIRCH_FENCE, 2);
+            setBlock(level, new BlockPos(x + dx, baseY, z), BIRCH_FENCE, 2);
+            setBlock(level, new BlockPos(x + dx, baseY, z + 7), BIRCH_FENCE, 2);
         }
         for (int dz = 0; dz < 8; dz++) {
-            level.setBlock(new BlockPos(x, baseY, z + dz), BIRCH_FENCE, 2);
-            level.setBlock(new BlockPos(x + 9, baseY, z + dz), BIRCH_FENCE, 2);
+            setBlock(level, new BlockPos(x, baseY, z + dz), BIRCH_FENCE, 2);
+            setBlock(level, new BlockPos(x + 9, baseY, z + dz), BIRCH_FENCE, 2);
         }
     }
 
@@ -1108,46 +1210,46 @@ public final class TianShuiCityBuilder {
                     boolean isEdge = dx == 0 || dx == 11 || dz == 0 || dz == 7;
                     boolean isDoor = y < 3 && dx == 6 && dz == 0;
                     boolean isWindow = y >= 2 && dz == 0 && (dx == 3 || dx == 9);
-                    if (isEdge && !isDoor && !isWindow) level.setBlock(p, SPRUCE_PLANK, 2);
-                    else if (isWindow) level.setBlock(p, GLASS_PANE, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, SPRUCE_PLANK, 2);
-                    else level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor && !isWindow) setBlock(level, p, SPRUCE_PLANK, 2);
+                    else if (isWindow) setBlock(level, p, GLASS_PANE, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, SPRUCE_PLANK, 2);
+                    else setBlock(level, p, AIR, 2);
                 }
             }
         }
         // Roof
-        for (int dx = 0; dx < 12; dx++) for (int dz = 0; dz < 8; dz++) level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), SPRUCE_STAIRS, 2);
+        for (int dx = 0; dx < 12; dx++) for (int dz = 0; dz < 8; dz++) setBlock(level, new BlockPos(x + dx, baseY + 5, z + dz), SPRUCE_STAIRS, 2);
         // 2nd floor (partial, balcony side)
         for (int dx = 1; dx <= 10; dx++) {
             for (int dz = 1; dz <= 6; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 5, z + dz), OAK_PLANK, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 5, z + dz), OAK_PLANK, 2);
             }
         }
         // Balcony railing
         for (int dx = 1; dx <= 10; dx++) {
-            level.setBlock(new BlockPos(x + dx, baseY + 6, z + 1), SPRUCE_FENCE, 2);
+            setBlock(level, new BlockPos(x + dx, baseY + 6, z + 1), SPRUCE_FENCE, 2);
         }
         // Bar counter
         for (int dx = 2; dx <= 9; dx++) {
-            level.setBlock(new BlockPos(x + dx, baseY + 1, z + 6), SPRUCE_PLANK, 2);
+            setBlock(level, new BlockPos(x + dx, baseY + 1, z + 6), SPRUCE_PLANK, 2);
         }
         // Brewing stands
-        level.setBlock(new BlockPos(x + 3, baseY + 2, z + 6), BREWING_STAND, 2);
-        level.setBlock(new BlockPos(x + 8, baseY + 2, z + 6), BREWING_STAND, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 2, z + 6), BREWING_STAND, 2);
+        setBlock(level, new BlockPos(x + 8, baseY + 2, z + 6), BREWING_STAND, 2);
         // Barrel storage
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 2), BARREL, 2);
-        level.setBlock(new BlockPos(x + 10, baseY + 1, z + 2), BARREL, 2);
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 5), BARREL, 2);
-        level.setBlock(new BlockPos(x + 10, baseY + 1, z + 5), BARREL, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 1, z + 2), BARREL, 2);
+        setBlock(level, new BlockPos(x + 10, baseY + 1, z + 2), BARREL, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 1, z + 5), BARREL, 2);
+        setBlock(level, new BlockPos(x + 10, baseY + 1, z + 5), BARREL, 2);
         // Common room tables (oak plank blocks)
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 3), OAK_PLANK, 2);
-        level.setBlock(new BlockPos(x + 5, baseY + 1, z + 3), OAK_PLANK, 2);
-        level.setBlock(new BlockPos(x + 7, baseY + 1, z + 3), OAK_PLANK, 2);
-        level.setBlock(new BlockPos(x + 4, baseY + 1, z + 5), OAK_PLANK, 2);
-        level.setBlock(new BlockPos(x + 6, baseY + 1, z + 5), OAK_PLANK, 2);
-        level.setBlock(new BlockPos(x + 8, baseY + 1, z + 5), OAK_PLANK, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z + 3), OAK_PLANK, 2);
+        setBlock(level, new BlockPos(x + 5, baseY + 1, z + 3), OAK_PLANK, 2);
+        setBlock(level, new BlockPos(x + 7, baseY + 1, z + 3), OAK_PLANK, 2);
+        setBlock(level, new BlockPos(x + 4, baseY + 1, z + 5), OAK_PLANK, 2);
+        setBlock(level, new BlockPos(x + 6, baseY + 1, z + 5), OAK_PLANK, 2);
+        setBlock(level, new BlockPos(x + 8, baseY + 1, z + 5), OAK_PLANK, 2);
         // Lanterns
-        level.setBlock(new BlockPos(x + 6, baseY + 4, z + 4), LANTERN, 2);
+        setBlock(level, new BlockPos(x + 6, baseY + 4, z + 4), LANTERN, 2);
     }
 
     private static void buildTeaHouse(ServerLevel level, int x, int baseY, int z) {
@@ -1158,25 +1260,25 @@ public final class TianShuiCityBuilder {
                     boolean isEdge = dx == 0 || dx == 5 || dz == 0 || dz == 4;
                     boolean isDoor = y < 3 && dx == 3 && dz == 0;
                     boolean isWindow = y >= 2 && dz == 0 && (dx == 2 || dx == 4);
-                    if (isEdge && !isDoor && !isWindow) level.setBlock(p, BIRCH_PLANK, 2);
-                    else if (isWindow) level.setBlock(p, GLASS_PANE, 2);
-                    else if (!isEdge && y == 0) level.setBlock(p, BIRCH_PLANK, 2);
-                    else level.setBlock(p, AIR, 2);
+                    if (isEdge && !isDoor && !isWindow) setBlock(level, p, BIRCH_PLANK, 2);
+                    else if (isWindow) setBlock(level, p, GLASS_PANE, 2);
+                    else if (!isEdge && y == 0) setBlock(level, p, BIRCH_PLANK, 2);
+                    else setBlock(level, p, AIR, 2);
                 }
             }
         }
-        for (int dx = 0; dx < 6; dx++) for (int dz = 0; dz < 5; dz++) level.setBlock(new BlockPos(x + dx, baseY + 4, z + dz), BIRCH_STAIRS, 2);
+        for (int dx = 0; dx < 6; dx++) for (int dz = 0; dz < 5; dz++) setBlock(level, new BlockPos(x + dx, baseY + 4, z + dz), BIRCH_STAIRS, 2);
         // White terracotta floor (peaceful)
         for (int dx = 1; dx <= 4; dx++) {
             for (int dz = 1; dz <= 3; dz++) {
-                level.setBlock(new BlockPos(x + dx, baseY + 1, z + dz), WHITE_CARPET, 2);
+                setBlock(level, new BlockPos(x + dx, baseY + 1, z + dz), WHITE_CARPET, 2);
             }
         }
         // Tea table
-        level.setBlock(new BlockPos(x + 3, baseY + 1, z + 2), BIRCH_PLANK, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 1, z + 2), BIRCH_PLANK, 2);
         // Cauldron for tea
-        level.setBlock(new BlockPos(x + 1, baseY + 1, z + 1), CAULDRON, 2);
+        setBlock(level, new BlockPos(x + 1, baseY + 1, z + 1), CAULDRON, 2);
         // Lantern
-        level.setBlock(new BlockPos(x + 3, baseY + 3, z + 3), LANTERN, 2);
+        setBlock(level, new BlockPos(x + 3, baseY + 3, z + 3), LANTERN, 2);
     }
 }

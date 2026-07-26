@@ -1,12 +1,20 @@
 package dev.ergenverse.spawn;
 
 import dev.ergenverse.block.ErgenverseBlocks;
+import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
+import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+import dev.ergenverse.runtime.Provenance;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 /**
  * TengFamilyCityBuilder — a FULLY hand-built Teng Family City (滕城),
@@ -143,9 +151,131 @@ public final class TengFamilyCityBuilder {
     private static final BlockState SKELETON_WALL_SKULL = Blocks.SKELETON_WALL_SKULL.defaultBlockState();
     private static final BlockState END_ROD          = Blocks.END_ROD.defaultBlockState();
 
-    // ── Helper ────────────────────────────────────────────────────────────
+    // ── Helper ─────────────────────────────────────────────────────────
+    /**
+     * Filtered setBlock — delegates to {@link #sb} so every setBlock call
+     * gets the chunk filter and provenance guard. (CRON-COMPLETIONIST-66
+     * delegation pattern — avoids mechanical replace_all of every setBlock
+     * callsite.)
+     */
     private static void setBlock(ServerLevel level, BlockPos pos, BlockState state) {
-        level.setBlock(pos, state, 2);
+        sb(level, pos, state, 2);
+    }
+
+    // ── Canon center (CRON-COMPLETIONIST-66) ───────────────────────────
+    // The city is ALWAYS at PlanetSuzakuBlueprint.TENG_FAMILY_CITY coordinates.
+    // This eliminates the prior bug where the registry passed BlockPos.ZERO
+    // and the city was built at (0,0,0) instead of its canon coordinate
+    // (3500, 0, -900).
+
+    /** Canonical city X coordinate (fixed for every world/seed/player). */
+    public static final int SECT_X = PlanetSuzakuBlueprint.TENG_FAMILY_CITY.x;
+
+    /** Canonical city Z coordinate (fixed for every world/seed/player). */
+    public static final int SECT_Z = PlanetSuzakuBlueprint.TENG_FAMILY_CITY.z;
+
+    /**
+     * Resolve the city center BlockPos by sampling the surface heightmap at
+     * (SECT_X, SECT_Z). Defensive fallback to y=64 if heightmap returns bogus.
+     */
+    public static BlockPos getSectCenter(ServerLevel level) {
+        int surfaceY = level.getHeightmapPos(
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                new BlockPos(SECT_X, 0, SECT_Z)).getY();
+        if (surfaceY <= 0) surfaceY = 64;
+        return new BlockPos(SECT_X, surfaceY, SECT_Z);
+    }
+
+    // ── Chunk-scoped build infrastructure (CRON-COMPLETIONIST-66) ──────
+    private static final ThreadLocal<ChunkBounds> CURRENT_BOUNDS = new ThreadLocal<>();
+
+    /**
+     * Filtered setBlock — the ONLY block-placement call site. Three guards:
+     * chunk filter, provenance guard, placement.
+     */
+    private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null) {
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
+        level.setBlock(pos, state, flags);
+    }
+
+    private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+            WorldDeltaStore store = runtime.deltaStore();
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            return store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
+                    pos, t.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Chunk-scoped build entry point — invoked by the chunk-materializer for
+     * each chunk that overlaps the city footprint.
+     */
+    public static void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds) {
+        ChunkBounds prev = CURRENT_BOUNDS.get();
+        CURRENT_BOUNDS.set(bounds);
+        try {
+            buildInternal(level, getSectCenter(level));
+        } finally {
+            if (prev == null) CURRENT_BOUNDS.remove();
+            else CURRENT_BOUNDS.set(prev);
+        }
+    }
+
+    /**
+     * Full-build entry point using the canon center from {@link #getSectCenter}.
+     * Idempotent: guarded by {@link #isAlreadyBuilt}.
+     */
+    public static void build(ServerLevel level) {
+        BlockPos center = getSectCenter(level);
+        if (isAlreadyBuilt(level, center)) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Teng Family City already built — build() is a no-op.");
+            return;
+        }
+        Ergenverse.LOGGER.info("[Ergenverse] Building Teng Family City at {}", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Teng Family City construction complete.");
+    }
+
+    /**
+     * Legacy 2-arg full-build entry point — kept for backward compat with
+     * {@link dev.ergenverse.world.blueprint.CanonGeographyPlacer}.
+     *
+     * @deprecated prefer {@link #build(ServerLevel)} or {@link #buildForChunk}
+     */
+    @Deprecated
+    public static void build(ServerLevel level, BlockPos center) {
+        if (isAlreadyBuilt(level, center)) return;
+        Ergenverse.LOGGER.info("[Ergenverse] Building Teng Family City at {} (legacy 2-arg path)", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Teng Family City construction complete.");
+    }
+
+    private static void buildInternal(ServerLevel level, BlockPos center) {
+        buildCityWalls(level, center);
+        buildMainStreets(level, center);
+        buildCityGate(level, center);
+        buildMarketDistrict(level, center);
+        buildMortalQuarter(level, center);
+        buildResidentialDistrict(level, center);
+        buildWarehouseDistrict(level, center);
+        buildGovernorKeep(level, center);
+        buildCultivatorQuarter(level, center);
+        buildTempleDistrict(level, center);
+        buildTavernDistrict(level, center);
+        buildSmugglerTunnels(level, center);
+        buildCityLanterns(level, center);
+        buildInteriorFurnishings(level, center);
     }
 
     private static void fill(ServerLevel level, BlockPos origin, int w, int h, int d, BlockState state) {
@@ -199,38 +329,17 @@ public final class TengFamilyCityBuilder {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  Main entry point
+    //  Idempotency guard
     // ═══════════════════════════════════════════════════════════════════
-
-    /**
-     * Build the full Teng Family City centered at (x, groundY, z).
-     * The city gate faces south (positive Z).
-     */
-    public static void build(ServerLevel level, BlockPos center) {
-        if (isAlreadyBuilt(level, center)) return;
-        dev.ergenverse.core.Ergenverse.LOGGER.info("[Ergenverse] Building Teng Family City at {}", center);
-
-        buildCityWalls(level, center);
-        buildMainStreets(level, center);
-        buildCityGate(level, center);
-        buildMarketDistrict(level, center);
-        buildMortalQuarter(level, center);
-        buildResidentialDistrict(level, center);
-        buildWarehouseDistrict(level, center);
-        buildGovernorKeep(level, center);
-        buildCultivatorQuarter(level, center);
-        buildTempleDistrict(level, center);
-        buildTavernDistrict(level, center);
-        buildSmugglerTunnels(level, center);
-        buildCityLanterns(level, center);
-        buildInteriorFurnishings(level, center);
-
-        dev.ergenverse.core.Ergenverse.LOGGER.info("[Ergenverse] Teng Family City construction complete.");
-    }
 
     public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
         // Check if the keep's foundation marker exists
         return level.getBlockState(center.offset(0, 1, -20)).getBlock() == Blocks.GOLD_BLOCK;
+    }
+
+    /** Convenience overload using the canon center. */
+    public static boolean isAlreadyBuilt(ServerLevel level) {
+        return isAlreadyBuilt(level, getSectCenter(level));
     }
 
     // ═══════════════════════════════════════════════════════════════════

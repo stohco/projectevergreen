@@ -7,6 +7,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
+import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+import dev.ergenverse.runtime.Provenance;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
+import javax.annotation.Nullable;
 
 /**
  * NanDouCityBuilder — FULLY hand-built Nan Dou City (南斗城), capital of the
@@ -146,7 +153,100 @@ public final class NanDouCityBuilder {
         return level.getBlockState(center.above(WALL_HEIGHT + 1)).getBlock() == Blocks.POLISHED_DEEPSLATE;
     }
 
+    /** Convenience overload using the canon center. */
+    public static boolean isAlreadyBuilt(ServerLevel level) {
+        return isAlreadyBuilt(level, getSectCenter(level));
+    }
+
+        // ═══════════════════════════════════════════════════════════════════
+    //  Canon center + chunk-scoped infrastructure (CRON-COMPLETIONIST-66)
+    // ═══════════════════════════════════════════════════════════════════
+
+    /** Canonical X coordinate. */
+    public static final int SECT_X = PlanetSuzakuBlueprint.NAN_DOU_CITY.x;
+
+    /** Canonical Z coordinate. */
+    public static final int SECT_Z = PlanetSuzakuBlueprint.NAN_DOU_CITY.z;
+
+    /**
+     * Resolve the center BlockPos by sampling the surface heightmap at
+     * (SECT_X, SECT_Z). Defensive fallback to y=64 if heightmap returns bogus.
+     */
+    public static BlockPos getSectCenter(ServerLevel level) {
+        int surfaceY = level.getHeightmapPos(
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                new BlockPos(SECT_X, 0, SECT_Z)).getY();
+        if (surfaceY <= 0) surfaceY = 64;
+        return new BlockPos(SECT_X, surfaceY, SECT_Z);
+    }
+
+    private static final ThreadLocal<ChunkBounds> CURRENT_BOUNDS = new ThreadLocal<>();
+
+    private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null) {
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
+        level.setBlock(pos, state, flags);
+    }
+
+    private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+            WorldDeltaStore store = runtime.deltaStore();
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            return store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
+                    pos, t.getMessage());
+            return false;
+        }
+    }
+
+    /** Filtered setBlock — delegates to sb. ALL existing level.setBlock calls
+     *  in this class are replaced to call this method instead. */
+    private static void setBlock(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        sb(level, pos, state, flags);
+    }
+
+    private static void setBlock(ServerLevel level, BlockPos pos, BlockState state) {
+        sb(level, pos, state, 2);
+    }
+
+    public static void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds) {
+        ChunkBounds prev = CURRENT_BOUNDS.get();
+        CURRENT_BOUNDS.set(bounds);
+        try {
+            buildInternal(level, getSectCenter(level));
+        } finally {
+            if (prev == null) CURRENT_BOUNDS.remove();
+            else CURRENT_BOUNDS.set(prev);
+        }
+    }
+
+    public static void build(ServerLevel level) {
+        BlockPos center = getSectCenter(level);
+        if (isAlreadyBuilt(level, center)) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Nan Dou City already built — build() is a no-op.");
+            return;
+        }
+        Ergenverse.LOGGER.info("[Ergenverse] Building Nan Dou City at {}", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Nan Dou City construction complete.");
+    }
+
+    @Deprecated
     public static void build(ServerLevel level, BlockPos center) {
+        if (isAlreadyBuilt(level, center)) return;
+        Ergenverse.LOGGER.info("[Ergenverse] Building Nan Dou City at {} (legacy 2-arg path)", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Nan Dou City construction complete.");
+    }
+
+    private static void buildInternal(ServerLevel level, BlockPos center) {
         if (built) return;
         int baseY = center.getY();
         int cx = center.getX();
@@ -185,6 +285,8 @@ public final class NanDouCityBuilder {
         Ergenverse.LOGGER.info("[NanDouCity] Nan Dou City build complete.");
     }
 
+
+
     // ══════════════════════════════════════════════════════════════════
     // FOUNDATION
     // ══════════════════════════════════════════════════════════════════
@@ -194,17 +296,17 @@ public final class NanDouCityBuilder {
             for (int z = -CITY_HALF; z <= CITY_HALF; z++) {
                 // Fill below baseY with stone
                 for (int y = baseY - 3; y < baseY; y++) {
-                    level.setBlock(new BlockPos(cx + x, y, cz + z), STONE, 3);
+                    setBlock(level, new BlockPos(cx + x, y, cz + z), STONE, 3);
                 }
                 // Surface: gravel roads, grass rest
                 if (isMainRoad(x, z) || isPlaza(x, z)) {
-                    level.setBlock(new BlockPos(cx + x, baseY, cz + z), COBBLESTONE, 3);
+                    setBlock(level, new BlockPos(cx + x, baseY, cz + z), COBBLESTONE, 3);
                 } else {
-                    level.setBlock(new BlockPos(cx + x, baseY, cz + z), GRASS_BLOCK, 3);
+                    setBlock(level, new BlockPos(cx + x, baseY, cz + z), GRASS_BLOCK, 3);
                 }
                 // Clear above
                 for (int y = baseY + 1; y < baseY + WALL_HEIGHT + 5; y++) {
-                    level.setBlock(new BlockPos(cx + x, y, cz + z), AIR, 3);
+                    setBlock(level, new BlockPos(cx + x, y, cz + z), AIR, 3);
                 }
             }
         }
@@ -237,16 +339,16 @@ public final class NanDouCityBuilder {
             boolean northGate = (i >= -GATE_WIDTH/2 && i <= GATE_WIDTH/2);
             for (int y = baseY + 1; y <= baseY + h; y++) {
                 if (!northGate) {
-                    level.setBlock(new BlockPos(cx + i, y, cz - CITY_HALF), DEEPSLATE_BRICKS, 3);
+                    setBlock(level, new BlockPos(cx + i, y, cz - CITY_HALF), DEEPSLATE_BRICKS, 3);
                 }
                 // South wall (z = +CITY_HALF)
                 if (!skipX) {
-                    level.setBlock(new BlockPos(cx + i, y, cz + CITY_HALF), DEEPSLATE_BRICKS, 3);
+                    setBlock(level, new BlockPos(cx + i, y, cz + CITY_HALF), DEEPSLATE_BRICKS, 3);
                 }
                 // West wall (x = -CITY_HALF)
-                level.setBlock(new BlockPos(cx - CITY_HALF, y, cz + i), DEEPSLATE_BRICKS, 3);
+                setBlock(level, new BlockPos(cx - CITY_HALF, y, cz + i), DEEPSLATE_BRICKS, 3);
                 // East wall (x = +CITY_HALF)
-                level.setBlock(new BlockPos(cx + CITY_HALF, y, cz + i), DEEPSLATE_BRICKS, 3);
+                setBlock(level, new BlockPos(cx + CITY_HALF, y, cz + i), DEEPSLATE_BRICKS, 3);
             }
             // Battlements (crenellations) on top
             if (i % 2 == 0) {
@@ -255,7 +357,7 @@ public final class NanDouCityBuilder {
                     int wz = cz + (dir == 0 ? -CITY_HALF : dir == 1 ? CITY_HALF : i);
                     if ((dir < 2 && (Math.abs(i) > GATE_WIDTH/2 + 1 || i % 3 != 0))
                         || dir >= 2) {
-                        level.setBlock(new BlockPos(wx, baseY + h + 1, wz), POLISHED_DEEPSLATE, 3);
+                        setBlock(level, new BlockPos(wx, baseY + h + 1, wz), POLISHED_DEEPSLATE, 3);
                     }
                 }
             }
@@ -289,9 +391,9 @@ public final class NanDouCityBuilder {
                     boolean edge = Math.abs(dx) == s/2 || Math.abs(dz) == s/2;
                     boolean top = dy == by + h;
                     if (edge || top) {
-                        level.setBlock(new BlockPos(bx + dx, dy, bz + dz), POLISHED_DEEPSLATE, 3);
+                        setBlock(level, new BlockPos(bx + dx, dy, bz + dz), POLISHED_DEEPSLATE, 3);
                     } else {
-                        level.setBlock(new BlockPos(bx + dx, dy, bz + dz), AIR, 3);
+                        setBlock(level, new BlockPos(bx + dx, dy, bz + dz), AIR, 3);
                     }
                 }
             }
@@ -299,16 +401,16 @@ public final class NanDouCityBuilder {
         // Gold cap
         for (int dx = -s/2; dx <= s/2; dx++) {
             for (int dz = -s/2; dz <= s/2; dz++) {
-                level.setBlock(new BlockPos(bx + dx, by + h + 1, bz + dz), GOLD_BLOCK, 3);
+                setBlock(level, new BlockPos(bx + dx, by + h + 1, bz + dz), GOLD_BLOCK, 3);
             }
         }
         // Lanterns at top
-        level.setBlock(new BlockPos(bx, by + h, bz), SEA_LANTERN, 3);
+        setBlock(level, new BlockPos(bx, by + h, bz), SEA_LANTERN, 3);
         // Iron bars for windows
         for (int dy = by + h/2 - 1; dy <= by + h/2 + 1; dy++) {
             if (Math.abs(bx) > CITY_HALF - 5) {
-                level.setBlock(new BlockPos(bx, dy, bz - s/2 - 1), IRON_BARS, 3);
-                level.setBlock(new BlockPos(bx, dy, bz + s/2 + 1), IRON_BARS, 3);
+                setBlock(level, new BlockPos(bx, dy, bz - s/2 - 1), IRON_BARS, 3);
+                setBlock(level, new BlockPos(bx, dy, bz + s/2 + 1), IRON_BARS, 3);
             }
         }
     }
@@ -335,23 +437,23 @@ public final class NanDouCityBuilder {
 
     private static void placeGatePillar(ServerLevel level, int px, int py, int pz, Direction dir) {
         if (dir == Direction.NORTH || dir == Direction.SOUTH) {
-            level.setBlock(new BlockPos(px, py, pz - 1), POLISHED_DEEPSLATE, 3);
-            level.setBlock(new BlockPos(px, py, pz + 1), POLISHED_DEEPSLATE, 3);
+            setBlock(level, new BlockPos(px, py, pz - 1), POLISHED_DEEPSLATE, 3);
+            setBlock(level, new BlockPos(px, py, pz + 1), POLISHED_DEEPSLATE, 3);
         } else {
-            level.setBlock(new BlockPos(px - 1, py, pz), POLISHED_DEEPSLATE, 3);
-            level.setBlock(new BlockPos(px + 1, py, pz), POLISHED_DEEPSLATE, 3);
+            setBlock(level, new BlockPos(px - 1, py, pz), POLISHED_DEEPSLATE, 3);
+            setBlock(level, new BlockPos(px + 1, py, pz), POLISHED_DEEPSLATE, 3);
         }
-        level.setBlock(new BlockPos(px, py, pz), AIR, 3); // gate opening
+        setBlock(level, new BlockPos(px, py, pz), AIR, 3); // gate opening
     }
 
     private static void placeGateArchBlock(ServerLevel level, int ax, int ay, int az, Direction dir, BlockState state) {
         if (dir == Direction.NORTH || dir == Direction.SOUTH) {
             for (int dz = -1; dz <= 1; dz++) {
-                level.setBlock(new BlockPos(ax, ay, az + dz), state, 3);
+                setBlock(level, new BlockPos(ax, ay, az + dz), state, 3);
             }
         } else {
             for (int dx = -1; dx <= 1; dx++) {
-                level.setBlock(new BlockPos(ax + dx, ay, az), state, 3);
+                setBlock(level, new BlockPos(ax + dx, ay, az), state, 3);
             }
         }
     }
@@ -365,10 +467,10 @@ public final class NanDouCityBuilder {
         for (int x = -CITY_HALF + 5; x <= CITY_HALF - 5; x++) {
             for (int z = -CITY_HALF + 5; z <= CITY_HALF - 5; z++) {
                 if (isMainRoad(x, z)) {
-                    level.setBlock(new BlockPos(cx + x, baseY, cz + z), STONE_BRICK, 3);
+                    setBlock(level, new BlockPos(cx + x, baseY, cz + z), STONE_BRICK, 3);
                     // Road edges
                     if (Math.abs(x) == 3 || Math.abs(z) == 3) {
-                        level.setBlock(new BlockPos(cx + x, baseY, cz + z), POLISHED_DEEPSLATE, 3);
+                        setBlock(level, new BlockPos(cx + x, baseY, cz + z), POLISHED_DEEPSLATE, 3);
                     }
                 }
             }
@@ -382,15 +484,15 @@ public final class NanDouCityBuilder {
                 boolean edge = Math.abs(x) == 12 || Math.abs(z) == 12;
                 boolean corner = Math.abs(x) >= 10 && Math.abs(z) >= 10;
                 if (edge) {
-                    level.setBlock(new BlockPos(cx + x, y, cz + z), OBSIDIAN, 3);
+                    setBlock(level, new BlockPos(cx + x, y, cz + z), OBSIDIAN, 3);
                 } else if (corner) {
-                    level.setBlock(new BlockPos(cx + x, y, cz + z), GOLD_BLOCK, 3);
+                    setBlock(level, new BlockPos(cx + x, y, cz + z), GOLD_BLOCK, 3);
                 } else {
-                    level.setBlock(new BlockPos(cx + x, y, cz + z), POLISHED_DEEPSLATE, 3);
+                    setBlock(level, new BlockPos(cx + x, y, cz + z), POLISHED_DEEPSLATE, 3);
                 }
                 // Clear above plaza
                 for (int dy = 1; dy <= 20; dy++) {
-                    level.setBlock(new BlockPos(cx + x, y + dy, cz + z), AIR, 3);
+                    setBlock(level, new BlockPos(cx + x, y + dy, cz + z), AIR, 3);
                 }
             }
         }
@@ -401,28 +503,28 @@ public final class NanDouCityBuilder {
             for (int dz = -3; dz <= 3; dz++) {
                 boolean rim = Math.abs(dx) == 3 || Math.abs(dz) == 3;
                 if (rim) {
-                    level.setBlock(new BlockPos(cx + dx, fy, cz + dz), POLISHED_DEEPSLATE, 3);
-                    level.setBlock(new BlockPos(cx + dx, fy + 1, cz + dz), POLISHED_DEEPSLATE, 3);
+                    setBlock(level, new BlockPos(cx + dx, fy, cz + dz), POLISHED_DEEPSLATE, 3);
+                    setBlock(level, new BlockPos(cx + dx, fy + 1, cz + dz), POLISHED_DEEPSLATE, 3);
                 } else {
-                    level.setBlock(new BlockPos(cx + dx, fy, cz + dz), WATER, 3);
+                    setBlock(level, new BlockPos(cx + dx, fy, cz + dz), WATER, 3);
                 }
             }
         }
         // Center pillar with lantern
-        level.setBlock(new BlockPos(cx, fy + 1, cz), POLISHED_DEEPSLATE, 3);
-        level.setBlock(new BlockPos(cx, fy + 2, cz), POLISHED_DEEPSLATE, 3);
-        level.setBlock(new BlockPos(cx, fy + 3, cz), SEA_LANTERN, 3);
+        setBlock(level, new BlockPos(cx, fy + 1, cz), POLISHED_DEEPSLATE, 3);
+        setBlock(level, new BlockPos(cx, fy + 2, cz), POLISHED_DEEPSLATE, 3);
+        setBlock(level, new BlockPos(cx, fy + 3, cz), SEA_LANTERN, 3);
 
         // Red lanterns around plaza perimeter (every 5 blocks)
         for (int i = -12; i <= 12; i += 5) {
-            level.setBlock(new BlockPos(cx + i, baseY + 4, cz - 13), SOUL_LANTERN, 3);
-            level.setBlock(new BlockPos(cx + i, baseY + 4, cz + 13), SOUL_LANTERN, 3);
-            level.setBlock(new BlockPos(cx - 13, baseY + 4, cz + i), SOUL_LANTERN, 3);
-            level.setBlock(new BlockPos(cx + 13, baseY + 4, cz + i), SOUL_LANTERN, 3);
+            setBlock(level, new BlockPos(cx + i, baseY + 4, cz - 13), SOUL_LANTERN, 3);
+            setBlock(level, new BlockPos(cx + i, baseY + 4, cz + 13), SOUL_LANTERN, 3);
+            setBlock(level, new BlockPos(cx - 13, baseY + 4, cz + i), SOUL_LANTERN, 3);
+            setBlock(level, new BlockPos(cx + 13, baseY + 4, cz + i), SOUL_LANTERN, 3);
         }
 
         // Nan Dou City plaque (gold block on south side of fountain)
-        level.setBlock(new BlockPos(cx, fy + 2, cz + 2), GOLD_BLOCK, 3);
+        setBlock(level, new BlockPos(cx, fy + 2, cz + 2), GOLD_BLOCK, 3);
     }
 
     // ══════════════════════════════════════════════════════════════════
@@ -439,7 +541,7 @@ public final class NanDouCityBuilder {
                 for (int dz = 0; dz <= 2; dz++) {
                     for (int dy = 1; dy <= 4; dy++) {
                         boolean edge = dx == 0 || dx == 2 || dz == 0 || dz == 2 || dy == 4;
-                        level.setBlock(new BlockPos(px + dx * side, baseY + dy, gy + dz),
+                        setBlock(level, new BlockPos(px + dx * side, baseY + dy, gy + dz),
                             edge ? DEEPSLATE_BRICKS : AIR, 3);
                     }
                 }
@@ -447,17 +549,17 @@ public final class NanDouCityBuilder {
             // Roof
             for (int dx = -1; dx <= 3; dx++) {
                 for (int dz = -1; dz <= 3; dz++) {
-                    level.setBlock(new BlockPos(px + dx * side, baseY + 5, gy + dz), DARK_OAK_STAIR, 3);
+                    setBlock(level, new BlockPos(px + dx * side, baseY + 5, gy + dz), DARK_OAK_STAIR, 3);
                 }
             }
             // Chest inside
-            level.setBlock(new BlockPos(px + side, baseY + 1, gy + 1), CHEST, 3);
+            setBlock(level, new BlockPos(px + side, baseY + 1, gy + 1), CHEST, 3);
             // Lantern
-            level.setBlock(new BlockPos(px + side, baseY + 5, gy + 1), LANTERN, 3);
+            setBlock(level, new BlockPos(px + side, baseY + 5, gy + 1), LANTERN, 3);
         }
         // Red carpet leading from gate into the city
         for (int z = 0; z < 20; z++) {
-            level.setBlock(new BlockPos(cx, baseY + 1, gy - z), RED_CARPET, 3);
+            setBlock(level, new BlockPos(cx, baseY + 1, gy - z), RED_CARPET, 3);
         }
     }
 
@@ -479,11 +581,11 @@ public final class NanDouCityBuilder {
                 boolean edgeZ = Math.abs(z) == pd;
                 if (edgeX || edgeZ) {
                     for (int y = baseY + 1; y <= baseY + 8; y++) {
-                        level.setBlock(new BlockPos(px + x, y, pz + z), POLISHED_DEEPSLATE, 3);
+                        setBlock(level, new BlockPos(px + x, y, pz + z), POLISHED_DEEPSLATE, 3);
                     }
                     // Battlements
                     if ((x + z) % 2 == 0) {
-                        level.setBlock(new BlockPos(px + x, baseY + 9, pz + z), POLISHED_DEEPSLATE, 3);
+                        setBlock(level, new BlockPos(px + x, baseY + 9, pz + z), POLISHED_DEEPSLATE, 3);
                     }
                 }
             }
@@ -494,16 +596,16 @@ public final class NanDouCityBuilder {
             for (int y = baseY + 1; y <= baseY + 10; y++) {
                 // Pillars
                 if (Math.abs(x) == 2) {
-                    level.setBlock(new BlockPos(px + x, y, pz + pd), POLISHED_DEEPSLATE, 3);
+                    setBlock(level, new BlockPos(px + x, y, pz + pd), POLISHED_DEEPSLATE, 3);
                 } else {
-                    level.setBlock(new BlockPos(px + x, y, pz + pd), AIR, 3);
+                    setBlock(level, new BlockPos(px + x, y, pz + pd), AIR, 3);
                 }
             }
         }
         // Gate arch top
         for (int x = -3; x <= 3; x++) {
-            level.setBlock(new BlockPos(px + x, baseY + 11, pz + pd), GOLD_BLOCK, 3);
-            level.setBlock(new BlockPos(px + x, baseY + 12, pz + pd), GOLD_BLOCK, 3);
+            setBlock(level, new BlockPos(px + x, baseY + 11, pz + pd), GOLD_BLOCK, 3);
+            setBlock(level, new BlockPos(px + x, baseY + 12, pz + pd), GOLD_BLOCK, 3);
         }
 
         // Throne Hall (main building, center of compound)
@@ -516,31 +618,31 @@ public final class NanDouCityBuilder {
         // Inner garden (between gate and throne hall)
         for (int x = -pw + 3; x <= pw - 3; x++) {
             for (int z = pd - 10; z <= pd - 3; z++) {
-                level.setBlock(new BlockPos(px + x, baseY + 1, pz + z), GRASS_BLOCK, 3);
+                setBlock(level, new BlockPos(px + x, baseY + 1, pz + z), GRASS_BLOCK, 3);
                 // Spirit herb garden plants
                 if ((x + z) % 7 == 0) {
-                    level.setBlock(new BlockPos(px + x, baseY + 2, pz + z), FERN, 3);
+                    setBlock(level, new BlockPos(px + x, baseY + 2, pz + z), FERN, 3);
                 }
                 if ((x * z) % 11 == 0) {
-                    level.setBlock(new BlockPos(px + x, baseY + 2, pz + z), AZALEA, 3);
+                    setBlock(level, new BlockPos(px + x, baseY + 2, pz + z), AZALEA, 3);
                 }
             }
         }
         // Garden path
         for (int z = pd - 10; z <= pd - 3; z++) {
-            level.setBlock(new BlockPos(px, baseY + 1, pz + z), SAND, 3);
+            setBlock(level, new BlockPos(px, baseY + 1, pz + z), SAND, 3);
         }
 
         // Formation platform in garden (cultivation ceremony space)
         for (int dx = -3; dx <= 3; dx++) {
             for (int dz = -3; dz <= 3; dz++) {
-                level.setBlock(new BlockPos(px + dx, baseY + 1, pz - 8 + dz), B.FORMATION_PLATFORM, 3);
+                setBlock(level, new BlockPos(px + dx, baseY + 1, pz - 8 + dz), B.FORMATION_PLATFORM, 3);
             }
         }
 
         // Red carpet from gate to throne hall
         for (int z = pd - 3; z >= -10; z--) {
-            level.setBlock(new BlockPos(px, baseY + 1, pz + z), RED_CARPET, 3);
+            setBlock(level, new BlockPos(px, baseY + 1, pz + z), RED_CARPET, 3);
         }
     }
 
@@ -553,10 +655,10 @@ public final class NanDouCityBuilder {
         // Floor
         for (int x = -hw; x <= hw; x++) {
             for (int z = -hd; z <= hd; z++) {
-                level.setBlock(new BlockPos(px + x, by + 1, pz + z), POLISHED_DEEPSLATE, 3);
+                setBlock(level, new BlockPos(px + x, by + 1, pz + z), POLISHED_DEEPSLATE, 3);
                 // Gold inlay border
                 if (Math.abs(x) == hw || Math.abs(z) == hd) {
-                    level.setBlock(new BlockPos(px + x, by + 1, pz + z), GOLD_BLOCK, 3);
+                    setBlock(level, new BlockPos(px + x, by + 1, pz + z), GOLD_BLOCK, 3);
                 }
             }
         }
@@ -564,14 +666,14 @@ public final class NanDouCityBuilder {
         // Walls
         for (int x = -hw; x <= hw; x++) {
             for (int y = 2; y <= height; y++) {
-                level.setBlock(new BlockPos(px + x, by + y, pz - hd), DEEPSLATE_BRICKS, 3);
-                level.setBlock(new BlockPos(px + x, by + y, pz + hd), DEEPSLATE_BRICKS, 3);
+                setBlock(level, new BlockPos(px + x, by + y, pz - hd), DEEPSLATE_BRICKS, 3);
+                setBlock(level, new BlockPos(px + x, by + y, pz + hd), DEEPSLATE_BRICKS, 3);
             }
         }
         for (int z = -hd; z <= hd; z++) {
             for (int y = 2; y <= height; y++) {
-                level.setBlock(new BlockPos(px - hw, by + y, pz + z), DEEPSLATE_BRICKS, 3);
-                level.setBlock(new BlockPos(px + hw, by + y, pz + z), DEEPSLATE_BRICKS, 3);
+                setBlock(level, new BlockPos(px - hw, by + y, pz + z), DEEPSLATE_BRICKS, 3);
+                setBlock(level, new BlockPos(px + hw, by + y, pz + z), DEEPSLATE_BRICKS, 3);
             }
         }
 
@@ -580,47 +682,47 @@ public final class NanDouCityBuilder {
             for (int z = -hd - 1; z <= hd + 1; z++) {
                 int distFromEdge = Math.min(Math.abs(x) - hw, Math.abs(z) - hd);
                 if (distFromEdge >= -1 && distFromEdge <= 1) {
-                    level.setBlock(new BlockPos(px + x, by + height + 1, pz + z), DARK_OAK_STAIR, 3);
+                    setBlock(level, new BlockPos(px + x, by + height + 1, pz + z), DARK_OAK_STAIR, 3);
                 }
             }
         }
         // Gold roof ridge
         for (int x = -hw + 2; x <= hw - 2; x += 4) {
-            level.setBlock(new BlockPos(px + x, by + height + 2, pz), GOLD_BLOCK, 3);
+            setBlock(level, new BlockPos(px + x, by + height + 2, pz), GOLD_BLOCK, 3);
         }
 
         // Throne platform (raised dais at north end)
         for (int x = -3; x <= 3; x++) {
             for (int z = -hd + 2; z <= -hd + 4; z++) {
-                level.setBlock(new BlockPos(px + x, by + 1, pz + z), OBSIDIAN, 3);
-                level.setBlock(new BlockPos(px + x, by + 2, pz + z), OBSIDIAN, 3);
+                setBlock(level, new BlockPos(px + x, by + 1, pz + z), OBSIDIAN, 3);
+                setBlock(level, new BlockPos(px + x, by + 2, pz + z), OBSIDIAN, 3);
             }
         }
         // Throne seat
-        level.setBlock(new BlockPos(px, by + 3, pz - hd + 2), DARK_OAK_STAIR, 3);
-        level.setBlock(new BlockPos(px, by + 4, pz - hd + 2), GOLD_BLOCK, 3);
+        setBlock(level, new BlockPos(px, by + 3, pz - hd + 2), DARK_OAK_STAIR, 3);
+        setBlock(level, new BlockPos(px, by + 4, pz - hd + 2), GOLD_BLOCK, 3);
         // Banner behind throne
         for (int y = 3; y <= 7; y++) {
-            level.setBlock(new BlockPos(px, by + y, pz - hd + 1), RED_WOOL, 3);
+            setBlock(level, new BlockPos(px, by + y, pz - hd + 1), RED_WOOL, 3);
         }
 
         // Pillars along the hall (8 pillars, 4 per side)
         for (int i = 0; i < 4; i++) {
             int pz_pillar = pz - hd + 5 + i * 5;
             for (int y = 2; y <= height; y++) {
-                level.setBlock(new BlockPos(px - hw + 3, by + y, pz_pillar), POLISHED_DEEPSLATE, 3);
-                level.setBlock(new BlockPos(px + hw - 3, by + y, pz_pillar), POLISHED_DEEPSLATE, 3);
+                setBlock(level, new BlockPos(px - hw + 3, by + y, pz_pillar), POLISHED_DEEPSLATE, 3);
+                setBlock(level, new BlockPos(px + hw - 3, by + y, pz_pillar), POLISHED_DEEPSLATE, 3);
             }
         }
 
         // Lanterns
-        level.setBlock(new BlockPos(px - hw + 1, by + 8, pz), SOUL_LANTERN, 3);
-        level.setBlock(new BlockPos(px + hw - 1, by + 8, pz), SOUL_LANTERN, 3);
-        level.setBlock(new BlockPos(px, by + 8, pz - hd + 1), SOUL_LANTERN, 3);
+        setBlock(level, new BlockPos(px - hw + 1, by + 8, pz), SOUL_LANTERN, 3);
+        setBlock(level, new BlockPos(px + hw - 1, by + 8, pz), SOUL_LANTERN, 3);
+        setBlock(level, new BlockPos(px, by + 8, pz - hd + 1), SOUL_LANTERN, 3);
 
         // Chests in side alcoves
-        level.setBlock(new BlockPos(px - hw + 1, by + 1, pz - 2), CHEST, 3);
-        level.setBlock(new BlockPos(px + hw - 1, by + 1, pz - 2), CHEST, 3);
+        setBlock(level, new BlockPos(px - hw + 1, by + 1, pz - 2), CHEST, 3);
+        setBlock(level, new BlockPos(px + hw - 1, by + 1, pz - 2), CHEST, 3);
     }
 
     private static void buildPalaceWing(ServerLevel level, int wx, int by, int wz) {
@@ -629,11 +731,11 @@ public final class NanDouCityBuilder {
         int hd = 6;
         for (int x = -hw; x <= hw; x++) {
             for (int z = -hd; z <= hd; z++) {
-                level.setBlock(new BlockPos(wx + x, by + 1, wz + z), DARK_OAK_PLANK, 3);
+                setBlock(level, new BlockPos(wx + x, by + 1, wz + z), DARK_OAK_PLANK, 3);
                 boolean edge = Math.abs(x) == hw || Math.abs(z) == hd;
                 if (edge) {
                     for (int y = 2; y <= 7; y++) {
-                        level.setBlock(new BlockPos(wx + x, by + y, wz + z), DEEPSLATE_BRICKS, 3);
+                        setBlock(level, new BlockPos(wx + x, by + y, wz + z), DEEPSLATE_BRICKS, 3);
                     }
                 }
             }
@@ -641,24 +743,24 @@ public final class NanDouCityBuilder {
         // Roof
         for (int x = -hw; x <= hw; x++) {
             for (int z = -hd; z <= hd; z++) {
-                level.setBlock(new BlockPos(wx + x, by + 7, wz + z), DARK_OAK_STAIR, 3);
+                setBlock(level, new BlockPos(wx + x, by + 7, wz + z), DARK_OAK_STAIR, 3);
             }
         }
         // Door (facing the garden)
-        level.setBlock(new BlockPos(wx, by + 3, wz + hd), AIR, 3);
-        level.setBlock(new BlockPos(wx, by + 4, wz + hd), AIR, 3);
-        level.setBlock(new BlockPos(wx + 1, by + 3, wz + hd), AIR, 3);
-        level.setBlock(new BlockPos(wx + 1, by + 4, wz + hd), AIR, 3);
+        setBlock(level, new BlockPos(wx, by + 3, wz + hd), AIR, 3);
+        setBlock(level, new BlockPos(wx, by + 4, wz + hd), AIR, 3);
+        setBlock(level, new BlockPos(wx + 1, by + 3, wz + hd), AIR, 3);
+        setBlock(level, new BlockPos(wx + 1, by + 4, wz + hd), AIR, 3);
         // Interior: bookshelves (library wing) or cauldrons (alchemy wing)
-        level.setBlock(new BlockPos(wx - 2, by + 1, wz - 2), BOOKSHELF, 3);
-        level.setBlock(new BlockPos(wx - 1, by + 1, wz - 2), BOOKSHELF, 3);
-        level.setBlock(new BlockPos(wx + 2, by + 1, wz - 2), BOOKSHELF, 3);
-        level.setBlock(new BlockPos(wx + 1, by + 1, wz - 2), BOOKSHELF, 3);
+        setBlock(level, new BlockPos(wx - 2, by + 1, wz - 2), BOOKSHELF, 3);
+        setBlock(level, new BlockPos(wx - 1, by + 1, wz - 2), BOOKSHELF, 3);
+        setBlock(level, new BlockPos(wx + 2, by + 1, wz - 2), BOOKSHELF, 3);
+        setBlock(level, new BlockPos(wx + 1, by + 1, wz - 2), BOOKSHELF, 3);
         // Crafting
-        level.setBlock(new BlockPos(wx, by + 1, wz), CRAFTING_TABLE, 3);
+        setBlock(level, new BlockPos(wx, by + 1, wz), CRAFTING_TABLE, 3);
         // Barrel storage
-        level.setBlock(new BlockPos(wx - 2, by + 1, wz + 2), BARREL, 3);
-        level.setBlock(new BlockPos(wx + 2, by + 1, wz + 2), BARREL, 3);
+        setBlock(level, new BlockPos(wx - 2, by + 1, wz + 2), BARREL, 3);
+        setBlock(level, new BlockPos(wx + 2, by + 1, wz + 2), BARREL, 3);
     }
 
     // ══════════════════════════════════════════════════════════════════
@@ -676,11 +778,11 @@ public final class NanDouCityBuilder {
                 boolean edge = Math.abs(x) == 15 || Math.abs(z) == 15;
                 if (edge) {
                     for (int y = baseY + 1; y <= baseY + 5; y++) {
-                        level.setBlock(new BlockPos(mx + x, y, mz + z), B.SPIRIT_STONE, 3);
+                        setBlock(level, new BlockPos(mx + x, y, mz + z), B.SPIRIT_STONE, 3);
                     }
                 }
                 // Market floor
-                level.setBlock(new BlockPos(mx + x, baseY + 1, mz + z), B.SPIRIT_SAND, 3);
+                setBlock(level, new BlockPos(mx + x, baseY + 1, mz + z), B.SPIRIT_SAND, 3);
             }
         }
 
@@ -688,10 +790,10 @@ public final class NanDouCityBuilder {
         for (int i = -10; i <= 10; i += 10) {
             for (int j = -10; j <= 10; j += 10) {
                 for (int y = 2; y <= 7; y++) {
-                    level.setBlock(new BlockPos(mx + i, baseY + y, mz + j), B.SPIRIT_WOOD_LOG, 3);
+                    setBlock(level, new BlockPos(mx + i, baseY + y, mz + j), B.SPIRIT_WOOD_LOG, 3);
                 }
                 // Lantern on each pillar
-                level.setBlock(new BlockPos(mx + i, baseY + 7, mz + j), LANTERN, 3);
+                setBlock(level, new BlockPos(mx + i, baseY + 7, mz + j), LANTERN, 3);
             }
         }
 
@@ -701,29 +803,29 @@ public final class NanDouCityBuilder {
             int sz = -10 + i * 8;
             // North row stalls
             for (int x = -1; x <= 1; x++) {
-                level.setBlock(new BlockPos(mx + x, baseY + 2, mz + sz), DARK_OAK_PLANK, 3);
+                setBlock(level, new BlockPos(mx + x, baseY + 2, mz + sz), DARK_OAK_PLANK, 3);
             }
-            level.setBlock(new BlockPos(mx - 2, baseY + 1, mz + sz), CHEST, 3);
-            level.setBlock(new BlockPos(mx - 2, baseY + 3, mz + sz), SOUL_LANTERN, 3);
+            setBlock(level, new BlockPos(mx - 2, baseY + 1, mz + sz), CHEST, 3);
+            setBlock(level, new BlockPos(mx - 2, baseY + 3, mz + sz), SOUL_LANTERN, 3);
             // South row stalls
             for (int x = -1; x <= 1; x++) {
-                level.setBlock(new BlockPos(mx + x, baseY + 2, mz - sz), DARK_OAK_PLANK, 3);
+                setBlock(level, new BlockPos(mx + x, baseY + 2, mz - sz), DARK_OAK_PLANK, 3);
             }
-            level.setBlock(new BlockPos(mx + 2, baseY + 1, mz - sz), CHEST, 3);
-            level.setBlock(new BlockPos(mx + 2, baseY + 3, mz - sz), SOUL_LANTERN, 3);
+            setBlock(level, new BlockPos(mx + 2, baseY + 1, mz - sz), CHEST, 3);
+            setBlock(level, new BlockPos(mx + 2, baseY + 3, mz - sz), SOUL_LANTERN, 3);
         }
 
         // Alchemy furnace (corner of market)
-        level.setBlock(new BlockPos(mx + 12, baseY + 1, mz + 12), B.ALCHEMY_FURNACE, 3);
-        level.setBlock(new BlockPos(mx + 12, baseY + 1, mz - 12), B.PILL_FURNACE, 3);
+        setBlock(level, new BlockPos(mx + 12, baseY + 1, mz + 12), B.ALCHEMY_FURNACE, 3);
+        setBlock(level, new BlockPos(mx + 12, baseY + 1, mz - 12), B.PILL_FURNACE, 3);
 
         // Dao stone display at market center
-        level.setBlock(new BlockPos(mx, baseY + 1, mz), B.DAO_STONE, 3);
-        level.setBlock(new BlockPos(mx, baseY + 2, mz), GLASS_PANE, 3);
+        setBlock(level, new BlockPos(mx, baseY + 1, mz), B.DAO_STONE, 3);
+        setBlock(level, new BlockPos(mx, baseY + 2, mz), GLASS_PANE, 3);
 
         // Anvil for artifact repairs
-        level.setBlock(new BlockPos(mx - 12, baseY + 1, mz - 12), ANVIL, 3);
-        level.setBlock(new BlockPos(mx - 13, baseY + 1, mz - 12), FURNACE, 3);
+        setBlock(level, new BlockPos(mx - 12, baseY + 1, mz - 12), ANVIL, 3);
+        setBlock(level, new BlockPos(mx - 13, baseY + 1, mz - 12), FURNACE, 3);
     }
 
     // ══════════════════════════════════════════════════════════════════
@@ -749,18 +851,18 @@ public final class NanDouCityBuilder {
         for (int ddx = -2; ddx <= 2; ddx++) {
             for (int ddz = -2; ddz <= 2; ddz++) {
                 boolean rim = Math.abs(ddx) == 2 || Math.abs(ddz) == 2;
-                level.setBlock(new BlockPos(wellX + ddx, baseY + 1, wellZ + ddz),
+                setBlock(level, new BlockPos(wellX + ddx, baseY + 1, wellZ + ddz),
                     rim ? COBBLESTONE : WATER, 3);
             }
         }
-        level.setBlock(new BlockPos(wellX, baseY + 3, wellZ), IRON_BARS, 3);
+        setBlock(level, new BlockPos(wellX, baseY + 3, wellZ), IRON_BARS, 3);
 
         // Dirt paths between houses
         for (int row = 0; row < 4; row++) {
             for (int z = 0; z < 5; z++) {
                 int pathZ = dz - 10 + row * 6 + 5;
                 for (int x = -14; x <= 8; x++) {
-                    level.setBlock(new BlockPos(dx + x, baseY + 1, pathZ), GRAVEL, 3);
+                    setBlock(level, new BlockPos(dx + x, baseY + 1, pathZ), GRAVEL, 3);
                 }
             }
         }
@@ -771,12 +873,12 @@ public final class NanDouCityBuilder {
         for (int x = 0; x < 5; x++) {
             for (int z = 0; z < 4; z++) {
                 // Floor
-                level.setBlock(new BlockPos(hx + x, by + 1, hz + z), OAK_PLANK, 3);
+                setBlock(level, new BlockPos(hx + x, by + 1, hz + z), OAK_PLANK, 3);
                 // Walls
                 boolean edge = x == 0 || x == 4 || z == 0 || z == 3;
                 if (edge) {
                     for (int y = 2; y <= 4; y++) {
-                        level.setBlock(new BlockPos(hx + x, by + y, hz + z),
+                        setBlock(level, new BlockPos(hx + x, by + y, hz + z),
                             (x == 0 || x == 4) ? COBBLESTONE : OAK_PLANK, 3);
                     }
                 }
@@ -785,18 +887,18 @@ public final class NanDouCityBuilder {
         // Roof (spruce stairs)
         for (int x = -1; x <= 5; x++) {
             for (int z = -1; z <= 4; z++) {
-                level.setBlock(new BlockPos(hx + x, by + 5, hz + z), SPRUCE_STAIRS, 3);
+                setBlock(level, new BlockPos(hx + x, by + 5, hz + z), SPRUCE_STAIRS, 3);
             }
         }
         // Door (front face, center)
-        level.setBlock(new BlockPos(hx + 2, by + 2, hz + 3), AIR, 3);
-        level.setBlock(new BlockPos(hx + 2, by + 3, hz + 3), AIR, 3);
+        setBlock(level, new BlockPos(hx + 2, by + 2, hz + 3), AIR, 3);
+        setBlock(level, new BlockPos(hx + 2, by + 3, hz + 3), AIR, 3);
         // Window
-        level.setBlock(new BlockPos(hx + 4, by + 3, hz + 1), GLASS_PANE, 3);
-        level.setBlock(new BlockPos(hx + 4, by + 3, hz + 2), GLASS_PANE, 3);
+        setBlock(level, new BlockPos(hx + 4, by + 3, hz + 1), GLASS_PANE, 3);
+        setBlock(level, new BlockPos(hx + 4, by + 3, hz + 2), GLASS_PANE, 3);
         // Interior: bed, crafting table, barrel
-        level.setBlock(new BlockPos(hx + 1, by + 1, hz + 1), BARREL, 3);
-        level.setBlock(new BlockPos(hx + 3, by + 1, hz + 1), CRAFTING_TABLE, 3);
+        setBlock(level, new BlockPos(hx + 1, by + 1, hz + 1), BARREL, 3);
+        setBlock(level, new BlockPos(hx + 3, by + 1, hz + 1), CRAFTING_TABLE, 3);
     }
 
     // ══════════════════════════════════════════════════════════════════
@@ -820,7 +922,7 @@ public final class NanDouCityBuilder {
         // Wide merchant avenue connecting to main street
         for (int z = 0; z < 15; z++) {
             for (int x = -2; x <= 2; x++) {
-                level.setBlock(new BlockPos(mx + x, baseY + 1, mz - 10 + z), STONE_BRICK, 3);
+                setBlock(level, new BlockPos(mx + x, baseY + 1, mz - 10 + z), STONE_BRICK, 3);
             }
         }
     }
@@ -829,11 +931,11 @@ public final class NanDouCityBuilder {
                                                int width, int depth, String type) {
         for (int x = 0; x < width; x++) {
             for (int z = 0; z < depth; z++) {
-                level.setBlock(new BlockPos(bx + x, by + 1, bz + z), BIRCH_PLANK, 3);
+                setBlock(level, new BlockPos(bx + x, by + 1, bz + z), BIRCH_PLANK, 3);
                 boolean edge = x == 0 || x == width - 1 || z == 0 || z == depth - 1;
                 if (edge) {
                     for (int y = 2; y <= 6; y++) {
-                        level.setBlock(new BlockPos(bx + x, by + y, bz + z), STONE_BRICK, 3);
+                        setBlock(level, new BlockPos(bx + x, by + y, bz + z), STONE_BRICK, 3);
                     }
                 }
             }
@@ -841,38 +943,38 @@ public final class NanDouCityBuilder {
         // Roof
         for (int x = -1; x <= width; x++) {
             for (int z = -1; z <= depth; z++) {
-                level.setBlock(new BlockPos(bx + x, by + 7, bz + z), BIRCH_PLANK, 3);
+                setBlock(level, new BlockPos(bx + x, by + 7, bz + z), BIRCH_PLANK, 3);
             }
         }
         // Door
-        level.setBlock(new BlockPos(bx + width/2, by + 2, bz + depth - 1), AIR, 3);
-        level.setBlock(new BlockPos(bx + width/2, by + 3, bz + depth - 1), AIR, 3);
-        level.setBlock(new BlockPos(bx + width/2 + 1, by + 2, bz + depth - 1), AIR, 3);
-        level.setBlock(new BlockPos(bx + width/2 + 1, by + 3, bz + depth - 1), AIR, 3);
+        setBlock(level, new BlockPos(bx + width/2, by + 2, bz + depth - 1), AIR, 3);
+        setBlock(level, new BlockPos(bx + width/2, by + 3, bz + depth - 1), AIR, 3);
+        setBlock(level, new BlockPos(bx + width/2 + 1, by + 2, bz + depth - 1), AIR, 3);
+        setBlock(level, new BlockPos(bx + width/2 + 1, by + 3, bz + depth - 1), AIR, 3);
         // Windows
-        level.setBlock(new BlockPos(bx + 1, by + 4, bz + depth - 1), GLASS_PANE, 3);
-        level.setBlock(new BlockPos(bx + width - 2, by + 4, bz + depth - 1), GLASS_PANE, 3);
+        setBlock(level, new BlockPos(bx + 1, by + 4, bz + depth - 1), GLASS_PANE, 3);
+        setBlock(level, new BlockPos(bx + width - 2, by + 4, bz + depth - 1), GLASS_PANE, 3);
         // Interior based on type
         if (type.equals("auction")) {
             // Auction house: carpet, multiple chests, anvil
-            level.setBlock(new BlockPos(bx + width/2, by + 1, bz + depth/2), RED_CARPET, 3);
+            setBlock(level, new BlockPos(bx + width/2, by + 1, bz + depth/2), RED_CARPET, 3);
             for (int i = 0; i < width - 2; i++) {
-                level.setBlock(new BlockPos(bx + 1 + i, by + 1, bz + 1), CHEST, 3);
+                setBlock(level, new BlockPos(bx + 1 + i, by + 1, bz + 1), CHEST, 3);
             }
-            level.setBlock(new BlockPos(bx + width/2, by + 1, bz + depth/2 + 1), ANVIL, 3);
+            setBlock(level, new BlockPos(bx + width/2, by + 1, bz + depth/2 + 1), ANVIL, 3);
         } else if (type.equals("trading")) {
-            level.setBlock(new BlockPos(bx + 1, by + 1, bz + 1), CHEST, 3);
-            level.setBlock(new BlockPos(bx + width - 2, by + 1, bz + 1), CHEST, 3);
-            level.setBlock(new BlockPos(bx + width/2, by + 1, bz + depth/2), BARREL, 3);
+            setBlock(level, new BlockPos(bx + 1, by + 1, bz + 1), CHEST, 3);
+            setBlock(level, new BlockPos(bx + width - 2, by + 1, bz + 1), CHEST, 3);
+            setBlock(level, new BlockPos(bx + width/2, by + 1, bz + depth/2), BARREL, 3);
         } else {
             // Storage: barrels and chests
-            level.setBlock(new BlockPos(bx + 1, by + 1, bz + 1), BARREL, 3);
-            level.setBlock(new BlockPos(bx + width - 2, by + 1, bz + 1), BARREL, 3);
-            level.setBlock(new BlockPos(bx + 1, by + 1, bz + depth - 2), CHEST, 3);
-            level.setBlock(new BlockPos(bx + width - 2, by + 1, bz + depth - 2), CHEST, 3);
+            setBlock(level, new BlockPos(bx + 1, by + 1, bz + 1), BARREL, 3);
+            setBlock(level, new BlockPos(bx + width - 2, by + 1, bz + 1), BARREL, 3);
+            setBlock(level, new BlockPos(bx + 1, by + 1, bz + depth - 2), CHEST, 3);
+            setBlock(level, new BlockPos(bx + width - 2, by + 1, bz + depth - 2), CHEST, 3);
         }
         // Sign (lantern above door)
-        level.setBlock(new BlockPos(bx + width/2, by + 7, bz + depth), LANTERN, 3);
+        setBlock(level, new BlockPos(bx + width/2, by + 7, bz + depth), LANTERN, 3);
     }
 
     // ══════════════════════════════════════════════════════════════════
@@ -889,10 +991,10 @@ public final class NanDouCityBuilder {
                 boolean edge = Math.abs(x) == 12 || Math.abs(z) == 15;
                 if (edge) {
                     for (int y = baseY + 1; y <= baseY + 6; y++) {
-                        level.setBlock(new BlockPos(tx + x, y, tz + z), B.SPIRIT_STONE, 3);
+                        setBlock(level, new BlockPos(tx + x, y, tz + z), B.SPIRIT_STONE, 3);
                     }
                 }
-                level.setBlock(new BlockPos(tx + x, baseY + 1, tz + z), B.SPIRIT_SAND, 3);
+                setBlock(level, new BlockPos(tx + x, baseY + 1, tz + z), B.SPIRIT_SAND, 3);
             }
         }
 
@@ -901,7 +1003,7 @@ public final class NanDouCityBuilder {
         for (int x = -6; x <= 6; x++) {
             for (int z = -8; z <= 8; z++) {
                 for (int y = baseY + 2; y <= baseY + 4; y++) {
-                    level.setBlock(new BlockPos(tx + x, y, tz + z),
+                    setBlock(level, new BlockPos(tx + x, y, tz + z),
                         (Math.abs(x) == 6 || Math.abs(z) == 8) ? B.SPIRIT_STONE : WHITE_CARPET, 3);
                 }
             }
@@ -909,7 +1011,7 @@ public final class NanDouCityBuilder {
         // Stairs leading up (south face)
         for (int s = 0; s < 3; s++) {
             for (int x = -2; x <= 2; x++) {
-                level.setBlock(new BlockPos(tx + x, baseY + 2 + s, tz + 9 + s), STONE_STAIRS, 3);
+                setBlock(level, new BlockPos(tx + x, baseY + 2 + s, tz + 9 + s), STONE_STAIRS, 3);
             }
         }
 
@@ -919,14 +1021,14 @@ public final class NanDouCityBuilder {
         int[][] pillarOffsets = {{-5, -7}, {5, -7}, {-5, 7}, {5, 7}};
         for (int[] p : pillarOffsets) {
             for (int y = hallY; y <= hallY + 8; y++) {
-                level.setBlock(new BlockPos(tx + p[0], y, tz + p[1]), B.SPIRIT_WOOD_LOG, 3);
+                setBlock(level, new BlockPos(tx + p[0], y, tz + p[1]), B.SPIRIT_WOOD_LOG, 3);
             }
         }
         // 2 middle pillars
         for (int z = -3; z <= 3; z += 6) {
             for (int y = hallY; y <= hallY + 8; y++) {
-                level.setBlock(new BlockPos(tx - 5, y, tz + z), B.SPIRIT_WOOD_LOG, 3);
-                level.setBlock(new BlockPos(tx + 5, y, tz + z), B.SPIRIT_WOOD_LOG, 3);
+                setBlock(level, new BlockPos(tx - 5, y, tz + z), B.SPIRIT_WOOD_LOG, 3);
+                setBlock(level, new BlockPos(tx + 5, y, tz + z), B.SPIRIT_WOOD_LOG, 3);
             }
         }
 
@@ -934,78 +1036,78 @@ public final class NanDouCityBuilder {
         for (int x = -8; x <= 8; x++) {
             for (int z = -10; z <= 10; z++) {
                 boolean innerRoof = Math.abs(x) <= 6 && Math.abs(z) <= 8;
-                level.setBlock(new BlockPos(tx + x, hallY + 9, tz + z),
+                setBlock(level, new BlockPos(tx + x, hallY + 9, tz + z),
                     innerRoof ? B.SPIRIT_WOOD_PLANK : DARK_OAK_STAIR, 3);
             }
         }
         // Gold roof ornament
-        level.setBlock(new BlockPos(tx, hallY + 10, tz), GOLD_BLOCK, 3);
-        level.setBlock(new BlockPos(tx, hallY + 11, tz), END_ROD, 3);
+        setBlock(level, new BlockPos(tx, hallY + 10, tz), GOLD_BLOCK, 3);
+        setBlock(level, new BlockPos(tx, hallY + 11, tz), END_ROD, 3);
 
         // Altar at north end of hall
         for (int x = -2; x <= 2; x++) {
             for (int z = -7; z <= -5; z++) {
-                level.setBlock(new BlockPos(tx + x, hallY, tz + z), OBSIDIAN, 3);
+                setBlock(level, new BlockPos(tx + x, hallY, tz + z), OBSIDIAN, 3);
             }
         }
-        level.setBlock(new BlockPos(tx, hallY + 1, tz - 6), B.DAO_STONE, 3);
-        level.setBlock(new BlockPos(tx, hallY + 2, tz - 6), SOUL_LANTERN, 3);
+        setBlock(level, new BlockPos(tx, hallY + 1, tz - 6), B.DAO_STONE, 3);
+        setBlock(level, new BlockPos(tx, hallY + 2, tz - 6), SOUL_LANTERN, 3);
 
         // Incense burners (cauldrons) on each side of altar
-        level.setBlock(new BlockPos(tx - 3, hallY, tz - 6), CAULDRON, 3);
-        level.setBlock(new BlockPos(tx + 3, hallY, tz - 6), CAULDRON, 3);
+        setBlock(level, new BlockPos(tx - 3, hallY, tz - 6), CAULDRON, 3);
+        setBlock(level, new BlockPos(tx + 3, hallY, tz - 6), CAULDRON, 3);
 
         // Red carpet from south gate to altar
         for (int z = 9; z >= -7; z--) {
-            level.setBlock(new BlockPos(tx, baseY + (z >= 9 ? 1 : 4), tz + z), RED_CARPET, 3);
+            setBlock(level, new BlockPos(tx, baseY + (z >= 9 ? 1 : 4), tz + z), RED_CARPET, 3);
         }
 
         // Temple gate
-        level.setBlock(new BlockPos(tx - 1, baseY + 2, tz + 15), POLISHED_DEEPSLATE, 3);
-        level.setBlock(new BlockPos(tx - 1, baseY + 3, tz + 15), POLISHED_DEEPSLATE, 3);
-        level.setBlock(new BlockPos(tx + 1, baseY + 2, tz + 15), POLISHED_DEEPSLATE, 3);
-        level.setBlock(new BlockPos(tx + 1, baseY + 3, tz + 15), POLISHED_DEEPSLATE, 3);
+        setBlock(level, new BlockPos(tx - 1, baseY + 2, tz + 15), POLISHED_DEEPSLATE, 3);
+        setBlock(level, new BlockPos(tx - 1, baseY + 3, tz + 15), POLISHED_DEEPSLATE, 3);
+        setBlock(level, new BlockPos(tx + 1, baseY + 2, tz + 15), POLISHED_DEEPSLATE, 3);
+        setBlock(level, new BlockPos(tx + 1, baseY + 3, tz + 15), POLISHED_DEEPSLATE, 3);
         // Gate top
         for (int x = -2; x <= 2; x++) {
-            level.setBlock(new BlockPos(tx + x, baseY + 4, tz + 15), GOLD_BLOCK, 3);
+            setBlock(level, new BlockPos(tx + x, baseY + 4, tz + 15), GOLD_BLOCK, 3);
         }
         // Gate lanterns
-        level.setBlock(new BlockPos(tx - 2, baseY + 4, tz + 16), SOUL_LANTERN, 3);
-        level.setBlock(new BlockPos(tx + 2, baseY + 4, tz + 16), SOUL_LANTERN, 3);
+        setBlock(level, new BlockPos(tx - 2, baseY + 4, tz + 16), SOUL_LANTERN, 3);
+        setBlock(level, new BlockPos(tx + 2, baseY + 4, tz + 16), SOUL_LANTERN, 3);
 
         // Meditation garden (east of temple hall, inside compound)
         for (int x = 8; x <= 11; x++) {
             for (int z = -8; z <= 8; z++) {
-                level.setBlock(new BlockPos(tx + x, baseY + 1, tz + z), GRASS_BLOCK, 3);
+                setBlock(level, new BlockPos(tx + x, baseY + 1, tz + z), GRASS_BLOCK, 3);
                 // Scattered spirit herbs
                 if ((x + z) % 3 == 0) {
-                    level.setBlock(new BlockPos(tx + x, baseY + 2, tz + z), FERN, 3);
+                    setBlock(level, new BlockPos(tx + x, baseY + 2, tz + z), FERN, 3);
                 }
             }
         }
         // Stone bench
         for (int z = -2; z <= 2; z++) {
-            level.setBlock(new BlockPos(tx + 9, baseY + 1, tz + z), STONE_SLAB, 3);
+            setBlock(level, new BlockPos(tx + 9, baseY + 1, tz + z), STONE_SLAB, 3);
         }
 
         // Library wing (west of temple hall, inside compound)
         for (int x = -11; x <= -8; x++) {
             for (int z = -5; z <= 5; z++) {
-                level.setBlock(new BlockPos(tx + x, baseY + 1, tz + z), DARK_OAK_PLANK, 3);
+                setBlock(level, new BlockPos(tx + x, baseY + 1, tz + z), DARK_OAK_PLANK, 3);
                 boolean wall = Math.abs(x) == 11 || Math.abs(z) == 5;
                 if (wall) {
                     for (int y = 2; y <= 5; y++) {
-                        level.setBlock(new BlockPos(tx + x, baseY + y, tz + z), B.SPIRIT_STONE, 3);
+                        setBlock(level, new BlockPos(tx + x, baseY + y, tz + z), B.SPIRIT_STONE, 3);
                     }
                 }
             }
         }
         // Library interior: bookshelves
         for (int z = -4; z <= 4; z += 2) {
-            level.setBlock(new BlockPos(tx - 10, baseY + 1, tz + z), BOOKSHELF, 3);
-            level.setBlock(new BlockPos(tx - 9, baseY + 1, tz + z), BOOKSHELF, 3);
+            setBlock(level, new BlockPos(tx - 10, baseY + 1, tz + z), BOOKSHELF, 3);
+            setBlock(level, new BlockPos(tx - 9, baseY + 1, tz + z), BOOKSHELF, 3);
         }
         // Lectern
-        level.setBlock(new BlockPos(tx - 10, baseY + 1, tz), BOOKSHELF, 3);
+        setBlock(level, new BlockPos(tx - 10, baseY + 1, tz), BOOKSHELF, 3);
     }
 }

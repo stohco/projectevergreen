@@ -100,24 +100,24 @@ public final class StructureBuilderRegistry {
         // bug that built the sect at (0,0,0) instead of its canon coordinate).
         register(PlanetSuzakuBlueprint.HENG_YUE_SECT.id, (l, b) -> HengYueSectBuilder.buildForChunk(l, b));
 
-        // CRON-COMPLETIONIST-83: remaining 9 builders still use the legacy path.
-        // Each guards on isAlreadyBuilt (idempotent). They IGNORE the ChunkBounds
-        // and do a full build on every call — they rely on isAlreadyBuilt for
-        // idempotency. Migrating them to chunk-scoped buildForChunk is a future
-        // round (same pattern as Wang Family Village and Heng Yue Sect).
-        // 5 builders take (ServerLevel, BlockPos); 4 take (ServerLevel).
-        // The 2-arg builders are wrapped with lambdas that discard the BlockPos
-        // (the builder resolves its own center internally — CRON-65 verified this
-        // comment was FALSE for HengYueSectBuilder; the other 5 may have the same
-        // bug. Future rounds must audit each.).
-        register(PlanetSuzakuBlueprint.TENG_FAMILY_CITY.id, (l, b) -> TengFamilyCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
-        register(PlanetSuzakuBlueprint.TIAN_SHUI_CITY.id, (l, b) -> TianShuiCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        // CRON-COMPLETIONIST-66: All 5 remaining (ServerLevel, BlockPos)-taking
+        // builders are now chunk-scoped — same pattern as Wang Family Village
+        // and Heng Yue Sect. The registry forwards ChunkBounds to buildForChunk,
+        // which filters placements to the loaded chunk and applies the provenance-
+        // aware rebuild guard. Each builder resolves its own center from
+        // PlanetSuzakuBlueprint (fixes the prior BlockPos.ZERO bug that built
+        // structures at (0,0,0) instead of their canon coordinates).
+        // The 4 (ServerLevel)-only builders (QilinCity, SnowDomainCapital,
+        // VermilionBirdCapital, LuoHeSect) remain on the legacy path — they
+        // resolve their own center internally and do not take a BlockPos.
+        register(PlanetSuzakuBlueprint.TENG_FAMILY_CITY.id, (l, b) -> TengFamilyCityBuilder.buildForChunk(l, b));
+        register(PlanetSuzakuBlueprint.TIAN_SHUI_CITY.id, (l, b) -> TianShuiCityBuilder.buildForChunk(l, b));
         register(PlanetSuzakuBlueprint.QILIN_CITY.id, (l, b) -> QilinCityBuilder.build(l));
-        register(PlanetSuzakuBlueprint.NAN_DOU_CITY.id, (l, b) -> NanDouCityBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.NAN_DOU_CITY.id, (l, b) -> NanDouCityBuilder.buildForChunk(l, b));
         register(PlanetSuzakuBlueprint.SNOW_DOMAIN_CAPITAL.id, (l, b) -> SnowDomainCapitalBuilder.build(l));
         register(PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.id, (l, b) -> VermilionBirdImperialCityBuilder.build(l));
-        register(PlanetSuzakuBlueprint.SOUL_REFINING_SECT.id, (l, b) -> SoulRefiningSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
-        register(PlanetSuzakuBlueprint.XUAN_DAO_SECT.id, (l, b) -> XuanDaoSectBuilder.build(l, net.minecraft.core.BlockPos.ZERO));
+        register(PlanetSuzakuBlueprint.SOUL_REFINING_SECT.id, (l, b) -> SoulRefiningSectBuilder.buildForChunk(l, b));
+        register(PlanetSuzakuBlueprint.XUAN_DAO_SECT.id, (l, b) -> XuanDaoSectBuilder.buildForChunk(l, b));
         register(PlanetSuzakuBlueprint.LUO_HE_SECT.id, (l, b) -> LuoHeSectBuilder.build(l));
     }
 

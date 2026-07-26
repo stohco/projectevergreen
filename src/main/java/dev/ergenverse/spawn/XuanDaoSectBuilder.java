@@ -1,11 +1,19 @@
 package dev.ergenverse.spawn;
 
 import dev.ergenverse.block.ErgenverseBlocks;
+import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
+import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+import dev.ergenverse.runtime.Provenance;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 /**
  * XuanDaoSectBuilder — FULLY hand-built Xuan Dao Sect (悬道宗).
@@ -124,24 +132,136 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     /** Base Y level for the sect. All buildings sit on this plane. */
     private static final int BASE_Y = -2;
 
+    // ── Canon center (CRON-COMPLETIONIST-66) ───────────────────────────
+    // The sect is ALWAYS at PlanetSuzakuBlueprint.XUAN_DAO_SECT coordinates.
+    // This eliminates the prior bug where the registry passed BlockPos.ZERO
+    // and the sect was built at (0,0,0) instead of its canon coordinate
+    // (-2400, 0, 1400).
+
+    /** Canonical sect X coordinate (fixed for every world/seed/player). */
+    public static final int SECT_X = PlanetSuzakuBlueprint.XUAN_DAO_SECT.x;
+
+    /** Canonical sect Z coordinate (fixed for every world/seed/player). */
+    public static final int SECT_Z = PlanetSuzakuBlueprint.XUAN_DAO_SECT.z;
+
     /**
-     * Check if the sect is already built by looking for the library tower's
-     * sea lantern marker at the expected position.
+     * Resolve the sect center BlockPos. The X/Z come from
+     * {@link PlanetSuzakuBlueprint#XUAN_DAO_SECT}; the Y uses the builder's
+     * hardcoded {@code BASE_Y} (preserves existing Y behavior — the heightmap
+     * migration is a separate round per CRON-65 critique #3).
      */
-    public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
-        // Library tower places a sea lantern at center + library offset
-        return level.getBlockState(center.offset(0, 3, -3)).getBlock() == Blocks.SEA_LANTERN;
+    public static BlockPos getSectCenter(ServerLevel level) {
+        return new BlockPos(SECT_X, BASE_Y, SECT_Z);
+    }
+
+    // ── Chunk-scoped build infrastructure (CRON-COMPLETIONIST-66) ──────
+    //
+    // Mirrors the WangFamilyVillageBuilder (CRON-62/63) and HengYueSectBuilder
+    // (CRON-65) pattern. The chunk-materializer invokes buildForChunk(level,
+    // bounds) for EACH chunk that overlaps the sect footprint. The ThreadLocal
+    // CURRENT_BOUNDS holds the active bounds during a buildInternal() call;
+    // the sb() helper checks it and skips any placement outside the bounds.
+    // When bounds is null (full-build path — commands, login events), no
+    // filtering occurs.
+
+    /** Active chunk bounds during a buildInternal() pass, or null for full-build. */
+    private static final ThreadLocal<ChunkBounds> CURRENT_BOUNDS = new ThreadLocal<>();
+
+    /**
+     * Filtered setBlock — the ONLY block-placement call site in this class.
+     * Three guards, in order:
+     *
+     * <p><b>1. Chunk filter (CRON-62 pattern):</b> if CURRENT_BOUNDS is non-null
+     * and (x, z) falls outside the bounds, skip.
+     *
+     * <p><b>2. Provenance-aware rebuild guard (CRON-63 pattern):</b> if
+     * CURRENT_BOUNDS is non-null, consult the {@link WorldDeltaStore} for a
+     * PLAYER or SIMULATION delta at (x, y, z). If either exists, skip the
+     * placement — player/sim intent wins over CANON.
+     *
+     * <p><b>3. Placement:</b> if both guards pass, call level.setBlock.
+     */
+    private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null) {
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
+        level.setBlock(pos, state, flags);
     }
 
     /**
-     * Build the full Xuan Dao Sect centered at the given position.
-     * @param level the server level
-     * @param center the courtyard center block position
+     * Provenance-aware guard helper (CRON-63 pattern). Returns true if a
+     * PLAYER or SIMULATION delta is recorded at {@code pos}. O(1) per call.
+     * Defensive: returns false if WorldRuntime is not initialized.
      */
+    private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+            WorldDeltaStore store = runtime.deltaStore();
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            return store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
+                    pos, t.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Chunk-scoped build entry point — invoked by the chunk-materializer for
+     * each chunk that overlaps the sect footprint.
+     */
+    public static void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds) {
+        ChunkBounds prev = CURRENT_BOUNDS.get();
+        CURRENT_BOUNDS.set(bounds);
+        try {
+            buildInternal(level, getSectCenter(level));
+        } finally {
+            if (prev == null) CURRENT_BOUNDS.remove();
+            else CURRENT_BOUNDS.set(prev);
+        }
+    }
+
+    /**
+     * Full-build entry point using the canon center resolved from
+     * {@link #getSectCenter}. Idempotent: guarded by {@link #isAlreadyBuilt}.
+     * Used by SpawnEventHandler (server-start) and ErgenverseCommand.
+     */
+    public static void build(ServerLevel level) {
+        BlockPos center = getSectCenter(level);
+        if (isAlreadyBuilt(level, center)) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Xuan Dao Sect already built — build() is a no-op.");
+            return;
+        }
+        Ergenverse.LOGGER.info("[Ergenverse] Building Xuan Dao Sect at {}", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Xuan Dao Sect construction complete.");
+    }
+
+    /**
+     * Legacy 2-arg full-build entry point — kept for backward compat with
+     * {@link dev.ergenverse.world.blueprint.CanonGeographyPlacer} which
+     * resolves its own center from the JSON blueprint.
+     *
+     * @deprecated prefer {@link #build(ServerLevel)} or {@link #buildForChunk}
+     */
+    @Deprecated
     public static void build(ServerLevel level, BlockPos center) {
         if (isAlreadyBuilt(level, center)) return;
-        dev.ergenverse.core.Ergenverse.LOGGER.info("[Ergenverse] Building Xuan Dao Sect at {}", center);
+        Ergenverse.LOGGER.info("[Ergenverse] Building Xuan Dao Sect at {} (legacy 2-arg path)", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Xuan Dao Sect construction complete.");
+    }
 
+    /**
+     * The actual construction body — shared by all three entry points.
+     * Placements flow through {@link #sb} which applies the chunk filter and
+     * provenance guard when CURRENT_BOUNDS is set.
+     */
+    private static void buildInternal(ServerLevel level, BlockPos center) {
         buildEntryPath(level, center);
         buildOuterGate(level, center);
         buildCentralCourtyard(level, center);
@@ -156,9 +276,16 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
         buildLanterns(level, center);
 
         // Mark built (same pattern as HengYueSect).
-        level.setBlockAndUpdate(center.above(2), SMOOTH_SLAB);
+        sb(level, center.above(2), SMOOTH_SLAB, 3);
+    }
 
-        dev.ergenverse.core.Ergenverse.LOGGER.info("[Ergenverse] Xuan Dao Sect construction complete.");
+    /**
+     * Check if the sect is already built by looking for the library tower's
+     * sea lantern marker at the expected position.
+     */
+    public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
+        // Library tower places a sea lantern at center + library offset
+        return level.getBlockState(center.offset(0, 3, -3)).getBlock() == Blocks.SEA_LANTERN;
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -515,8 +642,13 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
 
     // ── Helper methods ────────────────────────────────────────────────
 
+    /**
+     * Filtered setBlock — delegates to {@link #sb} so every set call gets the
+     * chunk filter and provenance guard. (CRON-COMPLETIONIST-66 delegation
+     * pattern — avoids mechanical replace_all of every set() callsite.)
+     */
     private static void set(ServerLevel level, int x, int y, int z, BlockState state) {
-        level.setBlock(new BlockPos(x, y, z), state, 3);
+        sb(level, new BlockPos(x, y, z), state, 3);
     }
 
     private static void fill(ServerLevel level, int x, int y, int z,
