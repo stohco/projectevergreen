@@ -2,57 +2,64 @@ package dev.ergenverse.client.model;
 
 // TEXTURE: assets/ergenverse/textures/entity/beast/sea_serpent.png  SIZE: 128x128
 /*
- * SeaSerpentModel — CRON-COMPLETIONIST-41: 8→12 segment upgrade for fluid undulation.
+ * SeaSerpentModel — CRON-COMPLETIONIST-86: TRUE CHAINED BODY for fluid undulation.
  *
- * CHANGES FROM PRIOR VERSION (CRON-36):
- *   - Body segments UPGRADED from 8 to 12. CRON-36 self-critique said
- *     "12 would be better for truly fluid motion." Fixed.
- *   - 12 segments create a smoother, more organic traveling wave with
- *     finer phase resolution (0.28 rad/seg vs 0.4 rad/seg previously).
- *   - Taper more gradual: width decreases 0.2 per segment instead of 0.25.
- *   - Texture size increased from 128x64 to 128x128 to accommodate
- *     12 segments × 10px texture height each.
- *   - Dorsal fins now on segments 1, 4, 7, 10 (every 3rd, alternating
- *     for more even distribution along body).
- *   - Lateral line ridges on segments 2, 5, 8, 11.
- *   - Death animation sequential straightening now spans 12 stages
- *     with finer granularity (staggers at 0.06 instead of 0.08).
+ * CRON-86 FIX: The 12 body segments were ALL parented to root, meaning each
+ * segment's yRot was applied in root space — segments wiggled independently
+ * instead of producing a true traveling wave. This round reparents them into
+ * a CHAIN: seg_0 (root) → seg_1 → seg_2 → ... → seg_11. Now rotations
+ * propagate from head to tail, producing a true undulating S-curve.
  *
- * ANATOMY (12-segment chain):
- *   - seg[0]:  front torso  (3.0 x 3.0 x 2.5, deform 0.40)
- *   - seg[1]:  mid-front   (2.8 x 2.8 x 2.5, deform 0.38)
- *   - seg[2]:  front-mid   (2.6 x 2.6 x 2.5, deform 0.36)
- *   - seg[3]:  center-front (2.4 x 2.4 x 2.5, deform 0.34)
- *   - seg[4]:  center      (2.2 x 2.2 x 2.5, deform 0.32)
- *   - seg[5]:  center-rear (2.0 x 2.0 x 2.5, deform 0.30)
- *   - seg[6]:  rear-front  (1.8 x 1.8 x 2.5, deform 0.28)
- *   - seg[7]:  mid-rear    (1.6 x 1.6 x 2.5, deform 0.26)
- *   - seg[8]:  rear        (1.4 x 1.4 x 2.5, deform 0.24)
- *   - seg[9]:  pre-tail    (1.2 x 1.2 x 2.5, deform 0.22)
- *   - seg[10]: tail-base   (1.0 x 1.0 x 2.5, deform 0.20)
- *   - seg[11]: tail-tip    (0.7 x 0.7 x 2.5, deform 0.18)
- *   - head: flat skull + jaw + whiskers + eyes
- *   - dorsal fins: on segs 1, 4, 7, 10
- *   - lateral ridges: on segs 2, 5, 8, 11
- *   - tail_fin: at end of seg[11]
- *   - pec_fin_L/R: on seg[0]
+ * ANATOMY (12-segment CHAINED body):
+ *   - seg[0]:  front torso  (3.0 x 3.0 x 2.5, deform 0.40) — root child
+ *   - seg[1]:  mid-front   (2.8 x 2.8 x 2.5, deform 0.38) — child of seg_0
+ *   - seg[2]:  front-mid   (2.6 x 2.6 x 2.5, deform 0.36) — child of seg_1
+ *   - ... (each segment is child of the previous, offset (0, 0, 2.5))
+ *   - seg[11]: tail-tip    (0.7 x 0.7 x 2.5, deform 0.18) — child of seg_10
+ *   - neck:    child of seg_0 (front torso) — offset (0, -0.2, -3.0)
+ *   - head:    child of neck (skull + jaw + whiskers + eyes)
+ *   - dorsal fins: on segs 1, 4, 7, 10 (children of their segment)
+ *   - lateral ridges: on segs 2, 5, 8, 11 (children of their segment)
+ *   - tail_fin: at end of seg_11 (child of seg_11)
+ *   - pec_fin_L/R: on seg_0 (children of seg_0, offset (±1.5, -0.5, 1.0))
  *
- * ANIMATION:
- *   - Swim: 12-segment traveling wave, phase=0.28 rad/seg, amp increases
- *     toward tail (0.15→1.35). Much smoother than 8-seg version.
- *   - All prior animations preserved (idle drift, attack strike, death
- *     sequential straightening, resting coil).
+ * ANIMATION (CRON-86 REWRITE for chained propagation):
+ *   - Swim: SMALL per-segment rotations with phase delay. Because segments
+ *     are chained, rotations COMPOUND — a 0.1 rad rotation on seg_0 plus
+ *     0.1 rad on seg_1 plus ... produces a cumulative S-curve. The old
+ *     animation used large per-segment amplitudes (up to 1.35 rad) which
+ *     would curl the chained body into a spiral. New amplitudes are
+ *     0.05-0.12 rad per segment — small enough for a smooth wave.
+ *   - The traveling wave is achieved by phase-delaying each segment's
+ *     rotation: phase = wave + i * 0.45F. The phase delay makes the wave
+ *     travel from head to tail.
+ *   - Resting coil: each segment gets a small yRot that compounds into
+ *     a gradual spiral.
+ *   - Death: sequential straightening preserved (dampens rotations to 0).
  *
- * HARSH SELF-CRITIQUE (CRON-41):
- *   - 12 segments is a major improvement. The wave is now visibly smoother
- *     — the difference between 8 and 12 is noticeable in motion. Score
- *     improved from 4/10 to ~6/10.
- *   - Still box-based (MC limitation). Each segment is a rounded box.
- *   - Performance: 12 matrix ops per frame is fine (was 8, now 12 — 50%
- *     more, but still trivial for modern hardware).
- *   - Texture at 128x128 is adequate. UV layout must match new segment count.
- *   - Whiskers still 0.2px sticks. Gills still cosmetic. These are
- *     acknowledged limitations of the addBox API.
+ * CANON: Sea serpent (海蛇) is the apex aquatic predator of 修魔海 (Sea of
+ * Devils). The novel mentions demonic sea beasts in the Sea of Devils but
+ * does not name a specific sea serpent character — this entity is
+ * mod-original but canon-plausible. Verified via web search: 修魔海 is canon
+ * (Wang Lin enters it around year 470-530 of the timeline).
+ *
+ * HARSH SELF-CRITIQUE (CRON-86):
+ *   - The chained structure is the CORRECT anatomical model for a serpent.
+ *     Real snakes undulate via vertebral propagation — each vertebra rotates
+ *     slightly relative to the previous, and the cumulative effect is a
+ *     traveling wave. The old root-parented model was anatomically wrong.
+ *   - The phase delay (0.45 rad/seg) is tuned for visual smoothness. Real
+ *     snake undulation has a wavelength of ~1 body length, which for 12
+ *     segments means ~2π/12 ≈ 0.52 rad/seg phase delay. 0.45 is close.
+ *   - The amplitude (0.05-0.12 rad/seg) is conservative. Real snakes can
+ *     achieve larger amplitudes, but for a chained Minecraft model, small
+ *     amplitudes prevent spiral curling. A future round could increase
+ *     amplitude after runtime verification.
+ *   - The neck is now a child of seg_0 (front torso), so neck rotations
+ *     propagate to the head. The old root-parented neck meant head turns
+ *     didn't follow body undulation — now they do.
+ *   - The pec fins are children of seg_0, so they follow body motion.
+ *     The old root-parented pec fins stayed fixed while the body wiggled.
  */
 import dev.ergenverse.entity.SpiritBeastEntity;
 import net.minecraft.client.model.HierarchicalModel;
@@ -92,16 +99,25 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
 
     public SeaSerpentModel(ModelPart root) {
         this.root = root;
-        for (int i = 0; i < NUM_SEGMENTS; i++) {
-            this.segments[i] = root.getChild("seg_" + i);
+        // CRON-COMPLETIONIST-86: Segments are now CHAINED.
+        // seg_0 is a root child; seg_1 is a child of seg_0; seg_2 is a child of seg_1; etc.
+        // This makes rotations propagate from head to tail, producing true undulation.
+        this.segments[0] = root.getChild("seg_0");
+        for (int i = 1; i < NUM_SEGMENTS; i++) {
+            this.segments[i] = this.segments[i - 1].getChild("seg_" + i);
         }
-        this.neck = root.getChild("neck");
+        // CRON-COMPLETIONIST-86: neck is now a child of seg_0 (front torso), not root.
+        // Old root-space offset was (0, 7.8, -11.0). seg_0 is at (0, 8.0, -8.0).
+        // New offset = (0, -0.2, -3.0). Rotation unchanged.
+        this.neck = this.segments[0].getChild("neck");
         this.head = this.neck.getChild("head");
         this.jaw = this.head.getChild("jaw");
         this.eyeLeft = this.head.getChild("eye_left");
         this.eyeRight = this.head.getChild("eye_right");
         this.whiskerLeft = this.head.getChild("whisker_left");
         this.whiskerRight = this.head.getChild("whisker_right");
+        // Dorsal fins are children of their respective segments (unchanged — they were already
+        // children of segments via seg.addOrReplaceChild in the loop).
         this.dorsal0 = this.segments[1].getChild("dorsal");
         this.dorsal1 = this.segments[4].getChild("dorsal");
         this.dorsal2 = this.segments[7].getChild("dorsal");
@@ -111,17 +127,23 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
         this.lateral2 = this.segments[8].getChild("lateral");
         this.lateral3 = this.segments[11].getChild("lateral");
         this.tailFin = this.segments[11].getChild("tail_fin");
-        this.pecFinLeft = root.getChild("pec_fin_left");
-        this.pecFinRight = root.getChild("pec_fin_right");
+        // CRON-COMPLETIONIST-86: pec fins are now children of seg_0 (front torso), not root.
+        // Old root-space offset was (±1.5, 7.5, -7.0). seg_0 is at (0, 8.0, -8.0).
+        // New offset = (±1.5, -0.5, 1.0).
+        this.pecFinLeft = this.segments[0].getChild("pec_fin_left");
+        this.pecFinRight = this.segments[0].getChild("pec_fin_right");
     }
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
 
-        // ── Body segment chain: 12 segments tapering front → rear ──────
+        // ── Body segment CHAIN: 12 segments tapering front → rear ──────
+        // CRON-COMPLETIONIST-86: Segments are now CHAINED. seg_0 is a root child at
+        // (0, 8.0, -8.0). Each subsequent segment is a child of the previous, offset
+        // (0, 0, 2.5) — the z-spacing between consecutive segments.
         float[][] segDefs = {
-            // {halfW, halfH, depth, deformation, zOffset}
+            // {halfW, halfH, depth, deformation, zOffset (root-space, for reference)}
             {1.5F, 1.5F, 2.5F, 0.40F, -8.0F},  // seg_0: front torso
             {1.4F, 1.4F, 2.5F, 0.38F, -5.5F},  // seg_1
             {1.3F, 1.3F, 2.5F, 0.36F, -3.0F},  // seg_2
@@ -137,18 +159,31 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
         };
 
         int texY = 0;
+        PartDefinition prevSeg = null;  // CRON-86: track previous segment for chaining
         for (int i = 0; i < NUM_SEGMENTS; i++) {
             float hw = segDefs[i][0];
             float hh = segDefs[i][1];
             float d  = segDefs[i][2];
             float def = segDefs[i][3];
-            float zOff = segDefs[i][4];
             CubeDeformation cd = new CubeDeformation(def);
 
-            PartDefinition seg = root.addOrReplaceChild("seg_" + i,
-                    CubeListBuilder.create().texOffs(0, texY)
-                            .addBox(-hw, -hh, -d / 2.0F, hw * 2.0F, hh * 2.0F, d, cd),
-                    PartPose.offset(0.0F, 8.0F, zOff));
+            // CRON-COMPLETIONIST-86: seg_0 is a root child (absolute offset);
+            // seg_1..11 are children of the previous segment (relative offset (0, 0, 2.5)).
+            PartDefinition seg;
+            if (i == 0) {
+                // seg_0: root child, absolute offset (0, 8.0, -8.0) — UNCHANGED from pre-CRON-86
+                seg = root.addOrReplaceChild("seg_" + i,
+                        CubeListBuilder.create().texOffs(0, texY)
+                                .addBox(-hw, -hh, -d / 2.0F, hw * 2.0F, hh * 2.0F, d, cd),
+                        PartPose.offset(0.0F, 8.0F, -8.0F));
+            } else {
+                // seg_1..11: child of previous segment, relative offset (0, 0, 2.5)
+                // This is the z-spacing between consecutive segments.
+                seg = prevSeg.addOrReplaceChild("seg_" + i,
+                        CubeListBuilder.create().texOffs(0, texY)
+                                .addBox(-hw, -hh, -d / 2.0F, hw * 2.0F, hh * 2.0F, d, cd),
+                        PartPose.offset(0.0F, 0.0F, 2.5F));
+            }
             texY += 10; // each segment gets 10px of texture height
 
             // Dorsal fins on segments 1, 4, 7, 10
@@ -168,13 +203,18 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
                                 .addBox(-hw - 0.05F, -0.1F, -ridgeD * 4, ridgeD, 0.2F, ridgeD * 8),
                         PartPose.offset(0.0F, -hh * 0.3F, 0.0F));
             }
+
+            prevSeg = seg;  // CRON-86: chain reference for next iteration
         }
 
         // ── neck : connector between seg_0 and head ─────────────────────
-        PartDefinition neck = root.addOrReplaceChild("neck",
+        // CRON-COMPLETIONIST-86: Reparented from root to seg_0 (front torso).
+        // Old root-space offset was (0, 7.8, -11.0). seg_0 is at (0, 8.0, -8.0).
+        // New offset = (0-0, 7.8-8.0, -11.0-(-8.0)) = (0, -0.2, -3.0). Rotation unchanged.
+        PartDefinition neck = root.getChild("seg_0").addOrReplaceChild("neck",
                 CubeListBuilder.create().texOffs(16, 0)
                         .addBox(-1.2F, -1.2F, -2.0F, 2.4F, 2.4F, 2.5F, new CubeDeformation(0.3F)),
-                PartPose.offsetAndRotation(0.0F, 7.8F, -11.0F, -0.15F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -0.2F, -3.0F, -0.15F, 0.0F, 0.0F));
 
         // ── head : flat broad skull ────────────────────────────────────
         PartDefinition head = neck.addOrReplaceChild("head",
@@ -206,21 +246,25 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offset(1.0F, -0.3F, -2.0F));
 
         // ── tail fin : at end of seg_11 ────────────────────────────────
-        PartDefinition seg11 = root.getChild("seg_11");
-        seg11.addOrReplaceChild("tail_fin",
+        // CRON-COMPLETIONIST-86: seg_11 is no longer a root child, so root.getChild("seg_11")
+        // would return null. Must use the chained reference: prevSeg (which is seg_11 after the loop).
+        prevSeg.addOrReplaceChild("tail_fin",
                 CubeListBuilder.create().texOffs(16, 16)
                         .addBox(-1.0F, -1.5F, -0.1F, 2.0F, 3.0F, 0.2F),
                 PartPose.offset(0.0F, 0.0F, 1.5F));
 
         // ── pectoral fins on seg_0 ────────────────────────────────────
-        root.addOrReplaceChild("pec_fin_left",
+        // CRON-COMPLETIONIST-86: Reparented from root to seg_0 (front torso).
+        // Old root-space offset was (±1.5, 7.5, -7.0). seg_0 is at (0, 8.0, -8.0).
+        // New offset = (±1.5-0, 7.5-8.0, -7.0-(-8.0)) = (±1.5, -0.5, 1.0).
+        root.getChild("seg_0").addOrReplaceChild("pec_fin_left",
                 CubeListBuilder.create().texOffs(56, 0)
                         .addBox(-2.5F, -0.1F, -1.2F, 2.5F, 0.2F, 2.4F),
-                PartPose.offset(-1.5F, 7.5F, -7.0F));
-        root.addOrReplaceChild("pec_fin_right",
+                PartPose.offset(-1.5F, -0.5F, 1.0F));
+        root.getChild("seg_0").addOrReplaceChild("pec_fin_right",
                 CubeListBuilder.create().texOffs(56, 4)
                         .addBox(0.0F, -0.1F, -1.2F, 2.5F, 0.2F, 2.4F),
-                PartPose.offset(1.5F, 7.5F, -7.0F));
+                PartPose.offset(1.5F, -0.5F, 1.0F));
 
         return LayerDefinition.create(mesh, 128, 128);
     }
@@ -249,10 +293,14 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
 
         if (resting) {
             // ── RESTING : loose coil ──────────────────────────────────
+            // CRON-86: With chained segments, each segment's yRot COMPOUNDS.
+            // Small per-segment rotations produce a gradual spiral coil.
             float breath = (float) Math.sin(ageInTicks * 0.06F) * 0.05F;
             this.root.y = -0.5F + breath;
-            // 12-segment coil: more gradual spiral
-            float[] coilAngles = {0.2F, 0.35F, 0.5F, 0.65F, 0.8F, 0.95F, 1.1F, 1.2F, 1.25F, 1.2F, 1.1F, 0.9F};
+            // 12-segment coil: small per-segment rotations that compound into a spiral.
+            // Old code used large angles (0.2-1.25) — those would over-curl a chained body.
+            // New: 0.08-0.15 rad per segment, compounding to ~1.5 rad total curve.
+            float[] coilAngles = {0.08F, 0.10F, 0.12F, 0.13F, 0.14F, 0.15F, 0.15F, 0.14F, 0.13F, 0.12F, 0.10F, 0.08F};
             for (int i = 0; i < NUM_SEGMENTS; i++) {
                 this.segments[i].yRot = coilAngles[i];
                 this.segments[i].xRot = 0.0F;
@@ -269,33 +317,50 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
             this.dorsal2.xRot = 0.5F;
             this.dorsal3.xRot = 0.5F;
         } else if (swimming) {
-            // ── SWIM UNDULATION : 12-segment traveling wave ─────────────
+            // ── SWIM UNDULATION : 12-segment traveling wave (CHAINED propagation) ─────
+            // CRON-86: With chained segments, each segment's yRot propagates to all
+            // downstream segments. A SMALL per-segment rotation with phase delay produces
+            // a TRUE traveling S-curve — the wave travels from head to tail because each
+            // segment's rotation is phase-delayed relative to the previous.
+            //
+            // OLD animation (pre-CRON-86): used large amplitudes (up to 1.35 rad on seg_11)
+            // with segments parented to root. This produced independent wiggling, NOT a
+            // traveling wave. With chained segments, those amplitudes would curl the body
+            // into a spiral.
+            //
+            // NEW animation: amplitude is 0.05-0.12 rad per segment (compounds through chain).
+            // Phase delay is 0.45 rad/seg (wavelength ≈ 14 segments ≈ 1.2 body lengths).
             float wave = ageInTicks * 0.8F;
-            float baseAmp = 0.12F + limbSwingAmount * 0.30F;
+            float baseAmp = 0.05F + limbSwingAmount * 0.07F;  // 0.05-0.12 rad per segment
 
             for (int i = 0; i < NUM_SEGMENTS; i++) {
-                // Phase offset: 0.28 radians per segment (finer resolution than 0.4)
-                float phase = wave + i * 0.28F;
-                // Amplitude increases toward tail
-                float segAmp = baseAmp * (0.15F + i * 0.1F);
+                // Phase delay: 0.45 radians per segment (wavelength ≈ 14 segments)
+                float phase = wave + i * 0.45F;
+                // Small amplitude per segment — compounds through chain into S-curve.
+                // Slight amplitude increase toward tail for whip effect.
+                float segAmp = baseAmp * (0.8F + i * 0.03F);  // 0.8x to 1.13x baseAmp
                 this.segments[i].yRot = (float) Math.sin(phase) * segAmp;
+                // Tiny vertical oscillation for 3D undulation (compounds through chain)
                 this.segments[i].xRot = (float) Math.cos(phase + 1.0F) * segAmp * 0.15F;
             }
 
-            this.neck.yRot = (float) Math.sin(wave - 0.15F) * baseAmp * 0.25F;
+            // Neck follows the body wave with a slight lead (phase advance)
+            this.neck.yRot = (float) Math.sin(wave - 0.20F) * baseAmp * 0.5F;
 
-            float tailPhase = wave + NUM_SEGMENTS * 0.28F;
-            this.tailFin.yRot = (float) Math.sin(tailPhase) * baseAmp * 1.3F;
-            this.tailFin.xRot = (float) Math.cos(tailPhase) * baseAmp * 0.25F;
+            // Tail fin amplifies the last segment's motion (whip effect)
+            float tailPhase = wave + NUM_SEGMENTS * 0.45F;
+            this.tailFin.yRot = (float) Math.sin(tailPhase) * baseAmp * 2.0F;
+            this.tailFin.xRot = (float) Math.cos(tailPhase) * baseAmp * 0.4F;
 
+            // Pectoral fins paddle gently (now children of seg_0, so they follow body)
             this.pecFinLeft.zRot = (float) Math.sin(wave * 0.5F) * 0.25F;
             this.pecFinRight.zRot = -(float) Math.sin(wave * 0.5F) * 0.25F;
 
-            // 4 dorsal fins ripple with finer delay
-            this.dorsal0.xRot = (float) Math.sin(wave + 1 * 0.28F) * 0.15F;
-            this.dorsal1.xRot = (float) Math.sin(wave + 4 * 0.28F) * 0.15F;
-            this.dorsal2.xRot = (float) Math.sin(wave + 7 * 0.28F) * 0.15F;
-            this.dorsal3.xRot = (float) Math.sin(wave + 10 * 0.28F) * 0.15F;
+            // 4 dorsal fins ripple with phase delay matching their segment
+            this.dorsal0.xRot = (float) Math.sin(wave + 1 * 0.45F) * 0.15F;
+            this.dorsal1.xRot = (float) Math.sin(wave + 4 * 0.45F) * 0.15F;
+            this.dorsal2.xRot = (float) Math.sin(wave + 7 * 0.45F) * 0.15F;
+            this.dorsal3.xRot = (float) Math.sin(wave + 10 * 0.45F) * 0.15F;
 
             this.whiskerLeft.xRot = 0.3F + (float) Math.sin(ageInTicks * 0.3F) * 0.05F;
             this.whiskerRight.xRot = 0.3F + (float) Math.sin(ageInTicks * 0.3F + 1.0F) * 0.05F;
@@ -305,16 +370,17 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
             this.jaw.xRot = limbSwingAmount * 0.15F;
             this.root.y = (float) Math.sin(wave * 0.5F) * 0.08F;
         } else {
-            // ── IDLE / GROUND : gentle S-curve drift ────────────────────
+            // ── IDLE / GROUND : gentle S-curve drift (chained) ────────
+            // CRON-86: Small per-segment rotations compound into a gentle S-curve.
             float idle = ageInTicks * 0.15F;
-            float idleAmp = 0.04F;
+            float idleAmp = 0.03F;  // small — compounds through chain
             for (int i = 0; i < NUM_SEGMENTS; i++) {
-                float phase = idle + i * 0.2F;
+                float phase = idle + i * 0.3F;
                 this.segments[i].yRot = (float) Math.sin(phase) * idleAmp;
                 this.segments[i].xRot = 0.0F;
             }
             this.neck.yRot = (float) Math.sin(idle - 0.3F) * idleAmp * 0.5F;
-            this.tailFin.yRot = (float) Math.sin(idle + NUM_SEGMENTS * 0.2F) * idleAmp * 1.5F;
+            this.tailFin.yRot = (float) Math.sin(idle + NUM_SEGMENTS * 0.3F) * idleAmp * 2.0F;
             this.jaw.xRot = 0.0F;
             this.whiskerLeft.yRot = (float) Math.sin(idle * 2.0F) * 0.08F;
             this.whiskerRight.yRot = -(float) Math.sin(idle * 2.0F) * 0.08F;
@@ -327,16 +393,19 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
         }
 
         // ── attack : head strike + body recoil cascade ────────────────
+        // CRON-86: With chained segments, the recoil on seg_0 propagates through
+        // the body. Small per-segment recoil values compound into a full-body flinch.
         float atk = entity.attackAnim;
         if (atk > 0.0F) {
             float strike = (float) Math.sin(atk * Math.PI);
             this.head.xRot = -strike * 1.2F;
             this.jaw.xRot = strike * 0.7F;
-            // 3-segment recoil cascade (finer than 2)
-            this.segments[0].yRot -= strike * 0.25F;
-            this.segments[1].yRot -= strike * 0.20F;
-            this.segments[2].yRot -= strike * 0.15F;
-            this.segments[3].yRot -= strike * 0.10F;
+            // Recoil cascade: head segments pull back, tail segments unaffected.
+            // Values are SMALL because they compound through the chain.
+            this.segments[0].yRot -= strike * 0.05F;
+            this.segments[1].yRot -= strike * 0.04F;
+            this.segments[2].yRot -= strike * 0.03F;
+            this.segments[3].yRot -= strike * 0.02F;
             this.whiskerLeft.xRot = strike * 0.8F;
             this.whiskerRight.xRot = strike * 0.8F;
             this.whiskerLeft.yRot = strike * 0.3F;
@@ -344,6 +413,10 @@ public class SeaSerpentModel extends HierarchicalModel<SpiritBeastEntity> {
         }
 
         // ── death : sequential straightening head→tail ──────────────────
+        // CRON-86: The death block already dampens segment rotations via
+        // *(1-segCollapse), which correctly drives them to 0 as collapse→1.
+        // This is the correct behavior for chained segments — stale swim/idle
+        // rotations are dampened to 0, preventing propagation through the chain.
         if (entity.deathTime > 0) {
             float t = Math.min(entity.deathTime / 12.0F, 1.0F);
             float collapse = t * t;

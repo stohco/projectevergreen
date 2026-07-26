@@ -93,33 +93,36 @@ public class SpiritFireBeastModel extends HierarchicalModel<SpiritBeastEntity> {
 
     public SpiritFireBeastModel(ModelPart root) {
         this.root = root;
+        // CRON-COMPLETIONIST-86: Capture bodyChest/bodyHip as local ModelPart variables
+        // at the top of the constructor (CRON-85 fixup — was using this.bodyChest/this.bodyHip
+        // before the locals were declared, causing cannot-find-symbol errors).
+        ModelPart bodyChest = root.getChild("body_chest");
+        ModelPart bodyHip = root.getChild("body_hip");
         // FIX (RE-APPLY-PHASE1): head is parented under neck in createBodyLayer()
         // (neck.addOrReplaceChild("head", ...)), NOT under root. Reading head from
         // root returned null and threw NPE at this.head.getChild("jaw") the moment
         // a FireBeast rendered — a direct client crash cause.
-        this.neck = this.bodyChest.getChild("neck");
+        this.neck = bodyChest.getChild("neck");
         this.head = this.neck.getChild("head");
         this.jaw = this.head.getChild("jaw");
         this.eyeLeft = this.head.getChild("eye_left");
         this.eyeRight = this.head.getChild("eye_right");
         // mane segments are children of the bodyChest (attached to the spine)
-        ModelPart bodyChest = root.getChild("body_chest");
         this.mane0 = bodyChest.getChild("mane_0");
         this.mane1 = bodyChest.getChild("mane_1");
         this.mane2 = bodyChest.getChild("mane_2");
         // mane_3 and mane_4 are on bodyHip
-        ModelPart bodyHip = root.getChild("body_hip");
         this.mane3 = bodyHip.getChild("mane_3");
         this.mane4 = bodyHip.getChild("mane_4");
-        this.tailBase = this.bodyHip.getChild("tail_base");
+        this.tailBase = bodyHip.getChild("tail_base");
         this.flameTip = this.tailBase.getChild("flame_tip");
-        this.frontLeftThigh = this.bodyChest.getChild("front_left_thigh");
+        this.frontLeftThigh = bodyChest.getChild("front_left_thigh");
         this.frontLeftShin = this.frontLeftThigh.getChild("shin");
-        this.frontRightThigh = this.bodyChest.getChild("front_right_thigh");
+        this.frontRightThigh = bodyChest.getChild("front_right_thigh");
         this.frontRightShin = this.frontRightThigh.getChild("shin");
-        this.backLeftThigh = this.bodyHip.getChild("back_left_thigh");
+        this.backLeftThigh = bodyHip.getChild("back_left_thigh");
         this.backLeftShin = this.backLeftThigh.getChild("shin");
-        this.backRightThigh = this.bodyHip.getChild("back_right_thigh");
+        this.backRightThigh = bodyHip.getChild("back_right_thigh");
         this.backRightShin = this.backRightThigh.getChild("shin");
     }
 

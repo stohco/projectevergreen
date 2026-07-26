@@ -110,7 +110,9 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         PartDefinition root = mesh.getRoot();
 
         // ── body_chest : front torso, deeper at shoulders ──────────────
-        root.addOrReplaceChild("body_chest",
+        // CRON-COMPLETIONIST-86: Capture bodyChest/bodyHip as local PartDefinition variables
+        // so createBodyLayer() (static) can use them for child reparenting (CRON-85 fixup).
+        PartDefinition bodyChest = root.addOrReplaceChild("body_chest",
                 CubeListBuilder.create().texOffs(0, 0)
                         .addBox(-2.0F, -3.0F, -5.0F, 4.0F, 6.0F, 5.0F, new CubeDeformation(0.3F)),
                 PartPose.offset(0.0F, 6.0F, -2.5F));
@@ -118,7 +120,7 @@ public class SpiritWolfModel extends HierarchicalModel<SpiritBeastEntity> {
         // ── body_hip : rear torso, narrower at hips ───────────────────────
         // CRON-COMPLETIONIST-17: Extend z from 5→6 to overlap with chest by 1px,
         // eliminating the visible seam between chest and hip.
-        root.addOrReplaceChild("body_hip",
+        PartDefinition bodyHip = root.addOrReplaceChild("body_hip",
                 CubeListBuilder.create().texOffs(0, 12)
                         .addBox(-1.5F, -2.5F, -1.0F, 3.0F, 5.0F, 6.0F, new CubeDeformation(0.2F)),
                 PartPose.offset(0.0F, 5.5F, 2.5F));
