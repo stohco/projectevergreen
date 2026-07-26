@@ -1,28 +1,43 @@
-<h1>Ergenverse 0.1.3-alpha — Renegade Immortal (仙逆)</h1>
-<p>Forge mod recreating the <em>Renegade Immortal</em> novel in Minecraft 1.20.1.</p>
+<h1>Ergenverse 0.1.7-alpha — Renegade Immortal (仙逆)</h1>
+<p>A living cultivation-world simulator reconstructing the <em>Renegade Immortal</em> (仙逆) novel universe in Minecraft 1.20.1 + Forge 47.4.0.</p>
+
+<h2>What's new in 0.1.7-alpha (CRON-131)</h2>
+<ul>
+  <li><strong>Spawn INTO the village.</strong> New players now arrive directly on the Wang Family Village plaza — standing on the hand-crafted Central Plaza floor, surrounded by the Wang Family Home, Elder's Home, commoner homes, perimeter fence, roads, and path lights. Wang Lin is materialized nearby. (Previously spawned 600 blocks away in empty terrain.)</li>
+  <li><strong>Hand-crafted world, not randomized.</strong> Planet Suzaku uses a custom <code>BlueprintChunkGenerator</code> whose terrain columns come from canon geography + biome profiles + a deterministic canon seed. Every new world starts from identical canon state. The Sea of Devils is always to the east, Heng Yue Mountain always rises where it should, Wang Family Village is always at (3842, ~72, -1184).</li>
+  <li><strong>Removed the legacy double-build.</strong> The retired 1220-line village builder is no longer called at server start — the semantic composition system (<code>CanonSettlementBuilder</code>) is the single source of truth. No more orphaned spirit-vein-stone marker, no wasted 80K block placements.</li>
+  <li><strong>Server-start village materialization.</strong> A 7×7 chunk grid around the village is force-loaded at server start, so the village is objectively present before any player joins. (Per the canon directive: "The player shouldn't be causing canonical places to come into existence.")</li>
+  <li><strong>Assembly caching.</strong> The ~80K-voxel village composition is assembled once and reused across all chunk-loads — no 49× re-assembly at server start.</li>
+</ul>
+
 <h2>Mod list</h2>
 <ul>
-  <li><strong>ergenverse-0.1.3-alpha.jar</strong> — the Er Gen universe simulation (814+ classes: cultivation, body refining, alchemy, beasts, flora, formations, talismans, canon/divine sense, NPC AI). Bundled in <code>overrides/mods/</code>.</li>
+  <li><strong>ergenverse-0.1.7-alpha.jar</strong> — the Er Gen universe simulation. Bundled in <code>overrides/mods/</code>.</li>
 </ul>
+
 <h2>Requirements</h2>
 <ul>
   <li>Minecraft 1.20.1</li>
   <li>Forge 47.4.0 (declared in <code>manifest.json</code>; CurseForge auto-installs on import)</li>
   <li>Java 17 (Forge 1.20.1 requirement)</li>
 </ul>
-<h2>Install</h2>
+
+<h2>Install via CurseForge</h2>
 <ol>
-  <li>Open the CurseForge app.</li>
-  <li>Click <strong>+ Create Custom Profile</strong> → <strong>Import</strong>.</li>
-  <li>Select <code>ergenverse-modpack-0.1.3-alpha.zip</code>.</li>
+  <li>Open the <strong>CurseForge</strong> app.</li>
+  <li>Go to <strong>Minecraft</strong> → click <strong>+ Create Custom Profile</strong>.</li>
+  <li>Switch to the <strong>Import</strong> tab.</li>
+  <li>Select <code>ergenverse-modpack-0.1.7-alpha.zip</code>.</li>
   <li>CurseForge installs Forge 47.4.0 and the mod automatically. Launch the profile.</li>
+  <li>Create a <strong>new world</strong> (single-player). On first join you'll be teleported into Wang Family Village.</li>
 </ol>
-<h2>What's new in 0.1.3-alpha</h2>
+
+<h2>Canon fidelity</h2>
+<p>The Er Gen novels are treated as objective law, not inspiration. Planet Suzaku is Wang Lin's home cultivation world — a third-tier planet in the Vermilion Bird Star System. Locations are placed at canon coordinates (Wang Family Village at 3842,-1184; Heng Yue Sect; Teng Family City; the Sea of Devils; the Suzaku Tomb; etc.). Vanilla Minecraft mobs (creepers, zombies, skeletons) are suppressed during chunk-gen; the world is populated by canon NPCs and spirit beasts.</p>
+
+<h2>Known limitations</h2>
 <ul>
-  <li>103 loot table parse errors fixed → 0 (loot tables now load cleanly)</li>
-  <li>30 missing item registrations (spirit stones, beast cores, equipment/artifacts)</li>
-  <li>Client main-menu crash fixed (ERKeybinds MOD/FORGE bus split)</li>
-  <li>spirit_stone_wall blockstate fix (324 model bakery warnings → 0)</li>
-  <li>Registry freeze crash from duplicate item names fixed</li>
-  <li>Version discipline established (see CHANGELOG.md)</li>
+  <li>The first server-start has a ~2-3s lag spike while the 7×7 village chunks force-load + materialize. Subsequent logins are instant.</li>
+  <li>The spawn-into-village teleport only fires on <strong>first join</strong> for a player. To re-trigger on an existing save, use <code>/ergen debug canon-build</code> to manually materialize the village.</li>
+  <li>This is a single-player-focused build. Multiplayer is not tested.</li>
 </ul>
