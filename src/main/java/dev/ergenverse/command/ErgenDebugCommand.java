@@ -11,6 +11,10 @@ import dev.ergenverse.history.CanonDivergenceRecorder;
 import dev.ergenverse.history.WorldChronicle;
 import dev.ergenverse.history.WorldHistory;
 import dev.ergenverse.npc.rumor.RumorNetwork;
+import dev.ergenverse.runtime.Provenance;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.BlockChangeDelta;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
 import dev.ergenverse.simulation.WorldSimState;
 import dev.ergenverse.simulation.actor.Actor;
 import dev.ergenverse.simulation.actor.ActorRegistry;
@@ -70,6 +74,12 @@ import java.util.Optional;
  *   <li>{@code /ergen debug blueprint} — show world blueprint</li>
  *   <li>{@code /ergen debug events} — show eventbus diagnostic snapshot</li>
  *   <li>{@code /ergen debug relationships} — show NPC relationship graph</li>
+ *   <li><b>CRON-73:</b> {@code /ergen debug journal} — WorldDeltaStore status
+ *       (PLAYER/SIMULATION/CANON delta counts)</li>
+ *   <li><b>CRON-73:</b> {@code /ergen debug journal query <x> <y> <z>} —
+ *       deltas at a position + live Minecraft state</li>
+ *   <li><b>CRON-73:</b> {@code /ergen debug journal recent [count]} —
+ *       last N SIMULATION deltas (proof that beasts/weather/residence are journaling)</li>
  * </ul>
  *
  * <h2>Reality-manipulation subcommands</h2>
@@ -79,6 +89,12 @@ import java.util.Optional;
  *   <li>{@code /ergen debug simulate <ticks>} — fast-forward the actor tick loop</li>
  *   <li>{@code /ergen debug breakthrough <actorId>} — force a cultivation breakthrough</li>
  *   <li>{@code /ergen debug perception <id>} — force a perception snapshot now and show it</li>
+ *   <li><b>CRON-73:</b> {@code /ergen debug journal sim-write <x> <y> <z> <blockId>} —
+ *       manually trigger a SIMULATION write (operational proof of persistence)</li>
+ *   <li><b>CRON-73:</b> {@code /ergen debug journal player-write <x> <y> <z> <blockId>} —
+ *       manually trigger a PLAYER write (test resolution priority)</li>
+ *   <li><b>CRON-73:</b> {@code /ergen debug journal clear} — wipe the journal
+ *       (simulate fresh-save state; blueprint-only)</li>
  * </ul>
  *
  * <p>Constitution: Article XXV (Completed System Checklist) — debugging tools,
@@ -153,6 +169,32 @@ public class ErgenDebugCommand {
                         .executes(ErgenDebugCommand::matureHerb))
                     .then(Commands.literal("golden_save")
                         .executes(ErgenDebugCommand::goldenSave))
+                    // ── CRON-COMPLETIONIST-73: Journal (WorldDeltaStore) inspection ──
+                    .then(Commands.literal("journal")
+                        .executes(ErgenDebugCommand::showJournalStatus)
+                        .then(Commands.literal("query")
+                            .then(Commands.argument("x", IntegerArgumentType.integer())
+                                .then(Commands.argument("y", IntegerArgumentType.integer())
+                                    .then(Commands.argument("z", IntegerArgumentType.integer())
+                                        .executes(ErgenDebugCommand::journalQuery)))))
+                        .then(Commands.literal("recent")
+                            .executes(ctx -> journalRecent(ctx, 10))
+                            .then(Commands.argument("count", IntegerArgumentType.integer(1, 100))
+                                .executes(ctx -> journalRecent(ctx, IntegerArgumentType.getInteger(ctx, "count")))))
+                        .then(Commands.literal("sim-write")
+                            .then(Commands.argument("x", IntegerArgumentType.integer())
+                                .then(Commands.argument("y", IntegerArgumentType.integer())
+                                    .then(Commands.argument("z", IntegerArgumentType.integer())
+                                        .then(Commands.argument("blockId", StringArgumentType.string())
+                                            .executes(ErgenDebugCommand::journalSimWrite))))))
+                        .then(Commands.literal("player-write")
+                            .then(Commands.argument("x", IntegerArgumentType.integer())
+                                .then(Commands.argument("y", IntegerArgumentType.integer())
+                                    .then(Commands.argument("z", IntegerArgumentType.integer())
+                                        .then(Commands.argument("blockId", StringArgumentType.string())
+                                            .executes(ErgenDebugCommand::journalPlayerWrite))))))
+                        .then(Commands.literal("clear")
+                            .executes(ErgenDebugCommand::journalClear)))
                 )
         );
     }
@@ -231,6 +273,12 @@ public class ErgenDebugCommand {
             "  \u00a7e/ergen debug herb\u00a7r \u2014 mature nearest spirit herb"), false);
         ctx.getSource().sendSuccess(() -> Component.literal(
             "  \u00a7e/ergen debug golden_save\u00a7r \u2014 save+reload persistence test"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug journal\u00a7r \u2014 WorldDeltaStore status + inspection"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug journal query <x> <y> <z>\u00a7r \u2014 deltas at a position"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug journal sim-write <x> <y> <z> <blockId>\u00a7r \u2014 manual SIM write"), false);
         return 1;
     }
 
@@ -995,5 +1043,359 @@ public class ErgenDebugCommand {
     private static void sendLine(CommandContext<CommandSourceStack> ctx, String key, String value) {
         ctx.getSource().sendSuccess(() -> Component.literal(
             "  \u00a77" + key + ":\u00a7r " + value), false);
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  CRON-COMPLETIONIST-73: /ergen debug journal — WorldDeltaStore inspection
+    // ══════════════════════════════════════════════════════════════════
+    //
+    //  The WorldDeltaStore is the simulation's journal of every change since
+    //  day 0 — block edits (PLAYER + SIMULATION provenance), and (future) non-
+    //  block deltas (actor moves, relationships, memories). Per CRON-69's
+    //  "world as Git" contract: blueprint + journal = save. A fresh save
+    //  starts with an empty journal; every playthrough begins from pure canon.
+    //
+    //  Prior to CRON-73, there was NO way for a player/admin to inspect this
+    //  journal. The 3 simulation writers (SpiritBeastFeedGoal CRON-61,
+    //  WeatherDamageSubscriber CRON-61, BlockPlacementEngine CRON-61) all
+    //  route through WorldFacade.setSimulationBlock, but their writes were
+    //  invisible — the player had to trust that the journal was being
+    //  populated. This subcommand set closes that gap by exposing:
+    //
+    //    /ergen debug journal                  — status: counts by provenance
+    //    /ergen debug journal query <x> <y> <z> — what's recorded at a pos
+    //    /ergen debug journal recent [count]    — last N SIMULATION deltas
+    //    /ergen debug journal sim-write <x> <y> <z> <blockId>
+    //                                          — manually trigger a SIM write
+    //    /ergen debug journal player-write <x> <y> <z> <blockId>
+    //                                          — manually trigger a PLAYER write
+    //    /ergen debug journal clear            — wipe the journal (NEW SAVE test)
+    //
+    //  The sim-write/player-write commands are the operational proof: run
+    //  one, save+reload, run /ergen debug journal query <same pos> — if the
+    //  delta is still there, the persistence loop is closed. This is the
+    //  analog of /ergen debug golden_save but for the delta journal.
+
+    /**
+     * /ergen debug journal — show journal status: total deltas, breakdown by
+     * provenance, journal size.
+     */
+    private static int showJournalStatus(CommandContext<CommandSourceStack> ctx) {
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7l=== WORLD DELTA JOURNAL ===\u00a7r"), false);
+
+        WorldRuntime rt = WorldRuntime.get();
+        if (!rt.isInitialized()) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cWorldRuntime not initialized. Load a world first.\u00a7r"), false);
+            return 1;
+        }
+        WorldDeltaStore store = rt.deltaStore();
+
+        sendLine(ctx, "Status", "\u00a7aINITIALIZED\u00a7r");
+        sendLine(ctx, "Suzaku Level", rt.suzakuLevel() != null ? "\u00a7aBOUND\u00a7r" : "\u00a7cUNBOUND\u00a7r");
+        sendLine(ctx, "Total Deltas (size())", String.valueOf(store.size()));
+        sendLine(ctx, "PLAYER block deltas", String.valueOf(store.blockChangeCount(Provenance.PLAYER)));
+        sendLine(ctx, "SIMULATION block deltas", String.valueOf(store.blockChangeCount(Provenance.SIMULATION)));
+        sendLine(ctx, "CANON block deltas", String.valueOf(store.blockChangeCount(Provenance.CANON))
+                + " \u00a78(should always be 0 — canon is immutable)\u00a7r");
+
+        ctx.getSource().sendSuccess(() -> Component.literal(""), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Journal inspection:\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug journal query <x> <y> <z>\u00a7r \u2014 what's recorded at a position"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug journal recent [count]\u00a7r \u2014 last N SIMULATION deltas"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(""), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Operational proof (persistence test):\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug journal sim-write <x> <y> <z> <blockId>\u00a7r \u2014 write a SIM delta"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug journal player-write <x> <y> <z> <blockId>\u00a7r \u2014 write a PLAYER delta"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug journal clear\u00a7r \u2014 wipe journal (test fresh-save state)"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a77Then: save+reload, run /ergen debug journal query <pos> — if the delta persists, the loop is closed.\u00a7r"), false);
+        return 1;
+    }
+
+    /**
+     * /ergen debug journal query <x> <y> <z> — show what's recorded at a
+     * position across all provenances, plus the live Minecraft block state.
+     */
+    private static int journalQuery(CommandContext<CommandSourceStack> ctx) {
+        int x = IntegerArgumentType.getInteger(ctx, "x");
+        int y = IntegerArgumentType.getInteger(ctx, "y");
+        int z = IntegerArgumentType.getInteger(ctx, "z");
+
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7l=== JOURNAL QUERY: (" + x + ", " + y + ", " + z + ") ===\u00a7r"), false);
+
+        WorldRuntime rt = WorldRuntime.get();
+        if (!rt.isInitialized()) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cWorldRuntime not initialized.\u00a7r"), false);
+            return 1;
+        }
+        WorldDeltaStore store = rt.deltaStore();
+
+        // Query each provenance
+        String playerState = store.getBlock(x, y, z, Provenance.PLAYER);
+        String simState = store.getBlock(x, y, z, Provenance.SIMULATION);
+        String canonState = store.getBlock(x, y, z, Provenance.CANON);
+
+        sendLine(ctx, "PLAYER delta", playerState != null
+                ? "\u00a7b" + playerState + "\u00a7r" : "\u00a78(none)\u00a7r");
+        sendLine(ctx, "SIMULATION delta", simState != null
+                ? "\u00a7a" + simState + "\u00a7r" : "\u00a78(none)\u00a7r");
+        sendLine(ctx, "CANON delta", canonState != null
+                ? "\u00a7c" + canonState + "\u00a7r (unexpected — canon is immutable)" : "\u00a78(none — expected)\u00a7r");
+
+        // Resolution priority: PLAYER > SIMULATION > CANON
+        String resolved;
+        String resolvedProvenance;
+        if (playerState != null) {
+            resolved = playerState;
+            resolvedProvenance = "PLAYER";
+        } else if (simState != null) {
+            resolved = simState;
+            resolvedProvenance = "SIMULATION";
+        } else {
+            resolved = "(canon — no delta)";
+            resolvedProvenance = "CANON";
+        }
+        sendLine(ctx, "Resolved (P>S>C)", "\u00a7e" + resolved + "\u00a7r (\u00a7" + resolvedProvenance.charAt(0) + resolvedProvenance + "\u00a7r)");
+
+        // Live Minecraft state at this position
+        ServerLevel level = rt.suzakuLevel();
+        if (level != null) {
+            try {
+                var liveState = level.getBlockState(new BlockPos(x, y, z));
+                String liveBlockId = net.minecraftforge.registries.ForgeRegistries.BLOCKS
+                        .getKey(liveState.getBlock()).toString();
+                sendLine(ctx, "Live Minecraft", "\u00a7d" + liveBlockId + "\u00a7r");
+            } catch (Throwable t) {
+                sendLine(ctx, "Live Minecraft", "\u00a7cquery failed: " + t.getMessage() + "\u00a7r");
+            }
+        }
+
+        ctx.getSource().sendSuccess(() -> Component.literal(""), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Resolution priority: PLAYER > SIMULATION > CANON. The CompositeWorldLayer asks PlayerLayer first, then SimulationLayer, then BlueprintLayer.\u00a7r"), false);
+        return 1;
+    }
+
+    /**
+     * /ergen debug journal recent [count] — show the last N SIMULATION deltas.
+     * Useful for confirming that beast harvests / weather damage / sect wall
+     * expansion are actually being journaled.
+     */
+    private static int journalRecent(CommandContext<CommandSourceStack> ctx, int count) {
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7l=== LAST " + count + " SIMULATION DELTAS ===\u00a7r"), false);
+
+        WorldRuntime rt = WorldRuntime.get();
+        if (!rt.isInitialized()) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cWorldRuntime not initialized.\u00a7r"), false);
+            return 1;
+        }
+        WorldDeltaStore store = rt.deltaStore();
+
+        var simChanges = store.blockChanges(Provenance.SIMULATION);
+        if (simChanges.isEmpty()) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a78No SIMULATION deltas in the journal.\u00a7r"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a77This means no beast has harvested, no weather has damaged, and no residence has been placed yet.\u00a7r"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a77To test: /ergen debug journal sim-write <x> <y> <z> minecraft:air\u00a7r"), false);
+            return 1;
+        }
+
+        // Sort by packed position (deterministic order) and take last N
+        var sorted = simChanges.entrySet().stream()
+                .sorted((a, b) -> Long.compare(a.getKey(), b.getKey()))
+                .limit(count)
+                .toList();
+
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a7a" + simChanges.size() + "\u00a7r total SIMULATION deltas. Showing first " + sorted.size() + ":"), false);
+
+        for (var entry : sorted) {
+            BlockChangeDelta d = entry.getValue();
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "  \u00a7a[" + d.x() + ", " + d.y() + ", " + d.z() + "]\u00a7r \u2192 \u00a7b" + d.blockState() + "\u00a7r"), false);
+        }
+
+        ctx.getSource().sendSuccess(() -> Component.literal(""), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Note: deltas are indexed by packed position (latest-wins per position). The 'recent' here is by position order, not by time — the journal does not preserve temporal order for block changes (only the latest state at each position matters).\u00a7r"), false);
+        return 1;
+    }
+
+    /**
+     * /ergen debug journal sim-write <x> <y> <z> <blockId> — manually trigger
+     * a SIMULATION write through the WorldFacade. This is the operational
+     * proof: write a delta, save+reload, query — if it persists, the
+     * simulation-persistence loop is closed.
+     */
+    private static int journalSimWrite(CommandContext<CommandSourceStack> ctx) {
+        int x = IntegerArgumentType.getInteger(ctx, "x");
+        int y = IntegerArgumentType.getInteger(ctx, "y");
+        int z = IntegerArgumentType.getInteger(ctx, "z");
+        String blockId = StringArgumentType.getString(ctx, "blockId");
+
+        WorldRuntime rt = WorldRuntime.get();
+        if (!rt.isInitialized()) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cWorldRuntime not initialized.\u00a7r"), false);
+            return 1;
+        }
+
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7l=== SIMULATION WRITE ===\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Position:\u00a7r (" + x + ", " + y + ", " + z + ")"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Block:\u00a7r \u00a7b" + blockId + "\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Provenance:\u00a7r \u00a7aSIMULATION\u00a7r"), false);
+
+        // Validate blockId resolves
+        try {
+            var rl = new net.minecraft.resources.ResourceLocation(blockId);
+            var block = net.minecraftforge.registries.ForgeRegistries.BLOCKS.getValue(rl);
+            if (block == null || block.defaultBlockState() == null) {
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "\u00a7cBlock '" + blockId + "' not found in registry.\u00a7r"), false);
+                return 0;
+            }
+        } catch (Throwable t) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cInvalid blockId '" + blockId + "': " + t.getMessage() + "\u00a7r"), false);
+            return 0;
+        }
+
+        // Write through the facade (records to journal + mirrors to live level)
+        rt.world().setSimulationBlock(x, y, z, blockId);
+
+        // Verify it was recorded
+        String recorded = rt.deltaStore().getBlock(x, y, z, Provenance.SIMULATION);
+        boolean success = blockId.equals(recorded);
+
+        ctx.getSource().sendSuccess(() -> Component.literal(""), false);
+        if (success) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7aSUCCESS\u00a7r — delta journaled under SIMULATION provenance."), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7eTo verify persistence:\u00a7r"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "  1. Save the world (Esc → Save and Quit to Title)"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "  2. Reload the world"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "  3. Run: \u00a7e/ergen debug journal query " + x + " " + y + " " + z + "\u00a7r"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "  4. If SIMULATION delta still shows \u00a7b" + blockId + "\u00a7r → \u00a7aPERSISTENCE CONFIRMED\u00a7r"), false);
+        } else {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cFAILED\u00a7r — write did not record. Recorded: " + recorded), false);
+        }
+        return success ? 1 : 0;
+    }
+
+    /**
+     * /ergen debug journal player-write <x> <y> <z> <blockId> — manually
+     * trigger a PLAYER write. Same as sim-write but PLAYER provenance. Useful
+     * for testing the resolution priority (PLAYER > SIMULATION > CANON).
+     */
+    private static int journalPlayerWrite(CommandContext<CommandSourceStack> ctx) {
+        int x = IntegerArgumentType.getInteger(ctx, "x");
+        int y = IntegerArgumentType.getInteger(ctx, "y");
+        int z = IntegerArgumentType.getInteger(ctx, "z");
+        String blockId = StringArgumentType.getString(ctx, "blockId");
+
+        WorldRuntime rt = WorldRuntime.get();
+        if (!rt.isInitialized()) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cWorldRuntime not initialized.\u00a7r"), false);
+            return 1;
+        }
+
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7l=== PLAYER WRITE ===\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Position:\u00a7r (" + x + ", " + y + ", " + z + ")"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Block:\u00a7r \u00a7b" + blockId + "\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Provenance:\u00a7r \u00a7bPLAYER\u00a7r (takes priority over SIMULATION and CANON)"), false);
+
+        // Validate blockId
+        try {
+            var rl = new net.minecraft.resources.ResourceLocation(blockId);
+            var block = net.minecraftforge.registries.ForgeRegistries.BLOCKS.getValue(rl);
+            if (block == null) {
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "\u00a7cBlock '" + blockId + "' not found in registry.\u00a7r"), false);
+                return 0;
+            }
+        } catch (Throwable t) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cInvalid blockId '" + blockId + "': " + t.getMessage() + "\u00a7r"), false);
+            return 0;
+        }
+
+        rt.world().setPlayerBlock(x, y, z, blockId);
+
+        String recorded = rt.deltaStore().getBlock(x, y, z, Provenance.PLAYER);
+        boolean success = blockId.equals(recorded);
+
+        ctx.getSource().sendSuccess(() -> Component.literal(""), false);
+        if (success) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7aSUCCESS\u00a7r — delta journaled under PLAYER provenance."), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7eTo test resolution priority:\u00a7r write a SIMULATION delta at the same position, then query — the PLAYER delta wins."), false);
+        } else {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cFAILED\u00a7r — write did not record. Recorded: " + recorded), false);
+        }
+        return success ? 1 : 0;
+    }
+
+    /**
+     * /ergen debug journal clear — wipe the journal entirely. This simulates
+     * a fresh save (blueprint + empty journal). Use with caution — all player
+     * edits and simulation writes since the last save are lost.
+     */
+    private static int journalClear(CommandContext<CommandSourceStack> ctx) {
+        WorldRuntime rt = WorldRuntime.get();
+        if (!rt.isInitialized()) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cWorldRuntime not initialized.\u00a7r"), false);
+            return 1;
+        }
+        WorldDeltaStore store = rt.deltaStore();
+
+        int before = store.size();
+        int playerBefore = store.blockChangeCount(Provenance.PLAYER);
+        int simBefore = store.blockChangeCount(Provenance.SIMULATION);
+
+        store.clear();
+
+        int after = store.size();
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7l=== JOURNAL CLEARED ===\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Before:\u00a7r " + before + " total (" + playerBefore + " PLAYER, " + simBefore + " SIMULATION)"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77After:\u00a7r " + after + " total"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a7eThe world is now in 'fresh save' state — blueprint + empty journal. Live Minecraft blocks are NOT reverted (only the journal is cleared). To revert live blocks, reload the world.\u00a7r"), false);
+        return 1;
     }
 }
