@@ -23,6 +23,27 @@ package dev.ergenverse.client.model;
  * ANATOMY (v4 — UNCHANGED from v3):
  *   Same 27-part multi-segment fish. No geometry changes.
  *
+ * CRON-COMPLETIONIST-87 (v5): reparented 3 parts from root to body segments:
+ *   - pec_fin_base_left  (root → bodyFront)  — pectoral fins attach behind head
+ *   - pec_fin_base_right (root → bodyFront)  — mirror
+ *   - tail_root          (root → bodyRear)   — peduncle attaches at end of body
+ *   World-coordinate-preservation invariant (for pec_fins):
+ *     new = old_root - parent_root; bodyFront_root = (0, 12, 1)
+ *     - pec_fin_base_left:  (-2.5, 13, -1) → (-2.5, 1, -2)
+ *     - pec_fin_base_right: ( 2.5, 13, -1) → ( 2.5, 1, -2)
+ *   HIGH-BAR POSITIONING FIX for tail_root:
+ *     v4 placed tail_root at root (0, 12, 5); cube extends root z=5..9.
+ *     bodyRear cube extends root z=7.5..11.5. OVERLAP of 1.5 blocks (z=7.5..9).
+ *     v5 places tail_root at bodyRear(0, 0, 4) → root-relative (0, 12, 11.5);
+ *     cube extends root z=11.5..15.5. NO OVERLAP — tail attaches cleanly at end of body.
+ *     This is a DELIBERATE deviation from the pure world-preservation invariant
+ *     (which would give offset (0, 0, -2.5), placing tail_root BEFORE bodyRear start).
+ *   Stale-state fix: IDLE block now resets bodyFront.xRot = 0.0F (previously only
+ *   bodyRear.xRot was reset). With tail now parented to bodyRear (child of bodyFront),
+ *   bodyFront.xRot propagates to the tail — a stale body pitch would freeze the tail
+ *   at an angle when the fish stops swimming. CRON-87 closes the parent-hierarchy
+ *   defect class for ALL 12 beast models (100%).
+ *
  * HARSH SELF-CRITIQUE (v4):
  *   - UV layout is now correct — no overlaps. All 27 parts map to unique
  *     regions of the 64x64 texture.
@@ -90,13 +111,17 @@ public class SoulFishModel extends HierarchicalModel<SpiritBeastEntity> {
         this.dorsalFinTip = this.dorsalFinMid.getChild("dorsal_fin_tip");
         this.analFinBase = this.bodyFront.getChild("anal_fin_base");
         this.analFinTip = this.analFinBase.getChild("anal_fin_tip");
-        this.pecFinBaseLeft = root.getChild("pec_fin_base_left");
+        this.pecFinBaseLeft = this.bodyFront.getChild("pec_fin_base_left");
         this.pecFinTipLeft = this.pecFinBaseLeft.getChild("pec_fin_tip_left");
-        this.pecFinBaseRight = root.getChild("pec_fin_base_right");
+        this.pecFinBaseRight = this.bodyFront.getChild("pec_fin_base_right");
         this.pecFinTipRight = this.pecFinBaseRight.getChild("pec_fin_tip_right");
         this.ventralFinLeft = this.bodyMid.getChild("ventral_fin_left");
         this.ventralFinRight = this.bodyMid.getChild("ventral_fin_right");
-        this.tailRoot = root.getChild("tail_root");
+        // CRON-87: tail_root reparented from root to bodyRear. The v4 root position
+        // (0, 12, 5) placed the peduncle cube OVERLAPPING bodyRear (root z=7.5..11.5).
+        // v5 places it at bodyRear(0, 0, 4) → root (0, 12, 11.5), attaching cleanly
+        // at the END of bodyRear. The tail now follows bodyRear (and bodyFront) pitch.
+        this.tailRoot = this.bodyRear.getChild("tail_root");
         this.tailTop = this.tailRoot.getChild("tail_top");
         this.tailMid = this.tailRoot.getChild("tail_mid");
         this.tailBot = this.tailRoot.getChild("tail_bot");
@@ -128,7 +153,11 @@ public class SoulFishModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offset(0.0F, 0.0F, 2.5F));
 
         // ── body_rear : narrower taper rear ────────────────────────────────
-        bodyMid.addOrReplaceChild("body_rear",
+        // CRON-87: captured as local variable so the static createBodyLayer() method
+        // can reference it for tail_root reparenting (same pattern as CRON-86
+        // Tiger/Wolf bodyChest/bodyHip local capture). The instance field this.bodyRear
+        // is set in the constructor via this.bodyMid.getChild("body_rear").
+        PartDefinition bodyRear = bodyMid.addOrReplaceChild("body_rear",
                 CubeListBuilder.create().texOffs(0, 16)
                         .addBox(-1.5F, -1.2F, 0.0F, 3.0F, 2.4F, 4.0F, bodyTapered),
                 PartPose.offset(0.0F, 0.0F, 4.0F));
@@ -212,29 +241,38 @@ public class SoulFishModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offsetAndRotation(1.8F, 1.5F, 0.0F, 0.0F, 0.0F, 0.3F));
 
         // ── pectoral fins : 2-box each, scaled 2x ───────────────────────
-        PartDefinition pecBaseL = root.addOrReplaceChild("pec_fin_base_left",
+        //    CRON-87: reparented from root to bodyFront. Pectoral fins attach
+        //    behind the head, anatomically correct. New offset (±2.5, 1.0, -2.0)
+        //    preserves world position (±2.5, 13, -1). The pec fins now follow
+        //    bodyFront.xRot (body pitch) — previously frozen in root space.
+        PartDefinition pecBaseL = bodyFront.addOrReplaceChild("pec_fin_base_left",
                 CubeListBuilder.create().texOffs(4, 8)
                         .addBox(-2.0F, -0.1F, -1.0F, 2.0F, 0.2F, 2.0F),
-                PartPose.offset(-2.5F, 13.0F, -1.0F));
+                PartPose.offset(-2.5F, 1.0F, -2.0F));
         pecBaseL.addOrReplaceChild("pec_fin_tip_left",
                 CubeListBuilder.create().texOffs(6, 8)
                         .addBox(-1.6F, -0.06F, -0.8F, 1.6F, 0.12F, 1.6F),
                 PartPose.offset(-2.0F, 0.0F, 0.0F));
 
-        PartDefinition pecBaseR = root.addOrReplaceChild("pec_fin_base_right",
+        PartDefinition pecBaseR = bodyFront.addOrReplaceChild("pec_fin_base_right",
                 CubeListBuilder.create().texOffs(4, 10)
                         .addBox(0.0F, -0.1F, -1.0F, 2.0F, 0.2F, 2.0F),
-                PartPose.offset(2.5F, 13.0F, -1.0F));
+                PartPose.offset(2.5F, 1.0F, -2.0F));
         pecBaseR.addOrReplaceChild("pec_fin_tip_right",
                 CubeListBuilder.create().texOffs(6, 10)
                         .addBox(0.0F, -0.06F, -0.8F, 1.6F, 0.12F, 1.6F),
                 PartPose.offset(2.0F, 0.0F, 0.0F));
 
         // ── tail root : peduncle connector (scaled 2x) ────────────────────
-        PartDefinition tailRoot = root.addOrReplaceChild("tail_root",
+        //    CRON-87: reparented from root to bodyRear. v4 placed tail_root at
+        //    root (0, 12, 5) which OVERLAPPED bodyRear (root z=7.5..11.5) by 1.5
+        //    blocks. v5 places it at bodyRear(0, 0, 4) → root (0, 12, 11.5),
+        //    attaching cleanly at the END of bodyRear. The tail now follows
+        //    bodyRear (and bodyFront) pitch — previously frozen in root space.
+        PartDefinition tailRoot = bodyRear.addOrReplaceChild("tail_root",
                 CubeListBuilder.create().texOffs(12, 4)
                         .addBox(-0.7F, -0.7F, 0.0F, 1.4F, 1.4F, 4.0F, new CubeDeformation(0.15F)),
-                PartPose.offset(0.0F, 12.0F, 5.0F));
+                PartPose.offset(0.0F, 0.0F, 4.0F));
 
         // ── tail fan : 3 lobes, WIDER (v2: 2.8 max → v3: 5.6 max) ─────
         tailRoot.addOrReplaceChild("tail_top",
@@ -285,6 +323,10 @@ public class SoulFishModel extends HierarchicalModel<SpiritBeastEntity> {
             // ── RESTING : fish hovers in place ──────────────────────────
             float hover = (float) Math.sin(ageInTicks * 0.05F) * 0.1F;
             this.root.y = hover;
+            // CRON-87: bodyFront.xRot MUST be reset in RESTING — tail_root is now
+            // parented to bodyRear (child of bodyFront), so a stale bodyFront.xRot
+            // from swimming would freeze the tail at an angle when the fish rests.
+            this.bodyFront.xRot = 0.0F;
             // Fins spread slightly for stability
             this.pecFinBaseLeft.zRot = -0.15F;
             this.pecFinBaseRight.zRot = 0.15F;
@@ -367,6 +409,11 @@ public class SoulFishModel extends HierarchicalModel<SpiritBeastEntity> {
             this.dorsalFinTip.zRot = 0.0F;
             this.qiGlow.yScale = 1.0F;
             this.mouth.xRot = 0.0F;
+            // CRON-87: bodyFront.xRot MUST be reset in IDLE — tail_root is now
+            // parented to bodyRear (child of bodyFront), so a stale bodyFront.xRot
+            // from swimming would freeze the tail at an angle when the fish stops.
+            // v4 only reset bodyRear.xRot here; v5 also resets bodyFront.xRot.
+            this.bodyFront.xRot = 0.0F;
             this.bodyRear.xRot = 0.0F;
             this.gillCoverLeft.zRot = -0.05F;
             this.gillCoverRight.zRot = 0.05F;

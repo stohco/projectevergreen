@@ -19,6 +19,21 @@ package dev.ergenverse.client.model;
  *   - Added CubeDeformation(0.1F) to all wing bones for subtle rounding.
  *   - Legs now children of abdomen (correct anatomy — legs hang from rear).
  *
+ * CRON-COMPLETIONIST-87 (v5): reparented left_leg, right_leg, uropatagium from
+ *   root to abdomen. v4 attempted this but reverted due to a misunderstood
+ *   scoping concern (the comment claimed 'Java resolves the local abdomen to
+ *   the instance field' — this is WRONG; in a static method, local variables
+ *   shadow instance fields, exactly as CRON-86's Tiger/Wolf fix demonstrated).
+ *   v5 completes the abdomen hierarchy. World-coordinate-preservation invariant:
+ *   new_offset = old_root_offset - abdomen_root_offset where abdomen_root = (0, 10.25, 1.25).
+ *     - left_leg:    (-0.6, 11.25, 0.0)  → (-0.6, 1.0, -1.25)
+ *     - right_leg:   ( 0.6, 11.25, 0.0)  → ( 0.6, 1.0, -1.25)
+ *     - uropatagium: ( 0.0, 11.25, 0.5)  → ( 0.0, 1.0, -0.75)
+ *   Now legs + uropatagium follow abdomen (and thus thorax) rotations — previously
+ *   they were frozen in root space and didn't follow body roll/pitch. Closes the
+ *   parent-hierarchy defect class for SpiritBat (11 of 12 models done; only SoulFish
+ *   remains, fixed in the same CRON-87 round).
+ *
  * ANATOMY (v4):
  *   - thorax: 2.5x2.5x2.5, abdomen: 3x2x2.5, head: 2x2x2
  *   - ears: 0.6x2.5x0.6 with inner detail, nose leaf
@@ -107,10 +122,14 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
         this.rightWebMid = this.rightWebProximal.getChild("web_mid");
         this.rightWebDistal = this.rightWebMid.getChild("web_distal");
         this.rightThumbClaw = this.rightShoulder.getChild("thumb_claw");
-        // v4: legs + uropatagium remain root children (thorax hierarchy only for wings)
-        this.leftLeg = root.getChild("left_leg");
-        this.rightLeg = root.getChild("right_leg");
-        this.uropatagium = root.getChild("uropatagium");
+        // CRON-87: legs + uropatagium are now children of abdomen (correct anatomy —
+        // legs hang from the rear of the torso, uropatagium drapes between them).
+        // v4 left these as root children due to a misunderstood scoping concern;
+        // the same static-method-local-shadows-instance-field pattern as CRON-86's
+        // Tiger/Wolf fix works here too.
+        this.leftLeg = this.abdomen.getChild("left_leg");
+        this.rightLeg = this.abdomen.getChild("right_leg");
+        this.uropatagium = this.abdomen.getChild("uropatagium");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -126,7 +145,11 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                 PartPose.offset(0.0F, 10.0F, 0.0F));
 
         // ── abdomen : slightly wider rear torso ────────────────────────
-        thorax.addOrReplaceChild("abdomen",
+        // CRON-87: captured as local variable so the static createBodyLayer() method
+        // can reference it for legs/uropatagium reparenting (same pattern as CRON-86
+        // Tiger/Wolf bodyChest/bodyHip local capture). The instance field this.abdomen
+        // is set in the constructor via this.thorax.getChild("abdomen").
+        PartDefinition abdomen = thorax.addOrReplaceChild("abdomen",
                 CubeListBuilder.create().texOffs(10, 0)
                         .addBox(-1.5F, -1.0F, 0.0F, 3.0F, 2.0F, 2.5F, new CubeDeformation(0.4F)),
                 PartPose.offset(0.0F, 0.25F, 1.25F));
@@ -245,24 +268,28 @@ public class SpiritBatModel extends HierarchicalModel<SpiritBeastEntity> {
                         .addBox(0.0F, 0.0F, -0.7F, 1.0F, 0.1F, 1.4F),
                 PartPose.offsetAndRotation(1.0F, 0.0F, 0.0F, -0.30F, 0.0F, 0.0F));
 
-        // ── legs : short, positioned at abdomen bottom (root children, y=11.25) ──
-        //    v4 note: moved from root children to abdomen children but Java resolves
-        //    the local 'abdomen' to the instance field. Root children with
-        //    adjusted y-position achieve the same visual result.
-        root.addOrReplaceChild("left_leg",
+        // ── legs : short, hanging from abdomen bottom ─────────────────────
+        //    CRON-87: reparented from root to abdomen. New offsets preserve world
+        //    position: abdomen_root=(0, 10.25, 1.25), so leg offset (0.6, 1.0, -1.25)
+        //    places the leg at world (0.6, 11.25, 0.0) — identical to v4. The legs
+        //    now follow abdomen (and thorax) rotations instead of being frozen
+        //    in root space.
+        abdomen.addOrReplaceChild("left_leg",
                 CubeListBuilder.create().texOffs(16, 0)
                         .addBox(-0.25F, 0.0F, -0.25F, 0.5F, 1.5F, 0.5F),
-                PartPose.offset(-0.6F, 11.25F, 0.0F));
-        root.addOrReplaceChild("right_leg",
+                PartPose.offset(-0.6F, 1.0F, -1.25F));
+        abdomen.addOrReplaceChild("right_leg",
                 CubeListBuilder.create().texOffs(16, 3)
                         .addBox(-0.25F, 0.0F, -0.25F, 0.5F, 1.5F, 0.5F),
-                PartPose.offset(0.6F, 11.25F, 0.0F));
+                PartPose.offset(0.6F, 1.0F, -1.25F));
 
-        // ── uropatagium : tail membrane (positioned at abdomen bottom) ──────
-        root.addOrReplaceChild("uropatagium",
+        // ── uropatagium : tail membrane draping between legs ────────────────
+        //    CRON-87: reparented from root to abdomen. New offset (0, 1.0, -0.75)
+        //    preserves world position (0, 11.25, 0.5).
+        abdomen.addOrReplaceChild("uropatagium",
                 CubeListBuilder.create().texOffs(18, 8)
                         .addBox(-0.8F, 0.0F, -0.5F, 1.6F, 0.1F, 1.0F),
-                PartPose.offset(0.0F, 11.25F, 0.5F));
+                PartPose.offset(0.0F, 1.0F, -0.75F));
 
         return LayerDefinition.create(mesh, 64, 64);
     }
