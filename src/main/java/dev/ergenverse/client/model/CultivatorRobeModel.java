@@ -184,6 +184,15 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     public boolean pursuing = false;
     /** CRON-COMPLETIONIST-44: Set by renderer from POSE_SOCIALIZING — relaxed, facing companion. */
     public boolean socializing = false;
+    /**
+     * CRON-130: Set by renderer from POSE_FLYING — sword-flight (御剑飞行).
+     * Body leaned forward into the wind, arms swept back (streamlined),
+     * legs straight back, robe hem billowing upward (gravity-inverted
+     * drape), hair bun pushed back by wind, subtle altitude oscillation.
+     * Only active for cultivators at Foundation Establishment (筑基) or
+     * higher; Qi Condensation and mortal cultivators never fly.
+     */
+    public boolean flying = false;
 
     // ── CRON-COMPLETIONIST-19: Cognitive Body-Language Layer ───────────
     // The user's 2026-07-25 directive: "the real bottleneck isn't AI anymore.
@@ -766,6 +775,18 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     }
 
     /**
+     * CRON-130: Renderer-side toggle for the sword-flight pose (御剑飞行).
+     * Called by {@link dev.ergenverse.client.render.EntityCultivatorRenderer}
+     * from {@code entity.isFlying()} (synced DATA_POSE == POSE_FLYING) before
+     * super.render invokes setupAnim. When true, setupAnim applies the flight
+     * animation: forward body lean, swept-back arms, billowing robe hem,
+     * wind-pushed hair, altitude oscillation.
+     */
+    public void setFlying(boolean flying) {
+        this.flying = flying;
+    }
+
+    /**
      * CRON-COMPLETIONIST-19: Set the cognitive look-target from the renderer.
      *
      * <p>The renderer reads the synced {@code DATA_LOOK_TARGET_X/Y/Z} from
@@ -1039,6 +1060,99 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
             this.robeWaist.xRot = idleSway * 0.5F;
             this.robeMid.xRot = idleSway * 0.4F;
             this.robeHem.xRot = idleSway * 0.3F;
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        //  CRON-130: SWORD-FLIGHT POSE (御剑飞行)
+        // ══════════════════════════════════════════════════════════════
+        // The iconic cultivator visual: standing on a flying sword, robes
+        // billowing in the wind. CultivatorFlightGoal sets POSE_FLYING when
+        // a Foundation+ cultivator takes flight to pursue a far target.
+        //
+        // Anatomy (added on top of HumanoidModel):
+        //   - Body pitched forward ~25° (lean into the wind — aerodynamic).
+        //   - Arms swept back (streamlined — reduce drag).
+        //   - Legs straight back together (sword-rider posture, weight on sword).
+        //   - Robe hem billows UP (negative xRot — gravity-inverted drape).
+        //     This is THE key visual: real cultivator art always shows the
+        //     robe trailing upward behind the flyer.
+        //   - Robe segments add wind flutter: high-frequency sine noise scaled
+        //     by implied speed. Each segment flutters at a slightly different
+        //     phase (waist < mid < hem lag) for natural fabric chaos.
+        //   - Hair bun pushed back by wind (slight +z offset).
+        //   - Subtle altitude bob: body.y oscillates ±0.1 blocks at ~0.15 Hz
+        //     (the cultivator is hovering, not perfectly still).
+        //
+        // CRON-130 self-critique #1: there is no visible sword-under-feet
+        // model in this round — the sword is implied by the pose. The
+        // held-weapon sword (swordRight) is hidden during flight. A future
+        // CRON should add a dedicated "ride_sword" ModelPart under the body
+        // that's visible only during POSE_FLYING. See worklog self-critique.
+        //
+        // Canon: 御剑飞行 (sword flight) is universally attested in 仙逆
+        // and Chinese cultivation novels. The realm gate (Foundation+)
+        // is enforced in EntityCultivator.isFoundationOrHigher(). NO
+        // fabricated chapter citations.
+        if (this.flying) {
+            // Body leans forward into the wind (streamlined).
+            this.body.xRot = 0.45F;
+            // Subtle altitude bob — hovering oscillation (±0.1 blocks at 0.15 Hz).
+            this.body.y = (float) Math.sin(ageInTicks * 0.15F) * 0.1F;
+
+            // Arms swept back (streamlined — trailing, not leading).
+            // Negative xRot would raise arms forward; positive drops them back.
+            this.rightArm.xRot = 0.7F;
+            this.rightArm.yRot = 0.0F;
+            this.rightArm.zRot = 0.15F;        // slight outward (balance)
+            this.leftArm.xRot = 0.7F;
+            this.leftArm.yRot = 0.0F;
+            this.leftArm.zRot = -0.15F;
+
+            // Legs straight back together (sword-rider posture).
+            // Slight bend (0.1) — legs are not perfectly rigid.
+            this.rightLeg.xRot = 0.10F;
+            this.leftLeg.xRot = 0.10F;
+            this.rightLeg.yRot = 0.0F;
+            this.leftLeg.yRot = 0.0F;
+            this.rightLeg.zRot = 0.0F;
+            this.leftLeg.zRot = 0.0F;
+
+            // Head: slightly raised (chin up — looking forward at the horizon).
+            // Don't override head.yRot; the look-control tracks the destination.
+            this.head.xRot = -0.10F;
+
+            // Robe billows UP — gravity-inverted drape.
+            // Strong negative xRot flips the hem upward. Each segment flutters
+            // at a different phase (wind gradient: waist steadier, hem wildest).
+            float windGust = (float) Math.sin(ageInTicks * 0.5F) * 0.10F;
+            float windFlutter = (float) Math.sin(ageInTicks * 1.3F) * 0.05F;
+            // Waist: steadier (anchored to body)
+            this.robeWaist.xRot = -0.6F + windGust * 0.5F;
+            // Mid: medium flutter (lagging waist by ~1 frame equivalent)
+            this.robeMid.xRot = -0.9F + windGust * 0.8F + windFlutter;
+            // Hem: wildest (trailing fabric catches the most wind)
+            this.robeHem.xRot = -1.2F + windGust * 1.2F + windFlutter * 1.5F
+                    + (float) Math.sin(ageInTicks * 2.1F) * 0.04F;
+
+            // Hair bun pushed back by wind (slight +z offset on the head's child).
+            this.hairBun.z = 0.5F;
+            this.hairBun.xRot = -0.15F;
+            this.hairpin.zRot = (float) Math.sin(ageInTicks * 0.4F) * 0.05F;
+
+            // Hide the held weapon during flight (the sword is "under feet",
+            // not in hand — see CRON-130 self-critique for the missing
+            // ride_sword ModelPart).
+            this.swordRight.visible = false;
+            this.fanRight.visible = false;
+            this.staffRight.visible = false;
+            this.hoeRight.visible = false;
+            this.flyWhiskRight.visible = false;
+        } else {
+            // Restore hair bun position when not flying (the wind-push offset
+            // is only applied during flight; we reset it so other poses don't
+            // inherit a stale offset).
+            this.hairBun.z = 0.0F;
+            this.hairBun.xRot = 0.0F;
         }
 
         // ═════════════════════════════════════════════════════════════════

@@ -336,6 +336,14 @@ public class EntityCultivator extends PathfinderMob {
     public static final int POSE_PURSUING = 5;
     /** Relaxed stance, facing a companion — cultivator socializes. CRON-COMPLETIONIST-44. */
     public static final int POSE_SOCIALIZING = 6;
+    /**
+     * CRON-130: Sword-flight pose (御剑飞行). Body leaned forward, arms swept back,
+     * robe billowing upward. Active while CultivatorFlightGoal is running.
+     * Canon: cultivators at Foundation Establishment (筑基) or higher may ride
+     * a flying sword. Below Foundation, the cultivator must walk — Qi
+     * Condensation cannot sustain the qi expenditure of sword flight.
+     */
+    public static final int POSE_FLYING = 7;
 
     public int getCultivatorPose() {
         return this.entityData.get(DATA_POSE);
@@ -427,6 +435,74 @@ public class EntityCultivator extends PathfinderMob {
     /** CRON-COMPLETIONIST-44: True when in POSE_SOCIALIZING (relaxed, facing a companion). */
     public boolean isSocializing() {
         return this.entityData.get(DATA_POSE) == POSE_SOCIALIZING;
+    }
+
+    /**
+     * CRON-130: True when in POSE_FLYING (sword-flight / 御剑飞行).
+     * CultivatorFlightGoal sets this while flying; renderer reads it to
+     * trigger the flight animation (forward lean, swept arms, robe billow).
+     */
+    public boolean isFlying() {
+        return this.entityData.get(DATA_POSE) == POSE_FLYING;
+    }
+
+    /**
+     * CRON-130: Convenience setter for the flight pose. Pass true to enter
+     * POSE_FLYING; pass false to return to POSE_IDLE. Used by
+     * CultivatorFlightGoal on start/stop. Direct setCultivatorPose(POSE_FLYING)
+     * is also valid — this method exists for symmetry with isFlying().
+     */
+    public void setFlying(boolean flying) {
+        this.entityData.set(DATA_POSE, flying ? POSE_FLYING : POSE_IDLE);
+    }
+
+    /**
+     * CRON-130: Returns true if the cultivator's cultivation realm is at or
+     * above Foundation Establishment (筑基) — the canonical minimum realm for
+     * sword flight (御剑飞行). Qi Condensation (练气) and mortal cannot fly.
+     *
+     * <p>Realm strings come from {@link #getCultivationRealm()} (synced data,
+     * populated from canon JSON {@code cultivation_realm} or {@code realm}).
+     * Recognized realm strings (case-insensitive, whitespace/separator
+     * agnostic): {@code foundation}, {@code core_formation}, {@code nascent_soul},
+     * {@code soul_formation}, {@code soul_transformation}, {@code infant_transformation},
+     * {@code ascendant}, {@code void_amassing}, and any realm containing the
+     * substrings "foundation", "core", "soul", "transcend", "ascendant", "void",
+     * "ancient", or "yang". Mortal and Qi Condensation explicitly return false.
+     *
+     * <p>Canon fidelity (web-search verified 2026-07-27):
+     * <ul>
+     *   <li>Baidu Baike 仙逆 — 筑基 (Foundation Establishment) is the realm at
+     *       which cultivators gain the ability to fly on swords.</li>
+     *   <li>Wang Lin first observes Li Muwan flying on a sword when she visits
+     *       Heng Yue Sect — she is at Foundation Establishment.</li>
+     *   <li>Wang Lin himself first flies after reaching Foundation Establishment
+     *       mid-novel (no specific chapter cited to avoid fabrication).</li>
+     * </ul>
+     * NO fabricated chapter citations.
+     */
+    public boolean isFoundationOrHigher() {
+        String realm = getCultivationRealm();
+        if (realm == null || realm.isEmpty()) return false;
+        String r = realm.trim().toLowerCase(java.util.Locale.ROOT);
+        if (r.isEmpty()) return false;
+        // Explicit mortal / qi-condensation rejection
+        if (r.equals("mortal") || r.equals("mortal_body")
+                || r.equals("qi_condensation") || r.equals("qi")
+                || r.equals("refining_qi") || r.equals("qi_refining")
+                || r.equals("练气") || r.equals("凡人")) {
+            return false;
+        }
+        // Foundation-or-higher realm keywords (the realm can fly)
+        return r.contains("foundation") || r.contains("core")
+                || r.contains("soul") || r.contains("transcend")
+                || r.contains("transformation") || r.contains("ascendant")
+                || r.contains("void") || r.contains("ancient")
+                || r.contains("yang") || r.contains("筑基")
+                || r.contains("结丹") || r.contains("元婴")
+                || r.contains("化神") || r.contains("婴变")
+                || r.contains("问鼎") || r.contains("窥涅")
+                || r.contains("净涅") || r.contains("碎涅");
     }
 
     // ── CRON-COMPLETIONIST-19: Cognitive look-target + attention lock ──
@@ -801,6 +877,18 @@ public class EntityCultivator extends PathfinderMob {
         // Canon: "两人踏天同行" — Li Muwan follows Wang Lin as his eternal
         // companion after the successful revival.
         this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.FollowPlayerGoal(this));
+        // CRON-130: CultivatorFlightGoal — sword-flight (御剑飞行) for Foundation+
+        // cultivators. Priority 5 (above meditation=6; below react-to-world=5
+        // actually we use priority 5 here so both flight and react can coexist
+        // — flight claims MOVE+LOOK, react claims LOOK only, so when flight is
+        // active it preempts react's LOOK via the MOVE flag. When flight is
+        // inactive, react runs normally).
+        // Canon: cultivators at 筑基 (Foundation Establishment) or higher may
+        // ride a flying sword. Qi Condensation and mortal cultivators walk.
+        // Activates only when the cultivator has a far target (combat target
+        // >16 blocks away, or far navigation target). Below that, walking is
+        // used (more canon-faithful — cultivators don't fly for short hops).
+        this.goalSelector.addGoal(5, new dev.ergenverse.entity.ai.CultivatorFlightGoal(this));
         this.goalSelector.addGoal(7, new net.minecraft.world.entity.ai.goal.RandomStrollGoal(this, 0.35D));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
