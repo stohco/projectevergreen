@@ -1111,7 +1111,7 @@ public final class RICanonicalDatabase {
             "unknown", "Country of Zhao",
             java.util.List.of(
                 "Teng Huayuan's great-great-grandson; pursued Wang Lin for Old man Ji Mo's bounty",
-                "Killed by Wang Lin in the Forest of Distorted Divine Sense; Wang Lin stole his Foundation Establishment"
+                "Killed by Wang Lin near Jue Ming Valley (决明谷); Wang Lin stole his Foundation Establishment"
             ),
             List.of(new RelationShip("Wang Lin", "enemy"), new RelationShip("Teng Huayuan", "family")),
             "novel (first kill); Fandom wiki; Baidu Baike"
@@ -1687,7 +1687,7 @@ public final class RICanonicalDatabase {
             java.util.List.of(
                 "Blue-skinned man with 9 talismans attached to his body",
                 "Speaks in a language Wang Lin can't understand",
-                "Led Wang Lin to Wu Yu's Nascent Soul in the Forest of Distorted Divine Sense"
+                "Led Wang Lin to Wu Yu's Nascent Soul preserved underground in the Corpse Yin Sect"
             ),
             List.of(new RelationShip("Wu Yu", "master"), new RelationShip("Wang Lin", "ally")),
             "novel; Fandom wiki"
@@ -2284,7 +2284,7 @@ public final class RICanonicalDatabase {
             "1",
             java.util.List.of(
                 "A third-tier cultivation country on Planet Suzaku; Wang Lin's birthplace",
-                "Contains Wang Family Village, Heng Yue Sect, Tian Shui City, the Forest of Distorted Divine Sense, the Teng Family City",
+                "Contains Wang Family Village, Heng Yue Sect, Tian Shui City, Jue Ming Valley (决明谷), the Teng Family City",
                 "Teng Huayuan was the de facto ruler through the Teng Clan",
                 "Wang Lin becomes 'Ancestor of the Country of Zhao'"
             ), java.util.List.of("Heng Yue Sect", "Teng Clan", "Wang Clan", "Xuan Dao Sect"), java.util.List.of(

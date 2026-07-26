@@ -5,7 +5,7 @@ package dev.ergenverse.runtime;
  *
  * <p><b>Contract:</b> Weather is canon-driven, not random. The Snow Domain
  * has perpetual blizzards. The Sea of Devils has spiritual storms. The
- * Forest of Distorted Divine Sense has reality-distorting mists. Weather
+ * Jue Ming Valley (决明谷) has death-law mists. Weather
  * affects cultivation (storms can disrupt meditation), beast behavior
  * (predators hunt more aggressively in storms), and travel (blizzards
  * reduce visibility and movement speed).
@@ -27,7 +27,7 @@ public final class WeatherRuntime {
         // TODO: Initialize canon weather patterns.
         // Snow Domain: perpetual blizzard (snow + wind + reduced visibility)
         // Sea of Devils: spiritual storms (rain + lightning + qi disruption)
-        // Forest of Distorted Divine Sense: reality mist (fog + disorientation)
+        // Jue Ming Valley (决明谷): death-law mist (fog + soul oppression)
         // Zhao Plains: temperate, seasonal
         // Fire Burn Country: hot, dry, occasional fire storms
         started = true;

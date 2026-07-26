@@ -478,7 +478,7 @@ public final class RICivilizationEngine {
                 new Relationship("CIV-04", "Proximity, Possible Rivalry", "Same Sea of Devils region. Both 'demonic' but different methods.", 3)
             ),
             Arrays.asList(
-                new CanonEvent("Adai leads Wang Lin to Wu Yu's Nascent Soul in Forest of Distorted Divine Sense", null, 5),
+                new CanonEvent("Adai leads Wang Lin to Wu Yu's Nascent Soul preserved underground in the Corpse Yin Sect", null, 5),
                 new CanonEvent("Wang Lin enters Corpse Yin Sect; Ye Zi gives immortal cave", null, 5),
                 new CanonEvent("Wang Lin attacks members, takes back soul sliver", null, 5),
                 new CanonEvent("Wang Lin kills many members when they use Wang family for resentful spirits", null, 5)

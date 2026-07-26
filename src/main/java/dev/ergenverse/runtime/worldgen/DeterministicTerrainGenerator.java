@@ -20,7 +20,7 @@ import java.util.List;
  * procedural generation still has a place. … You've been saying 'no randomness.'
  * I agree. But I wouldn't make every cliff by hand. Instead I'd use deterministic
  * procedural generation constrained by the blueprint. For example: Blueprint
- * says [Forest of Distorted Sense: Boundary, Climate, Elevation, Spirit density,
+ * says [Jue Ming Valley: Boundary, Climate, Elevation, Spirit density,
  * Tree species, Important landmarks, Canonical paths]. Then a deterministic
  * generator fills in: individual tree placement, rock scatter, grass, flowers,
  * fallen logs, small terrain noise. Because the inputs are fixed, the result is
@@ -34,8 +34,8 @@ import java.util.List;
  * deterministically by minecraft:noise seeded with
  * {@link DeterministicSeedHandler#CANON_SEED}, so this class does NOT
  * regenerate that — it only layers canon-specific accents that biome features
- * would not produce: e.g. a few "distortion marker" blocks inside the Forest of
- * Distorted Sense, or bone/soul-sand accents at the Sea of Devils edge. The
+ * would not produce: e.g. a few "death-law marker" blocks inside the Jue Ming
+ * Valley, or bone/soul-sand accents at the Sea of Devils edge. The
  * placement is a pure hash of (chunk coords + CANON_SEED), so every new save
  * gets the identical scatter. No hand-placement, no randomness.
  *
@@ -68,7 +68,7 @@ public final class DeterministicTerrainGenerator {
         // For each canon geographic region, if this chunk falls within its
         // accent radius, deterministically place a few accent blocks.
         for (PlanetSuzakuBlueprint.CanonLocation loc : List.of(
-                PlanetSuzakuBlueprint.FOREST_OF_DISTORTED_SENSE,
+                PlanetSuzakuBlueprint.JUE_MING_VALLEY,
                 PlanetSuzakuBlueprint.SEA_OF_DEVILS,
                 PlanetSuzakuBlueprint.SUZAKU_TOMB)) {
 
@@ -81,7 +81,7 @@ public final class DeterministicTerrainGenerator {
             long seed = mix(mix(DeterministicSeedHandler.CANON_SEED, chunkX), chunkZ) ^ loc.id.hashCode();
 
             switch (loc.id) {
-                case "forest_of_distorted_sense" -> decorateDistortedForest(baseX, baseZ, seed, level);
+                case "jue_ming_valley" -> decorateJueMingValley(baseX, baseZ, seed, level);
                 case "sea_of_devils" -> decorateSeaOfDevils(baseX, baseZ, seed, level);
                 case "suzaku_tomb" -> decorateSuzakuTomb(baseX, baseZ, seed, level);
                 default -> { /* no accent for this region yet */ }
@@ -91,8 +91,16 @@ public final class DeterministicTerrainGenerator {
 
     // ── Region accents ──────────────────────────────────────────────────
 
-    /** Forest of Distorted Sense: a sparse scatter of warped-nylium + shroomlights, canon-flavored. */
-    private static void decorateDistortedForest(int baseX, int baseZ, long seed, ServerLevel level) {
+    /**
+     * Jue Ming Valley (决明谷 / 绝命谷) — Valley of Certain Death. Canon: Wang Lin's
+     * physical body destroyed here, soul flees to Foreign Battleground; a trapping
+     * formation holds cultivators inside; ancient restrictions, sealed beasts.
+     * Decoration: soul-sand + bone-block accents, reflecting the death-law ambiance.
+     * Replaces the former decorateDistortedForest (mod-original warped-nylium +
+     * shroomlights) — CRON-COMPLETIONIST-64 remapped Forest of Distorted Sense →
+     * Jue Ming Valley for canon purity.
+     */
+    private static void decorateJueMingValley(int baseX, int baseZ, long seed, ServerLevel level) {
         // Deterministically pick 3 accent columns in the chunk.
         for (int i = 0; i < 3; i++) {
             long s = mix(seed, i);
@@ -101,8 +109,9 @@ public final class DeterministicTerrainGenerator {
             int worldX = baseX + lx, worldZ = baseZ + lz;
             int y = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, new BlockPos(worldX, 0, worldZ)).getY();
             if (y <= level.getMinBuildHeight() + 1) continue;
-            BlockState accent = (s & 1) == 0 ? Blocks.WARPED_NYLIUM.defaultBlockState()
-                                             : Blocks.SHROOMLIGHT.defaultBlockState();
+            // Soul sand (death-law ground) + bone blocks (remains of fallen cultivators).
+            BlockState accent = (s & 1) == 0 ? Blocks.SOUL_SAND.defaultBlockState()
+                                             : Blocks.BONE_BLOCK.defaultBlockState();
             trySet(level, worldX, y, worldZ, accent);
         }
     }

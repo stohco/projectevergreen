@@ -550,7 +550,7 @@ public final class RIEcologyEngine {
             .faunaDerived("Iron-Feathered Hawk (QC tier); Stone-Backed Boar (QC herbivore); "
                 + "Cloud-Walk Rabbit (non-spirit); Teng-Clan War Hound (mortal)")
             .faunaCanon("Dead bird containing Heaven-Defying Bead (Timeline E11); "
-                + "Dragon Statue in Forest of Distorted Divine Sense (contains Wu Yu Nascent Soul)")
+                + "Wu Yu's Nascent Soul preserved underground in the Corpse Yin Sect (尸阴宗)")
             .mortals("5-15 million (Type C)")
             .sects("Heng Yue Sect, Xuan Dao Sect, Teng Clan (DESTROYED), Wang Clan (EXTERMINATED then restored)")
             .ruins("Wang Family Village ruin (post-massacre, resentful-spirit ecology, ~10-50y to decay); "
@@ -558,7 +558,7 @@ public final class RIEcologyEngine {
             .jossFlame("Low per-capita (fragile tier), but consistent across 100-family villages")
             .player("Starting zone. Low-tier herbs and beasts. Heng Yue Sect recruitment. "
                 + "Wang Family Village massacre site. Teng Family City ruins. "
-                + "Forest of Distorted Divine Sense (high-tier zone anomaly).")
+                + "Jue Ming Valley (决明谷) — high-tier danger zone where Wang Lin's body was destroyed.")
             .build(),
 
         // ECO-02: Planet Suzaku

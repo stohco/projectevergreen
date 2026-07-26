@@ -129,10 +129,6 @@ public final class SuzakuFeatureIndex {
             Map.entry("sea_of_devils", List.of(
                     "ergenverse:demon_corpse_mushroom_placed",
                     "ergenverse:spirit_vein_ore_placed"
-            )),
-            Map.entry("forest_of_distorted_sense", List.of(
-                    "ergenverse:demon_corpse_mushroom_placed",
-                    "ergenverse:spirit_vein_ore_placed"
             ))
     );
 

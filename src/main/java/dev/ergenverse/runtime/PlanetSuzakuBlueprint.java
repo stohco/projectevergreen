@@ -151,10 +151,21 @@ public final class PlanetSuzakuBlueprint {
             new CanonLocation("sea_of_devils", "Sea of Devils (修魔海)",
                     6000, 0, -1184, "geographic", "RI — 修魔海; 古神之地, 蚊兽, 十亿尊魂幡 events");
 
-    // Forest of Distorted Sense — mod-original (no canon "扭曲之森"); canon analogue is 决明谷 (Jue Ming Valley).
-    public static final CanonLocation FOREST_OF_DISTORTED_SENSE =
-            new CanonLocation("forest_of_distorted_sense", "Forest of Distorted Sense (扭曲之森)",
-                    4500, 0, -2400, "geographic", "MOD-ORIGINAL (canon analogue: 决明谷 / Jue Ming Valley)");
+    // Jue Ming Valley = 决明谷 (Jue Ming Gu) / also written 绝命谷 — Valley of Certain Death.
+    // Canon: Wang Lin flees here to await Teng Huayuan's revenge; his physical body is
+    // destroyed here and his soul flees to the Foreign Battleground (域外战场) via the
+    // 天逆珠. A trapping formation holds cultivators inside until the sect competition
+    // for tokens ends. Wang Lin's Ji Realm (极境) awakening occurs here, driven by grief
+    // over his clan's annihilation. Verified via Baidu Baike 仙逆编年史 + multiple chapter
+    // summaries. NOTE: the novel uses 决明 (Jue Ming = "decisive brightness") in some
+    // sources and 绝命 (Jue Ming = "certain death") in others; both romanize to
+    // "Jue Ming Valley". The enriched canon DB uses 绝命谷. The translation
+    // "Valley of Certain Death" is the common English rendering.
+    public static final CanonLocation JUE_MING_VALLEY =
+            new CanonLocation("jue_ming_valley", "Jue Ming Valley (决明谷 / 绝命谷)",
+                    4500, 0, -500, "dangerous_region",
+                    "RI — 决明谷 / 绝命谷; Wang Lin's physical body destroyed here, "
+                    + "Ji Realm awakening, Teng Huayuan confrontation, soul flees to 域外战场");
 
     // Suzaku Tomb (朱雀墓) — underground inheritance site of the 朱雀子 lineage.
     public static final CanonLocation SUZAKU_TOMB =
@@ -191,7 +202,7 @@ public final class PlanetSuzakuBlueprint {
         map.put(LUO_HE_SECT.id, LUO_HE_SECT);
         map.put(FOUR_SECTS_ALLIANCE.id, FOUR_SECTS_ALLIANCE);
         map.put(SEA_OF_DEVILS.id, SEA_OF_DEVILS);
-        map.put(FOREST_OF_DISTORTED_SENSE.id, FOREST_OF_DISTORTED_SENSE);
+        map.put(JUE_MING_VALLEY.id, JUE_MING_VALLEY);
         map.put(SUZAKU_TOMB.id, SUZAKU_TOMB);
         return Collections.unmodifiableMap(map);
     }

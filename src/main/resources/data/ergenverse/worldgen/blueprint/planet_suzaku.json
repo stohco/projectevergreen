@@ -42,7 +42,7 @@
         "capital": "zhao_capital",
         "biome_rule": "ergenverse:zhao_plains",
         "mountain_biome_rule": "ergenverse:zhao_mountains",
-        "terrain_description": "Temperate plains with mountain ranges to the north. Fertile farmland. The Forest of Distorted Divine Sense is embedded in the western region.",
+        "terrain_description": "Temperate plains with mountain ranges to the north. Fertile farmland. Jue Ming Valley (决明谷 / 绝命谷, Valley of Certain Death) is embedded in the eastern region.",
         "political_tier": "minor_mortal_kingdom",
         "cultivation_power": "low — only minor sects (Heng Yue) operate here"
       },
@@ -274,20 +274,6 @@
         "chapter": 2,
         "distance_from_wang_village": 2400,
         "_distance_comment": "~2 days travel through dangerous terrain. Located in the dark valley region northwest of the village."
-      },
-      {
-        "id": "forest_of_distorted_sense",
-        "name": "Forest of Distorted Divine Sense",
-        "canon_name": "Shen Nian Cuo Luan Zhi Sen / 神念错乱之森",
-        "canon_confidence": "EXPLICIT — embedded in Zhao, distorts perception",
-        "type": "dangerous_region",
-        "x": 2900,
-        "z": -1500,
-        "country": "zhao",
-        "radius": 400,
-        "description": "A forest where divine sense becomes unreliable. Mortals feel uneasy. Cultivators below Soul Formation cannot trust their perception here. Hidden dangers and hidden opportunities.",
-        "chapter": 2,
-        "is_restriction_zone": true
       },
       {
         "id": "sea_of_devils",
@@ -563,15 +549,6 @@
     },
 
     "restrictions": [
-      {
-        "id": "forest_of_distorted_sense_restriction",
-        "name": "Distorted Sense Formation",
-        "center": [2900, -1500],
-        "radius": 400,
-        "type": "perception_distortion",
-        "effect": "divine_sense_unreliable_below_soul_formation",
-        "is_active": true
-      },
       {
         "id": "jue_ming_valley_restriction",
         "name": "Valley of Certain Death Seal",
