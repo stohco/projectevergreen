@@ -183,7 +183,7 @@ public final class PlanetSuzakuBlueprint {
 
     // ── Kunxu Realm (昆虚界) — pocket-realm where Mu Bingmei takes Zhou Ru as disciple ──
     // CRON-COMPLETIONIST-111: Canon (web-search verified 2026-07-26, RICanonicalDatabase
-    // L74 + N19): 慕冰媚 (Mu Bingmei) enters the Kunxu Realm and takes 周茹 (Zhou Ru)
+    // L74 + N19): 木冰眉 (Mu Bingmei) enters the Kunxu Realm and takes 周茹 (Zhou Ru)
     // as her disciple. 周茹's cultivation arc (mortal → Soul Transformation) takes
     // place here under Mu Bingmei's guidance.
     //
@@ -229,10 +229,10 @@ public final class PlanetSuzakuBlueprint {
     // cultivator under 慕冰梅 (Mu Bingmei) in 昆墟之境 (Kunxu Realm).
     public static final String NPC_ZHOU_RU = "zhou_ru";  // 周茹
 
-    // CRON-COMPLETIONIST-111: 慕冰媚 (Mu Bingmei, also known as 柳眉 Liu Mei)
+    // CRON-COMPLETIONIST-111: 木冰眉 (Mu Bingmei, also known as 柳眉 Liu Mei)
     // — Wang Lin's third wife and Zhou Ru's cultivation master. Canon
     // (web-search verified 2026-07-26, RICanonicalDatabase N19 + L74):
-    //   - Mu Bingmei is Liu Mei's true form (慕冰媚 / 柳眉).
+    //   - Mu Bingmei is Liu Mei's true form (木冰眉 / 柳眉).
     //   - Ascendant+ cultivation; Wang Lin's third wife.
     //   - Had a son with Wang Lin (Wang Ping) whom she refined into a
     //     resentful spirit out of hatred.
@@ -241,7 +241,7 @@ public final class PlanetSuzakuBlueprint {
     //   - She entered the Kunxu Realm (昆虚界) and took Zhou Ru as her disciple.
     // The ZhouRuCultivationGrowthService (CRON-111) advances Zhou Ru's realm
     // when she is near Mu Bingmei — modeling the disciple-master cultivation.
-    public static final String NPC_MU_BINGMEI = "mu_bingmei";  // 慕冰媚 / 柳眉
+    public static final String NPC_MU_BINGMEI = "mu_bingmei";  // 木冰眉 / 柳眉
 
     /**
      * All canonical locations, indexed by id. Immutable. Built fresh each call

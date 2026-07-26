@@ -32,7 +32,7 @@ import java.util.List;
  * <ul>
  *   <li>After Wang Lin places Li Muwan's soul into 周茹 (CRON-110), 周茹
  *       eventually becomes a Soul Transformation (炼虚) cultivator.</li>
- *   <li>慕冰媚 (Mu Bingmei, also known as 柳眉 Liu Mei) — Wang Lin's third
+ *   <li>木冰眉 (Mu Bingmei, also known as 柳眉 Liu Mei) — Wang Lin's third
  *       wife — enters the Kunxu Realm (昆虚界) and takes 周茹 as her disciple
  *       (RICanonicalDatabase N19 + L74).</li>
  *   <li>周茹's cultivation arc (mortal → Soul Transformation) takes place
@@ -452,7 +452,7 @@ public final class ZhouRuCultivationGrowthService {
                 Component.literal("─────────────────────────────────────")
                         .withStyle(ChatFormatting.DARK_PURPLE));
         player.sendSystemMessage(
-                Component.literal("周茹在慕冰媚的指点下突破至 " + newRealm.nameCn + " 境。")
+                Component.literal("周茹在木冰眉的指点下突破至 " + newRealm.nameCn + " 境。")
                         .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
         player.sendSystemMessage(
                 Component.literal("Zhou Ru broke through to " + newRealm.name

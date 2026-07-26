@@ -82,7 +82,7 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         // Soul Transformation state in npc_zhou_ru.json describes her later
         // cultivation arc under Mu Bingmei in Kunxu Realm (a future questline).
         profile(CanonUUID.ZHOU_RU,       "zhou_ru",       "Zhou Ru 周茹",          "vermilion_bird_country", "mortal");
-        // CRON-COMPLETIONIST-111: 慕冰媚 (Mu Bingmei, also known as 柳眉 Liu Mei)
+        // CRON-COMPLETIONIST-111: 木冰眉 (Mu Bingmei, also known as 柳眉 Liu Mei)
         // — Wang Lin's third wife and Zhou Ru's cultivation master. Canon
         // (RICanonicalDatabase N19): Ascendant+ cultivation. SectId
         // "kunxu_realm" reflects her placement at the Kunxu Realm where she
@@ -90,7 +90,7 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         // RealmId.ASCENDANT (合体) — the canon-attested cultivation level.
         // The ZhouRuCultivationGrowthService advances Zhou Ru's realm when
         // she is near Mu Bingmei — modeling the disciple-master cultivation.
-        profile(CanonUUID.MU_BINGMEI,    "mu_bingmei",    "Mu Bingmei 慕冰媚 / 柳眉", "kunxu_realm",   "ascendant");
+        profile(CanonUUID.MU_BINGMEI,    "mu_bingmei",    "Mu Bingmei 木冰眉 / 柳眉", "kunxu_realm",   "ascendant");
     }
 
     private static void profile(UUID uuid, String characterId, String displayName, String sectId, String realm) {

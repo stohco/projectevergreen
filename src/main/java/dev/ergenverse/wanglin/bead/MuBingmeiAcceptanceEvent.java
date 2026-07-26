@@ -20,6 +20,19 @@ import java.util.List;
 /**
  * Mu Bingmei Acceptance Event — CRON-COMPLETIONIST-113.
  *
+ * <p><b>CRON-COMPLETIONIST-115 — CANON CORRECTION:</b> the prior form of
+ * this file used incorrect Chinese characters for Mu Bingmei's name
+ * (using 慕 "admire" + 媚 "charm" instead of the correct 木 "wood" +
+ * 眉 "brow"). The canon-correct characters are <b>木冰眉</b>
+ * (wood-ice-brow), verified via Baidu Baike
+ * (https://baike.baidu.com/item/木冰眉/8802287). Additionally, 柳眉
+ * (Liu Mei) is canonically Mu Bingmei's <b>ninth avatar</b> (第九分身),
+ * not merely "a mask she wore in the mortal world". CRON-115 corrects
+ * both errors across the codebase. The character_id "mu_bingmei"
+ * (romanization) is unchanged — only the Chinese display characters
+ * were wrong. This correction mirrors CRON-69's 藤厉 not "Teng Lijun"
+ * fix.
+ *
  * <p>Implements the canon-faithful "Mu Bingmei takes Zhou Ru as her disciple"
  * narrative beat. After CRON-112's Kunxu departure (周茹 teleported to the
  * Kunxu Realm at (-3500, surface, -3500)), Mu Bingmei senses the soul of
@@ -53,7 +66,7 @@ import java.util.List;
  * "took Zhou Ru as her disciple" (L74 + N10 + N19 relationships). This is
  * NOT mod-original — it is direct canon. The exact chapter is not cited
  * here to avoid fabrication. Sources: RICanonicalDatabase N10/N19/L74,
- * Baidu Baike (周茹, 慕冰媚), Fandom wiki.
+ * Baidu Baike (周茹, 木冰眉), Fandom wiki.
  *
  * <h2>Trigger Mechanism — Automatic Tick Service (NOT interaction-gated)</h2>
  * <p>The acceptance fires AUTOMATICALLY when 周茹 is near Mu Bingmei at the
@@ -321,7 +334,7 @@ public final class MuBingmeiAcceptanceEvent {
             // ── Step 5: Record in HistoryManager ──
             HistoryManager.onDiscovery(witness,
                     "mu_bingmei_accepts_zhou_ru_as_disciple",
-                    "Mu Bingmei (慕冰媚) formally accepted Zhou Ru (周茹) as her "
+                    "Mu Bingmei (木冰眉) formally accepted Zhou Ru (周茹) as her "
                             + "disciple at the Kunxu Realm (昆虚界), teaching her "
                             + "the cultivation methods of the Kunxu Realm. Zhou Ru "
                             + "calls Wang Lin 'uncle' (王林叔叔) — the soul of Li "
@@ -330,7 +343,7 @@ public final class MuBingmeiAcceptanceEvent {
                     level.getGameTime());
         }
 
-        Ergenverse.LOGGER.info("[Ergenverse] CRON-113: Mu Bingmei (慕冰媚) accepted Zhou Ru "
+        Ergenverse.LOGGER.info("[Ergenverse] CRON-113: Mu Bingmei (木冰眉) accepted Zhou Ru "
                         + "(周茹) as her disciple at tick {}. Position: Zhou Ru={}, "
                         + "Mu Bingmei={}, distance={:.1f} blocks. Witness: {}.",
                 currentTick,
@@ -423,7 +436,7 @@ public final class MuBingmeiAcceptanceEvent {
      *
      * @param level     the server level
      * @param zhouRu    the disciple EntityCultivator (周茹)
-     * @param muBingmei the master EntityCultivator (慕冰媚)
+     * @param muBingmei the master EntityCultivator (木冰眉)
      */
     private static void spawnAcceptanceEffects(ServerLevel level,
                                                 EntityCultivator zhouRu,
@@ -531,7 +544,7 @@ public final class MuBingmeiAcceptanceEvent {
      *
      * @param player    the witnessing player
      * @param zhouRu    the disciple EntityCultivator (周茹)
-     * @param muBingmei the master EntityCultivator (慕冰媚)
+     * @param muBingmei the master EntityCultivator (木冰眉)
      */
     private static void announceAcceptance(ServerPlayer player,
                                             EntityCultivator zhouRu,
@@ -540,7 +553,7 @@ public final class MuBingmeiAcceptanceEvent {
                 Component.literal("─────────────────────────────────────")
                         .withStyle(ChatFormatting.DARK_PURPLE));
         player.sendSystemMessage(
-                Component.literal("慕冰媚收周茹为徒，传以昆虚界修行之法。")
+                Component.literal("木冰眉收周茹为徒，传以昆虚界修行之法。")
                         .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
         player.sendSystemMessage(
                 Component.literal("Mu Bingmei takes Zhou Ru as her disciple, "

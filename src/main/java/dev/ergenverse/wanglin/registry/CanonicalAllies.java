@@ -168,7 +168,7 @@ public final class CanonicalAllies extends AbstractSubRegistry {
         ));
 
         register(CanonicalEntry.of(
-                "ally_mu_bingmei", "Mu Bingmei / Liu Mei (Third Wife)", "慕冰媚 / 柳眉",
+                "ally_mu_bingmei", "Mu Bingmei / Liu Mei (Third Wife)", "木冰眉 / 柳眉",
                 CanonicalCategory.ALLIES,
                 Provenance.explicit("Renegade Immortal", List.of("Planet Suzaku era"), 4),
                 OwnershipState.WANG_LIN_OWNED,

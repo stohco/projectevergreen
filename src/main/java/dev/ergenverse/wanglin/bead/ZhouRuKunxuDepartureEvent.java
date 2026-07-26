@@ -23,7 +23,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *
  * <p>Implements the canon-faithful post-transfer quest step: after CRON-110's
  * soul transfer (Li Muwan's 元婴 placed into 周茹), Wang Lin escorts 周茹 to
- * the Kunxu Realm (昆虚界) and entrusts her to 慕冰媚 (Mu Bingmei) for
+ * the Kunxu Realm (昆虚界) and entrusts her to 木冰眉 (Mu Bingmei) for
  * cultivation. This is the bridge between CRON-110 (soul transfer at
  * Vermilion Bird Capital) and CRON-111 (cultivation growth service, which
  * requires 周茹 to be near Mu Bingmei at the Kunxu Realm).
@@ -33,7 +33,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  * <ul>
  *   <li>After Wang Lin places Li Muwan's soul into 周茹 (CRON-110), 周茹
  *       eventually becomes a Soul Transformation (炼虚) cultivator under
- *       慕冰媚 (Mu Bingmei) in the Kunxu Realm (昆虚界).</li>
+ *       木冰眉 (Mu Bingmei) in the Kunxu Realm (昆虚界).</li>
  *   <li>The novel does not dwell on the logistics of how 周茹 travels to
  *       the Kunxu Realm. The Kunxu Realm is canonically a pocket-realm
  *       accessible from the Cave World — the journey is implied rather
@@ -333,7 +333,7 @@ public final class ZhouRuKunxuDepartureEvent {
                 "zhou_ru_kunxu_departure",
                 "Wang Lin sent Zhou Ru (周茹) to the Kunxu Realm (昆虚界) at "
                         + "(" + surfacePos.getX() + ", " + surfacePos.getY() + ", "
-                        + surfacePos.getZ() + "), entrusting her to Mu Bingmei (慕冰媚) "
+                        + surfacePos.getZ() + "), entrusting her to Mu Bingmei (木冰眉) "
                         + "for cultivation. The Li Muwan soul within her begins its "
                         + "long cultivation arc toward Soul Transformation.",
                 serverLevel.getGameTime());
@@ -458,7 +458,7 @@ public final class ZhouRuKunxuDepartureEvent {
                 Component.literal("─────────────────────────────────────")
                         .withStyle(ChatFormatting.DARK_PURPLE));
         player.sendSystemMessage(
-                Component.literal("王林将周茹送往昆虚界，托付于慕冰媚门下。")
+                Component.literal("王林将周茹送往昆虚界，托付于木冰眉门下。")
                         .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
         player.sendSystemMessage(
                 Component.literal("Wang Lin sends Zhou Ru to the Kunxu Realm, "
@@ -521,7 +521,7 @@ public final class ZhouRuKunxuDepartureEvent {
      */
     private static void announceAlreadyDeparted(ServerPlayer player) {
         player.sendSystemMessage(
-                Component.literal("周茹已启程前往昆虚界，投于慕冰媚门下修行。")
+                Component.literal("周茹已启程前往昆虚界，投于木冰眉门下修行。")
                         .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         player.sendSystemMessage(
                 Component.literal("Zhou Ru has already departed for the Kunxu Realm "

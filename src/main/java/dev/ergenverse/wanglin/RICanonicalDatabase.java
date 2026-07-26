@@ -423,7 +423,7 @@ public final class RICanonicalDatabase {
             "novel; Fandom wiki; Baidu Baike"
         ),
         new CanonCharacter(
-            "N19", "Mu Bingmei", "慕冰媚 / 柳眉", CharType.OTHER,
+            "N19", "Mu Bingmei", "木冰眉 / 柳眉", CharType.OTHER,
             "Ascendant+", "Vermilion Bird Country / Divine Sect", "alive", 4,
             "unknown", "Planet Suzaku / IAC",
             java.util.List.of(
@@ -432,7 +432,7 @@ public final class RICanonicalDatabase {
                 "Wang Lin severed karmic ties with her via the Dream Dao; one of his clones accompanies her"
             ),
             List.of(new RelationShip("Wang Lin", "love_interest"), new RelationShip("Wang Ping", "family"), new RelationShip("Zhou Ru", "disciple")),
-            "novel; Fandom wiki; Baidu Baike (Liu Mei = Mu Bingmei)"
+            "novel; Fandom wiki; Baidu Baike (木冰眉 — https://baike.baidu.com/item/木冰眉/8802287)"
         ),
         new CanonCharacter(
             "N20", "Situ Nan", "司徒南", CharType.OTHER,
