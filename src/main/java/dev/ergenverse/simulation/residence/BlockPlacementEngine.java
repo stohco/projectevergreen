@@ -1,6 +1,7 @@
 package dev.ergenverse.simulation.residence;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.WorldRuntime;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -685,8 +686,47 @@ public final class BlockPlacementEngine {
         placeWallEast(level, min, max);
     }
 
-    /** Convenience: set a single block. */
+    /**
+     * Convenience: set a single block.
+     *
+     * <p><b>CRON-COMPLETIONIST-61 — simulation provenance wiring:</b>
+     * When the {@link WorldRuntime} is initialized AND the target level is
+     * the Planet Suzaku level bound to the runtime, this routes the change
+     * through {@code WorldRuntime.get().world().setSimulationBlock(...)} so
+     * it is journaled under {@link dev.ergenverse.runtime.Provenance#SIMULATION}
+     * and persists across save/load via {@link dev.ergenverse.runtime.persist.WorldDeltaSavedData}.
+     *
+     * <p>Otherwise (non-Suzaku level, or runtime not yet initialized), it
+     * falls back to direct {@code level.setBlock}. This preserves the
+     * engine's behavior for ad-hoc uses outside the simulation (e.g. test
+     * worlds) while ensuring the canonical Suzaku simulation writes flow
+     * through the journal.
+     *
+     * <p>Architectural rationale: residences are SIMULATION, not CANON.
+     * They are placed in response to a resident's existence (Article XLVII:
+     * "the house is literally generated from the resident"), and a resident
+     * is a simulation actor. The blueprint does not contain per-block
+     * residence layouts — those are derived. So a residence's blocks belong
+     * in the SIMULATION layer, where they can diverge from a fresh save
+     * (e.g. a burned-down house stays burned-down across reload, but a new
+     * save starts fresh).
+     */
     private static void setBlock(ServerLevel level, BlockPos pos, BlockState state) {
+        try {
+            WorldRuntime rt = WorldRuntime.get();
+            if (rt.isInitialized() && rt.suzakuLevel() == level) {
+                ResourceLocation rl = ForgeRegistries.BLOCKS.getKey(state.getBlock());
+                if (rl != null) {
+                    rt.world().setSimulationBlock(
+                            pos.getX(), pos.getY(), pos.getZ(), rl.toString());
+                    return;
+                }
+            }
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] BlockPlacementEngine facade write failed at {}: {}",
+                    pos, t.getMessage());
+        }
+        // Fallback: direct write (non-Suzaku level or runtime not initialized)
         level.setBlock(pos, state, 3);
     }
 

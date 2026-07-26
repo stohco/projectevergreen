@@ -1,6 +1,8 @@
 package dev.ergenverse.entity.ai;
 
+import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.SpiritBeastEntity;
+import dev.ergenverse.runtime.WorldRuntime;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,7 +44,25 @@ import java.util.List;
  *   CUNNING+: carnivores drag prey corpses to cover before feeding.
  *   SPIRIT+: after feeding, emit content particle effect.
  *
- * CRON-COMPLETIONIST-71: fills the "feed" gap from CRON task priority (c).
+ * <p><b>CRON-COMPLETIONIST-61 — simulation provenance wiring:</b>
+ * All block-state changes performed by this goal are now routed through
+ * {@code WorldRuntime.get().world().setSimulationBlock(...)} (the
+ * {@link dev.ergenverse.runtime.layer.WorldFacade}), NOT direct
+ * {@code level.destroyBlock} / {@code level.setBlock} calls. This ensures:
+ * <ol>
+ *   <li>The change is journaled in the {@link dev.ergenverse.runtime.delta.WorldDeltaStore}
+ *       under {@link dev.ergenverse.runtime.Provenance#SIMULATION}.</li>
+ *   <li>It persists across save/load via {@link dev.ergenverse.runtime.persist.WorldDeltaSavedData}.</li>
+ *   <li>It is replayed by the {@link dev.ergenverse.runtime.materialize.PlanetSuzakuChunkMaterializer}
+ *       on chunk reload, so a beast-eaten grass block does not regrow on save/load.</li>
+ *   <li>It can be queried via {@link dev.ergenverse.runtime.layer.SimulationLayer#getBlock}.</li>
+ * </ol>
+ * Before this round, the beast ate grass in Minecraft's live world, but the
+ * change was never journaled — so on save/load the grass regrew from canon,
+ * silently undoing the simulation. That violated CRON-69's "world as Git"
+ * contract (blueprint + delta journal = save). This fix closes that leak.
+ *
+ * <p>CRON-COMPLETIONIST-71: fills the "feed" gap from CRON task priority (c).
  */
 public class SpiritBeastFeedGoal extends Goal {
 
@@ -174,21 +194,29 @@ public class SpiritBeastFeedGoal extends Goal {
             BlockState bs = beast.level().getBlockState(feedTarget);
             Block block = bs.getBlock();
 
-            // Check if the block is edible vegetation
+            // Check if the block is edible vegetation.
+            // CRON-COMPLETIONIST-61: route every block-state change through
+            // the WorldFacade so it is journaled under SIMULATION provenance
+            // and persists across save/load. Direct level.destroyBlock /
+            // level.setBlock calls would silently leak — the change would
+            // exist in Minecraft's chunk save but NOT in the delta journal,
+            // so a save/load would revert it to canon and the beast would
+            // re-eat the same grass forever.
             boolean ate = false;
             if (block == Blocks.TALL_GRASS || block == Blocks.FERN
                     || block == Blocks.DEAD_BUSH) {
-                beast.level().destroyBlock(feedTarget, false);
+                // Vegetation → air (consumed)
+                simulationSetBlock(feedTarget, "minecraft:air");
                 ate = true;
             } else if (block == Blocks.GRASS_BLOCK) {
                 // Eat the grass, leaving dirt
-                beast.level().setBlock(feedTarget, Blocks.DIRT.defaultBlockState(), 3);
+                simulationSetBlock(feedTarget, "minecraft:dirt");
                 ate = true;
             }
             // Kelp / seagrass for aquatic herbivores
             else if (beast.getBeastType().isAquatic()
                     && (block == Blocks.SEAGRASS || block == Blocks.KELP)) {
-                beast.level().destroyBlock(feedTarget, false);
+                simulationSetBlock(feedTarget, "minecraft:air");
                 ate = true;
             }
 
@@ -216,6 +244,40 @@ public class SpiritBeastFeedGoal extends Goal {
                     beast.getX(), beast.getY() + 0.5D, beast.getZ(),
                     5, 0.5D, 0.5D, 0.5D, 0.02D);
         }
+    }
+
+    /**
+     * Route a block-state change through the {@link dev.ergenverse.runtime.layer.WorldFacade}
+     * under {@link dev.ergenverse.runtime.Provenance#SIMULATION}.
+     *
+     * <p>If the WorldRuntime is not initialized yet (e.g. beast feeding in
+     * an unloaded dimension before init), falls back to direct level.setBlock
+     * so the feed at least visibly happens. The change won't be journaled in
+     * that case, but that scenario is degenerate (beasts should not exist
+     * before the runtime is initialized).
+     *
+     * <p>If the runtime IS initialized, the facade mirrors the change into
+     * the live level internally — we must NOT also call level.setBlock
+     * ourselves, or Minecraft will log a "already updating" warning.
+     */
+    private void simulationSetBlock(BlockPos pos, String blockId) {
+        try {
+            if (WorldRuntime.get().isInitialized()) {
+                WorldRuntime.get().world().setSimulationBlock(
+                        pos.getX(), pos.getY(), pos.getZ(), blockId);
+                return;
+            }
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] SpiritBeastFeedGoal facade write failed at {}: {}",
+                    pos, t.getMessage());
+        }
+        // Fallback: direct write (degenerate case, not journaled)
+        BlockState fallback = "minecraft:air".equals(blockId)
+                ? Blocks.AIR.defaultBlockState()
+                : net.minecraftforge.registries.ForgeRegistries.BLOCKS.getValue(
+                        new net.minecraft.resources.ResourceLocation(blockId))
+                        .defaultBlockState();
+        beast.level().setBlock(pos, fallback, 3);
     }
 
     private void spawnEatParticles(BlockPos pos) {
