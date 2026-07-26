@@ -28,6 +28,7 @@ import dev.ergenverse.simulation.event.EnergyType;
 import dev.ergenverse.simulation.event.WorldEventBus;
 import dev.ergenverse.simulation.opportunity.OpportunityRegistry;
 import dev.ergenverse.simulation.settlement.CultivatorMindRegistry;
+import dev.ergenverse.canon.structure.CanonSettlementBuilder;
 import dev.ergenverse.simulation.residence.WangLinHomeBuilder;
 import dev.ergenverse.world.blueprint.WorldBlueprintManager;
 import net.minecraft.commands.CommandSourceStack;
@@ -196,6 +197,9 @@ public class ErgenDebugCommand {
                                             .executes(ErgenDebugCommand::journalPlayerWrite))))))
                         .then(Commands.literal("clear")
                             .executes(ErgenDebugCommand::journalClear)))
+                    // ── CRON-125: Canon structure composition (semantic Village→Building→Room→Furniture) ──
+                    .then(Commands.literal("canon-build")
+                        .executes(ErgenDebugCommand::canonBuildWangFamilyVillage))
                     // ── CRON-COMPLETIONIST-74: Residence simulation (WangLinHomeBuilder) ──
                     .then(Commands.literal("residence")
                         .then(Commands.literal("build")
@@ -1441,6 +1445,36 @@ public class ErgenDebugCommand {
      * <p>The isAlreadyBuilt guard (marker block at origin.offset(0,5,0),
      * journaled under SIMULATION) prevents double-builds.
      */
+    // ── CRON-125: Canon structure composition ──────────────────────────
+
+    /**
+     * /ergen debug canon-build — materialize Wang Family Village via the
+     * semantic composition system (Village → Buildings → Rooms → Furniture).
+     * Delegates to {@link CanonSettlementBuilder#buildWangFamilyVillage}.
+     */
+    private static int canonBuildWangFamilyVillage(CommandContext<CommandSourceStack> ctx) {
+        ServerLevel level = ctx.getSource().getLevel();
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7l=== CANON BUILD (Composition) ===\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77System:\u00a7r semantic composition (Village \u2192 Buildings \u2192 Rooms \u2192 Furniture)"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Settlement:\u00a7r Wang Family Village (\u738b\u6c0f\u6751)"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Canon:\u00a7r \u8d75\u56fd\u67d0\u504f\u50fb\u5c0f\u5c71\u6751 (RI Ch.1-10). 'Wang Family Village' is mod-original."), false);
+        try {
+            CanonSettlementBuilder.buildWangFamilyVillage(level, null);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7aSUCCESS\u00a7r — Wang Family Village composition materialized at canon coordinate."), false);
+        } catch (Throwable t) {
+            ctx.getSource().sendFailure(Component.literal(
+                "\u00a7cFailed: " + t.getMessage() + "\u00a7r"));
+        }
+        return 1;
+    }
+
+    // ── CRON-COMPLETIONIST-74: Residence simulation ────────────────────
+
     private static int residenceBuild(CommandContext<CommandSourceStack> ctx) {
         ServerLevel level = ctx.getSource().getLevel();
         int x = IntegerArgumentType.getInteger(ctx, "x");
