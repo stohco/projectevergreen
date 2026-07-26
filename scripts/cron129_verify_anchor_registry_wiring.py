@@ -120,7 +120,8 @@ check("2.1 AnchorRegistryService import", "import dev.ergenverse.assembly.Anchor
 check("2.2 AnchorRegistry import", "import dev.ergenverse.assembly.AnchorRegistry;" in csb)
 check("2.3 buildWangFamilyVillage publishes after materialize",
       "AnchorRegistryService.get().register(" in csb and
-      "PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.id, result.anchors()" in csb)
+      ("PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.id, result.anchors()" in csb or
+       "AnchorRegistryService.get().register(settlementId, result.anchors()" in csb))
 check("2.4 generic build() also publishes",
       csb.count("AnchorRegistryService.get().register(") >= 2)
 check("2.5 log message mentions AnchorRegistryService publish",

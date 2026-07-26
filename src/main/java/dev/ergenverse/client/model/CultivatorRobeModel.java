@@ -284,6 +284,24 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     private final ModelPart flyWhiskRight;
 
     /**
+     * CRON-132: The ride_sword — a horizontal sword rendered under the
+     * cultivator's feet during sword-flight (御剑飞行). Child of the body
+     * so it inherits the body's forward lean (0.45F during flight), making
+     * the sword tilt with the cultivator — the iconic visual of a leaning
+     * flyer on a tilting sword.
+     *
+     * <p>Hidden by default (constructor sets visible=false). The setupAnim
+     * flight block sets visible=true when {@link #flying} is true; the
+     * else branch resets visible=false. This avoids the "every NPC has a
+     * sword under their feet" bug.
+     *
+     * <p>The held-weapon sword (swordRight) is ALSO hidden during flight
+     * (existing CRON-130 behavior) — the cultivator is NOT holding a sword
+     * in their hand while flying; the sword is under their feet.
+     */
+    private final ModelPart rideSword;
+
+    /**
      * CRON-COMPLETIONIST-97: Per-character body scale. Set by
      * {@link #setCharacterId(String)} from the {@link HeldWeaponType} enum.
      * Applied by the renderer via {@code poseStack.scale(scale, scale, scale)}
@@ -329,6 +347,11 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
         this.staffRight.visible = false;
         this.hoeRight.visible = false;
         this.flyWhiskRight.visible = false;
+        // CRON-132: ride_sword is a child of "body" (not right_arm) so it
+        // inherits the body's forward lean during flight. Hidden by default;
+        // setupAnim flight block enables it.
+        this.rideSword = root.getChild("body").getChild("ride_sword");
+        this.rideSword.visible = false;
     }
 
     /**
@@ -741,6 +764,71 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
                         .addBox(-1.0F, 20.0F, -0.3F, 2.0F, 4.0F, 0.6F, new CubeDeformation(0.2F)),
                 PartPose.ZERO);
 
+        // ═════════════════════════════════════════════════════════════════
+        // CRON-COMPLETIONIST-132: RIDE_SWORD — the flying sword under feet
+        // ═════════════════════════════════════════════════════════════════
+        // The iconic cultivator flight visual: a horizontal sword under the
+        // cultivator's feet. Rendered ONLY when POSE_FLYING (御剑飞行).
+        //
+        // Hierarchy: child of "body" (NOT right_arm) so it inherits the
+        // body's forward lean (0.45F during flight). The sword tilts with
+        // the cultivator — a leaning flyer on a tilting sword.
+        //
+        // Geometry (in body-local coordinates, model pixels = 1/16 block):
+        //   - Body cube is 8x12x4 with origin (-4, 0, -2). The body's local
+        //     origin (0,0,0) is at the top-center of the torso.
+        //   - Feet are at y=12 (bottom of the body) + leg length 12 = y=24
+        //     in root coords, but in body-local coords the feet are at y=12.
+        //   - The sword sits at y=12.5F (just below the feet, so the cultivator
+        //     appears to stand ON the sword).
+        //   - The blade extends along the Z axis (forward = -Z in Minecraft
+        //     model space). Total blade length = 24 units (1.5 blocks — wider
+        //     than the cultivator for visibility).
+        //   - Blade box: 1x1x24 (thin), centered at z=0, so it spans z=-12
+        //     to z=+12.
+        //   - Guard (crossbar): 5x1x1 at z=0 (where the cultivator stands).
+        //   - Pommel: 1x1x2 at z=+12 (behind the cultivator).
+        //
+        // UV layout (64x64 texture):
+        //   - Blade: texOffs(32, 56) — 1x24 blade needs 4 faces of 1x24 + 2
+        //     caps of 1x1 = 2*(1*24) + 2*(24*1) + 2*(1*1) = 4+48+48+2 = too
+        //     much. Simplified: use a 1x1x24 box (4 long faces 1x24, 2 end
+        //     caps 1x1). UV footprint: 2*(1+24) wide x 2*(1+1) tall = 50x4.
+        //     That overflows row 56 (only 8 rows to 64). Use a SMALLER blade:
+        //     1x1x16, UV = 2*(1+16) x 2*(1+1) = 34x4. Still wide.
+        //   - Pragmatic approach: blade 1x1x20, UV at (32,56) needs 22x4
+        //     (1+20+1 wide x 1+1+1+1 tall). 32+22=54 < 64. Fits!
+        //   - Guard: texOffs(32, 60) — 5x1x1 needs 7x3 UV. 32+7=39 < 64. Fits.
+        //   - Pommel: texOffs(40, 60) — 1x1x2 needs 4x3 UV. 40+4=44 < 64. Fits.
+        //
+        // The sword texture in rows 56-63 of the cultivator texture will be
+        // a metallic blade gradient (gray to silver). Existing cultivator
+        // textures don't have art in rows 56-63 cols 32-63 (that region was
+        // unused — weapons used cols 0-31 at row 56). The renderer's texture
+        // binding is unchanged (same cultivator texture); the ride_sword just
+        // samples the newly-allocated UV region.
+        //
+        // Canon: 御剑飞行 (sword flight) is universally attested in 仙逆.
+        // Foundation Establishment (筑基) is the canonical minimum realm
+        // (enforced by EntityCultivator.isFoundationOrHigher). The sword-
+        // under-feet visual is the universally-attested cultivator icon.
+        // NO fabricated chapter citations.
+        PartDefinition bodyDef = root.getChild("body");
+        PartDefinition rideSwordDef = bodyDef.addOrReplaceChild("ride_sword",
+                CubeListBuilder.create().texOffs(32, 56)
+                        .addBox(-0.5F, 12.5F, -10.0F, 1.0F, 1.0F, 20.0F),
+                PartPose.ZERO);
+        // Guard (crossbar) — horizontal bar at z=0 where the cultivator stands.
+        rideSwordDef.addOrReplaceChild("ride_sword_guard",
+                CubeListBuilder.create().texOffs(32, 60)
+                        .addBox(-2.5F, 12.5F, -0.5F, 5.0F, 1.0F, 1.0F),
+                PartPose.ZERO);
+        // Pommel — small cap at the back (z=+10).
+        rideSwordDef.addOrReplaceChild("ride_sword_pommel",
+                CubeListBuilder.create().texOffs(40, 60)
+                        .addBox(-0.5F, 12.5F, 9.5F, 1.0F, 1.0F, 2.0F),
+                PartPose.ZERO);
+
         return LayerDefinition.create(mesh, 64, 64);
     }
 
@@ -1083,11 +1171,12 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
         //   - Subtle altitude bob: body.y oscillates ±0.1 blocks at ~0.15 Hz
         //     (the cultivator is hovering, not perfectly still).
         //
-        // CRON-130 self-critique #1: there is no visible sword-under-feet
-        // model in this round — the sword is implied by the pose. The
-        // held-weapon sword (swordRight) is hidden during flight. A future
-        // CRON should add a dedicated "ride_sword" ModelPart under the body
-        // that's visible only during POSE_FLYING. See worklog self-critique.
+        // CRON-130 self-critique #1: there was no visible sword-under-feet
+        // model in that round — the sword was implied by the pose. The
+        // held-weapon sword (swordRight) was hidden during flight.
+        // CRON-132 CLOSED THIS GAP: a dedicated "ride_sword" ModelPart is
+        // now a child of the body, visible only during POSE_FLYING. See the
+        // createBodyLayer() ride_sword section + the flight block below.
         //
         // Canon: 御剑飞行 (sword flight) is universally attested in 仙逆
         // and Chinese cultivation novels. The realm gate (Foundation+)
@@ -1140,19 +1229,33 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
             this.hairpin.zRot = (float) Math.sin(ageInTicks * 0.4F) * 0.05F;
 
             // Hide the held weapon during flight (the sword is "under feet",
-            // not in hand — see CRON-130 self-critique for the missing
-            // ride_sword ModelPart).
+            // not in hand — CRON-132 added the ride_sword ModelPart below).
             this.swordRight.visible = false;
             this.fanRight.visible = false;
             this.staffRight.visible = false;
             this.hoeRight.visible = false;
             this.flyWhiskRight.visible = false;
+
+            // CRON-132: show the ride_sword under the cultivator's feet.
+            // The sword is a child of the body, so it inherits the body's
+            // forward lean (0.45F) — the sword tilts with the cultivator,
+            // creating the iconic "leaning flyer on a tilting sword" visual.
+            // A subtle pitch oscillation (±0.03F at 0.8 Hz) suggests the
+            // sword is adjustingly banking against the wind.
+            this.rideSword.visible = true;
+            this.rideSword.xRot = (float) Math.sin(ageInTicks * 0.8F) * 0.03F;
         } else {
             // Restore hair bun position when not flying (the wind-push offset
             // is only applied during flight; we reset it so other poses don't
             // inherit a stale offset).
             this.hairBun.z = 0.0F;
             this.hairBun.xRot = 0.0F;
+            // CRON-132: hide the ride_sword when not flying. Without this,
+            // a cultivator who landed would still have a sword under their
+            // feet — a visual bug. The reset is in the else branch so it
+            // fires every frame the cultivator is NOT flying, ensuring the
+            // sword disappears immediately on landing.
+            this.rideSword.visible = false;
         }
 
         // ═════════════════════════════════════════════════════════════════
