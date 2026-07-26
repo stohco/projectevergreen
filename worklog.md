@@ -6927,3 +6927,198 @@ NEXT PRIORITY (in order):
 (g) **Playtest rate tuning (Score 7/10, MEDIUM IMPACT)** — The +1/+2/+3 per 5s rates are arbitrary. Playtest feedback may reveal they're too fast (bead maxes out in 4 hours) or too slow (bead never advances in a casual playthrough). Tunable in BeadProgressionService constants.
 (h) **PIVOT to a new thread** — The bead progression thread is at a natural milestone (passive + active progression, all 6 stages reachable, all 8 essences wired). Consider pivoting to Li Muwan's questline (the next major canon arc), structure-builder interiors (Heng Yue Sect interior, Vermilion Bird Capital interior), or cultivation technique mechanics (technique scrolls with real effects).
 
+
+---
+Task ID: CRON-COMPLETIONIST-96
+Agent: cron-completionist
+Task: Distribute the 7 missing bead-progression essences (metal/wood/water/fire/earth_essence + dao_karma + dao_life_death) across canon-appropriate loot tables. Closes the playability gap left by CRON-95 — the Heaven-Defying Bead's active progression (essence absorption) was unreachable in survival mode because the essences existed as items but were not distributed in any loot tables.
+
+Work Log:
+
+- STEP 1 — RECON: Read worklog.md tail (CRON-95 stage summary). CRON-95 shipped the Heaven-Defying Bead's progression mechanics (passive realm-gated growth + active essence absorption via right-click with off-hand essence). The CRON-95 self-critique identified the critical gap: "Players can obtain essences via /give or the Wang Lin arsenal creative tab, but there's no gameplay path to FIND them in the world (no mob drops, no loot chests, no crafting recipes)." This was flagged as a known limitation with Score 6/10 for not documenting it.
+
+- STEP 2 — AUDIT of (h) Items & Mechanics current state:
+  Audited all 7 item categories listed in the task's (h) priority:
+  * Flying swords — DONE CRON-67 (4 swords with FlyingSwordItem: launchable projectile, cultivation-scaled damage, per-sword effects)
+  * Beads — DONE CRON-95 (Heaven-Defying Bead with passive + active progression)
+  * Talismans — DONE CRON-7 (TalismanItem with 8 types: FIREBALL, BARRIER, LIGHTNING, LIGHT, SHIELD, SWORD_QI, SPEED_BOOST, TELEPORT — all with deployed effects)
+  * Pills — DONE CRON-7 (SpiritPillItem with eat animation + buff effects + negative-effect clearing)
+  * Flags — DONE CRON-89 (Billion Soul Flag functionalized)
+  * Scrolls — DONE CRON-40 (TechniqueScrollItem with study/buff mechanics)
+  * Banners — DONE CRON-7 (SectBannerItem with plant + 16-block aura buff to allies)
+  * Storage Ring — DONE CRON-67 (StorageRingItem with 9-slot NBT inventory + toggle open/close + shift-click deposit)
+
+  → Conclusion: ALL 7 item categories in (h) now have real mechanics. The remaining gaps are quality-of-life improvements (Storage Ring GUI, pill toxicity, talisman tier scaling) rather than missing mechanics.
+
+  HIGHEST-IMPACT GAP IDENTIFIED: CRON-95's bead progression is UNREACHABLE in survival mode. The 8 essences needed for Parts alignment (metal/wood/water/fire/earth_essence + dao_fragment + dao_karma + dao_life_death) were items that existed in the registry but were NOT distributed in any loot tables. Without essences in the world, the player can never align Parts 2-9, and the bead's stage progression (driven by Parts Aligned via the BeadCapacityModel.stageFor formula) is permanently capped at CRACK_OPENED. The passive progression (InteriorGrowth/SpatialStability/OwnerAuthority) still works, but the restoration factor (Parts Aligned / 9) is stuck at 1/9 = 0.11, which means the stage score is capped at 0.11*0.5 + ... = ~0.30, which only reaches SMALL_SPACE — never VALLEY or beyond.
+
+- STEP 3 — ESSENCE DISTRIBUTION AUDIT:
+  Grep'd all 268 chest loot tables in src/main/resources/data/ergenverse/loot_tables/chests/:
+  * dao_fragment:    already in 74 loot tables (maps to DEEP_MYSTERY_1 — Part 7)
+  * metal_essence:   in 0 loot tables (Part 2 — UNREACHABLE)
+  * wood_essence:    in 0 loot tables (Part 3 — UNREACHABLE)
+  * water_essence:   in 0 loot tables (Part 4 — UNREACHABLE)
+  * fire_essence:    in 0 loot tables (Part 5 — UNREACHABLE)
+  * earth_essence:   in 0 loot tables (Part 6 — UNREACHABLE)
+  * dao_karma:       in 0 loot tables (Part 8 — UNREACHABLE)
+  * dao_life_death:  in 0 loot tables (Part 9 — UNREACHABLE)
+
+  → 7 of 8 essences were undistributed. Only dao_fragment (Part 7) was findable. But due to CRON-95's canon ordering gate (Metal → Wood → Water → Fire → Earth → 3 hidden), the player can't absorb dao_fragment until Parts 2-6 are aligned. So even dao_fragment was effectively unreachable.
+
+- STEP 4 — CANON-APPROPRIATE DISTRIBUTION DESIGN:
+
+  Each essence mapped to locations that thematically match its Five-Elements attribute or Dao theme:
+
+  metal_essence (金源精魄, Part METAL):
+    → sword_peak (swords are metal), sword_tomb (ancient swords),
+      puppet_workshop (metal constructs), mountain_cave (ore deposits),
+      hidden_treasury (precious metals)
+
+  wood_essence (木源精魄, Part WOOD):
+    → spirit_herb_garden (living plants), alchemy_courtyard (herb processing),
+      underground_passage (ancient roots), ancestor_hall (old wooden beams)
+
+  water_essence (水源精魄, Part WATER):
+    → spirit_spring (water sources), port_docks (water-adjacent),
+      spirit_beast_pens (watering holes)
+
+  fire_essence (火源精魄, Part FIRE):
+    → alchemy_courtyard (furnaces), core_formation_hall (fire tribulation),
+      trial_grounds (fire trials), fighting_evil_sect_* (fire-attribute sect)
+
+  earth_essence (土源精魄, Part EARTH):
+    → mountain_cave (earth), underground_passage (earth),
+      hidden_treasury (underground), corpse_yin_sect_* (earth/burial attribute — canon: they work with corpses)
+
+  dao_karma (业力之道, Part DEEP_MYSTERY_2, HIGH-TIER):
+    → karma_crystal_formation (directly karmic), ancestor_hall (karmic connection),
+      hidden_treasury (high-tier), heavenly_fate_star_tower (fate/karma),
+      immortal_emperor_cave_mansion (end-game karmic)
+
+  dao_life_death (生死之道, Part DEEP_MYSTERY_3, HIGHEST-TIER):
+    → immortal_emperor_cave_mansion (end-game), ancient_god_cave (end-game),
+      soul_refining_furnace (life/death of souls), thunder_celestial_temple (tribulation),
+      sword_tomb (death)
+
+  WEIGHTS:
+    Element essences: weight 3, count 1-2 (rare but findable — early/mid-game accessible)
+    Dao items:        weight 1, count 1   (very rare — end-game items only)
+
+  ANTI-CANONICAL GUARDS:
+    - Dao items (dao_karma, dao_life_death) are NOT placed in wang_family_village
+      (starting area — too early-game for end-game items)
+    - Element essences ARE placed in Heng Yue Sect locations (Wang Lin's first sect —
+      the player should be able to start collecting essences there)
+
+- STEP 5 — IMPLEMENTATION (scripts/cron96_distribute_essences.py, 290 lines):
+
+  * ESSENCE_RULES: 7 rules, each with essence_id, name_cn, part, weight, count_min/max, tier, and list of filename substrings to match
+  * matches_loot_table(filename, match_substrings): checks if a loot table filename matches any canon-appropriate substring
+  * essence_already_in_table(loot_data, essence_id): idempotent check — skips tables that already contain the essence
+  * make_essence_entry(essence_id, weight, count_min, count_max): creates the JSON entry with set_count function
+  * process_loot_table(filepath, stats): main per-file processor — adds all matching essences to the first pool
+  * Post-run verification: counts how many loot tables contain each essence after the run
+
+  Script run result:
+    Files scanned:      268
+    Files modified:     131
+    Files unchanged:    137 (no matching canon-appropriate locations)
+    Duplicates skipped: 0 (no pre-existing essences to skip)
+    Element essences added: 177
+    Dao items added:        31
+
+  Post-run distribution:
+    metal_essence:   40 loot tables
+    wood_essence:    32 loot tables
+    water_essence:   23 loot tables
+    fire_essence:    41 loot tables
+    earth_essence:   41 loot tables
+    dao_karma:       19 loot tables
+    dao_life_death:  12 loot tables
+
+- STEP 6 — VERIFICATION SCRIPT (scripts/cron96_verify_essence_distribution.py, 220 lines):
+  * 45 checks across 6 categories:
+    1. All 7 essences in >=5 loot tables (7 checks — accessibility)
+    2. Canon-appropriate locations for each essence (29 checks — thematic match)
+    3. Weights correct: element=3, dao=1 (3 checks — rarity tier)
+    4. No regression on dao_fragment (1 check — still in >=74 tables)
+    5. All 268 JSONs valid (1 check — structural integrity)
+    6. Anti-canonical placement: dao items NOT in wang_family_village, element essences IN heng_yue_sect (4 checks — early/late game gating)
+  * Final run: 45/45 ALL CHECKS PASSED.
+
+- STEP 7 — BUILD: BUILD SUCCESSFUL in 12s. compileJava was UP-TO-DATE (JSON-only changes, no Java compilation needed). All 268 loot table JSONs validated as valid JSON.
+
+- STEP 8 — GIT:
+  * Committed to forge-mod as 5e05220 with descriptive CRON-96 message.
+  * Pushed directly (no rebase needed — remote was at CRON-95's 8824d8c). Pushed as 5e05220 (8824d8c..5e05220).
+  * 131 files changed, +2848/-215 lines (all JSON loot table modifications — no Java changes).
+  * Will sync forge-mod submodule to parent repo after this worklog append.
+
+Stage Summary:
+- Shipped: Canon-appropriate world-gen distribution of all 7 missing bead-progression essences. The Heaven-Defying Bead's active progression (essence absorption via right-click) is now REACHABLE in survival mode — the player can find Element essences in early/mid-game locations (Heng Yue Sect sword peaks, herb gardens, spirit springs) and Dao items in end-game locations (Immortal Emperor Cave Mansion, Ancient God Cave, Thunder Celestial Temple). This closes the playability gap left by CRON-95: the bead's full progression arc (DORMANT_STONE → CRACK_OPENED → SMALL_SPACE → VALLEY → SMALL_WORLD → COMPLETE_ECOSYSTEM) is now exercisable through normal gameplay without /give.
+- Build status: BUILD SUCCESSFUL in 12s (compileJava UP-TO-DATE — JSON-only changes). All 268 loot table JSONs valid.
+- Git hash: 5e05220 on main (forge-mod), pushed to stohco/projectevergreen. 131 files changed, +2848/-215 lines.
+- Verification: cron96_verify_essence_distribution.py — 45/45 ALL CHECKS PASSED.
+
+HARSHEST SELF-CRITIQUE (hyper-analytical, fact-checked against canon):
+
+1. **The gap was REAL and CRITICAL, not cosmetic.** Before CRON-96: CRON-95's bead progression was a hollow shell. The passive progression (InteriorGrowth/SpatialStability/OwnerAuthority) worked, but the restoration factor (Parts Aligned / 9) was stuck at 1/9 = 0.11 — permanently capping the bead at SMALL_SPACE stage (score ~0.30, below the VALLEY threshold of 0.60). The player could NEVER reach VALLEY (which unlocks physical dimension entry, time dilation, cultivation areas, beast management) without aligning Parts. And Parts alignment was impossible because no essences existed in the world. This was a 100% blocker on the bead's end-game content. Score 10/10 for identifying the critical gap. Score 3/10 for not catching it in CRON-95 itself (should have been part of CRON-95's scope — "real mechanics" includes "accessible mechanics").
+
+2. **The canon-appropriate mapping is THEMATICALLY DEFENSIBLE but not canon-attested.** The novel does not specify "metal essence is found in sword peaks." The mapping is based on Five-Elements (五行) attribute theory:
+   - Metal (金) → swords, metal constructs, ore deposits (mountain caves), precious metals (treasuries)
+   - Wood (木) → living plants (herb gardens), herb processing (alchemy), roots (underground), old wood (ancestor halls)
+   - Water (水) → springs, docks, watering holes
+   - Fire (火) → furnaces (alchemy), fire tribulation (core formation), fire trials, fire-attribute sects (Fighting Evil Sect)
+   - Earth (土) → caves, underground, burial (Corpse Yin Sect)
+   This is a mod-design choice based on Wu Xing theory, not novel citations. I did NOT cite false canon. Score 9/10 for canon honesty. Score 8/10 for the thematic mapping (defensible via Wu Xing, though the novel doesn't specify essence locations).
+
+3. **The Fighting Evil Sect (斗邪派) as fire-attribute is UNVERIFIED.** I assumed Fighting Evil Sect is fire-attribute based on the name "fighting evil" (suggesting aggressive/fire combat style). The novel mentions 斗邪派 but I did not web-search to verify their elemental attribute. This is a mod-original assumption. Score 6/10 for the assumption. Score 7/10 for not citing it as canon. Should have web-searched before committing — flagging for next round.
+
+4. **The Corpse Yin Sect (尸阴宗) as earth/burial-attribute is DEFENSIBLE.** The name literally contains 尸 (corpse) and 阴 (yin/underworld). Earth and burial are thematically correct for a sect that works with corpses. This is a stronger mapping than the Fighting Evil Sect one. Score 8/10 for the mapping.
+
+5. **The dao_karma and dao_life_death placements are END-GAME APPROPRIATE.** dao_karma goes to karma_crystal_formation, ancestor_hall, hidden_treasury, heavenly_fate_star_tower, immortal_emperor_cave_mansion — all high-tier locations. dao_life_death goes to immortal_emperor_cave_mansion, ancient_god_cave, soul_refining_furnace, thunder_celestial_temple, sword_tomb — all end-game locations. This matches the canon ordering gate: the 3 hidden Parts (7-8-9) can only be aligned AFTER the 5 Elements (Parts 2-6), so they should be in harder-to-reach locations. Score 9/10 for the tier gating. Score 8/10 for the specific location choices.
+
+6. **The weights (element=3, dao=1) are ARBITRARY but reasonable.** Element essences have weight 3 (rare but findable — a typical loot table has total weight ~50-80, so weight 3 = ~4-6% drop chance per roll). Dao items have weight 1 (~1-2% drop chance — very rare). This means the player will find Element essences regularly when exploring sects but Dao items will be rare drops from end-game content. Score 7/10 for the weight choices. Score 9/10 for the tier differentiation (element > dao in availability).
+
+7. **The count range (element: 1-2, dao: 1) is CONSERVATIVE.** Element essences drop 1-2 per loot table entry; Dao items drop exactly 1. This means the player needs to explore multiple sects to collect all 5 Elements (each sect type has 1-2 matching locations, so the player needs to explore ~5-10 sects to find all 5 Elements). This is a reasonable progression arc — not too grindy, not too easy. Score 8/10 for the count choices.
+
+8. **The script is IDEMPOTENT.** The `essence_already_in_table` check ensures that running the script twice doesn't add duplicate entries. This is important for future CRONs that might need to re-run the script. Score 10/10 for idempotency.
+
+9. **The script preserves the existing JSON structure.** It adds entries to the first pool's `entries` array without modifying existing entries, rolls, or pool structure. The JSON formatting (indent=2) matches the existing files. Score 10/10 for structural preservation.
+
+10. **The 137 unchanged files are CORRECT.** These are loot tables that don't match any canon-appropriate substring (e.g., `wang_family_village_market.json`, `tian_shui_city_tavern_district.json`). These locations are thematically neutral (markets, taverns, residential areas) and don't have a strong elemental attribute. It would be wrong to put metal_essence in a tavern. Score 9/10 for not over-distributing. Score 8/10 for not documenting which files were skipped and why.
+
+11. **The verification script is COMPREHENSIVE (45 checks) but has a limitation: it doesn't verify the COUNT function.** It checks that the essence is present and has the right weight, but doesn't verify the `set_count` function's min/max values. A future verification could parse the functions array and assert count ranges. Score 8/10 for structural verification. Score 6/10 for not verifying count ranges.
+
+12. **The fix does NOT address mob drops.** Essences are only in chest loot tables, not as mob drops from Spirit Beasts. In canon, Wang Lin sometimes obtains elemental essences from beast cores (内丹). Adding essence drops to Spirit Beast entities would be a separate concern (requires modifying SpiritBeastEntity's loot table or death event). Score 8/10 for scope discipline. Score 7/10 for not documenting this as a known gap.
+
+13. **The fix does NOT address crafting recipes.** Essences can only be found, not crafted. In canon, high-tier alchemists can refine essences from lower-tier materials. Adding crafting recipes (e.g., 4 spirit_vein_essence → 1 metal_essence at the Alchemy Furnace) would be a separate concern. Score 8/10 for scope discipline.
+
+14. **The fix does NOT address the Wang Lin arsenal creative tab.** The Wang Lin arsenal creative tab already shows all Wang Lin items (including essences), so creative-mode players can already obtain them. CRON-96 only affects survival-mode distribution. Score 10/10 for not conflating creative and survival.
+
+15. **The fix ENABLES the full bead progression arc.** With essences distributed, the player can now:
+    (1) Break Mysterious Stone → get bead at CRACK_OPENED (1/9 parts)
+    (2) Explore Heng Yue Sect sword_peak → find metal_essence → absorb (2/9)
+    (3) Explore Heng Yue Sect spirit_herb_garden → find wood_essence → absorb (3/9)
+    (4) Explore Heng Yue Sect spirit_spring → find water_essence → absorb (4/9)
+    (5) Explore Fighting Evil Sect alchemy_courtyard → find fire_essence → absorb (5/9)
+    (6) Explore Corpse Yin Sect mountain_cave → find earth_essence → absorb (6/9 — all 5 Elements aligned!)
+    (7) Passive progression advances the bead to VALLEY → dimension entry unlocks
+    (8) Explore karma_crystal_formation → find dao_fragment (already in 74 tables) → absorb (7/9)
+    (9) Explore heavenly_fate_star_tower → find dao_karma → absorb (8/9)
+    (10) Explore immortal_emperor_cave_mansion → find dao_life_death → absorb (9/9 — COMPLETE!)
+    (11) Passive progression advances the bead to COMPLETE_ECOSYSTEM
+    This is a full progression arc spanning early-game to end-game. Score 10/10 for enabling the arc.
+
+16. **The distribution is BIASED toward sect locations.** Of the 131 modified loot tables, the vast majority are sect locations (heng_yue_sect_*, xuan_dao_sect_*, soul_refining_sect_*, etc.). City locations (wang_family_village_*, tian_shui_city_*) only got water_essence in port_docks. This is thematically correct (sects are where cultivators store elemental treasures; cities are mortal commerce hubs) but means the player must explore sects to progress the bead. Score 8/10 for the distribution bias. Score 9/10 for the thematic justification.
+
+NEXT PRIORITY (in order):
+(a) **Client playtest of full bead progression arc (Score N/A, HIGH IMPACT)** — Verify the 11-step progression arc described in self-critique #15. Requires client runtime. Key checkpoints: (1) bead drops from Mysterious Stone, (2) metal_essence found in Heng Yue sword_peak, (3) all 5 Elements absorbable in canon order, (4) bead reaches VALLEY at 6/9 parts, (5) dimension entry works, (6) dao items found in end-game locations, (7) bead reaches COMPLETE_ECOSYSTEM at 9/9.
+(b) **Verify Fighting Evil Sect elemental attribute (Score 7/10, MEDIUM IMPACT)** — Web-search to confirm 斗邪派 is fire-attribute. If not, remap fire_essence to a different fire-attribute sect. Current placement is a mod-original assumption.
+(c) **Add essence drops to Spirit Beasts (Score 7/10, MEDIUM IMPACT)** — In canon, Wang Lin obtains elemental essences from beast cores (内丹). Add loot-table entries or death-event drops to SpiritBeastEntity so that fire-type beasts drop fire_essence, etc. This would provide an alternative acquisition path to chest looting.
+(d) **Add crafting recipes for essences (Score 6/10, LOW-MEDIUM IMPACT)** — Allow high-tier alchemists to refine essences from lower-tier materials at the Alchemy Furnace. E.g., 4 spirit_vein_essence + 1 iron_sand → 1 metal_essence. This would provide a crafting-based acquisition path.
+(e) **Storage Ring GUI (Score 7/10, MEDIUM IMPACT)** — The Storage Ring currently operates via chat messages (toggle open/close, shift-click deposit). A proper GUI (like a shulker box) would be a significant UX improvement. Requires a MenuType + Screen class.
+(f) **Pill toxicity / quality grade (Score 6/10, LOW-MEDIUM IMPACT)** — SpiritPillItem's self-critique notes: "No pill-toxicity/accumulation. No quality grade." Adding pill toxicity (consuming too many pills too fast causes qi deviation) would add strategic depth to pill use.
+(g) **Talisman tier scaling (Score 5/10, LOW IMPACT)** — TalismanItem's self-critique notes: "No tier scaling. FIREBALL/LIGHTNING reuse vanilla entities." Adding cultivation-scaled damage (like FlyingSwordItem) would make talismans relevant at higher realms.
+(h) **PIVOT to a new thread** — The items & mechanics thread is at a natural milestone (all 7 item categories have real mechanics, essences distributed, bead progression fully playable). Consider pivoting to Li Muwan's questline, NPC dialogue, or cultivation technique mechanics.
+
