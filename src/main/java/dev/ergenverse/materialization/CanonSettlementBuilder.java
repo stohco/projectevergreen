@@ -1,5 +1,7 @@
 package dev.ergenverse.materialization;
 
+import dev.ergenverse.assembly.AnchorRegistry;
+import dev.ergenverse.assembly.AnchorRegistryService;
 import dev.ergenverse.assembly.AssemblyResult;
 import dev.ergenverse.assembly.WorldAssembler;
 import dev.ergenverse.canon.structure.CanonSettlement;
@@ -38,6 +40,13 @@ import javax.annotation.Nullable;
  * WorldAssembler + VoxelMaterializer pipeline instead of the old direct
  * {@code materializeInto(VolumePlacer)} call. The external API is unchanged.
  *
+ * <p><b>CRON-129 — ANCHOR REGISTRY PUBLISH.</b> After each successful
+ * assembly, the compiled {@link AnchorRegistry} is published to
+ * {@link AnchorRegistryService} so NPC AI goals can query semantic anchors
+ * ("where is the nearest MEDITATION mat?") by settlement id + role. Before
+ * CRON-129, the registry was logged then discarded; AI had no way to ask
+ * the user's "Find Wang Lin → Find Bedroom → Find Bed" question.
+ *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
 public final class CanonSettlementBuilder {
@@ -61,8 +70,18 @@ public final class CanonSettlementBuilder {
         AssemblyResult result = WorldAssembler.assemble(village, canonX, surfaceY, canonZ);
         int written = VoxelMaterializer.materialize(result, level, bounds);
 
+        // CRON-129: publish the compiled AnchorRegistry to the singleton
+        // service so NPC AI goals can query semantic anchors by role.
+        // This is the bridge between "the compiler knows where Wang Lin's
+        // meditation mat is" and "the cultivator's meditation goal can
+        // pathfind to that mat". Without this publish call, the registry
+        // is logged-then-discarded and AI cannot ask anchor questions.
+        AnchorRegistryService.get().register(
+                PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.id, result.anchors());
+
         Ergenverse.LOGGER.info("[Ergenverse] CanonSettlementBuilder: Wang Family Village materialized — "
-                + "{} voxels, {} anchors.", written, result.anchors().size());
+                + "{} voxels, {} anchors published to AnchorRegistryService.",
+                written, result.anchors().size());
         return written;
     }
 
@@ -85,7 +104,15 @@ public final class CanonSettlementBuilder {
 
         int surfaceY = BlueprintChunkGenerator.surfaceHeightFor(level, loc.x, loc.z);
         AssemblyResult result = WorldAssembler.assemble(settlement, loc.x, surfaceY, loc.z);
-        return VoxelMaterializer.materialize(result, level, bounds);
+        int written = VoxelMaterializer.materialize(result, level, bounds);
+
+        // CRON-129: publish the compiled AnchorRegistry for AI consumption.
+        AnchorRegistryService.get().register(settlementId, result.anchors());
+
+        Ergenverse.LOGGER.info("[Ergenverse] CanonSettlementBuilder: '{}' materialized — "
+                + "{} voxels, {} anchors published to AnchorRegistryService.",
+                settlementId, written, result.anchors().size());
+        return written;
     }
 
     private static @Nullable CanonSettlement resolveComposition(String settlementId) {

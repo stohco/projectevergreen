@@ -28,6 +28,9 @@ import dev.ergenverse.simulation.event.EnergyType;
 import dev.ergenverse.simulation.event.WorldEventBus;
 import dev.ergenverse.simulation.opportunity.OpportunityRegistry;
 import dev.ergenverse.simulation.settlement.CultivatorMindRegistry;
+import dev.ergenverse.assembly.AnchorRegistry;
+import dev.ergenverse.assembly.AnchorRegistryService;
+import dev.ergenverse.canon.structure.SemanticRole;
 import dev.ergenverse.materialization.CanonSettlementBuilder;
 import dev.ergenverse.simulation.residence.WangLinHomeBuilder;
 import dev.ergenverse.world.blueprint.WorldBlueprintManager;
@@ -200,6 +203,11 @@ public class ErgenDebugCommand {
                     // ── CRON-125: Canon structure composition (semantic Village→Building→Room→Furniture) ──
                     .then(Commands.literal("canon-build")
                         .executes(ErgenDebugCommand::canonBuildWangFamilyVillage))
+                    // ── CRON-129: Anchor Registry inspector (AI navigation wiring) ──
+                    .then(Commands.literal("anchors")
+                        .executes(ErgenDebugCommand::anchorsList)
+                        .then(Commands.literal("reset")
+                            .executes(ErgenDebugCommand::anchorsReset)))
                     // ── CRON-COMPLETIONIST-74: Residence simulation (WangLinHomeBuilder) ──
                     .then(Commands.literal("residence")
                         .then(Commands.literal("build")
@@ -246,6 +254,14 @@ public class ErgenDebugCommand {
         sendLine(ctx, "Opportunity Registry", hasLevel && OpportunityRegistry.get(level) != null
                 ? "\u00a7aLIVE\u00a7r" : "\u00a78OFF\u00a7r");
         sendLine(ctx, "Actors", ActorRegistry.all().size() + " registered");
+        // CRON-129: AnchorRegistryService — the AI navigation bridge.
+        {
+            int anchorSettlements = AnchorRegistryService.get().registeredSettlementCount();
+            int anchorTotal = AnchorRegistryService.get().totalAnchorCount();
+            sendLine(ctx, "Anchor Registry", anchorSettlements == 0
+                    ? "\u00a78EMPTY\u00a7r (no settlements compiled)"
+                    : "\u00a7aLIVE\u00a7r (" + anchorSettlements + " settlements, " + anchorTotal + " anchors)");
+        }
 
         ctx.getSource().sendSuccess(() -> Component.literal(""), false);
         ctx.getSource().sendSuccess(() -> Component.literal(
@@ -268,6 +284,8 @@ public class ErgenDebugCommand {
             "  \u00a7e/ergen debug performance\u00a7r \u2014 JVM + entity stats"), false);
         ctx.getSource().sendSuccess(() -> Component.literal(
             "  \u00a7e/ergen debug rumors\u00a7r \u2014 rumor network state"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug anchors\u00a7r \u2014 anchor registry (CRON-129 AI nav)"), false);
         ctx.getSource().sendSuccess(() -> Component.literal(
             "\u00a77Manipulate reality:\u00a7r"), false);
         ctx.getSource().sendSuccess(() -> Component.literal(
@@ -1478,6 +1496,75 @@ public class ErgenDebugCommand {
             ctx.getSource().sendFailure(Component.literal(
                 "\u00a7cFailed: " + t.getMessage() + "\u00a7r"));
         }
+        return 1;
+    }
+
+    // ── CRON-129: Anchor Registry inspector ────────────────────────────
+
+    /**
+     * {@code /ergen debug anchors} — list all registered settlement
+     * AnchorRegistries and a per-settlement role breakdown. Useful for
+     * verifying that CanonSettlementBuilder has published anchors and
+     * that AI goals can query them.
+     */
+    private static int anchorsList(CommandContext<CommandSourceStack> ctx) {
+        AnchorRegistryService service = AnchorRegistryService.get();
+        int settlementCount = service.registeredSettlementCount();
+        int totalAnchors = service.totalAnchorCount();
+
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7l=== ANCHOR REGISTRY (CRON-129) ===\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Settlements registered:\u00a7r " + settlementCount), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Total anchors:\u00a7r " + totalAnchors), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Semantic roles:\u00a7r BED, MEDITATION, BOOKSHELF, WINDOW, ENTRANCE, WELL, "
+                    + "COURTYARD, CHIMNEY, STORAGE, ALCHEMY, WORK, FARM, LECTERN, FORMATION"), false);
+
+        if (settlementCount == 0) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7eNo settlements registered yet.\u00a7r Run \u00a7a/ergen debug canon-build\u00a7r "
+                    + "to compile Wang Family Village and publish its anchors."), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a77Alternatively, walk near a settlement's canon coordinate to trigger "
+                    + "chunk-load materialization (auto-publishes anchors)."), false);
+            return 1;
+        }
+
+        for (String settlementId : service.registeredSettlementIds()) {
+            AnchorRegistry registry = service.get(settlementId);
+            if (registry == null) continue;
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7b" + settlementId + "\u00a7r — " + registry.size() + " anchors:"), false);
+            // Per-role breakdown
+            for (SemanticRole role : SemanticRole.values()) {
+                List<AnchorRegistry.ResolvedAnchor> anchors = registry.findByRole(role);
+                if (anchors.isEmpty()) continue;
+                ctx.getSource().sendSuccess(() -> Component.literal(
+                    "  \u00a7a" + role + "\u00a7r (" + anchors.size() + "): "
+                        + anchors.stream()
+                            .map(a -> a.id() + "(@" + a.x() + "," + a.y() + "," + a.z() + ")")
+                            .reduce((s1, s2) -> s1 + ", " + s2)
+                            .orElse("")), false);
+            }
+        }
+        return 1;
+    }
+
+    /**
+     * {@code /ergen debug anchors reset} — clear all published
+     * AnchorRegistries. Useful for testing the "no anchor" fallback
+     * path in AI goals (meditate-in-place behavior).
+     */
+    private static int anchorsReset(CommandContext<CommandSourceStack> ctx) {
+        AnchorRegistryService service = AnchorRegistryService.get();
+        int cleared = service.registeredSettlementCount();
+        service.clear();
+        final int finalCleared = cleared;
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a7aCleared " + finalCleared + " settlement AnchorRegistries.\u00a7r "
+                + "AI goals will fall back to in-place behavior until next compilation."), false);
         return 1;
     }
 
