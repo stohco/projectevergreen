@@ -362,7 +362,43 @@ public class CultivationPlanetCrystalBlock extends Block {
         }
 
         // Prerequisite 1: Crystal must not already be inherited.
+        // ── CRON-117: Wang Ping Redemption Event branch ──
+        // If the Crystal IS inherited AND the player meets the redemption
+        // prerequisites (bead with Li Muwan revived, realm ≥ ASCENDANT,
+        // Wang Ping's deadUntilRevived flag still true), fire the redemption
+        // event instead of showing the "Crystal is silent" message. This
+        // reuses the right-click interaction on the inherited Crystal as
+        // the redemption trigger — the Crystal is the spiritual core of
+        // Planet Suzaku; Wang Lin channels Ling Tianhou's sword qi
+        // (presumed stored in the bead) through the Crystal to rebuild
+        // Wang Ping's body. See WangPingRedemptionEvent class javadoc
+        // for the full canon basis and the mod-original condensation
+        // (canon places the redemption on Ranyun Star, not Suzaku Tomb).
         if (state.getValue(INHERITED)) {
+            // Check the redemption prerequisites.
+            ItemStack beadForRedemption = findBead(serverPlayer);
+            if (!beadForRedemption.isEmpty()
+                    && beadForRedemption.getItem() instanceof HeavenDefyingBeadItem beadItem
+                    && beadItem.isLiMuwanRevived(beadForRedemption)
+                    && getPlayerRealm(serverPlayer).order >= RealmId.ASCENDANT.order
+                    && isWangPingAwaitingRedemption()) {
+                // All redemption prerequisites met — fire the redemption.
+                try {
+                    boolean redeemed = dev.ergenverse.wanglin.bead.WangPingRedemptionEvent
+                            .redeemAtSuzakuTomb(serverPlayer, pos, level.getGameTime());
+                    if (redeemed) {
+                        return InteractionResult.CONSUME;
+                    }
+                    // If redemption failed (defensive), fall through to the
+                    // "Crystal is silent" message below.
+                } catch (Throwable t) {
+                    Ergenverse.LOGGER.warn("[Ergenverse] CRON-117: Wang Ping redemption "
+                            + "threw an exception at {}: {}", pos, t.getMessage(), t);
+                }
+            }
+            // Either the Crystal is inherited and the redemption prerequisites
+            // are NOT met, OR the redemption failed defensively. Show the
+            // standard "Crystal is silent" message.
             serverPlayer.sendSystemMessage(Component.literal(
                     "修炼星晶的力量已经传承。星晶归于沉寂。")
                     .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
@@ -521,6 +557,34 @@ public class CultivationPlanetCrystalBlock extends Block {
         CultivationState state = stateOpt.resolve().orElse(null);
         if (state == null) return RealmId.MORTAL;
         return state.getCurrentRealm();
+    }
+
+    /**
+     * CRON-117: Check whether Wang Ping is awaiting redemption (i.e., his
+     * {@code deadUntilRevived} flag is still true). Used by the redemption
+     * branch in {@link #use} to gate the redemption event.
+     *
+     * <p>Defensive: returns {@code false} if the WorldRuntime or NPCRuntime
+     * is unavailable, or if Wang Ping's ActorState is not found. This
+     * causes the right-click to fall through to the "Crystal is silent"
+     * message — safer than crashing the interaction.
+     *
+     * @return {@code true} if Wang Ping is registered and his
+     *         {@code deadUntilRevived} flag is true; {@code false} otherwise
+     */
+    private static boolean isWangPingAwaitingRedemption() {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+            dev.ergenverse.runtime.NPCRuntime.ActorState state =
+                    runtime.npcs().getActor(dev.ergenverse.runtime.CanonUUID.WANG_PING);
+            if (state == null) return false;
+            return state.deadUntilRevived;
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CRON-117: isWangPingAwaitingRedemption "
+                    + "check failed: {}", t.getMessage());
+            return false;
+        }
     }
 
     /**

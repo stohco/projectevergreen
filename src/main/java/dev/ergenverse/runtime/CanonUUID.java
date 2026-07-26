@@ -135,10 +135,10 @@ public final class CanonUUID {
     //   - Redeemed by Wang Lin: rebuilt a body from sword qi (剑气) — a "false
     //     life". Cannot cry, sterile, has NO cultivation talent, cannot sense
     //     spiritual qi.
-    //   - Lived a mortal life (~73 years) with Wang Lin during the 二次化凡
+    //   - Lived a mortal life (~72 years) with Wang Lin during the 二次化凡
     //     (second mortal transformation) / 梦道 (Dream Dao) arc. Became a mortal
-    //     emperor (帝王), married 青衣 (Qing Yi).
-    //   - At ~72-73, voluntarily dispersed his sword-qi body; his 残魂
+    //     emperor (帝王), married 青宜 (Qing Yi).
+    //   - At ~72, voluntarily dispersed his sword-qi body; his 残魂
     //     (remnant soul) was sealed into the 天逆珠 (Heaven-Defying Bead) by
     //     Wang Lin.
     //   - First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as "厉儿 (Li'er)";

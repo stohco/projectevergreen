@@ -1,8 +1,8 @@
 {
-  "_comment": "NPC: Qing Yi (青衣). Canon ID: N11. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Qing Yi (青宜). Canon ID: N11. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_qing_yi",
   "name": "Qing Yi",
-  "nameCn": "青衣",
+  "nameCn": "青宜",
   "canon_id": "N11",
   "type": "other",
   "faction": "independent",

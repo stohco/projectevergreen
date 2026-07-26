@@ -169,9 +169,9 @@ public final class NPCRuntime {
         //     leaving only a wisp of resentful soul. This is effectively his
         //     death as a normal child.
         //   - Redeemed by Wang Lin: rebuilt a body from sword qi (剑气); lived
-        //     a mortal life (~73 years) with Wang Lin during the 二次化凡 arc.
-        //     Became a mortal emperor (帝王), married 青衣 (Qing Yi).
-        //   - At ~72-73, voluntarily dispersed his sword-qi body; 残魂 sealed
+        //     a mortal life (~72 years) with Wang Lin during the 二次化凡 arc.
+        //     Became a mortal emperor (帝王), married 青宜 (Qing Yi).
+        //   - At ~72, voluntarily dispersed his sword-qi body; 残魂 sealed
         //     into the 天逆珠 by Wang Lin.
         //   - First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as "厉儿 (Li'er)";
         //     named 王平 in Vol 7 Ch 681. (Safe citations per Baidu Baike.)

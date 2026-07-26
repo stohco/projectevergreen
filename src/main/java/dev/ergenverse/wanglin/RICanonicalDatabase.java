@@ -340,7 +340,7 @@ public final class RICanonicalDatabase {
             "novel; Fandom wiki; Baidu Baike"
         ),
         new CanonCharacter(
-            "N11", "Qing Yi", "青衣", CharType.OTHER,
+            "N11", "Qing Yi", "青宜", CharType.OTHER,
             "unknown", "Wang family", "alive", 4,
             "unknown", "unknown",
             java.util.List.of("Wang Ping's wife (daughter-in-law to Wang Lin)"),

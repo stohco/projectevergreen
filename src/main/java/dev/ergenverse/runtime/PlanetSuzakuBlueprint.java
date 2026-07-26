@@ -249,8 +249,8 @@ public final class PlanetSuzakuBlueprint {
     //   - Conceived in the 朱雀墓 (Suzaku Tomb) from an accidental union.
     //   - Refined into a 怨婴 (resentment infant) by Liu Mei for ~100 years.
     //   - Redeemed by Wang Lin: rebuilt a body from sword qi (剑气); lived a
-    //     mortal life (~73 years) with Wang Lin during the 二次化凡 arc.
-    //   - At ~72-73, voluntarily dispersed his sword-qi body; 残魂 sealed into
+    //     mortal life (~72 years) with Wang Lin during the 二次化凡 arc.
+    //   - At ~72, voluntarily dispersed his sword-qi body; 残魂 sealed into
     //     the 天逆珠 by Wang Lin.
     //   - First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as "厉儿 (Li'er)";
     //     named 王平 in Vol 7 Ch 681. (Safe citations per Baidu Baike.)

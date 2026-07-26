@@ -118,7 +118,7 @@ public final class CanonRelationshipSeeder {
         // framing (used in the animation/donghua 魔改, not the novel) was
         // corrected in CRON-116 to "biological son".
         // Canon: refined into a 怨婴 by Liu Mei; later rebuilt by Wang Lin
-        // from sword qi (剑气) and lived a mortal life (~73 years) with Wang
+        // from sword qi (剑气) and lived a mortal life (~72 years) with Wang
         // Lin during the 二次化凡 arc. Unconditional paternal bond — Wang Lin
         // would sacrifice everything for his safety. Trust is absolute.
         store.recordMultiAxis(
@@ -128,7 +128,7 @@ public final class CanonRelationshipSeeder {
                         + "Liu Mei (her 9th avatar), conceived in the Suzaku Tomb. "
                         + "Refined into a 怨婴 (resentment infant) by Liu Mei; later "
                         + "rebuilt by Wang Lin from sword qi (剑气) and lived a mortal "
-                        + "life (~73 years) with Wang Lin during the 二次化凡 arc. "
+                        + "life (~72 years) with Wang Lin during the 二次化凡 arc. "
                         + "The relationship transcends cultivation politics. Wang Lin "
                         + "would sacrifice everything for his safety. Trust is absolute.",
                 tick);
@@ -317,7 +317,7 @@ public final class CanonRelationshipSeeder {
         // Wang Family Village (he was conceived in the Suzaku Tomb, refined
         // into a 怨婴, then lived his mortal life with Wang Lin during the
         // 二次化凡 arc elsewhere). The Zhou Tingsu link was non-canon
-        // fabrication. Replaced with the canon-attested wife 青衣 (Qing Yi) —
+        // fabrication. Replaced with the canon-attested wife 青宜 (Qing Yi) —
         // a female cultivator who chose mortality to stay with Wang Ping
         // during his mortal emperor (帝王) life. She followed him in death;
         // her soul was collected by Wang Lin to accompany Wang Ping's 残魂
@@ -325,7 +325,7 @@ public final class CanonRelationshipSeeder {
         store.recordMultiAxis(
                 "wang_ping", "qing_yi",
                 85, 30, 0, 95, 0, 0,  // trust=85, familiarity=95
-                "Canon: Qing Yi (青衣) is Wang Ping's wife — a female cultivator "
+                "Canon: Qing Yi (青宜) is Wang Ping's wife — a female cultivator "
                         + "who chose mortality to stay with him during his mortal "
                         + "emperor (帝王) life in the 二次化凡 arc. Their bond is "
                         + "innocent and unaffected by cultivation politics. She "

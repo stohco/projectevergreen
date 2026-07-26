@@ -96,7 +96,7 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         // verified 2026-07-27, Baidu Baike + Fandom wiki + newhanfu + Toutiao
         // + 163): conceived in the 朱雀墓 (Suzaku Tomb); refined into a 怨婴
         // (resentment infant) by Liu Mei; later rebuilt by Wang Lin from sword
-        // qi (剑气) and lived a mortal life (~73 years) during the 二次化凡 arc.
+        // qi (剑气) and lived a mortal life (~72 years) during the 二次化凡 arc.
         // At story start he is canonically a 怨婴 — flagged deadUntilRevived=true
         // in NPCRuntime, so this materializer refuses to spawn him on chunk
         // load. A future Wang Ping redemption event would clear the flag.

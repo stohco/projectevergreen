@@ -1,5 +1,5 @@
 {
-  "_comment": "NPC: Wang Ping (王平). Canon ID: N07. CRON-COMPLETIONIST-116: registered as a canon NPC at the Suzaku Tomb (朱雀墓) — his conception site. Canon (web-search verified 2026-07-27, Baidu Baike https://baike.baidu.com/item/王平/62563845 + Fandom wiki https://xian-ni.fandom.com/wiki/Wang_Ping + newhanfu + Toutiao + 163): Wang Ping is Wang Lin's BIOLOGICAL son by 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei), conceived in the Suzaku Tomb from an accidental union. Refined into a 怨婴 (resentment infant) by Liu Mei for ~100 years. Later rebuilt by Wang Lin from sword qi (剑气) — a 'false life' that cannot cry, is sterile, has NO cultivation talent, cannot sense spiritual qi. Lived a mortal life (~73 years) with Wang Lin during the 二次化凡 (second mortal transformation) / 梦道 (Dream Dao) arc; became a mortal emperor (帝王); married 青衣 (Qing Yi). At ~72-73, voluntarily dispersed his sword-qi body; 残魂 (remnant soul) sealed into the 天逆珠 by Wang Lin. First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as '厉儿 (Li'er)'; named 王平 in Vol 7 Ch 681. At story start, Wang Ping is canonically a 怨婴 (resentment infant) — flagged deadUntilRevived=true so CanonActorMaterializer refuses to spawn him on chunk load. A future Wang Ping redemption event (parallel to Li Muwan's CRON-100/102 revival arc) would clear the flag. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Wang Ping (王平). Canon ID: N07. CRON-COMPLETIONIST-116: registered as a canon NPC at the Suzaku Tomb (朱雀墓) — his conception site. Canon (web-search verified 2026-07-27, Baidu Baike https://baike.baidu.com/item/王平/62563845 + Fandom wiki https://xian-ni.fandom.com/wiki/Wang_Ping + newhanfu + Toutiao + 163): Wang Ping is Wang Lin's BIOLOGICAL son by 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei), conceived in the Suzaku Tomb from an accidental union. Refined into a 怨婴 (resentment infant) by Liu Mei for ~100 years. Later rebuilt by Wang Lin from sword qi (剑气) — a 'false life' that cannot cry, is sterile, has NO cultivation talent, cannot sense spiritual qi. Lived a mortal life (~72 years) with Wang Lin during the 二次化凡 (second mortal transformation) / 梦道 (Dream Dao) arc; became a mortal emperor (帝王); married 青宜 (Qing Yi). At ~72, voluntarily dispersed his sword-qi body; 残魂 (remnant soul) sealed into the 天逆珠 by Wang Lin. First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as '厉儿 (Li'er)'; named 王平 in Vol 7 Ch 681. At story start, Wang Ping is canonically a 怨婴 (resentment infant) — flagged deadUntilRevived=true so CanonActorMaterializer refuses to spawn him on chunk load. A future Wang Ping redemption event (parallel to Li Muwan's CRON-100/102 revival arc) would clear the flag. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_wang_ping",
   "name": "Wang Ping",
   "nameCn": "王平",
@@ -10,7 +10,7 @@
   "cultivation": "Mortal (凡人) — cannot cultivate; sword-qi body has no spiritual qi sensitivity",
   "personality": "silent, observant, melancholic; cannot cry (sword-qi body limitation); sterile; carries the wound of his mother's betrayal without expression",
   "speech": "rare, soft, measured; speaks only when necessary; cannot raise his voice",
-  "relationship_to_wanglin": "biological son; Wang Lin rebuilt him from sword qi after Liu Mei refined him into a 怨婴; lived ~73 years as a mortal with Wang Lin during the 二次化凡 arc; unconditional paternal bond",
+  "relationship_to_wanglin": "biological son; Wang Lin rebuilt him from sword qi after Liu Mei refined him into a 怨婴; lived ~72 years as a mortal with Wang Lin during the 二次化凡 arc; unconditional paternal bond",
   "dialogue_available": true,
   "quest_available": false,
   "trade_available": false,
@@ -23,7 +23,7 @@
     "spirit_severing": "The sword-qi vessel of Wang Ping; his 残魂 is destined for the 天逆珠"
   },
   "canon_confidence": 5,
-  "note": "Wang Lin's biological son by Mu Bingmei / Liu Mei (her 9th avatar), conceived in the Suzaku Tomb. Refined into a 怨婴 by Liu Mei; rebuilt from sword qi by Wang Lin; lived a mortal life (~73 years) during the 二次化凡 arc. At ~72-73, voluntarily dispersed his sword-qi body; 残魂 sealed into the 天逆珠. First appears Vol 7 Ch 680 as '厉儿 (Li'er)'; named 王平 in Vol 7 Ch 681. Canon sources: Baidu Baike (https://baike.baidu.com/item/王平/62563845), Fandom wiki (https://xian-ni.fandom.com/wiki/Wang_Ping), newhanfu, Toutiao, 163. NO fabricated chapter citations beyond Ch 680/681 (Baidu Baike-attested).",
+  "note": "Wang Lin's biological son by Mu Bingmei / Liu Mei (her 9th avatar), conceived in the Suzaku Tomb. Refined into a 怨婴 by Liu Mei; rebuilt from sword qi by Wang Lin; lived a mortal life (~72 years) during the 二次化凡 arc. At ~72, voluntarily dispersed his sword-qi body; 残魂 sealed into the 天逆珠. First appears Vol 7 Ch 680 as '厉儿 (Li'er)'; named 王平 in Vol 7 Ch 681. Canon sources: Baidu Baike (https://baike.baidu.com/item/王平/62563845), Fandom wiki (https://xian-ni.fandom.com/wiki/Wang_Ping), newhanfu, Toutiao, 163. NO fabricated chapter citations beyond Ch 680/681 (Baidu Baike-attested).",
   "derivation_type": "A",
   "salt": 62563845,
   "dao_heart": {
@@ -39,8 +39,8 @@
     "biological_son": "Wang Ping is Wang Lin's BIOLOGICAL son by 木冰眉 / 柳眉 (Mu Bingmei's 9th avatar Liu Mei), conceived in the 朱雀墓 (Suzaku Tomb) from an accidental union. NOT adopted — the animation/donghua 'blood-soul' framing is 魔改 (non-canon for the novel).",
     "refinement_into_resentful_infant": "Liu Mei refined Wang Ping into a 怨婴 (resentment infant) for ~100 years, leaving only a wisp of resentful soul. This is effectively his death as a normal child.",
     "sword_qi_reconstruction": "Wang Lin saved Wang Ping's remnant soul and rebuilt a body from sword qi (剑气) — a 'false life'. The sword-qi body cannot cry, is sterile, has NO cultivation talent, cannot sense spiritual qi.",
-    "mortal_life_with_wang_lin": "Lived a mortal life (~73 years) with Wang Lin during the 二次化凡 (second mortal transformation) / 梦道 (Dream Dao) arc. Became a mortal emperor (帝王), married 青衣 (Qing Yi).",
-    "final_fate": "At ~72-73, Wang Ping voluntarily dispersed his sword-qi body; his 残魂 (remnant soul) was sealed into the 天逆珠 (Heaven-Defying Bead) by Wang Lin. 青衣 followed him in death; her soul was also collected to accompany him.",
+    "mortal_life_with_wang_lin": "Lived a mortal life (~72 years) with Wang Lin during the 二次化凡 (second mortal transformation) / 梦道 (Dream Dao) arc. Became a mortal emperor (帝王), married 青宜 (Qing Yi).",
+    "final_fate": "At ~72, Wang Ping voluntarily dispersed his sword-qi body; his 残魂 (remnant soul) was sealed into the 天逆珠 (Heaven-Defying Bead) by Wang Lin. 青宜 followed him in death; her soul was also collected to accompany him.",
     "chapter_citations": "First appears Vol 7 Ch 680 《柳眉的特殊法宝》 as '厉儿 (Li'er)'. Named 王平 in Vol 7 Ch 681. Both citations are Baidu Baike-attested (https://baike.baidu.com/item/王平/62563845).",
     "sources": "Baidu Baike (https://baike.baidu.com/item/王平/62563845); Fandom wiki (https://xian-ni.fandom.com/wiki/Wang_Ping); newhanfu (https://www.newhanfu.com/81534.html); Toutiao (https://www.toutiao.com/article/7638935916031066670); 163. NO fabricated chapter citations."
   },
@@ -49,7 +49,7 @@
     "Father says you are a cultivator. I cannot sense your Qi. I am sorry.",
     "I am Wang Ping. I was born of the Suzaku Tomb. My mother refined me; my father rebuilt me. I am a sword-qi construct — a false life.",
     "Do not ask me to cry. The sword qi that is my body has no tears to give.",
-    "When I disperse, my 残魂 will go into the 天逆珠. Father has promised me this. 青衣 will follow."
+    "When I disperse, my 残魂 will go into the 天逆珠. Father has promised me this. 青宜 will follow."
   ],
   "daily_schedule": [
     {
@@ -78,7 +78,7 @@
     },
     {
       "time": "16:00",
-      "action": "Walk to a high point and watch the horizon — longing for 青衣",
+      "action": "Walk to a high point and watch the horizon — longing for 青宜",
       "location": "suzaku_tomb",
       "duration": 120
     },
