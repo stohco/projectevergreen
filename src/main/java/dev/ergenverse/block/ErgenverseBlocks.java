@@ -260,6 +260,25 @@ public final class ErgenverseBlocks {
     public static final RegistryObject<Block> MYSTERIOUS_STONE = registerMysteriousStone(
             "mysterious_stone", 3.0F, 6.0F);
 
+    // ── CRON-COMPLETIONIST-106: Cultivation Planet Crystal ────────────
+    // The 修炼星晶 (Cultivation Planet Crystal) — the sealed core of Planet
+    // Suzaku, placed at the center of the Suzaku Tomb inheritance chamber
+    // (0, -59, 0). Replaces the diamond_block placeholder that was used in
+    // CRON-105. This is a dedicated block with canon-faithful mechanics:
+    //   - Emits light level 15 (the Crystal's spiritual Qi manifests as
+    //     visible light, lighting the 20x20 chamber).
+    //   - Emits ambient END_ROD particles (spiritual Qi radiating outward).
+    //   - Right-click triggers the 15th-gen Suzaku Son inheritance event,
+    //     gated by: (1) bead in hand, (2) realm ≥ Nascent Soul, (3) Crystal
+    //     not yet inherited. On success, marks the player's bead with the
+    //     Suzaku Son status and transitions the block to inherited=true.
+    //   - Does NOT drop as an item when broken (canon: the Crystal is the
+    //     sealed core of the planet; it cannot be "picked up" — its power
+    //     is conveyed through the inheritance event, not inventory acquisition).
+    // See CultivationPlanetCrystalBlock Javadoc for full canon basis.
+    public static final RegistryObject<Block> CULTIVATION_PLANET_CRYSTAL = registerCrystal(
+            "cultivation_planet_crystal");
+
     // ── Terrain Blocks ─────────────────────────────────────────────────
     public static final RegistryObject<Block> SPIRIT_DIRT = registerSimple("spirit_dirt", 0.5F, 0.5F);
     public static final RegistryObject<Block> SPIRIT_GRASS = registerSimple("spirit_grass", 0.6F, 0.6F);
@@ -294,6 +313,33 @@ public final class ErgenverseBlocks {
                         .strength(hardness, resistance)
                         .sound(SoundType.STONE)));
         BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        return block;
+    }
+
+    /**
+     * CRON-106: Register the CultivationPlanetCrystalBlock. The Crystal is
+     * a dedicated block with canon-faithful mechanics (see class javadoc):
+     * light level 15, ambient END_ROD particles, right-click inheritance
+     * event with prerequisites. Hardness 8.0F (sealed core of a planet —
+     * hard to break), blast resistance 1200.0F, amethyst sound, purple
+     * map color. The block-item is NOT added to any creative tab by default
+     * — the Crystal is not inventory-acquirable (canon: it stays in the
+     * tomb). It IS registered as a BlockItem so it can be /give-ed for
+     * testing/debugging.
+     */
+    private static RegistryObject<Block> registerCrystal(String name) {
+        RegistryObject<Block> block = BLOCKS.register(name, () -> new CultivationPlanetCrystalBlock(
+                BlockBehaviour.Properties.of()
+                        .strength(8.0F, 1200.0F)
+                        .sound(SoundType.AMETHYST)
+                        .lightLevel(state -> 15)
+                        .mapColor(net.minecraft.world.level.material.MapColor.COLOR_PURPLE)
+                        .requiresCorrectToolForDrops()
+                        .noOcclusion()));
+        // Register the BlockItem for /give testing. Not added to creative tab
+        // (the Crystal is not inventory-acquirable per canon).
+        BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(),
+                new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC)));
         return block;
     }
 

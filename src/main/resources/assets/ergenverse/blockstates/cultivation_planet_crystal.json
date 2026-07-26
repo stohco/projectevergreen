@@ -1,0 +1,11 @@
+{
+  "_comment": "CRON-106: Cultivation Planet Crystal blockstate. Two variants: inherited=false (default, active Crystal — right-click triggers inheritance) and inherited=true (Crystal inherited, no further inheritance). Both use the same model + texture (canon does not describe a visual change). A future CRON could add a dimmed texture for the inherited state.",
+  "variants": {
+    "inherited=false": {
+      "model": "ergenverse:block/cultivation_planet_crystal"
+    },
+    "inherited=true": {
+      "model": "ergenverse:block/cultivation_planet_crystal"
+    }
+  }
+}

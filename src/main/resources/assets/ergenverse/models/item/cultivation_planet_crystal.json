@@ -1,0 +1,4 @@
+{
+  "_comment": "CRON-106: Cultivation Planet Crystal block-item model. Inherits the block model (cube_all with the crystal texture). The item is registered for /give testing only — the Crystal is NOT inventory-acquirable per canon (see CultivationPlanetCrystalBlock javadoc).",
+  "parent": "ergenverse:block/cultivation_planet_crystal"
+}

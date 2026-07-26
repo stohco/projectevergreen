@@ -44,15 +44,19 @@ import javax.annotation.Nullable;
  *       (7 blocks tall), centered at the blueprint's (0, -60, 0).</li>
  *   <li><b>Walls/floor/ceiling:</b> deepslate bricks (vanilla block,
  *       canon-appropriate for an ancient underground site).</li>
- *   <li><b>Cultivation Planet Crystal (修炼星晶):</b> a diamond block on a
+ *   <li><b>Cultivation Planet Crystal (修炼星晶):</b> a dedicated
+ *       {@link dev.ergenverse.block.CultivationPlanetCrystalBlock} on a
  *       spirit-stone pedestal at the chamber center. The Crystal is the
  *       macguffin of the Suzaku Son inheritance arc — Wang Lin must
- *       acquire it to advance. <b>Mod-original placeholder:</b> the actual
- *       Cultivation Planet Crystal block does not yet exist as a custom
- *       block; a diamond block is used as a visually appropriate
- *       placeholder (emits light, rare, fits the "sacred crystal" motif).
- *       A future CRON should create a dedicated CultivationPlanetCrystalBlock
- *       with canon-faithful mechanics (Qi emission, inheritance trigger).</li>
+ *       acquire it to advance. <b>CRON-106:</b> the former CRON-105
+ *       diamond_block placeholder has been REPLACED by the dedicated
+ *       CultivationPlanetCrystalBlock, which has canon-faithful mechanics:
+ *       light level 15 (the Crystal's spiritual Qi manifests as visible
+ *       light), ambient END_ROD particles (Qi radiating outward), and a
+ *       right-click inheritance event gated by (1) bead in hand, (2) realm
+ *       ≥ Nascent Soul, (3) Crystal not yet inherited. On success, the
+ *       block transitions to {@code inherited=true} and the player's bead
+ *       is marked with the Suzaku Son status.</li>
  *   <li><b>Spirit-vein conduits:</b> four {@code SPIRIT_VEIN_STONE} pillars
  *       at the chamber corners, channeling spiritual Qi from the planet's
  *       core into the Crystal. Canon: the Suzaku Tomb is sealed around the
@@ -97,8 +101,10 @@ import javax.annotation.Nullable;
  *       the tomb is the inheritance site of that lineage).</li>
  *   <li><b>Cultivation Planet Crystal (修炼星晶):</b> the macguffin. Canon:
  *       the Crystal is the sealed core of the planet; acquiring it is
- *       central to the Suzaku Son inheritance. <b>Mod-original placeholder:</b>
- *       a diamond block is used until a dedicated Crystal block exists.</li>
+ *       central to the Suzaku Son inheritance. <b>CRON-106:</b> now a
+ *       dedicated {@link dev.ergenverse.block.CultivationPlanetCrystalBlock}
+ *       with canon-faithful mechanics (light, particles, inheritance
+ *       event). The CRON-105 diamond_block placeholder is retired.</li>
  *   <li><b>World Origin Essence (一界本源) drop:</b> canon-attested as the
  *       reagent Wang Lin uses to revive Li Muwan (CRON-101). Dropping it
  *       from the Suzaku Tomb inheritance chest is a mod-inferred
@@ -273,13 +279,20 @@ public final class SuzakuTombBuilder {
     }
 
     /**
-     * Returns true if the Cultivation Planet Crystal (diamond block
-     * placeholder) is already present at the chamber center. Used by the
-     * full-build path to avoid redundant rebuilds.
+     * Returns true if the Cultivation Planet Crystal is already present at
+     * the chamber center. Used by the full-build path to avoid redundant
+     * rebuilds.
+     *
+     * <p>CRON-106: now checks for {@code CULTIVATION_PLANET_CRYSTAL}
+     * (the dedicated block) instead of the former {@code DIAMOND_BLOCK}
+     * placeholder. The check accepts EITHER block-state (inherited=true
+     * or inherited=false) — the Crystal is "already built" if any
+     * CultivationPlanetCrystalBlock exists at the position.
      */
     private static boolean isAlreadyBuilt(ServerLevel level) {
         BlockPos crystalPos = new BlockPos(TOMB_X, TOMB_Y + 1, TOMB_Z);
-        return level.getBlockState(crystalPos).is(Blocks.DIAMOND_BLOCK);
+        return level.getBlockState(crystalPos).getBlock() instanceof
+                dev.ergenverse.block.CultivationPlanetCrystalBlock;
     }
 
     // ════════════════════════════════════════════════════════════════════
@@ -365,18 +378,27 @@ public final class SuzakuTombBuilder {
      *
      * <p>The pedestal is a 3x3 spirit-stone platform at floor level, with
      * a single spirit-stone block pillar rising one block. The Crystal
-     * (diamond block placeholder) sits on top of the pedestal at
-     * (TOMB_X, TOMB_Y+1, TOMB_Z) — one block above the chamber center.
+     * sits on top of the pedestal at (TOMB_X, TOMB_Y+1, TOMB_Z) — one
+     * block above the chamber center.
      *
-     * <p><b>Mod-original placeholder:</b> the diamond block represents the
-     * 修炼星晶 (Cultivation Planet Crystal). A future CRON should create a
-     * dedicated CultivationPlanetCrystalBlock with canon-faithful
-     * mechanics (Qi emission, inheritance trigger, light emission).
+     * <p><b>CRON-106:</b> the Crystal is now the dedicated
+     * {@link dev.ergenverse.block.CultivationPlanetCrystalBlock} — a real
+     * custom block with canon-faithful mechanics (light level 15, ambient
+     * END_ROD particles, right-click inheritance event with prerequisites,
+     * no-drops when broken). This replaces the CRON-105 diamond_block
+     * placeholder, which had none of these mechanics.
+     *
+     * <p>The Crystal's block-state is the default {@code inherited=false}
+     * — the inheritance event has not yet occurred. When a player
+     * right-clicks the Crystal (and meets the prerequisites), the block
+     * transitions to {@code inherited=true} via a PLAYER delta, which
+     * persists across chunk reload.
      */
     private static void buildPedestalAndCrystal(ServerLevel level) {
         final BlockState spiritStone = dev.ergenverse.block.ErgenverseBlocks.SPIRIT_STONE_BLOCK
                 .get().defaultBlockState();
-        final BlockState crystalPlaceholder = Blocks.DIAMOND_BLOCK.defaultBlockState();
+        final BlockState crystal = dev.ergenverse.block.ErgenverseBlocks.CULTIVATION_PLANET_CRYSTAL
+                .get().defaultBlockState();
 
         // 3x3 pedestal base at FLOOR_Y+1 (one block above the floor)
         for (int dx = -1; dx <= 1; dx++) {
@@ -387,7 +409,7 @@ public final class SuzakuTombBuilder {
 
         // Crystal on top of the pedestal center, at TOMB_Y+1
         // (TOMB_Y = -60, pedestal top at FLOOR_Y+1 = -62, crystal at -59)
-        sb(level, new BlockPos(TOMB_X, TOMB_Y + 1, TOMB_Z), crystalPlaceholder, 3);
+        sb(level, new BlockPos(TOMB_X, TOMB_Y + 1, TOMB_Z), crystal, 3);
     }
 
     // ── Spirit-vein conduits (4 corner pillars) ───────────────────────

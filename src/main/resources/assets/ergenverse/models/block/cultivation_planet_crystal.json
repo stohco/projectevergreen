@@ -1,0 +1,7 @@
+{
+  "_comment": "CRON-106: Cultivation Planet Crystal block model. Uses cube_all with a single texture on all faces (a 16x16 PNG with a glowing purple core, gold rim, and white center seed — visually appropriate for the sealed core of Planet Suzaku). parent=minecraft:block/cube_all gives a full-cube model. The actual light emission is handled by the BlockBehaviour.Properties.lightLevel(state -> 15) in ErgenverseBlocks.registerCrystal, NOT by the model.",
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "ergenverse:block/cultivation_planet_crystal"
+  }
+}

@@ -151,6 +151,27 @@ public class HeavenDefyingBeadItem extends WangLinItem {
     public static final String NBT_LI_MUWAN_REVIVED = "Ergen.Bead.LiMuwanRevived";
 
     /**
+     * CRON-COMPLETIONIST-106: NBT key tracking whether the player has
+     * become the 15th-generation Suzaku Son (朱雀子) by inheriting the
+     * Cultivation Planet Crystal (修炼星晶) at the Suzaku Tomb.
+     *
+     * <p>Canon: Wang Lin inherits the Cultivation Planet Crystal at the
+     * Suzaku Tomb, becoming the 15th-generation Suzaku Son of Planet
+     * Suzaku. The bead is the medium through which the inheritance's
+     * spiritual Qi is absorbed — without the bead, the inheritance's
+     * Qi would annihilate an unprepared cultivator.
+     *
+     * <p>Write-once: once set to {@code true}, never reset. The inheritance
+     * is a one-time event per save (canon: Wang Lin inherits ONCE).
+     *
+     * <p>Set by {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}
+     * when the inheritance event triggers. Read by future code that grants
+     * Suzaku Son privileges (e.g., access to sealed chambers, recognition
+     * by 拓森 when registered as a canon NPC).
+     */
+    public static final String NBT_SUZAKU_SON = "Ergen.Bead.SuzakuSon";
+
+    /**
      * CRON-COMPLETIONIST-95: A bitfield tracking WHICH of the 9 Parts have
      * been aligned. Bit i corresponds to {@link HeavenDefyingBead.Part}
      * ordinal i (so bit 0 = CORE, bit 1 = METAL, ..., bit 8 = DEEP_MYSTERY_3).
@@ -839,6 +860,37 @@ public class HeavenDefyingBeadItem extends WangLinItem {
     public void setLiMuwanRevived(ItemStack stack, boolean revived) {
         if (!revived) return;  // write-once: can't un-revive
         stack.getOrCreateTag().putBoolean(NBT_LI_MUWAN_REVIVED, true);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-106: Check whether the player has become the
+     * 15th-generation Suzaku Son by inheriting the Cultivation Planet Crystal.
+     *
+     * @param stack the bead stack
+     * @return {@code true} if the Suzaku Son inheritance has been triggered
+     *         via {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}
+     */
+    public boolean isSuzakuSon(ItemStack stack) {
+        if (stack.isEmpty() || !stack.hasTag()) return false;
+        return stack.getTag().getBoolean(NBT_SUZAKU_SON);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-106: Mark the player as the 15th-generation Suzaku
+     * Son. Called ONLY by {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}
+     * after the inheritance event triggers (prerequisites: bead in hand,
+     * realm ≥ Nascent Soul, Crystal not yet inherited).
+     *
+     * <p>This flag is write-once — once set to {@code true}, it is never
+     * reset. Calling this with {@code false} is a no-op if the flag is
+     * already {@code true} (defensive: prevents accidental un-inheritance).
+     *
+     * @param stack the bead stack
+     * @param suzakuSon {@code true} to mark as Suzaku Son
+     */
+    public void setSuzakuSon(ItemStack stack, boolean suzakuSon) {
+        if (!suzakuSon) return;  // write-once: can't un-inherit
+        stack.getOrCreateTag().putBoolean(NBT_SUZAKU_SON, true);
     }
 
     /** Get the Samsara incarnation count stored in the bead. */

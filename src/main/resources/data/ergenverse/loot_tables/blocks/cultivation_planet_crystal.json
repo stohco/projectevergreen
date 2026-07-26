@@ -1,0 +1,5 @@
+{
+  "_comment": "CRON-106: Cultivation Planet Crystal loot table — DROPS NOTHING. Canon: the Crystal is the sealed core of Planet Suzaku; it cannot be 'picked up' as an item (too large and spiritually dense). If the player breaks the Crystal block, it drops nothing. The block is removed (a PLAYER 'air' delta is recorded), and the inheritance opportunity is lost for that save. This is canon-faithful: the Crystal's power is conveyed through the inheritance event (right-click), NOT through inventory acquisition. NOTE: this loot table is a SAFETY NET — the block's getDrops() override returns an empty list, so this JSON should never be consulted. But if any code path bypasses the override (e.g., a third-party mod querying the loot table directly), this JSON ensures no NBT-bearing Crystal item is dropped. The block-item (ergenverse:cultivation_planet_crystal) IS registered for /give testing, but it is not added to any creative tab and is not intended for normal play.",
+  "type": "minecraft:block",
+  "pools": []
+}
