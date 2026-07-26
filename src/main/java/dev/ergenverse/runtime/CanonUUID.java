@@ -82,6 +82,25 @@ public final class CanonUUID {
     // — the correct character is 拓森 (Tuò Sēn, "forest"). CRON-107 fixes this.
     public static final UUID TUO_SEN = of("npc:tuo_sen");
 
+    // CRON-COMPLETIONIST-110: 周茹 (Zhou Ru) — the vessel for Li Muwan's
+    // reincarnated soul. Canon (web-search verified 2026-07-26, multiple
+    // sources: Baidu Baike 周茹, RICanonicalDatabase N10 entry, Fandom wiki):
+    //   - Wang Lin places Li Muwan's captured 元婴 (Nascent Soul, CRON-99)
+    //     into 周茹 — the fetus/child who becomes the vessel for Li Muwan's
+    //     reincarnation. Li Muwan chooses NOT to devour the host soul; she
+    //     instead addresses Wang Lin as 'uncle' (王林叔叔).
+    //   - After the transfer, 周茹 grows up to become a Soul Transformation
+    //     (化神) cultivator under 慕冰梅 (Mu Bingmei) in 昆墟之境 (Kunxu Realm).
+    //   - She is later reincarnated on the Immortal Astral Continent (仙遗族
+    //     / IAC arc) where she lives an ordinary life.
+    // At story start (before CRON-99's soul capture fires), 周茹 exists as
+    // a mortal girl in 朱雀国 (Vermilion Bird Country). She is present in
+    // the world from day 0 — the soul transfer can only fire after Wang Lin
+    // has captured Li Muwan's soul into the bead (CRON-99 prerequisite).
+    // NO fabricated chapter citation. Canon sources: Baidu Baike, Fandom
+    // wiki, RICanonicalDatabase entry N10.
+    public static final UUID ZHOU_RU = of("npc:zhou_ru");
+
     // ── Spirit Beasts (named/canonical beasts, not generic spawns) ──
     public static final UUID WOLF_PACK_ALPHA_ZHAO = of("beast:wolf_pack_alpha_zhao");
     public static final UUID SPIRIT_TIGER_ZHAO_MOUNTAINS = of("beast:spirit_tiger_zhao_mountains");

@@ -173,6 +173,36 @@ public class HeavenDefyingBeadItem extends WangLinItem {
     public static final String NBT_SUZAKU_SON = "Ergen.Bead.SuzakuSon";
 
     /**
+     * CRON-COMPLETIONIST-110: Flag indicating that Li Muwan's soul has been
+     * transferred from the bead into 周茹 (Zhou Ru) — the reincarnation
+     * vessel. Set to {@code true} by {@link ZhouRuSoulTransferEvent} when
+     * Wang Lin right-clicks Zhou Ru while holding the bead with Li Muwan's
+     * soul captured (CRON-99 prerequisite).
+     *
+     * <p>Canon basis (web-search verified 2026-07-26, Baidu Baike + Fandom
+     * wiki + RICanonicalDatabase N10): After capturing Li Muwan's 元婴
+     * (Nascent Soul) into the bead (CRON-99), Wang Lin places the soul
+     * into 周茹 — a mortal vessel. Li Muwan chooses NOT to devour the host
+     * soul; she addresses Wang Lin as 'uncle' (王林叔叔). The soul lives
+     * on through 周茹, who later becomes a Soul Transformation cultivator
+     * under 慕冰梅 (Mu Bingmei).
+     *
+     * <p>This flag does NOT clear {@link #NBT_LI_MUWAN_SOUL} — canonically,
+     * the soul is "associated" with both the bead (Wang Lin's intent) and
+     * Zhou Ru (the vessel). The bead still has {@code hasLiMuwanSoul=true}
+     * so the revival attempt service (CRON-100) can still operate. This
+     * flag is a QUEST TRACKER marking the reincarnation step.
+     *
+     * <p>Write-once: once set to {@code true}, never reset. The
+     * reincarnation is a one-time event per save (canon: Wang Lin places
+     * Li Muwan's soul in Zhou Ru ONCE).
+     *
+     * <p>NO fabricated chapter citation. The reincarnation arc is
+     * canon-attested; the exact chapter is NOT cited to avoid fabrication.
+     */
+    public static final String NBT_SOUL_TRANSFERRED_TO_ZHOU_RU = "Ergen.Bead.SoulTransferredToZhouRu";
+
+    /**
      * CRON-COMPLETIONIST-95: A bitfield tracking WHICH of the 9 Parts have
      * been aligned. Bit i corresponds to {@link HeavenDefyingBead.Part}
      * ordinal i (so bit 0 = CORE, bit 1 = METAL, ..., bit 8 = DEEP_MYSTERY_3).
@@ -892,6 +922,49 @@ public class HeavenDefyingBeadItem extends WangLinItem {
     public void setSuzakuSon(ItemStack stack, boolean suzakuSon) {
         if (!suzakuSon) return;  // write-once: can't un-inherit
         stack.getOrCreateTag().putBoolean(NBT_SUZAKU_SON, true);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-110: Check whether Li Muwan's soul has been
+     * transferred from the bead into 周茹 (Zhou Ru) — the reincarnation
+     * vessel. Returns {@code false} for beads that have never triggered
+     * the soul transfer event.
+     *
+     * <p>Once {@code true}, this flag is permanent — the soul transfer is
+     * irreversible (canon: Li Muwan's soul resides in Zhou Ru; she does
+     * not return to the bead until the eventual revival arc, which is
+     * tracked by the separate {@link #NBT_LI_MUWAN_REVIVED} flag).
+     *
+     * @param stack the bead stack
+     * @return {@code true} if Li Muwan's soul has been transferred to Zhou Ru
+     */
+    public boolean hasSoulTransferredToZhouRu(ItemStack stack) {
+        if (stack.isEmpty() || !stack.hasTag()) return false;
+        return stack.getTag().getBoolean(NBT_SOUL_TRANSFERRED_TO_ZHOU_RU);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-110: Mark Li Muwan's soul as transferred to Zhou Ru.
+     * Called ONLY by {@link ZhouRuSoulTransferEvent#handleSoulTransfer} after
+     * all prerequisites are met (bead in main hand, hasLiMuwanSoul=true,
+     * not yet transferred).
+     *
+     * <p>This flag is write-once — once set to {@code true}, it is never
+     * reset. Calling this with {@code false} is a no-op (defensive: prevents
+     * accidental un-transfer, which would break the canon narrative arc).
+     *
+     * <p><b>Does NOT clear {@link #NBT_LI_MUWAN_SOUL}.</b> The
+     * {@code hasLiMuwanSoul} flag stays true — canonically, the soul is
+     * "associated" with both the bead (Wang Lin's intent) and Zhou Ru (the
+     * vessel). This keeps the revival attempt service (CRON-100) operational
+     * — it gates on {@code hasLiMuwanSoul}, which remains true.
+     *
+     * @param stack the bead stack
+     * @param transferred {@code true} to mark the soul transfer as completed
+     */
+    public void setSoulTransferredToZhouRu(ItemStack stack, boolean transferred) {
+        if (!transferred) return;  // write-once: can't un-transfer
+        stack.getOrCreateTag().putBoolean(NBT_SOUL_TRANSFERRED_TO_ZHOU_RU, true);
     }
 
     /** Get the Samsara incarnation count stored in the bead. */

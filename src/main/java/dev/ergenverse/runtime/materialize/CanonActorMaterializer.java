@@ -72,6 +72,16 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         // SectId "ancient_god_clan" reflects his origin (Tu Si's power
         // inheritance). Realm "ancient" maps to RealmId.ANCIENT (古境).
         profile(CanonUUID.TUO_SEN,       "tuo_sen",       "Tuo Sen 拓森",          "ancient_god_clan", "ancient");
+        // CRON-COMPLETIONIST-110: 周茹 (Zhou Ru) — the mortal vessel for Li
+        // Muwan's reincarnation. At story start she is a mortal girl living
+        // in 朱雀国 (Vermilion Bird Country); the soul transfer event
+        // (ZhouRuSoulTransferEvent) fires when Wang Lin right-clicks her
+        // while holding the bead with Li Muwan's soul (CRON-99 prerequisite).
+        // SectId "vermilion_bird_country" reflects her mortal origin in
+        // 朱雀国. Realm "mortal" reflects her pre-transfer state — the
+        // Soul Transformation state in npc_zhou_ru.json describes her later
+        // cultivation arc under Mu Bingmei in Kunxu Realm (a future questline).
+        profile(CanonUUID.ZHOU_RU,       "zhou_ru",       "Zhou Ru 周茹",          "vermilion_bird_country", "mortal");
     }
 
     private static void profile(UUID uuid, String characterId, String displayName, String sectId, String realm) {

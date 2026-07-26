@@ -198,6 +198,15 @@ public final class PlanetSuzakuBlueprint {
     // triggers the inheritance (CRON-106). Until then, deadUntilRevived=true.
     public static final String NPC_TUO_SEN = "tuo_sen";  // 拓森 (NOT 拓山)
 
+    // CRON-COMPLETIONIST-110: 周茹 (Zhou Ru) — the mortal vessel for Li
+    // Muwan's reincarnation. The soul transfer (ZhouRuSoulTransferEvent)
+    // fires when the player right-clicks this NPC while holding the
+    // Heaven-Defying Bead with Li Muwan's soul captured (CRON-99).
+    // Canon: web-search verified 2026-07-26 (Baidu Baike, Fandom wiki).
+    // After the transfer she eventually becomes a Soul Transformation
+    // cultivator under 慕冰梅 (Mu Bingmei) in 昆墟之境 (Kunxu Realm).
+    public static final String NPC_ZHOU_RU = "zhou_ru";  // 周茹
+
     /**
      * All canonical locations, indexed by id. Immutable. Built fresh each call
      * (the set is tiny — 15 entries — so this is negligible).

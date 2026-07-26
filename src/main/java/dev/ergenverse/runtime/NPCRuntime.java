@@ -119,6 +119,25 @@ public final class NPCRuntime {
         if (tuoSenState != null) {
             tuoSenState.deadUntilRevived = true;
         }
+        // CRON-COMPLETIONIST-110: 周茹 (Zhou Ru) — the mortal vessel for Li
+        // Muwan's reincarnation. Canon (web-search verified 2026-07-26,
+        // Baidu Baike + Fandom wiki + RICanonicalDatabase N10):
+        //   - Wang Lin places Li Muwan's captured 元婴 (Nascent Soul, CRON-99)
+        //     into 周茹, who becomes the vessel for Li Muwan's reincarnation.
+        //   - Li Muwan chooses NOT to devour the host soul; addresses Wang Lin
+        //     as 'uncle' (王林叔叔).
+        //   - Eventually 周茹 becomes a Soul Transformation cultivator under
+        //     慕冰梅 (Mu Bingmei) in 昆墟之境 (Kunxu Realm).
+        // Placement: Vermilion Bird Capital (朱雀国) — she's a mortal girl in
+        // Zhu Que Country at story start. Mod-original concrete placement
+        // until a Kunxu Realm location is added (the canon Kunxu Realm is
+        // her later cultivation location, not her day-0 location).
+        // NOT flagged deadUntilRevived — she's present from day 0 so the player
+        // can find her; the soul transfer only fires when the player holds the
+        // bead with Li Muwan's soul captured (gated by the event handler).
+        register(CanonUUID.ZHOU_RU, "Zhou Ru 周茹",
+                PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.x,
+                PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.z);
         loaded = true;
     }
 
