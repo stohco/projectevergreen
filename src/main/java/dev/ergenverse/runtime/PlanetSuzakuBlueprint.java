@@ -323,6 +323,49 @@ public final class PlanetSuzakuBlueprint {
                     "RI — 冉云星 (罗天星域 / 雷之仙界 north); Wang Lin's 二次化凡 mortal-life "
                             + "arc star; Wang Ping materializes at 落月村 (woodcarver village)");
 
+    // ── 天运宗 (Tian Yun Sect) — the #1 sect on 天运星, home of 天运子 ──
+    // CRON-COMPLETIONIST-123: Canon (web-search verified 2026-07-27, Baidu Baike
+    // https://baike.baidu.com/item/天运子/23166960 + Sohu
+    // https://www.sohu.com/a/961903590_568249 + Zhihu
+    // https://zhuanlan.zhihu.com/p/1957927329482383516 + 163.com
+    // https://www.163.com/dy/article/K98V89NE0556C06B.html):
+    //   - 天运宗 (Tian Yun Sect) is the #1 sect on 天运星 (Tian Yun Star) in
+    //     the 洞府界 (Cave Mansion Realm). It is ruled by 天运子 (Tian Yun Zi),
+    //     a major antagonist of Wang Lin.
+    //   - 大罗剑宗 (Da Luo Sword Sect, the existing DA_LUO_SWORD_SECT at
+    //     (5000, 5000)) is the #2 sect on 天运星. Canon (Sohu): 大罗剑宗 is
+    //     "在天运星上声名赫赫...在天运星的修仙群体中实力仅次于天运子".
+    //   - 天运子 and 凌天侯 (Ling Tianhou, master of 大罗剑宗) are rivals.
+    //     天运子 eventually consumed 凌天侯 (生生吞噬) at his 98th awakening,
+    //     causing 大罗剑宗 to decline.
+    //   - 天运子 is canonically at 天人第三衰 (Heavenly Third Tribulation)
+    //     — above the Three Nirvana Realms (碎涅三境), at the transition to
+    //     the Third Step. He is significantly more powerful than 凌天侯
+    //     (净涅后期).
+    //   - 天运子 is a clone (分身) of the All-Seer; his 本体 is the artifact
+    //     spirit (器灵) of the Realm-Defining Compass (定界罗盘). 灭生老人
+    //     sent him into the 洞府界.
+    //
+    // Placement: (5500, 0, 5500) — close to but distinct from DA_LUO_SWORD_SECT
+    // at (5000, 5000). The 500-block offset reflects that the two sects are
+    // distinct compounds on the same star; the player can walk between them.
+    // The TIAN_YUN_SECT location is the canonical home of 天运子; the
+    // DA_LUO_SWORD_SECT location is the canonical home of 凌天侯. When the
+    // player right-clicks 天运子 (after Ling Tianhou has granted the sword qi),
+    // the LingTianhouConsumptionEvent fires (CRON-123).
+    //
+    // Mod-original concrete placement: like DA_LUO_SWORD_SECT, this is a
+    // remote overworld region representing the canon 洞府界天运星. A future
+    // CRON could implement 洞府界 as a true multi-dimension structure.
+    //
+    // NO fabricated chapter citation — no source explicitly names the chapter
+    // of 天运子's first appearance or the consumption event.
+    public static final CanonLocation TIAN_YUN_SECT =
+            new CanonLocation("tian_yun_sect", "Tian Yun Sect (天运宗)",
+                    5500, 0, 5500, "sect",
+                    "RI — 天运宗 (#1 sect on 天运星 in 洞府界); home of 天运子 (Tian Yun Zi, "
+                            + "clone of All-Seer); consumes 凌天侯 at 98th awakening");
+
     // ── Canonical NPC id strings (the UUID lives in CanonUUID) ──
     public static final String NPC_WANG_LIN = "wang_lin";
     public static final String NPC_OLD_CHEN = "old_chen";
@@ -431,6 +474,7 @@ public final class PlanetSuzakuBlueprint {
         map.put(KUNXU_REALM.id, KUNXU_REALM);
         map.put(DA_LUO_SWORD_SECT.id, DA_LUO_SWORD_SECT);
         map.put(RANYUN_STAR.id, RANYUN_STAR);  // CRON-120: Wang Ping redemption star
+        map.put(TIAN_YUN_SECT.id, TIAN_YUN_SECT);  // CRON-123: Tian Yun Zi home
         return Collections.unmodifiableMap(map);
     }
 

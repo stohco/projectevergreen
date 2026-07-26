@@ -212,6 +212,63 @@ public final class CanonUUID {
     // Zhihu timeline (https://zhuanlan.zhihu.com/p/713215901).
     public static final UUID QING_YI = of("npc:qing_yi");
 
+    // CRON-COMPLETIONIST-123: 天运子 (Tian Yun Zi) — the master of 天运宗
+    // (Tian Yun Sect), the #1 sect on 天运星 (Tian Yun Star). Canon (web-search
+    // verified 2026-07-27, Baidu Baike dedicated entry
+    // https://baike.baidu.com/item/天运子/23166960 + Sohu
+    // https://www.sohu.com/a/961903590_568249 + Zhihu
+    // https://zhuanlan.zhihu.com/p/1957927329482383516 + 163.com
+    // https://www.163.com/dy/article/K98V89NE0556C06B.html + Sohu
+    // https://www.sohu.com/a/935257158_122415633):
+    //   - True identity: a clone (分身) of the All-Seer (天运子的本体 is the
+    //     artifact spirit / 器灵 of the Realm-Defining Compass / 定界罗盘),
+    //     sent by 灭生老人 (Mie Sheng Lao Ren) into the Cave Mansion Realm
+    //     (洞府界). The Baidu Baike dedicated entry states: "天运子作为《仙逆》
+    //     中的核心反派之一，其身份被描述为天道碎片化成的定界罗盘器灵".
+    //   - Cultivation: 天人第三衰 (Heavenly Third Tribulation) — at the
+    //     transition between the Second Step and the Third Step. Per Sohu:
+    //     "天运子已经达到了碎涅三境之上，天人第三衰级别" — already above the
+    //     Three Nirvana Realms (碎涅三境), at the 天人第三衰 level. He needs
+    //     to weather two more 天人衰劫 (Heavenly Tribulations) to break
+    //     through to the Third Step.
+    //   - Behavior: 天运子 needs to constantly CONSUME OTHER CULTIVATORS
+    //     (生生吞噬) to allow himself to reincarnate repeatedly, growing
+    //     stronger with each awakening. Per Zhihu: "天运子需要不断的吞噬其他
+    //     人，然后让自己一次次轮回，实力也更为强大". He has gone through 98
+    //     awakenings; each awakening consumes a major cultivator.
+    //   - The 98th awakening target: 凌天侯 (Ling Tianhou), the Sword
+    //     Venerable (剑尊) of 大罗剑宗. Per Zhihu: "天运子选定凌天侯作为第
+    //     九十八觉醒的吞噬对象，在二人爆发最后一次冲突后，成功将凌天侯吞
+    //     噬". Per Sohu: "天运子精心谋划后出手，发动诡异仙法将凌天侯强行
+    //     笼罩...最终被天运子生生吞噬，大罗剑宗也因失去主心骨，在后续岁
+    //     月里逐渐衰败凋零".
+    //   - Final fate: 天运子 was eventually condensed into origin (本源) by
+    //     王林 (Wang Lin). Per 163.com: "最后凌天侯被天运子吞噬、天运子被
+    //     王林凝为本源，灭生老人协助王林完成复活计划".
+    //   - Relationship to Wang Lin: 天运子 selected 王林 as his next
+    //     consumption target after 凌天侯. He taught 王林 the Slaughter
+    //     Immortal Art (戮仙术) with a trap inside, intending to possess
+    //     him. 王林 eventually defeated 天运子 in the Primordial Divine
+    //     Realm (仙罡大陆).
+    //
+    // CRON-123 placement: 天运宗 (Tian Yun Sect) on 天运星 (Tian Yun Star)
+    // — a new CanonLocation near (but distinct from) the existing
+    // DA_LUO_SWORD_SECT. Both are on 天运星 in the 洞府界. Canon: 天运宗
+    // is the #1 sect on 天运星, 大罗剑宗 is #2 — they compete for influence.
+    // 天运子 is a LIVING NPC at story start (deadUntilRevived=false) — the
+    // player can travel to 天运宗 and witness the consumption event by
+    // right-clicking 天运子 after Ling Tianhou has granted the sword qi
+    // (CRON-118 prerequisite).
+    //
+    // NO fabricated chapter citation — no source explicitly names the
+    // chapter of 天运子's first appearance or the consumption event.
+    // Canon sources: Baidu Baike 天运子 (https://baike.baidu.com/item/天运子/23166960),
+    // Sohu (https://www.sohu.com/a/961903590_568249,
+    // https://www.sohu.com/a/935257158_122415633),
+    // Zhihu (https://zhuanlan.zhihu.com/p/1957927329482383516),
+    // 163.com (https://www.163.com/dy/article/K98V89NE0556C06B.html).
+    public static final UUID TIAN_YUN_ZI = of("npc:tian_yun_zi");
+
     // ── Spirit Beasts (named/canonical beasts, not generic spawns) ──
     public static final UUID WOLF_PACK_ALPHA_ZHAO = of("beast:wolf_pack_alpha_zhao");
     public static final UUID SPIRIT_TIGER_ZHAO_MOUNTAINS = of("beast:spirit_tiger_zhao_mountains");

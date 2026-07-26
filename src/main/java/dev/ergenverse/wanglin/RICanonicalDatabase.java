@@ -1443,16 +1443,30 @@ public final class RICanonicalDatabase {
             "novel (implicit); Fandom wiki; C3"
         ),
         new CanonCharacter(
-            "N113", "Tianyunzi", "天运子", CharType.OTHER,
-            "Third Step+", "Heavenly Fate Sect", "deceased", 5,
-            "unknown", "Planet Tian Yun / Primordial Divine Realm",
+            "N113", "Tianyunzi", "天运子", CharType.ANTAGONIST,
+            // CRON-123 canon correction: was "Third Step+" — UNVERIFIED. The web-search
+            // (Baidu Baike 天运子 entry + Sohu + Zhihu) confirmed 天运子 is at 天人第三衰
+            // (Heavenly Third Tribulation), which is ABOVE the Three Nirvana Realms
+            // (碎涅三境) but BELOW the Third Step. He needs to weather two more
+            // 天人衰劫 (Heavenly Tribulations) to break through to the Third Step.
+            "Heavenly Third Tribulation (天人第三衰) — above 碎涅三境, below Third Step",
+            // CRON-123: was "Heavenly Fate Sect" — the canon name is 天运宗 (Tian Yun Sect).
+            "Tian Yun Sect (天运宗) — #1 sect on 天运星 (Tian Yun Star) in 洞府界",
+            "deceased", 5,
+            "Tian Yun Star (天运星) / Primordial Divine Realm (仙罡大陆)",
+            // CRON-123: starDomain added — Cave Mansion Realm (洞府界).
+            "Cave Mansion Realm (洞府界) — Tian Yun Star (天运星) sub-region",
             java.util.List.of(
-                "Clone of All-Seer / artifact spirit of the Realm-Defining Compass",
-                "Created clone to teach Wang Lin the Slaughter Immortal Art with a trap inside",
-                "Intended to possess Wang Lin but was defeated; killed/devoured by Wang Lin in the Primordial Divine Realm"
+                "Clone (分身) of the All-Seer; his 本体 is the artifact spirit (器灵) of the Realm-Defining Compass (定界罗盘), formed from fragments of the Heavenly Dao (天道碎片)",
+                "灭生老人 sent him into the Cave Mansion Realm (洞府界) to monitor cultivators",
+                "Needs to constantly consume other cultivators (生生吞噬) to reincarnate repeatedly, growing stronger with each awakening — 98 awakenings so far",
+                "98th awakening target: 凌天侯 (Ling Tianhou), Sword Venerable of 大罗剑宗 — successfully consumed him; Da Luo Sword Sect declined thereafter",
+                "Selected Wang Lin as his next consumption target; taught him the Slaughter Immortal Art (戮仙术) with a trap inside, intending to possess him",
+                "Eventually defeated by Wang Lin and condensed into origin (本源) in the Primordial Divine Realm (仙罡大陆)"
             ),
-            List.of(new RelationShip("Wang Lin", "enemy"), new RelationShip("All-Seer", "family"), new RelationShip("Old Man Miesheng", "ally")),
-            "novel; Fandom wiki; Baidu Baike (clone of All-Seer)"
+            List.of(new RelationShip("Wang Lin", "enemy"), new RelationShip("Ling Tianhou", "enemy"), new RelationShip("All-Seer", "family"), new RelationShip("Old Man Miesheng", "ally")),
+            // CRON-123: sources updated with primary Baidu Baike 天运子 dedicated entry.
+            "novel; Baidu Baike 天运子 (https://baike.baidu.com/item/天运子/23166960); Baidu Baike 凌天侯 (https://baike.baidu.com/item/凌天侯/65285935); Sohu (https://www.sohu.com/a/961903590_568249, https://www.sohu.com/a/935257158_122415633); Zhihu (https://zhuanlan.zhihu.com/p/1957927329482383516); 163.com (https://www.163.com/dy/article/K98V89NE0556C06B.html)"
         ),
         new CanonCharacter(
             "N114", "Seven-Colored Daoist", "七彩道人 / 七彩仙尊", CharType.ANTAGONIST,

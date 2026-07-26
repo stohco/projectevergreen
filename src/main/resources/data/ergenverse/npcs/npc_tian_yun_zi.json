@@ -1,0 +1,111 @@
+{
+  "_comment": "NPC: Tian Yun Zi (天运子). CRON-COMPLETIONIST-123: registered as a canon NPC at the Tian Yun Sect (天运宗) — a remote overworld region at (5500, 5500) representing the canon 洞府界天运星, near the Da Luo Sword Sect (5000, 5000). Canon (web-search verified 2026-07-27, Baidu Baike dedicated entry https://baike.baidu.com/item/天运子/23166960 + Sohu https://www.sohu.com/a/961903590_568249 + Zhihu https://zhuanlan.zhihu.com/p/1957927329482383516 + 163.com https://www.163.com/dy/article/K98V89NE0556C06B.html + Sohu https://www.sohu.com/a/935257158_122415633): 天运子 is the master of 天运宗, the #1 sect on 天运星, and a core antagonist of 仙逆. True identity: a clone (分身) of the All-Seer; his 本体 is the artifact spirit (器灵) of the Realm-Defining Compass (定界罗盘), formed from fragments of the Heavenly Dao (天道碎片). 灭生老人 sent him into the 洞府界. Cultivation: 天人第三衰 (Heavenly Third Tribulation) — above the Three Nirvana Realms (碎涅三境), at the transition to the Third Step. He needs to weather two more 天人衰劫 to break through. Behavior: 天运子 needs to constantly consume other cultivators (生生吞噬) to reincarnate repeatedly, growing stronger with each awakening. His 98th awakening target is 凌天侯 (Ling Tianhou), the Sword Venerable of 大罗剑宗. After consuming 凌天侯, 大罗剑宗 declined. Final fate: 天运子 was eventually condensed into origin (本源) by 王林 (Wang Lin) in the Primordial Divine Realm (仙罡大陆). He taught 王林 the Slaughter Immortal Art (戮仙术) with a trap inside, intending to possess him, but was defeated. NO fabricated chapter citation — no source explicitly names 天运子's first appearance chapter. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "npc_id": "npc_tian_yun_zi",
+  "name": "Tian Yun Zi",
+  "nameCn": "天运子",
+  "canon_id": "N113",
+  "type": "cultivator",
+  "faction": "tian_yun_sect",
+  "location": "tian_yun_sect",
+  "cultivation": "Heavenly Third Tribulation (天人第三衰) — above the Three Nirvana Realms (碎涅三境), at the transition to the Third Step. The mod's closest mapping is RealmId.NIRVANA_FRUIT (碎涅) — the closest realm BELOW 天人第三衰. The mod's enum has no explicit 天人衰 realm; the worklog's NEXT PRIORITY (b) calls for restructuring the Third Step to 空之四境, which would resolve this mapping gap.",
+  "personality": "calculating, predatory, patient across millennia; views other cultivators as resources to be consumed; conceals his true identity (clone of the All-Seer) beneath the facade of a sect master; carries the cold certainty of a being who has reincarnated 98 times",
+  "speech": "formal, deliberate, with an undercurrent of menace; speaks of destiny and the cycles of reincarnation; never raises his voice — his power speaks for him",
+  "relationship_to_wanglin": "antagonist; selected Wang Lin as his next consumption target after 凌天侯; taught Wang Lin the Slaughter Immortal Art (戮仙术) with a trap inside, intending to possess him; eventually defeated and condensed into origin (本源) by Wang Lin in the Primordial Divine Realm",
+  "dialogue_available": true,
+  "quest_available": true,
+  "trade_available": false,
+  "teaching_available": true,
+  "perception_tiers": {
+    "mortal": "An imposing elder cultivator of immense presence",
+    "qi_condensation": "A powerful sect master, far beyond my comprehension",
+    "core_formation": "A cultivator at the peak of the Second Step, perhaps even higher",
+    "nascent_soul": "Tian Yun Zi (天运子), master of Tian Yun Sect, the #1 sect on Tian Yun Star",
+    "spirit_severing": "A clone (分身) — his true body is the artifact spirit (器灵) of the Realm-Defining Compass (定界罗盘); 灭生老人 sent him into the Cave Mansion Realm to monitor cultivators"
+  },
+  "canon_confidence": 5,
+  "note": "Tian Yun Zi (天运子) — master of Tian Yun Sect (天运宗), the #1 sect on Tian Yun Star (天运星) in the Cave Mansion Realm (洞府界). True identity: a clone of the All-Seer; his true body is the artifact spirit of the Realm-Defining Compass. 灭生老人 sent him into the Cave Mansion Realm. Cultivation: 天人第三衰 (Heavenly Third Tribulation), above the Three Nirvana Realms and at the transition to the Third Step. He needs to consume cultivators (生生吞噬) to reincarnate repeatedly, growing stronger with each awakening. His 98th awakening target is 凌天侯 (Ling Tianhou). After consuming 凌天侯, Da Luo Sword Sect declined. Final fate: condensed into origin (本源) by Wang Lin in the Primordial Divine Realm. Canon sources: Baidu Baike (https://baike.baidu.com/item/天运子/23166960), Sohu (https://www.sohu.com/a/961903590_568249, https://www.sohu.com/a/935257158_122415633), Zhihu (https://zhuanlan.zhihu.com/p/1957927329482383516), 163.com (https://www.163.com/dy/article/K98V89NE0556C06B.html). NO fabricated chapter citation.",
+  "derivation_type": "A",
+  "salt": 23166960,
+  "dao_heart": {
+    "stability": 88,
+    "cracks": [],
+    "last_tested_tick": null,
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Tian Yun Zi's Dao heart is exceptionally stable — he has reincarnated 98 times and retains his identity across awakenings. However, his Dao is fundamentally flawed: he relies on consuming others rather than cultivating his own breakthrough. This is a structural weakness Wang Lin eventually exploits."
+  },
+  "soul_state": "clone_avatar",
+  "tribulation_debt": 2,
+  "_xianxia_schema": 1,
+  "canon_notes": {
+    "title": "Tian Yun Zi is the master of 天运宗 (Tian Yun Sect), the #1 sect on 天运星 (Tian Yun Star). 大罗剑宗 (Da Luo Sword Sect) is the #2 sect — they compete for influence.",
+    "true_identity": "Tian Yun Zi's true identity is a clone (分身) of the All-Seer. His 本体 (true body/origin) is the artifact spirit (器灵) of the Realm-Defining Compass (定界罗盘), formed from fragments of the Heavenly Dao (天道碎片). 灭生老人 sent him into the Cave Mansion Realm (洞府界). This identity is hidden — most characters know him only as the master of Tian Yun Sect.",
+    "cultivation_realm": "天人第三衰 (Heavenly Third Tribulation) — above the Three Nirvana Realms (碎涅三境), at the transition to the Third Step. Per Sohu: '天运子已经达到了碎涅三境之上，天人第三衰级别，他需要再度过两次天人衰劫' — Tian Yun Zi has already reached above the Three Nirvana Realms, at the Heavenly Third Tribulation level; he needs to weather two more Heavenly Tribulations. In the mod, this maps to RealmId.NIRVANA_FRUIT (碎涅) as the closest realm BELOW 天人第三衰 — the mod's enum has no explicit 天人衰 realm.",
+    "consumption_behavior": "Tian Yun Zi needs to constantly consume other cultivators (生生吞噬) to allow himself to reincarnate repeatedly, growing stronger with each awakening. Per Zhihu: '天运子需要不断的吞噬其他人，然后让自己一次次轮回，实力也更为强大'. He has gone through 98 awakenings; each awakening consumes a major cultivator.",
+    "98th_awakening_target": "Tian Yun Zi's 98th awakening target is 凌天侯 (Ling Tianhou), the Sword Venerable (剑尊) of 大罗剑宗. Per Zhihu: '天运子选定凌天侯作为第九十八觉醒的吞噬对象，在二人爆发最后一次冲突后，成功将凌天侯吞噬'. Per Sohu: '天运子精心谋划后出手，发动诡异仙法将凌天侯强行笼罩...最终被天运子生生吞噬，大罗剑宗也因失去主心骨，在后续岁月里逐渐衰败凋零'.",
+    "relationship_to_wang_lin": "Tian Yun Zi selected Wang Lin as his next consumption target after 凌天侯. He taught Wang Lin the Slaughter Immortal Art (戮仙术) with a trap inside, intending to possess him. Wang Lin eventually defeated Tian Yun Zi in the Primordial Divine Realm (仙罡大陆).",
+    "final_fate": "Tian Yun Zi was eventually condensed into origin (本源) by Wang Lin. Per 163.com: '最后凌天侯被天运子吞噬、天运子被王林凝为本源，灭生老人协助王林完成复活计划'.",
+    "chapter_citations": "NO explicit chapter citations found in any source. All searches returned encyclopedia entries, fan analysis articles, and video descriptions — none contained specific chapter references. The mod does NOT fabricate chapter citations.",
+    "sources": "Baidu Baike 天运子 (https://baike.baidu.com/item/天运子/23166960); Baidu Baike 凌天侯 (https://baike.baidu.com/item/凌天侯/65285935); Sohu (https://www.sohu.com/a/961903590_568249, https://www.sohu.com/a/935257158_122415633); Zhihu (https://zhuanlan.zhihu.com/p/1957927329482383516); 163.com (https://www.163.com/dy/article/K98V89NE0556C06B.html). NO fabricated chapter citations."
+  },
+  "initiation_lines": [
+    "你是谁，竟敢踏入天运宗？",
+    "I am Tian Yun Zi, master of Tian Yun Sect. You stand before the strongest cultivator on Tian Yun Star.",
+    "我感知到你身上有凌天侯的剑气。他终究还是把那两道剑气赠了出去。",
+    "I sense Ling Tianhou's sword qi upon you. So — he has finally given those two strands away.",
+    "凌天侯...我的第九十八次觉醒，已选定他。他终究逃不出我的轮回。",
+    "Ling Tianhou... my 98th awakening has chosen him. He cannot escape my cycle of reincarnation.",
+    "你呢，王林？你是否也会成为我下一次觉醒的养料？",
+    "And you, Wang Lin? Will you too become nourishment for my next awakening?",
+    "天运之子，轮回不息；凡有所图，必有所失。",
+    "The child of Heavenly Fate cycles without end; whatever is plotted, something must be lost."
+  ],
+  "daily_schedule": [
+    {
+      "time": "04:00",
+      "action": "Dawn meditation at the sect's highest peak — refines his 天人第三衰 realm",
+      "location": "tian_yun_sect",
+      "duration": 240
+    },
+    {
+      "time": "08:00",
+      "action": "Calculate the next awakening's target — surveys cultivators across 天运星",
+      "location": "tian_yun_sect",
+      "duration": 120
+    },
+    {
+      "time": "10:00",
+      "action": "Receive the sect elders' reports — oversees the #1 sect on 天运星",
+      "location": "tian_yun_sect",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Practice the Realm-Defining Compass arts — refines his clone's connection to his 本体",
+      "location": "tian_yun_sect",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Survey the Da Luo Sword Sect from afar — monitors 凌天侯's movements",
+      "location": "tian_yun_sect",
+      "duration": 120
+    },
+    {
+      "time": "19:00",
+      "action": "Evening meal with the sect elders",
+      "location": "tian_yun_sect",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Solo cultivation — prepares for the 98th awakening's consumption ritual",
+      "location": "tian_yun_sect",
+      "duration": 360
+    },
+    {
+      "time": "02:00",
+      "action": "Rest (light trance — a 天人第三衰 cultivator needs minimal sleep)",
+      "location": "tian_yun_sect",
+      "duration": 120
+    }
+  ]
+}

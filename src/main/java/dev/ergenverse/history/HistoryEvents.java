@@ -2,6 +2,7 @@ package dev.ergenverse.history;
 
 import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem;
+import dev.ergenverse.wanglin.bead.LingTianhouConsumptionEvent;
 import dev.ergenverse.wanglin.bead.LingTianhouSwordQiGrantEvent;
 import dev.ergenverse.wanglin.bead.ZhouRuKunxuDepartureEvent;
 import dev.ergenverse.wanglin.bead.ZhouRuSoulTransferEvent;
@@ -131,6 +132,22 @@ public class HistoryEvents {
         if (LingTianhouSwordQiGrantEvent.CHARACTER_ID.equals(cultivator.getCharacterId())) {
             LingTianhouSwordQiGrantEvent.handleSwordQiGrant(serverPlayer, cultivator);
             return;  // Ling Tianhou interaction fully handled
+        }
+
+        // 4. CRON-123: if the target is 天运子 (Tian Yun Zi), dispatch to
+        //    the Ling Tianhou consumption event handler. The handler is
+        //    fully defensive — it no-ops with a "prerequisite not met"
+        //    message if Ling Tianhou has not yet granted the sword qi,
+        //    and a "already consumed" message if the consumption has
+        //    already fired (write-once per save).
+        //    Canon: 天运子 (master of 天运宗, the #1 sect on 天运星) needs
+        //    to consume cultivators (生生吞噬) to reincarnate repeatedly.
+        //    His 98th awakening target is 凌天侯 (Ling Tianhou). The
+        //    consumption marks Ling Tianhou as dead and dematerializes
+        //    his EntityCultivator (if loaded). 大罗剑宗 declines thereafter.
+        if (LingTianhouConsumptionEvent.CHARACTER_ID.equals(cultivator.getCharacterId())) {
+            LingTianhouConsumptionEvent.handleConsumption(serverPlayer, cultivator);
+            return;  // 天运子 interaction fully handled
         }
     }
 }

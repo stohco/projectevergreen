@@ -240,6 +240,39 @@ public final class NPCRuntime {
         // (She dies at age 72 alongside Wang Ping in Ch 700, but that's
         // a future event tied to the Wang Ping mortal-life arc questline.)
 
+        // CRON-COMPLETIONIST-123: 天运子 (Tian Yun Zi) — the master of 天运宗
+        // (Tian Yun Sect), the #1 sect on 天运星. Canon (web-search verified
+        // 2026-07-27, Baidu Baike dedicated entry
+        // https://baike.baidu.com/item/天运子/23166960 + Sohu
+        // https://www.sohu.com/a/961903590_568249 + Zhihu
+        // https://zhuanlan.zhihu.com/p/1957927329482383516 + 163.com
+        // https://www.163.com/dy/article/K98V89NE0556C06B.html):
+        //   - True identity: a clone (分身) of the All-Seer; his 本体 is the
+        //     artifact spirit (器灵) of the Realm-Defining Compass (定界罗盘).
+        //     灭生老人 sent him into the 洞府界.
+        //   - Cultivation: 天人第三衰 (Heavenly Third Tribulation) — above the
+        //     Three Nirvana Realms (碎涅三境), at the transition to Third Step.
+        //   - Behavior: 天运子 needs to constantly consume other cultivators
+        //     (生生吞噬) to reincarnate repeatedly, growing stronger each time.
+        //     His 98th awakening target is 凌天侯 (Ling Tianhou) — the
+        //     LingTianhouConsumptionEvent fires when the player right-clicks
+        //     天运子 after Ling Tianhou has granted the sword qi (CRON-118).
+        //   - Final fate: 天运子 was eventually condensed into origin (本源)
+        //     by 王林 (Wang Lin) in the Primordial Divine Realm — a future event.
+        // Placement: TIAN_YUN_SECT (5500, 5500) — close to but distinct from
+        // DA_LUO_SWORD_SECT (5000, 5000). Both are on 天运星 in the 洞府界.
+        // 天运子 is a LIVING NPC at story start (deadUntilRevived=false) — the
+        // player can travel here and right-click him to witness the consumption
+        // event (CRON-123 prerequisite: Ling Tianhou must have already granted
+        // the sword qi).
+        // NO fabricated chapter citation.
+        register(CanonUUID.TIAN_YUN_ZI, "Tian Yun Zi 天运子",
+                PlanetSuzakuBlueprint.TIAN_YUN_SECT.x,
+                PlanetSuzakuBlueprint.TIAN_YUN_SECT.z);
+        // 天运子 is alive at story start — no deadUntilRevived flag.
+        // (He is eventually condensed into origin by Wang Lin later in canon,
+        // but that's a future event.)
+
         loaded = true;
     }
 

@@ -147,6 +147,42 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         // name 青宜 literally means "green-appropriate", and her green
         // robe is the visual signature).
         profile(CanonUUID.QING_YI,      "qing_yi",       "Qing Yi 青宜",          "sun_family_ranyun", "qi_condensation");
+
+        // CRON-COMPLETIONIST-123: 天运子 (Tian Yun Zi) — the master of 天运宗
+        // (Tian Yun Sect), the #1 sect on 天运星 (Tian Yun Star). Canon (web-search
+        // verified 2026-07-27, Baidu Baike https://baike.baidu.com/item/天运子/23166960
+        // + Sohu https://www.sohu.com/a/961903590_568249 + Zhihu
+        // https://zhuanlan.zhihu.com/p/1957927329482383516 + 163.com
+        // https://www.163.com/dy/article/K98V89NE0556C06B.html):
+        //   - True identity: a clone (分身) of the All-Seer; his 本体 is the
+        //     artifact spirit (器灵) of the Realm-Defining Compass (定界罗盘).
+        //     灭生老人 sent him into the 洞府界.
+        //   - Cultivation: 天人第三衰 (Heavenly Third Tribulation) — above the
+        //     Three Nirvana Realms (碎涅三境), at the transition to Third Step.
+        //     He needs to weather two more 天人衰劫 to break through to Third Step.
+        //   - Behavior: 天运子 needs to constantly consume other cultivators
+        //     (生生吞噬) to reincarnate repeatedly. His 98th awakening target is
+        //     凌天侯 (Ling Tianhou) — the LingTianhouConsumptionEvent fires when
+        //     the player right-clicks 天运子 after Ling Tianhou has granted the
+        //     sword qi (CRON-118).
+        //   - Final fate: eventually condensed into origin (本源) by 王林 in the
+        //     Primordial Divine Realm — a future event.
+        // SectId "tian_yun_sect" — the master of the #1 sect on 天运星.
+        // Realm "nirvana_fruit" — the mod's closest realm BELOW 天人第三衰 (the
+        //   mod's enum doesn't have an explicit 天人衰 realm; 天人第三衰 is
+        //   canonically ABOVE 碎涅 (NIRVANA_FRUIT, order 12) and BELOW 真仙
+        //   (TRUE_IMMORTAL, order 14). The mod's SPIRIT_SEIZER (夺舍, order 13)
+        //   is canonically a body-snatching TECHNIQUE rather than a realm —
+        //   using it here would be canon-incorrect. We pick NIRVANA_FRUIT as
+        //   the closest BELOW 天人第三衰; the Javadoc in npc_tian_yun_zi.json
+        //   and CanonUUID.TIAN_YUN_ZI documents the canon 天人第三衰 realm
+        //   explicitly. This is a known limitation — the worklog's NEXT
+        //   PRIORITY (b) calls for restructuring the Third Step to 空之四境,
+        //   which would also resolve this mapping gap.
+        // CharacterId "tian_yun_zi" allows the renderer to pick a distinct
+        //   model/texture (an imposing elder cultivator with an aura of cosmic
+        //   calculation — 天运子 is described as calculating and predatory).
+        profile(CanonUUID.TIAN_YUN_ZI,  "tian_yun_zi",   "Tian Yun Zi 天运子",    "tian_yun_sect",     "nirvana_fruit");
     }
 
     private static void profile(UUID uuid, String characterId, String displayName, String sectId, String realm) {
