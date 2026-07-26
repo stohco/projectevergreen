@@ -106,6 +106,20 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         // CharacterId "wang_ping" allows the renderer to pick a distinct
         // model/texture (a young boy with sword-qi visual cues).
         profile(CanonUUID.WANG_PING,     "wang_ping",     "Wang Ping 王平",         "none",          "mortal");
+
+        // CRON-COMPLETIONIST-118: 凌天侯 (Ling Tianhou) — the 剑尊 (Sword
+        // Venerable), founder of 大罗剑宗 (Da Luo Sword Sect). Canon (web-search
+        // verified 2026-07-27, Baidu Baike + Sohu + Zhihu + 163):
+        //   - Cultivation: 净涅后期 (Quiet Nirvana Late Stage).
+        //   - True identity: an avatar of 灭生老人's servant.
+        //   - Gave Wang Lin two strands of sword qi for Wang Ping's redemption.
+        // SectId "da_luo_sword_sect" — founder of the sect.
+        // Realm "nirvana_cleanser" — the mod's closest realm to 净涅后期
+        //   (note: the mod's RealmId.NIRVANA_CLEANSER maps to 净涅, which is
+        //    the canon match for Ling Tianhou's 净涅后期 realm).
+        // CharacterId "ling_tianhou" allows the renderer to pick a distinct
+        // model/texture (a sword cultivator with a snake-shaped flying sword).
+        profile(CanonUUID.LING_TIANHOU,  "ling_tianhou",  "Ling Tianhou 凌天侯",   "da_luo_sword_sect", "nirvana_cleanser");
     }
 
     private static void profile(UUID uuid, String characterId, String displayName, String sectId, String realm) {

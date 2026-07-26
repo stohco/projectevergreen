@@ -203,6 +203,47 @@ public final class PlanetSuzakuBlueprint {
                     -3500, 0, -3500, "secret_realm",
                     "RI — 昆虚界; Mu Bingmei's cultivation retreat; Zhou Ru's disciple arc");
 
+    // ── Da Luo Sword Sect (大罗剑宗) — Ling Tianhou's sect on Tian Yun Star ──
+    // CRON-COMPLETIONIST-118: Canon (web-search verified 2026-07-27, Baidu Baike
+    // https://baike.baidu.com/item/凌天侯/65285935 + Sohu https://www.sohu.com/a/935257158_122415633
+    // + Zhihu https://zhuanlan.zhihu.com/p/1957927329482383516 + 163.com):
+    //   - 大罗剑宗 (Da Luo Sword Sect) is located on 天运星 (Tian Yun Star) in
+    //     the 洞府界 (Cave Mansion Realm). It is ranked 2nd on Tian Yun Star,
+    //     behind only 天运宗 (Tian Yun Sect).
+    //   - Founded by 凌天侯 (Ling Tianhou), the 剑尊 (Sword Venerable), at
+    //     净涅后期 (Quiet Nirvana Late Stage). Ling Tianhou's true identity is
+    //     an avatar of 灭生老人's servant (a 4th-step cultivator of 逆尘界).
+    //   - Ling Tianhou first formally appears at the 天运子寿宴 (Tian Yun Zi's
+    //     birthday banquet), riding a 蛇形飞剑 (snake-shaped flying sword),
+    //     leading over 10,000 sword sect disciples.
+    //   - Ling Tianhou PERSONALLY gave Wang Lin TWO STRANDS OF SWORD QI (两道剑气)
+    //     to rebuild Wang Ping's body (CRON-117 closed the redemption event;
+    //     CRON-118 closes the sword qi acquisition). He also gave Wang Lin
+    //     大罗剑宗长老 (Elder) status.
+    //   - Ling Tianhou was eventually consumed by 天运子 (Tian Yun Zi); the
+    //     sect declined thereafter.
+    //
+    // Mod-original concrete placement: the canon 洞府界 (Cave Mansion Realm) is
+    // a separate dimension not yet implemented in the mod. This placement (far
+    // southeast, remote, ~5000 blocks from spawn) reflects the sect's "remote
+    // and prestigious" nature. A future CRON could implement 洞府界 as a
+    // separate dimension, parallel to the Kunxu Realm treatment. For now,
+    // Ling Tianhou materializes here as a living NPC, and the player can
+    // travel here to receive the sword qi for Wang Ping's redemption.
+    //
+    // Canon sources: Baidu Baike (https://baike.baidu.com/item/凌天侯/65285935),
+    // Sohu (https://www.sohu.com/a/935257158_122415633),
+    // Sohu on sword qi transfer (https://www.sohu.com/a/849321229_568249),
+    // Zhihu (https://zhuanlan.zhihu.com/p/1957927329482383516),
+    // 163.com (https://www.163.com/dy/article/K91BPTNS0556C06B.html).
+    // NO fabricated chapter citation — no source explicitly names the chapter
+    // of Ling Tianhou's first appearance or the sword qi transfer.
+    public static final CanonLocation DA_LUO_SWORD_SECT =
+            new CanonLocation("da_luo_sword_sect", "Da Luo Sword Sect (大罗剑宗)",
+                    5000, 0, 5000, "sect",
+                    "RI — 大罗剑宗 on 天运星 (洞府界); Ling Tianhou (剑尊) founder; "
+                            + "source of the two sword qi strands for Wang Ping's redemption");
+
     // ── Canonical NPC id strings (the UUID lives in CanonUUID) ──
     public static final String NPC_WANG_LIN = "wang_lin";
     public static final String NPC_OLD_CHEN = "old_chen";
@@ -259,6 +300,34 @@ public final class PlanetSuzakuBlueprint {
     // (his conception site). A future redemption event would clear the flag.
     public static final String NPC_WANG_PING = "wang_ping";  // 王平
 
+    // CRON-COMPLETIONIST-118: 凌天侯 (Ling Tianhou) — the 剑尊 (Sword Venerable),
+    // founder of 大罗剑宗 (Da Luo Sword Sect). Canon (web-search verified
+    // 2026-07-27, Baidu Baike https://baike.baidu.com/item/凌天侯/65285935 +
+    // Sohu https://www.sohu.com/a/935257158_122415633 + Zhihu + 163):
+    //   - Cultivation: 净涅后期 (Quiet Nirvana Late Stage).
+    //   - True identity: an avatar (分身) of 灭生老人's servant (仆从). 灭生老人
+    //     is a 4th-step cultivator of 逆尘界 (Ni Chen Realm). Ling Tianhou was
+    //     sent to 洞府界 to monitor 天运子 (Tian Yun Zi).
+    //   - First formally appears at the 天运子寿宴 (Tian Yun Zi's birthday
+    //     banquet), riding a 蛇形飞剑 (snake-shaped flying sword), leading
+    //     over 10,000 sword sect disciples.
+    //   - Ling Tianhou PERSONALLY gave Wang Lin TWO STRANDS OF SWORD QI
+    //     (两道剑气) to rebuild Wang Ping's body (CRON-117 redemption event).
+    //     He also gave Wang Lin 大罗剑宗长老 (Elder) status.
+    //   - Eventually consumed by 天运子 (Tian Yun Zi); the sect declined.
+    //
+    // In the mod, Ling Tianhou is a LIVING NPC at the Da Luo Sword Sect
+    // location (5000, 5000). The player can travel there and right-click
+    // him to receive the Sword Qi Strand item (CRON-118). The sword qi
+    // item is the canon-faithful prerequisite for the Wang Ping redemption
+    // event (replaces the CRON-117 Li Muwan revived proxy, which was
+    // chronologically inverted).
+    //
+    // Canon sources: Baidu Baike, Sohu, Zhihu, 163. NO fabricated chapter
+    // citation — no source explicitly names Ling Tianhou's first appearance
+    // chapter.
+    public static final String NPC_LING_TIANHOU = "ling_tianhou";  // 凌天侯
+
     /**
      * All canonical locations, indexed by id. Immutable. Built fresh each call
      * (the set is tiny — 15 entries — so this is negligible).
@@ -281,6 +350,7 @@ public final class PlanetSuzakuBlueprint {
         map.put(JUE_MING_VALLEY.id, JUE_MING_VALLEY);
         map.put(SUZAKU_TOMB.id, SUZAKU_TOMB);
         map.put(KUNXU_REALM.id, KUNXU_REALM);
+        map.put(DA_LUO_SWORD_SECT.id, DA_LUO_SWORD_SECT);
         return Collections.unmodifiableMap(map);
     }
 

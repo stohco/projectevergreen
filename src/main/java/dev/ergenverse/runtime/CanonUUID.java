@@ -152,6 +152,23 @@ public final class CanonUUID {
     // attested). Canon sources: Baidu Baike, Fandom wiki, newhanfu, Toutiao, 163.
     public static final UUID WANG_PING = of("npc:wang_ping");
 
+    // CRON-COMPLETIONIST-118: 凌天侯 (Ling Tianhou) — the 剑尊 (Sword Venerable),
+    // founder of 大罗剑宗 (Da Luo Sword Sect). Canon (web-search verified
+    // 2026-07-27, Baidu Baike https://baike.baidu.com/item/凌天侯/65285935 +
+    // Sohu + Zhihu + 163):
+    //   - Cultivation: 净涅后期 (Quiet Nirvana Late Stage).
+    //   - True identity: an avatar (分身) of 灭生老人's servant (仆从). 灭生老人
+    //     is a 4th-step cultivator of 逆尘界 (Ni Chen Realm).
+    //   - Ling Tianhou PERSONALLY gave Wang Lin TWO STRANDS OF SWORD QI
+    //     (两道剑气) to rebuild Wang Ping's body (CRON-117 redemption event).
+    //   - Eventually consumed by 天运子 (Tian Yun Zi); the sect declined.
+    // In the mod, Ling Tianhou is a LIVING NPC at the Da Luo Sword Sect
+    // location (5000, 5000). Right-clicking him grants the Sword Qi Strand
+    // item (CRON-118), which is the canon-faithful prerequisite for the
+    // Wang Ping redemption event.
+    // NO fabricated chapter citation. Canon sources: Baidu Baike, Sohu, Zhihu, 163.
+    public static final UUID LING_TIANHOU = of("npc:ling_tianhou");
+
     // ── Spirit Beasts (named/canonical beasts, not generic spawns) ──
     public static final UUID WOLF_PACK_ALPHA_ZHAO = of("beast:wolf_pack_alpha_zhao");
     public static final UUID SPIRIT_TIGER_ZHAO_MOUNTAINS = of("beast:spirit_tiger_zhao_mountains");

@@ -107,6 +107,18 @@ public final class ErgenverseItems {
     public static final RegistryObject<Item> CAVE_DWELLING_CORE = ITEMS.register("cave_dwelling_core",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
 
+    // ── Sword Qi Strand (CRON-COMPLETIONIST-118) ──────────────────────
+    // A strand of sword qi from 凌天侯 (Ling Tianhou), the 剑尊 of 大罗剑宗.
+    // Canon: Ling Tianhou personally gave Wang Lin TWO strands of sword qi
+    // (两道剑气) to rebuild Wang Ping's body. This item is the canon-faithful
+    // prerequisite for the Wang Ping redemption event (CRON-117/118),
+    // replacing the chronologically-inverted Li Muwan revived proxy.
+    // Obtainable ONLY by right-clicking the Ling Tianhou NPC at the Da Luo
+    // Sword Sect (5000, 5000). NOT craftable, NOT lootable, NOT tradeable.
+    public static final RegistryObject<SwordQiStrandItem> SWORD_QI_STRAND =
+            ITEMS.register("sword_qi_strand", () -> new SwordQiStrandItem(
+                    new Item.Properties().stacksTo(2).rarity(net.minecraft.world.item.Rarity.EPIC)));
+
     // ── Pills ──────────────────────────────────────────────────────────
     // CRON-COMPLETIONIST-57: Replaced generic Item pills with SpiritPillItem (real mechanics).
     // Constitution Article III: "Never design progression. Design reality."
@@ -481,6 +493,8 @@ public final class ErgenverseItems {
                             output.accept(BILLION_SOUL_FLAG.get());
                             // CRON-COMPLETIONIST-101: World Origin Essence — canon 一界本源 reagent for Li Muwan's revival
                             output.accept(WORLD_ORIGIN_ESSENCE.get());
+                            // CRON-COMPLETIONIST-118: Sword Qi Strand — 凌天侯's two sword qi for Wang Ping's redemption
+                            output.accept(SWORD_QI_STRAND.get());
                         })
                         .build());
         Ergenverse.LOGGER.info("[Ergenverse] ErgenverseItems: registered jade_slip utility item.");

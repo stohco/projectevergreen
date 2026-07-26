@@ -362,24 +362,34 @@ public class CultivationPlanetCrystalBlock extends Block {
         }
 
         // Prerequisite 1: Crystal must not already be inherited.
-        // ── CRON-117: Wang Ping Redemption Event branch ──
+        // ── CRON-117/118: Wang Ping Redemption Event branch ──
         // If the Crystal IS inherited AND the player meets the redemption
-        // prerequisites (bead with Li Muwan revived, realm ≥ ASCENDANT,
+        // prerequisites (sword qi strands in inventory, realm ≥ ASCENDANT,
         // Wang Ping's deadUntilRevived flag still true), fire the redemption
         // event instead of showing the "Crystal is silent" message. This
         // reuses the right-click interaction on the inherited Crystal as
         // the redemption trigger — the Crystal is the spiritual core of
         // Planet Suzaku; Wang Lin channels Ling Tianhou's sword qi
-        // (presumed stored in the bead) through the Crystal to rebuild
-        // Wang Ping's body. See WangPingRedemptionEvent class javadoc
-        // for the full canon basis and the mod-original condensation
-        // (canon places the redemption on Ranyun Star, not Suzaku Tomb).
+        // (obtained from the Da Luo Sword Sect, CRON-118) through the
+        // Crystal to rebuild Wang Ping's body. See WangPingRedemptionEvent
+        // class javadoc for the full canon basis and the mod-original
+        // condensation (canon places the redemption on Ranyun Star, not
+        // Suzaku Tomb).
+        //
+        // CRON-118 CANON CORRECTION: the prior CRON-117 implementation
+        // checked isLiMuwanRevived as the prerequisite. This was
+        // chronologically INVERTED — Li Muwan is revived at the END of the
+        // novel (Wang Lin at 踏天境), which is FAR AFTER Wang Ping's
+        // redemption (Wang Lin at 问鼎). CRON-118 removes the Li Muwan
+        // revived proxy and replaces it with the canon-faithful Sword Qi
+        // Strand item (obtained from Ling Tianhou at the Da Luo Sword
+        // Sect, CRON-118). The player must have ≥2 sword qi strands in
+        // their inventory (canon: exactly two strands) to trigger the
+        // redemption.
         if (state.getValue(INHERITED)) {
             // Check the redemption prerequisites.
-            ItemStack beadForRedemption = findBead(serverPlayer);
-            if (!beadForRedemption.isEmpty()
-                    && beadForRedemption.getItem() instanceof HeavenDefyingBeadItem beadItem
-                    && beadItem.isLiMuwanRevived(beadForRedemption)
+            int swordQiCount = countSwordQiStrands(serverPlayer);
+            if (swordQiCount >= 2
                     && getPlayerRealm(serverPlayer).order >= RealmId.ASCENDANT.order
                     && isWangPingAwaitingRedemption()) {
                 // All redemption prerequisites met — fire the redemption.
@@ -387,12 +397,14 @@ public class CultivationPlanetCrystalBlock extends Block {
                     boolean redeemed = dev.ergenverse.wanglin.bead.WangPingRedemptionEvent
                             .redeemAtSuzakuTomb(serverPlayer, pos, level.getGameTime());
                     if (redeemed) {
+                        // Consume the 2 sword qi strands from the player's inventory.
+                        consumeSwordQiStrands(serverPlayer, 2);
                         return InteractionResult.CONSUME;
                     }
                     // If redemption failed (defensive), fall through to the
                     // "Crystal is silent" message below.
                 } catch (Throwable t) {
-                    Ergenverse.LOGGER.warn("[Ergenverse] CRON-117: Wang Ping redemption "
+                    Ergenverse.LOGGER.warn("[Ergenverse] CRON-117/118: Wang Ping redemption "
                             + "threw an exception at {}: {}", pos, t.getMessage(), t);
                 }
             }
@@ -557,6 +569,89 @@ public class CultivationPlanetCrystalBlock extends Block {
         CultivationState state = stateOpt.resolve().orElse(null);
         if (state == null) return RealmId.MORTAL;
         return state.getCurrentRealm();
+    }
+
+    /**
+     * CRON-118: Count the number of Sword Qi Strand items in the player's
+     * inventory (main + off hand + main inventory). Used by the redemption
+     * branch in {@link #use} to check if the player has the canon-required
+     * 2 strands.
+     *
+     * @param player the server player
+     * @return the total count of Sword Qi Strand items in the player's inventory
+     */
+    private static int countSwordQiStrands(ServerPlayer player) {
+        int count = 0;
+        // Main hand
+        ItemStack mainHand = player.getMainHandItem();
+        if (mainHand.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem) {
+            count += mainHand.getCount();
+        }
+        // Off hand
+        ItemStack offHand = player.getOffhandItem();
+        if (offHand.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem) {
+            count += offHand.getCount();
+        }
+        // Main inventory
+        for (ItemStack stack : player.getInventory().items) {
+            if (stack.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem) {
+                count += stack.getCount();
+            }
+        }
+        return count;
+    }
+
+    /**
+     * CRON-118: Consume {@code count} Sword Qi Strand items from the player's
+     * inventory (main + off hand + main inventory). Called by the redemption
+     * branch in {@link #use} after a successful Wang Ping redemption — the
+     * two sword qi strands are "used up" to rebuild Wang Ping's body.
+     *
+     * <p>Consumption order: main inventory first, then off hand, then main
+     * hand. This prioritizes keeping the player's hands free.
+     *
+     * <p>Defensive: if the player has fewer than {@code count} strands, this
+     * method consumes as many as it finds (defensive — should not happen
+     * because {@link #countSwordQiStrands} is checked first, but defensive
+     * coding in case of race conditions).
+     *
+     * @param player the server player
+     * @param count  the number of sword qi strands to consume
+     */
+    private static void consumeSwordQiStrands(ServerPlayer player, int count) {
+        int remaining = count;
+        // Main inventory first
+        for (ItemStack stack : player.getInventory().items) {
+            if (remaining <= 0) break;
+            if (stack.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem) {
+                int take = Math.min(remaining, stack.getCount());
+                stack.shrink(take);
+                remaining -= take;
+            }
+        }
+        // Off hand
+        if (remaining > 0) {
+            ItemStack offHand = player.getOffhandItem();
+            if (offHand.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem) {
+                int take = Math.min(remaining, offHand.getCount());
+                offHand.shrink(take);
+                remaining -= take;
+            }
+        }
+        // Main hand (last resort)
+        if (remaining > 0) {
+            ItemStack mainHand = player.getMainHandItem();
+            if (mainHand.getItem() instanceof dev.ergenverse.item.SwordQiStrandItem) {
+                int take = Math.min(remaining, mainHand.getCount());
+                mainHand.shrink(take);
+                remaining -= take;
+            }
+        }
+        if (remaining > 0) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CRON-118: consumeSwordQiStrands could not "
+                    + "consume all {} strands ({} remaining) for player {}.",
+                    count, remaining, player.getName().getString());
+        }
     }
 
     /**

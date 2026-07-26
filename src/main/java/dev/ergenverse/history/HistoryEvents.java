@@ -2,6 +2,7 @@ package dev.ergenverse.history;
 
 import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem;
+import dev.ergenverse.wanglin.bead.LingTianhouSwordQiGrantEvent;
 import dev.ergenverse.wanglin.bead.ZhouRuKunxuDepartureEvent;
 import dev.ergenverse.wanglin.bead.ZhouRuSoulTransferEvent;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,6 +43,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  *       {@code "sent_to_kunxu": true}. The departure fires on a subsequent
  *       right-click after the transfer (same-tick guard prevents the
  *       departure from firing on the same right-click as the transfer).</li>
+ *   <li>CRON-COMPLETIONIST-118: if the target cultivator's characterId is
+ *       {@code "ling_tianhou"}, dispatches to
+ *       {@link LingTianhouSwordQiGrantEvent#handleSwordQiGrant} — Ling
+ *       Tianhou grants the player two strands of sword qi (两道剑气) for
+ *       Wang Ping's redemption. The grant is write-once per save. The
+ *       sword qi item is the canon-faithful prerequisite for the Wang
+ *       Ping redemption event (CRON-117/118), replacing the chronologically-
+ *       inverted Li Muwan revived proxy.</li>
  * </ul>
  *
  * <p>Must be registered on the Forge event bus:
@@ -60,6 +69,10 @@ public class HistoryEvents {
      * handler (CRON-110, if the bead's transfer flag is not yet set) or
      * the Kunxu departure event handler (CRON-112, if the bead's transfer
      * flag is already set).
+     *
+     * <p>CRON-COMPLETIONIST-118: additionally, if the target is Ling Tianhou
+     * (characterId="ling_tianhou"), dispatch to the sword qi grant event
+     * handler. The grant is write-once per save.
      *
      * <p>This is the Forge-event equivalent of overriding interact(),
      * which is final on Mob in MC 1.20.1.
@@ -104,6 +117,20 @@ public class HistoryEvents {
                 // each gate failure.
                 ZhouRuSoulTransferEvent.handleSoulTransfer(serverPlayer, cultivator);
             }
+            return;  // 周茹 interaction fully handled — don't fall through
+        }
+
+        // 3. CRON-118: if the target is Ling Tianhou (凌天侯), dispatch to
+        //    the sword qi grant event handler. The handler is fully
+        //    defensive — it no-ops with a "already granted" message if
+        //    the grant has already fired (write-once per save).
+        //    Canon: Ling Tianhou personally gave Wang Lin two strands of
+        //    sword qi (两道剑气) to rebuild Wang Ping's body. The grant
+        //    is the canon-faithful prerequisite for the Wang Ping
+        //    redemption event (CRON-117/118).
+        if (LingTianhouSwordQiGrantEvent.CHARACTER_ID.equals(cultivator.getCharacterId())) {
+            LingTianhouSwordQiGrantEvent.handleSwordQiGrant(serverPlayer, cultivator);
+            return;  // Ling Tianhou interaction fully handled
         }
     }
 }

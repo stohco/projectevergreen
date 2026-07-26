@@ -1,37 +1,108 @@
 {
-  "_comment": "NPC: Ling Tianhou (凌天候). Canon ID: N39. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Ling Tianhou (凌天侯). CRON-COMPLETIONIST-118: registered as a canon NPC at the Da Luo Sword Sect (大罗剑宗) — a remote overworld region at (5000, 5000) representing the canon 洞府界天运星. Canon (web-search verified 2026-07-27, Baidu Baike https://baike.baidu.com/item/凌天侯/65285935 + Sohu https://www.sohu.com/a/935257158_122415633 + Zhihu https://zhuanlan.zhihu.com/p/1957927329482383516 + 163.com https://www.163.com/dy/article/K91BPTNS0556C06B.html): 凌天侯 is the 剑尊 (Sword Venerable) and 创派老祖 (founding ancestor) of 大罗剑宗, ranked 2nd on 天运星 behind only 天运宗. Cultivation: 净涅后期 (Quiet Nirvana Late Stage). True identity: an avatar (分身) of 灭生老人's servant (仆从) — 灭生老人 is a 4th-step cultivator of 逆尘界 (Ni Chen Realm), who sent Ling Tianhou to 洞府界 to monitor 天运子. Ling Tianhou first formally appears at the 天运子寿宴 (Tian Yun Zi's birthday banquet), riding a 蛇形飞剑 (snake-shaped flying sword), leading over 10,000 sword sect disciples. He PERSONALLY gave Wang Lin TWO STRANDS OF SWORD QI (两道剑气) to rebuild Wang Ping's body (CRON-117 redemption event), and also gave Wang Lin 大罗剑宗长老 (Elder) status. He killed 青霜仙君 to seize the 雨之仙剑 (Rain Immortal Sword). Eventually consumed by 天运子 (Tian Yun Zi); the sect declined thereafter. NO fabricated chapter citation — no source explicitly names Ling Tianhou's first appearance chapter. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_ling_tianhou",
   "name": "Ling Tianhou",
-  "nameCn": "凌天候",
-  "canon_id": "N39",
-  "type": "elder",
-  "faction": "independent",
-  "location": "unknown",
-  "cultivation": "Third Step (Nirvana Void)",
-  "personality": "heaven-aspected elder; powerful, aloof",
-  "speech": "heaven-resonant, aloof",
-  "relationship_to_wanglin": "complex; elder",
+  "nameCn": "凌天侯",
+  "canon_id": "N20",
+  "type": "cultivator",
+  "faction": "da_luo_sword_sect",
+  "location": "da_luo_sword_sect",
+  "cultivation": "Nirvana Cleanser Late Stage (净涅后期)",
+  "personality": "aloof, sword-obsessed, honorable to those who earn his respect; carries the weight of his hidden identity as 灭生老人's pawn; genuinely helpful to Wang Lin despite his covert mission",
+  "speech": "formal, archaic, sword-metaphor-heavy; speaks with the authority of a sect founder",
+  "relationship_to_wanglin": "ally and benefactor; gave Wang Lin two strands of sword qi to rebuild Wang Ping's body; granted Wang Lin 大罗剑宗长老 (Elder) status; his aid is sincere (per Sohu analysis: '体现了凌天侯对王林的真心帮助')",
   "dialogue_available": true,
   "quest_available": true,
   "trade_available": false,
-  "teaching_available": true,
+  "teaching_available": false,
   "perception_tiers": {
-    "mortal": "A heaven-aspected elder",
-    "qi_condensation": "Third Step; overwhelming",
-    "core_formation": "Ling Tianhou; Nirvana Void",
-    "nascent_soul": "Third Step; heaven dao"
+    "mortal": "A sword cultivator of immense presence",
+    "qi_condensation": "A Nirvana-tier sword master",
+    "core_formation": "The Sword Venerable (剑尊) of Da Luo Sword Sect",
+    "nascent_soul": "Ling Tianhou (凌天侯), founder of Da Luo Sword Sect, at 净涅后期",
+    "spirit_severing": "An avatar of 灭生老人's servant, sent to monitor 天运子 — his true identity is hidden beneath the sword master's facade"
   },
-  "canon_confidence": 4,
-  "note": "Heaven-aspected elder",
+  "canon_confidence": 5,
+  "note": "Ling Tianhou (凌天侯) — Sword Venerable (剑尊) and founder of Da Luo Sword Sect (大罗剑宗) on Tian Yun Star (天运星) in the Cave Mansion Realm (洞府界). Cultivation: 净涅后期 (Quiet Nirvana Late Stage). True identity: an avatar of 灭生老人's servant. He personally gave Wang Lin two strands of sword qi (两道剑气) to rebuild Wang Ping's body, and granted Wang Lin Elder status. Eventually consumed by 天运子. Canon sources: Baidu Baike (https://baike.baidu.com/item/凌天侯/65285935), Sohu (https://www.sohu.com/a/935257158_122415633, https://www.sohu.com/a/849321229_568249), Zhihu (https://zhuanlan.zhihu.com/p/1957927329482383516), 163.com (https://www.163.com/dy/article/K91BPTNS0556C06B.html). NO fabricated chapter citation.",
   "derivation_type": "A",
-  "salt": 840097333,
+  "salt": 65285935,
   "dao_heart": {
-    "stability": 50,
+    "stability": 95,
     "cracks": [],
     "last_tested_tick": null,
-    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Per canon: Wang Lin's Dao heart is famously tested at every major realm."
+    "note": "0-100. A cracked Dao heart blocks breakthrough regardless of Qi. Ling Tianhou's Dao heart is exceptionally stable — he is a 净涅后期 cultivator and the founder of a major sword sect. His sword Dao is unwavering, even as his true identity (灭生老人's pawn) creates an existential tension he does not consciously acknowledge."
   },
-  "soul_state": "none",
+  "soul_state": "living_avatar",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "canon_notes": {
+    "title": "Ling Tianhou is called 剑尊 (Sword Venerable) — the highest title for a sword cultivator. He is the 创派老祖 (founding ancestor) of 大罗剑宗.",
+    "cultivation_realm": "净涅后期 (Quiet Nirvana Late Stage). In the mod, this maps to RealmId.NIRVANA_CLEANSER (净涅).",
+    "true_identity": "Ling Tianhou's true identity is an avatar (分身) of 灭生老人's servant (仆从). 灭生老人 is a 4th-step cultivator of 逆尘界 (Ni Chen Realm). Ling Tianhou was sent to 洞府界 to monitor 天运子 (Tian Yun Zi). This identity is hidden — most characters know him only as the Sword Venerable.",
+    "sect_rank": "大罗剑宗 is ranked 2nd on 天运星 (Tian Yun Star), behind only 天运宗 (Tian Yun Sect). The sect has over 10,000 disciples.",
+    "first_appearance": "Ling Tianhou first formally appears at the 天运子寿宴 (Tian Yun Zi's birthday banquet), riding a 蛇形飞剑 (snake-shaped flying sword), leading over 10,000 sword sect disciples. The exact chapter is NOT cited — no source explicitly names it.",
+    "sword_qi_gift": "Ling Tianhou PERSONALLY gave Wang Lin TWO STRANDS OF SWORD QI (两道剑气) to rebuild Wang Ping's body (CRON-117 redemption event). He also gave Wang Lin 大罗剑宗长老 (Elder) status. Per Sohu: '凌天侯果断将自身两道剑气交于王林。这两道剑气成为日后王平重塑肉身的关键因素，体现了凌天侯对王林的真心帮助' (Ling Tianhou decisively gave his own two sword qi strands to Wang Lin; these became the key factor in Wang Ping's body reconstruction, reflecting Ling Tianhou's sincere help).",
+    "rain_immortal_sword": "Ling Tianhou killed 青霜仙君 (Qing Shuang Xian Jun) to seize the 雨之仙剑 (Rain Immortal Sword), a sword containing Immortal Realm origin power. He did this to pursue a breakthrough in his sword Dao.",
+    "final_fate": "Ling Tianhou was eventually consumed (生生吞噬) by 天运子 (Tian Yun Zi). After his fall, 大罗剑宗 declined and withered. His 本体 (true body/origin) did not truly perish — he appears again in connection with Wang Lin (source truncated, details UNVERIFIED).",
+    "chapter_citations": "NO explicit chapter citations found in any source. All searches returned encyclopedia entries, fan analysis articles, and video descriptions — none contained specific chapter references. The mod does NOT fabricate chapter citations.",
+    "sources": "Baidu Baike (https://baike.baidu.com/item/凌天侯/65285935); Sohu (https://www.sohu.com/a/935257158_122415633, https://www.sohu.com/a/849321229_568249); Zhihu (https://zhuanlan.zhihu.com/p/1957927329482383516); 163.com (https://www.163.com/dy/article/K91BPTNS0556C06B.html); NGA (https://ngabbs.com/read.php?tid=44359264). NO fabricated chapter citations."
+  },
+  "initiation_lines": [
+    "I am Ling Tianhou, the Sword Venerable of Da Luo Sword Sect. You stand before the founder of ten thousand sword disciples.",
+    "Your bead — I sense the soul within. Li Muwan's yuan yin. You carry a heavy burden, Wang Lin.",
+    "I have heard of your son — the child of Mu Bingmei's ninth avatar, refined into a resentment infant for a hundred years. The resentment cannot be purged by ordinary means.",
+    "But sword qi can rebuild what was destroyed. Two strands of my own sword qi — one to condense flesh, one to condense the life force that will animate it. This is the sword Venerable's gift.",
+    "Take them. Use them at the Suzaku Tomb, where your son was conceived. The Crystal there will channel the sword qi into a new body. He will live — but he will be a False Life. He cannot cry. He cannot cultivate. He cannot sire children. This is the cost of sword-qi reconstruction.",
+    "From this day, you are an Elder of Da Luo Sword Sect. May the sword Dao guide your path."
+  ],
+  "daily_schedule": [
+    {
+      "time": "05:00",
+      "action": "Dawn meditation at the sect's sword peak — cultivates sword qi",
+      "location": "da_luo_sword_sect",
+      "duration": 180
+    },
+    {
+      "time": "08:00",
+      "action": "Inspect the disciple training grounds — oversees ten thousand sword cultivators",
+      "location": "da_luo_sword_sect",
+      "duration": 120
+    },
+    {
+      "time": "10:00",
+      "action": "Practice the snake-shaped flying sword technique at the main plaza",
+      "location": "da_luo_sword_sect",
+      "duration": 120
+    },
+    {
+      "time": "13:00",
+      "action": "Receive disciples seeking guidance — formal sword Dao instruction",
+      "location": "da_luo_sword_sect",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Study the Rain Immortal Sword (雨之仙剑) — seeks sword Dao breakthrough",
+      "location": "da_luo_sword_sect",
+      "duration": 180
+    },
+    {
+      "time": "19:00",
+      "action": "Evening meal with the sect elders",
+      "location": "da_luo_sword_sect",
+      "duration": 60
+    },
+    {
+      "time": "20:00",
+      "action": "Solo cultivation at the sword peak — refines his 净涅后期 realm",
+      "location": "da_luo_sword_sect",
+      "duration": 360
+    },
+    {
+      "time": "02:00",
+      "action": "Rest (light trance — a 净涅 cultivator needs little sleep)",
+      "location": "da_luo_sword_sect",
+      "duration": 180
+    }
+  ]
 }

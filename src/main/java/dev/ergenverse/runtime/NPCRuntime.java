@@ -190,6 +190,27 @@ public final class NPCRuntime {
         if (wangPingState != null) {
             wangPingState.deadUntilRevived = true;
         }
+
+        // CRON-COMPLETIONIST-118: 凌天侯 (Ling Tianhou) — the 剑尊 (Sword
+        // Venerable), founder of 大罗剑宗 (Da Luo Sword Sect). Canon (web-search
+        // verified 2026-07-27, Baidu Baike https://baike.baidu.com/item/凌天侯/65285935
+        // + Sohu https://www.sohu.com/a/935257158_122415633 + Zhihu + 163):
+        //   - Cultivation: 净涅后期 (Quiet Nirvana Late Stage).
+        //   - True identity: an avatar (分身) of 灭生老人's servant (仆从).
+        //   - Ling Tianhou PERSONALLY gave Wang Lin TWO STRANDS OF SWORD QI
+        //     (两道剑气) to rebuild Wang Ping's body (CRON-117 redemption event).
+        //   - Eventually consumed by 天运子 (Tian Yun Zi); the sect declined.
+        // Placement: Da Luo Sword Sect (5000, 5000) — a remote overworld region
+        // representing the canon 洞府界天运星. Ling Tianhou is a LIVING NPC
+        // (deadUntilRevived=false) — the player can travel here and right-click
+        // him to receive the Sword Qi Strand item (CRON-118).
+        // NO fabricated chapter citation.
+        register(CanonUUID.LING_TIANHOU, "Ling Tianhou 凌天侯",
+                PlanetSuzakuBlueprint.DA_LUO_SWORD_SECT.x,
+                PlanetSuzakuBlueprint.DA_LUO_SWORD_SECT.z);
+        // Ling Tianhou is alive at story start — no deadUntilRevived flag.
+        // (He is consumed by 天运子 later in canon, but that's a future event.)
+
         loaded = true;
     }
 

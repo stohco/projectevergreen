@@ -99,25 +99,26 @@ import net.minecraft.sounds.SoundSource;
  *   <li><b>Crystal is inherited.</b> Canon-chronological: Wang Lin
  *       inherits the Suzaku Son status (Ch 443-450+) BEFORE Wang Ping's
  *       redemption (Ch 680+). The inheritance is a strict prerequisite.</li>
- *   <li><b>Player holds the Heaven-Defying Bead with Li Muwan revived.</b>
- *       Canon-chronological: the bead is Wang Lin's; the sword-qi treasure
- *       from Ling Tianhou is presumed stored in the bead (mod-original
- *       condensation). Li Muwan's revived state is a proxy for "Wang Lin
- *       has reached the late-stage power needed to wield Ling Tianhou's
- *       sword qi" — she is revived only at Wang Lin's 踏天境 (Transcendence),
- *       which is far beyond the 问鼎 stage where the canon redemption
- *       happens. This is a mod-original simplification: the mod does not
- *       have a Ling Tianhou NPC or a separate sword-qi item, so we gate
- *       on Li Muwan's revival as a proxy for "Wang Lin has the prerequisites
- *       to channel the sword qi".</li>
+ *   <li><b>Player has ≥2 Sword Qi Strand items in inventory.</b>
+ *       CRON-118 canon correction: the prior CRON-117 implementation
+ *       checked the bead's {@code isLiMuwanRevived} flag as a proxy for
+ *       "Wang Lin has the prerequisites to channel Ling Tianhou's sword
+ *       qi". This was chronologically INVERTED — Li Muwan is revived at
+ *       the END of the novel (Wang Lin at 踏天境), which is FAR AFTER
+ *       Wang Ping's redemption (Wang Lin at 问鼎). CRON-118 removes the
+ *       Li Muwan revived proxy and replaces it with the canon-faithful
+ *       Sword Qi Strand item (obtained from Ling Tianhou at the Da Luo
+ *       Sword Sect, CRON-118). The player must have ≥2 sword qi strands
+ *       in their inventory (canon: exactly two strands) to trigger the
+ *       redemption. The 2 strands are consumed on successful redemption.</li>
  *   <li><b>Player's cultivation realm ≥ {@link dev.ergenverse.cultivation.RealmId#ASCENDANT}
  *       (问鼎 / Ascendant).</b> Canon: Wang Lin is at 问鼎 (Ascendant)
  *       during the redemption arc, breaking through to 问鼎中期 (Ascendant
  *       middle stage) by the arc's end. The mod's RealmId.ASCENDANT
- *       corresponds to the 问鼎 stage (verification: RealmId.java line 25,
- *       "Ascendant" / "合体" — note: in the mod's mapping, ASCENDANT is
- *       合体 not 问鼎; this is a known mod-canon discrepancy documented
- *       in CRON-117 self-critique). The intent is "Wang Lin has reached
+ *       corresponds to the 合体 stage (note: the mod's realm mapping has
+ *       a known discrepancy — ASCENDANT maps to 合体, not 问鼎; the mod
+ *       is missing the 问鼎 realm entirely. This is documented in
+ *       CRON-117 self-critique #2). The intent is "Wang Lin has reached
  *       the Ascendant-tier power needed to wield Ling Tianhou's sword qi".</li>
  *   <li><b>Wang Ping's {@code deadUntilRevived} flag is true.</b> The
  *       redemption is a one-time event per save. Once Wang Ping is
