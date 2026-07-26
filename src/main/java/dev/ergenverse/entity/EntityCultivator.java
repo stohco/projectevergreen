@@ -103,6 +103,20 @@ public class EntityCultivator extends PathfinderMob {
     private static final EntityDataAccessor<String> DATA_SECT =
             SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.STRING);
 
+    /**
+     * CRON-COMPLETIONIST-102: The UUID of the player this cultivator is
+     * following as a companion. Empty string = not following anyone (default
+     * for all canon NPCs). Set to a player's UUID when Li Muwan is revived —
+     * she follows Wang Lin ("两人踏天同行" — they transcend together).
+     *
+     * <p>Synced to the client so the renderer can display companion-specific
+     * visuals (e.g., a gentle aura, a different idle pose) in a future CRON.
+     * The {@link dev.ergenverse.entity.ai.FollowPlayerGoal} reads this
+     * server-side to determine its target.
+     */
+    private static final EntityDataAccessor<String> DATA_FOLLOWING_PLAYER_UUID =
+            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.STRING);
+
     // ── CRON-COMPLETIONIST-19: Cognitive Body-Language Layer ───────────
     // The user's 2026-07-25 directive: "the real bottleneck isn't AI anymore.
     // It's representation. Suppose Wang Lin decides 'Observe wolves.' That's
@@ -221,6 +235,8 @@ public class EntityCultivator extends PathfinderMob {
         this.entityData.define(DATA_CULTIVATION_REALM, "mortal");
         this.entityData.define(DATA_POSE, 0);
         this.entityData.define(DATA_SECT, "independent");
+        // CRON-COMPLETIONIST-102: companion-following UUID (empty = not following).
+        this.entityData.define(DATA_FOLLOWING_PLAYER_UUID, "");
         // CRON-COMPLETIONIST-19: cognitive look-target defaults to NaN (no target).
         // Float.NaN is a valid float and syncs cleanly. The renderer checks isNaN.
         this.entityData.define(DATA_LOOK_TARGET_X, Float.NaN);
@@ -254,6 +270,42 @@ public class EntityCultivator extends PathfinderMob {
     /** CRON-COMPLETIONIST-50: Sets the sect/faction ID (called during initialization). */
     public void setSectId(String sectId) {
         this.entityData.set(DATA_SECT, sectId);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-102: Get the UUID of the player this cultivator is
+     * following as a companion. Returns an empty string if not following
+     * anyone (the default for all canon NPCs except revived Li Muwan).
+     *
+     * @return the following player's UUID string, or empty if not following
+     */
+    public String getFollowingPlayerUuid() {
+        return this.entityData.get(DATA_FOLLOWING_PLAYER_UUID);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-102: Set the UUID of the player this cultivator
+     * should follow as a companion. Called by
+     * {@link dev.ergenverse.wanglin.bead.LiMuwanRevivalEvent} when Li Muwan
+     * is revived — she follows Wang Lin ("两人踏天同行").
+     *
+     * <p>Pass an empty string to stop following (clears the companion bond).
+     *
+     * @param playerUuid the player's UUID string, or empty to clear
+     */
+    public void setFollowingPlayerUuid(String playerUuid) {
+        this.entityData.set(DATA_FOLLOWING_PLAYER_UUID, playerUuid == null ? "" : playerUuid);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-102: Check if this cultivator is currently following
+     * a player as a companion.
+     *
+     * @return {@code true} if a following-player UUID is set
+     */
+    public boolean isFollowingPlayer() {
+        String uuid = getFollowingPlayerUuid();
+        return uuid != null && !uuid.isEmpty();
     }
 
     public String getDisplayNameCn() {
@@ -742,6 +794,13 @@ public class EntityCultivator extends PathfinderMob {
         // sets POSE_MEDITATING → triggers CultivatorRobeModel zhan zhuang animation.
         // Previously a dead stub; now fully functional with random duration + cooldown.
         this.goalSelector.addGoal(6, new dev.ergenverse.entity.ai.CultivatorMeditationGoal(this));
+        // CRON-COMPLETIONIST-102: FollowPlayerGoal — companion follow AI for
+        // revived Li Muwan. Priority 4 (between CognitionDrivenGoal=3 and
+        // NpcReactToWorld=5). Always registered but only activates when
+        // isFollowingPlayer() returns true (set by LiMuwanRevivalEvent).
+        // Canon: "两人踏天同行" — Li Muwan follows Wang Lin as his eternal
+        // companion after the successful revival.
+        this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.FollowPlayerGoal(this));
         this.goalSelector.addGoal(7, new net.minecraft.world.entity.ai.goal.RandomStrollGoal(this, 0.35D));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 

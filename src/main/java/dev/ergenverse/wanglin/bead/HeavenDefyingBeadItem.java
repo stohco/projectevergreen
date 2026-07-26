@@ -129,6 +129,28 @@ public class HeavenDefyingBeadItem extends WangLinItem {
     public static final int CANON_REVIVAL_ATTEMPT_CAP = 137;
 
     /**
+     * CRON-COMPLETIONIST-102: Flag indicating Li Muwan has been successfully
+     * revived. Set to {@code true} by {@link RevivalAttemptService#doSuccessfulRevival}
+     * after the World Origin Essence is consumed and Li Muwan spawns as a
+     * living NPC at the player's position.
+     *
+     * <p>Canon basis (web-search verified 2026-07-26): "王林踏入第四步后，
+     * 成功运用一界本源将之复活，此后，两人踏天同行，超越生死轮回"
+     * — after Wang Lin enters the Fourth Step and uses 一界本源 to revive
+     * her, they transcend together. The revived flag marks this permanent
+     * state transition: Li Muwan is no longer a trapped soul — she lives
+     * again as Wang Lin's companion.
+     *
+     * <p>Once set to {@code true}, this flag is NEVER reset. The revival
+     * is irreversible — canon: the world whose origin was extracted is
+     * gone forever, and Li Muwan lives beyond the cycle of life and death.
+     *
+     * <p>NO fabricated chapter citation. The revival is canon-attested;
+     * the exact chapter is NOT cited to avoid fabrication.
+     */
+    public static final String NBT_LI_MUWAN_REVIVED = "Ergen.Bead.LiMuwanRevived";
+
+    /**
      * CRON-COMPLETIONIST-95: A bitfield tracking WHICH of the 9 Parts have
      * been aligned. Bit i corresponds to {@link HeavenDefyingBead.Part}
      * ordinal i (so bit 0 = CORE, bit 1 = METAL, ..., bit 8 = DEEP_MYSTERY_3).
@@ -583,6 +605,18 @@ public class HeavenDefyingBeadItem extends WangLinItem {
                     .withStyle(ChatFormatting.DARK_GRAY)
                     .append(Component.literal(attempts + " / " + CANON_REVIVAL_ATTEMPT_CAP)
                             .withStyle(ChatFormatting.GOLD)));
+
+            // CRON-COMPLETIONIST-102: Revived flag.
+            // Only shown when Li Muwan has been successfully revived — the
+            // endgame state. Displays "Li Muwan: REVIVED" in GOLD+BOLD.
+            if (isLiMuwanRevived(stack)) {
+                tooltip.add(Component.literal("李慕婉：已复活  ·  ")
+                        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
+                        .append(Component.literal("Li Muwan: REVIVED")
+                                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)));
+                tooltip.add(Component.literal("  两人踏天同行，超越生死轮回")
+                        .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+            }
         }
 
         // Available tabs
@@ -772,6 +806,39 @@ public class HeavenDefyingBeadItem extends WangLinItem {
      */
     public void setLastRevivalAttemptTick(ItemStack stack, long tick) {
         stack.getOrCreateTag().putLong(NBT_LAST_REVIVAL_TICK, Math.max(0L, tick));
+    }
+
+    /**
+     * CRON-COMPLETIONIST-102: Check whether Li Muwan has been successfully
+     * revived. Returns {@code false} for beads that have never reached the
+     * success path (the vast majority of beads).
+     *
+     * <p>Once {@code true}, this flag is permanent — the revival is
+     * irreversible (canon: the sacrificed world is gone forever).
+     *
+     * @param stack the bead stack
+     * @return {@code true} if Li Muwan has been revived via the success path
+     */
+    public boolean isLiMuwanRevived(ItemStack stack) {
+        if (stack.isEmpty() || !stack.hasTag()) return false;
+        return stack.getTag().getBoolean(NBT_LI_MUWAN_REVIVED);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-102: Mark Li Muwan as revived. Called ONLY by
+     * {@link RevivalAttemptService#doSuccessfulRevival} after the World
+     * Origin Essence is consumed and Li Muwan spawns as a living NPC.
+     *
+     * <p>This flag is write-once — once set to {@code true}, it is never
+     * reset. Calling this with {@code false} is a no-op if the flag is
+     * already {@code true} (defensive: prevents accidental un-revival).
+     *
+     * @param stack the bead stack
+     * @param revived {@code true} to mark Li Muwan as revived
+     */
+    public void setLiMuwanRevived(ItemStack stack, boolean revived) {
+        if (!revived) return;  // write-once: can't un-revive
+        stack.getOrCreateTag().putBoolean(NBT_LI_MUWAN_REVIVED, true);
     }
 
     /** Get the Samsara incarnation count stored in the bead. */

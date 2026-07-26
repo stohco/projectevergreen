@@ -388,10 +388,21 @@ public final class RevivalAttemptService {
      * subject ({@link #SUBJECT_REVIVAL_ESSENCE_CONSUMED}) to distinguish
      * the essence-sacrifice beat from the general success beat.
      *
-     * <p>This method does NOT remove Li Muwan's soul from the bead —
-     * the soul remains as a permanent record. Instead, it sets a new
-     * NBT flag (TODO: future CRON) and displays the canon-faithful
-     * success message. The successful revival is the ENDGAME event.
+     * <p><b>CRON-COMPLETIONIST-102:</b> This method now also marks Li
+     * Muwan as revived on the bead (write-once NBT flag
+     * {@link HeavenDefyingBeadItem#NBT_LI_MUWAN_REVIVED}) and spawns Li
+     * Muwan as a living {@link dev.ergenverse.entity.EntityCultivator} at
+     * the player's position via {@link LiMuwanRevivalEvent#spawnAtPlayer}.
+     * She is configured as a companion: her cultivation realm is set to
+     * TRANSCENDENCE (踏天境), her HP is set to a high value (canon: 弹指灭天),
+     * and her following-player UUID is set to the player's UUID (activating
+     * the {@link dev.ergenverse.entity.ai.FollowPlayerGoal} — she follows
+     * Wang Lin, "两人踏天同行").
+     *
+     * <p>This method does NOT remove Li Muwan's soul flag from the bead —
+     * the soul flag remains as a permanent record alongside the revived
+     * flag. The revived flag distinguishes "soul captured" (CRON-99) from
+     * "soul revived" (CRON-102).
      */
     private static boolean doSuccessfulRevival(ServerPlayer player,
                                                 HeavenDefyingBeadItem beadItem,
@@ -467,6 +478,23 @@ public final class RevivalAttemptService {
                         + "World Origin Essence consumed from world「{}」). "
                         + "This is the endgame event of Wang Lin's central arc.",
                 player.getName().getString(), sourceWorld);
+
+        // CRON-COMPLETIONIST-102: Mark Li Muwan as revived on the bead
+        // (write-once flag — permanent record of the endgame event).
+        beadItem.setLiMuwanRevived(stack, true);
+
+        // CRON-COMPLETIONIST-102: Spawn Li Muwan as a living NPC at the
+        // player's position. She follows Wang Lin as his eternal companion
+        // ("两人踏天同行"). This is the emotional capstone of the Li Muwan arc.
+        boolean spawned = LiMuwanRevivalEvent.spawnAtPlayer(player, currentTick);
+        if (!spawned) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CRON-102: Li Muwan spawn failed — the "
+                    + "revival succeeded but she did not appear as an NPC. The bead's "
+                    + "revived flag is set; a future chunk reload may materialize her.");
+            player.sendSystemMessage(Component.literal(
+                    "李慕婉的灵魂已回归天地，但她的形体尚未凝聚。她会在你身边的某处出现。")
+                    .withStyle(ChatFormatting.YELLOW, ChatFormatting.ITALIC));
+        }
 
         return true;
     }
