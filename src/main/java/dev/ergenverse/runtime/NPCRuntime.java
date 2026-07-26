@@ -69,6 +69,25 @@ public final class NPCRuntime {
         register(CanonUUID.LI_MUWAN, "Li Muwan 李慕婉",
                 PlanetSuzakuBlueprint.LUO_HE_SECT.x,
                 PlanetSuzakuBlueprint.LUO_HE_SECT.z);
+        // CRON-103 canon-faithful death state: in the novel, Li Muwan perishes
+        // when her Nascent Soul (元婴) formation fails — she is DEAD before
+        // Wang Lin's revival arc. The mod previously registered her as a
+        // living NPC at Luo He Sect from day 0, contradicting canon. She is
+        // now flagged deadUntilRevived=true; CanonActorMaterializer refuses
+        // to materialize her until the revival event clears the flag (and
+        // persists the revived state via WorldDeltaStore.markActorRevived).
+        //
+        // Canon sources (web-search verified 2026-07-26, multiple sources):
+        //   - "李慕婉结婴失败寿尽而亡" — Li Muwan perishes when her Nascent
+        //     Soul formation fails.
+        //   - "王林将李慕婉的元婴收入天逆珠" — Wang Lin captures her Nascent
+        //     Soul into the Heaven-Defying Bead (CRON-99 implements this).
+        //   - The revival arc spans hundreds of chapters; she is NOT alive
+        //     between her death and the revival event.
+        ActorState liMuwanState = actors.get(CanonUUID.LI_MUWAN);
+        if (liMuwanState != null) {
+            liMuwanState.deadUntilRevived = true;
+        }
         register(CanonUUID.WANG_ZHUO, "Wang Zhuo 王卓",
                 PlanetSuzakuBlueprint.HENG_YUE_SECT.x,
                 PlanetSuzakuBlueprint.HENG_YUE_SECT.z);
@@ -129,6 +148,26 @@ public final class NPCRuntime {
         return materialized.contains(canonUuid);
     }
 
+    /**
+     * Mark an actor as alive (clear the {@code deadUntilRevived} flag).
+     * Called by {@link dev.ergenverse.wanglin.bead.LiMuwanRevivalEvent}
+     * when the revival event fires, and by
+     * {@link dev.ergenverse.runtime.WorldRuntime#initialize} when applying
+     * the persisted {@link dev.ergenverse.runtime.delta.WorldDeltaStore#revivedActorUuids()}
+     * set on world load.
+     *
+     * <p>CRON-103: this is the in-memory companion to
+     * {@link dev.ergenverse.runtime.delta.WorldDeltaStore#markActorRevived}.
+     * The flag is in-memory only; the persistence channel is the revived set
+     * in the delta store.
+     */
+    public void markActorAlive(UUID canonUuid) {
+        ActorState state = actors.get(canonUuid);
+        if (state != null) {
+            state.deadUntilRevived = false;
+        }
+    }
+
     /** Get an actor's simulation state by canon UUID. */
     public ActorState getActor(UUID canonUuid) {
         return actors.get(canonUuid);
@@ -145,11 +184,25 @@ public final class NPCRuntime {
     /**
      * ActorState — the persistent simulation state of a canon NPC.
      * This survives chunk unload/reload. Only the Minecraft entity is ephemeral.
+     *
+     * <p>CRON-103: the {@code deadUntilRevived} flag gates materialization.
+     * For Li Muwan, it is set to {@code true} at registration (she is dead
+     * before the revival arc) and cleared when the revival event fires.
+     * The persistence channel is
+     * {@link dev.ergenverse.runtime.delta.WorldDeltaStore#markActorRevived};
+     * on world load, {@link dev.ergenverse.runtime.WorldRuntime#initialize}
+     * applies the revived set to clear the flag for revived actors.
      */
     public static final class ActorState {
         public final UUID canonUuid;
         public final String name;
         public int x, z; // current position (changes as the NPC moves)
+        /**
+         * If true, the actor is canonically dead and CanonActorMaterializer
+         * will refuse to materialize them. Cleared by the revival event
+         * (CRON-103) or by the persisted revived-set on world load.
+         */
+        public boolean deadUntilRevived = false;
         // TODO: inventory, cultivation state, memories, relationships, schedule
 
         ActorState(UUID canonUuid, String name, int x, int z) {

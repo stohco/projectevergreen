@@ -81,6 +81,31 @@ public final class CanonActorMaterializer implements ActorMaterializer {
         NPCRuntime.ActorState state = runtime.npcs().getActor(canonUuid);
         if (state == null) return -1;
 
+        // CRON-103: canon-faithful death gate. If the actor is flagged
+        // deadUntilRevived (e.g. Li Muwan before the revival event), refuse
+        // to materialize. The revival event clears the flag and persists the
+        // revived state via WorldDeltaStore.markActorRevived, so on world
+        // reload the persisted revived-set is applied to clear the flag.
+        //
+        // This is the canon-faithful behavior: Li Muwan is DEAD before the
+        // revival arc (she perishes when her Nascent Soul formation fails).
+        // She does NOT roam Luo He Sect as a living NPC from day 0. The
+        // revival event (CRON-102) is the sole mechanism that brings her
+        // back as a living EntityCultivator.
+        //
+        // Note: if an entity with this UUID already exists in the level
+        // (from a pre-CRON-103 save where she was materialized before the
+        // flag existed), we DO NOT discard it here — the entity lingers
+        // until natural chunk unload, then dematerializes, and subsequent
+        // materialization calls correctly refuse. This is the safest
+        // migration path for existing saves.
+        if (state.deadUntilRevived) {
+            Ergenverse.LOGGER.debug("[Ergenverse] CanonActorMaterializer: refusing to materialize {} "
+                    + "(canon UUID {}) — deadUntilRevived=true. Wait for the revival event.",
+                    state.name, canonUuid);
+            return -1;
+        }
+
         // If an entity with this canon UUID already exists in the level, don't double-spawn.
         net.minecraft.world.entity.Entity existing = findEntityByUuid(canonUuid);
         if (existing != null && existing.isAlive()) {

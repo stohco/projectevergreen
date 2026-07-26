@@ -105,6 +105,20 @@ public final class SpawnEventHandler {
         if (!(event.getEntity() instanceof ServerPlayer sp)) return;
         if (sp.server == null) return;
 
+        // CRON-103: migrate Li Muwan's revived flag from bead NBT to the
+        // WorldDeltaStore's revived-actor set, if needed. This is a one-time
+        // migration for pre-CRON-103 saves where the player had already
+        // revived Li Muwan but the revived-actor set didn't exist yet. Runs
+        // for ALL logins (first-join and returning); idempotent. Must run
+        // AFTER WorldRuntime.initialize (which runs on ServerStartingEvent,
+        // before any player logs in).
+        try {
+            dev.ergenverse.wanglin.bead.LiMuwanRevivalEvent.migrateRevivedFlagIfNeeded(sp);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CRON-103: Li Muwan revived-flag migration failed for {}: {}",
+                    sp.getName().getString(), t.getMessage());
+        }
+
         boolean firstJoin = !sp.getPersistentData().getBoolean(NBT_SUZAKU_TELEPORTED);
         if (!firstJoin) return; // returning player — they're already on Suzaku
 

@@ -171,6 +171,12 @@ public final class WorldRuntime {
         //    deltaStore from NBT, so PLAYER/SIMULATION changes survive reload.
         try {
             this.savedData = WorldDeltaSavedData.getOrCreate(suzakuLevel, deltaStore);
+            // CRON-103: wire the dirty callback so subsequent mutations to the
+            // delta store mark the SavedData dirty. Without this, block changes
+            // recorded after the first world save would never persist (the
+            // SavedData would not be re-saved). This fixes a pre-existing
+            // persistence gap that prior rounds missed.
+            this.deltaStore.setDirtyCallback(() -> this.savedData.setDirty());
         } catch (Throwable t) {
             Ergenverse.LOGGER.error("[Ergenverse] WorldDeltaSavedData load failed: {}", t.getMessage(), t);
         }
@@ -188,6 +194,30 @@ public final class WorldRuntime {
         memory.loadAll();
         cultivation.loadAll();
         economy.loadAll();
+
+        // 6b. CRON-103: apply the persisted revived-actor set to the NPC
+        //     runtime. Actors marked as revived in a prior session (e.g. Li
+        //     Muwan after CRON-102's revival event) have their
+        //     deadUntilRevived flag cleared here, so CanonActorMaterializer
+        //     will materialize them normally. Without this, a revived Li
+        //     Muwan would be re-flagged as dead on every world reload.
+        try {
+            java.util.Set<java.util.UUID> revived = deltaStore.revivedActorUuids();
+            if (!revived.isEmpty()) {
+                Ergenverse.LOGGER.info("[Ergenverse] CRON-103: applying {} persisted revived-actor UUID(s) to NPCRuntime.",
+                        revived.size());
+                for (java.util.UUID uuid : revived) {
+                    npcs.markActorAlive(uuid);
+                    NPCRuntime.ActorState s = npcs.getActor(uuid);
+                    if (s != null) {
+                        Ergenverse.LOGGER.info("[Ergenverse] CRON-103: actor '{}' (canon UUID {}) marked ALIVE "
+                                + "(revived state restored from prior session).", s.name, uuid);
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CRON-103: failed to apply revived-actor set: {}", t.getMessage());
+        }
 
         // 7. Start event bus + weather
         events.start();

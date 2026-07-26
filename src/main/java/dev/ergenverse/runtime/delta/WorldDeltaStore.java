@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * WorldDeltaStore — the simulation's journal of every change since day 0.
@@ -62,12 +65,49 @@ public final class WorldDeltaStore {
     /** Journal of all non-block, non-entity deltas (actor moves, relationships, memories, …). */
     private final List<WorldDelta> journal = new ArrayList<>();
 
+    /**
+     * Set of canon actor UUIDs that have been permanently revived (e.g. Li
+     * Muwan after CRON-103). These persist across reloads so a revived actor
+     * stays alive. This is the persistence channel for the
+     * {@code deadUntilRevived} flag on {@link dev.ergenverse.runtime.NPCRuntime.ActorState}.
+     *
+     * <p>CRON-103: prior to this round, Li Muwan was registered as a living
+     * NPC at Luo He Sect from day 0 — contradicting canon (she is DEAD before
+     * the revival arc). CRON-103 marks her {@code deadUntilRevived=true} at
+     * registration; the revival event writes her UUID into this set, which
+     * clears the flag on the next {@code loadAll}. The set is serialized
+     * alongside the delta journal so it survives world reload.
+     */
+    private final Set<UUID> revivedActorUuids = new HashSet<>();
+
+    /**
+     * Dirty callback — invoked whenever the store is mutated. Set by
+     * {@link dev.ergenverse.runtime.WorldRuntime#initialize} to
+     * {@code () -> savedData.setDirty()} so Minecraft knows to persist the
+     * journal on the next world save. Without this, mutations after the
+     * initial save would be lost.
+     *
+     * <p>CRON-103: this fixes a pre-existing persistence gap. Prior rounds
+     * mutated the store via {@link #record} but never marked the SavedData
+     * dirty — so block changes after the first world save were silently
+     * dropped. This callback is invoked from {@link #record} and
+     * {@link #markActorRevived} to ensure ALL mutations persist.
+     */
+    private Runnable dirtyCallback = () -> {};
+
     public WorldDeltaStore() {
         for (Provenance p : Provenance.values()) {
             blockIndex.put(p, new HashMap<>());
             entityIndex.put(p, new HashMap<>());
         }
     }
+
+    /**
+     * Set the dirty callback — invoked whenever the store is mutated. Called
+     * once by {@link dev.ergenverse.runtime.WorldRuntime#initialize} after
+     * the {@link dev.ergenverse.runtime.persist.WorldDeltaSavedData} is bound.
+     */
+    public void setDirtyCallback(Runnable cb) { this.dirtyCallback = cb; }
 
     // ── Recording ───────────────────────────────────────────────────────
 
@@ -91,6 +131,35 @@ public final class WorldDeltaStore {
         } else {
             journal.add(delta);
         }
+        dirtyCallback.run();
+    }
+
+    // ── Revived-actor tracking (CRON-103) ───────────────────────────────
+
+    /**
+     * Mark a canon actor as permanently revived. Used by
+     * {@link dev.ergenverse.wanglin.bead.LiMuwanRevivalEvent} when Li Muwan
+     * is revived — her {@code deadUntilRevived} flag on
+     * {@link dev.ergenverse.runtime.NPCRuntime.ActorState} is cleared, and
+     * her UUID is written here so the revived state survives world reload.
+     *
+     * <p>Idempotent: re-marking an already-revived actor is a no-op.
+     */
+    public synchronized void markActorRevived(UUID uuid) {
+        if (uuid == null) return;
+        if (revivedActorUuids.add(uuid)) {
+            dirtyCallback.run();
+        }
+    }
+
+    /** True if the actor has been permanently revived. */
+    public synchronized boolean isActorRevived(UUID uuid) {
+        return revivedActorUuids.contains(uuid);
+    }
+
+    /** Immutable view of all revived actor UUIDs. */
+    public synchronized Set<UUID> revivedActorUuids() {
+        return Collections.unmodifiableSet(new HashSet<>(revivedActorUuids));
     }
 
     // ── Block queries (used by the layers) ──────────────────────────────
@@ -190,6 +259,7 @@ public final class WorldDeltaStore {
         for (Provenance p : Provenance.values()) blockIndex.get(p).clear();
         for (Provenance p : Provenance.values()) entityIndex.get(p).clear();
         journal.clear();
+        revivedActorUuids.clear();
     }
 
     // ── NBT persistence ─────────────────────────────────────────────────
@@ -212,6 +282,16 @@ public final class WorldDeltaStore {
             list.add(WorldDeltaCodec.toNbt(d));
         }
         tag.put("deltas", list);
+
+        // Revived actors (CRON-103) — a ListTag of UUID strings.
+        ListTag revivedList = new ListTag();
+        for (UUID uuid : revivedActorUuids) {
+            CompoundTag entry = new CompoundTag();
+            entry.putUUID("uuid", uuid);
+            revivedList.add(entry);
+        }
+        tag.put("revived_actors", revivedList);
+
         return tag;
     }
 
@@ -222,6 +302,19 @@ public final class WorldDeltaStore {
         for (int i = 0; i < list.size(); i++) {
             WorldDelta d = WorldDeltaCodec.fromNbt(list.getCompound(i));
             if (d != null) record(d);
+        }
+
+        // Revived actors (CRON-103).
+        ListTag revivedList = tag.getList("revived_actors", Tag.TAG_COMPOUND);
+        for (int i = 0; i < revivedList.size(); i++) {
+            CompoundTag entry = revivedList.getCompound(i);
+            try {
+                if (entry.hasUUID("uuid")) {
+                    revivedActorUuids.add(entry.getUUID("uuid"));
+                }
+            } catch (Throwable t) {
+                // Defensive: skip malformed entries rather than failing the whole load.
+            }
         }
     }
 }

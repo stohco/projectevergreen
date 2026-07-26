@@ -7,10 +7,12 @@ import dev.ergenverse.history.HistoryManager;
 import dev.ergenverse.runtime.CanonUUID;
 import dev.ergenverse.runtime.NPCRuntime;
 import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.core.BlockPos;
 
@@ -70,14 +72,17 @@ import net.minecraft.core.BlockPos;
  *
  * <h2>Mod-Fidelity Bridges (documented honestly)</h2>
  * <ul>
- *   <li><b>Li Muwan is alive at Luo He Sect from day 0.</b> In canon, Li
- *       Muwan is DEAD before the revival — she perishes when her Nascent
- *       Soul formation fails. The mod has her registered as a living NPC
- *       at Luo He Sect from the start (NPCRuntime.loadAll). This is a
- *       pre-existing mod-fidelity issue. CRON-102 handles it by
- *       dematerializing the existing entity and re-materializing her at
- *       the player's position. A future CRON should make her "dead" (not
- *       materialized) until the revival event fires.</li>
+ *   <li><b>Li Muwan is no longer alive at Luo He Sect from day 0 (CRON-103 closed this gap).</b>
+ *       Prior to CRON-103, Li Muwan was registered as a living NPC at Luo He Sect
+ *       from the start (NPCRuntime.loadAll), contradicting canon (she is DEAD
+ *       before the revival arc — she perishes when her Nascent Soul formation
+ *       fails). CRON-103 marks her {@code deadUntilRevived=true} at registration;
+ *       CanonActorMaterializer refuses to materialize her until this event fires.
+ *       This event clears the flag and persists the revived state via
+ *       {@link WorldDeltaStore#markActorRevived}, so on world reload the
+ *       revived-actor set is applied to keep her alive. Pre-CRON-103 saves
+ *       (where the bead is already revived but the revived-set is empty) are
+ *       migrated by {@link #migrateRevivedFlagIfNeeded} on player login.</li>
  *   <li><b>HP is not set to a canon-attested value.</b> Canon: Li Muwan's
  *       post-revival power is "弹指灭天" (destroys heaven with a flick).
  *       The mod sets her HP to 1000 (a high value representing her
@@ -189,6 +194,27 @@ public final class LiMuwanRevivalEvent {
         state.x = playerX;
         state.z = playerZ;
 
+        // 4b. CRON-103: persist the revived state and clear the deadUntilRevived
+        //     flag. Without this, CanonActorMaterializer would refuse to
+        //     materialize her (step 5 below would return -1). The markActorRevived
+        //     call writes her UUID into the WorldDeltaStore's revived-actor set,
+        //     which is serialized to NBT on world save. On world reload,
+        //     WorldRuntime.initialize applies the revived set to clear the
+        //     deadUntilRevived flag for revived actors — so a revived Li Muwan
+        //     stays alive across reloads.
+        try {
+            runtime.deltaStore().markActorRevived(CanonUUID.LI_MUWAN);
+            runtime.npcs().markActorAlive(CanonUUID.LI_MUWAN);
+            Ergenverse.LOGGER.info("[Ergenverse] CRON-103: marked Li Muwan as revived in WorldDeltaStore "
+                    + "(persisted) and cleared deadUntilRevived flag in NPCRuntime.");
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CRON-103: failed to persist revived-actor state: {}",
+                    t.getMessage());
+            // Non-fatal: we still attempt the materialization below. If it
+            // fails because deadUntilRevived is still true, the failure path
+            // below handles it. The next revival attempt will retry the persist.
+        }
+
         // 5. Materialize Li Muwan at the player's position.
         int entityId = runtime.npcs().materializeActor(CanonUUID.LI_MUWAN, runtime);
         if (entityId < 0) {
@@ -286,5 +312,75 @@ public final class LiMuwanRevivalEvent {
             }
         }
         return null;
+    }
+
+    /**
+     * CRON-103: Migration helper for pre-CRON-103 saves.
+     *
+     * <p>Prior to CRON-103, Li Muwan was registered as a living NPC at Luo He
+     * Sect from day 0 (no {@code deadUntilRevived} flag). A player who revived
+     * her in a pre-CRON-103 save has a bead with {@code NBT_LI_MUWAN_REVIVED=true}
+     * but the new {@link WorldDeltaStore#revivedActorUuids()} set is empty
+     * (because the old code never wrote to it). On world reload with CRON-103,
+     * Li Muwan would be re-flagged as dead and refuse to materialize — a
+     * regression for that save.
+     *
+     * <p>This method scans the player's inventory (main + offhand) for a
+     * Heaven-Defying Bead with {@code NBT_LI_MUWAN_REVIVED=true}. If found
+     * AND {@link WorldDeltaStore#isActorRevived} returns false for Li Muwan,
+     * the method writes her UUID into the revived-actor set (persisting it)
+     * and clears her {@code deadUntilRevived} flag in the NPCRuntime.
+     *
+     * <p>Idempotent: if the revived-actor set already contains Li Muwan, this
+     * is a no-op. Safe to call on every player login.
+     *
+     * <p>Called from {@link dev.ergenverse.spawn.SpawnEventHandler#onPlayerLogin}
+     * after the WorldRuntime is initialized. This is a one-time migration —
+     * once the revived-actor set is populated, subsequent logins skip the work.
+     *
+     * @param player the server player whose inventory to scan
+     * @return true if a migration was performed (revived-actor set was empty
+     *         and is now populated); false if no migration was needed
+     */
+    public static boolean migrateRevivedFlagIfNeeded(ServerPlayer player) {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+
+            // If Li Muwan is already marked revived in the delta store, no migration needed.
+            if (runtime.deltaStore().isActorRevived(CanonUUID.LI_MUWAN)) {
+                return false;
+            }
+
+            // Scan the player's inventory for a Heaven-Defying Bead with NBT_LI_MUWAN_REVIVED=true.
+            boolean foundRevivedBead = false;
+            net.minecraft.world.entity.player.Inventory inv = player.getInventory();
+            for (int i = 0; i < inv.getContainerSize(); i++) {
+                ItemStack stack = inv.getItem(i);
+                if (stack.isEmpty()) continue;
+                if (!(stack.getItem() instanceof HeavenDefyingBeadItem bead)) continue;
+                if (bead.isLiMuwanRevived(stack)) {
+                    foundRevivedBead = true;
+                    break;
+                }
+            }
+
+            if (!foundRevivedBead) return false;
+
+            // Migration: write Li Muwan's UUID into the revived-actor set and clear the flag.
+            runtime.deltaStore().markActorRevived(CanonUUID.LI_MUWAN);
+            runtime.npcs().markActorAlive(CanonUUID.LI_MUWAN);
+            Ergenverse.LOGGER.info("[Ergenverse] CRON-103: migrated Li Muwan's revived state from bead NBT "
+                    + "to WorldDeltaStore (pre-CRON-103 save detected for player {}).",
+                    player.getName().getString());
+            player.sendSystemMessage(Component.literal(
+                    "李慕婉的复活状态已迁移至世界存档。")
+                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+            return true;
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.warn("[Ergenverse] CRON-103: migrateRevivedFlagIfNeeded failed: {}",
+                    t.getMessage());
+            return false;
+        }
     }
 }
