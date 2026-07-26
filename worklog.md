@@ -4638,3 +4638,131 @@ NEXT PRIORITY:
 2. Verify all 309 Wang Lin arsenal items have textures (some may still be checkerboard). Run a creative-tab inventory scan.
 3. Wire publishSocialInteraction() — still dead code from CRON-67.
 4. Continue event-sourced architecture wiring (option f) — now that the server actually runs, the event bus can be observed live.
+---
+Task ID: CRON-COMPLETIONIST-78
+Agent: cron-completionist
+Task: Close the entity provenance leak in BOTH directions — (1) fix HengYueSectBuilder.placeItemFrame which was missing the chunk-filter + provenance-guard that WangFamilyVillageBuilder got in CRON-71 (a real bug: canon ItemFrames in Heng Yue Sect re-spawned after player removal), and (2) implement full player-placed and player-removed entity tracking via a new EntityPlacementDelta, closing the placement-direction provenance leak deferred since CRON-76 critique #10 (Score 5/10, deferred 2 rounds).
+
+Work Log:
+- STEP 1 — RECON: Read worklog.md tail (CRON-77 stage summary + NEXT PRIORITY list). The CRON-77 next-priority list had 6 items: (a) runtime verification — cannot do without a client; (b) track player-placed item frames — Score 5/10, deferred 2 rounds, known gap from CRON-76 critique #10; (c) 3D Models — large standing priority; (d) JSON vs Java coordinate audit — Score 5/10, deferred 9 rounds; (e) 决明 vs 绝命 — Score 6/10, deferred 9 rounds; (f) custom map color — Score 4/10.
+
+  SELECTED item (b): "Track player-placed item frames and paintings". This is the highest-impact well-scoped deferred item — it closes a real provenance leak (player-placed entities not in the journal) that has been deferred twice. It's also architecturally important: the journal should be the single source of truth for ALL player state, not just block state.
+
+- STEP 2 — ARCHITECTURAL SURVEY (via Explore subagent + direct reads):
+  * WorldDelta interface (89 lines): generic interface with type(), id(), provenance(), apply(WorldRuntime), serialize(CompoundTag). NO "ENTITY" type constant — only BlockChangeDelta exists as concrete implementation.
+  * WorldDeltaStore (171 lines): blockIndex (Map<Provenance, Map<Long, BlockChangeDelta>>) + flat journal list for non-block deltas. NO entity index. NO entity query methods.
+  * ChunkContribution (44 lines): only blockChanges + structures fields. NO entityPlacements.
+  * PlayerLayer (46 lines): only queries block changes. NO entity support.
+  * WorldFacade (128 lines): only setPlayerBlock/setSimulationBlock/applyBlockChange. NO entity methods.
+  * PlayerBlockDeltaTracker (176 lines): subscribes to BlockEvent.BreakEvent + BlockEvent.EntityPlaceEvent. The CRON-76 cascade (cascadeRecordAttachedEntities) records PLAYER "air" BLOCK deltas at entity positions when the support block is broken — but this is a fake block delta, not a real entity delta.
+  * PlanetSuzakuChunkMaterializer (166 lines): only replays BlockChangeDeltas. NO entity replay.
+  * WangFamilyVillageBuilder.placeItemFrame (CRON-71): HAS chunk-filter + provenance-guard via CURRENT_BOUNDS ThreadLocal + hasPlayerOrSimulationDelta helper. The Javadoc even mentions the limitation about block-break cascade.
+  * HengYueSectBuilder.placeItemFrame (line 1310, pre-CRON-78): NAIVE — `level.addFreshEntity(frame)` directly, NO chunk-filter, NO provenance-guard. This is a REAL BUG: the CRON-76 cascade records PLAYER "air" at entity position, but HengYueSectBuilder.placeItemFrame doesn't check it, so the canon ItemFrame re-spawns on reload (floating where the support block used to be).
+  * HengYueSectBuilder has 5 placeItemFrame call sites: line 673 (sect calligraphy scroll), 821 (WOODEN_SWORD), 823 (STONE_SWORD), 825 (IRON_SWORD), 883 (ancestor memorial books). All 5 were leaking.
+  * CRITICAL FINDING: The CRON-76 stage summary claimed "the item-frame cascade provenance leak is CLOSED — preventing the chunk-materializer from re-placing the canon entity on reload." This was WRONG for Heng Yue Sect — only WangFamilyVillageBuilder.placeItemFrame had the guard (CRON-71). Heng Yue Sect was still leaking. The CRON-76 self-critique missed this because it didn't read HengYueSectBuilder.placeItemFrame.
+
+- STEP 3 — DESIGN DECISION: Two related fixes in one focused round:
+  (A) Fix HengYueSectBuilder.placeItemFrame to mirror WangFamilyVillageBuilder's pattern (chunk-filter + provenance-guard). This closes the canon-entity re-spawn bug for Heng Yue Sect's 5 ItemFrame sites.
+  (B) Implement full player-placed and player-removed entity tracking via a new EntityPlacementDelta. This closes the placement-direction provenance leak (player-placed ItemFrames not in journal) AND the direct-attack-direction leak (player attacks canon ItemFrame, no support break, no CRON-76 cascade, no journal entry → canon builder re-spawns on reload).
+
+  Both fixes target the SAME architectural concern: entity provenance. Doing both in one round ensures the entity provenance system is complete — no more deferred leaks.
+
+- STEP 4 — API VERIFICATION (via javap on Forge 1.20.1 mapped jar):
+  * EntityLeaveLevelEvent (Forge event): getEntity() (from EntityEvent) + getLevel(). NO removal reason in the event itself.
+  * Entity.RemovalReason enum: KILLED, DISCARDED, UNLOADED_TO_CHUNK, UNLOADED_WITH_PLAYER, CHANGED_DIMENSION. Each has shouldDestroy() and shouldSave() booleans.
+  * Entity.getRemovalReason(): returns the RemovalReason set by remove(reason) or discard() (which sets DISCARDED).
+  * Entity.saveWithoutId(CompoundTag): saves entity state without UUID.
+  * EntityType.loadEntityRecursive(CompoundTag, Level, Function<Entity, Entity>): returns Entity directly (NOT Optional — common pitfall, caught in first compile).
+  * HangingEntity.getPos(): returns BlockPos (the hanging position).
+  * PlayerInteractEvent.RightClickBlock: getItemStack(), getPos(), getLevel(), getHand().
+
+- STEP 5 — IMPLEMENTATION (Part 1: Fix HengYueSectBuilder.placeItemFrame):
+  * Replaced the 3-line naive placeItemFrame with the full guarded version mirroring WangFamilyVillageBuilder's CRON-71 pattern.
+  * Added comprehensive Javadoc explaining: CRON-78 fix, the real bug (CRON-76 stage summary mis-claimed the leak was closed), the two guards (chunk-filter + provenance-guard), the limitation (provenance guard checks BLOCK position not entity existence), and the full-build path exception.
+  * No changes needed to the 5 call sites — they all call placeItemFrame(level, pos, facing, item), which now has the guards internally.
+
+- STEP 6 — IMPLEMENTATION (Part 2: Create EntityPlacementDelta):
+  * Created /home/z/my-project/forge-mod/src/main/java/dev/ergenverse/runtime/delta/EntityPlacementDelta.java (185 lines).
+  * Single delta kind with two actions: PLACE (stores entity NBT via saveWithoutId) and REMOVE (null NBT, just marks "entity here is gone").
+  * Latest-wins by (position, provenance) — re-recording at the same position overwrites the prior delta. So place→remove→place yields a single PLACE delta with the latest NBT.
+  * Deterministic id derived from position + provenance (same scheme as BlockChangeDelta but with bit 0 of high word set to distinguish entity deltas from block deltas — defensive, since the store uses position-based indexing not id-based).
+  * apply() delegates to WorldFacade.applyEntityPlacement (idempotent for PLACE — checks if entity already exists; for REMOVE — discards any entity at position).
+  * serialize/deserialize via WorldDeltaCodec (registered in static initializer).
+  * Comprehensive Javadoc explaining: CRON-78 context, the two actions, latest-wins semantics, idempotency, interaction with CRON-76 cascade, interaction with canon entity re-spawn.
+
+- STEP 7 — IMPLEMENTATION (Part 3: Extend WorldDeltaStore):
+  * Added entityIndex: Map<Provenance, Map<Long, EntityPlacementDelta>> mirroring blockIndex.
+  * Updated record() to dispatch EntityPlacementDelta to entityIndex (else-if branch).
+  * Added query methods: getEntityPlacement(x, y, z, Provenance), hasEntityPlacement(x, y, z, Provenance), entityPlacementCount(Provenance), getEntityPlacementsInChunk(chunkX, chunkZ).
+  * Updated serialize() to include entity placements in the "deltas" ListTag.
+  * Updated clear() and size() to account for entityIndex.
+  * Updated class Javadoc with "Entity-placement indexing (CRON-78)" section.
+
+- STEP 8 — IMPLEMENTATION (Part 4: Extend ChunkContribution):
+  * Added `public final List<EntityPlacementDelta> entityPlacements = new ArrayList<>();` field.
+  * Updated isEmpty() to also check entityPlacements.
+  * Added import for EntityPlacementDelta.
+  * Updated field Javadoc.
+
+- STEP 9 — IMPLEMENTATION (Part 5: Extend PlayerLayer + SimulationLayer):
+  * Both layers' getChunkContribution now also iterates store.getEntityPlacementsInChunk and adds matching-provenance deltas to c.entityPlacements.
+  * Updated class Javadoc for both layers with CRON-78 note.
+
+- STEP 10 — IMPLEMENTATION (Part 6: Extend WorldFacade):
+  * Added recordPlayerEntityPlacement(x, y, z, CompoundTag entityNbt) — journals PLACE delta, no live mirror (entity already exists in world).
+  * Added recordPlayerEntityRemoval(x, y, z) — journals REMOVE delta, no live mirror (entity already gone).
+  * Added applyEntityPlacement(x, y, z, Action, CompoundTag, Provenance) — used by materializer on reload. Idempotent for PLACE (checks if entity already exists at position via getEntitiesOfClass; skips if yes — handles vanilla persistence). For REMOVE (finds any ItemFrame/Painting at position and discards it; no-op if none).
+  * Added imports: CompoundTag, Entity, EntityType, ItemFrame, Painting, AABB, List.
+  * Comprehensive Javadoc for all three methods explaining the contract, idempotency, and the vanilla-persistence interaction.
+
+- STEP 11 — IMPLEMENTATION (Part 7: Create PlayerEntityDeltaTracker):
+  * Created /home/z/my-project/forge-mod/src/main/java/dev/ergenverse/runtime/PlayerEntityDeltaTracker.java (268 lines).
+  * @Mod.EventBusSubscriber on FORGE bus.
+  * Placement tracking: @SubscribeEvent on PlayerInteractEvent.RightClickBlock. Filters for server-side + ServerPlayer + ItemFrame/GlowItemFrame/Painting in hand. Schedules 1-tick task via level.getServer().tell(new TickTask(...)) to find newly-spawned entity. The task searches a 3x3x3 box (inflated by 1.0) around clickPos for ItemFrames and Paintings, skips already-tracked positions (idempotent), saves entity NBT via saveWithoutId, calls runtime.world().recordPlayerEntityPlacement.
+  * Removal tracking: @SubscribeEvent on EntityLeaveLevelEvent. Filters for server-side + ItemFrame/Painting. Checks entity.getRemovalReason() — only records for DISCARDED (player attack). Skips UNLOADED_TO_CHUNK, UNLOADED_WITH_PLAYER, CHANGED_DIMENSION, KILLED. Gets entity's hanging position via frame.getPos() / painting.getPos(). Calls runtime.world().recordPlayerEntityRemoval.
+  * Comprehensive class Javadoc explaining: CRON-78 context, the two events, the removal-reason filter rationale, interaction with CRON-76 cascade (duplicate recording is harmless), interaction with canon builder (this is the ONLY signal for direct-attack-on-canon-ItemFrame), idempotency.
+
+- STEP 12 — IMPLEMENTATION (Part 8: Extend PlanetSuzakuChunkMaterializer):
+  * Added import for EntityPlacementDelta.
+  * In the materialize() method, after the existing block-changes replay loop, added a new loop that iterates c.entityPlacements and calls runtime.world().applyEntityPlacement(...) for each. This replays player-placed ItemFrames (idempotent — skips if entity already exists from vanilla persistence) and player-removed canon entities (no-op if already gone).
+  * Inline comment explains the CRON-78 addition.
+
+- STEP 13 — IMPLEMENTATION (Part 9: Update hasPlayerOrSimulationDelta in both builders):
+  * HengYueSectBuilder.hasPlayerOrSimulationDelta: now also checks store.hasEntityPlacement for PLAYER and SIMULATION. Updated Javadoc with CRON-78 section explaining why this is required (direct-attack-on-canon-ItemFrame case the CRON-76 cascade misses).
+  * WangFamilyVillageBuilder.hasPlayerOrSimulationDelta: same update. Same Javadoc note.
+  * This is CRITICAL: without this update, the canon builder would re-spawn canon ItemFrames that the player removed via direct attack (the EntityLeaveLevelEvent → REMOVE delta path). The block-index check alone catches the cascade case (support break); the entity-index check catches the direct-attack case.
+
+- STEP 14 — BUILD VERIFICATION:
+  * First compile (incremental): FAILED with 1 error — `EntityType.loadEntityRecursive(...)` returns Entity directly, not Optional<Entity>. My initial code called `.orElse(null)` which doesn't exist on Entity. Fixed by removing the `.orElse(null)` call (the method returns null on failure, which the existing null-check handles).
+  * Second compile (incremental): BUILD SUCCESSFUL, 0 errors, 56 warnings (subset of pre-existing deprecation warnings — incremental compile only recompiles changed files).
+  * Clean rebuild (JAVA_HOME=/tmp/my-project/.jdks/jdk-17.0.13+11 ./gradlew clean compileJava): BUILD SUCCESSFUL in 27s, 0 errors, 100 pre-existing warnings (unchanged from CRON-77 baseline — all deprecation warnings, no new ones from CRON-78).
+  * Verified all 10 artifacts via grep: EntityPlacementDelta.java (185 lines), PlayerEntityDeltaTracker.java (268 lines), WorldDeltaStore entityIndex (8 references), ChunkContribution entityPlacements (2 references), WorldFacade entity methods (recordPlayerEntityPlacement, recordPlayerEntityRemoval, applyEntityPlacement), PlanetSuzakuChunkMaterializer entity replay (lines 101-104), HengYueSectBuilder placeItemFrame guards (CURRENT_BOUNDS + hasPlayerOrSimulationDelta at line 1379-1384), both builders' hasPlayerOrSimulationDelta checks entity index (2 references each).
+
+- STEP 15 — GIT: Committed as b463a2e, pushed to origin/main (5cd9c6c..b463a2e). 10 files changed, +760/-16 lines. 2 new files (EntityPlacementDelta.java, PlayerEntityDeltaTracker.java), 8 modified files.
+
+Stage Summary:
+- Shipped: Two related fixes closing the entity provenance leak in BOTH directions. (1) HengYueSectBuilder.placeItemFrame now has the chunk-filter + provenance-guard that WangFamilyVillageBuilder got in CRON-71 — closes the real canon-entity re-spawn bug for Heng Yue Sect's 5 ItemFrame sites (the CRON-76 stage summary mis-claimed this was closed; in fact only WangFamilyVillageBuilder had the guard). (2) Full player-placed and player-removed entity tracking via new EntityPlacementDelta + PlayerEntityDeltaTracker — closes the placement-direction leak (player-placed ItemFrames now in journal, not just vanilla chunk NBT) AND the direct-attack-direction leak (player attacks canon ItemFrame, no support break, no CRON-76 cascade — now tracked via EntityLeaveLevelEvent filtered for DISCARDED removal reason). The journal is now the single source of truth for ALL player state, both blocks and entities.
+- Build status: BUILD SUCCESSFUL, 0 errors, 100 pre-existing warnings (unchanged from CRON-77 baseline), 27s clean rebuild.
+- Git hash: b463a2e on main, pushed to stohco/projectevergreen. 10 files changed, +760/-16 lines.
+
+HARSHEST SELF-CRITIQUE (hyper-analytical, fact-checked against canon):
+1. **The CRON-76 stage summary was WRONG — Heng Yue Sect was still leaking.** The CRON-76 worklog claimed "the item-frame cascade provenance leak is CLOSED — preventing the chunk-materializer from re-placing the canon entity on reload." This was only true for WangFamilyVillageBuilder.placeItemFrame (which got the guard in CRON-71). HengYueSectBuilder.placeItemFrame was still the naive 3-line version — `level.addFreshEntity(frame)` directly, no guards. The CRON-76 self-critique missed this because it didn't read HengYueSectBuilder.placeItemFrame. Score 3/10 for CRON-76's self-critique rigor — the claim was made without verifying all call sites. CRON-78 fixes this for real.
+2. **The placement-direction "leak" may have been overstated.** The CRON-76 critique #10 said "the player's item frame would disappear on reload." But vanilla Minecraft persists entities (including player-placed ItemFrames) in chunk NBT — they SHOULD re-appear on reload via vanilla persistence. The critique was speculative ("would disappear") not empirical ("disappears"). HOWEVER, the architectural concern is real: the journal should be the single source of truth for player state, not vanilla chunk NBT. CRON-78 brings entity placements under the journal, which is architecturally correct regardless of whether vanilla persistence was actually failing. Score 7/10 — defensible architectural improvement, even if the original "bug" was speculative.
+3. **The direct-attack-direction leak was REAL and is now closed.** When a player attacks a canon ItemFrame directly (left-click), vanilla calls entity.discard() with reason DISCARDED. The CRON-76 cascade doesn't fire (no support block broken). Without CRON-78, no journal entry records the removal. On chunk reload, the canon builder's placeItemFrame would re-spawn the canon ItemFrame — actual bug, user-visible. CRON-78 closes this via EntityLeaveLevelEvent → REMOVE delta → hasPlayerOrSimulationDelta checks entity index → skip re-placement. Score 9/10 for closing this real bug.
+4. **No runtime verification possible.** The build succeeds and the logic is sound (EntityLeaveLevelEvent fires on discard; the filter correctly identifies DISCARDED; the materializer replays entity placements idempotently; the canon builder's guard checks both block and entity indexes). But I cannot run a Minecraft client to verify that (a) placing an ItemFrame records a placement delta, (b) attacking a canon ItemFrame records a removal delta, (c) save+reload doesn't re-spawn the removed canon ItemFrame, (d) save+reload doesn't duplicate the player-placed ItemFrame. Score 9/10 for code correctness, 4/10 for runtime confidence — same limitation as every prior CRON round.
+5. **The 1-tick deferral for placement tracking is a race condition.** The PlayerInteractEvent.RightClickBlock fires BEFORE the entity exists. I schedule a 1-tick task to find the newly-spawned entity. If the chunk unloads before the task runs (rare but possible — player places frame at chunk edge, immediately walks away), the task finds no entity and doesn't record. The entity still persists via vanilla chunk NBT, so no actual data loss — but the journal misses the placement. Score 7/10 — defensible for the common case, known limitation for the edge case.
+6. **The removal tracking only fires for DISCARDED reason.** If a future mod or vanilla change introduces a new removal reason for hanging entities (e.g., a "STOLEN" reason for theft mechanics), the tracker would miss it. Score 8/10 — defensible for current MC 1.20.1, would need extension if new reasons are added.
+7. **The removal tracking records PLAYER provenance even when the removal wasn't player-caused.** EntityLeaveLevelEvent doesn't carry the source of the removal. If a beast attacks a canon ItemFrame, vanilla calls entity.discard() with reason DISCARDED — same as a player attack. The tracker records PLAYER provenance, which is slightly wrong (should be SIMULATION). Functionally OK — the canon builder skips re-placement regardless of whether the delta is PLAYER or SIMULATION. But the journal's provenance record is slightly inaccurate. Score 7/10 — defensible for current scope, would need source-tracking for accurate provenance.
+8. **The entity NBT can be large.** ItemFrame NBT is small (~100 bytes), but if a player places 1000 ItemFrames, the journal grows by ~100KB. This is acceptable — vanilla chunk NBT would grow similarly. The journal is persisted via WorldDeltaSavedData, which serializes the whole journal on each save. For very large journals (10K+ entity placements), serialization could become slow. Score 8/10 — defensible for current scope, would need incremental serialization for very large journals.
+9. **The materializer's entity replay happens AFTER block replay.** This means: if a player places an ItemFrame at position P, then breaks the support block at P (cascade records PLAYER air block delta at P), the journal has BOTH a PLACE entity delta at P AND an air block delta at P. On reload, the materializer: (1) applies the air block delta (sets block at P to air — no-op, position is already air), (2) replays the entity placement (tries to spawn ItemFrame at P — but the support is gone, so the ItemFrame would spawn and immediately be removed by vanilla's "survives()" check). This is a minor inefficiency — the entity spawns and immediately dies. Score 7/10 — defensible, but a future round could add a "check support block exists" guard before spawning.
+10. **The hasPlayerOrSimulationDelta update is correct but slightly over-broad.** It returns true if ANY entity placement delta exists at the position (PLACE or REMOVE). For PLACE, this is correct (player placed an entity, canon builder should skip). For REMOVE, this is also correct (player removed an entity, canon builder should skip). But consider: player places frame at P (PLACE delta), then removes it (REMOVE delta overwrites PLACE in latest-wins). The journal has only the REMOVE delta. The canon builder's hasPlayerOrSimulationDelta returns true (entity delta exists) → skips. This is correct — the player removed the entity, don't re-spawn it. Score 10/10 for correctness.
+11. **Canon fidelity: no canon data touched.** The EntityPlacementDelta is a pure persistence mechanism — no canon claims, no canon drift. The HengYueSectBuilder.placeItemFrame fix uses the same pattern as WangFamilyVillageBuilder (CRON-71) — no new canon. The PlayerEntityDeltaTracker listens to vanilla events — no canon data involved. Score 10/10 for canon fidelity.
+12. **The CRON-76 cascade and the CRON-78 removal tracker can both fire for the same event.** When a player breaks the support block of a canon ItemFrame: (1) CRON-76 cascade records PLAYER "air" BLOCK delta at entity position, (2) vanilla removes the entity with reason DISCARDED, (3) CRON-78 tracker records PLAYER REMOVE ENTITY delta at entity position. Both deltas exist at the same position. This is HARMLESS — both agree ("no entity here"), and the canon builder's guard returns true from either check. Score 10/10 for correctness, 6/10 for journal efficiency (duplicate recording).
+
+NEXT PRIORITY (in order):
+(a) **Runtime verification of CRON-78 fixes** — boot a Minecraft client on Planet Suzaku, navigate to Heng Yue Sect (4200, -1400), verify: (1) placing an ItemFrame at a non-canon position records a PLACE delta (check via /ergen debug journal), (2) attacking a canon ItemFrame directly (left-click) records a REMOVE delta, (3) save+reload doesn't re-spawn the removed canon ItemFrame at the 5 Heng Yue Sect sites, (4) save+reload doesn't duplicate player-placed ItemFrames (vanilla persistence + journal replay should be idempotent). Score N/A — cannot do without a running client, deferred to user playtesting.
+(b) **3D Models / Animations / AI (priority g, standing)** — with CRON-78, the entity provenance system is complete (both blocks and entities, both placement and removal, both player and canon). The next major axis of work is the entity VISUAL side (beasts, cultivators, NPCs). The existing 12 spirit beast models + CultivatorRobeModel + Pose-based animation system + full AI goals need harsh critique and polish: anatomy correction, animation smoothing, per-entity hitbox verification, swimming/flying/ground pathfinding verification. Score varies per entity.
+(c) **Audit JSON vs Java coordinate consistency (CRON-65 priority e, deferred 10 rounds)** — with CRON-72's coordinate fix, the Java side is consistent with PlanetSuzakuBlueprint; the JSON blueprint side should be audited. Score 5/10.
+(d) **Resolve the 决明 vs 绝命 character project-wide (CRON-68 priority f, deferred 10 rounds)** — update PlanetSuzakuBlueprint.java, blueprint JSON, WorldLaws, DeterministicTerrainGenerator Javadoc to consistently use 决明谷 per Baidu Baike 仙逆编年史 primary source. Score 6/10 — canon purity, deferred 10 rounds (longest-standing deferral).
+(e) **Custom map color for mysterious_stone** — make the block appear slightly darker than regular stone on treasure maps, matching the "darker than the others" canon description. Small polish, low priority. Score 4/10.
+(f) **Add "check support block exists" guard to applyEntityPlacement** — minor efficiency improvement to avoid spawning entities that would immediately be removed by vanilla's survives() check (CRON-78 critique #9 above). Score 4/10.
