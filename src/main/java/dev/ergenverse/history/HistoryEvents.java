@@ -4,6 +4,7 @@ import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem;
 import dev.ergenverse.wanglin.bead.LingTianhouConsumptionEvent;
 import dev.ergenverse.wanglin.bead.LingTianhouSwordQiGrantEvent;
+import dev.ergenverse.wanglin.bead.WangPingMortalArcEvent;
 import dev.ergenverse.wanglin.bead.ZhouRuKunxuDepartureEvent;
 import dev.ergenverse.wanglin.bead.ZhouRuSoulTransferEvent;
 import net.minecraft.server.level.ServerPlayer;
@@ -148,6 +149,34 @@ public class HistoryEvents {
         if (LingTianhouConsumptionEvent.CHARACTER_ID.equals(cultivator.getCharacterId())) {
             LingTianhouConsumptionEvent.handleConsumption(serverPlayer, cultivator);
             return;  // 天运子 interaction fully handled
+        }
+
+        // 5. CRON-124: if the target is Wang Ping (王平) or 青宜 (Qing Yi),
+        //    dispatch to the Wang Ping mortal-life arc event handler.
+        //    The arc is a 5-stage event chain:
+        //      Stage 1: Woodcarving apprenticeship (right-click Wang Ping)
+        //      Stage 2: Marriage to 青宜 (right-click 青宜)
+        //      Stage 3: 25 years of war (right-click Wang Ping)
+        //      Stage 4: 10-year emperor reign (right-click Wang Ping)
+        //      Stage 5: Voluntary dispersal at age 72 (right-click Wang Ping
+        //               with the Heaven-Defying Bead in main hand)
+        //    The handler is fully defensive — it no-ops with appropriate
+        //    canon-faithful messages for each gate failure (e.g., wrong
+        //    stage, missing bead, dormant bead). Each stage is write-once
+        //    per save (the mortal_arc_stage runtime flag advances forward
+        //    only).
+        //    Canon: the 二次化凡 arc spans 72 years on 冉云星 (Ranyun Star),
+        //    per Zhihu timeline 19+8+25+10+10=72. Stage 5 dispersal is
+        //    Vol 7 Ch 700 《惊变》 (Baidu Baike-attested). 青宜 follows Wang
+        //    Ping in death (殉情而亡); both souls sealed into the 天逆珠.
+        if (WangPingMortalArcEvent.WANG_PING_CHARACTER_ID.equals(cultivator.getCharacterId())) {
+            WangPingMortalArcEvent.handleWangPingInteract(serverPlayer, cultivator);
+            return;  // Wang Ping interaction fully handled
+        }
+
+        if (WangPingMortalArcEvent.QING_YI_CHARACTER_ID.equals(cultivator.getCharacterId())) {
+            WangPingMortalArcEvent.handleQingYiInteract(serverPlayer, cultivator);
+            return;  // 青宜 interaction fully handled
         }
     }
 }

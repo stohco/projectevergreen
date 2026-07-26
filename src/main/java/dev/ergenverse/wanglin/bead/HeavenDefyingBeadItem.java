@@ -203,6 +203,61 @@ public class HeavenDefyingBeadItem extends WangLinItem {
     public static final String NBT_SOUL_TRANSFERRED_TO_ZHOU_RU = "Ergen.Bead.SoulTransferredToZhouRu";
 
     /**
+     * CRON-COMPLETIONIST-124: Flag indicating that Wang Ping's 残魂 (remnant
+     * soul) has been sealed into the Heaven-Defying Bead by Wang Lin after
+     * Wang Ping voluntarily dispersed his sword-qi body at age 72.
+     *
+     * <p>Canon basis (web-search verified 2026-07-27, Baidu Baike
+     * https://baike.baidu.com/item/王平/62563845 + Baidu Baike 仙逆编年史
+     * https://baike.baidu.com/item/仙逆编年史/9845998 + Zhihu timeline
+     * https://zhuanlan.zhihu.com/p/713215901):
+     * <pre>
+     *   "在王平72岁那年，他主动散去剑气之躯，残魂被王林封入天逆珠中"
+     *   — At Wang Ping's age 72, he voluntarily dispersed his sword-qi body;
+     *     his remnant soul was sealed into the Heaven-Defying Bead by Wang Lin.
+     * </pre>
+     * Vol 7 Ch 700 《惊变》 — Baidu Baike-attested chapter citation.
+     *
+     * <p>Write-once: once set to {@code true}, never reset. The dispersal
+     * is a one-time event per save (canon: Wang Ping disperses ONCE).
+     *
+     * <p>Set by {@link WangPingMortalArcEvent} stage 5 (voluntary dispersal).
+     * Read by future code that may revive Wang Ping at the novel's end (Wang
+     * Lin at 踏天境 / Transcendence: both Wang Ping and 青宜 are revived as
+     * ordinary mortals — a future questline hook).
+     *
+     * <p>NO fabricated chapter citation beyond Ch 700 (Baidu Baike-attested).
+     */
+    public static final String NBT_WANG_PING_SOUL = "Ergen.Bead.WangPingSoul";
+
+    /**
+     * CRON-COMPLETIONIST-124: Flag indicating that 青宜's soul has been
+     * collected into the Heaven-Defying Bead after she followed Wang Ping
+     * in death (殉情而亡 — "died for love").
+     *
+     * <p>Canon basis (web-search verified 2026-07-27, Baidu Baike 青宜
+     * dedicated entry https://baike.baidu.com/item/青宜/637430 + Sohu
+     * https://www.sohu.com/a/1021093654_121458245 + QQ News
+     * https://view.inews.qq.com/a/20260507A07ELJ00):
+     * <pre>
+     *   "在王平主动散去剑气之躯后，青宜殉情而亡，灵魂亦被王林收入天逆珠"
+     *   — After Wang Ping voluntarily dispersed his sword-qi body, 青宜
+     *     followed him in death; her soul was also collected into the
+     *     Heaven-Defying Bead by Wang Lin.
+     * </pre>
+     * Vol 7 Ch 700 《惊变》 — Baidu Baike-attested chapter citation (same
+     * chapter as Wang Ping's dispersal).
+     *
+     * <p>Write-once: once set to {@code true}, never reset. The voluntary
+     * death is a one-time event per save.
+     *
+     * <p>Set by {@link WangPingMortalArcEvent} stage 5 (voluntary dispersal).
+     *
+     * <p>NO fabricated chapter citation beyond Ch 700 (Baidu Baike-attested).
+     */
+    public static final String NBT_QING_YI_SOUL = "Ergen.Bead.QingYiSoul";
+
+    /**
      * CRON-COMPLETIONIST-95: A bitfield tracking WHICH of the 9 Parts have
      * been aligned. Bit i corresponds to {@link HeavenDefyingBead.Part}
      * ordinal i (so bit 0 = CORE, bit 1 = METAL, ..., bit 8 = DEEP_MYSTERY_3).
@@ -799,6 +854,72 @@ public class HeavenDefyingBeadItem extends WangLinItem {
         if (present) {
             Ergenverse.LOGGER.info("[Ergenverse] Heaven-Defying Bead: Li Muwan's "
                     + "Nascent Soul stored. The motivation is now absolute.");
+        }
+    }
+
+    // ── CRON-COMPLETIONIST-124: Wang Ping & Qing Yi Soul Accessors ──────
+
+    /**
+     * Whether Wang Ping's 残魂 (remnant soul) is sealed in this bead.
+     *
+     * <p>CRON-COMPLETIONIST-124: Set to {@code true} by
+     * {@link WangPingMortalArcEvent} stage 5 (voluntary dispersal at age 72).
+     * Canon: Vol 7 Ch 700 《惊变》 — Wang Ping voluntarily disperses his
+     * sword-qi body; Wang Lin seals his 残魂 into the 天逆珠.
+     *
+     * @param stack the bead stack
+     * @return {@code true} if Wang Ping's 残魂 is sealed in this bead
+     */
+    public boolean hasWangPingSoul(ItemStack stack) {
+        if (stack.isEmpty() || !stack.hasTag()) return false;
+        return stack.getTag().getBoolean(NBT_WANG_PING_SOUL);
+    }
+
+    /**
+     * Store Wang Ping's 残魂 in the bead. Canon: after his voluntary
+     * dispersal at age 72 (Ch 700 《惊变》).
+     *
+     * @param stack the bead stack
+     * @param present {@code true} to seal the soul; {@code false} to clear
+     *                (never used in normal gameplay — write-once)
+     */
+    public void setWangPingSoul(ItemStack stack, boolean present) {
+        stack.getOrCreateTag().putBoolean(NBT_WANG_PING_SOUL, present);
+        if (present) {
+            Ergenverse.LOGGER.info("[Ergenverse] Heaven-Defying Bead: Wang Ping's "
+                    + "remnant soul (残魂) sealed. The 二次化凡 arc is complete.");
+        }
+    }
+
+    /**
+     * Whether 青宜's soul is collected in this bead.
+     *
+     * <p>CRON-COMPLETIONIST-124: Set to {@code true} by
+     * {@link WangPingMortalArcEvent} stage 5 (after 青宜 follows Wang Ping
+     * in death — 殉情而亡). Canon: Vol 7 Ch 700 《惊变》.
+     *
+     * @param stack the bead stack
+     * @return {@code true} if 青宜's soul is collected in this bead
+     */
+    public boolean hasQingYiSoul(ItemStack stack) {
+        if (stack.isEmpty() || !stack.hasTag()) return false;
+        return stack.getTag().getBoolean(NBT_QING_YI_SOUL);
+    }
+
+    /**
+     * Store 青宜's soul in the bead. Canon: after she followed Wang Ping
+     * in death (殉情而亡) at Ch 700 《惊变》.
+     *
+     * @param stack the bead stack
+     * @param present {@code true} to collect the soul; {@code false} to clear
+     *                (never used in normal gameplay — write-once)
+     */
+    public void setQingYiSoul(ItemStack stack, boolean present) {
+        stack.getOrCreateTag().putBoolean(NBT_QING_YI_SOUL, present);
+        if (present) {
+            Ergenverse.LOGGER.info("[Ergenverse] Heaven-Defying Bead: 青宜's soul "
+                    + "collected (殉情而亡). She chose mortality and death alongside "
+                    + "Wang Ping; her soul rests in the 天逆珠.");
         }
     }
 
