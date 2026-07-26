@@ -235,13 +235,13 @@ public final class SettlementRegistry {
 
     // ═══════════════════════════════════════════════════════════════════
     //  Heng Yue Sect (恒岳派) — Wang Lin's first sect
-    //  Canonical center: (5400, -1900).
+    //  Canonical center: (4200, -1400) — CRON-88: synced to Java PlanetSuzakuBlueprint.HENG_YUE_SECT.
     //  Canon NPCs: npc_qiu_siping, npc_wang_zhuo, npc_wang_hao, npc_sun_dazhu.
     //  This is a STUB — full residence layout pending HengYueSectBuilder v2.
     // ═══════════════════════════════════════════════════════════════════
     private static void seedHengYueSect() {
         Settlement s = new Settlement("heng_yue_sect",
-                "Heng Yue Pai / 恒岳派", "sect", 5400, -1900);
+                "Heng Yue Pai / 恒岳派", "sect", 4200, -1400);
         s.primaryEconomy = "sect_cultivation_economy";
         s.governance = "sect_elder_council";
         s.trend = "stable";
@@ -296,8 +296,9 @@ public final class SettlementRegistry {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  Teng Family City (滕城) — Largest city in Zhao Country
-    //  Canonical center: (6800, -1000) from planet_suzaku.json.
+    //  Teng Family City (藤家城) — Largest city in Zhao Country
+    //  Canonical center: (3500, -900) — CRON-88: synced to Java PlanetSuzakuBlueprint.TENG_FAMILY_CITY.
+    //  CRON-69: 藤 (vine) not 滕 (water) — Teng Huayuan is 藤化元.
     //  Canon NPCs: npc_teng_huayuan (Half-Step Deity Transformation patriarch),
     //              npc_teng_li (Late Foundation Establishment, arrogant young master),
     //              npc_teng_xiuxiu (conflicted family member).
@@ -316,11 +317,11 @@ public final class SettlementRegistry {
     //  LIFE — population, residences, shared locations, personality.
     // ═══════════════════════════════════════════════════════════════════
     private static void seedTengFamilyCity() {
-        // Blueprint coordinate from planet_suzaku.json
-        int cx = 6800;
-        int cz = -1000;
+        // CRON-88: coordinates synced to Java PlanetSuzakuBlueprint.TENG_FAMILY_CITY (3500, -900)
+        int cx = 3500;
+        int cz = -900;
         Settlement s = new Settlement("teng_family_city",
-                "Teng Cheng / 滕城", "city", cx, cz);
+                "Teng Jia Cheng / 藤家城", "city", cx, cz);
         s.primaryEconomy = "mortal_commerce_with_cultivator_taxation";
         s.governance = "patriarchal_autocracy";
         s.trend = "stable_under_repression";
@@ -530,8 +531,8 @@ public final class SettlementRegistry {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  Tian Shui City (天水城) — Major trade hub in Zhao Country
-    //  Canonical center: (5200, 600) from planet_suzaku.json.
+    //  Tian Shui City (天水城) — Greatest trade hub in Zhao Country
+    //  Canonical center: (2600, -2000) — CRON-88: synced to Java PlanetSuzakuBlueprint.TIAN_SHUI_CITY.
     //  Canon NPCs: npc_tianshui_governor_bai (Governor, Foundation Establishment),
     //              npc_gao_qiming (INFERRED diviner).
     //  Simulation NPCs: npc_tianshui_guard_zhao, npc_tianshui_merchant_liu,
@@ -550,9 +551,9 @@ public final class SettlementRegistry {
     //  blocks at this center. This seeding gives the city LIFE.
     // ═══════════════════════════════════════════════════════════════════
     private static void seedTianShuiCity() {
-        // Blueprint coordinate from planet_suzaku.json
-        int cx = 5200;
-        int cz = 600;
+        // CRON-88: coordinates synced to Java PlanetSuzakuBlueprint.TIAN_SHUI_CITY (2600, -2000)
+        int cx = 2600;
+        int cz = -2000;
         Settlement s = new Settlement("tian_shui_city",
                 "Tian Shui Cheng / 天水城", "city", cx, cz);
         s.primaryEconomy = "river_trade_hub_merchant_guild_cultivator_guild";

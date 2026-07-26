@@ -23,8 +23,13 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * <p>Every settlement in the World Blueprint has a FIXED (x, z) coordinate.
  * Wang Family Village is ALWAYS at (3842, -1184). Heng Yue Sect is ALWAYS at
- * (5400, -1900). Teng City is ALWAYS at (6800, -1000). Every playthrough.
+ * (4200, -1400). Teng Family City is ALWAYS at (3500, -900). Every playthrough.
  * Every seed. The stage is fixed.
+ *
+ * <p>CRON-88: coordinates synced between JSON (planet_suzaku.json) and Java
+ * (PlanetSuzakuBlueprint.java). Previously the JSON had divergent coordinates
+ * for 11 of 15 locations — now all match. IDs also synced: 'teng_city' →
+ * 'teng_family_city', 'vermilion_bird_imperial_city' → 'vermilion_bird_capital'.
  *
  * <p>Currently builds:
  * <ul>
@@ -131,10 +136,12 @@ public final class CanonGeographyPlacer {
                         dev.ergenverse.spawn.HengYueSectBuilder.build(level, center);
                     }
                 }
-                case "teng_city" -> {
-                    // Full hand-built Teng Family City (滕城) — largest city in Zhao Country.
+                case "teng_family_city" -> {
+                    // Full hand-built Teng Family City (藤家城) — largest city in Zhao Country.
                     // Constitution: the world is completely hand-crafted, NOT a block-swap script.
                     // Every block placed intentionally in Java via TengFamilyCityBuilder.
+                    // CRON-88: ID synced from 'teng_city' to 'teng_family_city' to match
+                    // Java PlanetSuzakuBlueprint.TENG_FAMILY_CITY.id.
                     int tengY = level.getHeightmapPos(
                             net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                             new BlockPos(x, 0, z)).getY();
@@ -179,10 +186,13 @@ public final class CanonGeographyPlacer {
                     // build(level) now performs the guard internally.
                     dev.ergenverse.spawn.SnowDomainCapitalBuilder.build(level);
                 }
-                case "vermilion_bird_imperial_city" -> {
-                    // Full hand-built Vermilion Bird Imperial City (朱雀皇城) — planetary capital.
+                case "vermilion_bird_capital" -> {
+                    // Full hand-built Vermilion Bird Capital (朱雀国) — planetary capital.
                     // Constitution: every block hand-authored.
                     // CRON-72: same pattern as snow_domain_capital above.
+                    // CRON-88: ID synced from 'vermilion_bird_imperial_city' to
+                    // 'vermilion_bird_capital' to match Java
+                    // PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.id.
                     dev.ergenverse.spawn.VermilionBirdImperialCityBuilder.build(level);
                 }
                 case "luo_he_sect" -> {
