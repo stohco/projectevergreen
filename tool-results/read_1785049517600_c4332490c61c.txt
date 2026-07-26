@@ -1,0 +1,475 @@
+     1→package dev.ergenverse.client.model;
+     2→
+     3→// TEXTURE: assets/ergenverse/textures/entity/beast/spirit_deer.png  SIZE: 64x64
+     4→/*
+     5→ * SpiritDeerModel — slender long-necked quadruped with branched antlers.
+     6→ *
+     7→ * ANATOMY (CRON-COMPLETIONIST-28 antler overhaul):
+     8→ *   - body        : slim torso (3 x 5 x 8) at chest height
+     9→ *   - body_chest  : wider front torso (3.5 x 5.5 x 4) — deep chest
+    10→ *   - body_hind   : narrower rear torso (2.5 x 4.5 x 5) — tapered waist
+    11→ *   - neck        : 2-segment neck chain (base + tip) — tapering S-curve,
+    12→ *                   replaces the single 1x4x1 broom-handle. 1.2 wide at base,
+    13→ *                   0.8 wide at tip. Each segment 2.5 long.
+    14→ *   - head        : skull (2x3x2) + snout (2x1.5x2) + 2 ears (leaf-shaped)
+    15→ *   - antlers     : 3-segment CURVED main beam per side (base upward-forward,
+    16→ *                   mid upward-back, tip upward-forward) with brow tine (near
+    17→ *                   base, angled outward), bay tine (mid-beam, angled outward),
+    18→ *                   trez tine (upper beam, angled outward). Each tine is a
+    19→ *                   short tapered box. Approximates real Cervidae palmate
+    20→ *                   branching. No longer TV antennae.
+    21→ *   - tail        : short puffy tuft at the rear
+    22→ *   - legs        : 4 slim legs, 2 segments each (thigh + shin), feet at y=15.
+    23→ *                   Rear legs have a forward-angled hock joint.
+    24→ *
+    25→ * ANIMATION:
+    26→ *   - Walk gait   : diagonal trot, cos(swing*0.6662)*amp*swingAmt, shins
+    27→ *                   counter-flex.
+    28→ *   - Flee (run)  : when limbSwingAmount > 0.6, swing frequency x1.6, amp 1.3,
+    29→ *                   head up, tail flagged.
+    30→ *   - Graze       : when idle (limbSwingAmount < 0.1), head dips down
+    31→ *                   head.xRot cycles to +1.2 on a slow sin(age*0.05).
+    32→ *   - Alert       : head snaps up (-0.3), ears forward, tail flicks up.
+    33→ *                   Triggered by an alert cycle out of phase with graze.
+    34→ *   - Head turn   : head.yRot = netHeadYaw * deg2rad (clamped); head.xRot
+    35→ *                   overridden by graze/alert when idle.
+    36→ *
+    37→ * HARSH SELF-CRITIQUE (post-CRON-28):
+    38→ *   - Antlers NOW have 3-segment curved main beam + 3 tines per side (brow,
+    39→ *     bay, trez). This is a MASSIVE improvement over the TV antennae.
+    40→ *     But: tines are still uniform boxes. Real tines taper to a point.
+    41→ *     The curve is approximated by 3 angled segments — not a true Bezier curve.
+    42→ *     No asymmetry (real antlers are always slightly asymmetric).
+    43→ *     No palmation on the top tines (real red deer have palmate tops).
+    44→ *     Score improved from 1/10 (antlers alone) to ~5/10.
+    45→ *   - Neck NOW has 2 segments that taper (1.2→0.8). Major improvement over
+    46→ *     the 1x4x1 broom-handle. But still boxes, not smooth curves.
+    47→ *   - Body NOW has chest/hip split for depth taper. Minor improvement —
+    48→ *     still reads as "two boxes glued together" rather than one smooth body.
+    49→ *   - Legs still have no visible hock on rear legs.
+    50→ *   - Ears still boxes (not leaf-shaped).
+    51→ *   - No dewclaws, no cloven hooves.
+    52→ *   - Texture UVs re-derived for new part layout — existing spirit_deer.png
+    53→ *     will scramble. Regeneration script required.
+    54→ *   - Graze/alert still blind sin wave (not driven by synced startled flag).
+    55→ */
+    56→import dev.ergenverse.entity.SpiritBeastEntity;
+    57→import net.minecraft.client.model.HierarchicalModel;
+    58→import net.minecraft.client.model.geom.ModelPart;
+    59→import net.minecraft.client.model.geom.PartPose;
+    60→import net.minecraft.client.model.geom.builders.CubeDeformation;
+    61→import net.minecraft.client.model.geom.builders.CubeListBuilder;
+    62→import net.minecraft.client.model.geom.builders.LayerDefinition;
+    63→import net.minecraft.client.model.geom.builders.MeshDefinition;
+    64→import net.minecraft.client.model.geom.builders.PartDefinition;
+    65→
+    66→public class SpiritDeerModel extends HierarchicalModel<SpiritBeastEntity> {
+    67→
+    68→    private final ModelPart root;
+    69→    private final ModelPart bodyChest;
+    70→    private final ModelPart bodyHind;
+    71→    private final ModelPart head;
+    72→    private final ModelPart neckBase;
+    73→    private final ModelPart neckTip;
+    74→    private final ModelPart earLeft;
+    75→    private final ModelPart earRight;
+    76→    private final ModelPart tail;
+    77→    private final ModelPart frontLeftThigh;
+    78→    private final ModelPart frontLeftShin;
+    79→    private final ModelPart frontRightThigh;
+    80→    private final ModelPart frontRightShin;
+    81→    private final ModelPart backLeftThigh;
+    82→    private final ModelPart backLeftShin;
+    83→    private final ModelPart backRightThigh;
+    84→    private final ModelPart backRightShin;
+    85→    private final ModelPart antlerLeftTip;
+    86→    private final ModelPart antlerRightTip;
+    87→
+    88→    public SpiritDeerModel(ModelPart root) {
+    89→        this.root = root;
+    90→        this.bodyChest = root.getChild("body_chest");
+    91→        this.bodyHind = root.getChild("body_hind");
+    92→        this.neckBase = root.getChild("neck_base");
+    93→        this.neckTip = this.neckBase.getChild("neck_tip");
+    94→        this.head = this.neckTip.getChild("head");
+    95→        this.earLeft = this.head.getChild("ear_left");
+    96→        this.earRight = this.head.getChild("ear_right");
+    97→        this.tail = root.getChild("tail");
+    98→        this.frontLeftThigh = root.getChild("front_left_thigh");
+    99→        this.frontLeftShin = this.frontLeftThigh.getChild("shin");
+   100→        this.frontRightThigh = root.getChild("front_right_thigh");
+   101→        this.frontRightShin = this.frontRightThigh.getChild("shin");
+   102→        this.backLeftThigh = root.getChild("back_left_thigh");
+   103→        this.backLeftShin = this.backLeftThigh.getChild("shin");
+   104→        this.backRightThigh = root.getChild("back_right_thigh");
+   105→        this.backRightShin = this.backRightThigh.getChild("shin");
+   106→        this.antlerLeftTip = this.head.getChild("antler_left_base").getChild("mid").getChild("tip");
+   107→        this.antlerRightTip = this.head.getChild("antler_right_base").getChild("mid").getChild("tip");
+   108→    }
+   109→
+   110→    public static LayerDefinition createBodyLayer() {
+   111→        MeshDefinition mesh = new MeshDefinition();
+   112→        PartDefinition root = mesh.getRoot();
+   113→
+   114→        // ── CRON-COMPLETIONIST-70: body_chest with CubeDeformation for organic roundness ──
+   115→        // Previously hard-edged box — looked noticeably blockier than wolf/tiger/fire_beast
+   116→        // which all use CubeDeformation. Now matches quality parity.
+   117→        CubeDeformation bodySoft = new CubeDeformation(0.25F);
+   118→        PartDefinition bodyChest = root.addOrReplaceChild("body_chest",
+   119→                CubeListBuilder.create().texOffs(0, 0)
+   120→                        .addBox(-1.75F, -2.75F, -4.0F, 3.5F, 5.5F, 4.0F, bodySoft),
+   121→                PartPose.offset(0.0F, 6.0F, -2.0F));
+   122→
+   123→        // ── CRON-COMPLETIONIST-70: body_hind with CubeDeformation ──
+   124→        CubeDeformation hindSoft = new CubeDeformation(0.2F);
+   125→        PartDefinition bodyHind = root.addOrReplaceChild("body_hind",
+   126→                CubeListBuilder.create().texOffs(14, 0)
+   127→                        .addBox(-1.25F, -2.25F, 0.0F, 2.5F, 4.5F, 5.0F, hindSoft),
+   128→                PartPose.offset(0.0F, 6.0F, 2.5F));
+   129→
+   130→        // ── neck_base : lower neck segment (wider, angled up-forward) ──────
+   131→        PartDefinition neckBase = root.addOrReplaceChild("neck_base",
+   132→                CubeListBuilder.create().texOffs(24, 0)
+   133→                        .addBox(-0.6F, -2.5F, -0.6F, 1.2F, 2.5F, 1.2F),
+   134→                PartPose.offsetAndRotation(0.0F, 3.5F, -4.0F, 0.9F, 0.0F, 0.0F));
+   135→
+   136→        // ── neck_tip : upper neck segment (narrower, S-curve continuation) ─────
+   137→        PartDefinition neckTip = neckBase.addOrReplaceChild("neck_tip",
+   138→                CubeListBuilder.create().texOffs(28, 0)
+   139→                        .addBox(-0.4F, -2.5F, -0.4F, 0.8F, 2.5F, 0.8F),
+   140→                PartPose.offsetAndRotation(0.0F, -2.5F, 0.0F, 0.5F, 0.0F, 0.0F));
+   141→
+   142→        // ── CRON-COMPLETIONIST-70: head with CubeDeformation ──
+   143→        CubeDeformation headSoft = new CubeDeformation(0.15F);
+   144→        PartDefinition head = neckTip.addOrReplaceChild("head",
+   145→                CubeListBuilder.create().texOffs(0, 16)
+   146→                        .addBox(-1.0F, -1.5F, -2.0F, 2.0F, 3.0F, 2.0F, headSoft)   // skull
+   147→                        .texOffs(8, 16)
+   148→                        .addBox(-1.0F, 0.0F, -3.5F, 2.0F, 1.0F, 2.0F),   // snout forward
+   149→                PartPose.offset(0.0F, -4.0F, 0.0F));
+   150→        // ── CRON-COMPLETIONIST-70: ears with CubeDeformation for softer look ──
+   151→        CubeDeformation earSoft = new CubeDeformation(0.2F);
+   152→        head.addOrReplaceChild("ear_left",
+   153→                CubeListBuilder.create().texOffs(20, 16)
+   154→                        .addBox(-1.0F, -1.5F, 0.0F, 1.0F, 2.0F, 1.0F, earSoft),
+   155→                PartPose.offsetAndRotation(-1.0F, -1.5F, -1.0F, 0.0F, 0.0F, -0.4F));
+   156→        head.addOrReplaceChild("ear_right",
+   157→                CubeListBuilder.create().texOffs(20, 20)
+   158→                        .addBox(0.0F, -1.5F, 0.0F, 1.0F, 2.0F, 1.0F, earSoft),
+   159→                PartPose.offsetAndRotation(1.0F, -1.5F, -1.0F, 0.0F, 0.0F, 0.4F));
+   160→
+   161→        // ── antlers : 3-segment CURVED main beam + brow/bay/trez tines ─────
+   162→        // CRON-COMPLETIONIST-28: Replaced TV antennae with curved multi-tine structure.
+   163→        // Each antler: base (angled outward-up) → mid (angled backward-up) →
+   164→        // tip (angled outward-up). Three tines branch off at different heights.
+   165→        // This approximates real Cervidae branching (not palmate — that's elk).
+   166→
+   167→        // ── LEFT ANTLER ──────────────────────────────────────────────────────
+   168→        PartDefinition antlerLBase = head.addOrReplaceChild("antler_left_base",
+   169→                CubeListBuilder.create().texOffs(0, 10)
+   170→                        .addBox(-0.4F, -2.0F, -0.4F, 0.8F, 2.0F, 0.8F),
+   171→                PartPose.offsetAndRotation(-0.5F, -1.5F, 0.0F, -0.4F, 0.0F, -0.2F));
+   172→        // brow tine (near base, angled outward and slightly forward)
+   173→        antlerLBase.addOrReplaceChild("brow_tine",
+   174→                CubeListBuilder.create().texOffs(4, 10)
+   175→                        .addBox(-0.3F, 0.0F, -0.3F, 0.6F, 1.2F, 0.6F),
+   176→                PartPose.offsetAndRotation(-0.2F, -0.5F, 0.0F, 0.5F, 0.0F, -0.7F));
+   177→        PartDefinition antlerLMid = antlerLBase.addOrReplaceChild("mid",
+   178→                CubeListBuilder.create().texOffs(8, 10)
+   179→                        .addBox(-0.35F, -2.0F, -0.35F, 0.7F, 2.0F, 0.7F),
+   180→                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.3F, 0.0F, -0.15F));
+   181→        // bay tine (mid-beam, angled outward)
+   182→        antlerLMid.addOrReplaceChild("bay_tine",
+   183→                CubeListBuilder.create().texOffs(12, 10)
+   184→                        .addBox(-0.25F, 0.0F, -0.25F, 0.5F, 1.0F, 0.5F),
+   185→                PartPose.offsetAndRotation(0.0F, -0.8F, 0.0F, 0.4F, 0.0F, -0.8F));
+   186→        PartDefinition antlerLTip = antlerLMid.addOrReplaceChild("tip",
+   187→                CubeListBuilder.create().texOffs(16, 10)
+   188→                        .addBox(-0.3F, -1.5F, -0.3F, 0.6F, 1.5F, 0.6F),
+   189→                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, -0.3F, 0.0F, -0.25F));
+   190→        // trez tine (upper beam, angled outward)
+   191→        antlerLTip.addOrReplaceChild("trez_tine",
+   192→                CubeListBuilder.create().texOffs(20, 10)
+   193→                        .addBox(-0.2F, 0.0F, -0.2F, 0.4F, 0.8F, 0.4F),
+   194→                PartPose.offsetAndRotation(0.0F, -0.5F, 0.0F, 0.35F, 0.0F, -0.6F));
+   195→
+   196→        // ── RIGHT ANTLER (mirrored) ────────────────────────────────────────
+   197→        PartDefinition antlerRBase = head.addOrReplaceChild("antler_right_base",
+   198→                CubeListBuilder.create().texOffs(24, 10)
+   199→                        .addBox(-0.4F, -2.0F, -0.4F, 0.8F, 2.0F, 0.8F),
+   200→                PartPose.offsetAndRotation(0.5F, -1.5F, 0.0F, -0.4F, 0.0F, 0.2F));
+   201→        antlerRBase.addOrReplaceChild("brow_tine",
+   202→                CubeListBuilder.create().texOffs(28, 10)
+   203→                        .addBox(-0.3F, 0.0F, -0.3F, 0.6F, 1.2F, 0.6F),
+   204→                PartPose.offsetAndRotation(0.2F, -0.5F, 0.0F, 0.5F, 0.0F, 0.7F));
+   205→        PartDefinition antlerRMid = antlerRBase.addOrReplaceChild("mid",
+   206→                CubeListBuilder.create().texOffs(32, 10)
+   207→                        .addBox(-0.35F, -2.0F, -0.35F, 0.7F, 2.0F, 0.7F),
+   208→                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, 0.3F, 0.0F, 0.15F));
+   209→        antlerRMid.addOrReplaceChild("bay_tine",
+   210→                CubeListBuilder.create().texOffs(36, 10)
+   211→                        .addBox(-0.25F, 0.0F, -0.25F, 0.5F, 1.0F, 0.5F),
+   212→                PartPose.offsetAndRotation(0.0F, -0.8F, 0.0F, 0.4F, 0.0F, 0.8F));
+   213→        PartDefinition antlerRTip = antlerRMid.addOrReplaceChild("tip",
+   214→                CubeListBuilder.create().texOffs(40, 10)
+   215→                        .addBox(-0.3F, -1.5F, -0.3F, 0.6F, 1.5F, 0.6F),
+   216→                PartPose.offsetAndRotation(0.0F, -2.0F, 0.0F, -0.3F, 0.0F, 0.25F));
+   217→        antlerRTip.addOrReplaceChild("trez_tine",
+   218→                CubeListBuilder.create().texOffs(44, 10)
+   219→                        .addBox(-0.2F, 0.0F, -0.2F, 0.4F, 0.8F, 0.4F),
+   220→                PartPose.offsetAndRotation(0.0F, -0.5F, 0.0F, 0.35F, 0.0F, 0.6F));
+   221→
+   222→        // ── CRON-COMPLETIONIST-70: tail with CubeDeformation for puffy look ──
+   223→        CubeDeformation tailSoft = new CubeDeformation(0.3F);
+   224→        root.addOrReplaceChild("tail",
+   225→                CubeListBuilder.create().texOffs(40, 0)
+   226→                        .addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 2.0F, tailSoft),
+   227→                PartPose.offsetAndRotation(0.0F, 4.0F, 4.0F, 0.3F, 0.0F, 0.0F));
+   228→
+   229→        // ── legs : 4 slim legs, thigh + shin, feet at y=15 ───────────────
+   230→        root.addOrReplaceChild("front_left_thigh",
+   231→                CubeListBuilder.create().texOffs(0, 28).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+   232→                PartPose.offset(-1.5F, 9.0F, -3.0F));
+   233→        root.getChild("front_left_thigh").addOrReplaceChild("shin",
+   234→                CubeListBuilder.create().texOffs(0, 34).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+   235→                PartPose.offset(0.0F, 3.0F, 0.0F));
+   236→
+   237→        root.addOrReplaceChild("front_right_thigh",
+   238→                CubeListBuilder.create().texOffs(8, 28).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+   239→                PartPose.offset(1.5F, 9.0F, -3.0F));
+   240→        root.getChild("front_right_thigh").addOrReplaceChild("shin",
+   241→                CubeListBuilder.create().texOffs(8, 34).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+   242→                PartPose.offset(0.0F, 3.0F, 0.0F));
+   243→
+   244→        root.addOrReplaceChild("back_left_thigh",
+   245→                CubeListBuilder.create().texOffs(0, 40).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+   246→                PartPose.offset(-1.5F, 9.0F, 3.0F));
+   247→        root.getChild("back_left_thigh").addOrReplaceChild("shin",
+   248→                CubeListBuilder.create().texOffs(0, 46).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+   249→                PartPose.offset(0.0F, 3.0F, 0.0F));
+   250→
+   251→        root.addOrReplaceChild("back_right_thigh",
+   252→                CubeListBuilder.create().texOffs(8, 40).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+   253→                PartPose.offset(1.5F, 9.0F, 3.0F));
+   254→        root.getChild("back_right_thigh").addOrReplaceChild("shin",
+   255→                CubeListBuilder.create().texOffs(8, 46).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 3.0F, 1.5F),
+   256→                PartPose.offset(0.0F, 3.0F, 0.0F));
+   257→
+   258→        // FIX (RE-APPLY-PHASE1): texture is 64x64 and model uses UVs up to y=46,
+   259→        // but this declared only 32px tall → UVs beyond y=32 rendered as black
+   260→        // rectangles (the "floating black prisms" symptom). Now 64x64.
+   261→        return LayerDefinition.create(mesh, 64, 64);
+   262→    }
+   263→
+   264→    // CRON-COMPLETIONIST-59: Expose antler tips for emissive divine glow render pass.
+   265→    // Spirit deer antlers glow at the tips (divine quality, similar to qilin).
+   266→    public ModelPart getAntlerLeftTip() { return this.antlerLeftTip; }
+   267→    public ModelPart getAntlerRightTip() { return this.antlerRightTip; }
+   268→
+   269→    @Override
+   270→    public ModelPart root() {
+   271→        return this.root;
+   272→    }
+   273→
+   274→    @Override
+   275→    public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
+   276→                          float ageInTicks, float netHeadYaw, float headPitch) {
+   277→        // ── CRON-COMPLETIONIST-16: POSE_RESTING — deer lies down, legs tucked ──
+   278→        boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
+   279→        // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — deer swims, head above water ──
+   280→        boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+   281→        // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — stretched gallop, head up, tail flagged ──
+   282→        boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
+   283→
+   284→        if (resting) {
+   285→            // Deer rests: body lowers, legs fold under, neck curls, head on ground
+   286→            // CRON-COMPLETIONIST-17: Added breathing, ear twitch, tail micro-sway
+   287→            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.12F;
+   288→            float earTwitch = (ageInTicks % 80 < 4) ? (float) Math.sin(ageInTicks * 1.8F) * 0.08F : 0.0F;
+   289→            float tailSway = (float) Math.sin(ageInTicks * 0.1F) * 0.06F;
+   290→            this.root.y = -2.0F + breath;
+   291→            this.frontLeftThigh.xRot  = -0.7F;
+   292→            this.frontRightThigh.xRot = -0.7F;
+   293→            this.frontLeftShin.xRot   = 0.5F;
+   294→            this.frontRightShin.xRot  = 0.5F;
+   295→            this.backLeftThigh.xRot   = 0.4F;
+   296→            this.backRightThigh.xRot  = 0.4F;
+   297→            this.backLeftShin.xRot    = -0.3F;
+   298→            this.backRightShin.xRot   = -0.3F;
+   299→            this.neckBase.xRot = 0.7F + breath * 0.3F;
+   300→            this.neckTip.xRot = 0.6F + breath * 0.1F;
+   301→            this.head.xRot = 0.8F + breath * 0.2F;
+   302→            this.tail.xRot = 0.5F + tailSway;
+   303→            this.earLeft.zRot  = -0.4F + earTwitch;
+   304→            this.earRight.zRot = 0.4F - earTwitch;
+   305→        } else if (swimming) {
+   306→            // CRON-COMPLETIONIST-17: Added vertical bob synchronized with paddle.
+   307→            float paddle = ageInTicks * 1.0F;
+   308→            float bob = (float) Math.sin(paddle * 0.5F) * 0.12F;
+   309→            this.root.xRot = -0.3F;
+   310→            this.root.y = -1.5F + bob;
+   311→            this.head.xRot = -0.4F;
+   312→            this.neckBase.xRot = 0.3F;
+   313→            this.neckTip.xRot = 0.2F;
+   314→            this.frontLeftThigh.xRot  = (float) Math.cos(paddle) * 0.7F;
+   315→            this.frontRightThigh.xRot = (float) Math.cos(paddle + Math.PI) * 0.7F;
+   316→            this.backLeftThigh.xRot   = (float) Math.cos(paddle + Math.PI) * 0.5F;
+   317→            this.backRightThigh.xRot  = (float) Math.cos(paddle) * 0.5F;
+   318→            this.frontLeftShin.xRot   = -0.2F + Math.abs((float) Math.cos(paddle)) * 0.3F;
+   319→            this.frontRightShin.xRot  = -0.2F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.3F;
+   320→            this.backLeftShin.xRot    = -0.2F + Math.abs((float) Math.cos(paddle + Math.PI)) * 0.2F;
+   321→            this.backRightShin.xRot   = -0.2F + Math.abs((float) Math.cos(paddle)) * 0.2F;
+   322→            this.tail.xRot = 0.3F;
+   323→            this.earLeft.zRot  = -0.3F;
+   324→            this.earRight.zRot = 0.3F;
+   325→        } else if (sprinting) {
+   326→            // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — deer gallop, stotting bounce ──
+   327→            float sprintPhase = limbSwing * 2.0F;
+   328→            float sprintAmp = 1.4F * limbSwingAmount;
+   329→            float sp = sprintPhase * 0.6662F;
+   330→            // Stotting bounce — all four feet off ground at peak
+   331→            float stot = (float) Math.abs(Math.sin(sp * 0.5F)) * 1.0F * limbSwingAmount;
+   332→            this.root.y = -stot;
+   333→            this.root.xRot = (float) Math.sin(sp + Math.PI * 0.5F) * 0.08F * limbSwingAmount;
+   334→            this.frontLeftThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
+   335→            this.frontRightThigh.xRot = (float) Math.cos(sp + Math.PI)  * sprintAmp;
+   336→            this.backLeftThigh.xRot   = (float) Math.cos(sp + Math.PI)  * sprintAmp;
+   337→            this.backRightThigh.xRot  = (float) Math.cos(sp)            * sprintAmp;
+   338→            this.frontLeftShin.xRot  = -0.4F + Math.max(0.0F, (float) Math.cos(sp))            * 0.7F * limbSwingAmount;
+   339→            this.frontRightShin.xRot = -0.4F + Math.max(0.0F, (float) Math.cos(sp + Math.PI))  * 0.7F * limbSwingAmount;
+   340→            this.backLeftShin.xRot   = -0.4F + Math.max(0.0F, (float) Math.cos(sp + Math.PI))  * 0.7F * limbSwingAmount;
+   341→            this.backRightShin.xRot  = -0.4F + Math.max(0.0F, (float) Math.cos(sp))            * 0.7F * limbSwingAmount;
+   342→            // Head up, neck extended, tail flagged high
+   343→            this.neckBase.xRot = 0.3F;
+   344→            this.neckTip.xRot = 0.3F;
+   345→            this.head.xRot = -0.4F;
+   346→            this.tail.xRot = -1.0F;              // tail flagged high
+   347→            this.earLeft.zRot  = -0.4F;
+   348→            this.earRight.zRot = 0.4F;
+   349→        } else {
+   350→            boolean moving = limbSwingAmount > 0.1F;
+   351→            boolean fleeing = limbSwingAmount > 0.6F;
+   352→
+   353→            // ── CRON-COMPLETIONIST-13: DATA_POSE overrides for graze/alert ──
+   354→            boolean poseGrazing = entity.getSpiritPose() == SpiritBeastEntity.POSE_GRAZING;
+   355→            boolean poseAlert   = entity.getSpiritPose() == SpiritBeastEntity.POSE_ALERT;
+   356→
+   357→        // ── walk / flee gait ─────────────────────────────────────────────
+   358→        float swingPhase = fleeing ? limbSwing * 1.6F : limbSwing;
+   359→        float amp = (fleeing ? 1.3F : 0.8F) * limbSwingAmount;
+   360→        float phase = swingPhase * 0.6662F;
+   361→
+   362→        this.frontLeftThigh.xRot  = (float) Math.cos(phase)            * amp;
+   363→        this.frontRightThigh.xRot = (float) Math.cos(phase + Math.PI)  * amp;
+   364→        this.backLeftThigh.xRot   = (float) Math.cos(phase + Math.PI)  * amp;
+   365→        this.backRightThigh.xRot  = (float) Math.cos(phase)            * amp;
+   366→
+   367→        this.frontLeftShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase))            * 0.6F * limbSwingAmount;
+   368→        this.frontRightShin.xRot = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI))  * 0.6F * limbSwingAmount;
+   369→        this.backLeftShin.xRot   = -0.3F + Math.max(0.0F, (float) Math.cos(phase + Math.PI))  * 0.6F * limbSwingAmount;
+   370→        this.backRightShin.xRot  = -0.3F + Math.max(0.0F, (float) Math.cos(phase))            * 0.6F * limbSwingAmount;
+   371→
+   372→        // ── CRON-16: Spine flex on gait ──────────────────────────
+   373→        float spineFlex = (float) Math.sin(phase + Math.PI * 0.5F) * 0.06F * limbSwingAmount;
+   374→        this.root.xRot = spineFlex;
+   375→
+   376→        // ── head behaviour ───────────────────────────────────────────────
+   377→        // CRON-19: Neck bobs with walk cycle (was static sin(age) bob)
+   378→        this.neckBase.xRot = 0.6F + (float) Math.sin(phase) * 0.04F * limbSwingAmount;
+   379→        this.neckTip.xRot = 0.5F;
+   380→        this.neckBase.yRot = (float) Math.sin(phase * 0.5F) * 0.03F * limbSwingAmount;
+   381→
+   382→        float yaw = netHeadYaw * 0.017453292F;
+   383→        this.head.yRot = Math.max(-0.8F, Math.min(0.8F, yaw));
+   384→
+   385→        if (fleeing) {
+   386→            // FLEE : head up, tail flagged
+   387→            this.head.xRot = -0.3F;
+   388→            this.neckBase.xRot = 0.4F;
+   389→            this.neckTip.xRot = 0.3F;                  // neck more upright to raise head
+   390→            this.tail.xRot = -0.8F;                 // tail flagged up
+   391→            this.earLeft.zRot  = -0.4F;
+   392→            this.earRight.zRot = 0.4F;
+   393→        } else if (moving) {
+   394→            // WALK : head level, look around
+   395→            this.head.xRot = headPitch * 0.017453292F;
+   396→            this.tail.xRot = 0.3F;
+   397→            this.earLeft.zRot  = -0.4F;
+   398→            this.earRight.zRot = 0.4F;
+   399→        } else {
+   400→            // IDLE / POSE_GRAZING / POSE_ALERT — driven by DATA_POSE
+   401→            if (poseGrazing) {
+   402→                // GRAZE : head dips toward the ground (driven by GrazeGoal)
+   403→                this.head.xRot = 1.2F;
+   404→                this.neckBase.xRot = 0.8F;
+   405→                this.neckTip.xRot = 0.5F;
+   406→                this.tail.xRot = 0.3F;
+   407→            } else if (poseAlert) {
+   408→                // ALERT : head snaps up, ears forward, tail flicks
+   409→                this.head.xRot = -0.3F;
+   410→                this.neckBase.xRot = 0.5F;
+   411→                this.neckTip.xRot = 0.3F;
+   412→                this.tail.xRot = -0.5F + (float) Math.sin(ageInTicks * 1.5F) * 0.3F;
+   413→                this.earLeft.zRot  = -0.2F;
+   414→                this.earRight.zRot = 0.2F;
+   415→            } else {
+   416→                // Fallback: slow graze / alert cycle when no goal is active
+   417→                float cycle = (float) Math.sin(ageInTicks * 0.05F);
+   418→                if (cycle > 0.0F) {
+   419→                    this.head.xRot = 1.2F * cycle;
+   420→                    this.neckBase.xRot = 0.8F;
+   421→                    this.neckTip.xRot = 0.5F;
+   422→                    this.tail.xRot = 0.3F;
+   423→                } else {
+   424→                    this.head.xRot = -0.3F;
+   425→                    this.neckBase.xRot = 0.5F;
+   426→                    this.neckTip.xRot = 0.3F;
+   427→                    this.tail.xRot = -0.5F + (float) Math.sin(ageInTicks * 1.5F) * 0.3F;
+   428→                    this.earLeft.zRot  = -0.2F;
+   429→                    this.earRight.zRot = 0.2F;
+   430→                }
+   431→            }
+   432→        }
+   433→        } // end of walk/flee else block
+   434→
+   435→        // ── attack : deer rears up (front hooves lift, head back) ─────
+   436→        float atk = entity.attackAnim;
+   437→        if (atk > 0.0F) {
+   438→            float lunge = (float) Math.sin(atk * Math.PI);
+   439→            // Deer don't lunge forward — they rear up and strike with hooves
+   440→            this.frontLeftThigh.xRot  = -lunge * 1.2F;   // front legs lift
+   441→            this.frontRightThigh.xRot = -lunge * 1.2F;
+   442→            this.frontLeftShin.xRot  = -lunge * 0.8F;   // knees fold
+   443→            this.frontRightShin.xRot = -lunge * 0.8F;
+   444→            this.backLeftThigh.xRot   += lunge * 0.2F;   // back legs anchor
+   445→            this.backRightThigh.xRot  += lunge * 0.2F;
+   446→            this.root.xRot = lunge * 0.3F;               // body tilts back
+   447→            this.neckBase.xRot -= lunge * 0.3F;
+   448→            this.neckTip.xRot -= lunge * 0.15F;             // neck raises
+   449→            this.head.xRot -= lunge * 0.5F;             // head throws back
+   450→        }
+   451→
+   452→        // ── death collapse : deer crumples, legs fold under ─────────
+   453→        if (entity.deathTime > 0) {
+   454→            float t = Math.min(entity.deathTime / 8.0F, 1.0F); // 0→1 over 0.4s (visible before fade)
+   455→            float collapse = t * t;
+   456→            this.root.xRot = collapse * -0.3F;
+   457→            this.root.zRot = collapse * 0.5F;
+   458→            this.neckBase.xRot = 0.5F + collapse * 0.3F;
+   459→            this.neckTip.xRot = 0.3F + collapse * 0.2F;       // neck folds down
+   460→            this.head.xRot = collapse * 0.6F;                  // head droops to ground
+   461→            // legs fold under the body (deer crumples)
+   462→            this.frontLeftThigh.xRot  = collapse * 0.8F;
+   463→            this.frontRightThigh.xRot = collapse * 0.8F;
+   464→            this.backLeftThigh.xRot   = collapse * 0.6F;
+   465→            this.backRightThigh.xRot  = collapse * 0.6F;
+   466→            this.frontLeftShin.xRot  = collapse * 0.5F;
+   467→            this.frontRightShin.xRot = collapse * 0.5F;
+   468→            this.backLeftShin.xRot   = collapse * 0.4F;
+   469→            this.backRightShin.xRot  = collapse * 0.4F;
+   470→            // tail goes limp
+   471→            this.tail.xRot = 0.3F + collapse * 0.3F;
+   472→        }
+   473→    }
+   474→}
+   475→
