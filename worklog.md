@@ -4852,3 +4852,98 @@ NEXT PRIORITY (in order):
 (d) **Add "Valley of Decisive Brightness" as an alternate English name** — addresses CRON-79 critique #4. The literal translation of 决明 is "decisive brightness", not "certain death". Adding this as an alternate name (e.g., in the lang file or a tooltip) would improve canon purity. Score 3/10 — small polish.
 (e) **Custom map color for mysterious_stone** — make the block appear slightly darker than regular stone on treasure maps. Score 4/10.
 (f) **Add "check support block exists" guard to applyEntityPlacement** — minor efficiency improvement from CRON-78 critique #9. Score 4/10.
+
+---
+Task ID: CRON-COMPLETIONIST-80
+Agent: cron-completionist
+Task: Per-entity hitbox reconciliation for all 12 SpiritBeastEntity types — close a 10-round silent regression where SOUL_FISH's CRON-60 sizing fix was undone by SpiritBeastEntity.reassessDimensions(), and align 8 of 12 beast hitboxes that didn't match their visible models (player's sword passed through deer antlers, crane head, fire beast flanks, etc.). This is the first focused slice of priority (g) "3D MODELS / ANIMATIONS / COLLISION / AI" — specifically the "per-entity hitboxes" sub-item plus a harsh audit of standing artwork defects.
+
+Work Log:
+- STEP 1 — RECON: Read worklog.md tail (CRON-79 stage summary + NEXT PRIORITY list). CRON-79 closed the 决明谷 canon-name deferral (10 rounds). The remaining NEXT PRIORITY items: (a) runtime verification (needs client), (b) 3D Models/Animations/AI ("the last remaining MAJOR axis of work"), (c) JSON vs Java coordinate audit (11-round deferral, Score 5/10), (d) "Valley of Decisive Brightness" alternate English (Score 3/10), (e) custom map color (Score 4/10), (f) check-support-block guard (Score 4/10).
+
+  SELECTED priority (g) from the original task spec (the standing CRON priority), scoped down to "per-entity hitboxes" — the only sub-item that is (1) explicitly named in the task spec, (2) has a CRITICAL bug (SOUL_FISH A≠B), (3) is achievable to a high bar in one round, (4) is gameplay-affecting (under-sized hitboxes mean the player can't hit beasts they should be able to hit).
+
+- STEP 2 — ARCHITECTURAL SURVEY (via direct file reads):
+  * EREntityTypes.java (201 lines): 12 SPIRIT_* registry objects, each with .sized(w, h) + a "Hitbox: ~W wide, ~H tall" comment.
+  * SpiritBeastEntity.java (619 lines): reassessDimensions() switch on BeastType enum — sets beastWidth/beastHeight/beastEyeHeight at runtime. The getDimensions() override returns EntityDimensions.scalable(beastWidth, beastHeight) — this OVERRIDES EntityType.sized() at runtime.
+  * SpiritBeastModelLayers.java (66 lines): central registry of ModelLayerLocations + LayerDefinition suppliers.
+
+  CRITICAL FINDING: When EntityType.sized(w, h) and SpiritBeastEntity.getDimensions() disagree, getDimensions() WINS at runtime. So EntityType.sized() becomes stale documentation. This is what happened to SOUL_FISH: CRON-60 doubled the EntityType.sized value but didn't update reassessDimensions() — the runtime override silently undid the fix.
+
+- STEP 3 — SCRIPT-BASED AUDIT (per Rule 9, Script Persistence):
+  Wrote /home/z/my-project/scripts/cron80_audit_beast_hitboxes.py. The script:
+  1. Parses EntityType.sized(w, h) calls from EREntityTypes.java (source A)
+  2. Parses case X -> { beastWidth=..; beastHeight=..; beastEyeHeight=..; } from SpiritBeastEntity.java (source B)
+  3. Parses "Hitbox: ~W wide, ~H tall" comments from EREntityTypes.java (source C)
+  4. Cross-references enum short-name (RABBIT) to registry name (SPIRIT_RABBIT)
+  5. Reports A/B/C mismatches + flags CRITICAL A≠B cases (runtime hits don't match declared hits)
+
+  Pre-CRON-80 audit results:
+  - SOUL_FISH: A=0.6x0.5, B=0.3x0.3 — CRITICAL A≠B (CRON-60 fix silently undone)
+  - 8 of 12 beasts had B≠C: SPIRIT_DEER, SPIRIT_CRANE, FIRE_BEAST, STONE_BACK_BOAR, SEA_SERPENT, QILIN, SPIRIT_HAWK, SPIRIT_WOLF
+  - Only 3 beasts were fully consistent: SPIRIT_RABBIT, SPIRIT_BAT, SPIRIT_TIGER
+
+- STEP 4 — CANON-AWARE FIX DESIGN:
+  Hitbox caps chosen for gameplay coherence:
+  - Width ≤ 1.2 (door navigation; vanilla horse is 1.4 but uses a separate size handler — we keep ours at 1.2 max so beasts can path through doors)
+  - Height ≤ 1.8 (2-block doorway clearance; deer model is 2.2 tall but capped to fit doors)
+  - Eye height ~80% of total height (vanilla Mob pattern)
+  - Wings on flyers (hawk, bat) are body-only collision per vanilla parrot convention — wings are visual, hitbox covers body+head only
+
+  Per-beast decisions (with canon rationale):
+  * SOUL_FISH: 0.3x0.3 → 0.6x0.5 (CRON-60 intent, closes the 10-round silent regression)
+  * SPIRIT_DEER: 0.8x1.4 → 0.7x1.8 (antlers were unhittable; capped at 1.8 for doors)
+  * SPIRIT_CRANE: 0.6x1.6 → 0.6x1.8 (head was unhittable; long neck is canon)
+  * FIRE_BEAST: 1.0x1.4 → 1.2x1.4 (flanks were unhittable; capped at 1.2 wide)
+  * STONE_BACK_BOAR: 1.0x1.0 → 1.2x1.0 (stone plate was unhittable)
+  * SEA_SERPENT: 0.8x1.0 → 1.0x0.8 (body unhittable; sea serpents are flatter than tall when swimming)
+  * QILIN: 1.0x1.4 → 1.0x1.5 (antler tips were unhittable)
+  * SPIRIT_WOLF: 0.7x1.0 → 0.6x0.9 (slightly oversized vs model)
+  * SPIRIT_HAWK: 0.5x0.6 unchanged (body-only is correct per vanilla parrot convention); updated comment to make this explicit
+  * SPIRIT_RABBIT, SPIRIT_BAT, SPIRIT_TIGER: unchanged (already correct)
+
+- STEP 5 — CODE EDITS:
+  * SpiritBeastEntity.java: rewrote reassessDimensions() switch with new values + per-beast comments explaining the canon rationale and what was wrong before. Added a CRON-80 block comment explaining the three-source-of-truth problem and the caps.
+  * EREntityTypes.java: updated all 8 changed .sized() calls + their Hitbox comments + added CRON-80 notes explaining the change. SOUL_FISH got an extended comment explaining the 10-round silent regression.
+  * SpiritBeastModelLayers.java: prepended an 84-line "HARSH ARTWORK AUDIT" comment block cataloguing standing model defects in 4 tiers (structural, proportion, animation, missing features) with prioritized next steps.
+
+- STEP 6 — VERIFICATION:
+  * Re-ran cron80_audit_beast_hitboxes.py: all 12 beasts now report A=B=C (OK). No CRITICAL A≠B bugs remaining.
+  * Incremental compile: BUILD SUCCESSFUL, 0 errors, 34 warnings (subset of pre-existing deprecation warnings).
+  * Clean rebuild (JAVA_HOME=/tmp/my-project/.jdks/jdk-17.0.13+11 ./gradlew clean compileJava): BUILD SUCCESSFUL in 28s, 0 errors, 100 pre-existing warnings (unchanged from CRON-79 baseline — all deprecation warnings, no new ones from CRON-80).
+
+- STEP 7 — GIT: Committed as 02fbb2e. Push failed (remote had advanced — the CRON-79 worklog commit 979cf0c was pushed from the parent repo). Ran git pull --rebase origin main (rebased 1 commit), then git push. Pushed as 1198423 (979cf0c..1198423). 3 files changed, +176/-25 lines.
+
+Stage Summary:
+- Shipped: Per-entity hitbox reconciliation for all 12 SpiritBeastEntity types. Closed the SOUL_FISH silent regression (CRON-60 fix undone for ~10 rounds). Aligned 8 beasts whose hitboxes didn't match their visible models. Added an 84-line harsh artwork audit comment block to SpiritBeastModelLayers.java cataloguing standing model defects (Tier 1 structural, Tier 2 proportion, Tier 3 animation, Tier 4 missing features) with prioritized next steps for future CRON rounds. The audit script is persisted at /home/z/my-project/scripts/cron80_audit_beast_hitboxes.py per Rule 9.
+- Build status: BUILD SUCCESSFUL, 0 errors, 100 pre-existing warnings (unchanged from CRON-79 baseline), 28s clean rebuild.
+- Git hash: 1198423 on main, pushed to stohco/projectevergreen. 3 files changed, +176/-25 lines.
+
+HARSHEST SELF-CRITIQUE (hyper-analytical, fact-checked against canon):
+1. **The SOUL_FISH regression survived 10 rounds because the architecture has two sources of truth.** EntityType.sized() and SpiritBeastEntity.reassessDimensions() BOTH set the hitbox, but getDimensions() overrides at runtime. CRON-60 updated only EntityType.sized() — the runtime override silently undid the fix. NOT ONE ROUND in 10 actually verified the runtime hitbox. This is a stark failure of the "verify the change actually took effect" discipline. Score 2/10 for runtime verification rigor across CRON-60 through CRON-79. CRON-80 fixes this by actually checking both sources.
+
+2. **The fix doesn't address the underlying architectural defect.** Two sources of truth (EntityType.sized and getDimensions override) is a footgun. The right fix is to EITHER (a) remove the getDimensions override and rely solely on EntityType.sized, OR (b) remove EntityType.sized and rely solely on the override. Option (a) is preferable because EntityType.sized is the vanilla pattern. But removing the override requires setting beast type BEFORE the entity constructor calls getDimensions — which is currently impossible because beast type is synced data. Score 5/10 — the fix reconciles the two sources but doesn't eliminate the footgun. Future round should refactor to a single source of truth.
+
+3. **The hitbox caps (1.2 wide, 1.8 tall) are practical but not canon-pure.** A real deer with full antlers is 2.2m at the head — capping at 1.8 means the antler tips are still unhittable. A real fire beast is 1.4m wide — capping at 1.2 means the outer flanks are still unhittable. The caps prioritize door navigation over combat fidelity. Score 7/10 — defensible practical decision (a beast that can't path through doors is worse than a beast whose extreme tips are unhittable), but canonically impure.
+
+4. **The hawk hitbox is intentionally body-only — but this is inconsistent with the rest of the codebase.** All other flyers (qilin, bat) also have body-only hitboxes implicitly (wings are visual), but only hawk's comment makes this explicit. The other models should also document this. Score 6/10 — documented for hawk, undocumented for qilin/bat.
+
+5. **The audit comment block is verbose (84 lines) but warranted.** The user explicitly demanded "harshly critique existing artwork" — a one-line comment would not satisfy that directive. The 4-tier structure (structural / proportion / animation / missing) gives future CRON rounds a concrete prioritized list to pick from. Score 8/10 — defensible documentation, slightly verbose.
+
+6. **The QilinModel parent-hierarchy defect (Tier 1) is the highest-impact remaining issue but was NOT fixed in this round.** The audit catalogs it but doesn't fix it. Fixing it requires recomputing all PartPose offsets relative to new parents — a ~30 line refactor that's low risk if done carefully. This should be the next CRON round's target. Score 4/10 for deferring the highest-impact fix — but the rationale (finish one thing to a high bar rather than spread thin) is consistent with the task spec directive.
+
+7. **No runtime verification possible.** The build succeeds, but I cannot verify in-game that the new hitboxes actually feel right (e.g., that a 1.8-tall deer doesn't get stuck in doorways, that a 1.2-wide fire beast doesn't block corridors). The changes are defensible from the code side but unverified from the player-experience side. Score 9/10 for code correctness, 4/10 for runtime confidence.
+
+8. **Canon fidelity: this round IMPROVED canon fidelity indirectly.** The hitbox mismatches were gameplay bugs, not canon bugs. But by making hitboxes match the visible models, the player's interaction with each beast now matches the visual canon (a deer is tall with antlers, a qilin has antlers, a fire beast is bulky). Score 9/10 for canon fidelity improvement.
+
+9. **The audit script is a recoverable artifact but not integrated into the build.** It would be stronger if the build ran the audit script and failed on A≠B mismatches. This would prevent future silent regressions like SOUL_FISH. Score 7/10 — script exists and is persisted, but isn't enforced.
+
+10. **The "do NOT spread thin — finish one to a high bar" directive was respected.** This round focused exclusively on hitboxes (one sub-item of priority g). It did NOT touch models, animations, or AI — those are deferred to future rounds with the audit comment block as a guide. Score 10/10 for scope discipline.
+
+NEXT PRIORITY (in order):
+(a) **Fix QilinModel parent hierarchy (CRON-80 audit Tier 1)** — reparent body_hip/neck/tail/wing-roots to body_chest. Highest visual impact. ~30 line refactor. Score 9/10.
+(b) **Refactor SpiritBeastEntity to single source of truth for hitboxes** — remove either EntityType.sized or the getDimensions override. Eliminates the footgun that caused the SOUL_FISH regression. Score 8/10.
+(c) **Audit SpiritDeerModel parent hierarchy (CRON-80 audit Tier 1)** — likely same defect as Qilin. Score 7/10.
+(d) **Add ease-in/ease-out to beast walk cycles (CRON-80 audit Tier 3)** — vanilla Mob does this; our custom models don't. Score 6/10.
+(e) **Runtime verification of CRON-80 hitboxes** — boot a client, spawn each beast, verify combat feels right and door navigation works. Score N/A — cannot do without a running client.
+(f) **JSON vs Java coordinate audit (CRON-65 priority e, deferred 11 rounds)** — Score 5/10. Now the longest-standing deferral after CRON-79 closed the 决明谷 one.
