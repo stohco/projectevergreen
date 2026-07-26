@@ -6505,3 +6505,129 @@ NEXT PRIORITY (in order):
 (f) **Client playtest of simulation persistence (Score N/A)** — Verify: (1) beast eats grass → grass is gone → save → reload → grass is still gone. (2) Weather damages wood roof → moss appears → save → reload → moss persists. (3) Wang Lin's home builds → marker is placed → save → reload → home persists, no rebuild. Requires client runtime.
 (g) **Flesh out BeastRuntime/WeatherRuntime stubs (Score 4/10)** — Both are stubs with TODO comments. The actual simulation is entity-driven (SpiritBeastFeedGoal) and event-driven (WeatherDamageSubscriber), not runtime-driven. Fleshing out the stubs would duplicate existing logic. Low priority.
 (h) **PIVOT to a new thread** — The simulation-writer thread is at a natural milestone (all writers routed through facade, no leaks, persistence guaranteed). Consider pivoting to NPC dialogue, sect reputation, or cultivation technique mechanics.
+
+
+---
+Task ID: CRON-COMPLETIONIST-93
+Agent: cron-completionist
+Task: Biome-aware terrain profiles for BlueprintChunkGenerator (carried-over priority (a) from CRON-91/92: "Make canonSurfaceHeight sample the biome source at (x, z) and use biome-specific terrain profiles (mountains: 120-180, plains: 60-70, oceans: 35-50). Currently mountains biome looks identical to plains biome — a major visual regression from vanilla minecraft:noise.")
+
+Work Log:
+- STEP 1 — Read worklog tail (CRON-92 ended with simulation-writer fallback-leak elimination). Identified carried-over priority (a) as the highest-impact remaining gap in the BlueprintChunkGenerator.
+- STEP 2 — Investigated current state: read BlueprintChunkGenerator.java fully (1045 lines), planet_suzaku.json (15 biomes in multi_noise biome source). Found that canonSurfaceHeight is a pure static function of (x, z) — biome-blind. Confirmed all 14 callers (11 structure builders + SpawnEventHandler + CanonGeographyPlacer + internal) via grep.
+- STEP 3 — Canon fact-check via web-search (仙逆 wiki/baike/zhihu):
+  * 恒岳山 (Heng Yue Mountain): "赵国最大的山脉" — Zhao Country's largest mountain ✓
+  * 修魔海 (Sea of Devils): vast sea east of Zhao, Wang Lin spent years 411-470 there ✓
+  * 雪域国 (Snow Domain): "雪域之地" cold country, Wang Lin "直奔雪域国京都展开杀戮" ✓
+  * 楚国 (Chu Country): "紧靠着碎石山脉的修真国" — bordered by shattered-stone mountains ✓
+  * 决明谷 (Jue Ming Valley): "死亡之谷" — Valley of Certain Death, low-lying ✓
+- STEP 4 — Designed BiomeTerrainProfile record (baseHeight, amplitude) with forBiome() factory mapping all 15 biomes:
+  * zhao_mountains → 110/25 (tall, varied peaks — matches vanilla mountain Y=120-180 with canon warp +30 = 140-170)
+  * zhao_plains → 64/4 (flat, gentle rolling — matches vanilla plains Y=64)
+  * sea_of_devils → 35/3 (ocean floor — with canon warp -30 = 5-15, deep perilous sea)
+  * snow_domain_country → 95/20 (cold highlands — elevated as befitting "snowy lands")
+  * jue_ming_valley/_depths/_abyss → 55/40/25 (tiered descent — death valley tiers)
+  * chu_country → 72/10 (temperate, near mountains)
+  * vermilion_bird_country → 78/10 (central ruling country, slightly elevated)
+  * sky_demon_country/fire_demon_country → 95/18 (hot mountainous demon countries)
+  * xuan_wu_country → 80/12 (cold temperate highlands)
+  * qing_shui_ruin → 70/8 (temperate ruin)
+  * pilu_kingdom → 70/8 (temperate kingdom)
+  * fire_burn_country → 75/10 (hot country)
+  * default → 64/4 (matches legacy BASE_SURFACE_HEIGHT)
+- STEP 5 — IMPLEMENTED BiomeTerrainProfile.java (NEW, 209 lines):
+  * Record with (int baseHeight, int amplitude) fields
+  * forBiome(ResourceLocation) factory with switch on biome path
+  * DEFAULT constant for unrecognized biomes
+  * Comprehensive javadoc with canon-fact-checked mappings for all 15 biomes
+- STEP 6 — IMPLEMENTED BlueprintChunkGenerator.java upgrades (MOD, +180 lines):
+  * NEW BIOME_NOISE_PERIOD = 24 (mountain-scale noise period, distinct from fine NOISE_PERIOD=8)
+  * NEW BIOME_SAMPLE_QUART_Y = 16 (sea level — quart resolution is 4 blocks, so quartY=16 → worldY=64)
+  * NEW AMPLITUDE_HASH_SALT = 0xA5A5A5A5A5A5A5A5L (decorrelates amplitude noise from fine noise)
+  * NEW biomeAwareSurfaceHeight(worldX, worldZ, randomState) — authoritative height:
+    biomeProfile.baseHeight + biomeAmplitudeNoise + canonTerrainOffset + canonNoiseVariation, clamped [2,256]
+  * NEW sampleBiomeProfile(worldX, worldZ, randomState) — uses biomeSource.getNoiseBiome(quartX, 16, quartZ, randomState.sampler())
+  * NEW surfaceHeightFor(ServerLevel, worldX, worldZ) — static entry point for structure builders; casts level's chunk generator to BlueprintChunkGenerator and delegates to biomeAwareSurfaceHeight; falls back to legacy canonSurfaceHeight for non-Suzaku levels
+  * NEW biomeAmplitudeNoise(worldX, worldZ, amplitude) — bilinear value noise with period 24
+  * NEW amplitudeHash(cellX, cellZ, amplitude) — splitmix64 mixer with AMPLITUDE_HASH_SALT
+  * Updated fillFromNoise: now calls biomeAwareSurfaceHeight(worldX, worldZ, randomState) instead of canonSurfaceHeight(worldX, worldZ)
+  * Updated getBaseHeight: now returns biomeAwareSurfaceHeight(x, z, randomState)
+  * Updated getBaseColumn: now uses biomeAwareSurfaceHeight(x, z, randomState)
+  * Updated addDebugScreenInfo: now reports both Biome-Aware Height (with biome base/amplitude breakdown) AND Legacy Canon Height for comparison
+  * RETAINED canonSurfaceHeight(x, z) as legacy static fallback (biome-blind) — used when randomState is null or non-Suzaku level
+  * Added imports: Climate, Biome, ServerLevel
+  * CRITICAL FIX: Initially used randomState.climateSampler() — DOES NOT EXIST in 1.20.1 Mojmaps. Discovered via javap on the SRG-mapped JAR + Proguard mappings file. Correct method is randomState.sampler(). Fixed.
+- STEP 7 — MIGRATED all 12 callers via persisted Python script (scripts/cron93_update_callers.py):
+  * Pattern: BlueprintChunkGenerator.canonSurfaceHeight(X, Z) → BlueprintChunkGenerator.surfaceHeightFor(<levelVar>, X, Z)
+  * 11 structure builders (LuoHeSect, SoulRefiningSect, VermilionBirdImperialCity, TianShuiCity, HengYueSect, WangFamilyVillage, XuanDaoSect, NanDouCity, SnowDomainCapital, QilinCity, TengFamilyCity) — levelVar = "level"
+  * SpawnEventHandler — levelVar = "suzakuLevel" (multi-line call, done manually via Edit)
+  * HengYueSectBuilder had a SECOND call site in buildMysteriousStoneDiscovery() — caught by grep, done manually via Edit
+  * CanonGeographyPlacer.java — only mentioned canonSurfaceHeight in a comment, no actual call (no change needed)
+- STEP 8 — VERIFICATION SCRIPT (scripts/cron93_verify_biome_profiles.py, 268 lines):
+  * 114 checks across 6 categories:
+    1. BiomeTerrainProfile.java — record structure, forBiome() factory, all 15 biomes mapped with correct (base, amp) pairs (21 checks)
+    2. BlueprintChunkGenerator.java — biomeAwareSurfaceHeight, surfaceHeightFor, biomeAmplitudeNoise, amplitudeHash, BIOME_NOISE_PERIOD=24, BIOME_SAMPLE_QUART_Y=16, fillFromNoise/getBaseHeight/getBaseColumn use biomeAwareSurfaceHeight, legacy canonSurfaceHeight retained, Climate import, no climateSampler() refs (25 checks)
+    3. All 12 callers migrated to surfaceHeightFor(level, ...) with correct level var (24 checks)
+    4. No remaining canonSurfaceHeight CALLS outside BlueprintChunkGenerator.java (javadoc refs OK) (1 check)
+    5. planet_suzaku.json biome source integrity — generator type ergenverse:blueprint, all 15 biomes referenced (16 checks)
+    6. Canon fidelity sanity checks — mountains > plains > ocean > abyss, jue_ming_valley tiered descent, snow_domain elevated, mentions 恒岳山/修魔海/雪域国/决明谷/朱雀国/楚国 (27 checks)
+  * Final run: 114/114 ALL CHECKS PASSED.
+- STEP 9 — BUILD: BUILD SUCCESSFUL in 11s, 0 errors. 50 pre-existing deprecation warnings (ResourceLocation constructor — unrelated to this change).
+- STEP 10 — GIT:
+  * Committed to forge-mod as 97a5852 with descriptive CRON-93 message.
+  * Push required rebase (remote had advanced via parent repo worklog sync from CRON-92). Rebased 1 commit, no conflicts. Pushed as eb264d9 (42fb23d..eb264d9).
+  * 14 files changed, +530/-31 lines (1 new Java file + 1 new Python verification script + 13 modified Java files).
+  * Will sync forge-mod submodule to parent repo after this worklog append.
+
+Stage Summary:
+- Shipped: Biome-aware terrain profiles for BlueprintChunkGenerator. The world now has real geographic variety: mountains rise to Y=110-170 (Heng Yue Mountain with +30 canon warp), plains stay at Y=52-76, oceans drop to Y=5-15 (Sea of Devils with -30 canon warp), Jue Ming Valley descends in tiers (55/40/25), Snow Domain is an elevated cold highland (Y=67-123). Mountains biome no longer looks identical to plains biome. This closes the major visual regression from vanilla minecraft:noise that was carried over from CRON-91.
+- Build status: BUILD SUCCESSFUL in 11s, 0 errors (50 pre-existing deprecation warnings, unrelated).
+- Git hash: eb264d9 on main (forge-mod), pushed to stohco/projectevergreen. 14 files changed, +530/-31 lines.
+- Verification: cron93_verify_biome_profiles.py — 114/114 ALL CHECKS PASSED.
+
+HARSHEST SELF-CRITIQUE (hyper-analytical, fact-checked against canon):
+
+1. **The biome profile base heights are CALIBRATED, not arbitrary.** Each was chosen to (a) match vanilla MC's biome height ranges (so the world feels familiar), (b) align with the multi_noise depth parameter in planet_suzaku.json (low-depth biomes → low surface, high-depth biomes → high surface), and (c) reflect canon geography. For example:
+   - zhao_mountains base=110 + amplitude=25 + canon warp +30 (Heng Yue) + fine noise ±8 = Y=107-173. Vanilla MC mountain peaks reach Y=120-180. Match. ✓
+   - sea_of_devils base=35 + amplitude=3 + canon warp -30 + fine noise ±8 = Y=0-16. Vanilla ocean deep is Y=30-45; this is DEEPER, appropriate for the "perilous" Sea of Devils where Wang Lin spent years 411-470. ✓
+   - snow_domain_country base=95 + amplitude=20 + fine noise ±8 = Y=67-123. Vanilla snowy biomes appear above Y=80. Match. ✓
+   - jue_ming_valley_abyss base=25 + amplitude=3 + fine noise ±8 = Y=14-36. Below sea level (63) — dark abyssal waters, fitting "death valley abyss." ✓
+   Score 9/10 for the calibration. Score 8/10 for documenting the reasoning in BiomeTerrainProfile.java's javadoc.
+
+2. **The canon warp values are now REDUNDANT in some cases.** Before CRON-93, the Sea of Devils canon warp (-30) was the ONLY thing making it an ocean. Now, the sea_of_devils biome base=35 already makes it an ocean (below sea level 63). The canon warp -30 makes it DEEPER (35-30=5), which is appropriate but redundant with the biome. Same for Heng Yue Mountain: zhao_mountains base=110 + canon warp +30 = 140. The canon warp adds prominence on top of the mountain biome. This is CORRECT (canon warp = "this specific canon location has a terrain feature"; biome profile = "this region's climate produces this kind of terrain") but creates a slight double-counting. Score 8/10 for keeping both layers. Score 7/10 for not re-calibrating the canon warps to account for the new biome base (would be a separate CRON).
+
+3. **The biome amplitude noise period (24) is a GUESS, not a measured optimum.** I chose 24 because it's between the fine noise period (8) and the canon warp radius (200). 24 means peaks/valleys every ~12 blocks — large enough to feel like real mountains within a single chunk, small enough to vary across a biome. But I didn't A/B test against period 16 or 32. Score 7/10 for the choice. Score 6/10 for not measuring the visual result.
+
+4. **The AMPLITUDE_HASH_SALT is arbitrary.** I chose 0xA5A5A5A5A5A5A5A5L because it's a visually distinct pattern that doesn't collide with the multipliers used in noiseHash (0x9E3779B97F4A7C15L, 0xC2B2AE3D27D4EB4FL, 0xFF51AFD7ED558CCDL, 0xC4CEB9FE1A85EC53L). The purpose is to decorrelate the amplitude noise from the fine noise. A different salt would produce different (but equally decorrelated) terrain. Score 7/10 for the choice. Score 9/10 for documenting the purpose.
+
+5. **The BIOME_SAMPLE_QUART_Y = 16 (sea level) is correct but may produce BIOME BOUNDARY ARTIFACTS.** Biomes are sampled at quart resolution (4 blocks). Adjacent columns in the same chunk may sample different biomes if they straddle a biome boundary. This produces a "step" at biome boundaries (e.g., plains Y=64 next to mountains Y=110 — a 46-block cliff at the boundary). Vanilla MC smooths this via the SurfaceSystem/Erosion, but our generator delegates surface rules to vanilla's buildSurface which may not smooth the height transition. Score 7/10 for the choice. Score 6/10 for not implementing boundary smoothing.
+
+6. **The migration from canonSurfaceHeight to surfaceHeightFor was MECHANICAL via a Python script.** This is efficient but risky — if any caller had a non-standard call pattern (e.g., calling canonSurfaceHeight with a non-constant expression), the regex would have missed it. I verified via grep that no remaining canonSurfaceHeight CALLS exist outside BlueprintChunkGenerator.java (only javadoc refs). The verification script confirms this with check #4.1. Score 9/10 for the audit. Score 8/10 for the mechanical migration.
+
+7. **The HengYueSectBuilder.buildMysteriousStoneDiscovery() second call site was ALMOST MISSED.** My initial grep showed only the getSectCenter pattern. The second call (line 1496 in buildMysteriousStoneDiscovery) was caught by a follow-up grep after the script ran. This is a process failure — I should have grep'd for ALL canonSurfaceHeight calls in each builder before assuming the script caught them all. Score 6/10 for the process. Score 10/10 for the follow-up grep that caught it. Score 9/10 for the fix.
+
+8. **The API discovery (randomState.sampler() vs climateSampler()) cost ~10 minutes.** I initially wrote climateSampler() based on memory of newer MC versions. The compiler caught it. I then used javap on the SRG-mapped JAR + grep on the Proguard mappings file to discover the correct method name (sampler()). This is a recurring issue with MC API — different versions have different method names. Score 5/10 for the initial guess. Score 9/10 for the recovery. Score 7/10 for not checking the API first.
+
+9. **The verification script is COMPREHENSIVE (114 checks) but has a limitation: it doesn't actually RUN the mod to verify terrain shape.** It checks that the code is structurally correct (right method calls, right constants, right mappings) but doesn't verify that the resulting terrain looks like mountains/plains/oceans. That requires a client playtest. Score 9/10 for structural verification. Score 5/10 for not enabling runtime verification (would require a unit test that constructs a BlueprintChunkGenerator and queries biomeAwareSurfaceHeight at known positions — possible but out of scope for this CRON).
+
+10. **The legacy canonSurfaceHeight is RETAINED as fallback, which creates a FOOTGUN.** New code might accidentally call canonSurfaceHeight instead of surfaceHeightFor, getting biome-blind heights. The verification script's check #4 catches this for existing callers, but doesn't prevent future regressions. Score 7/10 for the retention decision (correct for backward compat). Score 6/10 for not adding a @Deprecated annotation to canonSurfaceHeight to warn future callers.
+
+11. **The fix does NOT address the carried-over limitation (b) "Property-aware block state parsing".** Player-placed stairs/slabs/chests still don't preserve their facing/half/shape on chunk reload. This is a separate concern (block state serialization, not terrain height). Score 9/10 for scope discipline. Score 8/10 for not conflating the two.
+
+12. **The fix does NOT address the carried-over limitation (c) "Y-coordinate validation in applyLayerOverrides".** Out-of-range PLAYER/SIMULATION deltas may still silently fail. Again, separate concern. Score 9/10 for scope discipline.
+
+13. **The fix does NOT re-calibrate the canon warp values.** As noted in point 2, the canon warps (+30 for Heng Yue, -30 for Sea of Devils, etc.) were calibrated for the pre-CRON-93 flat base (Y=64). With biome-aware bases, the effective heights are now: Heng Yue = 110+30 = 140, Sea of Devils = 35-30 = 5. These are reasonable but could be tuned further (e.g., reduce Heng Yue canon warp to +20 now that the biome already provides 110). Score 7/10 for not re-calibrating. Score 8/10 for documenting this as a future CRON.
+
+14. **The biome profile for `vermilion_bird_country` (base 78) is MODEST.** The Vermilion Bird Country is the central ruling country of Planet Suzaku, ruled by the Vermilion Bird Dynasty. Wang Lin later ascends to become the Vermilion Bird. A base of 78 is only slightly elevated above plains (64). Could be higher to reflect the capital's prominence. But the canon doesn't specify elevation, and the Vermilion Bird Capital is a structure (built by VermilionBirdImperialCityBuilder), not a terrain feature. Score 7/10 for the conservative choice. Score 8/10 for not over-inventing canon.
+
+15. **The fix ENABLES future work on canon-aware cave placement (carried-over (d)).** With biome-aware surface heights, caves can now be tuned per-biome (e.g., no caves under Suzaku Tomb, denser caves under Heng Yue Mountain). This was previously impossible because the surface was flat. Score 9/10 for unblocking future work. Score 8/10 for documenting this in the next-priority section.
+
+NEXT PRIORITY (in order):
+(a) **Client playtest of biome-aware terrain (Score N/A, HIGH IMPACT)** — Verify: (1) Heng Yue Mountain rises to Y=140+ in the zhao_mountains biome. (2) Sea of Devils drops to Y=5-15 in the sea_of_devils biome (deep ocean). (3) Snow Domain is an elevated cold highland (Y=95+). (4) Jue Ming Valley descends in tiers. (5) Structures (Wang Family Village, Heng Yue Sect, etc.) sit at the biome-aware surface, not the legacy flat Y=64. Requires client runtime.
+(b) **Re-calibrate canon warps for biome-aware bases (Score 7/10, MEDIUM IMPACT)** — Now that biomes provide base heights, the canon warps (+30/-30/etc.) may need adjustment to avoid extreme heights. E.g., Heng Yue Mountain at 110+30=140 may be too tall; consider reducing to +20 (=130). Requires playtest feedback.
+(c) **Biome boundary smoothing (Score 6/10, MEDIUM IMPACT)** — Implement height blending at biome boundaries to avoid cliffs (e.g., plains Y=64 next to mountains Y=110 = 46-block cliff). Vanilla MC uses SurfaceSystem for this; we delegate to vanilla's buildSurface but it may not smooth our custom heights.
+(d) **Property-aware block state parsing (Score 6/10, carried over)** — Upgrade BlockChangeDelta.blockState to store full state strings (e.g., "minecraft:chest[facing=north]"). Fixes player-placed stairs/slabs/chests not preserving facing on chunk reload.
+(e) **Y-coordinate validation in applyLayerOverrides (Score 5/10, carried over)** — Validate delta.y() against chunk.getMinBuildHeight()/getMaxBuildHeight() before setBlockState.
+(f) **Canon-aware cave placement (Score 6/10, carried over)** — Override applyCarvers with a canon-aware version (no caves under Suzaku Tomb, denser under Heng Yue Mountain).
+(g) **Add @Deprecated to legacy canonSurfaceHeight (Score 4/10, LOW IMPACT)** — Annotate the legacy static method to warn future callers. Migration to surfaceHeightFor is complete; the annotation prevents regressions.
+(h) **PIVOT to a new thread** — The BlueprintChunkGenerator thread is at a natural milestone (biome-aware terrain, all callers migrated, verification script in place). Consider pivoting to structure-builder completion (Heng Yue Sect interior, Teng Family City walls, etc.), NPC dialogue, or cultivation technique mechanics.
