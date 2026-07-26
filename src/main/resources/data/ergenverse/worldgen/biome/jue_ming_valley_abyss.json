@@ -1,0 +1,83 @@
+{
+  "_comment": "CRON-COMPLETIONIST-68: Jue Ming Valley Abyss (决明谷深渊) — the deepest, rarest cave layer beneath the valley. MOD-ORIGINAL: the novel does not explicitly describe an 'abyss' beneath the valley; this biome represents the deepest mythic layer where the oldest sealed beasts and ancient restrictions reside (canonically the valley has 'sealed beasts, hidden inheritance' per the blueprint). CANON ANCHOR: Wang Lin's body was destroyed at the surface valley, NOT in the abyss — the bead (天逆珠) is found in the 域外战场 (Extraterrestrial Battlefield), NOT here. Do NOT place the bead in this biome. CLIMATE: coldest (cave deepest), no precipitation, black sky/fog. SPAWNERS: heaviest monsters (the abyss is most dangerous), rarest creatures. FEATURES: rarest spirit veins (concealed + dead, representing the deep ancient essence); demon_corpse_mushroom_ancient (oldest corpses); NO surface vegetation. CARVERS: deepest cave networks only. Referenced by spirit_bat_spawns.json biome modifier. This biome exists at depth [-1.0, -0.95] in the multi_noise biome source — only the very deepest caves near the valley center.",
+  "temperature": 0.0,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "temperature_modifier": "frozen",
+  "creature_spawn_probability": 0.01,
+  "effects": {
+    "sky_color": 0,
+    "fog_color": 0,
+    "water_color": 2500128,
+    "water_fog_color": 2500128,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 8,
+        "minCount": 2,
+        "maxCount": 4
+      }
+    ],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:skeleton",
+        "weight": 50,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:wither_skeleton",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:creeper",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:witch",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:spirit_vein_concealed",
+      "ergenverse:spirit_vein_dead"
+    ],
+    [
+      "ergenverse:demon_corpse_mushroom_ancient"
+    ],
+    [],
+    [],
+    []
+  ]
+}

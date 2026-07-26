@@ -1,0 +1,78 @@
+{
+  "_comment": "CRON-COMPLETIONIST-68: Jue Ming Valley Depths (决明谷深处) — the deeper cave layer beneath the surface valley. MOD-ORIGINAL: the novel does not explicitly describe layered depths of the valley; this biome is an extrapolation of the cave networks that a 'trapping formation' valley would naturally contain. CANON ANCHOR: the valley is canonically a death-zone where Wang Lin's physical body was destroyed and many cultivators perished (决明谷修士：不计其数 per 知乎专栏). The depths represent where the oldest corpses, demon-corpse mushrooms, and sealed beasts would accumulate. CLIMATE: cold (cave-modulated), no precipitation (underground), black sky/fog (no sky visible). SPAWNERS: heavier bat swarms (cave-dwelling), more skeletons (ancient fallen cultivators), no surface monsters. FEATURES: demon_corpse_mushroom (UndergroundDecoration step 7) — primary feature; spirit_vein_quartz_ore (UndergroundOres step 6). CARVERS: cave + cave_extra_underground (deeper cave networks). Referenced by spirit_bat_spawns.json biome modifier.",
+  "temperature": 0.1,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "temperature_modifier": "none",
+  "creature_spawn_probability": 0.02,
+  "effects": {
+    "sky_color": 0,
+    "fog_color": 0,
+    "water_color": 3669368,
+    "water_fog_color": 10066329,
+    "grass_color_modifier": "none"
+  },
+  "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 15,
+        "minCount": 4,
+        "maxCount": 8
+      }
+    ],
+    "axolotls": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:skeleton",
+        "weight": 40,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:spider",
+        "weight": 25,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:creeper",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ],
+    "liquid": []
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "ergenverse:spirit_vein_quartz_ore"
+    ],
+    [
+      "ergenverse:demon_corpse_mushroom",
+      "ergenverse:demon_corpse_mushroom_dormant"
+    ],
+    [],
+    [],
+    []
+  ]
+}
