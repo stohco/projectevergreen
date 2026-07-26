@@ -32,9 +32,15 @@ import java.util.Map;
  * position + provenance overwrites the prior entry (latest-wins within a
  * provenance), so the index never grows unbounded from repeat edits to one spot.
  *
+ * <p><b>Entity-placement indexing (CRON-78).</b> {@link EntityPlacementDelta}
+ * instances are position-indexed in a separate per-provenance map, mirroring
+ * the block index. This enables O(1) lookup ("did the player place/remove an
+ * entity at this position?") and O(chunk) replay during materialization.
+ *
  * <p><b>Non-block deltas.</b> Future delta kinds (actor moves, relationships,
  * memories) are appended to a flat journal list and serialized alongside block
- * changes. They are not position-indexed (their queries are domain-specific).
+ * and entity changes. They are not position-indexed (their queries are
+ * domain-specific).
  *
  * <p><b>Persistence.</b> {@link #serialize(CompoundTag)} writes the whole
  * journal; {@link #deserialize(CompoundTag)} rebuilds it. The
@@ -50,12 +56,16 @@ public final class WorldDeltaStore {
     /** Per-provenance index of the latest block change at each packed position. */
     private final Map<Provenance, Map<Long, BlockChangeDelta>> blockIndex = new EnumMap<>(Provenance.class);
 
-    /** Journal of all non-block deltas (actor moves, relationships, memories, …). */
+    /** Per-provenance index of the latest entity placement at each packed position (CRON-78). */
+    private final Map<Provenance, Map<Long, EntityPlacementDelta>> entityIndex = new EnumMap<>(Provenance.class);
+
+    /** Journal of all non-block, non-entity deltas (actor moves, relationships, memories, …). */
     private final List<WorldDelta> journal = new ArrayList<>();
 
     public WorldDeltaStore() {
         for (Provenance p : Provenance.values()) {
             blockIndex.put(p, new HashMap<>());
+            entityIndex.put(p, new HashMap<>());
         }
     }
 
@@ -76,6 +86,8 @@ public final class WorldDeltaStore {
         }
         if (delta instanceof BlockChangeDelta bcd) {
             blockIndex.get(bcd.provenance()).put(PackedPos.pack(bcd.x(), bcd.y(), bcd.z()), bcd);
+        } else if (delta instanceof EntityPlacementDelta epd) {
+            entityIndex.get(epd.provenance()).put(PackedPos.pack(epd.x(), epd.y(), epd.z()), epd);
         } else {
             journal.add(delta);
         }
@@ -104,6 +116,42 @@ public final class WorldDeltaStore {
         return blockIndex.get(p).size();
     }
 
+    // ── Entity queries (CRON-78) ────────────────────────────────────────
+
+    /** Latest entity placement delta at pos for the given provenance, or null. */
+    public synchronized EntityPlacementDelta getEntityPlacement(int x, int y, int z, Provenance p) {
+        return entityIndex.get(p).get(PackedPos.pack(x, y, z));
+    }
+
+    /** True if an entity placement delta is recorded at pos for the given provenance. */
+    public synchronized boolean hasEntityPlacement(int x, int y, int z, Provenance p) {
+        return entityIndex.get(p).containsKey(PackedPos.pack(x, y, z));
+    }
+
+    /** Number of entity placements recorded for a provenance. */
+    public synchronized int entityPlacementCount(Provenance p) {
+        return entityIndex.get(p).size();
+    }
+
+    /**
+     * All entity placements (across PLAYER + SIMULATION) whose position falls
+     * in the given chunk. Used by the {@link dev.ergenverse.runtime.materialize.ChunkMaterializer}
+     * to replay entity placements after canon blocks are placed.
+     */
+    public synchronized List<EntityPlacementDelta> getEntityPlacementsInChunk(int chunkX, int chunkZ) {
+        int minX = chunkX * 16, minZ = chunkZ * 16;
+        int maxX = minX + 15, maxZ = minZ + 15;
+        List<EntityPlacementDelta> out = new ArrayList<>();
+        for (Provenance p : new Provenance[]{ Provenance.PLAYER, Provenance.SIMULATION }) {
+            for (EntityPlacementDelta d : entityIndex.get(p).values()) {
+                if (d.x() >= minX && d.x() <= maxX && d.z() >= minZ && d.z() <= maxZ) {
+                    out.add(d);
+                }
+            }
+        }
+        return out;
+    }
+
     /**
      * All block changes (across PLAYER + SIMULATION) whose position falls in
      * the given chunk. Used by the {@link dev.ergenverse.runtime.materialize.ChunkMaterializer}
@@ -127,16 +175,20 @@ public final class WorldDeltaStore {
         return out;
     }
 
-    /** Total number of recorded deltas (block + non-block), for diagnostics. */
+    /** Total number of recorded deltas (block + entity + non-block), for diagnostics. */
     public synchronized int size() {
         int n = journal.size();
-        for (Provenance p : Provenance.values()) n += blockIndex.get(p).size();
+        for (Provenance p : Provenance.values()) {
+            n += blockIndex.get(p).size();
+            n += entityIndex.get(p).size();
+        }
         return n;
     }
 
     /** Wipe the journal (used when starting a brand-new save). */
     public synchronized void clear() {
         for (Provenance p : Provenance.values()) blockIndex.get(p).clear();
+        for (Provenance p : Provenance.values()) entityIndex.get(p).clear();
         journal.clear();
     }
 
@@ -150,8 +202,12 @@ public final class WorldDeltaStore {
             for (BlockChangeDelta d : blockIndex.get(p).values()) {
                 list.add(WorldDeltaCodec.toNbt(d));
             }
+            // Entity placements (CRON-78).
+            for (EntityPlacementDelta d : entityIndex.get(p).values()) {
+                list.add(WorldDeltaCodec.toNbt(d));
+            }
         }
-        // Non-block deltas.
+        // Non-block, non-entity deltas.
         for (WorldDelta d : journal) {
             list.add(WorldDeltaCodec.toNbt(d));
         }

@@ -295,8 +295,16 @@ public final class WangFamilyVillageBuilder {
             if (!runtime.isInitialized()) return false;
             WorldDeltaStore store = runtime.deltaStore();
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-            return store.hasBlock(x, y, z, Provenance.PLAYER)
-                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+            // Block deltas (CRON-63).
+            if (store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION)) return true;
+            // Entity placement deltas (CRON-78) — covers player-placed frames
+            // (PLACE) and player-removed canon frames (REMOVE). Required so
+            // the canon builder skips re-placement when the player directly
+            // attacks a canon ItemFrame (no support break, no CRON-76 cascade).
+            if (store.hasEntityPlacement(x, y, z, Provenance.PLAYER)
+                    || store.hasEntityPlacement(x, y, z, Provenance.SIMULATION)) return true;
+            return false;
         } catch (Throwable t) {
             // Defensive: never let a delta-store query failure block a build.
             // Log at debug (not error) to avoid log spam if this fires

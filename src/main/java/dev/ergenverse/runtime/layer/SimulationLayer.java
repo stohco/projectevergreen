@@ -2,13 +2,14 @@ package dev.ergenverse.runtime.layer;
 
 import dev.ergenverse.runtime.Provenance;
 import dev.ergenverse.runtime.delta.BlockChangeDelta;
+import dev.ergenverse.runtime.delta.EntityPlacementDelta;
 import dev.ergenverse.runtime.delta.WorldDeltaStore;
 
 /**
  * SimulationLayer — the simulation-evolution stratum (Provenance.SIMULATION).
  *
- * <p>Backed by the {@link WorldDeltaStore}'s per-provenance block index,
- * filtered to SIMULATION-provenance changes. Stateless view, like
+ * <p>Backed by the {@link WorldDeltaStore}'s per-provenance block AND entity
+ * indexes, filtered to SIMULATION-provenance changes. Stateless view, like
  * {@link PlayerLayer}.
  *
  * <p>Examples of what lives here: a spirit beast harvests an herb (herb → air),
@@ -19,6 +20,11 @@ import dev.ergenverse.runtime.delta.WorldDeltaStore;
  * <p>Resolution priority: PLAYER &gt; SIMULATION &gt; CANON. If the player has
  * also edited a position, the player wins (the composite asks PlayerLayer
  * first). The simulation layer is the second authority.
+ *
+ * <p><b>CRON-78:</b> {@link #getChunkContribution} now also surfaces
+ * {@link EntityPlacementDelta}s for symmetry with {@link PlayerLayer} — when
+ * future simulation subsystems place or remove decoration entities (e.g., a
+ * sect NPC hanging a banner), the materializer will replay them.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
@@ -42,6 +48,10 @@ public final class SimulationLayer implements WorldLayer {
         ChunkContribution c = new ChunkContribution();
         for (BlockChangeDelta d : store.getBlockChangesInChunk(chunkX, chunkZ)) {
             if (d.provenance() == Provenance.SIMULATION) c.blockChanges.add(d);
+        }
+        // CRON-78: surface entity placements for symmetry with PlayerLayer.
+        for (EntityPlacementDelta d : store.getEntityPlacementsInChunk(chunkX, chunkZ)) {
+            if (d.provenance() == Provenance.SIMULATION) c.entityPlacements.add(d);
         }
         return c;
     }

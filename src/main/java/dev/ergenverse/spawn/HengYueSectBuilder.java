@@ -246,6 +246,16 @@ public final class HengYueSectBuilder {
      *
      * <p>Defensive: returns false (no delta → proceed with placement) if the
      * WorldRuntime is not yet initialized.
+     *
+     * <p><b>CRON-78:</b> now also checks the entity-placement index. This is
+     * required because the player can remove a canon ItemFrame by directly
+     * attacking it (left-click) — that path doesn't trigger the CRON-76
+     * cascade (no support block broken), so no BLOCK "air" delta is recorded.
+     * The {@link dev.ergenverse.runtime.PlayerEntityDeltaTracker} records an
+     * ENTITY REMOVE delta at the entity's position instead. Without checking
+     * the entity index here, the canon builder would re-spawn the canon
+     * ItemFrame on next chunk-load — the long-standing bug that CRON-76
+     * critique #10 mis-claimed was closed.
      */
     private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
         try {
@@ -253,8 +263,14 @@ public final class HengYueSectBuilder {
             if (!runtime.isInitialized()) return false;
             WorldDeltaStore store = runtime.deltaStore();
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-            return store.hasBlock(x, y, z, Provenance.PLAYER)
-                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+            // Block deltas (CRON-63).
+            if (store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION)) return true;
+            // Entity placement deltas (CRON-78) — covers player-placed frames
+            // (PLACE) and player-removed canon frames (REMOVE).
+            if (store.hasEntityPlacement(x, y, z, Provenance.PLAYER)
+                    || store.hasEntityPlacement(x, y, z, Provenance.SIMULATION)) return true;
+            return false;
         } catch (Throwable t) {
             Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
                     pos, t.getMessage());
@@ -1307,8 +1323,66 @@ public final class HengYueSectBuilder {
     //  Narrative helpers (same pattern as WangFamilyVillageBuilder)
     // ═══════════════════════════════════════════════════════════════════
 
+    /**
+     * Place an {@link ItemFrame} entity at the given position, with the
+     * same chunk-filter and provenance guards as {@link #sb}.
+     *
+     * <p><b>CRON-COMPLETIONIST-78:</b> prior to this round,
+     * {@code placeItemFrame} called {@code level.addFreshEntity(frame)}
+     * directly, bypassing both the chunk filter and the provenance guard.
+     * This had two consequences:
+     * <ol>
+     *   <li><b>Chunk-filter bypass:</b> a frame at {@code base.offset(-2, 3, -6)}
+     *       would be spawned even when {@code buildForChunk} was building an
+     *       unrelated chunk. Item frames are entities, not blocks, so they
+     *       don't trigger cascading chunk-loads the way block placements do
+     *       — but they still spawn visible duplicates if multiple chunk-loads
+     *       in the same footprint each spawn their own frame.</li>
+     *   <li><b>Provenance bypass (the real bug):</b> when a player broke the
+     *       block supporting a canon item frame, the CRON-76 cascade recorded
+     *       a PLAYER "air" delta at the frame's position — but this
+     *       {@code placeItemFrame} method did NOT consult the delta store, so
+     *       on the next chunk-load the canon builder would re-spawn the frame,
+     *       leaving it floating where the support block used to be. The
+     *       CRON-76 stage summary claimed the leak was closed; in fact it was
+     *       only closed for {@code WangFamilyVillageBuilder.placeItemFrame}
+     *       (which got the guard in CRON-71). Heng Yue Sect — the most-visited
+     *       canon structure, with 5 item frame sites — was still leaking.</li>
+     * </ol>
+     *
+     * <p>The fix mirrors {@code WangFamilyVillageBuilder.placeItemFrame}
+     * (CRON-71) and {@code sb()} (CRON-63):
+     * <ol>
+     *   <li><b>Chunk filter:</b> if {@link #CURRENT_BOUNDS} is non-null and
+     *       (x, z) falls outside the bounds, skip the spawn.</li>
+     *   <li><b>Provenance guard:</b> if {@link #CURRENT_BOUNDS} is non-null
+     *       and a PLAYER or SIMULATION delta exists at {@code pos}, skip the
+     *       spawn — the player (or simulation) has edited this position, and
+     *       re-spawning the frame would undo that edit.</li>
+     * </ol>
+     *
+     * <p><b>Limitation:</b> the provenance guard checks the BLOCK position of
+     * the frame, not the entity's existence. See WangFamilyVillageBuilder's
+     * Javadoc (lines 680-734) for the full limitation discussion — the same
+     * caveat applies here. The CRON-78 entity-placement tracking closes the
+     * player-PLACEMENT direction; the player-REMOVAL direction (when the
+     * player attacks the frame directly) is handled by the
+     * {@code PlayerEntityDeltaTracker}.
+     *
+     * <p><b>Full-build path:</b> when {@link #CURRENT_BOUNDS} is null
+     * (full-build path — {@link #build}, called by SpawnEventHandler and
+     * ErgenverseCommand), no filtering or guarding occurs. This matches
+     * {@code sb()}'s behavior.
+     */
     private static void placeItemFrame(ServerLevel level, BlockPos pos,
                                           Direction facing, ItemStack item) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null) {
+            // Guard 1: chunk filter.
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            // Guard 2: provenance-aware rebuild guard.
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
         ItemFrame frame = new ItemFrame(level, pos, facing);
         frame.setItem(item);
         level.addFreshEntity(frame);

@@ -5,6 +5,7 @@ import dev.ergenverse.runtime.ChunkBounds;
 import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
 import dev.ergenverse.runtime.WorldRuntime;
 import dev.ergenverse.runtime.delta.BlockChangeDelta;
+import dev.ergenverse.runtime.delta.EntityPlacementDelta;
 import dev.ergenverse.runtime.layer.ChunkContribution;
 import dev.ergenverse.runtime.layer.CompositeWorldLayer;
 import dev.ergenverse.runtime.layer.WorldLayer;
@@ -92,6 +93,14 @@ public final class PlanetSuzakuChunkMaterializer implements ChunkMaterializer {
                 // Sim/player block changes: replay onto the live level.
                 for (BlockChangeDelta d : c.blockChanges) {
                     runtime.world().applyBlockChange(d.x(), d.y(), d.z(), d.blockState(), d.provenance());
+                }
+                // CRON-78: replay entity placements (PLACE and REMOVE) after
+                // block changes. This re-creates player-placed ItemFrames/Paintings
+                // (idempotent — skips if entity already exists) and discards
+                // player-removed canon entities (no-op if already gone).
+                for (EntityPlacementDelta d : c.entityPlacements) {
+                    runtime.world().applyEntityPlacement(
+                            d.x(), d.y(), d.z(), d.action(), d.entityNbt(), d.provenance());
                 }
             }
         }

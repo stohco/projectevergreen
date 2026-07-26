@@ -2,13 +2,22 @@ package dev.ergenverse.runtime.layer;
 
 import dev.ergenverse.runtime.Provenance;
 import dev.ergenverse.runtime.delta.BlockChangeDelta;
+import dev.ergenverse.runtime.delta.EntityPlacementDelta;
 import dev.ergenverse.runtime.delta.WorldDeltaStore;
 import dev.ergenverse.core.Ergenverse;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
 
 /**
  * WorldFacade — the simulation's single front door for writing the world.
@@ -88,6 +97,111 @@ public final class WorldFacade {
             level.setBlock(new BlockPos(x, y, z), state, net.minecraft.world.level.block.Block.UPDATE_ALL);
         } catch (Throwable t) {
             Ergenverse.LOGGER.debug("[Ergenverse] WorldFacade.applyBlockChange failed at ({},{},{}): {}",
+                    x, y, z, t.getMessage());
+        }
+    }
+
+    // ── Entity placement (CRON-78) ─────────────────────────────────────
+
+    /**
+     * Record a player entity placement (ItemFrame or Painting) into the journal.
+     * Does NOT mirror to the live level — the entity already exists in the
+     * world (the player just placed it via right-click). The journal entry is
+     * for reload: on chunk reload, the materializer calls
+     * {@link #applyEntityPlacement} which re-creates the entity from NBT if it
+     * isn't already present (idempotent).
+     *
+     * @param entityNbt full entity NBT (via {@code entity.saveWithoutId}) —
+     *                  captures facing, item, rotation, variant, etc.
+     */
+    public void recordPlayerEntityPlacement(int x, int y, int z, CompoundTag entityNbt) {
+        store.record(new EntityPlacementDelta(x, y, z,
+                EntityPlacementDelta.Action.PLACE, entityNbt, Provenance.PLAYER));
+    }
+
+    /**
+     * Record a player entity removal into the journal. Does NOT mirror to the
+     * live level — the entity is already gone (the player attacked it, vanilla
+     * discarded it). The journal entry tells the materializer NOT to re-create
+     * a canon entity at this position on reload.
+     */
+    public void recordPlayerEntityRemoval(int x, int y, int z) {
+        store.record(new EntityPlacementDelta(x, y, z,
+                EntityPlacementDelta.Action.REMOVE, null, Provenance.PLAYER));
+    }
+
+    /**
+     * Re-apply a recorded entity placement to the live level (used by the
+     * ChunkMaterializer on reload, and by {@link EntityPlacementDelta#apply}).
+     * Does NOT re-record — the delta is already in the journal.
+     *
+     * <p><b>Idempotent for PLACE:</b> if an entity already exists at (x, y, z)
+     * (vanilla may have re-created it from chunk NBT), skip the spawn. This
+     * prevents duplicate entities when both vanilla persistence and our journal
+     * would re-create the same entity.
+     *
+     * <p><b>For REMOVE:</b> find any ItemFrame or Painting at (x, y, z) and
+     * discard it. No-op if none present.
+     */
+    public void applyEntityPlacement(int x, int y, int z,
+                                       EntityPlacementDelta.Action action,
+                                       CompoundTag entityNbt,
+                                       Provenance provenance) {
+        if (level == null) return;
+        try {
+            BlockPos pos = new BlockPos(x, y, z);
+            // Use a small box around the block pos — ItemFrames/Paintings have
+            // their position at the hanging block, with a small entity-box offset.
+            AABB box = new AABB(pos).inflate(0.5);
+
+            if (action == EntityPlacementDelta.Action.PLACE) {
+                // Idempotent: check if an entity already exists at this position.
+                List<ItemFrame> existingFrames = level.getEntitiesOfClass(ItemFrame.class, box);
+                if (!existingFrames.isEmpty()) {
+                    Ergenverse.LOGGER.debug("[Ergenverse] WorldFacade.applyEntityPlacement: " +
+                            "ItemFrame already exists at ({},{},{}) — skipping spawn.", x, y, z);
+                    return;
+                }
+                List<Painting> existingPaintings = level.getEntitiesOfClass(Painting.class, box);
+                if (!existingPaintings.isEmpty()) {
+                    Ergenverse.LOGGER.debug("[Ergenverse] WorldFacade.applyEntityPlacement: " +
+                            "Painting already exists at ({},{},{}) — skipping spawn.", x, y, z);
+                    return;
+                }
+
+                if (entityNbt == null) {
+                    Ergenverse.LOGGER.debug("[Ergenverse] WorldFacade.applyEntityPlacement: " +
+                            "PLACE delta at ({},{},{}) has null NBT — skipping.", x, y, z);
+                    return;
+                }
+
+                // Load entity from NBT and spawn it.
+                Entity entity = EntityType.loadEntityRecursive(entityNbt, level, e -> e);
+                if (entity == null) {
+                    Ergenverse.LOGGER.debug("[Ergenverse] WorldFacade.applyEntityPlacement: " +
+                            "failed to load entity from NBT at ({},{},{}).", x, y, z);
+                    return;
+                }
+                // Force the entity's position to (x, y, z) — the NBT may have a
+                // slightly different position due to floating-point entity coordinates.
+                entity.setPos(x + 0.5, y + 0.5, z + 0.5);
+                level.addFreshEntity(entity);
+                Ergenverse.LOGGER.debug("[Ergenverse] WorldFacade.applyEntityPlacement: " +
+                        "spawned {} at ({},{},{}).", entity.getType().toShortString(), x, y, z);
+            } else {  // REMOVE
+                for (ItemFrame frame : level.getEntitiesOfClass(ItemFrame.class, box)) {
+                    frame.discard();
+                    Ergenverse.LOGGER.debug("[Ergenverse] WorldFacade.applyEntityPlacement: " +
+                            "discarded ItemFrame at ({},{},{}).", x, y, z);
+                }
+                for (Painting painting : level.getEntitiesOfClass(Painting.class, box)) {
+                    painting.discard();
+                    Ergenverse.LOGGER.debug("[Ergenverse] WorldFacade.applyEntityPlacement: " +
+                            "discarded Painting at ({},{},{}).", x, y, z);
+                }
+            }
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] WorldFacade.applyEntityPlacement failed at ({},{},{}): {}",
                     x, y, z, t.getMessage());
         }
     }
