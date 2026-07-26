@@ -109,10 +109,23 @@ public final class StructureBuilderRegistry {
     private static final Map<String, Builder> BUILDERS = new HashMap<>();
 
     static {
-        // Wang Family Village — fully chunk-scoped (CRON-COMPLETIONIST-62).
-        // The lambda forwards the bounds to buildForChunk, which filters placements.
+        // Wang Family Village — CRON-126: NOW ROUTED THROUGH THE COMPOSITION SYSTEM.
+        // The legacy 1220-line WangFamilyVillageBuilder is RETIRED from the live
+        // materialization path. The CanonSettlementBuilder delegates to
+        // WangFamilyVillageComposition.create() which authors the village as a
+        // semantic tree: CanonSettlement → CanonBuilding → CanonRoom → CanonFurniture.
+        // Each object materializes itself into a VolumePlacer (chunk-filtered +
+        // provenance-aware rebuild guard). The world now understands "This is
+        // Wang Lin's bedroom" (CanonRoom function=BEDROOM, owner=wang_lin) rather
+        // than "stone brick at (3844,72,-1182)".
+        //
+        // The legacy WangFamilyVillageBuilder class is RETAINED in the codebase
+        // as reference + fallback (the /ergen debug canon-build command can
+        // materialize either). A future CRON will delete it once the composition
+        // system is fully playtested.
         register(PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.id,
-                (level, bounds) -> WangFamilyVillageBuilder.buildForChunk(level, bounds));
+                (level, bounds) -> dev.ergenverse.canon.structure.CanonSettlementBuilder
+                        .buildWangFamilyVillage(level, bounds));
 
         // CRON-COMPLETIONIST-65: Heng Yue Sect is now chunk-scoped — same pattern
         // as Wang Family Village. The registry forwards ChunkBounds to
