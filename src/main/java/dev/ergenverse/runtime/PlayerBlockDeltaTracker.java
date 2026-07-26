@@ -156,6 +156,13 @@ public final class PlayerBlockDeltaTracker {
 
     /**
      * When the player places a block, record the new block state in the player delta.
+     *
+     * <p><b>CRON-COMPLETIONIST-94:</b> now captures the FULL block state string
+     * (e.g. {@code "minecraft:chest[facing=north,waterlogged=false]"}) instead
+     * of just the block id ({@code "minecraft:chest"}). This preserves the
+     * block's facing, half, shape, waterlogged, etc. across save/load. Before
+     * CRON-94, a player-placed chest would revert to its default facing on
+     * chunk reload — now it keeps the facing the player chose.
      */
     @SubscribeEvent
     public static void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
@@ -168,7 +175,11 @@ public final class PlayerBlockDeltaTracker {
         if (blockId == null) return;
 
         try {
-            WorldRuntime.get().world().setPlayerBlock(pos.getX(), pos.getY(), pos.getZ(), blockId.toString());
+            // CRON-94: serialize the full BlockState (with properties) instead
+            // of just the block id. BlockStateCodec.serialize delegates to
+            // BlockState.toString() which produces "namespace:path[prop=val,...]".
+            String stateString = dev.ergenverse.runtime.delta.BlockStateCodec.serialize(state);
+            WorldRuntime.get().world().setPlayerBlock(pos.getX(), pos.getY(), pos.getZ(), stateString);
         } catch (Exception e) {
             Ergenverse.LOGGER.debug("[Ergenverse] PlayerBlockDeltaTracker place failed: {}", e.getMessage());
         }

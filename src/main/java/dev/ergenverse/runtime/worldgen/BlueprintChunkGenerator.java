@@ -505,27 +505,26 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     }
 
     /**
-     * Resolve a registry id string (e.g. {@code "minecraft:stone"}) to a
-     * {@link BlockState}. Returns the default block state (no property
-     * overrides — the WorldDeltaStore journals block ids, not full state
-     * strings, so default state is the correct interpretation). Returns
-     * {@code null} for unresolvable ids.
+     * Resolve a block state string to a {@link BlockState}.
      *
-     * <p>Mirrors {@link dev.ergenverse.runtime.layer.WorldFacade#resolveBlockState}
-     * — kept private here to avoid pulling WorldFacade into the chunk-gen
-     * dependency graph (chunk-gen must remain pure w.r.t. the blueprint and
-     * the layer journal, not depend on the facade's live-level mirror logic).
+     * <p><b>CRON-COMPLETIONIST-94:</b> now delegates to
+     * {@link dev.ergenverse.runtime.delta.BlockStateCodec#parse} which
+     * supports property overrides (e.g. {@code "minecraft:chest[facing=north]"}).
+     * Before CRON-94, this method called {@code block.defaultBlockState()},
+     * discarding all property information — PLAYER/SIMULATION deltas with
+     * directional blocks (stairs, slabs, chests, doors) reverted to default
+     * facing when the chunk regenerated via {@code fillFromNoise}.
+     *
+     * <p>The codec lives in the {@code delta} package, which is already a
+     * dependency of this class (it imports {@link BlockChangeDelta}). The
+     * chunk-gen purity constraint (no dependency on WorldFacade) is preserved
+     * — the codec has no WorldFacade dependency.
+     *
+     * <p>Backward compatible: bare block ids ({@code "minecraft:stone"})
+     * still resolve to the default state.
      */
     private static BlockState resolveBlockState(String blockId) {
-        if (blockId == null || blockId.isEmpty()) return null;
-        try {
-            ResourceLocation rl = new ResourceLocation(blockId);
-            Block block = ForgeRegistries.BLOCKS.getValue(rl);
-            if (block == null) return null;
-            return block.defaultBlockState();
-        } catch (Throwable t) {
-            return null;
-        }
+        return dev.ergenverse.runtime.delta.BlockStateCodec.parse(blockId);
     }
 
     /**

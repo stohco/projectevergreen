@@ -1281,11 +1281,12 @@ public class ErgenDebugCommand {
         ctx.getSource().sendSuccess(() -> Component.literal(
             "\u00a77Provenance:\u00a7r \u00a7aSIMULATION\u00a7r"), false);
 
-        // Validate blockId resolves
+        // CRON-COMPLETIONIST-94: validate via BlockStateCodec.parse so the
+        // command accepts full state strings like "minecraft:chest[facing=north]".
+        // The old validation used new ResourceLocation(blockId) which threw on '['.
         try {
-            var rl = new net.minecraft.resources.ResourceLocation(blockId);
-            var block = net.minecraftforge.registries.ForgeRegistries.BLOCKS.getValue(rl);
-            if (block == null || block.defaultBlockState() == null) {
+            var parsed = dev.ergenverse.runtime.delta.BlockStateCodec.parse(blockId);
+            if (parsed == null) {
                 ctx.getSource().sendSuccess(() -> Component.literal(
                     "\u00a7cBlock '" + blockId + "' not found in registry.\u00a7r"), false);
                 return 0;
@@ -1351,11 +1352,11 @@ public class ErgenDebugCommand {
         ctx.getSource().sendSuccess(() -> Component.literal(
             "\u00a77Provenance:\u00a7r \u00a7bPLAYER\u00a7r (takes priority over SIMULATION and CANON)"), false);
 
-        // Validate blockId
+        // CRON-COMPLETIONIST-94: validate via BlockStateCodec.parse so the
+        // command accepts full state strings like "minecraft:chest[facing=north]".
         try {
-            var rl = new net.minecraft.resources.ResourceLocation(blockId);
-            var block = net.minecraftforge.registries.ForgeRegistries.BLOCKS.getValue(rl);
-            if (block == null) {
+            var parsed = dev.ergenverse.runtime.delta.BlockStateCodec.parse(blockId);
+            if (parsed == null) {
                 ctx.getSource().sendSuccess(() -> Component.literal(
                     "\u00a7cBlock '" + blockId + "' not found in registry.\u00a7r"), false);
                 return 0;

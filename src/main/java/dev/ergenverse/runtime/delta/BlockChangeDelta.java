@@ -50,7 +50,11 @@ public final class BlockChangeDelta implements WorldDelta {
      * @param x          block X
      * @param y          block Y
      * @param z          block Z
-     * @param blockState the new state as a registry id, e.g. {@code "minecraft:air"}
+     * @param blockState the new state as a registry id or full state string,
+     *                   e.g. {@code "minecraft:air"} (a break) or
+     *                   {@code "minecraft:chest[facing=north,waterlogged=false]"}
+     *                   (CRON-94: property-aware). Bare ids resolve to the
+     *                   default state; full state strings preserve properties.
      * @param provenance SIMULATION or PLAYER (never CANON)
      */
     public BlockChangeDelta(int x, int y, int z, String blockState, Provenance provenance) {

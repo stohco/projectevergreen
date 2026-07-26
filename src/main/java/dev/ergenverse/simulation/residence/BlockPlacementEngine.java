@@ -751,8 +751,12 @@ public final class BlockPlacementEngine {
                         pos, state);
                 return;
             }
+            // CRON-COMPLETIONIST-94: serialize the FULL BlockState (with properties)
+            // instead of just the block id. Residence blocks like stairs, doors, and
+            // directional blocks now preserve their facing/half/shape across save/load.
+            String stateString = dev.ergenverse.runtime.delta.BlockStateCodec.serialize(state);
             rt.world().setSimulationBlock(
-                    pos.getX(), pos.getY(), pos.getZ(), rl.toString());
+                    pos.getX(), pos.getY(), pos.getZ(), stateString);
         } catch (Throwable t) {
             Ergenverse.LOGGER.warn("[Ergenverse] BlockPlacementEngine: facade write FAILED at {} (block {}): {}. " +
                     "Placement skipped — no fallback write to avoid unjournaled state.",

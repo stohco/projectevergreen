@@ -226,16 +226,20 @@ public final class WorldFacade {
         }
     }
 
-    /** Resolve a registry id string to a BlockState (air-safe). */
+    /**
+     * Resolve a block state string to a {@link BlockState} (air-safe).
+     *
+     * <p><b>CRON-COMPLETIONIST-94:</b> now delegates to
+     * {@link dev.ergenverse.runtime.delta.BlockStateCodec#parse} which
+     * supports property overrides (e.g. {@code "minecraft:chest[facing=north]"}).
+     * Before CRON-94, this method called {@code block.defaultBlockState()},
+     * discarding all property information — player-placed chests/stairs/slabs
+     * reverted to default facing on chunk reload.
+     *
+     * <p>Backward compatible: bare block ids ({@code "minecraft:stone"})
+     * still resolve to the default state.
+     */
     private static BlockState resolveBlockState(String blockId) {
-        if (blockId == null || blockId.isEmpty()) return null;
-        try {
-            ResourceLocation rl = new ResourceLocation(blockId);
-            var block = ForgeRegistries.BLOCKS.getValue(rl);
-            if (block == null) return null;
-            return block.defaultBlockState();
-        } catch (Throwable t) {
-            return null;
-        }
+        return dev.ergenverse.runtime.delta.BlockStateCodec.parse(blockId);
     }
 }
