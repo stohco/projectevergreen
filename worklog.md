@@ -4947,3 +4947,108 @@ NEXT PRIORITY (in order):
 (d) **Add ease-in/ease-out to beast walk cycles (CRON-80 audit Tier 3)** — vanilla Mob does this; our custom models don't. Score 6/10.
 (e) **Runtime verification of CRON-80 hitboxes** — boot a client, spawn each beast, verify combat feels right and door navigation works. Score N/A — cannot do without a running client.
 (f) **JSON vs Java coordinate audit (CRON-65 priority e, deferred 11 rounds)** — Score 5/10. Now the longest-standing deferral after CRON-79 closed the 决明谷 one.
+
+---
+Task ID: CRON-COMPLETIONIST-81
+Agent: cron-completionist
+Task: Fix QilinModel parent hierarchy — closes CRON-80 audit Tier 1 (highest-impact structural defect). Before this round, body_hip, neck, head, tail_base, both wing roots, and all 4 thighs were ALL direct children of root; when bodyChest.xRot animated (spineFlex), none of them followed, causing the Qilin to visibly "hinge" at the waist during walk, wings to stay level during sprint pitch, tail to not follow rump rotation, and legs to not follow body pitch.
+
+Work Log:
+- STEP 1 — RECON: Read worklog.md tail (CRON-80 stage summary + NEXT PRIORITY list). CRON-80 closed the per-entity HITBOX mismatch (8 of 12 beasts; SOUL_FISH's 10-round silent regression) and added an 84-line "HARSH ARTWORK AUDIT" comment block to SpiritBeastModelLayers.java cataloguing standing model defects in 4 tiers. The #1 prioritized next step was "Fix QilinModel parent hierarchy (Tier 1) — highest visual impact. ~30 line refactor. Score 9/10."
+
+  SELECTED priority (g) from the original task spec (the standing CRON priority), scoped down to "QilinModel parent hierarchy" — the only sub-item that is (1) explicitly named as the #1 next step in CRON-80's audit, (2) has HIGH visual impact (animation coherence defect — the Qilin disintegrates during walk), (3) is achievable to a high bar in one round (~30 line refactor as estimated by CRON-80), (4) is a structural defect that affects ALL animation states (walk, sprint, swim, rest, combat, death).
+
+- STEP 2 — ARCHITECTURAL SURVEY (via direct file reads):
+  * QilinModel.java (578 lines pre-CRON-81): The createBodyLayer() method declared 10 parts as direct children of root: body_hip, neck, head, tail_base, left_wing_root, right_wing_root, front_left_thigh, front_right_thigh, back_left_thigh, back_right_thigh. NONE were parented to the body chain. Only mane (5 segments), scale_fl, scale_fr were correctly parented to body_chest; scale_bl, scale_br to body_hip.
+  * The constructor mirrored this: `this.bodyHip = root.getChild("body_hip")` etc.
+  * setupAnim() set `this.bodyChest.xRot = spineFlex` and `this.bodyHip.xRot = -spineFlex * 0.5F` — but since both were at root level, body_hip's world rotation was independent of body_chest's. The S-curve spine flex worked ONLY because the two were independently rotated.
+
+  CRITICAL FINDING: The defect was NOT a visual bug at rest (the parts were positioned correctly via their root-relative offsets). The defect manifested ONLY during animation — when body_chest.xRot changed, body_hip/neck/head/tail/wings/legs did NOT inherit that rotation. This is why the defect survived 23 rounds (CRON-58 through CRON-80): nobody checked the animation coherence, only the static pose.
+
+- STEP 3 — MATH VERIFICATION (per Rule 9, Script Persistence):
+  Wrote /home/z/my-project/scripts/cron81_verify_qilin_reparent.py. The script:
+  1. Defines the original root-relative PartPose offsets for all 10 parts to be reparented.
+  2. Defines the new parent assignments (body_hip/neck/head/wing-roots/front-thighs → body_chest; tail_base/back-thighs → body_hip).
+  3. Computes the new parent-relative offset via simple subtraction: (Rx-Px, Ry-Py, Rz-Pz).
+  4. Verifies that the new local offset, when added to the parent's world position, equals the part's original world position.
+
+  Verification result: ALL 10 PARTS PRESERVE WORLD POSITION ✓. The math is simple subtraction because the new parents (body_chest, body_hip) have NO PartPose rotation — only neck (-0.4 xRot) and tail_base (+0.3 xRot) have PartPose rotations among the reparented parts, and those rotations are preserved verbatim in the new PartPose.offsetAndRotation calls (they become the part's own rotation, not inherited).
+
+  Recomputed offsets (all verified):
+  - body_hip: (0, 5.5, 2.5) → body_chest-relative (0, -0.5, 5)
+  - neck: (0, 4, -5) → body_chest-relative (0, -2, -2.5) [PartPose rotation -0.4 preserved]
+  - head: (0, -1, -4) → body_chest-relative (0, -7, -1.5)
+  - tail_base: (0, 4, 5) → body_hip-relative (0, -1.5, 2.5) [PartPose rotation +0.3 preserved]
+  - left_wing_root: (-2, 4, -3) → body_chest-relative (-2, -2, -0.5) [PartPose zRot -0.8 preserved]
+  - right_wing_root: (2, 4, -3) → body_chest-relative (2, -2, -0.5) [PartPose zRot +0.8 preserved]
+  - front_left_thigh: (-2, 9, -4) → body_chest-relative (-2, 3, -1.5)
+  - front_right_thigh: (2, 9, -4) → body_chest-relative (2, 3, -1.5)
+  - back_left_thigh: (-2, 9, 4) → body_hip-relative (-2, 3.5, 1.5)
+  - back_right_thigh: (2, 9, 4) → body_hip-relative (2, 3.5, 1.5)
+
+- STEP 4 — ANIMATION FIX DESIGN:
+  The reparenting introduces inherited rotation. Before refactor, body_hip's world xRot = body_hip.xRot (local = world, since hip was at root). After refactor, body_hip's world xRot = body_chest.xRot + body_hip.xRot (local).
+
+  The original animation: `this.bodyChest.xRot = spineFlex; this.bodyHip.xRot = -spineFlex * 0.5F;` produced an S-curve (chest forward +spineFlex, hip backward -0.5*spineFlex).
+
+  If we naively keep `this.bodyHip.xRot = -spineFlex * 0.5F` after reparenting, body_hip's world xRot = spineFlex + (-0.5*spineFlex) = +0.5*spineFlex — SAME direction as chest. This produces a C-curve (both rotate same direction), not an S-curve.
+
+  FIX: Change body_hip.xRot to -1.5*spineFlex. Then world xRot = spineFlex + (-1.5*spineFlex) = -0.5*spineFlex — SAME as pre-CRON-81. S-curve preserved.
+
+  No other animation lines needed changing:
+  - Neck's PartPose -0.4 rotation is preserved; neck.xRot animation `=-0.4 + sin(phase)*0.04*limbSwingAmount` still works (now adds to body_chest's spineFlex — desired "neck follows body" behavior).
+  - Head's world rotation now includes body_chest's spineFlex (head bobs with body — anatomically correct, ±0.08 rad ~5°).
+  - Tail's world rotation now includes body_hip's -0.5*spineFlex (tail follows rump — desired).
+  - Wings now inherit body_chest's rotation (follow body pitch during sprint — desired).
+  - Legs now inherit their parent body part's rotation (legs follow torso pitch — anatomically correct for quadrupeds).
+
+- STEP 5 — CODE EDITS (via MultiEdit on QilinModel.java):
+  * File header comment: added 19-line CRON-81 block documenting the refactor (before/after hierarchy, math approach, animation fix rationale).
+  * Constructor: 10 lines changed — `root.getChild(...)` → `this.bodyChest.getChild(...)` or `this.bodyHip.getChild(...)` for body_hip, neck, head, tail_base, left_wing_root, right_wing_root, 4 thighs. Added 3 inline CRON-81 comments.
+  * createBodyLayer(): 10 PartDefinition declarations changed — `root.addOrReplaceChild(...)` → `bodyChest.addOrReplaceChild(...)` or `bodyHip.addOrReplaceChild(...)`. PartPose offsets recomputed per the verification script. Added inline comments documenting the world-position-preservation math for each part. Refactored the 4 thigh declarations to use local PartDefinition variables (frontLeftThigh, frontRightThigh, backLeftThigh, backRightThigh) instead of `root.getChild("...")` lookups, since the variables are now in scope.
+  * setupAnim(): 1 line changed — `this.bodyHip.xRot = -spineFlex * 0.5F` → `this.bodyHip.xRot = -spineFlex * 1.5F`. Added 5-line comment explaining the S-curve preservation math.
+
+- STEP 6 — AUDIT COMMENT UPDATE (SpiritBeastModelLayers.java):
+  * Updated the CRON-80 audit Tier 1 QILIN entry from "defect description + FIX recommendation" to "FIXED (CRON-81): ..." with full details of what shipped.
+  * Updated the PRIORITIZED NEXT STEPS list: step 1 marked "DONE (CRON-81)".
+
+- STEP 7 — VERIFICATION:
+  * Re-ran cron81_verify_qilin_reparent.py: ALL 10 PARTS PRESERVE WORLD POSITION ✓.
+  * Incremental compile: BUILD SUCCESSFUL, 0 errors, 30 warnings (subset of pre-existing deprecation warnings — incremental compile only recompiles changed files).
+  * Clean rebuild (JAVA_HOME=/tmp/my-project/.jdks/jdk-17.0.13+11 ./gradlew clean compileJava): BUILD SUCCESSFUL in 28s, 0 errors, 100 pre-existing warnings (unchanged from CRON-80 baseline — all deprecation warnings, no new ones from CRON-81).
+
+- STEP 8 — GIT: Committed as 980af0f. Push failed (remote had advanced — CRON-80 worklog append 31ee01d was pushed from the parent repo). Ran git pull --rebase origin main (rebased 1 commit, no conflicts), then git push. Pushed as a56188b (31ee01d..a56188b). 2 files changed, +103/-58 lines.
+
+Stage Summary:
+- Shipped: QilinModel parent hierarchy refactor. 10 parts reparented from root to the body chain (body_chest or body_hip). All PartPose offsets recomputed via subtraction and verified by /home/z/my-project/scripts/cron81_verify_qilin_reparent.py. One animation line changed (body_hip.xRot: -0.5*spineFlex → -1.5*spineFlex) to preserve the S-curve spine flex. The Qilin's body_hip, neck, head, tail, wings, and legs now ALL follow body_chest's spine flex during walk/run/sprint — closes the highest-impact Tier 1 structural defect from the CRON-80 audit.
+- Build status: BUILD SUCCESSFUL, 0 errors, 100 pre-existing warnings (unchanged from CRON-80 baseline), 28s clean rebuild.
+- Git hash: a56188b on main, pushed to stohco/projectevergreen. 2 files changed, +103/-58 lines.
+
+HARSHEST SELF-CRITIQUE (hyper-analytical, fact-checked against canon):
+1. **The defect survived 23 rounds (CRON-58 through CRON-80) because nobody checked animation coherence.** The Qilin model was added in CRON-58 with the parent hierarchy defect baked in. Every subsequent round that touched the Qilin (CRON-76 swimming, CRON-80 hitbox) verified the STATIC pose and the hitbox, but nobody animated the model in-game to see if the parts moved together. This is the same "verify the change actually took effect" discipline failure that CRON-80 identified for the SOUL_FISH hitbox. Score 2/10 for runtime animation verification rigor across CRON-58 through CRON-80. CRON-81 fixes the architecture but STILL cannot verify the animation in-game (no client available).
+
+2. **The fix is mathematically sound but runtime-unverified.** The verification script proves world positions are preserved at rest. The animation fix preserves body_hip's world rotation mathematically. But I cannot boot a client and watch the Qilin walk to confirm: (a) the S-curve looks right, (b) the head bob of ±0.08 rad isn't too noticeable, (c) the legs don't clip into the body during spine flex, (d) the wings don't intersect the back when folded. Score 9/10 for code correctness, 4/10 for runtime confidence — same pattern as CRON-80.
+
+3. **The head now bobs with body pitch — this is a behavior change, not just a bug fix.** Before CRON-81, the head's world rotation was independent of body_chest's spineFlex (head at root). After CRON-81, the head's world rotation = body_chest.xRot + head.xRot = spineFlex + pitch. The head bobs ±0.08 rad (~5°) during walk. This is ANATOMICALLY CORRECT (a real walking qilin's head bobs with its body), but it's a CHANGE from the original author's intent (head was deliberately at root to keep it level). Score 7/10 — defensible improvement, but should be flagged as a behavior change. If the original author wanted the head to stay level, the fix would be `this.head.xRot = pitch - spineFlex` (compensate for inherited rotation). I chose the anatomically-correct option over the preserve-old-behavior option.
+
+4. **The neck's PartPose rotation of -0.4 is now partially redundant.** The neck has PartPose.offsetAndRotation(0, -2, -2.5, -0.4, 0, 0) and setupAnim sets `this.neck.xRot = -0.4F + sin(phase) * 0.04F * limbSwingAmount`. The PartPose -0.4 is the INITIAL value (loaded into neck.xRot at construction); setupAnim OVERWRITES it every frame. So the PartPose -0.4 only matters on the first render frame (before setupAnim runs) or if setupAnim returns early (which it doesn't — no early return paths). The PartPose rotation is essentially dead code. Score 6/10 — preserved for safety (matches original), but could be cleaned up in a future round by removing the PartPose rotation and relying solely on setupAnim.
+
+5. **The fix doesn't address the underlying architectural pattern that caused the defect.** The original author parented everything to root because that's the simplest mental model ("everything is at root level"). The fix establishes a proper hierarchy, but doesn't enforce it — a future contributor could add a new part parented to root and reintroduce the same defect. Score 5/10 — fix is correct but doesn't prevent regression. A future round could add a validation step (e.g., a unit test that asserts body_hip's parent is body_chest) to prevent regression.
+
+6. **The verification script is a recoverable artifact but not integrated into the build.** Same critique as CRON-80's audit script. It would be stronger if the build ran the verification script and failed on world-position mismatch. Score 7/10 — script exists and is persisted, but isn't enforced.
+
+7. **The CRON-80 audit estimated "~30 line refactor, low risk."** The actual change was +103/-58 = 161 lines touched (net +45). The delta is larger than estimated because I added extensive inline comments documenting the math for each part (the audit didn't account for documentation). The actual CODE changes (excluding comments) are closer to ~30 lines, matching the estimate. Score 9/10 for estimate accuracy.
+
+8. **Canon fidelity: this round IMPROVED canon fidelity indirectly.** The parent hierarchy defect was an animation bug, not a canon bug. But by making the Qilin's body parts move together as a proper quadruped, the model now visually reads as a "divine beast" instead of "a pile of boxes that happen to be near each other." The Qilin (麒麟) is described in 仙逆 as a divine beast of extreme rarity with noble bearing — the S-curve spine flex and head-follows-body behavior now match that description. Score 8/10 for canon fidelity improvement.
+
+9. **The "do NOT spread thin — finish one to a high bar" directive was respected.** This round focused exclusively on the Qilin parent hierarchy (one Tier 1 defect). It did NOT touch SpiritDeerModel (Tier 1, likely same defect), walk-cycle easing (Tier 3), pose-transition LERP (Tier 3), or any other audit item. Score 10/10 for scope discipline.
+
+10. **The fix is REVERSIBLE if it causes problems.** If runtime testing reveals the head bob is too noticeable or the S-curve looks wrong, the fix can be reverted by: (a) changing body_hip.xRot back to -0.5*spineFlex (1 line), (b) reparenting the 10 parts back to root (10 constructor lines + 10 createBodyLayer lines + offset recomputation). The verification script can be re-run to confirm the revert preserves world positions. Score 8/10 for reversibility.
+
+NEXT PRIORITY (in order):
+(a) **Audit SpiritDeerModel parent hierarchy (CRON-80 audit Tier 1, now #2 on prioritized list)** — likely same defect as Qilin (body parts parented to root). SpiritDeerModel is 474 lines; audit + fix should be similar scope to CRON-81. Score 8/10.
+(b) **Refactor SpiritBeastEntity to single source of truth for hitboxes (CRON-80 NEXT PRIORITY b)** — remove either EntityType.sized or the getDimensions override. Eliminates the footgun that caused the SOUL_FISH regression. Score 8/10.
+(c) **Add ease-in/ease-out to beast walk cycles (CRON-80 audit Tier 3, now #3 on prioritized list)** — vanilla Mob does this; our custom models don't. Score 6/10.
+(d) **Add pose-transition LERP to SpiritBeastEntity + models (CRON-80 audit Tier 3, now #4)** — pose transitions are instant (1 tick); should LERP over 5-10 ticks. Score 7/10.
+(e) **Runtime verification of CRON-80 hitboxes AND CRON-81 parent hierarchy** — boot a client, spawn each beast, verify combat feels right, door navigation works, and the Qilin walks with proper S-curve spine flex. Score N/A — cannot do without a running client.
+(f) **JSON vs Java coordinate audit (CRON-65 priority e, deferred 12 rounds)** — Score 5/10. Now the longest-standing deferral.
