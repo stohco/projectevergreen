@@ -966,8 +966,7 @@ public final class HengYueSectBuilder {
             ));
         }
         // Chest at the back wall center
-        ChestHelper.placeChestWithLoot(level, chamber.offset(0, 1, 5),
-                new ResourceLocation("ergenverse", "chests/heng_yue_sect_mountain_cave"));
+        ChestHelper.placeChestWithLoot(level, chamber.offset(0, 1, 5), new ResourceLocation("ergenverse", "chests/heng_yue_sect_mountain_cave"), (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
         // Redstone dust near the skeletons — dried blood of fallen swordsmen (visual storytelling)
         setBlock(level, chamber.offset(-3, 1, 2), B.REDSTONE_BLOCK);
         setBlock(level, chamber.offset(3, 1, 3), B.REDSTONE_BLOCK);

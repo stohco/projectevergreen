@@ -448,8 +448,8 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, new BlockPos(gx - 5, gy, gz + 3), CAMPFIRE);
         setBlock(level, new BlockPos(gx + 5, gy, gz + 3), CAMPFIRE);
         // Chests behind gate pillars (hidden guard supplies)
-        ChestHelper.placeChestWithLoot(level, new BlockPos(gx - 7, gy, gz), LOOT_OUTER_GATE);
-        ChestHelper.placeChestWithLoot(level, new BlockPos(gx + 7, gy, gz), LOOT_OUTER_GATE);
+        ChestHelper.placeChestWithLoot(level, new BlockPos(gx - 7, gy, gz), LOOT_OUTER_GATE, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, new BlockPos(gx + 7, gy, gz), LOOT_OUTER_GATE, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── c. Main Plaza ─────────────────────────────────────────────────
@@ -498,9 +498,9 @@ public final class SoulRefiningSectBuilder {
             setBlock(level, c.offset(11, 1, i), SOUL_LANTERN);
         }
         // Chests at the inner corners (plaza offerings)
-        ChestHelper.placeChestWithLoot(level, c.offset(-10, 1, -10), LOOT_MAIN_PLAZA);
-        ChestHelper.placeChestWithLoot(level, c.offset(10, 1, 10), LOOT_MAIN_PLAZA);
-        ChestHelper.placeChestWithLoot(level, c.offset(-10, 1, 10), LOOT_MAIN_PLAZA);
+        ChestHelper.placeChestWithLoot(level, c.offset(-10, 1, -10), LOOT_MAIN_PLAZA, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, c.offset(10, 1, 10), LOOT_MAIN_PLAZA, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, c.offset(-10, 1, 10), LOOT_MAIN_PLAZA, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── d. Furnace Hall (THE central structure) ────────────────────────
@@ -603,10 +603,10 @@ public final class SoulRefiningSectBuilder {
             }
         }
         // Chests: sect's most precious artifacts
-        ChestHelper.placeChestWithLoot(level, base.offset(-7, 1, -7), LOOT_FURNACE);
-        ChestHelper.placeChestWithLoot(level, base.offset(7, 1, -7), LOOT_FURNACE);
-        ChestHelper.placeChestWithLoot(level, base.offset(-7, 1, 7), LOOT_FURNACE);
-        ChestHelper.placeChestWithLoot(level, base.offset(7, 1, 7), LOOT_FURNACE);
+        ChestHelper.placeChestWithLoot(level, base.offset(-7, 1, -7), LOOT_FURNACE, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(7, 1, -7), LOOT_FURNACE, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(-7, 1, 7), LOOT_FURNACE, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(7, 1, 7), LOOT_FURNACE, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
         // Soul campfire braziers near the chests
         setBlock(level, base.offset(-7, 1, -8), CAMPFIRE);
         setBlock(level, base.offset(7, 1, -8), CAMPFIRE);
@@ -690,9 +690,9 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(0, 1, 5), AIR);
         setBlock(level, base.offset(0, 2, 5), AIR);
         // Chests with forbidden technique loot
-        ChestHelper.placeChestWithLoot(level, base.offset(-3, 1, 4), LOOT_LIBRARY);
-        ChestHelper.placeChestWithLoot(level, base.offset(3, 1, 4), LOOT_LIBRARY);
-        ChestHelper.placeChestWithLoot(level, base.offset(0, 1, -3), LOOT_LIBRARY);
+        ChestHelper.placeChestWithLoot(level, base.offset(-3, 1, 4), LOOT_LIBRARY, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(3, 1, 4), LOOT_LIBRARY, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(0, 1, -3), LOOT_LIBRARY, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── f. Alchemy Courtyard ─────────────────────────────────────────
@@ -752,9 +752,9 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(-1, 1, 6), AIR);
         setBlock(level, base.offset(-1, 2, 6), AIR);
         // Chests with alchemy materials
-        ChestHelper.placeChestWithLoot(level, base.offset(-6, 1, 0), LOOT_ALCHEMY);
-        ChestHelper.placeChestWithLoot(level, base.offset(6, 1, 0), LOOT_ALCHEMY);
-        ChestHelper.placeChestWithLoot(level, base.offset(0, 1, -5), LOOT_ALCHEMY);
+        ChestHelper.placeChestWithLoot(level, base.offset(-6, 1, 0), LOOT_ALCHEMY, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(6, 1, 0), LOOT_ALCHEMY, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(0, 1, -5), LOOT_ALCHEMY, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── g. Ancestor Hall ──────────────────────────────────────────────
@@ -820,10 +820,10 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(-1, 1, 5), AIR);
         setBlock(level, base.offset(-1, 2, 5), AIR);
         // Chests at side altars (ancestor offerings)
-        ChestHelper.placeChestWithLoot(level, base.offset(-6, 1, -3), LOOT_ANCESTOR_HALL);
-        ChestHelper.placeChestWithLoot(level, base.offset(6, 1, -3), LOOT_ANCESTOR_HALL);
-        ChestHelper.placeChestWithLoot(level, base.offset(-6, 1, 3), LOOT_ANCESTOR_HALL);
-        ChestHelper.placeChestWithLoot(level, base.offset(6, 1, 3), LOOT_ANCESTOR_HALL);
+        ChestHelper.placeChestWithLoot(level, base.offset(-6, 1, -3), LOOT_ANCESTOR_HALL, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(6, 1, -3), LOOT_ANCESTOR_HALL, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(-6, 1, 3), LOOT_ANCESTOR_HALL, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(6, 1, 3), LOOT_ANCESTOR_HALL, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── h. Sword Peak ────────────────────────────────────────────────
@@ -891,9 +891,9 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(-1, 1, 6), AIR);
         setBlock(level, base.offset(-1, 2, 6), AIR);
         // Chests with weapon loot
-        ChestHelper.placeChestWithLoot(level, base.offset(-4, 1, 0), LOOT_SWORD_PEAK);
-        ChestHelper.placeChestWithLoot(level, base.offset(4, 1, 0), LOOT_SWORD_PEAK);
-        ChestHelper.placeChestWithLoot(level, base.offset(0, 1, 4), LOOT_SWORD_PEAK);
+        ChestHelper.placeChestWithLoot(level, base.offset(-4, 1, 0), LOOT_SWORD_PEAK, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(4, 1, 0), LOOT_SWORD_PEAK, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(0, 1, 4), LOOT_SWORD_PEAK, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── i. Spirit Beast Pens ──────────────────────────────────────────
@@ -956,9 +956,9 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(1, 1, 5), SKELETON_SKULL);
         setBlock(level, base.offset(7, 1, 5), SKELETON_SKULL);
         // Chests in each pen (beast handler supplies)
-        ChestHelper.placeChestWithLoot(level, base.offset(-7, 1, 3), LOOT_BEAST_PENS);
-        ChestHelper.placeChestWithLoot(level, base.offset(0, 1, 5), LOOT_BEAST_PENS);
-        ChestHelper.placeChestWithLoot(level, base.offset(7, 1, 3), LOOT_BEAST_PENS);
+        ChestHelper.placeChestWithLoot(level, base.offset(-7, 1, 3), LOOT_BEAST_PENS, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(0, 1, 5), LOOT_BEAST_PENS, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(7, 1, 3), LOOT_BEAST_PENS, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── j. Dormitories ───────────────────────────────────────────────
@@ -1010,10 +1010,10 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, c.offset(18, 1, 28), AIR);
         setBlock(level, c.offset(18, 2, 28), AIR);
         // Chests in each dormitory
-        ChestHelper.placeChestWithLoot(level, c.offset(12, 1, 20), LOOT_DORMITORIES);
-        ChestHelper.placeChestWithLoot(level, c.offset(24, 1, 20), LOOT_DORMITORIES);
-        ChestHelper.placeChestWithLoot(level, c.offset(12, 1, 27), LOOT_DORMITORIES);
-        ChestHelper.placeChestWithLoot(level, c.offset(24, 1, 27), LOOT_DORMITORIES);
+        ChestHelper.placeChestWithLoot(level, c.offset(12, 1, 20), LOOT_DORMITORIES, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, c.offset(24, 1, 20), LOOT_DORMITORIES, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, c.offset(12, 1, 27), LOOT_DORMITORIES, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, c.offset(24, 1, 27), LOOT_DORMITORIES, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── k. Seclusion Caves ────────────────────────────────────────────
@@ -1056,10 +1056,10 @@ public final class SoulRefiningSectBuilder {
             setBlock(level, caveBase.offset(0, 1, 4), CAMPFIRE);
         }
         // Chests in caves 1 and 3 (inner sect resources)
-        ChestHelper.placeChestWithLoot(level, c.offset(-22, 1, -7), LOOT_SECLUSION);
-        ChestHelper.placeChestWithLoot(level, c.offset(-22, 1, 3), LOOT_SECLUSION);
-        ChestHelper.placeChestWithLoot(level, c.offset(-22, 1, 13), LOOT_SECLUSION);
-        ChestHelper.placeChestWithLoot(level, c.offset(-22, 1, 23), LOOT_SECLUSION);
+        ChestHelper.placeChestWithLoot(level, c.offset(-22, 1, -7), LOOT_SECLUSION, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, c.offset(-22, 1, 3), LOOT_SECLUSION, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, c.offset(-22, 1, 13), LOOT_SECLUSION, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, c.offset(-22, 1, 23), LOOT_SECLUSION, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── l. Underground Passage ─────────────────────────────────────────
@@ -1132,10 +1132,10 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(5, 3, -10), SOUL_LANTERN);
         setBlock(level, base.offset(-5, 3, 10), SOUL_LANTERN);
         // Chests in the side rooms (hidden treasury)
-        ChestHelper.placeChestWithLoot(level, base.offset(5, 1, -11), LOOT_UNDERGROUND);
-        ChestHelper.placeChestWithLoot(level, base.offset(5, 1, -9), LOOT_UNDERGROUND);
-        ChestHelper.placeChestWithLoot(level, base.offset(-5, 1, 9), LOOT_UNDERGROUND);
-        ChestHelper.placeChestWithLoot(level, base.offset(-5, 1, 11), LOOT_UNDERGROUND);
+        ChestHelper.placeChestWithLoot(level, base.offset(5, 1, -11), LOOT_UNDERGROUND, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(5, 1, -9), LOOT_UNDERGROUND, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(-5, 1, 9), LOOT_UNDERGROUND, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(-5, 1, 11), LOOT_UNDERGROUND, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── m. Trial Grounds ──────────────────────────────────────────────
@@ -1207,10 +1207,10 @@ public final class SoulRefiningSectBuilder {
         setBlock(level, base.offset(7, 2, 0), AIR);
         setBlock(level, base.offset(7, 3, 0), AIR);
         // Chests near observation platforms
-        ChestHelper.placeChestWithLoot(level, base.offset(-1, 2, -5), LOOT_TRIAL);
-        ChestHelper.placeChestWithLoot(level, base.offset(1, 2, -5), LOOT_TRIAL);
-        ChestHelper.placeChestWithLoot(level, base.offset(-1, 2, 5), LOOT_TRIAL);
-        ChestHelper.placeChestWithLoot(level, base.offset(1, 2, 5), LOOT_TRIAL);
+        ChestHelper.placeChestWithLoot(level, base.offset(-1, 2, -5), LOOT_TRIAL, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(1, 2, -5), LOOT_TRIAL, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(-1, 2, 5), LOOT_TRIAL, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+        ChestHelper.placeChestWithLoot(level, base.offset(1, 2, 5), LOOT_TRIAL, (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ═══════════════════════════════════════════════════════════════════

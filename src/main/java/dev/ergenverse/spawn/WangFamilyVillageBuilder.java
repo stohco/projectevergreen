@@ -437,12 +437,19 @@ public final class WangFamilyVillageBuilder {
         buildPathLights(level, cx, cy, cz);
 
         // ── 14. Loot chests for key buildings ──────────────────────
+        // CRON-COMPLETIONIST-71: route through sb() via ChestHelper's placer
+        // overload. Prior to CRON-71, ChestHelper.placeChestWithLoot called
+        // level.setBlock directly, bypassing the chunk filter and provenance
+        // guard. Now the chest placement goes through sb() like every other
+        // block in the village.
         // Storage shed warehouse chest
         ChestHelper.placeChestWithLoot(level, new BlockPos(cx - 30 + 1, cy + 1, cz - 28 + 1),
-                new ResourceLocation("ergenverse", "chests/wang_family_village_warehouse"));
+                new ResourceLocation("ergenverse", "chests/wang_family_village_warehouse"),
+                (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
         // Tavern chest near village center
         ChestHelper.placeChestWithLoot(level, new BlockPos(cx + 10, cy + 1, cz + 5),
-                new ResourceLocation("ergenverse", "chests/wang_family_village_tavern"));
+                new ResourceLocation("ergenverse", "chests/wang_family_village_tavern"),
+                (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
 
         // ── 15. Alchemy Furnace in Wang family home ──────────────────
         // Already placed inside buildWangFamilyHome
@@ -496,7 +503,16 @@ public final class WangFamilyVillageBuilder {
         // This is the "carefully hidden notebook" the user's vision required.
         BlockPos journalPos = new BlockPos(x + 5, y + 0, z + 1);
         sb(level, journalPos, Blocks.TRAPPED_CHEST.defaultBlockState(), 2);
-        if (level.getBlockEntity(journalPos) instanceof ChestBlockEntity chest) {
+        // CRON-COMPLETIONIST-71: provenance guard for loot population.
+        // If a PLAYER or SIMULATION delta exists at journalPos, the chest
+        // was either broken (sb() skipped re-placement) or replaced by the
+        // player. In either case, do NOT overwrite the chest's contents
+        // with CANON loot — that would undo the player's edit. This closes
+        // the loot-respawn bug: prior to CRON-71, a player who broke the
+        // sleeping mat, found the chest, and emptied it would see the
+        // chest re-populated with the journal on next chunk-load.
+        if (!hasPlayerOrSimulationDelta(journalPos)
+                && level.getBlockEntity(journalPos) instanceof ChestBlockEntity chest) {
             // Page 1: The private journal (original 7 pages + 4 new)
             chest.setItem(0, createWrittenBook(
                     "Private Journal",
@@ -534,7 +550,11 @@ public final class WangFamilyVillageBuilder {
         // not technique. He is self-taught.
         BlockPos lecternPos = new BlockPos(x + 5, y + 1, z + 2);
         sb(level, lecternPos, Blocks.LECTERN.defaultBlockState(), 2);
-        if (level.getBlockEntity(lecternPos) instanceof LecternBlockEntity lectern) {
+        // CRON-COMPLETIONIST-71: provenance guard for loot population.
+        // Same rationale as the journal chest above — don't overwrite a
+        // player's lectern book with CANON loot.
+        if (!hasPlayerOrSimulationDelta(lecternPos)
+                && level.getBlockEntity(lecternPos) instanceof LecternBlockEntity lectern) {
             lectern.setBook(createWrittenBook(
                     "Cultivation Notes",
                     "Wang Lin",
@@ -558,7 +578,13 @@ public final class WangFamilyVillageBuilder {
         // The furnace was placed by buildWangFamilyHome at dx=3, dz=2.
         // Place a written book in the existing family chest at dx=1, dz=1.
         BlockPos familyChestPos = new BlockPos(x + 1, y + 1, z + 1);
-        if (level.getBlockEntity(familyChestPos) instanceof ChestBlockEntity familyChest) {
+        // CRON-COMPLETIONIST-71: provenance guard for loot population.
+        // The family chest is placed by buildWangFamilyHome (above) via
+        // ChestHelper.placeChestWithLoot with the sb() placer. If a PLAYER
+        // or SIMULATION delta exists at familyChestPos, the chest was
+        // edited by the player — don't overwrite.
+        if (!hasPlayerOrSimulationDelta(familyChestPos)
+                && level.getBlockEntity(familyChestPos) instanceof ChestBlockEntity familyChest) {
             // Find the first empty slot
             int slot = 0;
             while (slot < familyChest.getContainerSize()
@@ -650,8 +676,71 @@ public final class WangFamilyVillageBuilder {
         // This is NOT placed to avoid block-type conflicts.
     }
 
+    /**
+     * Place an {@link ItemFrame} entity at the given position, with the
+     * same chunk-filter and provenance guards as {@link #sb}.
+     *
+     * <p><b>CRON-COMPLETIONIST-71:</b> prior to this round,
+     * {@code placeItemFrame} called {@code level.addFreshEntity(frame)}
+     * directly, bypassing both the chunk filter and the provenance guard.
+     * This had two consequences:
+     * <ol>
+     *   <li><b>Chunk-filter bypass:</b> a frame at (x+1, y+2, z+1) would
+     *       be spawned even when {@code buildForChunk} was building an
+     *       unrelated chunk. Item frames are entities, not blocks, so
+     *       they don't trigger cascading chunk-loads the way block
+     *       placements do — but they still spawn visible duplicates
+     *       if multiple chunk-loads in the same footprint each spawn
+     *       their own frame.</li>
+     *   <li><b>Provenance bypass:</b> if a player broke the frame, the
+     *       chunk-materializer would re-spawn it on next chunk-load,
+     *       undoing the player's edit. This is the same bug class that
+     *       CRON-69's {@code ProvenanceAwareRebuildGuard} fixed for
+     *       {@code isAlreadyBuilt}, but it persisted in the per-block
+     *       chunk-scoped path for entity placements.</li>
+     * </ol>
+     *
+     * <p>The fix mirrors {@code sb()}'s two guards:
+     * <ol>
+     *   <li><b>Chunk filter:</b> if {@link #CURRENT_BOUNDS} is non-null
+     *       and (x, z) falls outside the bounds, skip the spawn.</li>
+     *   <li><b>Provenance guard:</b> if {@link #CURRENT_BOUNDS} is
+     *       non-null and a PLAYER or SIMULATION delta exists at {@code pos},
+     *       skip the spawn — the player (or simulation) has edited this
+     *       position, and re-spawning the frame would undo that edit.</li>
+     * </ol>
+     *
+     * <p><b>Limitation:</b> the provenance guard checks the BLOCK position
+     * of the frame, not the entity's existence. If a player breaks the
+     * frame but leaves the underlying block intact (e.g., the wall block
+     * the frame was attached to), the guard correctly fires (the frame
+     * break is recorded as a PLAYER delta at the frame's position). If a
+     * player breaks the underlying block, the frame is removed by Minecraft
+     * automatically, and the block-break delta is at the BLOCK position
+     * (not the frame position) — the frame's provenance guard would NOT
+     * fire, and the frame would be re-spawned on next chunk-load (since
+     * the block was re-placed by the chunk-materializer's block path).
+     * This is a known limitation; the fix would require recording a
+     * PLAYER delta at the frame position when the frame is removed by
+     * block-break cascade. Deferred to a future round.
+     *
+     * <p><b>Full-build path:</b> when {@link #CURRENT_BOUNDS} is null
+     * (full-build path — {@link #build}, called by SpawnEventHandler and
+     * ErgenverseCommand), no filtering or guarding occurs. This matches
+     * {@code sb()}'s behavior: the full-build path does NOT consult the
+     * delta store, because (a) at server-start there are no player deltas
+     * yet, and (b) the {@code /ergenverse build} command explicitly wants
+     * a full rebuild regardless of player edits.
+     */
     private static void placeItemFrame(ServerLevel level, BlockPos pos,
                                           Direction facing, ItemStack item) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null) {
+            // Guard 1: chunk filter.
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            // Guard 2: provenance-aware rebuild guard.
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
         ItemFrame frame = new ItemFrame(level, pos, facing);
         frame.setItem(item);
         level.addFreshEntity(frame);
@@ -837,8 +926,10 @@ public final class WangFamilyVillageBuilder {
         // Herb pot outside the door
         sb(level, new BlockPos(x + 5, y + 1, z + 5), B.QI_GRASS, 3);
         // Chest with family keepsakes
+        // CRON-COMPLETIONIST-71: route through sb() via placer overload.
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, y + 1, z + 1),
-                new ResourceLocation("ergenverse", "chests/wang_family_village_main"));
+                new ResourceLocation("ergenverse", "chests/wang_family_village_main"),
+                (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
 
         // ── Wang Lin's corner: evidence, not furniture ───────────────
         // Article XLV §5. The ONE room. Do not build another until this
@@ -905,8 +996,10 @@ public final class WangFamilyVillageBuilder {
         // Jade stone decoration outside
         sb(level, new BlockPos(x + 3, y + 1, z + 7), B.JADE_STONE, 3);
         // Chest with elder's valuables
+        // CRON-COMPLETIONIST-71: route through sb() via placer overload.
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 5, y + 1, z + 1),
-                new ResourceLocation("ergenverse", "chests/wang_family_village_governor_mansion"));
+                new ResourceLocation("ergenverse", "chests/wang_family_village_governor_mansion"),
+                (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── Commoner Homes ──────────────────────────────────────────────────
@@ -953,8 +1046,10 @@ public final class WangFamilyVillageBuilder {
         sb(level, new BlockPos(x + 2, y + 1, z + 5),
                 herbs[(x * 7 + z) % herbs.length], 3);
         // Chest inside for personal belongings
+        // CRON-COMPLETIONIST-71: route through sb() via placer overload.
         ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, y + 1, z + 1),
-                new ResourceLocation("ergenverse", "chests/wang_family_village_residential"));
+                new ResourceLocation("ergenverse", "chests/wang_family_village_residential"),
+                (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
     }
 
     // ── Farm Plots ──────────────────────────────────────────────────────
