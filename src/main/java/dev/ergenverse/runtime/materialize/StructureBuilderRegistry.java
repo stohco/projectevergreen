@@ -40,11 +40,14 @@ import java.util.Map;
  * full build with no chunk filtering. A {@code null} {@link ChunkBounds}
  * signals "build everything".
  *
- * <p>Today only Wang Family Village is chunk-scoped (it is the largest and the
- * worst offender — 83&times;83 footprint, ~80K blocks). The other 10 builders
- * ignore the bounds and do a full build on first call, guarded by
- * {@code isAlreadyBuilt} so subsequent calls are no-ops. Each can be migrated
- * to chunk-scoped buildForChunk in a future round.
+ * <p><b>CRON-COMPLETIONIST-72 (current state):</b> ALL 11 builders are now
+ * chunk-scoped. WangFamilyVillage (CRON-62), HengYue (CRON-65),
+ * TengFamily/TianShui/NanDou/SoulRefining/XuanDao (CRON-66/67), and the 4
+ * formerly-ServerLevel-only builders QilinCity/SnowDomainCapital/
+ * VermilionBirdImperialCity/LuoHeSect (CRON-72) all forward ChunkBounds to
+ * buildForChunk and apply the sb() chunk-filter + provenance-guard helper.
+ * The legacy "ignore bounds, full build" path is gone; every builder now
+ * respects the chunk-materializer's incremental contract.
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
  */
@@ -107,18 +110,26 @@ public final class StructureBuilderRegistry {
         // aware rebuild guard. Each builder resolves its own center from
         // PlanetSuzakuBlueprint (fixes the prior BlockPos.ZERO bug that built
         // structures at (0,0,0) instead of their canon coordinates).
-        // The 4 (ServerLevel)-only builders (QilinCity, SnowDomainCapital,
-        // VermilionBirdCapital, LuoHeSect) remain on the legacy path — they
-        // resolve their own center internally and do not take a BlockPos.
+        //
+        // CRON-COMPLETIONIST-72: The 4 (ServerLevel)-only builders (QilinCity,
+        // SnowDomainCapital, VermilionBirdCapital, LuoHeSect) are NOW chunk-scoped
+        // too — same pattern as the other 7. Each migrated to buildForChunk with
+        // the canonical sb() chunk-filter + provenance-guard helper. Each also
+        // had its coordinates fixed to source from PlanetSuzakuBlueprint
+        // (prior to CRON-72 they computed coords from VILLAGE_X/Z offsets,
+        // placing them at wildly off-canon positions — see each builder's
+        // Javadoc for the specific coordinate bug). All 11 chunk-scoped builders
+        // now share the uniform architecture: blueprint → layer → journal →
+        // materializer → buildForChunk → sb() → setBlock.
         register(PlanetSuzakuBlueprint.TENG_FAMILY_CITY.id, (l, b) -> TengFamilyCityBuilder.buildForChunk(l, b));
         register(PlanetSuzakuBlueprint.TIAN_SHUI_CITY.id, (l, b) -> TianShuiCityBuilder.buildForChunk(l, b));
-        register(PlanetSuzakuBlueprint.QILIN_CITY.id, (l, b) -> QilinCityBuilder.build(l));
+        register(PlanetSuzakuBlueprint.QILIN_CITY.id, (l, b) -> QilinCityBuilder.buildForChunk(l, b));
         register(PlanetSuzakuBlueprint.NAN_DOU_CITY.id, (l, b) -> NanDouCityBuilder.buildForChunk(l, b));
-        register(PlanetSuzakuBlueprint.SNOW_DOMAIN_CAPITAL.id, (l, b) -> SnowDomainCapitalBuilder.build(l));
-        register(PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.id, (l, b) -> VermilionBirdImperialCityBuilder.build(l));
+        register(PlanetSuzakuBlueprint.SNOW_DOMAIN_CAPITAL.id, (l, b) -> SnowDomainCapitalBuilder.buildForChunk(l, b));
+        register(PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.id, (l, b) -> VermilionBirdImperialCityBuilder.buildForChunk(l, b));
         register(PlanetSuzakuBlueprint.SOUL_REFINING_SECT.id, (l, b) -> SoulRefiningSectBuilder.buildForChunk(l, b));
         register(PlanetSuzakuBlueprint.XUAN_DAO_SECT.id, (l, b) -> XuanDaoSectBuilder.buildForChunk(l, b));
-        register(PlanetSuzakuBlueprint.LUO_HE_SECT.id, (l, b) -> LuoHeSectBuilder.build(l));
+        register(PlanetSuzakuBlueprint.LUO_HE_SECT.id, (l, b) -> LuoHeSectBuilder.buildForChunk(l, b));
     }
 
     /** Register (or replace) the builder for a canon location id. */

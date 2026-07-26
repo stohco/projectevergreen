@@ -2,31 +2,56 @@ package dev.ergenverse.spawn;
 
 import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
+import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+import dev.ergenverse.runtime.Provenance;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
+
 /**
  * VermilionBirdImperialCityBuilder — FULLY hand-built Vermilion Bird Imperial City
- * (朱雀皇城 / Zhuque Huang Cheng).
+ * (朱雀国都城 / Zhuque Guo Du Cheng).
  *
  * <p>Constitution: "The world is completely hand-crafted, accurate to the novels.
  * NEVER write a script that replaces vanilla blocks with other blocks as a shortcut.
  * Every structure must be hand-authored."
  *
- * <p>Canon basis (Renegade Immortal): The Imperial City is the seat of the Vermilion Bird
- * Dynasty, the ruling power of Planet Suzaku. It is the political, military, and cultivation
- * center of the entire planet. The Vermilion Bird Divine Sect governs from here. The city
- * is GRAND beyond all others — massive walls, towering gates, sprawling palace complexes,
- * and cultivation power that dwarfs anything in Zhao Country. The city lord is a Soul
- * Transformation cultivator. The palace contains the Vermilion Bird throne room and the
- * Dynasty's most sacred relics.
+ * <p><b>Canon (CRON-COMPLETIONIST-72 correction):</b> Per CRON-69 canon
+ * corrections: the ruling polity is 朱雀国 (Vermilion Bird Country), and its
+ * ruler holds the title 朱雀子 (Vermilion Bird Son/Master). The prior Javadoc
+ * called it the "Vermilion Bird Dynasty" — "dynasty" is a misnomer; the
+ * correct political unit is 国 (country). Situ Nan (魏鼠 / 司徒南) is the
+ * 2nd-generation 朱雀子 per canon. The Imperial City is the planetary capital
+ * of 朱雀国 on Planet Suzaku, the political/military/cultivation center of
+ * the entire planet. The exact architectural details of the capital are not
+ * specified in canon — this builder is a mod-original architectural inference
+ * of what a planetary capital would look like.
  *
- * <p>Block palette: Gold block, quartz (imperial white), redstone/red wool (vermilion
- * banners), polished deepslate, nether bricks (imperial dark accents), end rods
- * ( ceremonial spires), chiseled quartz pillars, spruce wood for structural beams.
- * The city radiates WEALTH and POWER — gold trim, white walls, red accents.
+ * <p>Architectural style (mod-original): Gold block, quartz (imperial white),
+ * redstone/red wool (vermilion banners), polished deepslate, nether bricks
+ * (imperial dark accents), end rods (ceremonial spires), chiseled quartz
+ * pillars, spruce wood for structural beams. The city radiates WEALTH and
+ * POWER — gold trim, white walls, red accents.
+ *
+ * <h2>CRON-COMPLETIONIST-72 — chunk-scoped migration</h2>
+ * Same migration as LuoHeSectBuilder / SnowDomainCapitalBuilder.
+ * Highlights:
+ * <ul>
+ *   <li>Coordinates now source from {@link PlanetSuzakuBlueprint#VERMILION_BIRD_CAPITAL}
+ *       (0, 0, 0). Prior to CRON-72, they were computed as
+ *       {@code VILLAGE_X + 5200 = 9042} and {@code VILLAGE_Z + 600 = -584},
+ *       placing the city at (9042, ?, -584) — wildly off-canon.</li>
+ *   <li>All placements now flow through {@link #sb} (chunk filter + provenance
+ *       guard via {@link WorldDeltaStore}).</li>
+ *   <li>Marker block: GOLD_BLOCK at {@code center.above(WALL_HEIGHT + 1)},
+ *       matching isAlreadyBuilt's check position.</li>
+ * </ul>
  *
  * <p>Districts (13):
  * <ol>
@@ -67,14 +92,116 @@ public final class VermilionBirdImperialCityBuilder {
 
     private VermilionBirdImperialCityBuilder() {}
 
-    // ── Canonical position on Planet Suzaku ────────────────────────
-    public static final int CITY_X = WangFamilyVillageBuilder.VILLAGE_X + 5200;
-    public static final int CITY_Z = WangFamilyVillageBuilder.VILLAGE_Z + 600;
+    // ── Canonical position on Planet Suzaku (CRON-72: from blueprint) ──
+    // CRON-72: prior to this round, CITY_X/Z were computed as
+    // VILLAGE_X + 5200 (= 9042) and VILLAGE_Z + 600 (= -584), placing
+    // the city at (9042, ?, -584) — wildly off the canon coordinate
+    // (0, 0, 0) in PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL. Same
+    // latent canon-coordinate bug as the other 3 ServerLevel-only builders.
+    // Fixed by sourcing directly from the blueprint.
+    public static final int CITY_X = PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.x;
+    public static final int CITY_Z = PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.z;
 
     private static final int CITY_RADIUS = 65;
     private static final int WALL_HEIGHT = 14;
 
-    private static boolean built = false;
+    // ── Chunk-scoped build infrastructure (CRON-COMPLETIONIST-72) ──────
+    //
+    // Mirrors the WangFamilyVillageBuilder (CRON-62/63) and XuanDaoSectBuilder
+    // (CRON-66/70) pattern. See those classes' Javadoc for full rationale.
+
+    /** Active chunk bounds during a buildInternal() pass, or null for full-build. */
+    private static final ThreadLocal<ChunkBounds> CURRENT_BOUNDS = new ThreadLocal<>();
+
+    /**
+     * Filtered setBlock — the ONLY block-placement call site in this class.
+     * Three guards: chunk filter, provenance-aware rebuild guard, placement.
+     * See {@link WangFamilyVillageBuilder#sb} for full Javadoc.
+     */
+    private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null) {
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
+        level.setBlock(pos, state, flags);
+    }
+
+    /**
+     * Provenance-aware guard helper (CRON-63 pattern). Returns true if a
+     * PLAYER or SIMULATION delta is recorded at {@code pos}. O(1) per call.
+     * Defensive: returns false if WorldRuntime is not initialized.
+     */
+    private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+            WorldDeltaStore store = runtime.deltaStore();
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            return store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
+                    pos, t.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Resolve the city center BlockPos using the canon surface height from
+     * {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}.
+     */
+    public static BlockPos getSectCenter(ServerLevel level) {
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(CITY_X, CITY_Z);
+        return new BlockPos(CITY_X, surfaceY, CITY_Z);
+    }
+
+    /**
+     * Chunk-scoped build entry point — invoked by the chunk-materializer for
+     * each chunk that overlaps the city footprint.
+     */
+    public static void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds) {
+        ChunkBounds prev = CURRENT_BOUNDS.get();
+        CURRENT_BOUNDS.set(bounds);
+        try {
+            buildInternal(level, getSectCenter(level));
+        } finally {
+            if (prev == null) CURRENT_BOUNDS.remove();
+            else CURRENT_BOUNDS.set(prev);
+        }
+    }
+
+    /**
+     * Full-build entry point — used by SpawnEventHandler (server-start) and
+     * ErgenverseCommand. Idempotent: guarded by {@link #isAlreadyBuilt}.
+     */
+    public static void build(ServerLevel level) {
+        BlockPos center = getSectCenter(level);
+        if (isAlreadyBuilt(level, center)) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Vermilion Bird Imperial City already built — build() is a no-op.");
+            return;
+        }
+        Ergenverse.LOGGER.info("[Ergenverse] Building Vermilion Bird Imperial City at {}", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Vermilion Bird Imperial City construction complete.");
+    }
+
+    /**
+     * Check if the city is already built by looking for the marker GOLD_BLOCK
+     * at {@code center.above(WALL_HEIGHT + 1)} — a stable position above the
+     * outer wall cap.
+     *
+     * <p><b>CRON-COMPLETIONIST-69 — provenance-aware rebuild guard.</b>
+     * If the player (or simulation) has recorded a delta at the marker
+     * position, returns {@code true} (city was built, then edited; don't
+     * rebuild). See {@link dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard}.
+     */
+    public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
+        BlockPos markerPos = center.above(WALL_HEIGHT + 1);
+        if (level.getBlockState(markerPos).getBlock() == Blocks.GOLD_BLOCK) return true;
+        if (dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard.shouldSkipRebuild(markerPos)) return true;
+        return false;
+    }
 
     // ── Block palette — imperial gold, quartz, red ───────────────
     private static final BlockState GOLD_BLOCK           = Blocks.GOLD_BLOCK.defaultBlockState();
@@ -139,17 +266,23 @@ public final class VermilionBirdImperialCityBuilder {
     private static final BlockState SPIRIT_GRASS          = ErgenverseBlocks.SPIRIT_GRASS.get().defaultBlockState();
     private static final BlockState SCORCHED_STONE        = ErgenverseBlocks.SCORCHED_STONE.get().defaultBlockState();
 
-    public static boolean isAlreadyBuilt(ServerLevel level) {
-        return level.getBlockState(new BlockPos(CITY_X, 80, CITY_Z)).getBlock() == Blocks.GOLD_BLOCK;
-    }
+    /**
+     * The actual construction body — shared by {@link #build} and {@link #buildForChunk}.
+     * Placements flow through {@link #sb} which applies the chunk filter and
+     * provenance guard when CURRENT_BOUNDS is set.
+     */
+    private static void buildInternal(ServerLevel level, BlockPos center) {
+        int cx = center.getX();
+        int baseY = center.getY(); // CRON-72: was hardcoded 64; now canon surface Y
+        int cz = center.getZ();
 
-    public static void build(ServerLevel level) {
-        if (built) return;
-        int baseY = 64;
-        int cx = CITY_X;
-        int cz = CITY_Z;
-
-        Ergenverse.LOGGER.info("[VermilionBirdCity] Building Vermilion Bird Imperial City at ({}, {}, {})...", cx, baseY, cz);
+        ChunkBounds bounds = CURRENT_BOUNDS.get();
+        if (bounds == null) {
+            Ergenverse.LOGGER.info("[VermilionBirdCity] Building Vermilion Bird Imperial City (full) at ({}, {}, {})...", cx, baseY, cz);
+        } else {
+            Ergenverse.LOGGER.debug("[VermilionBirdCity] Building Vermilion Bird Imperial City (chunk-scoped {}) at center ({}, {}, {}).",
+                    bounds, cx, baseY, cz);
+        }
 
         // Foundation
         buildFoundation(level, cx, baseY, cz);
@@ -193,8 +326,10 @@ public final class VermilionBirdImperialCityBuilder {
         // 13. Imperial Gardens
         buildGardens(level, cx, baseY, cz);
 
-        built = true;
-        Ergenverse.LOGGER.info("[VermilionBirdCity] Vermilion Bird Imperial City construction complete.");
+        // ── Marker block (CRON-72) ─────────────────────────────────────
+        // Place GOLD_BLOCK at center.above(WALL_HEIGHT + 1) — the position
+        // isAlreadyBuilt checks. Same pattern as LuoHeSectBuilder.
+        sb(level, center.above(WALL_HEIGHT + 1), GOLD_BLOCK, 3);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -654,7 +789,9 @@ public final class VermilionBirdImperialCityBuilder {
     // ── Helper methods ────────────────────────────────────────────────
 
     private static void set(ServerLevel level, int x, int y, int z, BlockState state) {
-        level.setBlock(new BlockPos(x, y, z), state, 3);
+        // CRON-72: delegate to sb() so all setBlock traffic flows through the
+        // chunk filter and provenance guard.
+        sb(level, new BlockPos(x, y, z), state, 3);
     }
 
     private static void fill(ServerLevel level, int x, int y, int z,

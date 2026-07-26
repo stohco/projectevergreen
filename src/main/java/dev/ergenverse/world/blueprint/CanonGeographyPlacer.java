@@ -172,30 +172,32 @@ public final class CanonGeographyPlacer {
                 case "snow_domain_capital" -> {
                     // Full hand-built Snow Domain Capital (雪国都城) — frozen fortress-city.
                     // Constitution: every block hand-authored.
-                    if (!dev.ergenverse.spawn.SnowDomainCapitalBuilder.isAlreadyBuilt(level)) {
-                        dev.ergenverse.spawn.SnowDomainCapitalBuilder.build(level);
-                    }
+                    // CRON-72: delegates to build() which now resolves canon center
+                    // via getSectCenter() + canonSurfaceHeight. The legacy
+                    // isAlreadyBuilt(level) signature was replaced by
+                    // isAlreadyBuilt(level, center) for the chunk-scoped path;
+                    // build(level) now performs the guard internally.
+                    dev.ergenverse.spawn.SnowDomainCapitalBuilder.build(level);
                 }
                 case "vermilion_bird_imperial_city" -> {
                     // Full hand-built Vermilion Bird Imperial City (朱雀皇城) — planetary capital.
                     // Constitution: every block hand-authored.
-                    if (!dev.ergenverse.spawn.VermilionBirdImperialCityBuilder.isAlreadyBuilt(level)) {
-                        dev.ergenverse.spawn.VermilionBirdImperialCityBuilder.build(level);
-                    }
+                    // CRON-72: same pattern as snow_domain_capital above.
+                    dev.ergenverse.spawn.VermilionBirdImperialCityBuilder.build(level);
                 }
                 case "luo_he_sect" -> {
-                    // Full hand-built Luo He Sect (罗河宗) — water cultivation sect.
+                    // Full hand-built Luo He Sect (洛河门) — water cultivation sect.
                     // Constitution: every block hand-authored.
-                    if (!dev.ergenverse.spawn.LuoHeSectBuilder.isAlreadyBuilt(level)) {
-                        dev.ergenverse.spawn.LuoHeSectBuilder.build(level);
-                    }
+                    // CRON-72: same pattern as snow_domain_capital above.
+                    // Canon correction: 洛河门 (Luo He Men), NOT 罗河宗 — verified
+                    // via Baidu Baike (仙逆 novel, 火焚国, founder 兰若).
+                    dev.ergenverse.spawn.LuoHeSectBuilder.build(level);
                 }
                 case "qilin_city" -> {
                     // Full hand-built Qilin City (麒麟城) — ornate trading city.
                     // Constitution: every block hand-authored.
-                    if (!dev.ergenverse.spawn.QilinCityBuilder.isAlreadyBuilt(level)) {
-                        dev.ergenverse.spawn.QilinCityBuilder.build(level);
-                    }
+                    // CRON-72: same pattern as snow_domain_capital above.
+                    dev.ergenverse.spawn.QilinCityBuilder.build(level);
                 }
                 case "xuan_dao_sect" -> {
                     // Full hand-built Xuan Dao Sect (悬道宗) — scholarly restriction sect.

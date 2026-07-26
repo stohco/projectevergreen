@@ -2,28 +2,58 @@ package dev.ergenverse.spawn;
 
 import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
+import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+import dev.ergenverse.runtime.Provenance;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
+
 /**
- * SnowDomainCapitalBuilder — FULLY hand-built Snow Domain Capital (雪国都城 / Xue Guo Du).
+ * SnowDomainCapitalBuilder — FULLY hand-built Snow Domain Capital (雪域国 / Xue Yu Guo).
  *
  * <p>Constitution: "The world is completely hand-crafted, accurate to the novels.
  * NEVER write a script that replaces vanilla blocks with other blocks as a shortcut.
  * Every structure must be hand-authored."
  *
- * <p>Canon basis (Renegade Immortal): The Snow Domain is a frozen northern country on
- * Planet Suzaku. Its capital is a fortress-city carved into glacial terrain, surrounded
- * by perpetual ice and snow. The city is home to ice-type cultivators who practice cold
- * cultivation arts. The architecture is thick-walled stone with ice accents — functional
- * and defensive against both the harsh climate and spirit beast threats. Ice spirit
- * wolves patrol the outer walls. The city lord is a Nascent Soul ice cultivator.
+ * <p><b>Canon (CRON-COMPLETIONIST-72 correction):</b> Per CRON-69 canon
+ * corrections and verified via Baidu Baike + Sohu + QQ News: the proper
+ * Chinese name is 雪域国 (Xue Yu Guo, "Snow Domain Country"), NOT 雪国都城
+ * (Xue Guo Du, "Snow Country Capital") as the prior Javadoc stated. 雪域国 is
+ * a frozen northern cultivation country on Planet Suzaku, noted for its
+ * assault on the 四派联盟 (Four Sects Alliance) — a major plot event in RI
+ * Ch.200-220. The country's signature genius is 红蝶 (Hong Die / Red
+ * Butterfly), the "天之骄女" (proud daughter of heaven), possessor of the
+ * 先天五灵体 (Innate Five-Spirit Body) and 绝情意境 (Affection-Severing
+ * state), called "朱雀星万年来天资第一人" (greatest talent in 10000 years of
+ * Suzaku Planet). The capital city itself is not named in canon — this
+ * builder is a mod-original architectural inference of what the seat of
+ * 雪域国 would look like, derived from the country's frozen-cultivation theme.
  *
- * <p>Block palette: Packed ice, blue ice, snow blocks, spruce (cold-climate wood),
- * stone bricks, polished granite, iron for fortifications. Spirit stone for inner
- * cultivation halls. The city feels COLD — blue/white/gray tones throughout.
+ * <p>Architectural style (mod-original): Packed ice, blue ice, snow blocks,
+ * spruce (cold-climate wood), stone bricks, polished granite, iron for
+ * fortifications. Spirit stone for inner cultivation halls. The city feels
+ * COLD — blue/white/gray tones throughout. This is an aesthetic inference
+ * from the country's name; canon does not detail specific buildings.
+ *
+ * <h2>CRON-COMPLETIONIST-72 — chunk-scoped migration</h2>
+ * Same migration as LuoHeSectBuilder (see its Javadoc for the full pattern).
+ * Highlights:
+ * <ul>
+ *   <li>Coordinates now source from {@link PlanetSuzakuBlueprint#SNOW_DOMAIN_CAPITAL}
+ *       (2000, 0, 3200). Prior to CRON-72, they were computed as
+ *       {@code VILLAGE_X + 3600 = 7442} and {@code VILLAGE_Z - 3200 = -4384},
+ *       placing the capital at (7442, ?, -4384) — wildly off-canon.</li>
+ *   <li>All placements now flow through {@link #sb} (chunk filter + provenance
+ *       guard via {@link WorldDeltaStore}).</li>
+ *   <li>Marker block: BLUE_ICE at {@code center.above(WALL_HEIGHT + 1)},
+ *       matching isAlreadyBuilt's check position.</li>
+ * </ul>
  *
  * <p>Districts (12):
  * <ol>
@@ -61,14 +91,116 @@ public final class SnowDomainCapitalBuilder {
 
     private SnowDomainCapitalBuilder() {}
 
-    // ── Canonical position on Planet Suzaku ────────────────────────
-    public static final int CAPITAL_X = WangFamilyVillageBuilder.VILLAGE_X + 3600;
-    public static final int CAPITAL_Z = WangFamilyVillageBuilder.VILLAGE_Z - 3200;
+    // ── Canonical position on Planet Suzaku (CRON-72: from blueprint) ──
+    // CRON-72: prior to this round, CAPITAL_X/Z were computed as
+    // VILLAGE_X + 3600 (= 7442) and VILLAGE_Z - 3200 (= -4384), placing
+    // the capital at (7442, ?, -4384) — wildly off the canon coordinate
+    // (2000, 0, 3200) in PlanetSuzakuBlueprint.SNOW_DOMAIN_CAPITAL. Same
+    // latent canon-coordinate bug as LuoHeSectBuilder. Fixed by sourcing
+    // directly from the blueprint.
+    public static final int CAPITAL_X = PlanetSuzakuBlueprint.SNOW_DOMAIN_CAPITAL.x;
+    public static final int CAPITAL_Z = PlanetSuzakuBlueprint.SNOW_DOMAIN_CAPITAL.z;
 
     private static final int CITY_RADIUS = 58;
     private static final int WALL_HEIGHT = 10;
 
-    private static boolean built = false;
+    // ── Chunk-scoped build infrastructure (CRON-COMPLETIONIST-72) ──────
+    //
+    // Mirrors the WangFamilyVillageBuilder (CRON-62/63) and XuanDaoSectBuilder
+    // (CRON-66/70) pattern. See those classes' Javadoc for full rationale.
+
+    /** Active chunk bounds during a buildInternal() pass, or null for full-build. */
+    private static final ThreadLocal<ChunkBounds> CURRENT_BOUNDS = new ThreadLocal<>();
+
+    /**
+     * Filtered setBlock — the ONLY block-placement call site in this class.
+     * Three guards: chunk filter, provenance-aware rebuild guard, placement.
+     * See {@link WangFamilyVillageBuilder#sb} for full Javadoc.
+     */
+    private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null) {
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
+        level.setBlock(pos, state, flags);
+    }
+
+    /**
+     * Provenance-aware guard helper (CRON-63 pattern). Returns true if a
+     * PLAYER or SIMULATION delta is recorded at {@code pos}. O(1) per call.
+     * Defensive: returns false if WorldRuntime is not initialized.
+     */
+    private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+            WorldDeltaStore store = runtime.deltaStore();
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            return store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
+                    pos, t.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Resolve the capital center BlockPos using the canon surface height from
+     * {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}.
+     */
+    public static BlockPos getSectCenter(ServerLevel level) {
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(CAPITAL_X, CAPITAL_Z);
+        return new BlockPos(CAPITAL_X, surfaceY, CAPITAL_Z);
+    }
+
+    /**
+     * Chunk-scoped build entry point — invoked by the chunk-materializer for
+     * each chunk that overlaps the capital footprint.
+     */
+    public static void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds) {
+        ChunkBounds prev = CURRENT_BOUNDS.get();
+        CURRENT_BOUNDS.set(bounds);
+        try {
+            buildInternal(level, getSectCenter(level));
+        } finally {
+            if (prev == null) CURRENT_BOUNDS.remove();
+            else CURRENT_BOUNDS.set(prev);
+        }
+    }
+
+    /**
+     * Full-build entry point — used by SpawnEventHandler (server-start) and
+     * ErgenverseCommand. Idempotent: guarded by {@link #isAlreadyBuilt}.
+     */
+    public static void build(ServerLevel level) {
+        BlockPos center = getSectCenter(level);
+        if (isAlreadyBuilt(level, center)) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Snow Domain Capital already built — build() is a no-op.");
+            return;
+        }
+        Ergenverse.LOGGER.info("[Ergenverse] Building Snow Domain Capital at {}", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Snow Domain Capital construction complete.");
+    }
+
+    /**
+     * Check if the capital is already built by looking for the marker BLUE_ICE
+     * at {@code center.above(WALL_HEIGHT + 1)} — a stable position above the
+     * outer wall cap.
+     *
+     * <p><b>CRON-COMPLETIONIST-69 — provenance-aware rebuild guard.</b>
+     * If the player (or simulation) has recorded a delta at the marker
+     * position, returns {@code true} (capital was built, then edited; don't
+     * rebuild). See {@link dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard}.
+     */
+    public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
+        BlockPos markerPos = center.above(WALL_HEIGHT + 1);
+        if (level.getBlockState(markerPos).getBlock() == Blocks.BLUE_ICE) return true;
+        if (dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard.shouldSkipRebuild(markerPos)) return true;
+        return false;
+    }
 
     // ── Block palette — cold, frozen, fortress-like ───────────────
     private static final BlockState PACKED_ICE        = Blocks.PACKED_ICE.defaultBlockState();
@@ -125,17 +257,23 @@ public final class SnowDomainCapitalBuilder {
     private static final BlockState SPIRIT_GRASS        = ErgenverseBlocks.SPIRIT_GRASS.get().defaultBlockState();
     private static final BlockState SCORCHED_STONE      = ErgenverseBlocks.SCORCHED_STONE.get().defaultBlockState();
 
-    public static boolean isAlreadyBuilt(ServerLevel level) {
-        return level.getBlockState(new BlockPos(CAPITAL_X, 80, CAPITAL_Z)).getBlock() == Blocks.BLUE_ICE;
-    }
+    /**
+     * The actual construction body — shared by {@link #build} and {@link #buildForChunk}.
+     * Placements flow through {@link #sb} which applies the chunk filter and
+     * provenance guard when CURRENT_BOUNDS is set.
+     */
+    private static void buildInternal(ServerLevel level, BlockPos center) {
+        int cx = center.getX();
+        int baseY = center.getY(); // CRON-72: was hardcoded 64; now canon surface Y
+        int cz = center.getZ();
 
-    public static void build(ServerLevel level) {
-        if (built) return;
-        int baseY = 64;
-        int cx = CAPITAL_X;
-        int cz = CAPITAL_Z;
-
-        Ergenverse.LOGGER.info("[SnowDomainCapital] Building Snow Domain Capital at ({}, {}, {})...", cx, baseY, cz);
+        ChunkBounds bounds = CURRENT_BOUNDS.get();
+        if (bounds == null) {
+            Ergenverse.LOGGER.info("[SnowDomainCapital] Building Snow Domain Capital (full) at ({}, {}, {})...", cx, baseY, cz);
+        } else {
+            Ergenverse.LOGGER.debug("[SnowDomainCapital] Building Snow Domain Capital (chunk-scoped {}) at center ({}, {}, {}).",
+                    bounds, cx, baseY, cz);
+        }
 
         // Foundation: snow/ice terrain base
         buildFoundation(level, cx, baseY, cz);
@@ -179,8 +317,10 @@ public final class SnowDomainCapitalBuilder {
         // Snow layer on roofs and ground
         buildSnowLayer(level, cx, baseY, cz);
 
-        built = true;
-        Ergenverse.LOGGER.info("[SnowDomainCapital] Snow Domain Capital construction complete.");
+        // ── Marker block (CRON-72) ─────────────────────────────────────
+        // Place BLUE_ICE at center.above(WALL_HEIGHT + 1) — the position
+        // isAlreadyBuilt checks. Same pattern as LuoHeSectBuilder.
+        sb(level, center.above(WALL_HEIGHT + 1), BLUE_ICE, 3);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -649,7 +789,9 @@ public final class SnowDomainCapitalBuilder {
     // ── Helper methods ────────────────────────────────────────────────
 
     private static void set(ServerLevel level, int x, int y, int z, BlockState state) {
-        level.setBlock(new BlockPos(x, y, z), state, 3);
+        // CRON-72: delegate to sb() so all setBlock traffic flows through the
+        // chunk filter and provenance guard.
+        sb(level, new BlockPos(x, y, z), state, 3);
     }
 
     private static void fill(ServerLevel level, int x, int y, int z,

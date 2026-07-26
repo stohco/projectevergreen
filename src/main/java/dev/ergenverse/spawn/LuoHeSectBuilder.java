@@ -2,30 +2,62 @@ package dev.ergenverse.spawn;
 
 import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.ChunkBounds;
+import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+import dev.ergenverse.runtime.Provenance;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
+
 /**
- * LuoHeSectBuilder — FULLY hand-built Luo He Sect (罗河宗 / Luo He Zong).
+ * LuoHeSectBuilder — FULLY hand-built Luo He Sect (洛河门 / Luo He Men).
  *
  * <p>Constitution: "The world is completely hand-crafted, accurate to the novels.
  * NEVER write a script that replaces vanilla blocks with other blocks as a shortcut.
  * Every structure must be hand-authored."
  *
- * <p>Canon basis: Luo He Sect appears in Er Gen's "A Will Eternal" (一念永恒).
- * It is one of the major cultivation sects in the Zhao State of the Lower Reaches.
- * The sect is known for its river/water cultivation arts, situated near a major
- * river. Its architecture incorporates water motifs — flowing channels, jade ponds,
- * mist-filled courtyards. The sect produces pills and talismans through water-based
- * alchemy. Disciples practice techniques that harmonize with flowing water energy.
- * The sect master is a Nascent Soul cultivator.
+ * <p><b>Canon (CRON-COMPLETIONIST-72 correction):</b> Luo He Sect (洛河门) appears
+ * in Er Gen's "Renegade Immortal" (仙逆), NOT "A Will Eternal" (一念永恒) as the
+ * prior Javadoc incorrectly stated. Verified via Baidu Baike + Tencent Video +
+ * Sohu: 洛河门 is a cultivation sect in 火焚国 (Huo Fen Country), known for its
+ * alchemy (炼丹术) tradition. The sect's founding ancestor (始祖) is 兰若 (Lan
+ * Ruo), a Nascent Soul middle-stage (元婴中期) cultivator who wields the Green
+ * Lotus Yin Fire (青莲阴火). 李慕婉 (Li Muwan) — Wang Lin's lifelong attachment
+ * — is a disciple of this sect before she later joins 云天宗 (Yun Tian Sect) in
+ * 楚国 (Chu Country). The sect's water-cultivation motif in this builder is
+ * mod-original theming derived from the 洛 (river) character — the novel does
+ * not detail a specific architectural style, so the prismarine-and-canal palette
+ * is an aesthetic inference, not canon.
  *
- * <p>Block palette: Prismarine (water affinity), sea lanterns, blue/cyan tones,
- * spruce and birch (river valley woods), stone bricks, quartz (elegant sect),
- * water buckets (flowing channels), lily pads, azaleas. The sect feels WET and
- * serene — water channels run through every district, mist hangs in courtyards.
+ * <p>Architectural style (mod-original): Prismarine (water affinity), sea
+ * lanterns, blue/cyan tones, spruce and birch (river valley woods), stone
+ * bricks, quartz (elegant sect), water channels, lily pads, azaleas. The sect
+ * feels WET and serene — water channels run through every district, mist hangs
+ * in courtyards. This is an architectural inference from the sect's name; canon
+ * does not specify architectural details.
+ *
+ * <h2>CRON-COMPLETIONIST-72 — chunk-scoped migration</h2>
+ * This builder was the last of the 4 "(ServerLevel)-only" builders (alongside
+ * QilinCity, SnowDomainCapital, VermilionBirdImperialCity) still using the
+ * legacy full-build path with raw {@code level.setBlock} calls and no chunk
+ * filter / no provenance guard. CRON-72 migrates it to the canonical chunk-scoped
+ * pattern established by WangFamilyVillageBuilder (CRON-62/63) and applied to
+ * 6 other builders (HengYue CRON-65, TengFamily/TianShui/NanDou/SoulRefining
+ * CRON-66, XuanDao CRON-67/70). All placements now flow through {@link #sb}
+ * which applies the chunk filter (CURRENT_BOUNDS) and provenance-aware rebuild
+ * guard (PLAYER/SIMULATION delta). The canon coordinate now sources from
+ * {@link PlanetSuzakuBlueprint#LUO_HE_SECT} (3000, 0, 2400) — the prior
+ * computation {@code WangFamilyVillageBuilder.VILLAGE_X - 2400 = 1442} placed
+ * the sect at (1442, ?, 416), wildly off-canon. The chunk-materializer only
+ * invokes this builder when chunks at the CANON coordinate load, so the prior
+ * mis-placement meant the sect NEVER materialized (the builder ran at (1442, ?,
+ * 416) but no chunk-load event at (1442, ?, 416) triggered it — it was only
+ * invoked via SpawnEventHandler server-start or /ergenverse build).
  *
  * <p>Districts (11):
  * <ol>
@@ -44,9 +76,11 @@ import net.minecraft.world.level.block.state.BlockState;
  *
  * <h2>Harsh Self-Critique</h2>
  * <ul>
- *   <li>Luo He Sect is from "A Will Eternal," which is a separate novel. The canon
- *       details may be less precise than Renegade Immortal locations. Architecture
- *       and layout are inferred from the sect's water-cultivation theme.</li>
+ *   <li><b>Canon (CRON-72 corrected):</b> 洛河门 is from 仙逆 (Renegade
+ *       Immortal), NOT 一念永恒 (A Will Eternal) as prior Javadoc claimed.
+ *       The founding ancestor is 兰若 (Lan Ruo, Nascent Soul middle stage).
+ *       Architecture and layout are mod-original inferences from the sect's
+ *       water-cultivation name — canon does not detail specific buildings.</li>
  *   <li>The "waterfall" is a vertical column of water source blocks — crudest
  *       possible representation. Real waterfalls need flowing water physics which
  *       MC handles, but the column itself is ungraceful.</li>
@@ -65,14 +99,139 @@ public final class LuoHeSectBuilder {
 
     private LuoHeSectBuilder() {}
 
-    // ── Canonical position on Planet Suzaku ────────────────────────
-    public static final int SECT_X = WangFamilyVillageBuilder.VILLAGE_X - 2400;
-    public static final int SECT_Z = WangFamilyVillageBuilder.VILLAGE_Z + 1600;
+    // ── Canonical position on Planet Suzaku (CRON-72: from blueprint) ──
+    // CRON-72: prior to this round, SECT_X/SECT_Z were computed as
+    // WangFamilyVillageBuilder.VILLAGE_X - 2400 (= 1442) and
+    // VILLAGE_Z + 1600 (= 416). This placed the sect at (1442, ?, 416),
+    // WILDLY OFF the canon coordinate (3000, 0, 2400) declared in
+    // PlanetSuzakuBlueprint.LUO_HE_SECT. The chunk-materializer invokes this
+    // builder when chunks at the CANON coordinate load, so the prior
+    // mis-placement meant the sect would be built at (1442, ?, 416) IF the
+    // builder was invoked, but the materializer's chunk-load trigger was at
+    // (3000, ?, 2400) — meaning the sect NEVER materialized via the normal
+    // chunk-load path. It only appeared if SpawnEventHandler's server-start
+    // hook or /ergenverse build command invoked it explicitly. Even then,
+    // the structure appeared at (1442, ?, 416) instead of (3000, ?, 2400).
+    // This is a latent canon-coordinate bug, fixed by sourcing the constants
+    // directly from PlanetSuzakuBlueprint.LUO_HE_SECT.
+    public static final int SECT_X = PlanetSuzakuBlueprint.LUO_HE_SECT.x;
+    public static final int SECT_Z = PlanetSuzakuBlueprint.LUO_HE_SECT.z;
 
     private static final int SECT_RADIUS = 45;
     private static final int WALL_HEIGHT = 8;
 
-    private static boolean built = false;
+    // ── Chunk-scoped build infrastructure (CRON-COMPLETIONIST-72) ──────
+    //
+    // Mirrors the WangFamilyVillageBuilder (CRON-62/63) and XuanDaoSectBuilder
+    // (CRON-66/70) pattern. The chunk-materializer invokes buildForChunk(level,
+    // bounds) for EACH chunk that overlaps the sect footprint. The ThreadLocal
+    // CURRENT_BOUNDS holds the active bounds during a buildInternal() call;
+    // the sb() helper checks it and skips any placement outside the bounds.
+    // When bounds is null (full-build path — commands, login events), no
+    // filtering occurs.
+
+    /** Active chunk bounds during a buildInternal() pass, or null for full-build. */
+    private static final ThreadLocal<ChunkBounds> CURRENT_BOUNDS = new ThreadLocal<>();
+
+    /**
+     * Filtered setBlock — the ONLY block-placement call site in this class.
+     * Three guards, in order:
+     *
+     * <p><b>1. Chunk filter (CRON-62 pattern):</b> if CURRENT_BOUNDS is non-null
+     * and (x, z) falls outside the bounds, skip.
+     *
+     * <p><b>2. Provenance-aware rebuild guard (CRON-63 pattern):</b> if
+     * CURRENT_BOUNDS is non-null, consult the {@link WorldDeltaStore} for a
+     * PLAYER or SIMULATION delta at (x, y, z). If either exists, skip the
+     * placement — player/sim intent wins over CANON.
+     *
+     * <p><b>3. Placement:</b> if both guards pass, call level.setBlock.
+     */
+    private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        ChunkBounds b = CURRENT_BOUNDS.get();
+        if (b != null) {
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
+        level.setBlock(pos, state, flags);
+    }
+
+    /**
+     * Provenance-aware guard helper (CRON-63 pattern). Returns true if a
+     * PLAYER or SIMULATION delta is recorded at {@code pos}. O(1) per call.
+     * Defensive: returns false if WorldRuntime is not initialized.
+     */
+    private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+            WorldDeltaStore store = runtime.deltaStore();
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            return store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
+                    pos, t.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Resolve the sect center BlockPos using the canon surface height from
+     * {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}.
+     * Eliminates the prior hardcoded y=64 placeholder.
+     */
+    public static BlockPos getSectCenter(ServerLevel level) {
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
+        return new BlockPos(SECT_X, surfaceY, SECT_Z);
+    }
+
+    /**
+     * Chunk-scoped build entry point — invoked by the chunk-materializer for
+     * each chunk that overlaps the sect footprint.
+     */
+    public static void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds) {
+        ChunkBounds prev = CURRENT_BOUNDS.get();
+        CURRENT_BOUNDS.set(bounds);
+        try {
+            buildInternal(level, getSectCenter(level));
+        } finally {
+            if (prev == null) CURRENT_BOUNDS.remove();
+            else CURRENT_BOUNDS.set(prev);
+        }
+    }
+
+    /**
+     * Full-build entry point — used by SpawnEventHandler (server-start) and
+     * ErgenverseCommand. Idempotent: guarded by {@link #isAlreadyBuilt}.
+     */
+    public static void build(ServerLevel level) {
+        BlockPos center = getSectCenter(level);
+        if (isAlreadyBuilt(level, center)) {
+            Ergenverse.LOGGER.debug("[Ergenverse] Luo He Sect already built — build() is a no-op.");
+            return;
+        }
+        Ergenverse.LOGGER.info("[Ergenverse] Building Luo He Sect at {}", center);
+        buildInternal(level, center);
+        Ergenverse.LOGGER.info("[Ergenverse] Luo He Sect construction complete.");
+    }
+
+    /**
+     * Check if the sect is already built by looking for the marker PRISMARINE
+     * at {@code center.above(WALL_HEIGHT + 1)} — a stable position above the
+     * outer wall cap.
+     *
+     * <p><b>CRON-COMPLETIONIST-69 — provenance-aware rebuild guard.</b>
+     * If the player (or simulation) has recorded a delta at the marker
+     * position, returns {@code true} (sect was built, then edited; don't
+     * rebuild). See {@link dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard}.
+     */
+    public static boolean isAlreadyBuilt(ServerLevel level, BlockPos center) {
+        BlockPos markerPos = center.above(WALL_HEIGHT + 1);
+        if (level.getBlockState(markerPos).getBlock() == Blocks.PRISMARINE) return true;
+        if (dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard.shouldSkipRebuild(markerPos)) return true;
+        return false;
+    }
 
     // ── Block palette — water, jade, river, serene ──────────────────
     private static final BlockState PRISMARINE            = Blocks.PRISMARINE.defaultBlockState();
@@ -133,17 +292,23 @@ public final class LuoHeSectBuilder {
     private static final BlockState SPIRIT_GRASS          = ErgenverseBlocks.SPIRIT_GRASS.get().defaultBlockState();
     private static final BlockState SCORCHED_STONE        = ErgenverseBlocks.SCORCHED_STONE.get().defaultBlockState();
 
-    public static boolean isAlreadyBuilt(ServerLevel level) {
-        return level.getBlockState(new BlockPos(SECT_X, 80, SECT_Z)).getBlock() == Blocks.PRISMARINE;
-    }
+    /**
+     * The actual construction body — shared by {@link #build} and {@link #buildForChunk}.
+     * Placements flow through {@link #sb} which applies the chunk filter and
+     * provenance guard when CURRENT_BOUNDS is set.
+     */
+    private static void buildInternal(ServerLevel level, BlockPos center) {
+        int cx = center.getX();
+        int baseY = center.getY(); // CRON-72: was hardcoded 64; now canon surface Y
+        int cz = center.getZ();
 
-    public static void build(ServerLevel level) {
-        if (built) return;
-        int baseY = 64;
-        int cx = SECT_X;
-        int cz = SECT_Z;
-
-        Ergenverse.LOGGER.info("[LuoHeSect] Building Luo He Sect at ({}, {}, {})...", cx, baseY, cz);
+        ChunkBounds bounds = CURRENT_BOUNDS.get();
+        if (bounds == null) {
+            Ergenverse.LOGGER.info("[LuoHeSect] Building Luo He Sect (full) at ({}, {}, {})...", cx, baseY, cz);
+        } else {
+            Ergenverse.LOGGER.debug("[LuoHeSect] Building Luo He Sect (chunk-scoped {}) at center ({}, {}, {}).",
+                    bounds, cx, baseY, cz);
+        }
 
         // Foundation
         buildFoundation(level, cx, baseY, cz);
@@ -181,8 +346,19 @@ public final class LuoHeSectBuilder {
         // 11. Spirit Herb Garden
         buildSpiritHerbGarden(level, cx, baseY, cz);
 
-        built = true;
-        Ergenverse.LOGGER.info("[LuoHeSect] Luo He Sect construction complete.");
+        // ── Marker block (CRON-72) ─────────────────────────────────────
+        // Place a PRISMARINE at center.above(WALL_HEIGHT + 1) — the position
+        // isAlreadyBuilt checks. Prior to CRON-72, isAlreadyBuilt checked
+        // (SECT_X, 80, SECT_Z) for PRISMARINE, but no PRISMARINE was placed
+        // at that exact position during build() — the marker was implicit
+        // (any PRISMARINE in the sect would satisfy the check, since PRISMARINE
+        // is the dominant wall material). This meant isAlreadyBuilt could
+        // return true even if the sect was only partially built (e.g., if a
+        // chunk-load built only the outer wall). The new marker is at a
+        // specific, stable position (cy + WALL_HEIGHT + 1, directly above the
+        // outer wall cap) and is placed at the END of buildInternal — so its
+        // presence guarantees the entire build completed.
+        sb(level, center.above(WALL_HEIGHT + 1), PRISMARINE, 3);
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -532,8 +708,15 @@ public final class LuoHeSectBuilder {
 
     // ── Helper methods ────────────────────────────────────────────────
 
+    /**
+     * Single-block placement helper — delegates to {@link #sb} so all setBlock
+     * traffic flows through the chunk filter and provenance guard. CRON-72:
+     * prior to this round, set() called level.setBlock directly, bypassing
+     * both guards. Now this is the ONLY non-sb setBlock call site, and it
+     * delegates to sb.
+     */
     private static void set(ServerLevel level, int x, int y, int z, BlockState state) {
-        level.setBlock(new BlockPos(x, y, z), state, 3);
+        sb(level, new BlockPos(x, y, z), state, 3);
     }
 
     private static void fill(ServerLevel level, int x, int y, int z,
