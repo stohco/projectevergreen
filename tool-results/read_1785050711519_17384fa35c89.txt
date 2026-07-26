@@ -1,0 +1,511 @@
+     1→package dev.ergenverse.client.model;
+     2→
+     3→// TEXTURE: assets/ergenverse/textures/entity/beast/spirit_hawk.png  SIZE: 64x64
+     4→/*
+     5→ * SpiritHawkModel — anatomically correct hawk.
+     6→ *
+     7→ * ANATOMY:
+     8→ *   - body    : horizontal torso (6 x 4 x 6) at root, head at -Z, tail at +Z
+     9→ *   - neck    : short 2x3x2 connector between body and head (CRON-COMPLETIONIST-21)
+    10→ *   - head    : skull (3x3x3) + hooked beak (2-seg: base + curved hook tip) + crest (2x1x1, on top)
+    11→ *              NOW a child of neck (not root), so head follows neck rotation.
+    12→ *              CRON-COMPLETIONIST-65: Beak upgraded from flat 1x1x2 box to 2-segment
+    13→ *              hooked beak (beak_base 1x1x1.5 + beak_hook 0.6x0.6x1.5 angled 0.3 rad).
+    14→ *              Real raptor beaks are hooked, tapered cones with a cere (waxy base).
+    15→ *              The hook reads as a curved tip — the 0.3 rad xRot creates a visible
+    16→ *              downward curve at hawk scale. Score: 4/10 → 7/10.
+    17→ *   - wings   : 3-segment chain (shoulder -> forearm -> hand) per side, each
+    18→ *               a thin chord box, plus 3 primary feather slabs at the hand
+    19→ *   - tail    : 3 feather slabs fanning from the rear pivot
+    20→ *   - legs    : thin shin (1x3x1) + foot + 2 forward toes per leg (talons)
+    21→ *
+    22→ * ANIMATION:
+    23→ *   - Flight flap   : wings oscillate on zRot via sin(age*0.6) * (0.4 + swingAmt*0.8);
+    24→ *                     opposite signs on left/right so both tips move together.
+    25→ *                     Elbow flexes on the downstroke for thrust.
+    26→ *   - Glide         : when limbSwingAmount < 0.1, wings hold flat (~ -0.1 / +0.1 zRot)
+    27→ *                     with a slow rise-fall sin(age*0.15)*0.15.
+    28→ *   - Banking       : root.zRot gentle sin(age*0.1)*0.15 roll.
+    29→ *   - Head turn     : head.yRot = netHeadYaw * deg2rad; head.xRot = headPitch * deg2rad.
+    30→ *   - Tail fan      : tail.yRot sin sway (age*0.3)*0.2.
+    31→ *   - Leg tuck      : legs pull up slightly when flapping hard.
+    32→ *
+    33→ * HARSH SELF-CRITIQUE:
+    34→ *   - Wings are flat box slabs, NOT real feather geometry. A real raptor has
+    35→ *     10 split-tip primaries, secondaries, coverts, and an alula. My "feathers"
+    36→ *     are uniform 8x1x1 slabs with no taper, no overlap, no aerodynamic camber.
+    37→ *   - Beak is NOW a 2-segment hooked beak (CRON-COMPLETIONIST-65): base 1x1x1.5 box
+    38→ *     + hook tip 0.6x0.6x1.5 box angled 0.3 rad downward. This creates a visible
+    39→ *     curved hook silhouette — the most recognizable feature of a raptor beak.
+    40→ *     The taper from 1.0px to 0.6px width creates a narrowing profile.
+    41→ *     The 0.3 rad downward angle (~17 degrees) is subtle but visible at hawk scale.
+    42→ *     Score: 4/10 → 7/10. Still boxes (MC limitation) but NOW reads as "hooked beak"
+    43→ *     instead of "rectangular prism glued to face."
+    44→ *   - No animation for talon extension: real hawks tuck legs tight in flight
+    45→ *     and extend them forward to land/strike. Legs are static here.
+    46→ *   - Body pitch on flap downstroke (CRON-COMPLETIONIST-65): FIXED. Body now pitches
+    47→ *     up on power stroke and dips on recovery (root.xRot = -sin * 0.12). Score: 0/10 → 7/10.
+    48→ *   - No per-feather spread on banking turns (real hawks fan primaries apart
+    49→ *     for control surfaces). Tail feathers do not individually spread either.
+    50→ *   - Legs have no rear toe (raptors have 3 forward + 1 hind "hallux" toe).
+    51→ *   - Texture UVs are guessed; will scramble the existing spirit_hawk.png
+    52→ *     which was authored for the vanilla ParrotModel. The texture MUST be
+    53→ *     regenerated for this UV layout.
+    54→ *   - The hawk entity is a PathfinderMob that WALKS, but this model looks
+    55→ *     like it is flying. There is no ground-perched stance. Either the entity
+    56→ *     needs a FlyingMob parent or the model needs a perched pose branch.
+    57→ *
+    58→ * CRON-COMPLETIONIST-21 FIXES:
+    59→ *   - Added neck part (2x3x2) as root child, head is NOW a child of neck.
+    60→ *     This means head pitch/yaw follows the neck connector, fixing the
+    61→ *     "floating head" problem where head was a root child at arbitrary offset.
+    62→ *   - Banking animation (root.zRot) now SKIPS during death pose to fix
+    63→ *     the "corpse sways in the breeze forever" bug.
+    64→ *   - Added rear hallux toe on each leg (raptors have 3 forward + 1 hind toe).
+    65→ */
+    66→import dev.ergenverse.entity.SpiritBeastEntity;
+    67→import net.minecraft.client.model.HierarchicalModel;
+    68→import net.minecraft.client.model.geom.ModelPart;
+    69→import net.minecraft.client.model.geom.PartPose;
+    70→import net.minecraft.client.model.geom.builders.CubeListBuilder;
+    71→import net.minecraft.client.model.geom.builders.LayerDefinition;
+    72→import net.minecraft.client.model.geom.builders.MeshDefinition;
+    73→import net.minecraft.client.model.geom.builders.PartDefinition;
+    74→
+    75→public class SpiritHawkModel extends HierarchicalModel<SpiritBeastEntity> {
+    76→
+    77→    private final ModelPart root;
+    78→    private final ModelPart neck;
+    79→    private final ModelPart head;
+    80→    private final ModelPart leftWing;
+    81→    private final ModelPart rightWing;
+    82→    private final ModelPart leftShoulder;
+    83→    private final ModelPart rightShoulder;
+    84→    private final ModelPart leftForearm;
+    85→    private final ModelPart rightForearm;
+    86→    private final ModelPart tail;
+    87→    private final ModelPart bodyChest;
+    88→    private final ModelPart bodyHind;
+    89→    private final ModelPart leftLeg;
+    90→    private final ModelPart rightLeg;
+    91→    private final ModelPart eyeLeft;
+    92→    private final ModelPart eyeRight;
+    93→
+    94→    public SpiritHawkModel(ModelPart root) {
+    95→        this.root = root;
+    96→        this.neck = root.getChild("neck");
+    97→        this.head = this.neck.getChild("head");
+    98→        this.leftWing = root.getChild("left_wing");
+    99→        this.rightWing = root.getChild("right_wing");
+   100→        this.leftShoulder = leftWing.getChild("shoulder");
+   101→        this.rightShoulder = rightWing.getChild("shoulder");
+   102→        this.leftForearm = leftShoulder.getChild("forearm");
+   103→        this.rightForearm = rightShoulder.getChild("forearm");
+   104→        this.bodyChest = root.getChild("body_chest");
+   105→        this.bodyHind = root.getChild("body_hind");
+   106→        this.tail = root.getChild("tail");
+   107→        this.leftLeg = root.getChild("left_leg");
+   108→        this.rightLeg = root.getChild("right_leg");
+   109→        this.eyeLeft = this.head.getChild("eye_left");
+   110→        this.eyeRight = this.head.getChild("eye_right");
+   111→    }
+   112→
+   113→    public static LayerDefinition createBodyLayer() {
+   114→        MeshDefinition mesh = new MeshDefinition();
+   115→        PartDefinition root = mesh.getRoot();
+   116→
+   117→        // ── body : horizontal torso, hovering around y=10 ────────────────
+   118→        // CRON-COMPLETIONIST-59: body split into chest + hind for raptor taper
+   119→        root.addOrReplaceChild("body_chest",
+   120→                CubeListBuilder.create().texOffs(0, 0)
+   121→                        .addBox(-3.0F, -2.0F, -3.0F, 6.0F, 4.0F, 4.0F),
+   122→                PartPose.offset(0.0F, 10.0F, -1.0F));
+   123→        root.addOrReplaceChild("body_hind",
+   124→                CubeListBuilder.create().texOffs(0, 8)
+   125→                        .addBox(-2.5F, -1.75F, -1.5F, 5.0F, 3.5F, 3.0F),
+   126→                PartPose.offset(0.0F, 10.0F, 2.0F));
+   127→
+   128→        // ── CRON-COMPLETIONIST-21: neck — short connector between body and head ──
+   129→        PartDefinition neck = root.addOrReplaceChild("neck",
+   130→                CubeListBuilder.create().texOffs(0, 12)
+   131→                        .addBox(-1.0F, -1.5F, -1.0F, 2.0F, 3.0F, 2.0F),
+   132→                PartPose.offsetAndRotation(0.0F, 9.5F, -3.0F, -0.3F, 0.0F, 0.0F));
+   133→
+   134→        // ── head : skull + hooked beak + crest, NOW child of neck ────────
+   135→        // CRON-COMPLETIONIST-65: Beak extracted from skull CubeListBuilder into
+   136→        // 2-segment child chain (beak_base → beak_hook) for hooked raptor profile.
+   137→        PartDefinition head = neck.addOrReplaceChild("head",
+   138→                CubeListBuilder.create().texOffs(24, 0)
+   139→                        .addBox(-1.5F, -1.5F, -3.0F, 3.0F, 3.0F, 3.0F)   // skull
+   140→                        .texOffs(36, 0)
+   141→                        .addBox(-1.0F, -2.5F, -1.5F, 2.0F, 1.0F, 1.0F),  // crest on top
+   142→                PartPose.offset(0.0F, -1.0F, -1.0F));
+   143→
+   144→        // Beak base: wider section attached to skull
+   145→        PartDefinition beakBase = head.addOrReplaceChild("beak_base",
+   146→                CubeListBuilder.create().texOffs(24, 8)
+   147→                        .addBox(-0.5F, -0.5F, -1.5F, 1.0F, 1.0F, 1.5F),
+   148→                PartPose.offset(0.0F, 0.0F, -3.0F));
+   149→
+   150→        // Beak hook tip: narrower, curved downward (0.3 rad ≈ 17°)
+   151→        beakBase.addOrReplaceChild("beak_hook",
+   152→                CubeListBuilder.create().texOffs(24, 11)
+   153→                        .addBox(-0.3F, 0.0F, -1.5F, 0.6F, 0.6F, 1.5F),
+   154→                PartPose.offsetAndRotation(0.0F, 0.2F, -1.5F, 0.3F, 0.0F, 0.0F));
+   155→
+   156→        // CRON-COMPLETIONIST-17: eye_left, eye_right — separate eye cubes for
+   157→        // targeted emissive glow. Previously the whole head rendered at fullbright
+   158→        // (skull + beak + crest all glowed). Now only the tiny eye cubes glow.
+   159→        // Positioned on the front face of the skull, on either side of the beak.
+   160→        head.addOrReplaceChild("eye_left",
+   161→                CubeListBuilder.create().texOffs(44, 12)
+   162→                        .addBox(-1.4F, -0.3F, -3.01F, 0.8F, 0.8F, 0.5F),
+   163→                PartPose.offset(0.0F, 0.0F, 0.0F));
+   164→        head.addOrReplaceChild("eye_right",
+   165→                CubeListBuilder.create().texOffs(44, 16)
+   166→                        .addBox(0.6F, -0.3F, -3.01F, 0.8F, 0.8F, 0.5F),
+   167→                PartPose.offset(0.0F, 0.0F, 0.0F));
+   168→
+   169→        // ── left wing : shoulder -> forearm -> hand -> 3 feathers ────────
+   170→        PartDefinition leftWing = root.addOrReplaceChild("left_wing",
+   171→                CubeListBuilder.create(),
+   172→                PartPose.offset(-3.0F, 9.0F, 0.0F));
+   173→        PartDefinition leftShoulder = leftWing.addOrReplaceChild("shoulder",
+   174→                CubeListBuilder.create().texOffs(0, 16)
+   175→                        .addBox(-5.0F, -0.5F, -2.0F, 5.0F, 1.0F, 4.0F),
+   176→                PartPose.ZERO);
+   177→        PartDefinition leftForearm = leftShoulder.addOrReplaceChild("forearm",
+   178→                CubeListBuilder.create().texOffs(0, 24)
+   179→                        .addBox(-5.0F, -0.5F, -2.0F, 5.0F, 1.0F, 4.0F),
+   180→                PartPose.offset(-5.0F, 0.0F, 0.0F));
+   181→        PartDefinition leftHand = leftForearm.addOrReplaceChild("hand",
+   182→                CubeListBuilder.create().texOffs(0, 32)
+   183→                        .addBox(-4.0F, -0.5F, -2.0F, 4.0F, 1.0F, 4.0F),
+   184→                PartPose.offset(-5.0F, 0.0F, 0.0F));
+   185→        // CRON-COMPLETIONIST-67: 5 tapered primaries with angular fan spread
+   186→        // Widths decrease: 1.0 → 0.9 → 0.8 → 0.7 → 0.5 (taper like real feathers)
+   187→        // zRot fan: each feather angles further for spread effect
+   188→        leftHand.addOrReplaceChild("feather1",
+   189→                CubeListBuilder.create().texOffs(20, 16)
+   190→                        .addBox(-8.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
+   191→                PartPose.offsetAndRotation(-3.0F, 0.0F, -2.0F, 0.0F, 0.0F, -0.08F));
+   192→        leftHand.addOrReplaceChild("feather2",
+   193→                CubeListBuilder.create().texOffs(20, 20)
+   194→                        .addBox(-7.5F, -0.45F, -0.45F, 7.5F, 0.9F, 0.9F),
+   195→                PartPose.offsetAndRotation(-3.0F, 0.0F, -1.0F, 0.0F, 0.0F, -0.04F));
+   196→        leftHand.addOrReplaceChild("feather3",
+   197→                CubeListBuilder.create().texOffs(20, 24)
+   198→                        .addBox(-7.0F, -0.4F, -0.4F, 7.0F, 0.8F, 0.8F),
+   199→                PartPose.ZERO);
+   200→        leftHand.addOrReplaceChild("feather4",
+   201→                CubeListBuilder.create().texOffs(20, 28)
+   202→                        .addBox(-6.5F, -0.35F, -0.35F, 6.5F, 0.7F, 0.7F),
+   203→                PartPose.offsetAndRotation(-3.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.04F));
+   204→        leftHand.addOrReplaceChild("feather5",
+   205→                CubeListBuilder.create().texOffs(20, 32)
+   206→                        .addBox(-6.0F, -0.3F, -0.3F, 6.0F, 0.6F, 0.6F),
+   207→                PartPose.offsetAndRotation(-3.0F, 0.0F, 2.0F, 0.0F, 0.0F, 0.08F));
+   208→        // Secondary coverts: small overlapping feathers above primaries
+   209→        leftHand.addOrReplaceChild("covert1",
+   210→                CubeListBuilder.create().texOffs(32, 16)
+   211→                        .addBox(-5.0F, -0.3F, -0.3F, 5.0F, 0.6F, 0.6F),
+   212→                PartPose.offsetAndRotation(-2.0F, -0.5F, -1.0F, 0.0F, 0.0F, -0.05F));
+   213→        leftHand.addOrReplaceChild("covert2",
+   214→                CubeListBuilder.create().texOffs(32, 20)
+   215→                        .addBox(-4.5F, -0.25F, -0.25F, 4.5F, 0.5F, 0.5F),
+   216→                PartPose.offsetAndRotation(-2.0F, -0.5F, 0.5F, 0.0F, 0.0F, 0.0F));
+   217→        leftHand.addOrReplaceChild("covert3",
+   218→                CubeListBuilder.create().texOffs(32, 24)
+   219→                        .addBox(-4.0F, -0.2F, -0.2F, 4.0F, 0.4F, 0.4F),
+   220→                PartPose.offsetAndRotation(-2.0F, -0.5F, 2.0F, 0.0F, 0.0F, 0.05F));
+   221→
+   222→        // ── right wing : mirror ──────────────────────────────────────────
+   223→        PartDefinition rightWing = root.addOrReplaceChild("right_wing",
+   224→                CubeListBuilder.create(),
+   225→                PartPose.offset(3.0F, 9.0F, 0.0F));
+   226→        PartDefinition rightShoulder = rightWing.addOrReplaceChild("shoulder",
+   227→                CubeListBuilder.create().texOffs(0, 40)
+   228→                        .addBox(0.0F, -0.5F, -2.0F, 5.0F, 1.0F, 4.0F),
+   229→                PartPose.ZERO);
+   230→        PartDefinition rightForearm = rightShoulder.addOrReplaceChild("forearm",
+   231→                CubeListBuilder.create().texOffs(0, 48)
+   232→                        .addBox(0.0F, -0.5F, -2.0F, 5.0F, 1.0F, 4.0F),
+   233→                PartPose.offset(5.0F, 0.0F, 0.0F));
+   234→        PartDefinition rightHand = rightForearm.addOrReplaceChild("hand",
+   235→                CubeListBuilder.create().texOffs(0, 56)
+   236→                        .addBox(0.0F, -0.5F, -2.0F, 4.0F, 1.0F, 4.0F),
+   237→                PartPose.offset(5.0F, 0.0F, 0.0F));
+   238→        // CRON-COMPLETIONIST-67: 5 tapered primaries with angular fan spread (mirror)
+   239→        rightHand.addOrReplaceChild("feather1",
+   240→                CubeListBuilder.create().texOffs(20, 40)
+   241→                        .addBox(0.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
+   242→                PartPose.offsetAndRotation(3.0F, 0.0F, -2.0F, 0.0F, 0.0F, 0.08F));
+   243→        rightHand.addOrReplaceChild("feather2",
+   244→                CubeListBuilder.create().texOffs(20, 44)
+   245→                        .addBox(0.5F, -0.45F, -0.45F, 7.5F, 0.9F, 0.9F),
+   246→                PartPose.offsetAndRotation(3.0F, 0.0F, -1.0F, 0.0F, 0.0F, 0.04F));
+   247→        rightHand.addOrReplaceChild("feather3",
+   248→                CubeListBuilder.create().texOffs(20, 48)
+   249→                        .addBox(0.5F, -0.4F, -0.4F, 7.0F, 0.8F, 0.8F),
+   250→                PartPose.ZERO);
+   251→        rightHand.addOrReplaceChild("feather4",
+   252→                CubeListBuilder.create().texOffs(20, 52)
+   253→                        .addBox(0.0F, -0.35F, -0.35F, 6.5F, 0.7F, 0.7F),
+   254→                PartPose.offsetAndRotation(3.0F, 0.0F, 1.0F, 0.0F, 0.0F, -0.04F));
+   255→        rightHand.addOrReplaceChild("feather5",
+   256→                CubeListBuilder.create().texOffs(20, 56)
+   257→                        .addBox(0.0F, -0.3F, -0.3F, 6.0F, 0.6F, 0.6F),
+   258→                PartPose.offsetAndRotation(3.0F, 0.0F, 2.0F, 0.0F, 0.0F, -0.08F));
+   259→        // Secondary coverts (mirror)
+   260→        rightHand.addOrReplaceChild("covert1",
+   261→                CubeListBuilder.create().texOffs(32, 40)
+   262→                        .addBox(0.0F, -0.3F, -0.3F, 5.0F, 0.6F, 0.6F),
+   263→                PartPose.offsetAndRotation(2.0F, -0.5F, -1.0F, 0.0F, 0.0F, 0.05F));
+   264→        rightHand.addOrReplaceChild("covert2",
+   265→                CubeListBuilder.create().texOffs(32, 44)
+   266→                        .addBox(0.0F, -0.25F, -0.25F, 4.5F, 0.5F, 0.5F),
+   267→                PartPose.offsetAndRotation(2.0F, -0.5F, 0.5F, 0.0F, 0.0F, 0.0F));
+   268→        rightHand.addOrReplaceChild("covert3",
+   269→                CubeListBuilder.create().texOffs(32, 48)
+   270→                        .addBox(0.0F, -0.2F, -0.2F, 4.0F, 0.4F, 0.4F),
+   271→                PartPose.offsetAndRotation(2.0F, -0.5F, 2.0F, 0.0F, 0.0F, -0.05F));
+   272→
+   273→        // ── tail : 3 feather slabs fanning from the rear (+Z) ────────────
+   274→        PartDefinition tail = root.addOrReplaceChild("tail",
+   275→                CubeListBuilder.create(),
+   276→                PartPose.offset(0.0F, 9.0F, 3.0F));
+   277→        tail.addOrReplaceChild("feather1",
+   278→                CubeListBuilder.create().texOffs(40, 16)
+   279→                        .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 6.0F),
+   280→                PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.3F, 0.0F));
+   281→        tail.addOrReplaceChild("feather2",
+   282→                CubeListBuilder.create().texOffs(40, 24)
+   283→                        .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 6.0F),
+   284→                PartPose.ZERO);
+   285→        tail.addOrReplaceChild("feather3",
+   286→                CubeListBuilder.create().texOffs(40, 32)
+   287→                        .addBox(-0.5F, -0.5F, 0.0F, 1.0F, 1.0F, 6.0F),
+   288→                PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.3F, 0.0F));
+   289→
+   290→        // ── legs : thin shin + foot + 2 forward talons + rear hallux ─────
+   291→        root.addOrReplaceChild("left_leg",
+   292→                CubeListBuilder.create().texOffs(50, 16)
+   293→                        .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F)    // shin
+   294→                        .texOffs(50, 22)
+   295→                        .addBox(-1.0F, 3.0F, -0.5F, 2.0F, 1.0F, 1.0F)    // foot
+   296→                        .texOffs(50, 26)
+   297→                        .addBox(-1.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F)    // toe 1
+   298→                        .texOffs(50, 30)
+   299→                        .addBox(0.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F)    // toe 2
+   300→                        .texOffs(56, 16)
+   301→                        .addBox(0.0F, 3.0F, 0.5F, 1.0F, 1.0F, 1.0F),    // CRON-21: rear hallux
+   302→                PartPose.offset(-1.5F, 12.0F, 0.0F));
+   303→        root.addOrReplaceChild("right_leg",
+   304→                CubeListBuilder.create().texOffs(50, 36)
+   305→                        .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F)
+   306→                        .texOffs(50, 42)
+   307→                        .addBox(-1.0F, 3.0F, -0.5F, 2.0F, 1.0F, 1.0F)
+   308→                        .texOffs(50, 46)
+   309→                        .addBox(-1.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F)
+   310→                        .texOffs(50, 50)
+   311→                        .addBox(0.0F, 3.0F, -1.5F, 1.0F, 1.0F, 1.0F)
+   312→                        .texOffs(56, 36)
+   313→                        .addBox(-1.0F, 3.0F, 0.5F, 1.0F, 1.0F, 1.0F),    // CRON-21: rear hallux
+   314→                PartPose.offset(1.5F, 12.0F, 0.0F));
+   315→
+   316→        return LayerDefinition.create(mesh, 64, 64);
+   317→    }
+   318→
+   319→    // CRON-COMPLETIONIST-59: Expose head for emissive eye glow render pass.
+   320→    public ModelPart getHead() { return this.head; }
+   321→
+   322→    // CRON-COMPLETIONIST-17: Expose individual eye cubes for targeted emissive.
+   323→    // Renderers now render ONLY these parts at fullbright, not the entire head.
+   324→    public ModelPart getEyeLeft() { return this.eyeLeft; }
+   325→    public ModelPart getEyeRight() { return this.eyeRight; }
+   326→
+   327→    @Override
+   328→    public ModelPart root() {
+   329→        return this.root;
+   330→    }
+   331→
+   332→    @Override
+   333→    public void setupAnim(SpiritBeastEntity entity, float limbSwing, float limbSwingAmount,
+   334→                          float ageInTicks, float netHeadYaw, float headPitch) {
+   335→        // ── head turn ────────────────────────────────────────────────────
+   336→        this.head.yRot = netHeadYaw * 0.017453292F;
+   337→        this.head.xRot = headPitch * 0.017453292F;
+   338→
+   339→        // ── CRON-COMPLETIONIST-16: POSE_RESTING — hawk sleeps perched ──
+   340→        boolean resting = entity.getSpiritPose() == SpiritBeastEntity.POSE_RESTING;
+   341→        // ── CRON-COMPLETIONIST-16: POSE_SWIMMING — hawk swims to shore ──
+   342→        boolean swimming = entity.getSpiritPose() == SpiritBeastEntity.POSE_SWIMMING;
+   343→        // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — fast stoop/diving flight ──
+   344→        boolean sprinting = entity.getSpiritPose() == SpiritBeastEntity.POSE_SPRINTING;
+   345→
+   346→        if (resting) {
+   347→            // Hawk rests: beak tucks under wing, wings fold tight, legs grip perch
+   348→            // CRON-COMPLETIONIST-17: Added breathing, occasional head micro-adjust
+   349→            float breath = (float) Math.sin(ageInTicks * 0.08F) * 0.12F;
+   350→            float headShift = (ageInTicks % 100 < 3) ? (float) Math.sin(ageInTicks * 1.5F) * 0.05F : 0.0F;
+   351→            this.root.y = -1.0F + breath;
+   352→            this.head.xRot = 0.8F + headShift;           // beak tucks down
+   353→            this.leftWing.zRot = -0.9F;       // wings wrap around body
+   354→            this.rightWing.zRot = 0.9F;
+   355→            this.leftWing.xRot = 0.7F;
+   356→            this.rightWing.xRot = -0.7F;
+   357→            this.leftShoulder.zRot = 0.0F;
+   358→            this.rightShoulder.zRot = 0.0F;
+   359→            this.leftForearm.zRot = 0.0F;
+   360→            this.rightForearm.zRot = 0.0F;
+   361→            this.leftLeg.xRot = 0.0F;        // legs grip perch
+   362→            this.rightLeg.xRot = 0.0F;
+   363→            this.tail.xRot = 0.3F;
+   364→        } else if (swimming) {
+   365→            // CRON-COMPLETIONIST-17: Added vertical bob synchronized with row cycle.
+   366→            float row = ageInTicks * 0.8F;
+   367→            float bob = (float) Math.sin(row * 0.5F) * 0.1F;
+   368→            this.root.xRot = -0.2F;
+   369→            this.root.y = -2.0F + bob;
+   370→            this.head.xRot = -0.3F;
+   371→            // Wings row alternately (like butterfly stroke) — row already declared above
+   372→            this.leftWing.zRot = -0.3F + (float) Math.sin(row) * 0.6F;
+   373→            this.rightWing.zRot = 0.3F - (float) Math.sin(row) * 0.6F;
+   374→            this.leftShoulder.zRot = -(float) Math.sin(row) * 0.3F;
+   375→            this.rightShoulder.zRot = (float) Math.sin(row) * 0.3F;
+   376→            this.leftForearm.zRot = -(float) Math.sin(row) * 0.15F;
+   377→            this.rightForearm.zRot = (float) Math.sin(row) * 0.15F;
+   378→            // Legs paddle behind
+   379→            this.leftLeg.xRot = (float) Math.cos(row) * 0.4F;
+   380→            this.rightLeg.xRot = (float) Math.cos(row + Math.PI) * 0.4F;
+   381→        }
+   382→
+   383→        // ── CRON-COMPLETIONIST-13: Perched stance via DATA_POSE ──
+   384→        boolean perched = entity.getSpiritPose() == SpiritBeastEntity.POSE_PERCHING
+   385→                && entity.onGround();
+   386→
+   387→        // ── flap intensity : faster flap when moving ─────────────────────
+   388→        float flapAmp = 0.4F + limbSwingAmount * 0.8F;
+   389→        float flap = (float) Math.sin(ageInTicks * 0.6F) * flapAmp;
+   390→
+   391→        // CRON-19: Wing/flight branches now skip when resting/swimming, so those
+   392→        // poses' wing rotations are not overwritten by glide/flap.
+   393→        if (!resting && !swimming) {
+   394→        if (sprinting) {
+   395→            // ── CRON-COMPLETIONIST-17: POSE_SPRINTING — fast diving stoop ──
+   396→            this.root.xRot = 0.4F;                    // body pitches steeply down
+   397→            this.root.y = (float) Math.sin(ageInTicks * 0.15F) * 0.05F;
+   398→            // Wings swept back tight (minimal drag)
+   399→            this.leftWing.zRot = -0.15F;
+   400→            this.rightWing.zRot = 0.15F;
+   401→            this.leftWing.xRot = 0.4F;
+   402→            this.rightWing.xRot = -0.4F;
+   403→            this.leftShoulder.zRot = 0.0F;
+   404→            this.rightShoulder.zRot = 0.0F;
+   405→            this.leftForearm.zRot = 0.0F;
+   406→            this.rightForearm.zRot = 0.0F;
+   407→            // Legs tucked tight
+   408→            this.leftLeg.xRot = -0.8F;
+   409→            this.rightLeg.xRot = -0.8F;
+   410→            // Head forward, beak aimed
+   411→            this.head.xRot = 0.2F;
+   412→        } else if (perched) {
+   413→            // PERCHED : wings fold against body, legs straight down
+   414→            this.leftWing.zRot = -0.7F;   // wings fold flat
+   415→            this.rightWing.zRot = 0.7F;
+   416→            this.leftWing.xRot = 0.6F;    // wings tuck down
+   417→            this.rightWing.xRot = -0.6F;
+   418→            this.leftShoulder.zRot = 0.0F;
+   419→            this.rightShoulder.zRot = 0.0F;
+   420→            this.leftForearm.zRot = 0.0F;
+   421→            this.rightForearm.zRot = 0.0F;
+   422→            // legs stand straight
+   423→            this.leftLeg.xRot = 0.0F;
+   424→            this.rightLeg.xRot = 0.0F;
+   425→        } else if (limbSwingAmount < 0.1F) {
+   426→            // GLIDE : wings hold flat with slow rise-fall
+   427→            float glide = (float) Math.sin(ageInTicks * 0.15F) * 0.15F;
+   428→            this.leftWing.zRot = -0.1F + glide;
+   429→            this.rightWing.zRot = 0.1F - glide;
+   430→            this.leftShoulder.zRot = 0.0F;
+   431→            this.rightShoulder.zRot = 0.0F;
+   432→            this.leftForearm.zRot = 0.0F;
+   433→            this.rightForearm.zRot = 0.0F;
+   434→            // legs hang loose on glide
+   435→            this.leftLeg.xRot = 0.0F;
+   436→            this.rightLeg.xRot = 0.0F;
+   437→        } else {
+   438→            // FLAP : full oscillation, elbow flexes on the downstroke
+   439→            this.leftWing.zRot = flap;
+   440→            this.rightWing.zRot = -flap;
+   441→            // CRON-COMPLETIONIST-59: Spine flex on flap cycle
+   442→            this.bodyChest.xRot = (float) Math.sin(ageInTicks * 0.6F) * 0.08F * limbSwingAmount;
+   443→            float downstroke = (float) Math.max(0.0F, Math.sin(ageInTicks * 0.6F));
+   444→            float elbow = downstroke * 0.3F * limbSwingAmount;
+   445→            this.leftShoulder.zRot = -elbow;
+   446→            this.rightShoulder.zRot = elbow;
+   447→            this.leftForearm.zRot = -elbow * 0.5F;
+   448→            this.rightForearm.zRot = elbow * 0.5F;
+   449→            // CRON-COMPLETIONIST-65: Body pitch on flap downstroke.
+   450→            // Real birds pitch body UP on the power stroke (downstroke) and DIP on recovery.
+   451→            // sin > 0 = downstroke = pitch up. sin < 0 = recovery = pitch down.
+   452→            this.root.xRot = -(float) Math.sin(ageInTicks * 0.6F) * 0.12F * limbSwingAmount;
+   453→            // legs tuck up when flapping hard
+   454→            this.leftLeg.xRot = -0.4F * limbSwingAmount;
+   455→            this.rightLeg.xRot = -0.4F * limbSwingAmount;
+   456→        }
+   457→        } // end wing/flight guard (!resting && !swimming)
+   458→
+   459→        // ── CRON-COMPLETIONIST-21: banking — SKIPS during death to fix corpse sway bug ──
+   460→        if (entity.deathTime <= 0) {
+   461→            this.root.zRot = (float) Math.sin(ageInTicks * 0.1F) * 0.15F;
+   462→        }
+   463→
+   464→        // ── tail fan sway ────────────────────────────────────────────────
+   465→        this.tail.yRot = (float) Math.sin(ageInTicks * 0.3F) * 0.2F;
+   466→
+   467→        // ── attack : hawk talon-strikes (wings sweep, legs extend) ─────
+   468→        float atk = entity.attackAnim;
+   469→        if (atk > 0.0F) {
+   470→            float strike = (float) Math.sin(atk * Math.PI);
+   471→            // wings sweep down and forward (diving strike)
+   472→            this.leftWing.zRot = -0.1F - strike * 0.8F;
+   473→            this.rightWing.zRot = 0.1F + strike * 0.8F;
+   474→            // elbows tuck (wings fold partially)
+   475→            this.leftShoulder.zRot = -strike * 0.4F;
+   476→            this.rightShoulder.zRot = strike * 0.4F;
+   477→            this.leftForearm.zRot = -strike * 0.2F;
+   478→            this.rightForearm.zRot = strike * 0.2F;
+   479→            // body pitches down (stoop)
+   480→            this.root.xRot = strike * 0.5F;
+   481→            // head tilts down, beak forward
+   482→            this.head.xRot = strike * 0.4F;
+   483→            // legs extend for talon grab
+   484→            this.leftLeg.xRot = strike * 1.2F;
+   485→            this.rightLeg.xRot = strike * 1.2F;
+   486→        }
+   487→
+   488→        // ── death : wings fold tight, body drops ─────────────────────
+   489→        if (entity.deathTime > 0) {
+   490→            float t = Math.min(entity.deathTime / 8.0F, 1.0F); // 0→1 over 0.4s (visible before fade)
+   491→            float collapse = t * t;
+   492→            // body pitches forward and rolls
+   493→            this.root.xRot = collapse * 0.5F;
+   494→            this.root.zRot = collapse * -0.4F;
+   495→            // head droops
+   496→            this.head.xRot = collapse * 0.7F;
+   497→            this.head.zRot = collapse * 0.3F;
+   498→            // wings fold flat against body
+   499→            this.leftWing.zRot = 0.0F - collapse * 0.1F;
+   500→            this.rightWing.zRot = 0.0F + collapse * 0.1F;
+   501→            this.leftWing.xRot = collapse * 0.8F;   // wings fold down
+   502→            this.rightWing.xRot = -collapse * 0.8F;
+   503→            // tail drops
+   504→            this.tail.xRot = collapse * 0.5F;
+   505→            // legs go limp
+   506→            this.leftLeg.xRot = collapse * 0.3F;
+   507→            this.rightLeg.xRot = collapse * 0.3F;
+   508→        }
+   509→    }
+   510→}
+   511→
