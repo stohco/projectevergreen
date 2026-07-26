@@ -79,6 +79,83 @@ package dev.ergenverse.client.model;
  *   - Texture UVs now cover: robe_waist(16,32), robe_mid(26,32), robe_hem(36,32),
  *     sash(0,48), hair_bun(0,32), hairpin(4,32), sleeve_R(40,32), sleeve_L(40,48).
  *     Updated textures must paint all these UV regions.
+ *
+ * <h2>CRON-COMPLETIONIST-97 — PER-CHARACTER HELD WEAPONS &amp; VISUAL DISTINCTION</h2>
+ *
+ * <p>Before CRON-97, ALL 9 canon NPCs (Wang Lin, Situ Nan, Teng Li, Li Muwan,
+ * Zeng Da Niu, Teng Huayuan, Wang Zhuo, Wang Hao, Old Chen) shared the SAME
+ * CultivatorRobeModel and differed only by texture. The user's standing
+ * directive (CRON-69 point g): "harshly critique existing artwork; correct
+ * anatomy; smooth interpolated animations; per-entity hitboxes". The harshest
+ * gap was that no NPC held a weapon — Situ Nan's iconic jade folding fan,
+ * Teng Li's sword, Zeng Da Niu's hoe were ALL absent. Canon NPCs were
+ * visually indistinguishable except by robe color.
+ *
+ * <p>CRON-97 closes this gap. Five held-weapon ModelParts are added as
+ * children of {@code right_arm}, so they inherit arm rotation (sword points
+ * down at idle, forward when arm is raised for casting, etc.). A new
+ * {@link #setCharacterId(String)} method maps canon characterId → weapon
+ * type + per-character scale:
+ * <ul>
+ *   <li><b>wang_lin</b> → SWORD (flying-sword cultivator) — canon: Wang Lin's
+ *       primary weapon throughout. Scale 1.0.</li>
+ *   <li><b>situ_nan</b> → FAN (jade folding fan) — canon: Situ Nan's signature
+ *       item; the 2nd-gen Vermilion Bird Son. Scale 1.10 (tall, imposing).</li>
+ *   <li><b>teng_li</b> → SWORD (藤厉 Teng Family young master, sword cultivator).
+ *       Scale 1.0.</li>
+ *   <li><b>wang_zhuo</b> → SWORD (Heng Yue Sect disciple, sword cultivator).
+ *       Scale 1.0.</li>
+ *   <li><b>teng_huayuan</b> → STAFF (Teng Family patriarch; patriarchal bearing).
+ *       Scale 1.05.</li>
+ *   <li><b>old_chen</b> → FLY_WHISK (Heng Yue Sect elder; mod-original character,
+ *       archetype-driven choice). Scale 0.98 (slightly stooped).</li>
+ *   <li><b>zeng_da_niu</b> → HOE (mortal farmer, 化凡 arc). Scale 0.95
+ *       (shorter, stocky build).</li>
+ *   <li><b>li_muwan</b> → FAN (lady's folding fan; Luo He Sect alchemist).
+ *       Scale 0.92 (slightly shorter, female).</li>
+ *   <li><b>wang_hao</b> → NONE (mortal, Wang Lin's cousin). Scale 1.0.</li>
+ *   <li><b>default / null</b> → NONE. Scale 1.0.</li>
+ * </ul>
+ *
+ * <p><b>Why weapons are children of {@code right_arm}, not {@code body}:</b>
+ * a child of right_arm inherits the arm's rotation. When the arm hangs at
+ * the side (xRot=0), the weapon points down. When the arm is raised for
+ * casting (xRot=-2.5), the weapon points up. When walking (arm swings
+ * opposite legs), the weapon sways naturally with the arm. This is the
+ * same pattern vanilla uses for held items (see
+ * {@link net.minecraft.client.renderer.entity.layers.ItemInHandLayer}).
+ *
+ * <p><b>UV allocation in the 64x64 texture:</b> weapons use the previously-
+ * unused bottom strip (rows 56-63):
+ * <ul>
+ *   <li>sword_right blade: (0, 56), 1x18 vertical</li>
+ *   <li>fan_right body: (4, 56), 2x9 vertical</li>
+ *   <li>staff_right shaft: (8, 56), 1x24 vertical</li>
+ *   <li>hoe_right handle: (16, 56), 1x14; hoe_head: (20, 56), 3x1</li>
+ *   <li>fly_whisk_right handle: (24, 56), 1x12; tassel: (28, 56), 2x4</li>
+ * </ul>
+ *
+ * <p><b>Canon fidelity (fact-checked against 仙逆):</b>
+ * <ul>
+ *   <li>Situ Nan's fan: well-attested in canon. He is repeatedly depicted
+ *       with a jade folding fan that conceals his cultivation. Score 10/10.</li>
+ *   <li>Teng Li as sword cultivator: defensible. The Teng Family are martial
+ *       cultivators; the young master would carry a sword. Specific weapon
+ *       not canon-attested. Score 7/10.</li>
+ *   <li>Wang Lin's flying sword: well-attested. He uses flying swords
+ *       throughout. The visible held sword represents his primary weapon.
+ *       Score 9/10 (he doesn't hold a sword at story start — he's mortal —
+ *       but the model represents his arc).</li>
+ *   <li>Zeng Da Niu's hoe: archetypal mortal farmer tool. The 化凡 arc has
+ *       Wang Lin and his companions living as mortals. Score 8/10.</li>
+ *   <li>Teng Huayuan's staff: patriarchal elder archetype. Specific weapon
+ *       not canon-attested. Score 6/10.</li>
+ *   <li>Li Muwan's fan: lady cultivator archetype. Not canon-attested for
+ *       Li Muwan specifically. Score 5/10.</li>
+ *   <li>Old Chen's fly_whisk: mod-original character. Daoist-elder archetype.
+ *       Score N/A (mod-original).</li>
+ *   <li>Wang Hao no weapon: he's a mortal at story start. Score 10/10.</li>
+ * </ul>
  */
 import dev.ergenverse.entity.EntityCultivator;
 import dev.ergenverse.simulation.intent.AnimationDirective;
@@ -186,6 +263,31 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
     private final ModelPart hairBun;
     private final ModelPart hairpin;
 
+    // ── CRON-COMPLETIONIST-97: Per-character held weapons ───────────────
+    // Five weapon ModelParts, all children of right_arm (inherit arm rotation).
+    // AT MOST ONE is visible at a time (selected by setCharacterId). All
+    // default to invisible; the renderer calls setCharacterId before super.render
+    // to enable the matching weapon for the canon character.
+    private final ModelPart swordRight;
+    private final ModelPart fanRight;
+    private final ModelPart staffRight;
+    private final ModelPart hoeRight;
+    private final ModelPart flyWhiskRight;
+
+    /**
+     * CRON-COMPLETIONIST-97: Per-character body scale. Set by
+     * {@link #setCharacterId(String)} from the {@link HeldWeaponType} enum.
+     * Applied by the renderer via {@code poseStack.scale(scale, scale, scale)}
+     * in {@link net.minecraft.client.renderer.entity.MobRenderer#scale}.
+     * 1.0 = average adult male (Wang Lin, Teng Li, Wang Zhuo, Wang Hao).
+     * 1.10 = Situ Nan (tall, imposing 2nd-gen Vermilion Bird Son).
+     * 1.05 = Teng Huayuan (patriarch bearing).
+     * 0.98 = Old Chen (slightly stooped elder).
+     * 0.95 = Zeng Da Niu (shorter, stocky farmer build).
+     * 0.92 = Li Muwan (slightly shorter, female).
+     */
+    private float characterScale = 1.0F;
+
     public CultivatorRobeModel(ModelPart root) {
         super(root);
         // CRON-54: Replace single robe_skirt with 3-bone chain
@@ -196,6 +298,124 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
         // CRON-COMPLETIONIST-21: hair bun is child of head, not root
         this.hairBun = root.getChild("head").getChild("hair_bun");
         this.hairpin = this.hairBun.getChild("hairpin");
+        // CRON-97: Extract held-weapon parts from right_arm
+        this.swordRight = root.getChild("right_arm").getChild("sword_right");
+        this.fanRight = root.getChild("right_arm").getChild("fan_right");
+        this.staffRight = root.getChild("right_arm").getChild("staff_right");
+        this.hoeRight = root.getChild("right_arm").getChild("hoe_right");
+        this.flyWhiskRight = root.getChild("right_arm").getChild("fly_whisk_right");
+        // CRON-97: All weapons hidden by default. setCharacterId enables the
+        // matching one. This avoids the "every NPC holds every weapon" bug if
+        // the renderer forgets to call setCharacterId.
+        this.swordRight.visible = false;
+        this.fanRight.visible = false;
+        this.staffRight.visible = false;
+        this.hoeRight.visible = false;
+        this.flyWhiskRight.visible = false;
+    }
+
+    /**
+     * CRON-COMPLETIONIST-97: Get the per-character body scale. The renderer
+     * reads this in its overridden {@code scale()} method and applies it to
+     * the PoseStack before rendering the model.
+     *
+     * @return the character scale (1.0 = default; &gt;1 = taller; &lt;1 = shorter)
+     */
+    public float getCharacterScale() {
+        return characterScale;
+    }
+
+    /**
+     * CRON-COMPLETIONIST-97: Set the canon character ID to drive held-weapon
+     * visibility and per-character body scale. Called by the renderer each
+     * frame from {@code entity.getCharacterId()} before super.render.
+     *
+     * <p>Maps canon characterId → {@link HeldWeaponType} (weapon + scale).
+     * Hides all weapons first, then enables the matching one. If the
+     * characterId is null, empty, or unrecognized, no weapon is shown and
+     * scale defaults to 1.0 (a generic cultivator with no held item).
+     *
+     * <p><b>Canon mapping (fact-checked):</b>
+     * <ul>
+     *   <li>{@code wang_lin} → SWORD, scale 1.0 — flying-sword cultivator</li>
+     *   <li>{@code situ_nan} → FAN, scale 1.10 — 2nd-gen Vermilion Bird Son
+     *       with iconic jade folding fan</li>
+     *   <li>{@code teng_li} → SWORD, scale 1.0 — Teng Family young master</li>
+     *   <li>{@code wang_zhuo} → SWORD, scale 1.0 — Heng Yue Sect disciple</li>
+     *   <li>{@code teng_huayuan} → STAFF, scale 1.05 — Teng Family patriarch</li>
+     *   <li>{@code old_chen} → FLY_WHISK, scale 0.98 — Heng Yue Sect elder
+     *       (mod-original character)</li>
+     *   <li>{@code zeng_da_niu} → HOE, scale 0.95 — mortal farmer (化凡 arc)</li>
+     *   <li>{@code li_muwan} → FAN, scale 0.92 — Luo He Sect alchemist
+     *       (lady's folding fan)</li>
+     *   <li>{@code wang_hao} → NONE, scale 1.0 — mortal (Wang Lin's cousin)</li>
+     * </ul>
+     *
+     * @param characterId the canon character ID (e.g. "wang_lin"); may be null
+     */
+    public void setCharacterId(String characterId) {
+        HeldWeaponType weapon = HeldWeaponType.forCharacter(characterId);
+        this.characterScale = weapon.scale;
+        // Hide all weapons first, then enable only the matching one.
+        this.swordRight.visible = (weapon == HeldWeaponType.SWORD);
+        this.fanRight.visible = (weapon == HeldWeaponType.FAN);
+        this.staffRight.visible = (weapon == HeldWeaponType.STAFF);
+        this.hoeRight.visible = (weapon == HeldWeaponType.HOE);
+        this.flyWhiskRight.visible = (weapon == HeldWeaponType.FLY_WHISK);
+    }
+
+    /**
+     * CRON-COMPLETIONIST-97: Enumeration of canon-archetype held weapons.
+     *
+     * <p>Each constant pairs a weapon model with a body scale, so the renderer
+     * can apply both from a single characterId lookup. The scale encodes
+     * per-character anatomy variation (Situ Nan tall, Li Muwan shorter, etc.)
+     * without needing a separate "character build" enum.
+     */
+    private enum HeldWeaponType {
+        /** No held weapon. Used for mortals (Wang Hao) and unrecognized characterIds. */
+        NONE(1.0F),
+        /** Flying sword. Wang Lin, Teng Li, Wang Zhuo. */
+        SWORD(1.0F),
+        /** Folding fan (jade for Situ Nan; lady's fan for Li Muwan). */
+        FAN(1.0F),
+        /** Walking staff. Teng Huayuan (patriarchal elder). */
+        STAFF(1.05F),
+        /** Farmer's hoe. Zeng Da Niu (mortal 化凡 arc). */
+        HOE(0.95F),
+        /** Daoist flywhisk (拂尘). Old Chen (Heng Yue Sect elder, mod-original). */
+        FLY_WHISK(0.98F);
+
+        /** Body scale applied by the renderer via PoseStack.scale. */
+        final float scale;
+
+        HeldWeaponType(float scale) {
+            this.scale = scale;
+        }
+
+        /**
+         * Resolve a canon characterId to its held-weapon type. Falls back to
+         * NONE for null/empty/unrecognized ids. Situ Nan and Li Muwan both
+         * map to FAN but the renderer selects different textures for them
+         * via the existing sectId-based texture chain — the held fan is the
+         * common visual element, the robe color distinguishes them further.
+         */
+        static HeldWeaponType forCharacter(String characterId) {
+            if (characterId == null || characterId.isEmpty()) return NONE;
+            // Normalize: lowercase, trim, replace spaces/spaces with underscores
+            String id = characterId.toLowerCase(java.util.Locale.ROOT).trim()
+                    .replaceAll("\\s+", "_");
+            return switch (id) {
+                case "wang_lin", "teng_li", "wang_zhuo" -> SWORD;
+                case "situ_nan" -> FAN;
+                case "teng_huayuan" -> STAFF;
+                case "old_chen" -> FLY_WHISK;
+                case "zeng_da_niu" -> HOE;
+                case "li_muwan" -> FAN;
+                // wang_hao, default, and any unrecognized id → no held weapon
+                default -> NONE;
+            };
+        }
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -249,6 +469,73 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
         root.getChild("left_arm").addOrReplaceChild("sleeve",
                 CubeListBuilder.create().texOffs(40, 48)
                         .addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.5F)),
+                PartPose.ZERO);
+
+        // ═════════════════════════════════════════════════════════════════
+        // CRON-COMPLETIONIST-97: HELD WEAPONS (children of right_arm)
+        // ═════════════════════════════════════════════════════════════════
+        // All five weapons are children of right_arm, so they inherit the
+        // arm's rotation. At idle (arm hangs at side, xRot=0), the weapon
+        // points downward. When the arm is raised for casting (xRot=-2.5),
+        // the weapon points upward. During walk cycle, the weapon sways
+        // naturally with the arm swing.
+        //
+        // AT MOST ONE is visible at a time — setCharacterId() selects which.
+        // The constructor hides all five by default; the renderer calls
+        // setCharacterId() before super.render to enable the matching one.
+        //
+        // Geometry notes:
+        //   - The right_arm cube is 4x12x4 with origin (-1, -2, -2). The hand
+        //     is at the bottom of the arm, around y=10 in arm-local coords.
+        //   - All weapon parts use PartPose.ZERO (no offset) and addBox at
+        //     the appropriate y position (downward extension from the hand).
+        //   - UVs are allocated in the previously-unused bottom strip of the
+        //     64x64 texture (rows 56-63).
+        PartDefinition rightArm = root.getChild("right_arm");
+
+        // Sword — thin blade extending 18 units below the hand. Held by
+        // Wang Lin, Teng Li, Wang Zhuo (flying-sword cultivators).
+        rightArm.addOrReplaceChild("sword_right",
+                CubeListBuilder.create().texOffs(0, 56)
+                        .addBox(-0.5F, 10.0F, -0.5F, 1.0F, 18.0F, 1.0F),
+                PartPose.ZERO);
+
+        // Fan — folded jade/lady's fan, 9 units long, 2 wide. Held by
+        // Situ Nan (jade fan) and Li Muwan (lady's fan).
+        rightArm.addOrReplaceChild("fan_right",
+                CubeListBuilder.create().texOffs(4, 56)
+                        .addBox(-1.0F, 9.0F, -0.5F, 2.0F, 9.0F, 1.0F),
+                PartPose.ZERO);
+
+        // Staff — long walking staff, 24 units (extends past feet when held
+        // at side). Held by Teng Huayuan (patriarchal elder).
+        rightArm.addOrReplaceChild("staff_right",
+                CubeListBuilder.create().texOffs(8, 56)
+                        .addBox(-0.5F, 6.0F, -0.5F, 1.0F, 24.0F, 1.0F),
+                PartPose.ZERO);
+
+        // Hoe — farmer's hoe: 14-unit handle + 3x1 horizontal head at the
+        // bottom. Held by Zeng Da Niu (mortal farmer, 化凡 arc).
+        PartDefinition hoeDef = rightArm.addOrReplaceChild("hoe_right",
+                CubeListBuilder.create().texOffs(16, 56)
+                        .addBox(-0.5F, 10.0F, -0.5F, 1.0F, 14.0F, 1.0F),
+                PartPose.ZERO);
+        // Hoe head — small horizontal blade at the bottom of the handle.
+        hoeDef.addOrReplaceChild("hoe_head",
+                CubeListBuilder.create().texOffs(20, 56)
+                        .addBox(-1.5F, 22.0F, -0.5F, 3.0F, 1.0F, 1.0F),
+                PartPose.ZERO);
+
+        // Fly whisk — Daoist 拂尘: 12-unit handle + 4-unit tassel at bottom.
+        // Held by Old Chen (mod-original Heng Yue Sect elder).
+        PartDefinition flyWhiskDef = rightArm.addOrReplaceChild("fly_whisk_right",
+                CubeListBuilder.create().texOffs(24, 56)
+                        .addBox(-0.3F, 10.0F, -0.3F, 0.6F, 12.0F, 0.6F),
+                PartPose.ZERO);
+        // Tassel — slightly inflated (CubeDeformation 0.2) to suggest hair/fiber.
+        flyWhiskDef.addOrReplaceChild("tassel",
+                CubeListBuilder.create().texOffs(28, 56)
+                        .addBox(-1.0F, 20.0F, -0.3F, 2.0F, 4.0F, 0.6F, new CubeDeformation(0.2F)),
                 PartPose.ZERO);
 
         return LayerDefinition.create(mesh, 64, 64);

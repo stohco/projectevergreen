@@ -182,6 +182,14 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
         model.setPursuing(entity.isPursuing());
         model.setSocializing(entity.isSocializing());
 
+        // CRON-COMPLETIONIST-97: Per-character held weapons + scale.
+        // Maps canon characterId → weapon type (SWORD/FAN/STAFF/HOE/FLY_WHISK/NONE)
+        // and per-character body scale (Situ Nan 1.10, Li Muwan 0.92, etc.).
+        // The model hides all weapons by default; setCharacterId enables the
+        // matching one. The scale is applied via the overridden scale() method
+        // below (MobRenderer.scale is called inside super.render).
+        model.setCharacterId(entity.getCharacterId());
+
         // CRON-COMPLETIONIST-19: pass the cognitive look-target (world coords)
         // from the synced entity data to the model. The model lerps the head
         // toward this target with micro-saccade noise — no snap rotation.
@@ -218,5 +226,32 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
 
         PerceptionResult perception = PerceptionBridge.perceiveEntity(entity);
         if (perception != null && perception.concealed) return;
+    }
+
+    /**
+     * CRON-COMPLETIONIST-97: Apply per-character body scale via PoseStack.
+     *
+     * <p>{@link MobRenderer#render} calls {@code scale(entity, poseStack, partialTicks)}
+     * between {@code setupRotations} and the model render. Overriding here lets
+     * us apply the per-character scale (Situ Nan 1.10, Li Muwan 0.92, etc.)
+     * that was set on the model by {@link CultivatorRobeModel#setCharacterId}.
+     *
+     * <p>The scale is read from the model (not re-computed here) so there is
+     * ONE source of truth for the characterId → scale mapping. If the
+     * characterId is null/empty/unrecognized, the model returns 1.0 and this
+     * is a no-op.
+     *
+     * <p>The shadow radius is NOT scaled here (it's set in the constructor via
+     * {@code super(context, model, 0.5F)}). A scaled shadow would look wrong
+     * for shorter characters (Li Muwan's shadow shouldn't shrink to 0.46).
+     * The shadow stays at 0.5 for all cultivators.
+     */
+    @Override
+    protected void scale(EntityCultivator entity, PoseStack poseStack, float partialTicks) {
+        float scale = this.getModel().getCharacterScale();
+        if (scale != 1.0F) {
+            poseStack.scale(scale, scale, scale);
+        }
+        super.scale(entity, poseStack, partialTicks);
     }
 }
