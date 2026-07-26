@@ -1,8 +1,10 @@
 package dev.ergenverse.simulation.residence;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.runtime.WorldRuntime;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
 
@@ -44,6 +46,23 @@ import java.util.List;
  * <pre>
  *   WangLinHomeBuilder.build(level, villageOrigin.offset(0, 64, 0));
  * </pre>
+ *
+ * <h2>CRON-74 — Provenance-Aware Rebuild Guard</h2>
+ * <p>Every block placement (including the marker) flows through
+ * {@link BlockPlacementEngine#setBlock} → {@code WorldRuntime.get().world().setSimulationBlock(...)},
+ * so the entire residence is journaled under {@link dev.ergenverse.runtime.Provenance#SIMULATION}.
+ * The marker block (CHISELED_STONE_BRICKS at {@code origin.offset(0, 5, 0)} — above the
+ * roof, out of sight) is also journaled, so on save+reload the chunk-materializer
+ * replays it and {@link #isAlreadyBuilt} correctly returns true — preventing
+ * double-builds whether triggered by command, chunk-load, or quest event.
+ *
+ * <p>The guard is a <b>marker-block</b> check, not a journal query, because the
+ * residence's blocks ARE the journal — querying the journal for "any SIMULATION
+ * delta at origin" would always return true after the first build, even if the
+ * player later demolished the residence. The marker block, by contrast, is a
+ * single authoritative sentinel: if it's gone (player broke it, or a
+ * PLAYER delta removed it), the residence is considered unbuilt and can be
+ * rebuilt.
  */
 public final class WangLinHomeBuilder {
 
@@ -52,6 +71,17 @@ public final class WangLinHomeBuilder {
 
     /** Wang Lin's settlement ID. */
     public static final String SETTLEMENT_ID = "wang_family_village";
+
+    /**
+     * The marker block used by {@link #isAlreadyBuilt}. CHISELED_STONE_BRICKS is
+     * chosen because it does not appear in the humble oak/cobblestone residence,
+     * making the check unambiguous.
+     */
+    private static final net.minecraft.world.level.block.state.BlockState MARKER =
+            Blocks.CHISELED_STONE_BRICKS.defaultBlockState();
+
+    /** Offset from origin to the marker position (above the roof, y=5). */
+    private static final BlockPos MARKER_OFFSET = new BlockPos(0, 5, 0);
 
     private WangLinHomeBuilder() {}
 
@@ -72,6 +102,13 @@ public final class WangLinHomeBuilder {
      * @param origin the northwest corner of the residence
      */
     public static void build(ServerLevel level, BlockPos origin) {
+        // CRON-74: Provenance-aware rebuild guard — if the marker is present,
+        // the residence has already been built (and journaled). Skip.
+        if (isAlreadyBuilt(level, origin)) {
+            Ergenverse.LOGGER.debug("[WangLinHomeBuilder] Already built at {} — skipping", origin);
+            return;
+        }
+
         Ergenverse.LOGGER.info("[WangLinHomeBuilder] Building Wang Lin's home at {}", origin);
 
         // Step 1: Load profile from classpath
@@ -91,11 +128,55 @@ public final class WangLinHomeBuilder {
         Ergenverse.LOGGER.info("[WangLinHomeBuilder] Manifest built: {} rooms, {} objects",
                 manifest.roomCount(), manifest.objectCount());
 
-        // Step 3: Place blocks
+        // Step 3: Place blocks (all journaled under SIMULATION via BlockPlacementEngine.setBlock)
         BlockPlacementEngine.placeResidence(level, origin, manifest);
+
+        // Step 4: Place the marker block (also journaled under SIMULATION) so
+        // isAlreadyBuilt returns true on subsequent calls and on save+reload.
+        placeMarker(level, origin);
 
         Ergenverse.LOGGER.info("[WangLinHomeBuilder] Wang Lin's home complete. Reasoning: {}",
                 manifest.manifestReasoning());
+    }
+
+    /**
+     * Check if Wang Lin's home has already been built at the given origin by
+     * testing for the marker block at {@code origin.offset(0, 5, 0)}.
+     *
+     * <p>The marker is journaled under SIMULATION, so on save+reload the
+     * chunk-materializer replays it and this method correctly returns true.
+     * If the player breaks the marker (via a PLAYER delta), this returns false
+     * and the residence can be rebuilt.
+     *
+     * @param level  the server level
+     * @param origin the northwest corner of the residence
+     * @return true if the marker block is present
+     */
+    public static boolean isAlreadyBuilt(ServerLevel level, BlockPos origin) {
+        BlockPos markerPos = origin.offset(MARKER_OFFSET);
+        return level.getBlockState(markerPos).getBlock() == MARKER.getBlock();
+    }
+
+    /**
+     * Place the marker block via the WorldFacade (SIMULATION provenance) so it
+     * is journaled and persists across save/load.
+     */
+    private static void placeMarker(ServerLevel level, BlockPos origin) {
+        BlockPos markerPos = origin.offset(MARKER_OFFSET);
+        try {
+            WorldRuntime rt = WorldRuntime.get();
+            if (rt.isInitialized() && rt.suzakuLevel() == level) {
+                rt.world().setSimulationBlock(
+                        markerPos.getX(), markerPos.getY(), markerPos.getZ(),
+                        "minecraft:chiseled_stone_bricks");
+                return;
+            }
+        } catch (Throwable t) {
+            Ergenverse.LOGGER.debug("[WangLinHomeBuilder] Facade write failed for marker at {}: {}",
+                    markerPos, t.getMessage());
+        }
+        // Fallback: direct write (non-Suzaku level or runtime not initialized)
+        level.setBlock(markerPos, MARKER, 3);
     }
 
     /**

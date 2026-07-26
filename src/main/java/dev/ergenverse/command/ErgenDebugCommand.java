@@ -28,6 +28,7 @@ import dev.ergenverse.simulation.event.EnergyType;
 import dev.ergenverse.simulation.event.WorldEventBus;
 import dev.ergenverse.simulation.opportunity.OpportunityRegistry;
 import dev.ergenverse.simulation.settlement.CultivatorMindRegistry;
+import dev.ergenverse.simulation.residence.WangLinHomeBuilder;
 import dev.ergenverse.world.blueprint.WorldBlueprintManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -195,6 +196,18 @@ public class ErgenDebugCommand {
                                             .executes(ErgenDebugCommand::journalPlayerWrite))))))
                         .then(Commands.literal("clear")
                             .executes(ErgenDebugCommand::journalClear)))
+                    // ── CRON-COMPLETIONIST-74: Residence simulation (WangLinHomeBuilder) ──
+                    .then(Commands.literal("residence")
+                        .then(Commands.literal("build")
+                            .then(Commands.argument("x", IntegerArgumentType.integer())
+                                .then(Commands.argument("y", IntegerArgumentType.integer())
+                                    .then(Commands.argument("z", IntegerArgumentType.integer())
+                                        .executes(ErgenDebugCommand::residenceBuild)))))
+                        .then(Commands.literal("status")
+                            .then(Commands.argument("x", IntegerArgumentType.integer())
+                                .then(Commands.argument("y", IntegerArgumentType.integer())
+                                    .then(Commands.argument("z", IntegerArgumentType.integer())
+                                        .executes(ErgenDebugCommand::residenceStatus))))))
                 )
         );
     }
@@ -279,6 +292,10 @@ public class ErgenDebugCommand {
             "  \u00a7e/ergen debug journal query <x> <y> <z>\u00a7r \u2014 deltas at a position"), false);
         ctx.getSource().sendSuccess(() -> Component.literal(
             "  \u00a7e/ergen debug journal sim-write <x> <y> <z> <blockId>\u00a7r \u2014 manual SIM write"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug residence build <x> <y> <z>\u00a7r \u2014 build Wang Lin's home (SIM)"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "  \u00a7e/ergen debug residence status <x> <y> <z>\u00a7r \u2014 check residence + SIM delta count"), false);
         return 1;
     }
 
@@ -1396,6 +1413,153 @@ public class ErgenDebugCommand {
             "\u00a77After:\u00a7r " + after + " total"), false);
         ctx.getSource().sendSuccess(() -> Component.literal(
             "\u00a7eThe world is now in 'fresh save' state — blueprint + empty journal. Live Minecraft blocks are NOT reverted (only the journal is cleared). To revert live blocks, reload the world.\u00a7r"), false);
+        return 1;
+    }
+
+    // ── /ergen debug residence [build|status] ──────────────────────
+    // CRON-COMPLETIONIST-74: Wire WangLinHomeBuilder — the 3rd simulation writer
+    // (beast herb-harvest = SpiritBeastFeedGoal, weather roof-damage =
+    // WeatherDamageSubscriber, residence = WangLinHomeBuilder). Prior to CRON-74
+    // WangLinHomeBuilder.build() was DEAD CODE — never called from anywhere.
+    // BlockPlacementEngine.placeResidence() had 23 direct level.setBlock calls
+    // that bypassed the setSimulationBlock journal. Both gaps are now closed.
+
+    /**
+     * {@code /ergen debug residence build <x> <y> <z>} — materialize Wang Lin's
+     * childhood home at the given origin (northwest corner of the meditation
+     * room). All blocks are journaled under SIMULATION provenance via
+     * BlockPlacementEngine.setBlock → WorldRuntime.world().setSimulationBlock.
+     *
+     * <p>This is the operational proof that the residence simulation chain
+     * (ResidentProfileLoader → ResidenceManifestBuilder → BlockPlacementEngine
+     * → WorldFacade → WorldDeltaStore) works end-to-end. Combined with
+     * /ergen debug journal, the player can: build the residence, save+reload,
+     * query the journal to confirm SIMULATION deltas persisted, and verify the
+     * residence materialized on chunk reload.
+     *
+     * <p>The isAlreadyBuilt guard (marker block at origin.offset(0,5,0),
+     * journaled under SIMULATION) prevents double-builds.
+     */
+    private static int residenceBuild(CommandContext<CommandSourceStack> ctx) {
+        ServerLevel level = ctx.getSource().getLevel();
+        int x = IntegerArgumentType.getInteger(ctx, "x");
+        int y = IntegerArgumentType.getInteger(ctx, "y");
+        int z = IntegerArgumentType.getInteger(ctx, "z");
+        BlockPos origin = new BlockPos(x, y, z);
+
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7l=== RESIDENCE BUILD ===\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Origin:\u00a7r (" + x + ", " + y + ", " + z + ")"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Resident:\u00a7r \u00a7bWang Lin\u00a7r (\u00a77wang_lin\u00a7r)"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Settlement:\u00a7r \u00a7bWang Family Village\u00a7r"), false);
+
+        if (WangLinHomeBuilder.isAlreadyBuilt(level, origin)) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7eWang Lin's home is already built at " + origin
+                + ". (marker block present). Use /ergen debug journal clear"
+                + " then reload the world to rebuild.\u00a7r"), false);
+            return 0;
+        }
+
+        WorldRuntime rt = WorldRuntime.get();
+        boolean runtimeReady = rt.isInitialized() && rt.suzakuLevel() == level;
+        int before = runtimeReady ? rt.deltaStore().blockChangeCount(Provenance.SIMULATION) : -1;
+        if (!runtimeReady) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cWarning: WorldRuntime not initialized or level is not Planet Suzaku."
+                + " Blocks will be placed via direct level.setBlock (NOT journaled)."
+                + " Persistence will not work.\u00a7r"), false);
+        } else {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a77SIMULATION deltas before:\u00a7r " + before), false);
+        }
+
+        // Build the residence (all blocks journaled under SIMULATION)
+        WangLinHomeBuilder.build(level, origin);
+
+        if (runtimeReady) {
+            int after = rt.deltaStore().blockChangeCount(Provenance.SIMULATION);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a77SIMULATION deltas after:\u00a7r " + after
+                + " (\u00a7a+" + (after - before) + "\u00a7r new)"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7aSUCCESS\u00a7r — Wang Lin's home materialized at " + origin + "."), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7eTo verify persistence:\u00a7r"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "  1. Save the world (Esc \u2192 Save and Quit to Title)"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "  2. Reload the world"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "  3. Run \u00a7b/ergen debug residence status " + x + " " + y + " " + z + "\u00a7r"), false);
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "  4. Run \u00a7b/ergen debug journal recent 20\u00a7r to see the SIMULATION deltas"), false);
+        } else {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7eBlocks placed (NOT journaled — runtime not ready)."
+                + " Run on Planet Suzaku for full simulation persistence.\u00a7r"), false);
+        }
+        return 1;
+    }
+
+    /**
+     * {@code /ergen debug residence status <x> <y> <z>} — check whether Wang
+     * Lin's home is built at the given origin by testing for the marker block.
+     * Also reports the SIMULATION delta count in the residence's footprint
+     * (13\u00d75\u00d74 = ~260 blocks) to confirm the journal was populated.
+     */
+    private static int residenceStatus(CommandContext<CommandSourceStack> ctx) {
+        ServerLevel level = ctx.getSource().getLevel();
+        int x = IntegerArgumentType.getInteger(ctx, "x");
+        int y = IntegerArgumentType.getInteger(ctx, "y");
+        int z = IntegerArgumentType.getInteger(ctx, "z");
+        BlockPos origin = new BlockPos(x, y, z);
+
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a76\u00a7l=== RESIDENCE STATUS ===\u00a7r"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(
+            "\u00a77Origin:\u00a7r (" + x + ", " + y + ", " + z + ")"), false);
+
+        boolean built = WangLinHomeBuilder.isAlreadyBuilt(level, origin);
+        BlockPos markerPos = origin.offset(0, 5, 0);
+        String markerBlock = level.getBlockState(markerPos)
+                .getBlock().getName().getString();
+
+        if (built) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7aBUILT\u00a7r — marker block (CHISELED_STONE_BRICKS) present at "
+                + markerPos), false);
+        } else {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a7cNOT BUILT\u00a7r — marker at " + markerPos + " is "
+                + markerBlock + " (expected CHISELED_STONE_BRICKS)"), false);
+        }
+
+        // Count SIMULATION deltas in the residence footprint (13x5x4)
+        WorldRuntime rt = WorldRuntime.get();
+        if (rt.isInitialized()) {
+            int simDeltas = 0;
+            for (int dx = 0; dx < 13; dx++) {
+                for (int dy = 0; dy < 6; dy++) {
+                    for (int dz = 0; dz < 5; dz++) {
+                        BlockPos p = origin.offset(dx, dy, dz);
+                        String recorded = rt.deltaStore().getBlock(
+                                p.getX(), p.getY(), p.getZ(), Provenance.SIMULATION);
+                        if (recorded != null) {
+                            simDeltas++;
+                        }
+                    }
+                }
+            }
+            final int simDeltaCount = simDeltas;
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                "\u00a77SIMULATION deltas in footprint:\u00a7r " + simDeltaCount
+                + " / ~260 (13\u00d75\u00d74 + marker)"), false);
+        }
+
         return 1;
     }
 }

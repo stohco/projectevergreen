@@ -237,27 +237,24 @@ public final class BlockPlacementEngine {
         placeWallWest(level, origin, origin.offset(2, 2, 2));
 
         // East wall with door gap at y=0
-        level.setBlock(origin.offset(2, 0, 1), AIR, 3);
-        level.setBlock(origin.offset(2, 1, 1), AIR, 3);
+        setBlock(level, origin.offset(2, 0, 1), AIR);
+        setBlock(level, origin.offset(2, 1, 1), AIR);
         // Door
         if (hasTrait(manifest, "cautious") || hasNeed(manifest, NeedCategory.DEFENSE)) {
-            level.setBlock(origin.offset(2, 0, 1),
-                    Blocks.IRON_DOOR.defaultBlockState()
+            setBlock(level, origin.offset(2, 0, 1),
+                Blocks.IRON_DOOR.defaultBlockState()
                             .setValue(DoorBlock.FACING, Direction.EAST)
-                            .setValue(DoorBlock.OPEN, Boolean.FALSE),
-                    3);
+                            .setValue(DoorBlock.OPEN, Boolean.FALSE));
         } else {
-            level.setBlock(origin.offset(2, 0, 1),
-                    Blocks.OAK_DOOR.defaultBlockState()
+            setBlock(level, origin.offset(2, 0, 1),
+                Blocks.OAK_DOOR.defaultBlockState()
                             .setValue(DoorBlock.FACING, Direction.EAST)
-                            .setValue(DoorBlock.OPEN, Boolean.FALSE),
-                    3);
+                            .setValue(DoorBlock.OPEN, Boolean.FALSE));
         }
-        level.setBlock(origin.offset(2, 1, 1),
+        setBlock(level, origin.offset(2, 1, 1),
                 Blocks.OAK_DOOR.defaultBlockState()
                         .setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER)
-                        .setValue(DoorBlock.FACING, Direction.EAST),
-                3);
+                        .setValue(DoorBlock.FACING, Direction.EAST));
 
         // Ceiling
         placeCeiling(level, origin, origin.offset(2, 3, 2), CEILING_PLANKS);
@@ -285,8 +282,8 @@ public final class BlockPlacementEngine {
         // Walls: all four sides (door gap in east wall at z=2)
         placeWallsEnclosed(level, origin, far);
         // Door gap in east wall
-        level.setBlock(far.east(), AIR, 3);
-        level.setBlock(far.east().above(), AIR, 3);
+        setBlock(level, far.east(), AIR);
+        setBlock(level, far.east().above(), AIR);
 
         // Ceiling
         placeCeiling(level, origin, far, CEILING_PLANKS);
@@ -329,8 +326,8 @@ public final class BlockPlacementEngine {
         placeWallsEnclosed(level, origin, far);
 
         // Door gap in south wall (connects to courtyard)
-        level.setBlock(origin.offset(1, 0, 3), AIR, 3);
-        level.setBlock(origin.offset(1, 1, 3), AIR, 3);
+        setBlock(level, origin.offset(1, 0, 3), AIR);
+        setBlock(level, origin.offset(1, 1, 3), AIR);
 
         // Ceiling
         placeCeiling(level, origin, far, CEILING_PLANKS);
@@ -442,8 +439,8 @@ public final class BlockPlacementEngine {
         setBlock(level, origin.offset(1, 0, 2), SPIRIT_STONE_INLAY);
 
         // Door gap in east wall (connects to bedroom)
-        level.setBlock(far.east(), AIR, 3);
-        level.setBlock(far.east().above(), AIR, 3);
+        setBlock(level, far.east(), AIR);
+        setBlock(level, far.east().above(), AIR);
 
         // NO torches — meditation room is dim (cultivators meditate in near-darkness)
         // This is intentional: canon says Wang Lin meditates alone in silence.
@@ -471,7 +468,7 @@ public final class BlockPlacementEngine {
         // Ladder going down through bedroom ceiling (at east edge)
         BlockPos ladderTop = origin.offset(4, 1, 1);
         for (int y = 1; y >= -4; y--) {
-            level.setBlock(origin.offset(4, y, 1), LADDER, 3);
+            setBlock(level, origin.offset(4, y, 1), LADDER);
         }
 
         Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Observation Post placed at {}", origin);
@@ -485,7 +482,7 @@ public final class BlockPlacementEngine {
         // Dig out cavity (replace floor blocks with air)
         for (int x = 0; x <= 2; x++) {
             for (int z = 0; z <= 2; z++) {
-                level.setBlock(origin.offset(x, 0, z), AIR, 3);
+                setBlock(level, origin.offset(x, 0, z), AIR);
             }
         }
 
@@ -522,8 +519,8 @@ public final class BlockPlacementEngine {
         setBlock(level, origin.offset(0, 1, 2), CHEST);
 
         // Door gap in west wall (connects to kitchen/entry area)
-        level.setBlock(origin, AIR, 3);
-        level.setBlock(origin.above(), AIR, 3);
+        setBlock(level, origin, AIR);
+        setBlock(level, origin.above(), AIR);
 
         // Torch
         setBlock(level, origin.offset(2, 2, 2), TORCH_WALL);
@@ -541,7 +538,7 @@ public final class BlockPlacementEngine {
         // The escape hatch is in the bedroom's north wall (z=0), at x=3
         // It's just an air gap — no door, just a removable plank look
         BlockPos escapePos = origin.offset(3, 1, 0);
-        level.setBlock(escapePos, AIR, 3);
+        setBlock(level, escapePos, AIR);
 
         Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Defensive features placed at {}", origin);
     }
@@ -612,7 +609,7 @@ public final class BlockPlacementEngine {
         for (int x = min.getX(); x <= max.getX(); x++) {
             for (int y = min.getY(); y <= max.getY(); y++) {
                 for (int z = min.getZ(); z <= max.getZ(); z++) {
-                    level.setBlock(new BlockPos(x, y, z), state, 3);
+                    setBlock(level, new BlockPos(x, y, z), state);
                 }
             }
         }
@@ -623,7 +620,7 @@ public final class BlockPlacementEngine {
         int y = min.getY();
         for (int x = min.getX(); x <= max.getX(); x++) {
             for (int z = min.getZ(); z <= max.getZ(); z++) {
-                level.setBlock(new BlockPos(x, y, z), state, 3);
+                setBlock(level, new BlockPos(x, y, z), state);
             }
         }
     }
@@ -633,7 +630,7 @@ public final class BlockPlacementEngine {
         int y = max.getY();
         for (int x = min.getX(); x <= max.getX(); x++) {
             for (int z = min.getZ(); z <= max.getZ(); z++) {
-                level.setBlock(new BlockPos(x, y, z), state, 3);
+                setBlock(level, new BlockPos(x, y, z), state);
             }
         }
     }
@@ -643,7 +640,7 @@ public final class BlockPlacementEngine {
         int z = min.getZ();
         for (int x = min.getX(); x <= max.getX(); x++) {
             for (int y = min.getY(); y <= max.getY(); y++) {
-                level.setBlock(new BlockPos(x, y, z), WALL_PLANKS, 3);
+                setBlock(level, new BlockPos(x, y, z), WALL_PLANKS);
             }
         }
     }
@@ -653,7 +650,7 @@ public final class BlockPlacementEngine {
         int z = max.getZ();
         for (int x = min.getX(); x <= max.getX(); x++) {
             for (int y = min.getY(); y <= max.getY(); y++) {
-                level.setBlock(new BlockPos(x, y, z), WALL_PLANKS, 3);
+                setBlock(level, new BlockPos(x, y, z), WALL_PLANKS);
             }
         }
     }
@@ -663,7 +660,7 @@ public final class BlockPlacementEngine {
         int x = min.getX();
         for (int z = min.getZ(); z <= max.getZ(); z++) {
             for (int y = min.getY(); y <= max.getY(); y++) {
-                level.setBlock(new BlockPos(x, y, z), WALL_PLANKS, 3);
+                setBlock(level, new BlockPos(x, y, z), WALL_PLANKS);
             }
         }
     }
@@ -673,7 +670,7 @@ public final class BlockPlacementEngine {
         int x = max.getX();
         for (int z = min.getZ(); z <= max.getZ(); z++) {
             for (int y = min.getY(); y <= max.getY(); y++) {
-                level.setBlock(new BlockPos(x, y, z), WALL_PLANKS, 3);
+                setBlock(level, new BlockPos(x, y, z), WALL_PLANKS);
             }
         }
     }
