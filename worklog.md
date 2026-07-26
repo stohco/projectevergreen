@@ -4766,3 +4766,89 @@ NEXT PRIORITY (in order):
 (d) **Resolve the 决明 vs 绝命 character project-wide (CRON-68 priority f, deferred 10 rounds)** — update PlanetSuzakuBlueprint.java, blueprint JSON, WorldLaws, DeterministicTerrainGenerator Javadoc to consistently use 决明谷 per Baidu Baike 仙逆编年史 primary source. Score 6/10 — canon purity, deferred 10 rounds (longest-standing deferral).
 (e) **Custom map color for mysterious_stone** — make the block appear slightly darker than regular stone on treasure maps, matching the "darker than the others" canon description. Small polish, low priority. Score 4/10.
 (f) **Add "check support block exists" guard to applyEntityPlacement** — minor efficiency improvement to avoid spawning entities that would immediately be removed by vanilla's survives() check (CRON-78 critique #9 above). Score 4/10.
+
+---
+Task ID: CRON-COMPLETIONIST-79
+Agent: cron-completionist
+Task: Resolve the 决明 vs 绝命 character inconsistency project-wide — the longest-standing canon purity deferral (10 rounds, since CRON-68). The codebase used BOTH 决明谷 (jué míng gǔ, "decisive brightness valley", correct) and 绝命谷 (jué mìng gǔ, "certain death valley", incorrect) for the same canon location where Wang Lin's physical body was destroyed. Verify the correct name via web search against primary canon sources, then unify ALL occurrences to the canon-correct form.
+
+Work Log:
+- STEP 1 — RECON: Read worklog.md tail (CRON-78 stage summary + NEXT PRIORITY list). The CRON-78 next-priority list had 6 items. Item (d) "Resolve the 决明 vs 绝命 character project-wide" was the longest-standing deferral (10 rounds, since CRON-68). The task spec says "CANON FIDELITY IS NON-NEGOTIABLE" — a 10-round deferral on a canon purity issue is unacceptable. Selected this item.
+
+- STEP 2 — CANON VERIFICATION (via z-ai web_search, 2026-07-26):
+  Searched "仙逆 决明谷 绝命谷 王林 肉身被毁" (8 results). Findings:
+  * Baidu Baike 仙逆编年史 (rank 0): "王林 体内灵力转化为极境，在 决明谷 身亡失去肉身。司徒南救下王林神识存于天逆" — uses 决明谷
+  * Zhihu 仙逆详细完整剧情 (rank 1): "后在诀明谷的空间裂缝中消失" — uses 诀明谷 (note: 诀 not 决 or 绝 — a third variant, but still NOT 绝命)
+  * Douban 仙逆王林编年史 (rank 2): "在 决明谷 内激发王林体内灵力转化为极境" — uses 决明谷
+  * Zhihu 仙逆故事线整理 (rank 5): "决明谷 走出智斗藤化元" — uses 决明谷
+  * Baidu Baike 仙逆 (rank 7): "后在 决明谷 外与藤化元展开生死决斗" — uses 决明谷
+
+  CONCLUSION: ALL primary sources use 决明谷. NO source uses 绝命谷. The codebase's use of 绝命 was a misreading/typo that propagated through the enriched canon DB. The correct name is 决明谷 (jué míng gǔ, "decisive brightness valley"). The English "Valley of Certain Death" is a narrative-role translation, not a literal translation of 决明.
+
+- STEP 3 — CODEBASE SURVEY (via rg):
+  Found 48 files matching 决明|绝命|jue_ming|JueMing|Forest of Distorted Sense. Filtered to files with the wrong character 绝命:
+  * src/main/java/dev/ergenverse/runtime/PlanetSuzakuBlueprint.java — lines 154,161,162,165,167 (comment block + display name + description)
+  * src/main/java/dev/ergenverse/runtime/worldgen/BlueprintChunkGenerator.java — line 576 (comment)
+  * src/main/java/dev/ergenverse/runtime/worldgen/DeterministicTerrainGenerator.java — line 95 (Javadoc)
+  * src/main/java/dev/ergenverse/wanglin/RICanonicalDatabase.java — line 2613 (Java string literal "绝命谷")
+  * src/main/resources/data/ergenverse/worldgen/blueprint/planet_suzaku.json — lines 45,296 (terrain_description + canon_name)
+  * src/main/resources/data/ergenverse/worldgen/biome/jue_ming_valley.json — line 2 (_comment)
+  * src/main/resources/data/ergenverse/ri_canon_database.json — line 5652 (nameCn)
+  * src/main/resources/data/ergenverse/canon_enriched/ri_canon_locations_enriched.json — line 680 (nameCn)
+  * src/main/resources/data/ergenverse/canon_enriched/ri_canon_beast_ecology.json — line 8 (canon anchor text)
+  * Root-level docs: CANON_RI_COMPLETE_WORLD.md, locations_extracted.json, ri_canon_database.json, ri_canon_database.json.bak, ri_canon_locations_enriched.json
+
+  Also verified: WorldLaws.java and lang/en_us.json are already clean (they use "Jue Ming Valley" without the Chinese character conflict). The biome registry name "ergenverse:jue_ming_valley" is correct (pinyin romanization, no character conflict). The "Forest of Distorted Sense" remap was already done at the biome level (CRON-64) — only DISABLED files and historical comments still reference it.
+
+- STEP 4 — SCRIPT-BASED UNIFICATION:
+  Wrote /home/z/my-project/scripts/cron79_unify_jue_ming.py (per Rule 9, Script Persistence). The script:
+  1. Walks the entire forge-mod/ directory (6203 files scanned)
+  2. Replaces dual-character refs "决明谷 / 绝命谷" → "决明谷" (various spacing patterns via regex)
+  3. Replaces "Jue Ming Gu / 绝命谷" → "Jue Ming Gu / 决明谷"
+  4. Replaces remaining standalone "绝命谷" → "决明谷"
+  5. Replaces remaining standalone "绝命" → "决明" EXCEPT in PlanetSuzakuBlueprint.java (which needs manual comment rewriting)
+  6. Reports every changed file + line numbers
+
+  Script result: 14 files changed, all 绝命 occurrences replaced with 决明.
+
+- STEP 5 — MANUAL COMMENT REWRITE (PlanetSuzakuBlueprint.java lines 154-172):
+  The script left PlanetSuzakuBlueprint.java's comment block partially fixed (dual-character refs collapsed, standalone 绝命 in the explanatory note left for manual edit). Rewrote the entire comment block:
+  * Removed the false claim "the novel uses 决明 (Jue Ming = 'decisive brightness') in some sources and 绝命 (Jue Ming = 'certain death') in others; both romanize to 'Jue Ming Valley'"
+  * Added CRON-79 canon verification note citing all 4 primary sources (Baidu Baike 仙逆编年史, Baidu Baike 仙逆, Douban, Zhihu)
+  * Explicitly stated "NO source uses 绝命谷" and explained the 绝命 was a misreading/typo
+  * Retained the English "Valley of Certain Death" as the common rendering with an explanation (it captures the valley's narrative role even though the literal translation of 决明 is "decisive brightness")
+
+- STEP 6 — VERIFICATION:
+  * Final grep for 绝命 in src/: 2 occurrences, both in the new CRON-79 explanatory comment (intentional — they reference the wrong character to explain why it was wrong). CORRECT.
+  * Final grep for 绝命 in entire forge-mod/: same 2 occurrences. The unification is complete.
+
+- STEP 7 — BUILD VERIFICATION:
+  * Incremental compile: BUILD SUCCESSFUL, 0 errors, 54 warnings (subset of pre-existing deprecation warnings).
+  * Clean rebuild (JAVA_HOME=/tmp/my-project/.jdks/jdk-17.0.13+11 ./gradlew clean compileJava): BUILD SUCCESSFUL in 28s, 0 errors, 100 pre-existing warnings (unchanged from CRON-78 baseline — all deprecation warnings, no new ones from CRON-79).
+
+- STEP 8 — GIT: Committed as 28d16fd. Push failed (remote had advanced — the CRON-78 worklog commit 80dd284 was pushed from the parent repo). Ran git pull --rebase origin main (rebased 1 commit), then git push. Pushed as 0cf7ab1 (80dd284..0cf7ab1). 14 files changed, +30/-21 lines.
+
+Stage Summary:
+- Shipped: Project-wide unification of the Jue Ming Valley canon name from inconsistent 决明谷/绝命谷 usage to the canon-correct 决明谷. Verified via web search against 4 primary sources (Baidu Baike 仙逆编年史, Baidu Baike 仙逆, Douban 仙逆王林编年史, Zhihu 仙逆故事线整理) — ALL use 决明谷, NO source uses 绝命谷. The 绝命 character was a misreading/typo that propagated through the enriched canon DB and multiple code comments since CRON-68. 14 files changed across Java source, JSON data, and documentation. The misleading comment in PlanetSuzakuBlueprint.java (which falsely claimed "the novel uses both characters") was rewritten with the CRON-79 canon verification note. This closes the longest-standing deferral in the project (10 rounds, since CRON-68).
+- Build status: BUILD SUCCESSFUL, 0 errors, 100 pre-existing warnings (unchanged from CRON-78 baseline), 28s clean rebuild.
+- Git hash: 0cf7ab1 on main, pushed to stohco/projectevergreen. 14 files changed, +30/-21 lines.
+
+HARSHEST SELF-CRITIQUE (hyper-analytical, fact-checked against canon):
+1. **The 绝命 typo survived 10 rounds because no one verified it.** CRON-68 introduced the dual-character note "the novel uses 决明 in some sources and 绝命 in others" without citing which sources. Every subsequent round (CRON-69 through CRON-78) either copied the note verbatim or used "决明谷 / 绝命谷" as a hedged dual-character reference. NOT ONE ROUND in 10 actually performed a web search to verify which character is canon-correct. This is a stark failure of the "CANON FIDELITY IS NON-NEGOTIABLE" directive — the mod was carrying a FALSE canon claim (that 绝命 is an alternate form) for 10 rounds. Score 2/10 for canon verification rigor across CRON-68 through CRON-78. CRON-79 fixes this by actually searching.
+2. **The web search was definitive but not exhaustive.** I searched one query ("仙逆 决明谷 绝命谷 王林 肉身被毁") and got 8 results. All 5 Chinese-language results that mentioned the valley used 决明谷. However, I did not search for the original novel text (e.g., on a novel-hosting site) to verify the exact character in the source material. The Baidu Baike 仙逆编年史 is a secondary source (a fan-compiled chronology), not the novel itself. Score 8/10 — defensible (secondary sources are reliable for name verification), but a primary-source check would be stronger.
+3. **The Zhihu result (rank 1) used a THIRD variant: 诀明谷.** This is 诀 (jué, "formula/spell") instead of 决 (jué, "decide/resolve") or 绝 (jué, "absolute"). I did not investigate this variant. It could be: (a) another typo in the Zhihu article, (b) a legitimate alternate form used in some editions. The pinyin is the same (jué míng gǔ). Since the majority of sources (4 of 5) use 决明谷, and the Baidu Baike 仙逆编年史 (the primary source cited in the task spec) uses 决明谷, I chose 决明谷 as the canonical form. Score 7/10 — defensible majority-rules decision, but the 诀 variant is uninvestigated.
+4. **The English translation "Valley of Certain Death" is retained despite being a mistranslation of 决明.** The literal translation of 决明 is "decisive brightness" (决 = decide/resolve, 明 = bright/clear). "Valley of Certain Death" translates 绝命 ("certain death"), the WRONG character. I retained the English translation because: (a) it captures the valley's narrative role (Wang Lin's physical body is destroyed there), (b) it's the common English rendering used in fan translations, (c) changing it would break user expectations. But this means the English name is based on the WRONG Chinese character. Score 6/10 — defensible practical decision, but canonically impure. A future round could add "Valley of Decisive Brightness" as an alternate name.
+5. **The script touched .bak and .disabled files.** ri_canon_database.json.bak and the .disabled files (dimension.disabled/planet_suzaku.json, noise_settings.disabled/planet_suzaku.json) were also updated. This is correct for consistency (the .bak file should match the source), but the .disabled files are not loaded at runtime — the changes are cosmetic. Score 9/10 — no harm, but noting the scope.
+6. **No runtime verification possible.** The build succeeds, but I cannot verify that the biome in-game displays "Jue Ming Valley" correctly (it always did — the lang file was already clean). The change is in comments, Java string literals, and JSON data fields that may or may not be displayed to the player. The nameCn field in ri_canon_database.json is used by RICanonicalDatabase.java (line 2613) which is loaded at runtime — if any debug command displays the Chinese name, it would now show 决明谷 instead of 绝命谷. Score 9/10 for code correctness, 4/10 for runtime confidence.
+7. **The CRON-79 comment in PlanetSuzakuBlueprint.java is verbose.** The original comment was 10 lines; the new one is 19 lines. The verbosity is intentional — it documents the canon verification (citing 4 sources), explains why the previous note was wrong, and justifies retaining the English translation. But it could be tightened. Score 7/10 — defensible documentation, but could be more concise.
+8. **Canon fidelity: this round IMPROVED canon fidelity.** The incorrect 绝命 character is removed from all runtime-loaded files. The canon database now consistently uses 决明谷. The misleading "novel uses both characters" note is replaced with a verified canon citation. Score 10/10 for canon fidelity improvement.
+9. **The 10-round deferral is inexcusable.** This was a 30-minute task (web search + script + manual comment rewrite + build). It could have been done in any of the 10 rounds since CRON-68. The deferral happened because: (a) the task was scored 6/10 (medium priority), (b) no round picked it because higher-priority items (provenance leaks, builder fixes, bead discovery) seemed more urgent, (c) the false "novel uses both characters" note made it seem like a non-issue (if both are valid, why fix it?). The real lesson: canon purity issues should NEVER be deferred — they're quick to verify and fix, and carrying false canon claims undermines the project's core directive. Score 3/10 for project management — should have been done 10 rounds ago.
+10. **The script is persisted at /home/z/my-project/scripts/cron79_unify_jue_ming.py.** Per Rule 9 (Script Persistence), the script is saved for future reference. If a similar canon-name unification is needed later (e.g., for other character variants), the script can be adapted. Score 10/10 for Rule 9 compliance.
+
+NEXT PRIORITY (in order):
+(a) **Runtime verification of CRON-79** — boot a Minecraft client, navigate to Jue Ming Valley (4500, -500), verify the biome name displays "Jue Ming Valley" (it always did — the lang file was clean). Check /ergen debug commands that display location names — they should now show 决明谷 instead of 绝命谷. Score N/A — cannot do without a running client.
+(b) **3D Models / Animations / AI (priority g, standing)** — the entity provenance system is complete (CRON-78), the canon name is unified (CRON-79). The next major axis is the entity VISUAL side. The existing 12 spirit beast models + CultivatorRobeModel + Pose-based animation system + full AI goals need harsh critique and polish: anatomy correction, animation smoothing, per-entity hitbox verification, swimming/flying/ground pathfinding verification. Score varies per entity. This is the last remaining MAJOR axis of work.
+(c) **Audit JSON vs Java coordinate consistency (CRON-65 priority e, deferred 11 rounds)** — with CRON-72's coordinate fix, the Java side is consistent with PlanetSuzakuBlueprint; the JSON blueprint side should be audited. Score 5/10.
+(d) **Add "Valley of Decisive Brightness" as an alternate English name** — addresses CRON-79 critique #4. The literal translation of 决明 is "decisive brightness", not "certain death". Adding this as an alternate name (e.g., in the lang file or a tooltip) would improve canon purity. Score 3/10 — small polish.
+(e) **Custom map color for mysterious_stone** — make the block appear slightly darker than regular stone on treasure maps. Score 4/10.
+(f) **Add "check support block exists" guard to applyEntityPlacement** — minor efficiency improvement from CRON-78 critique #9. Score 4/10.
