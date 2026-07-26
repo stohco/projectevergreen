@@ -3,6 +3,9 @@ package dev.ergenverse.spawn;
 import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.runtime.ChunkBounds;
+import dev.ergenverse.runtime.Provenance;
+import dev.ergenverse.runtime.WorldRuntime;
+import dev.ergenverse.runtime.delta.WorldDeltaStore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -208,19 +211,80 @@ public final class WangFamilyVillageBuilder {
 
     /**
      * Filtered setBlock — the ONLY block-placement call site in this class.
-     * If CURRENT_BOUNDS is set, blocks whose (x, z) fall outside the bounds
-     * are silently skipped. This is what makes buildForChunk chunk-scoped:
-     * ~80K candidate placements per full build collapse to ~256 actual
-     * level.setBlock calls per chunk (a 300x reduction).
+     * Three guards, in order:
      *
-     * <p>Y is intentionally not filtered — structures are vertically thin
-     * and some builders place blocks at Y offsets relative to a runtime
-     * surface scan. X/Z filtering alone captures the chunk-scoping win.
+     * <p><b>1. Chunk filter (CRON-COMPLETIONIST-62):</b> if CURRENT_BOUNDS is
+     * non-null and (x, z) falls outside the bounds, skip. This is what makes
+     * buildForChunk chunk-scoped: ~80K candidate placements collapse to ~256
+     * actual level.setBlock calls per chunk.
+     *
+     * <p><b>2. Provenance-aware rebuild guard (CRON-COMPLETIONIST-63):</b> if
+     * CURRENT_BOUNDS is non-null (i.e. we are in the chunk-materializer path),
+     * consult the {@link WorldDeltaStore} for a PLAYER or SIMULATION delta at
+     * (x, y, z). If either exists, skip the placement. The player's edits
+     * (and the simulation's edits) take priority over CANON — re-placing a
+     * CANON block on top of a player edit would be a wasted write (the
+     * materializer replays the player/sim delta afterward and restores the
+     * player's state, but the intermediate write is unnecessary and produces
+     * a visible flicker). This guard is the operational realization of the
+     * Provenance contract: PLAYER &gt; SIMULATION &gt; CANON.
+     *
+     * <p>The provenance guard is <b>only active in the chunk-scoped path</b>
+     * (CURRENT_BOUNDS != null). The full-build path — {@link #build}, used by
+     * SpawnEventHandler at server-start and ErgenverseCommand for manual
+     * rebuild — does NOT consult the delta store, because (a) at server-start
+     * there are no player deltas yet, and (b) the /ergenverse build command
+     * explicitly wants a full rebuild regardless of player edits.
+     *
+     * <p><b>3. Placement:</b> if both guards pass, call level.setBlock.
+     *
+     * <p>Y is intentionally not chunk-filtered — structures are vertically
+     * thin. Y IS used for the provenance check (deltas are 3D-positioned).
+     *
+     * <p>Performance: ~50ns per guard (2x O(1) HashMap lookup + PackedPos.pack).
+     * For ~256 blocks per chunk-load: ~12.8µs total. Negligible vs the ~1-5µs
+     * per saved level.setBlock call.
      */
     private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
         ChunkBounds b = CURRENT_BOUNDS.get();
-        if (b != null && !b.contains(pos.getX(), pos.getZ())) return;
+        if (b != null) {
+            // Guard 1: chunk filter.
+            if (!b.contains(pos.getX(), pos.getZ())) return;
+            // Guard 2: provenance-aware rebuild guard.
+            // If the player or simulation has touched this position, the
+            // CANON placement would be overwritten by the materializer's
+            // delta replay anyway — skip the wasted write.
+            if (hasPlayerOrSimulationDelta(pos)) return;
+        }
         level.setBlock(pos, state, flags);
+    }
+
+    /**
+     * Provenance-aware guard helper (CRON-COMPLETIONIST-63). Returns true if
+     * a PLAYER or SIMULATION delta is recorded at {@code pos}. O(1) per call.
+     *
+     * <p>Defensive: returns false (no delta → proceed with placement) if the
+     * WorldRuntime is not yet initialized. The chunk-materializer already
+     * gates on {@code runtime.isInitialized()} so this should never fire in
+     * the materializer path, but defense-in-depth protects against unexpected
+     * call sites.
+     */
+    private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
+        try {
+            WorldRuntime runtime = WorldRuntime.get();
+            if (!runtime.isInitialized()) return false;
+            WorldDeltaStore store = runtime.deltaStore();
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            return store.hasBlock(x, y, z, Provenance.PLAYER)
+                    || store.hasBlock(x, y, z, Provenance.SIMULATION);
+        } catch (Throwable t) {
+            // Defensive: never let a delta-store query failure block a build.
+            // Log at debug (not error) to avoid log spam if this fires
+            // repeatedly in a broken state.
+            Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
+                    pos, t.getMessage());
+            return false;
+        }
     }
 
     /**
