@@ -602,5 +602,14 @@ public final class Ergenverse {
         // The bus itself is event-driven (publish/subscribe); this just ensures
         // it has the ServerLevel reference needed for WorldHistory persistence.
         dev.ergenverse.simulation.event.WorldEventBus.setCurrentLevel(overworld);
+
+        // Loop J: Zhou Ru Cultivation Growth — CRON-COMPLETIONIST-111.
+        // Advances 周茹's cultivation realm when she is near Mu Bingmei
+        // in the Kunxu Realm. Gates internally to every 24000 ticks
+        // (1 MC day). Models the disciple-master cultivation relationship
+        // (canon: 周茹 becomes Soul Transformation under Mu Bingmei).
+        // Requires CRON-110's soul transfer to have fired first
+        // (pregnant_with_li_muwan_soul runtime flag).
+        dev.ergenverse.wanglin.bead.ZhouRuCultivationGrowthService.tick(overworld, ticks);
     }
 }

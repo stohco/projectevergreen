@@ -181,6 +181,28 @@ public final class PlanetSuzakuBlueprint {
             new CanonLocation("suzaku_tomb", "Suzaku Tomb (朱雀墓)",
                     0, -60, 0, "ruin", "RI — 朱雀墓, underground; 15th-gen 朱雀子 inheritance, 拓森 reappears");
 
+    // ── Kunxu Realm (昆虚界) — pocket-realm where Mu Bingmei takes Zhou Ru as disciple ──
+    // CRON-COMPLETIONIST-111: Canon (web-search verified 2026-07-26, RICanonicalDatabase
+    // L74 + N19): 慕冰媚 (Mu Bingmei) enters the Kunxu Realm and takes 周茹 (Zhou Ru)
+    // as her disciple. 周茹's cultivation arc (mortal → Soul Transformation) takes
+    // place here under Mu Bingmei's guidance.
+    //
+    // The Kunxu Realm is canonically a pocket-realm accessible from the Cave World,
+    // not a surface location on Planet Suzaku. This mod-original concrete placement
+    // (far northwest, remote) reflects its "secret realm" nature — far from all
+    // other locations. The closest is Soul Refining Sect (-1600, -1800), which is
+    // ~2000 blocks away. A future CRON could implement the Kunxu Realm as a
+    // separate dimension (like the bead interior), but for now it's a remote
+    // overworld region so Mu Bingmei can materialize there and 周茹 can travel
+    // there for cultivation.
+    //
+    // Canon sources: RICanonicalDatabase L74 (Kunxu Realm), N19 (Mu Bingmei),
+    // N10 (Zhou Ru). NO fabricated chapter citation.
+    public static final CanonLocation KUNXU_REALM =
+            new CanonLocation("kunxu_realm", "Kunxu Realm (昆虚界)",
+                    -3500, 0, -3500, "secret_realm",
+                    "RI — 昆虚界; Mu Bingmei's cultivation retreat; Zhou Ru's disciple arc");
+
     // ── Canonical NPC id strings (the UUID lives in CanonUUID) ──
     public static final String NPC_WANG_LIN = "wang_lin";
     public static final String NPC_OLD_CHEN = "old_chen";
@@ -207,6 +229,20 @@ public final class PlanetSuzakuBlueprint {
     // cultivator under 慕冰梅 (Mu Bingmei) in 昆墟之境 (Kunxu Realm).
     public static final String NPC_ZHOU_RU = "zhou_ru";  // 周茹
 
+    // CRON-COMPLETIONIST-111: 慕冰媚 (Mu Bingmei, also known as 柳眉 Liu Mei)
+    // — Wang Lin's third wife and Zhou Ru's cultivation master. Canon
+    // (web-search verified 2026-07-26, RICanonicalDatabase N19 + L74):
+    //   - Mu Bingmei is Liu Mei's true form (慕冰媚 / 柳眉).
+    //   - Ascendant+ cultivation; Wang Lin's third wife.
+    //   - Had a son with Wang Lin (Wang Ping) whom she refined into a
+    //     resentful spirit out of hatred.
+    //   - Wang Lin severed karmic ties with her via the Dream Dao; one of
+    //     his clones accompanies her.
+    //   - She entered the Kunxu Realm (昆虚界) and took Zhou Ru as her disciple.
+    // The ZhouRuCultivationGrowthService (CRON-111) advances Zhou Ru's realm
+    // when she is near Mu Bingmei — modeling the disciple-master cultivation.
+    public static final String NPC_MU_BINGMEI = "mu_bingmei";  // 慕冰媚 / 柳眉
+
     /**
      * All canonical locations, indexed by id. Immutable. Built fresh each call
      * (the set is tiny — 15 entries — so this is negligible).
@@ -228,6 +264,7 @@ public final class PlanetSuzakuBlueprint {
         map.put(SEA_OF_DEVILS.id, SEA_OF_DEVILS);
         map.put(JUE_MING_VALLEY.id, JUE_MING_VALLEY);
         map.put(SUZAKU_TOMB.id, SUZAKU_TOMB);
+        map.put(KUNXU_REALM.id, KUNXU_REALM);
         return Collections.unmodifiableMap(map);
     }
 

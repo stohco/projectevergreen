@@ -101,6 +101,25 @@ public final class CanonUUID {
     // wiki, RICanonicalDatabase entry N10.
     public static final UUID ZHOU_RU = of("npc:zhou_ru");
 
+    // CRON-COMPLETIONIST-111: 慕冰媚 (Mu Bingmei, also known as 柳眉 Liu Mei)
+    // — Wang Lin's third wife and Zhou Ru's cultivation master. Canon
+    // (web-search verified 2026-07-26, RICanonicalDatabase N19 + L74):
+    //   - Mu Bingmei is Liu Mei's true form (慕冰媚 / 柳眉). Ascendant+
+    //     cultivation; Wang Lin's third wife.
+    //   - Had a son with Wang Lin (Wang Ping 王平) whom she refined into a
+    //     resentful spirit out of hatred. Wang Lin severed karmic ties with
+    //     her via the Dream Dao (梦道); one of his clones accompanies her.
+    //   - She entered the Kunxu Realm (昆虚界) and took Zhou Ru as her disciple.
+    //     周茹's cultivation arc (mortal → Soul Transformation) takes place
+    //     here under Mu Bingmei's guidance.
+    // At story start, Mu Bingmei is present at the Kunxu Realm (mod-original
+    // concrete placement at -3500, -3500 — far northwest, remote). The
+    // ZhouRuCultivationGrowthService (CRON-111) advances Zhou Ru's realm
+    // when she is near Mu Bingmei — modeling the disciple-master cultivation.
+    // NO fabricated chapter citation. Canon sources: RICanonicalDatabase
+    // N19, L74, Baidu Baike (Liu Mei = Mu Bingmei), Fandom wiki.
+    public static final UUID MU_BINGMEI = of("npc:mu_bingmei");
+
     // ── Spirit Beasts (named/canonical beasts, not generic spawns) ──
     public static final UUID WOLF_PACK_ALPHA_ZHAO = of("beast:wolf_pack_alpha_zhao");
     public static final UUID SPIRIT_TIGER_ZHAO_MOUNTAINS = of("beast:spirit_tiger_zhao_mountains");

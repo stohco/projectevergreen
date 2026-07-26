@@ -1,28 +1,29 @@
 {
-  "_comment": "NPC: Mu Bingmei (Liu Mei) (慕冰媚 / 柳眉). Canon ID: N19. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
+  "_comment": "NPC: Mu Bingmei (Liu Mei) (慕冰媚 / 柳眉). Canon ID: N19. CRON-COMPLETIONIST-111: registered as a canon NPC at the Kunxu Realm (昆虚界) where she takes Zhou Ru as her disciple. Per user directive: every miscellaneous NPC from RI must be accounted for. Prime Directive: Reality is objective; cultivation changes understanding, not existence. Every being described here exists independently of the player's perception.",
   "npc_id": "npc_mu_bingmei",
   "name": "Mu Bingmei (Liu Mei)",
   "nameCn": "慕冰媚 / 柳眉",
   "canon_id": "N19",
   "type": "other",
   "faction": "independent",
-  "location": "variable",
-  "cultivation": "Ascendant+",
-  "personality": "cold exterior, complex interior; rival-turned-love-interest",
+  "location": "kunxu_realm",
+  "cultivation": "Ascendant",
+  "personality": "cold exterior, complex interior; rival-turned-love-interest; master to Zhou Ru",
   "speech": "cold, measured, then warming",
-  "relationship_to_wanglin": "complex love interest; rival then lover",
+  "relationship_to_wanglin": "complex love interest; rival then lover; third wife; karmic ties severed via Dream Dao",
   "dialogue_available": true,
   "quest_available": true,
   "trade_available": false,
-  "teaching_available": false,
+  "teaching_available": true,
   "perception_tiers": {
     "mortal": "A cold, beautiful woman",
     "qi_condensation": "Cultivator; cold aura",
     "core_formation": "Ascendant+; complex relationship",
-    "nascent_soul": "Ascendant+; rival-turned-love"
+    "nascent_soul": "Ascendant+; rival-turned-love",
+    "soul_formation": "Ascendant+; Zhou Ru's master in the Kunxu Realm"
   },
   "canon_confidence": 4,
-  "note": "Complex love interest; rival-turned-lover",
+  "note": "Complex love interest; rival-turned-lover; Wang Lin's third wife; Zhou Ru's cultivation master in the Kunxu Realm",
   "derivation_type": "A",
   "salt": 1410724983,
   "dao_heart": {
@@ -33,5 +34,68 @@
   },
   "soul_state": "none",
   "tribulation_debt": 0,
-  "_xianxia_schema": 1
+  "_xianxia_schema": 1,
+  "canon_notes": {
+    "true_identity": "Mu Bingmei (慕冰媚) is Liu Mei's (柳眉) true form — they are the same person. Liu Mei was the public identity; Mu Bingmei is the true cultivation name.",
+    "wang_lin_relationship": "Wang Lin's third wife. Had a son with Wang Lin (Wang Ping 王平) whom she refined into a resentful spirit out of hatred. Wang Lin severed karmic ties with her via the Dream Dao (梦道); one of his clones accompanies her.",
+    "zhou_ru_master": "She entered the Kunxu Realm (昆虚界) and took Zhou Ru (周茹) as her disciple. Zhou Ru's cultivation arc (mortal → Soul Transformation) takes place here under Mu Bingmei's guidance. This is the post-transfer cultivation arc (CRON-110 soul transfer → CRON-111 cultivation growth).",
+    "sources": "RICanonicalDatabase N19 + L74; Baidu Baike (Liu Mei = Mu Bingmei); Fandom wiki. NO fabricated chapter citation."
+  },
+  "initiation_lines": [
+    "I am Mu Bingmei. The Kunxu Realm is my retreat. Few find their way here uninvited.",
+    "Liu Mei was a mask I wore in the mortal world. Mu Bingmei is my true name.",
+    "Zhou Ru is my disciple. Her soul carries a burden I understand — Wang Lin's love is not a gentle thing.",
+    "The Dream Dao severed what bound us. Yet his clone walks beside me still. Such is the way of karma.",
+    "If you seek to cultivate under me, bring the Kunxu Realm's spirit herbs. I will not teach the unprepared."
+  ],
+  "daily_schedule": [
+    {
+      "time": "03:00",
+      "action": "Pre-dawn cultivation in the Kunxu Realm's central spirit vein",
+      "location": "kunxu_realm",
+      "duration": 240
+    },
+    {
+      "time": "07:00",
+      "action": "Instruct Zhou Ru in cultivation technique",
+      "location": "kunxu_realm",
+      "duration": 120
+    },
+    {
+      "time": "09:00",
+      "action": "Solo meditation on the Dream Dao",
+      "location": "kunxu_realm",
+      "duration": 180
+    },
+    {
+      "time": "12:00",
+      "action": "Meal",
+      "location": "kunxu_realm",
+      "duration": 60
+    },
+    {
+      "time": "13:00",
+      "action": "Refine spirit herbs from the Kunxu Realm",
+      "location": "kunxu_realm",
+      "duration": 180
+    },
+    {
+      "time": "16:00",
+      "action": "Guide Zhou Ru through cultivation breakthrough",
+      "location": "kunxu_realm",
+      "duration": 240
+    },
+    {
+      "time": "20:00",
+      "action": "Evening meditation",
+      "location": "kunxu_realm",
+      "duration": 300
+    },
+    {
+      "time": "01:00",
+      "action": "Rest",
+      "location": "kunxu_realm",
+      "duration": 120
+    }
+  ]
 }

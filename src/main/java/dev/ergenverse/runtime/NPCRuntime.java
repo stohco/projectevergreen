@@ -138,6 +138,26 @@ public final class NPCRuntime {
         register(CanonUUID.ZHOU_RU, "Zhou Ru 周茹",
                 PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.x,
                 PlanetSuzakuBlueprint.VERMILION_BIRD_CAPITAL.z);
+        // CRON-COMPLETIONIST-111: 慕冰媚 (Mu Bingmei, also known as 柳眉 Liu Mei)
+        // — Wang Lin's third wife and Zhou Ru's cultivation master. Canon
+        // (web-search verified 2026-07-26, RICanonicalDatabase N19 + L74):
+        //   - Mu Bingmei is Liu Mei's true form (慕冰媚 / 柳眉). Ascendant+
+        //     cultivation; Wang Lin's third wife.
+        //   - Had a son with Wang Lin (Wang Ping) whom she refined into a
+        //     resentful spirit out of hatred. Wang Lin severed karmic ties
+        //     with her via the Dream Dao.
+        //   - She entered the Kunxu Realm (昆虚界) and took Zhou Ru as her
+        //     disciple. 周茹's cultivation arc takes place here.
+        // Placement: Kunxu Realm (-3500, -3500) — mod-original concrete
+        // placement. The canon Kunxu Realm is a pocket-realm accessible from
+        // the Cave World; this mod placement is a remote overworld region so
+        // Mu Bingmei can materialize there and 周茹 can travel there for
+        // cultivation. NOT flagged deadUntilRevived — she's present from day 0
+        // so the ZhouRuCultivationGrowthService can find her when 周茹
+        // approaches.
+        register(CanonUUID.MU_BINGMEI, "Mu Bingmei 慕冰媚 / 柳眉",
+                PlanetSuzakuBlueprint.KUNXU_REALM.x,
+                PlanetSuzakuBlueprint.KUNXU_REALM.z);
         loaded = true;
     }
 
