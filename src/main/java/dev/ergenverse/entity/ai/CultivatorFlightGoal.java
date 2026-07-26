@@ -2,6 +2,7 @@ package dev.ergenverse.entity.ai;
 
 import dev.ergenverse.core.Ergenverse;
 import dev.ergenverse.entity.EntityCultivator;
+import dev.ergenverse.entity.control.CultivatorFlightNavigator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -100,8 +101,16 @@ import java.util.UUID;
  * fail to find a path from a mountain peak to a far village because the
  * path crosses unloaded chunks, water, or unwalkable terrain. Direct
  * velocity manipulation is the only way to do 3D flight in MC 1.20.1
- * without a custom FlightPathNavigator. The latter is a future CRON
- * enhancement (see self-critique).
+ * without a custom FlightPathNavigator.
+ *
+ * <p><b>CRON-133 — FlightPathNavigator is no longer future work.</b>
+ * {@link CultivatorFlightNavigator} now provides obstacle-aware velocity
+ * computation. This goal delegates the per-tick velocity decision to the
+ * navigator, which ray-casts forward at 3 heights and either maintains
+ * course, dodges perpendicular, or vaults upward. Stuck detection: if the
+ * navigator reports blocked for {@value #MAX_BLOCKED_TICKS} consecutive
+ * ticks (the cultivator cannot find a way around), the goal aborts and the
+ * cultivator reverts to walking.
  */
 public class CultivatorFlightGoal extends Goal {
 
@@ -122,6 +131,14 @@ public class CultivatorFlightGoal extends Goal {
     /** Maximum flight duration (30 seconds = 600 ticks) before forced landing. */
     private static final int MAX_FLIGHT_TICKS = 600;
 
+    /**
+     * Maximum consecutive blocked ticks before aborting flight (5 seconds).
+     * If the navigator cannot find a dodge or vault for this long, the
+     * cultivator is stuck against an obstacle wider than dodge range —
+     * give up and revert to walking.
+     */
+    private static final int MAX_BLOCKED_TICKS = 100;
+
     /** Cruising speed (blocks per tick). 0.4 = 8 blocks/sec, slightly faster than sprinting. */
     private static final double FLIGHT_SPEED = 0.40D;
 
@@ -130,6 +147,9 @@ public class CultivatorFlightGoal extends Goal {
 
     /** Ticks elapsed in current flight session. */
     private int flightTicks;
+
+    /** Consecutive ticks the navigator has reported "blocked" — for stuck detection. */
+    private int consecutiveBlockedTicks;
 
     /** Last flight target position (for re-evaluation throttling). */
     private Vec3 lastTargetPos;
@@ -189,6 +209,7 @@ public class CultivatorFlightGoal extends Goal {
     @Override
     public void start() {
         flightTicks = 0;
+        consecutiveBlockedTicks = 0;
         lastTargetPos = null;
         cultivator.setFlying(true);
         cultivator.setNoGravity(true);
@@ -207,6 +228,7 @@ public class CultivatorFlightGoal extends Goal {
         cultivator.setDeltaMovement(0, 0, 0);
         cultivator.getNavigation().stop();
         flightTicks = 0;
+        consecutiveBlockedTicks = 0;
         lastTargetPos = null;
         Ergenverse.LOGGER.info("[Ergenverse] CultivatorFlightGoal: '{}' lands.",
                 cultivator.getCharacterId());
@@ -227,37 +249,50 @@ public class CultivatorFlightGoal extends Goal {
             lastTargetPos = target;
         }
 
-        Vec3 origin = cultivator.position();
-        Vec3 toTarget = target.subtract(origin);
-
         // Compute desired cruise altitude: 4 blocks above surface OR target's
         // Y if target is higher (chase a flying target) or much lower (dive).
         double desiredY = computeCruiseAltitude(target);
 
-        // Horizontal direction (normalized).
-        double dx = toTarget.x;
-        double dz = toTarget.z;
-        double horizMag = Math.sqrt(dx * dx + dz * dz);
-        if (horizMag < 0.001D) {
-            // Directly above/below — ascend or descend vertically.
-            cultivator.setDeltaMovement(0,
-                    Math.signum(toTarget.y) * FLIGHT_SPEED * 0.5D, 0);
+        // ── CRON-133: delegate velocity computation to CultivatorFlightNavigator ──
+        // The navigator ray-casts forward at 3 heights and either maintains
+        // course, dodges perpendicular, or vaults upward. This replaces the
+        // CRON-130 direct setDeltaMovement which flew through walls.
+        CultivatorFlightNavigator.SteerResult steer = CultivatorFlightNavigator.computeSteer(
+                cultivator, target, FLIGHT_SPEED, desiredY);
+        cultivator.setDeltaMovement(steer.velocity);
+
+        // Stuck detection — if blocked for too many consecutive ticks, abort.
+        if (steer.blocked) {
+            consecutiveBlockedTicks++;
+            if (consecutiveBlockedTicks == 20
+                    || consecutiveBlockedTicks == 60
+                    || consecutiveBlockedTicks == MAX_BLOCKED_TICKS) {
+                Ergenverse.LOGGER.warn("[Ergenverse] CultivatorFlightGoal: '{}' blocked ({} ticks; dodgeL={} dodgeR={} vault={}).",
+                        cultivator.getCharacterId(), consecutiveBlockedTicks,
+                        steer.dodgedLeft, steer.dodgedRight, steer.vaulted);
+            }
+            if (consecutiveBlockedTicks >= MAX_BLOCKED_TICKS) {
+                Ergenverse.LOGGER.warn("[Ergenverse] CultivatorFlightGoal: '{}' stuck for {} ticks, aborting flight.",
+                        cultivator.getCharacterId(), consecutiveBlockedTicks);
+                // Force stop — canContinueToUse will return false on next tick
+                // because flightTicks >= MAX_FLIGHT_TICKS.
+                flightTicks = MAX_FLIGHT_TICKS;
+            }
         } else {
-            double nx = dx / horizMag;
-            double nz = dz / horizMag;
-            // Horizontal velocity toward target at cruise speed.
-            double vx = nx * FLIGHT_SPEED;
-            double vz = nz * FLIGHT_SPEED;
-            // Vertical velocity — ease toward desired altitude.
-            double vy = (desiredY - origin.y) * 0.1D;
-            // Clamp vertical velocity for smooth ascent/descent.
-            vy = Math.max(-FLIGHT_SPEED, Math.min(FLIGHT_SPEED, vy));
-            cultivator.setDeltaMovement(vx, vy, vz);
+            if (consecutiveBlockedTicks > 0) {
+                // Log recovery from blockage.
+                Ergenverse.LOGGER.info("[Ergenverse] CultivatorFlightGoal: '{}' cleared obstacle after {} ticks.",
+                        cultivator.getCharacterId(), consecutiveBlockedTicks);
+            }
+            consecutiveBlockedTicks = 0;
         }
 
-        // Face the direction of travel (yaw).
+        // Face the direction of travel (yaw) — based on the ACTUAL velocity
+        // (post-navigator), so dodging cultivators face their dodge direction.
+        Vec3 velocity = steer.velocity;
+        double horizMag = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
         if (horizMag > 0.001D) {
-            float yaw = (float) (Math.atan2(dz, dx) * 180.0D / Math.PI) - 90.0F;
+            float yaw = (float) (Math.atan2(velocity.z, velocity.x) * 180.0D / Math.PI) - 90.0F;
             cultivator.setYRot(yaw);
             cultivator.yBodyRot = yaw;
             cultivator.yHeadRot = yaw;
