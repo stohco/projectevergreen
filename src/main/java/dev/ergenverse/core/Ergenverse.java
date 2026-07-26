@@ -611,5 +611,16 @@ public final class Ergenverse {
         // Requires CRON-110's soul transfer to have fired first
         // (pregnant_with_li_muwan_soul runtime flag).
         dev.ergenverse.wanglin.bead.ZhouRuCultivationGrowthService.tick(overworld, ticks);
+
+        // Loop K: Mu Bingmei Acceptance Event — CRON-COMPLETIONIST-113.
+        // One-shot narrative event: Mu Bingmei formally accepts 周茹 as her
+        // disciple when 周茹 is near her at the Kunxu Realm (after CRON-112's
+        // departure). Gates internally to every 200 ticks (10s). Sets the
+        // accepted_as_disciple runtime flag (write-once). Requires CRON-112's
+        // sent_to_kunxu runtime flag. Canon basis: RICanonicalDatabase N10
+        // (Zhou Ru — disciple of Mu Bingmei), N19 (Mu Bingmei — master of
+        // Zhou Ru), L74 (Kunxu Realm — "Mu Bingmei entered here; took Zhou
+        // Ru as her disciple").
+        dev.ergenverse.wanglin.bead.MuBingmeiAcceptanceEvent.tick(overworld, ticks);
     }
 }
