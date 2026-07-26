@@ -243,6 +243,18 @@ public final class ErgenverseBlocks {
     public static final RegistryObject<Block> RESTRICTION_STONE = registerSimple("restriction_stone", 4.0F, 4.0F);
     public static final RegistryObject<Block> SPIRIT_VEIN_STONE = registerSimple("spirit_vein_stone", 3.0F, 3.0F);
 
+    // ── CRON-COMPLETIONIST-75: Canon discovery block ───────────────────
+    // The "Mysterious Stone" (神秘石头) — the stone on Heng Yue Mountain
+    // in which Wang Lin found the Heaven-Defying Bead (天逆珠) per RI Ch. 8.
+    // Canon: 仙逆编年史 — "王林不合格被拒门外，凭借毅力独自上山遇险后
+    // 发现天逆珠法宝" (Wang Lin failed the entry test, climbed the mountain
+    // alone with perseverance, encountered danger, THEN discovered the bead).
+    // When broken, drops ergenverse:heaven_defying_bead with NBT matching
+    // HeavenDefyingBeadItem.applyInitialOpening() (CRACK_OPENED stage,
+    // Situ Nan's spirit, parts=1, stability=1000, authority=500).
+    public static final RegistryObject<Block> MYSTERIOUS_STONE = registerSimple(
+            "mysterious_stone", 3.0F, 6.0F);
+
     // ── Terrain Blocks ─────────────────────────────────────────────────
     public static final RegistryObject<Block> SPIRIT_DIRT = registerSimple("spirit_dirt", 0.5F, 0.5F);
     public static final RegistryObject<Block> SPIRIT_GRASS = registerSimple("spirit_grass", 0.6F, 0.6F);

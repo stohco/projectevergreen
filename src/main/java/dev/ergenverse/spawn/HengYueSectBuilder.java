@@ -154,6 +154,9 @@ public final class HengYueSectBuilder {
         private static final BlockState SPIRIT_VEIN = ErgenverseBlocks.SPIRIT_VEIN_STONE.get().defaultBlockState();
         private static final BlockState SPIRIT_GRASS = ErgenverseBlocks.SPIRIT_GRASS.get().defaultBlockState();
         private static final BlockState QI_GRASS = ErgenverseBlocks.QI_GATHERING_GRASS.get().defaultBlockState();
+        // CRON-COMPLETIONIST-75: The Heaven-Defying Bead's discovery stone.
+        private static final BlockState MYSTERIOUS_STONE =
+                ErgenverseBlocks.MYSTERIOUS_STONE.get().defaultBlockState();
     }
 
     private HengYueSectBuilder() {}
@@ -342,6 +345,9 @@ public final class HengYueSectBuilder {
         buildDormitories(level, center);
         buildLanterns(level, center);
         buildDefensiveWalls(level, center);
+        // CRON-COMPLETIONIST-75: Place the Heaven-Defying Bead's discovery
+        // stone AFTER all other districts so it isn't overwritten.
+        buildMysteriousStoneDiscovery(level, center);
     }
 
     /**
@@ -1328,6 +1334,48 @@ public final class HengYueSectBuilder {
      */
     private static void fill(ServerLevel level, BlockPos from, BlockPos to, BlockState state) {
         BlockPos.betweenClosedStream(from, to).forEach(p -> sb(level, p.immutable(), state, 3));
+    }
+
+    /**
+     * CRON-COMPLETIONIST-75: Place the Heaven-Defying Bead's discovery stone.
+     *
+     * <p><b>Canon basis (verified):</b> Per 仙逆编年史 (Baidu Baike) —
+     * "王林不合格被拒门外，凭借毅力独自上山遇险后发现天逆珠法宝，被救后
+     * 破例收为记名弟子" (Wang Lin failed the Heng Yue Sect entry test,
+     * climbed the mountain alone with perseverance, encountered danger,
+     * THEN discovered the 天逆珠 artifact, was rescued, and was exceptionally
+     * accepted as a recorded disciple). Per RI Ch. 8+: the bead was inside
+     * an ordinary-looking stone. Situ Nan's remnant soul was inside the bead;
+     * when Wang Lin found it, the bead was dormant (DORMANT_STONE stage).
+     * Situ Nan later blasted it open (CRACK_OPENED stage).
+     *
+     * <p><b>Placement rationale:</b> The stone is placed BESIDE the stone
+     * steps at step 2 (low on the mountain, where a rejected applicant
+     * climbing alone would be). Specifically at {@code c.offset(-5, -4, 26)} —
+     * 1 block west of the step-2 flanking wall (dx=-4), at the same Y as
+     * step 2 (y=c.getY()-4). The player walking up the steps won't see it
+     * directly (it's behind the flanking wall), but exploring off the path
+     * (as Wang Lin did) reveals it. This is canon-accurate: the stone was
+     * not in plain sight, not inside the sect compound, and not in the
+     * Sword Tomb (which is for elite disciples — a rejected applicant
+     * wouldn't have access).
+     *
+     * <p><b>Loot:</b> When broken, the block drops {@code ergenverse:heaven_defying_bead}
+     * with NBT matching {@code HeavenDefyingBeadItem.applyInitialOpening()}
+     * (CRACK_OPENED stage, Situ Nan's spirit, parts=1, stability=1000,
+     * authority=500). See {@code data/ergenverse/loot_tables/blocks/mysterious_stone.json}.
+     *
+     * <p><b>Provenance:</b> The stone is placed via {@link #sb}, so it's
+     * chunk-filtered and provenance-guarded. If the player breaks the stone
+     * (PLAYER delta at the position), the chunk-materializer won't re-place
+     * it on chunk reload — the discovery is permanent.
+     */
+    private static void buildMysteriousStoneDiscovery(ServerLevel level, BlockPos c) {
+        // Step 2 of buildStoneSteps is at z=c.getZ()+26, y=c.getY()-4.
+        // The flanking wall is at dx=±4. Place the stone 1 block west of
+        // the left flanking wall (dx=-5), at the same Y.
+        BlockPos stonePos = c.offset(-5, -4, 26);
+        setBlock(level, stonePos, B.MYSTERIOUS_STONE);
     }
 
     /**
