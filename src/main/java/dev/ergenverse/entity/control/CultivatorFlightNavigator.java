@@ -25,13 +25,23 @@ import net.minecraft.world.phys.Vec3;
  *   <li>Ray-cast forward {@value #LOOKAHEAD} blocks at three height samples
  *       (feet=0.5, chest=1.0, head=1.5 above entity Y) — if any sample hits
  *       a solid block, the path is blocked.</li>
- *   <li>If blocked, probe perpendicular dodge directions (left and right)
- *       at {@value #DODGE_PROBE_DIST} blocks. If exactly one is clear, dodge
- *       that way. If both are clear, pick one based on the cultivator's
- *       entity ID parity (deterministic per-cultivator bias to prevent
- *       oscillation — left if ID is even, right if odd).</li>
+ *   <li><b>CRON-135:</b> Also ray-cast forward {@value #LOOKAHEAD} blocks at
+ *       three UPWARD height samples (+3, +6, +9 above entity Y) — if any of
+ *       these hits a solid block, the cultivator is approaching a TALL
+ *       obstacle (mountainside, cliff, tower) that they will crash into
+ *       unless they vault NOW. The forward-only check (step 2) cannot detect
+ *       this because the cultivator's body height (0.5-1.5) is below the
+ *       obstacle's leading edge.</li>
+ *   <li>If blocked (forward OR upward), probe perpendicular dodge directions
+ *       (left and right) at {@value #DODGE_PROBE_DIST} blocks. If exactly one
+ *       is clear, dodge that way. If both are clear, pick one based on the
+ *       cultivator's entity ID parity (deterministic per-cultivator bias to
+ *       prevent oscillation — left if ID is even, right if odd).</li>
  *   <li>If neither dodge is clear, vault upward (strong vertical impulse) —
- *       the cultivator rises above the obstacle.</li>
+ *       the cultivator rises above the obstacle. When the upward ray-cast
+ *       detected the obstacle (tall obstacle case), the vault impulse is
+ *       STRONGER ({@value #TALL_VAULT_SPEED_SCALE}) because the cultivator
+ *       needs to gain more altitude to clear it.</li>
  *   <li>If the path is clear, return the wish-dir velocity at cruise speed.</li>
  * </ol>
  *
@@ -66,14 +76,43 @@ public final class CultivatorFlightNavigator {
     /** Vertical sample offsets (relative to entity Y) for forward ray-cast. */
     public static final double[] HEIGHT_SAMPLES = {0.5D, 1.0D, 1.5D};
 
+    /**
+     * CRON-135: Upward sample offsets (relative to entity Y) for forward
+     * ray-cast at the same LOOKAHEAD distance. These detect TALL obstacles
+     * (mountainsides, cliffs, towers) whose leading edge is ABOVE the
+     * cultivator's body height (1.5). Without these, a cultivator flying
+     * at cruise altitude (4 blocks above surface) toward a mountain peak
+     * would fly into the mountainside because the forward-only check at
+     * 0.5/1.0/1.5 returns 'clear' (the mountainside is above 1.5).
+     *
+     * <p>Offsets chosen to catch obstacles 3-9 blocks above the cultivator:
+     * <ul>
+     *   <li>+3.0: catches 3-block-tall walls (sect perimeter walls, pagodas)</li>
+     *   <li>+6.0: catches 6-block-tall structures (gatehouses, watchtowers)</li>
+     *   <li>+9.0: catches mountain leading edges and tall cliffs</li>
+     * </ul>
+     * Beyond +9, the cultivator is high enough that mountain collision is
+     * unlikely (cruise altitude is surface+4, so the cultivator is already
+     * 4 blocks up; +9 above entity = 13 blocks above surface, which is
+     * above most mountain leading edges in the village biome).
+     */
+    public static final double[] UPWARD_SAMPLES = {3.0D, 6.0D, 9.0D};
+
     /** Perpendicular probe distance for dodge detection (blocks). */
     public static final double DODGE_PROBE_DIST = 2.0D;
 
     /** Dodge velocity scale (relative to flight speed). */
     public static final double DODGE_SPEED_SCALE = 0.7D;
 
-    /** Vault upward impulse scale (relative to flight speed). */
+    /** Vault upward impulse scale (relative to flight speed) — standard vault for short obstacles. */
     public static final double VAULT_SPEED_SCALE = 0.8D;
+
+    /**
+     * CRON-135: Vault upward impulse scale for TALL obstacles detected by
+     * the upward ray-cast. Stronger than standard vault because the cultivator
+     * needs to gain more altitude to clear a mountainside or cliff.
+     */
+    public static final double TALL_VAULT_SPEED_SCALE = 1.2D;
 
     /** Forward speed reduction when vaulting (slow forward progress while rising). */
     public static final double VAULT_FORWARD_SCALE = 0.3D;
@@ -92,6 +131,13 @@ public final class CultivatorFlightNavigator {
         public final Vec3 velocity;
         /** True if the forward ray-cast hit a solid block. */
         public final boolean blocked;
+        /**
+         * CRON-135: True if the UPWARD ray-cast hit a solid block (tall
+         * obstacle detected). When true, the cultivator vaults with a
+         * STRONGER impulse (TALL_VAULT_SPEED_SCALE) to clear the obstacle.
+         * Always false when {@link #blocked} is false.
+         */
+        public final boolean tallObstacle;
         /** True if the cultivator dodged left this tick. */
         public final boolean dodgedLeft;
         /** True if the cultivator dodged right this tick. */
@@ -99,10 +145,11 @@ public final class CultivatorFlightNavigator {
         /** True if the cultivator vaulted upward this tick (no dodge available). */
         public final boolean vaulted;
 
-        public SteerResult(Vec3 velocity, boolean blocked, boolean dodgedLeft,
-                           boolean dodgedRight, boolean vaulted) {
+        public SteerResult(Vec3 velocity, boolean blocked, boolean tallObstacle,
+                           boolean dodgedLeft, boolean dodgedRight, boolean vaulted) {
             this.velocity = velocity;
             this.blocked = blocked;
+            this.tallObstacle = tallObstacle;
             this.dodgedLeft = dodgedLeft;
             this.dodgedRight = dodgedRight;
             this.vaulted = vaulted;
@@ -131,21 +178,35 @@ public final class CultivatorFlightNavigator {
         // No horizontal obstacle possible.
         if (horizMag < 0.001D) {
             double vy = Math.signum(toTarget.y) * flightSpeed * 0.5D;
-            return new SteerResult(new Vec3(0, vy, 0), false, false, false, false);
+            return new SteerResult(new Vec3(0, vy, 0), false, false, false, false, false);
         }
 
         double nx = dx / horizMag;
         double nz = dz / horizMag;
 
-        // Ray-cast forward at 3 heights.
-        boolean blocked = isForwardBlocked(cultivator, nx, nz);
+        // Ray-cast forward at 3 body heights (feet/chest/head).
+        boolean forwardBlocked = isForwardBlocked(cultivator, nx, nz);
+
+        // CRON-135: Ray-cast forward at 3 UPWARD heights (+3/+6/+9 above entity Y).
+        // This detects tall obstacles (mountainsides, cliffs, towers) whose
+        // leading edge is above the cultivator's body. Without this check, a
+        // cultivator at cruise altitude (surface+4) flying toward a mountain
+        // would crash into the mountainside because the forward-only check
+        // at 0.5/1.0/1.5 returns 'clear' (the mountainside is above 1.5).
+        boolean upwardBlocked = isUpwardBlocked(cultivator, nx, nz);
+
+        // The path is 'blocked' if EITHER ray-cast hits a solid block.
+        boolean blocked = forwardBlocked || upwardBlocked;
+        // 'tallObstacle' is true only when the upward ray-cast detected the
+        // obstacle (the forward ray-cast may or may not also be blocked).
+        boolean tallObstacle = upwardBlocked;
 
         if (!blocked) {
             // Clear path — direct toward target at cruise speed, ease toward desired Y.
             double vx = nx * flightSpeed;
             double vz = nz * flightSpeed;
             double vy = clampVy((desiredY - origin.y) * 0.1D, flightSpeed);
-            return new SteerResult(new Vec3(vx, vy, vz), false, false, false, false);
+            return new SteerResult(new Vec3(vx, vy, vz), false, false, false, false, false);
         }
 
         // Path is blocked — probe perpendicular dodge options.
@@ -174,20 +235,32 @@ public final class CultivatorFlightNavigator {
             double perpZ = goLeft ? leftPerpZ : -leftPerpZ;
 
             // Dodge velocity = perpendicular * scale + forward bias + upward bias.
+            // When the obstacle is tall (upward-blocked), increase the upward
+            // bias so the dodge also gains altitude — this helps the cultivator
+            // clear the tall obstacle while dodging around it.
             double vx = perpX * flightSpeed * DODGE_SPEED_SCALE
                     + nx * flightSpeed * DODGE_FORWARD_BIAS_SCALE;
             double vz = perpZ * flightSpeed * DODGE_SPEED_SCALE
                     + nz * flightSpeed * DODGE_FORWARD_BIAS_SCALE;
-            double vy = flightSpeed * DODGE_UPWARD_BIAS_SCALE;
+            double upwardBias = tallObstacle
+                    ? flightSpeed * DODGE_UPWARD_BIAS_SCALE * 2.0D  // double upward bias for tall obstacles
+                    : flightSpeed * DODGE_UPWARD_BIAS_SCALE;
+            double vy = upwardBias;
 
-            return new SteerResult(new Vec3(vx, vy, vz), true, goLeft, !goLeft, false);
+            return new SteerResult(new Vec3(vx, vy, vz), true, tallObstacle, goLeft, !goLeft, false);
         }
 
         // No dodge available — vault upward to clear the obstacle.
+        // CRON-135: When the obstacle is tall (detected by upward ray-cast),
+        // use a STRONGER vault impulse (TALL_VAULT_SPEED_SCALE) because the
+        // cultivator needs to gain more altitude to clear a mountainside or
+        // cliff. Standard vault (VAULT_SPEED_SCALE) is for short obstacles
+        // detected only by the forward ray-cast.
         double vx = nx * flightSpeed * VAULT_FORWARD_SCALE;
         double vz = nz * flightSpeed * VAULT_FORWARD_SCALE;
-        double vy = flightSpeed * VAULT_SPEED_SCALE;
-        return new SteerResult(new Vec3(vx, vy, vz), true, false, false, true);
+        double vaultScale = tallObstacle ? TALL_VAULT_SPEED_SCALE : VAULT_SPEED_SCALE;
+        double vy = flightSpeed * vaultScale;
+        return new SteerResult(new Vec3(vx, vy, vz), true, tallObstacle, false, false, true);
     }
 
     /**
@@ -204,6 +277,40 @@ public final class CultivatorFlightNavigator {
         double baseY = cultivator.getY();
         double baseZ = cultivator.getZ();
         for (double h : HEIGHT_SAMPLES) {
+            double checkX = baseX + nx * LOOKAHEAD;
+            double checkY = baseY + h;
+            double checkZ = baseZ + nz * LOOKAHEAD;
+            BlockPos pos = BlockPos.containing(checkX, checkY, checkZ);
+            BlockState state = level.getBlockState(pos);
+            if (state.isSolidRender(level, pos)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * CRON-135: Ray-cast forward {@link #LOOKAHEAD} blocks at 3 UPWARD heights
+     * (+3/+6/+9 above entity Y). Returns true if any sample hits a solid-render
+     * block — indicating a TALL obstacle (mountainside, cliff, tower) whose
+     * leading edge is above the cultivator's body height (1.5).
+     *
+     * <p>This catches the case the forward-only check misses: a cultivator
+     * flying at cruise altitude (surface+4) toward a mountain. The forward
+     * check at heights 0.5/1.0/1.5 returns 'clear' because the mountainside
+     * is above 1.5 — but the cultivator will crash into the mountainside
+     * because their cruise altitude is below the mountain's leading edge.
+     *
+     * <p>The upward check at +3/+6/+9 detects the mountainside's leading
+     * edge (which is typically 3-9 blocks above the cultivator at cruise
+     * altitude), triggering a vault BEFORE collision.
+     */
+    private static boolean isUpwardBlocked(EntityCultivator cultivator, double nx, double nz) {
+        Level level = cultivator.level();
+        double baseX = cultivator.getX();
+        double baseY = cultivator.getY();
+        double baseZ = cultivator.getZ();
+        for (double h : UPWARD_SAMPLES) {
             double checkX = baseX + nx * LOOKAHEAD;
             double checkY = baseY + h;
             double checkZ = baseZ + nz * LOOKAHEAD;

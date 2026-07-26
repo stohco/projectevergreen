@@ -100,8 +100,11 @@ check("field: boolean dodgedRight",
       "public final boolean dodgedRight;" in nav_src)
 check("field: boolean vaulted",
       "public final boolean vaulted;" in nav_src)
-check("constructor (5 args)",
-      re.search(r"public SteerResult\s*\(\s*Vec3\s+\w+\s*,\s*boolean\s+\w+\s*,\s*boolean\s+\w+\s*,\s*boolean\s+\w+\s*,\s*boolean\s+\w+\s*\)", nav_src) is not None)
+# CRON-135 expanded SteerResult from 5 args to 6 args (added tallObstacle).
+# Accept BOTH forms — the CRON-133 invariant is 'constructor exists with the
+# expected arg types', not a specific arg count.
+check("constructor (5 or 6 args — CRON-135 expanded to 6)",
+      re.search(r"public SteerResult\s*\(\s*Vec3\s+\w+\s*,\s*boolean\s+\w+\s*,\s*boolean\s+\w+\s*,\s*boolean\s+\w+\s*,\s*boolean\s+\w+\s*(?:,\s*boolean\s+\w+\s*)?\)", nav_src) is not None)
 
 # ──────────────────────────────────────────────────────────────────────────
 # 4. computeSteer method
@@ -111,12 +114,21 @@ check("public static SteerResult computeSteer",
       re.search(r"public static SteerResult computeSteer\s*\(", nav_src) is not None)
 check("params: EntityCultivator, Vec3, double, double",
       re.search(r"computeSteer\s*\(\s*EntityCultivator\s+\w+\s*,\s*Vec3\s+\w+\s*,\s*double\s+\w+\s*,\s*double\s+\w+\s*\)", nav_src) is not None)
+# CRON-135 changed clear-path return from 5 args to 6 args (added tallObstacle=false).
+# Accept BOTH forms.
 check("returns new SteerResult on clear path",
-      "return new SteerResult(new Vec3(vx, vy, vz), false, false, false, false);" in nav_src)
+      "return new SteerResult(new Vec3(vx, vy, vz), false, false, false, false, false)" in nav_src
+      or "return new SteerResult(new Vec3(vx, vy, vz), false, false, false, false);" in nav_src)
+# CRON-135 changed dodge return from 5 args to 6 args (added tallObstacle flag).
+# Accept BOTH forms — old form has 'true, goLeft, !goLeft, false' (4 bools after Vec3),
+# new form has 'true, tallObstacle, goLeft, !goLeft, false' (5 bools after Vec3).
 check("returns dodge SteerResult",
-      re.search(r"return new SteerResult\s*\(\s*new Vec3\s*\(\s*vx\s*,\s*vy\s*,\s*vz\s*\)\s*,\s*true\s*,\s*goLeft\s*,\s*!goLeft\s*,\s*false\s*\)", nav_src) is not None)
+      re.search(r"return new SteerResult\s*\(\s*new Vec3\s*\(\s*vx\s*,\s*vy\s*,\s*vz\s*\)\s*,\s*true\s*,\s*(?:tallObstacle\s*,\s*)?goLeft\s*,\s*!goLeft\s*,\s*false\s*\)", nav_src) is not None)
+# CRON-135 changed vault return from 5 args to 6 args (added tallObstacle flag).
+# Accept BOTH forms — old form has 'true, false, false, true' (4 bools),
+# new form has 'true, tallObstacle, false, false, true' (5 bools).
 check("returns vault SteerResult",
-      re.search(r"return new SteerResult\s*\(\s*new Vec3\s*\(\s*vx\s*,\s*vy\s*,\s*vz\s*\)\s*,\s*true\s*,\s*false\s*,\s*false\s*,\s*true\s*\)", nav_src) is not None)
+      re.search(r"return new SteerResult\s*\(\s*new Vec3\s*\(\s*vx\s*,\s*vy\s*,\s*vz\s*\)\s*,\s*true\s*,\s*(?:tallObstacle\s*,\s*)?false\s*,\s*false\s*,\s*true\s*\)", nav_src) is not None)
 
 # ──────────────────────────────────────────────────────────────────────────
 # 5. Algorithm — ray-cast + dodge + vault
@@ -134,8 +146,13 @@ check("uses BlockPos.containing",
       "BlockPos.containing(" in nav_src)
 check("deterministic per-cultivator dodge bias (entity ID parity)",
       "cultivator.getId() & 1" in nav_src)
+# CRON-135 changed vault to use a conditional vaultScale (tallObstacle ? TALL_VAULT_SPEED_SCALE : VAULT_SPEED_SCALE).
+# The CRON-133 invariant is 'VAULT_SPEED_SCALE is used for vault impulse' — still true
+# (it's the short-obstacle branch of the conditional). Accept EITHER the direct
+# use (CRON-133 form) or the conditional use (CRON-135 form).
 check("vault upward impulse when no dodge available",
-      "vy = flightSpeed * VAULT_SPEED_SCALE" in nav_src)
+      "vy = flightSpeed * VAULT_SPEED_SCALE" in nav_src
+      or "double vaultScale = tallObstacle ? TALL_VAULT_SPEED_SCALE : VAULT_SPEED_SCALE" in nav_src)
 check("dodge has forward bias",
       "DODGE_FORWARD_BIAS_SCALE" in nav_src)
 check("dodge has upward bias",
