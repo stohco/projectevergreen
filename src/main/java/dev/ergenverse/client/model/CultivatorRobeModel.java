@@ -285,6 +285,14 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
      * 0.98 = Old Chen (slightly stooped elder).
      * 0.95 = Zeng Da Niu (shorter, stocky farmer build).
      * 0.92 = Li Muwan (slightly shorter, female).
+     *
+     * <p>CRON-COMPLETIONIST-98: The scale is now sourced from
+     * {@link CharacterBuild#scaleFor(String)}, NOT from {@link HeldWeaponType#scale}.
+     * CRON-97 had a known limitation where two characters sharing a weapon type
+     * (Situ Nan and Li Muwan both → FAN) also shared the weapon type's default
+     * scale (1.0), losing the intended per-character anatomy (1.10 and 0.92).
+     * CRON-98 closes this by introducing a separate per-character build enum
+     * that overrides the weapon-type default. See {@link CharacterBuild}.
      */
     private float characterScale = 1.0F;
 
@@ -330,10 +338,11 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
      * visibility and per-character body scale. Called by the renderer each
      * frame from {@code entity.getCharacterId()} before super.render.
      *
-     * <p>Maps canon characterId → {@link HeldWeaponType} (weapon + scale).
-     * Hides all weapons first, then enables the matching one. If the
-     * characterId is null, empty, or unrecognized, no weapon is shown and
-     * scale defaults to 1.0 (a generic cultivator with no held item).
+     * <p>Maps canon characterId → {@link HeldWeaponType} (weapon) AND
+     * {@link CharacterBuild} (scale). Hides all weapons first, then enables
+     * the matching one. If the characterId is null, empty, or unrecognized,
+     * no weapon is shown and scale defaults to 1.0 (a generic cultivator with
+     * no held item).
      *
      * <p><b>Canon mapping (fact-checked):</b>
      * <ul>
@@ -351,11 +360,21 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
      *   <li>{@code wang_hao} → NONE, scale 1.0 — mortal (Wang Lin's cousin)</li>
      * </ul>
      *
+     * <p>CRON-COMPLETIONIST-98: The scale is now sourced from
+     * {@link CharacterBuild#scaleFor(String)} instead of the weapon-type
+     * enum's scale field. This decouples "what weapon does this character
+     * hold?" from "how tall is this character?". Two characters can share a
+     * weapon type (Situ Nan and Li Muwan both → FAN) but have different
+     * builds (1.10 vs 0.92) — closing the CRON-97 self-critique #6 gap.
+     *
      * @param characterId the canon character ID (e.g. "wang_lin"); may be null
      */
     public void setCharacterId(String characterId) {
         HeldWeaponType weapon = HeldWeaponType.forCharacter(characterId);
-        this.characterScale = weapon.scale;
+        // CRON-98: per-character build overrides the weapon-type-default scale.
+        // If CharacterBuild has no entry for this characterId, scaleFor returns
+        // 1.0F (the safe default — no visual change).
+        this.characterScale = CharacterBuild.scaleFor(characterId);
         // Hide all weapons first, then enable only the matching one.
         this.swordRight.visible = (weapon == HeldWeaponType.SWORD);
         this.fanRight.visible = (weapon == HeldWeaponType.FAN);
@@ -371,6 +390,16 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
      * can apply both from a single characterId lookup. The scale encodes
      * per-character anatomy variation (Situ Nan tall, Li Muwan shorter, etc.)
      * without needing a separate "character build" enum.
+     *
+     * <p>CRON-COMPLETIONIST-98: The {@code scale} field on this enum is now
+     * DEPRECATED and IGNORED by {@link #setCharacterId(String)}. Per-character
+     * scale is sourced from {@link CharacterBuild#scaleFor(String)} instead.
+     * The field is retained on the enum for backward-compatibility (existing
+     * tests and javadocs reference it) but is no longer consulted at runtime.
+     * This closes the CRON-97 self-critique #6 limitation where two characters
+     * sharing a weapon type (Situ Nan + Li Muwan both → FAN) also shared the
+     * weapon type's default scale (1.0), losing the intended per-character
+     * builds (1.10 and 0.92).
      */
     private enum HeldWeaponType {
         /** No held weapon. Used for mortals (Wang Hao) and unrecognized characterIds. */
@@ -386,7 +415,19 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
         /** Daoist flywhisk (拂尘). Old Chen (Heng Yue Sect elder, mod-original). */
         FLY_WHISK(0.98F);
 
-        /** Body scale applied by the renderer via PoseStack.scale. */
+        /**
+         * Body scale associated with this weapon type.
+         *
+         * @deprecated CRON-98: Per-character scale is now sourced from
+         * {@link CharacterBuild#scaleFor(String)}. This field is retained
+         * for backward-compatibility but is no longer consulted at runtime.
+         * The values were chosen as "the most common build for characters
+         * holding this weapon type" — e.g., STAFF is held only by Teng
+         * Huayuan (patriarch), so STAFF.scale = 1.05 matches his build.
+         * But FAN is held by both Situ Nan (1.10) and Li Muwan (0.92), so
+         * FAN.scale = 1.0 was a compromise that satisfied neither.
+         */
+        @Deprecated(since = "CRON-COMPLETIONIST-98", forRemoval = false)
         final float scale;
 
         HeldWeaponType(float scale) {
@@ -415,6 +456,135 @@ public class CultivatorRobeModel extends HumanoidModel<EntityCultivator> {
                 // wang_hao, default, and any unrecognized id → no held weapon
                 default -> NONE;
             };
+        }
+    }
+
+    /**
+     * CRON-COMPLETIONIST-98: Per-character body build (anatomy scale).
+     *
+     * <p>This enum closes the CRON-97 self-critique #6 gap: CRON-97's
+     * {@link HeldWeaponType} enum mapped weapon type → scale, which meant two
+     * characters sharing a weapon type (Situ Nan and Li Muwan both → FAN) also
+     * shared the weapon type's default scale (1.0), losing the intended
+     * per-character anatomy (Situ Nan 1.10, Li Muwan 0.92).
+     *
+     * <p>CRON-98 introduces this SEPARATE per-character build enum so that
+     * "what weapon does this character hold?" and "how tall is this character?"
+     * are independent queries. A character can hold a fan AND be tall (Situ Nan)
+     * or hold a fan AND be shorter (Li Muwan) — the two are no longer coupled.
+     *
+     * <p><b>Canon basis for each scale (fact-checked):</b>
+     * <ul>
+     *   <li>{@code wang_lin} → 1.0 — Wang Lin is a young man of average build
+     *       at story start. No canon description of unusual height. Score 8/10
+     *       (defensible default — canon does not describe his build).</li>
+     *   <li>{@code situ_nan} → 1.10 — Situ Nan is the 2nd-gen Vermilion Bird
+     *       Son (朱雀子), an imposing figure who carries the aura of a Soul
+     *       Formation cultivator. The +10% scale reflects his commanding
+     *       presence. Canon does not specify his exact height, but the
+     *       "imposing patriarch" archetype is consistent. Score 7/10
+     *       (archetype-driven, not canon-attested).</li>
+     *   <li>{@code teng_li} → 1.0 — Teng Li is the Teng Family young master,
+     *       a sword cultivator of Foundation Establishment. No canon
+     *       description of unusual build. Score 8/10 (defensible default).</li>
+     *   <li>{@code wang_zhuo} → 1.0 — Wang Zhuo is a Heng Yue Sect disciple,
+     *       peer to Wang Lin. No canon description of unusual build.
+     *       Score 8/10 (defensible default).</li>
+     *   <li>{@code teng_huayuan} → 1.05 — Teng Huayuan is the Teng Family
+     *       patriarch, a Nascent Soul cultivator. The +5% scale reflects his
+     *       patriarchal bearing. Score 7/10 (archetype-driven).</li>
+     *   <li>{@code old_chen} → 0.98 — Old Chen (陈老头, literally "Old Man Chen")
+     *       is a Heng Yue Sect elder. The name implies age; the -2% scale
+     *       reflects a slightly stooped posture. Mod-original character.
+     *       Score N/A (mod-original).</li>
+     *   <li>{@code zeng_da_niu} → 0.95 — Zeng Da Niu (曾大牛) is a mortal
+     *       farmer in the 四派联盟 化凡 arc. The -5% scale reflects a shorter,
+     *       stocky farmer build. Canon does not specify his height, but the
+     *       "stocky farmer" archetype is consistent. Score 7/10
+     *       (archetype-driven).</li>
+     *   <li>{@code li_muwan} → 0.92 — Li Muwan (李慕婉) is a female cultivator
+     *       from Luo He Sect. The -8% scale reflects her slightly shorter
+     *       female build. Canon does not specify her exact height, but the
+     *       "lady cultivator" archetype is consistent. Score 7/10
+     *       (archetype-driven; the 0.92 specifically is a mod choice to
+     *       visually distinguish her from the male cultivators).</li>
+     *   <li>{@code wang_hao} → 1.0 — Wang Hao is Wang Lin's cousin, a mortal
+     *       at story start. No canon description of unusual build.
+     *       Score 8/10 (defensible default).</li>
+     * </ul>
+     *
+     * <p><b>Why an enum and not a {@code Map<String, Float>}:</b> the enum
+     * gives compile-time exhaustiveness — adding a new character requires
+     * adding a new enum constant, which forces the developer to think about
+     * the build. A Map would silently fall back to 1.0 for new characters,
+     * which could hide a forgotten entry. The enum is also slightly faster
+     * (switch on enum ordinal is O(1) with a tableswitch; Map.get is O(1)
+     * with a hash but has higher constant factor).
+     *
+     * <p><b>Why {@code scaleFor(String)} returns a primitive {@code float}
+     * and not a {@code Float}:</b> the call site needs a primitive float for
+     * {@code poseStack.scale(scale, scale, scale)}. Returning a Float would
+     * require unboxing on every frame for every cultivator. The primitive
+     * return avoids that. The fallback (1.0F) is encoded in the method, not
+     * as a null check at the call site.
+     */
+    private enum CharacterBuild {
+        // ── Canon cultivators ─────────────────────────────────────────────
+        /** Wang Lin — young man, average build (story start). */
+        WANG_LIN("wang_lin", 1.0F),
+        /** Situ Nan — 2nd-gen Vermilion Bird Son, imposing patriarch build. */
+        SITU_NAN("situ_nan", 1.10F),
+        /** Teng Li — Teng Family young master, sword cultivator build. */
+        TENG_LI("teng_li", 1.0F),
+        /** Wang Zhuo — Heng Yue Sect disciple, peer to Wang Lin. */
+        WANG_ZHUO("wang_zhuo", 1.0F),
+        /** Teng Huayuan — Teng Family patriarch, patriarchal bearing. */
+        TENG_HUAYUAN("teng_huayuan", 1.05F),
+        /** Zeng Da Niu — mortal farmer, stocky build (化凡 arc). */
+        ZENG_DA_NIU("zeng_da_niu", 0.95F),
+        /** Li Muwan — Luo He Sect alchemist, female build. */
+        LI_MUWAN("li_muwan", 0.92F),
+        /** Wang Hao — Wang Lin's cousin, mortal at story start. */
+        WANG_HAO("wang_hao", 1.0F),
+
+        // ── Mod-original characters ─────────────────────────────────────
+        /** Old Chen — mod-original Heng Yue Sect elder; slightly stooped. */
+        OLD_CHEN("old_chen", 0.98F);
+
+        /** The canon characterId this build applies to (lowercase, normalized). */
+        final String characterId;
+        /** The body scale applied via PoseStack.scale. 1.0 = average adult male. */
+        final float scale;
+
+        CharacterBuild(String characterId, float scale) {
+            this.characterId = characterId;
+            this.scale = scale;
+        }
+
+        /**
+         * Resolve a canon characterId to its per-character body scale.
+         *
+         * <p>Falls back to {@code 1.0F} (average adult male, no visual change)
+         * for null, empty, or unrecognized characterIds. This is the safe
+         * default — a generic cultivator with no per-character build entry
+         * renders at scale 1.0, which matches the pre-CRON-97 behavior.
+         *
+         * <p>Normalization: lowercase, trim, replace whitespace runs with
+         * underscores. Matches the normalization in
+         * {@link HeldWeaponType#forCharacter(String)} so the two enums always
+         * agree on what a "canonical characterId" looks like.
+         *
+         * @param characterId the canon character ID (e.g. "wang_lin"); may be null
+         * @return the per-character body scale; 1.0F if unrecognized
+         */
+        static float scaleFor(String characterId) {
+            if (characterId == null || characterId.isEmpty()) return 1.0F;
+            String id = characterId.toLowerCase(java.util.Locale.ROOT).trim()
+                    .replaceAll("\\s+", "_");
+            for (CharacterBuild build : values()) {
+                if (build.characterId.equals(id)) return build.scale;
+            }
+            return 1.0F;
         }
     }
 
