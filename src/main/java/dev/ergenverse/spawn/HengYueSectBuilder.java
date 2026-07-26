@@ -639,6 +639,27 @@ public final class HengYueSectBuilder {
                 "Of every ten disciples who attempt foundation, perhaps three succeed. Of those three, one will have a flawed core that limits their entire future. Take your time. A flawed foundation is worse than none."
             ));
         }
+        // CRON-COMPLETIONIST-76: Second lectern with a hint about the mysterious
+        // stone on the mountainside. This guides players toward the Heaven-Defying
+        // Bead discovery without breaking canon — the book is a disciple's journal
+        // recounting a rumor, not a direct quest marker. Canon: Wang Lin found the
+        // bead by luck/exploration on Heng Yue Mountain. This book makes that
+        // exploration discoverable.
+        setBlock(level, base.offset(-3, 1, 2), LECTERN);
+        if (level.getBlockEntity(base.offset(-3, 1, 2)) instanceof LecternBlockEntity hintLectern) {
+            hintLectern.setBook(createWrittenBook(
+                "Disciple's Journal — Year of the Mountain Trial",
+                "Anonymous Junior Disciple",
+                "I failed the entry test again today. Third time. Elder Ouyang says my spiritual root is too weak — I gather qi slower than a snail crawls.",
+                "The other disciples walk past me in the courtyard and do not speak. I am not angry. They earned their place. I did not.",
+                "But I will not give up. Tomorrow I will climb the mountain alone, as the rejected applicants sometimes do. The mountain does not care about spiritual roots. The mountain is patient.",
+                "",
+                "There is a place on the eastern slope, above the stone stairs, where the hillside is bare and the wind blows cold. Some of the older disciples say a strange stone sits there — darker than the others, with veins like frozen lightning.",
+                "They say it is nothing. Just a rock. But once, when the moon was full, I thought I saw it glow.",
+                "Probably my imagination. Probably just the moonlight on amethyst.",
+                "I will go look tomorrow anyway. What is there to lose?"
+            ));
+        }
         // Chest under the lectern table area — blank paper and ink for study
         BlockPos chestPos = base.offset(2, 1, -1);
         setBlock(level, chestPos, CHEST);
@@ -1337,7 +1358,8 @@ public final class HengYueSectBuilder {
     }
 
     /**
-     * CRON-COMPLETIONIST-75: Place the Heaven-Defying Bead's discovery stone.
+     * CRON-COMPLETIONIST-75 / CRON-COMPLETIONIST-76: Place the Heaven-Defying
+     * Bead's discovery stone.
      *
      * <p><b>Canon basis (verified):</b> Per 仙逆编年史 (Baidu Baike) —
      * "王林不合格被拒门外，凭借毅力独自上山遇险后发现天逆珠法宝，被救后
@@ -1349,16 +1371,24 @@ public final class HengYueSectBuilder {
      * when Wang Lin found it, the bead was dormant (DORMANT_STONE stage).
      * Situ Nan later blasted it open (CRACK_OPENED stage).
      *
-     * <p><b>Placement rationale:</b> The stone is placed BESIDE the stone
-     * steps at step 2 (low on the mountain, where a rejected applicant
-     * climbing alone would be). Specifically at {@code c.offset(-5, -4, 26)} —
-     * 1 block west of the step-2 flanking wall (dx=-4), at the same Y as
-     * step 2 (y=c.getY()-4). The player walking up the steps won't see it
-     * directly (it's behind the flanking wall), but exploring off the path
-     * (as Wang Lin did) reveals it. This is canon-accurate: the stone was
-     * not in plain sight, not inside the sect compound, and not in the
-     * Sword Tomb (which is for elite disciples — a rejected applicant
-     * wouldn't have access).
+     * <p><b>CRON-76 fix:</b> CRON-75 placed the stone at {@code c.offset(-5, -4, 26)}
+     * — at the same Y as step 2 of the stone stairs (y=c.getY()-4). However,
+     * the natural terrain surface at (cx-5, cz+26) is at approximately
+     * c.getY() (canonSurfaceHeight there ≈ canonSurfaceHeight at the sect
+     * center, because both are within Heng Yue's terrain warp radius). This
+     * means the stone was placed ~4 blocks BELOW the surface — BURIED under
+     * grass/dirt, invisible to the player. The CRON-75 self-critique #4
+     * flagged this as a 5/10 risk; this round confirms and fixes it.
+     *
+     * <p><b>Fixed placement:</b> The stone is now placed at the SURFACE Y of
+     * its own (x, z) position — computed via {@code canonSurfaceHeight}. This
+     * guarantees the stone is at ground level, visible to a player exploring
+     * off the path. The stone sits 3 blocks east of the step-2 staircase
+     * (dx=+6, just outside the flanking wall at dx=+4), at z=cz+24 (between
+     * step 1 at z=cz+28 and step 3 at z=cz+24). A player walking up the
+     * stairs and looking right (east) will see the stone on the hillside
+     * above the path. This is canon-accurate: Wang Lin found the stone on
+     * the mountain, not buried underground.
      *
      * <p><b>Loot:</b> When broken, the block drops {@code ergenverse:heaven_defying_bead}
      * with NBT matching {@code HeavenDefyingBeadItem.applyInitialOpening()}
@@ -1371,10 +1401,15 @@ public final class HengYueSectBuilder {
      * it on chunk reload — the discovery is permanent.
      */
     private static void buildMysteriousStoneDiscovery(ServerLevel level, BlockPos c) {
-        // Step 2 of buildStoneSteps is at z=c.getZ()+26, y=c.getY()-4.
-        // The flanking wall is at dx=±4. Place the stone 1 block west of
-        // the left flanking wall (dx=-5), at the same Y.
-        BlockPos stonePos = c.offset(-5, -4, 26);
+        // CRON-76: Place at the SURFACE Y of the stone's own (x, z), NOT at
+        // c.getY()-4 (which was buried underground). The stone sits on the
+        // hillside east of the step-2 staircase, visible to a player looking
+        // right while climbing the stairs.
+        int stoneX = c.getX() + 6;   // 2 blocks east of the right flanking wall (dx=+4)
+        int stoneZ = c.getZ() + 24;  // between step 1 (z=cz+28) and step 3 (z=cz+24)
+        int stoneY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator
+                .canonSurfaceHeight(stoneX, stoneZ);
+        BlockPos stonePos = new BlockPos(stoneX, stoneY, stoneZ);
         setBlock(level, stonePos, B.MYSTERIOUS_STONE);
     }
 
