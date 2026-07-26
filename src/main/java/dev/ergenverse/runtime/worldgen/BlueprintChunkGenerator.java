@@ -12,6 +12,8 @@ import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -26,56 +28,106 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 /**
- * BlueprintChunkGenerator — wraps {@link NoiseBasedChunkGenerator} with
- * canon-aware terrain height offsets.
+ * BlueprintChunkGenerator — a true algorithmically-independent chunk generator
+ * for Planet Suzaku whose surface terrain is derived from the
+ * {@link PlanetSuzakuBlueprint}'s canon geography (plus a tiny deterministic
+ * value-noise perturbation seeded by {@link DeterministicSeedHandler#CANON_SEED}),
+ * <em>not</em> from {@code minecraft:overworld} noise.
  *
- * <p><b>CRON-71 design (wrapping, not replacing):</b> CRON-70 shipped a
- * standalone generator that reimplemented terrain from scratch. While it
- * compiled, it had critical gaps: no caves, no ores, no biome surface rules
- * (all surfaces were hard-coded grass), no aquifers. This version wraps
- * Minecraft's own {@link NoiseBasedChunkGenerator} and delegates ALL methods
- * to it, overriding only {@link #getBaseHeight} and {@link #getBaseColumn}
- * to add canon terrain warping from the {@link PlanetSuzakuBlueprint}.
+ * <h2>CRON-COMPLETIONIST-60 — TRUE ALGORITHMIC INDEPENDENCE (point 10)</h2>
  *
- * <p><b>What we get for free from the wrapped NoiseBasedChunkGenerator:</b>
+ * <p>The CRON-71 design (this class's prior form) only wrapped
+ * {@link NoiseBasedChunkGenerator} and overrode {@link #getBaseHeight} to add
+ * canon terrain offsets on top of vanilla noise. The surface shape was still
+ * determined by {@code minecraft:overworld} noise — only nudged a few blocks
+ * per canon location. That was a "noise with offset" generator, not a "blueprint"
+ * generator. It failed the architectural goal of point 10: <i>"Terrain columns
+ * come from the blueprint+layers, not minecraft:overworld noise."</i>
+ *
+ * <p>This version (CRON-COMPLETIONIST-60) closes that gap:
  * <ul>
- *   <li>Cave generation (carvers)</li>
- *   <li>Ore placement (via noise router)</li>
- *   <li>Biome surface rules (grass on plains, sand on beaches, snow on
- *       Snow Domain, podzol/taiga in mountains)</li>
- *   <li>Aquifers (underground water)</li>
- *   <li>Structure placement (villages, temples, etc.)</li>
- *   <li>Bedrock floor generation</li>
- *   <li>Mob spawning</li>
+ *   <li>{@link #fillFromNoise} is overridden to fill each column from
+ *       {@link #canonSurfaceHeight(int, int)}, a pure deterministic function
+ *       of the blueprint's canon locations + {@link DeterministicSeedHandler#CANON_SEED}.</li>
+ *   <li>{@link #getBaseHeight} returns {@link #canonSurfaceHeight(int, int)}.</li>
+ *   <li>{@link #getBaseColumn} returns a column built from
+ *       {@link #canonSurfaceHeight(int, int)} — bedrock at the bottom, stone
+ *       up to the canon surface, water up to sea level, air above.</li>
  * </ul>
  *
- * <p><b>What we add:</b> canon-aware terrain height offsets. Near each
- * canon location in the blueprint, the terrain is raised (mountain sects)
- * or lowered (Sea of Devils, Suzaku Tomb). The offset decays linearly
- * over 200 blocks from the location center. This is deterministic —
- * same result every save.
+ * <p>The wrapped {@link NoiseBasedChunkGenerator} is still used for
+ * {@link #applyCarvers} (caves/ravines) and {@link #buildSurface} (grass/sand/
+ * snow/etc. biome surface rules). Those methods use vanilla's noise-derived
+ * carving and surface data, which is independent of the surface heightmap —
+ * they carve <i>through</i> whatever stone we placed, and apply surface rules
+ * on top of whatever stone surface we placed. This preserves caves, ores
+ * (ores are placed by feature decoration which queries existing stone), and
+ * biome surface variation for free.
  *
- * <p><b>Codec:</b> Registered as {@code ergenverse:blueprint}. The JSON
- * format mirrors {@code minecraft:noise} but with our registry key:
+ * <p><b>Canon-driven surface formula:</b>
  * <pre>{@code
- * {
- *   "generator": {
- *     "type": "ergenverse:blueprint",
- *     "biome_source": { ... },
- *     "settings": "minecraft:overworld"
- *   }
- * }
+ *   canonSurfaceHeight(x, z) =
+ *       BASE_HEIGHT (64, one above sea level)
+ *     + sum_over_nearby_canon_locations(getTerrainWarpForLocation(loc)
+ *                                        * linearDecayFactor(distance, RADIUS=200))
+ *     + canonNoiseVariation(x, z)   // bilinear value noise, 8-block period,
+ *                                    // amplitude ±8, seeded by CANON_SEED
  * }</pre>
+ *
+ * <p>The result: Heng Yue Mountain is always raised +30 near (4200, -1400),
+ * the Sea of Devils is always lowered −30 near (6000, -1184), Wang Family
+ * Village sits at +8 above sea level on a hill, etc. — every playthrough,
+ * regardless of vanilla noise seed. The hand-placed spawn at (3842, -1184)
+ * always lands on the same hill. This is <i>true algorithmic independence</i>
+ * from {@code minecraft:overworld} noise.
+ *
+ * <p><b>Codec &amp; registration:</b> Registered as {@code ergenverse:blueprint}
+ * via {@link ErgenverseChunkGenerators#BLUEPRINT}. The dimension JSON at
+ * {@code data/ergenverse/dimension/planet_suzaku.json} references the generator
+ * type as {@code ergenverse:blueprint} with {@code settings: minecraft:overworld}
+ * (the overworld settings are used for cave/surface-rule configuration, NOT for
+ * surface terrain shape — that comes from this generator).
  *
  * <p><b>Canon fidelity (fact-checked against 仙逆):</b>
  * <ul>
  *   <li>恒岳山 (Heng Yue Mountain): Zhao Country's largest mountain, raised +30.</li>
- *   <li>修魔海 (Sea of Devils): vast perilous sea east of Zhao, lowered -30.</li>
- *   <li>朱雀墓 (Suzaku Tomb): underground inheritance site, depressed -12.</li>
- *   <li>Wang Family Village: "赵国某偏僻小山村" — mountain village, +8.</li>
- *   <li>藤家城 (Teng Family City): powerful family city, +10.</li>
- *   <li>雪域国 (Snow Domain): cold elevated country, +10.</li>
- *   <li>All sect locations: mountain terrain, +12 to +30.</li>
+ *   <li>修魔海 (Sea of Devils): vast perilous sea east of Zhao, lowered −30 → ocean.</li>
+ *   <li>朱雀墓 (Suzaku Tomb): underground inheritance site, surface depressed −12.</li>
+ *   <li>Wang Family Village: "赵国某偏僻小山村" — remote mountain village, raised +8.</li>
+ *   <li>藤家城 (Teng Family City): powerful family city in Zhao, raised +10.</li>
+ *   <li>雪域国 (Snow Domain): cold elevated country, raised +10.</li>
+ *   <li>恒岳派 / 炼魂宗 / 玄道宗 / 洛河门: mountain sects, raised +12 to +15.</li>
+ * </ul>
+ *
+ * <p><b>Known trade-offs (hyper-analytical self-critique):</b>
+ * <ul>
+ *   <li>The base noise variation is bilinear value noise (8-block period,
+ *       ±8 amplitude). This is intentionally crude — its purpose is to break
+ *       the perfectly-flat plateau that pure canon warping would produce
+ *       between canon locations, NOT to mimic natural terrain. Real terrain
+ *       variety will come from biome surface rules (grass/sand/snow) applied
+ *       by {@link #buildSurface}, not from terrain noise.</li>
+ *   <li>Caves are carved by vanilla carvers, which use vanilla noise to
+ *       determine WHERE to carve. Because our surface is canon-shaped (not
+ *       vanilla-noise-shaped), caves may occasionally carve into air (above
+ *       our surface where vanilla expected stone) or fail to carve (below our
+ *       surface where vanilla expected air). The net effect: caves still
+ *       exist but their density/surface-entrance distribution may differ
+ *       from a vanilla world. This is acceptable — the canon world has caves,
+ *       they just don't align with vanilla noise.</li>
+ *   <li>Ores are placed by feature decoration, which queries existing stone
+ *       blocks. Since we fill stone up to the canon surface, ores will be
+ *       placed normally. No loss here.</li>
+ *   <li>Aquifers (underground water) are part of vanilla noise generation.
+ *       Skipping vanilla {@code fillFromNoise} means we lose aquifers. This
+ *       is a known limitation; aquifers are mostly invisible to the player
+ *       (underground water pools) and the Sea of Devils already provides
+ *       surface water via our canon fill.</li>
+ *   <li>The wrapped generator's {@link NoiseBasedChunkGenerator#fillFromNoise}
+ *       is NOT called, so {@code chunk.getOrCreateNoiseChunk(...)} will be
+ *       lazily computed on first access (by {@code applyCarvers} or
+ *       {@code buildSurface}). This is fine — vanilla supports lazy
+ *       NoiseChunk computation.</li>
  * </ul>
  *
  * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.</p>
@@ -99,23 +151,61 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     private final Holder<NoiseGeneratorSettings> noiseSettings;
 
     /**
-     * The wrapped NoiseBasedChunkGenerator that does all the heavy lifting
-     * (caves, ores, surface rules, aquifers, structures).
+     * The wrapped NoiseBasedChunkGenerator that does the heavy lifting
+     * for caves (applyCarvers) and biome surface rules (buildSurface).
+     * <p><b>NOT used for {@code fillFromNoise}</b> — we override that
+     * fully to control surface terrain shape from canon geography.
      */
     private final NoiseBasedChunkGenerator wrapped;
 
+    // ════════════════════════════════════════════════════════════════════
+    //  CANON SURFACE CONSTANTS
+    // ════════════════════════════════════════════════════════════════════
+
     /**
-     * Canon terrain offset radius — how far (in blocks) from a canon location
-     * the terrain is warped. Within this radius, the offset decays linearly.
+     * Canon terrain warp radius — how far (in blocks) from a canon location
+     * the terrain is warped. Within this radius, the warp decays linearly.
      */
     private static final int TERRAIN_WARP_RADIUS = 200;
     private static final int TERRAIN_WARP_RADIUS_SQ = TERRAIN_WARP_RADIUS * TERRAIN_WARP_RADIUS;
 
     /**
-     * Maximum terrain offset in blocks. Positive = raise terrain (mountains).
-     * Negative = lower terrain (sea/tomb).
+     * Maximum terrain warp magnitude in blocks. Positive = raise terrain
+     * (mountains). Negative = lower terrain (sea/tomb).
      */
     private static final int MAX_WARP_HEIGHT = 30;
+
+    /**
+     * Base surface height (one block above sea level 63). All canon warps
+     * and noise variation are added to this. Plains away from canon
+     * locations will sit at y=64 — dry land just above water.
+     */
+    private static final int BASE_SURFACE_HEIGHT = 64;
+
+    /**
+     * Sea level. Columns whose canon surface is below this fill with water
+     * up to sea level (oceans, seas, lakes). Vanilla overworld also uses 63.
+     */
+    private static final int SEA_LEVEL = 63;
+
+    /**
+     * Period of the bilinear value-noise variation, in blocks. 8 means
+     * smooth rolling hills on the scale of half-a-chunk — enough to break
+     * flatness between canon locations without producing noise-dominated
+     * terrain that would mask canon geography.
+     */
+    private static final int NOISE_PERIOD = 8;
+
+    /**
+     * Amplitude of the canon value-noise variation. ±8 blocks gives gentle
+     * rolling hills; large enough to feel natural, small enough that canon
+     * warps (±30) dominate geography.
+     */
+    private static final int NOISE_AMPLITUDE = 8;
+
+    // ════════════════════════════════════════════════════════════════════
+    //  CONSTRUCTOR
+    // ════════════════════════════════════════════════════════════════════
 
     private BlueprintChunkGenerator(BiomeSource biomeSource,
                                      Holder<NoiseGeneratorSettings> noiseSettings) {
@@ -125,7 +215,7 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     }
 
     // ════════════════════════════════════════════════════════════════════
-    //  Delegation to wrapped NoiseBasedChunkGenerator
+    //  CHUNK GENERATION — TRUE ALGORITHMIC INDEPENDENCE
     // ════════════════════════════════════════════════════════════════════
 
     @Override
@@ -133,31 +223,99 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
         return CODEC;
     }
 
+    /**
+     * Fill the chunk with canon-derived terrain.
+     *
+     * <p>This is the heart of the algorithmic independence: surface height
+     * per column comes from {@link #canonSurfaceHeight(int, int)}, NOT from
+     * vanilla noise. The wrapped {@link NoiseBasedChunkGenerator#fillFromNoise}
+     * is NOT called — we generate terrain entirely from canon geography.
+     *
+     * <p>Vanilla {@link #applyCarvers} and {@link #buildSurface} will lazily
+     * compute the {@code NoiseChunk} they need for cave placement and surface
+     * rules; those operations do NOT depend on the surface heightmap that
+     * {@code fillFromNoise} would have produced.
+     */
     @Override
     public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender,
                                                            RandomState randomState,
                                                            StructureManager structureManager,
                                                            ChunkAccess chunk) {
-        // Delegate entirely to NoiseBasedChunkGenerator — this fills the
-        // chunk with noise terrain, stone, caves, aquifers, bedrock, etc.
-        return wrapped.fillFromNoise(executor, blender, randomState, structureManager, chunk);
+        int minY = chunk.getMinBuildHeight();
+        int maxY = chunk.getMaxBuildHeight();
+        int minChunkX = chunk.getPos().getMinBlockX();
+        int minChunkZ = chunk.getPos().getMinBlockZ();
+
+        // Cache block states — BlockState lookup is cheap but de-virtualized
+        // local refs are still marginally faster in a hot loop.
+        final BlockState stone = Blocks.STONE.defaultBlockState();
+        final BlockState water = Blocks.WATER.defaultBlockState();
+        final BlockState bedrock = Blocks.BEDROCK.defaultBlockState();
+
+        // MutableBlockPos avoids per-block allocation. setBlockState on a
+        // ProtoChunk during chunk-gen does NOT trigger lighting/scheduled
+        // tick updates — it just writes the section state.
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+
+        for (int localX = 0; localX < 16; localX++) {
+            for (int localZ = 0; localZ < 16; localZ++) {
+                int worldX = minChunkX + localX;
+                int worldZ = minChunkZ + localZ;
+                int surfaceHeight = canonSurfaceHeight(worldX, worldZ);
+
+                for (int y = minY; y < maxY; y++) {
+                    BlockState state;
+                    if (y == minY) {
+                        state = bedrock;
+                    } else if (y < surfaceHeight) {
+                        state = stone;
+                    } else if (y < SEA_LEVEL) {
+                        state = water;
+                    } else {
+                        // Air — leave the section's default (air). Skip
+                        // setBlockState to avoid 65K useless writes per
+                        // column above the surface.
+                        continue;
+                    }
+
+                    pos.set(worldX, y, worldZ);
+                    chunk.setBlockState(pos, state, false);
+                }
+            }
+        }
+
+        // Synchronous fill — return already-completed future. Vanilla's
+        // NoiseBasedChunkGenerator runs fillFromNoise on a worker thread via
+        // supplyAsync(executor); we don't need to because our fill is
+        // CPU-bound and fast (no noise sampling, no aquifer computation).
+        return CompletableFuture.completedFuture(chunk);
     }
 
-    @Override
-    public void buildSurface(WorldGenRegion region, StructureManager structureManager,
-                             RandomState randomState, ChunkAccess chunk) {
-        // Delegate entirely to NoiseBasedChunkGenerator — this applies
-        // biome surface rules (grass, sand, snow, podzol, etc.)
-        wrapped.buildSurface(region, structureManager, randomState, chunk);
-    }
-
+    /**
+     * Apply cave carvers. Delegated to the wrapped NoiseBasedChunkGenerator
+     * — caves are carved through whatever stone we placed in
+     * {@link #fillFromNoise}. The wrapped generator will lazily compute
+     * {@code NoiseChunk} for this chunk if it hasn't already been computed.
+     */
     @Override
     public void applyCarvers(WorldGenRegion region, long seed, RandomState randomState,
                               net.minecraft.world.level.biome.BiomeManager biomeManager,
                               StructureManager structureManager,
                               ChunkAccess chunk, GenerationStep.Carving step) {
-        // Delegate entirely to NoiseBasedChunkGenerator — caves, ravines
         wrapped.applyCarvers(region, seed, randomState, biomeManager, structureManager, chunk, step);
+    }
+
+    /**
+     * Apply biome surface rules (grass on plains, sand on beaches, snow on
+     * Snow Domain, podzol/taiga in mountains, etc.). Delegated to the wrapped
+     * NoiseBasedChunkGenerator — it queries the chunk's existing stone
+     * surface (which we placed in {@link #fillFromNoise}) and replaces the
+     * top few layers with the biome-appropriate block.
+     */
+    @Override
+    public void buildSurface(WorldGenRegion region, StructureManager structureManager,
+                             RandomState randomState, ChunkAccess chunk) {
+        wrapped.buildSurface(region, structureManager, randomState, chunk);
     }
 
     @Override
@@ -167,7 +325,7 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
 
     @Override
     public int getSeaLevel() {
-        return wrapped.getSeaLevel();
+        return SEA_LEVEL;
     }
 
     @Override
@@ -181,65 +339,96 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
     }
 
     // ════════════════════════════════════════════════════════════════════
-    //  Canon-aware overrides — the whole point of this wrapper
+    //  CANON-AWARE HEIGHT/COLUMN QUERIES — surface shape from canon
     // ════════════════════════════════════════════════════════════════════
 
     /**
-     * Get the surface height at (x, z), with canon terrain offsets applied.
-     * This is the ONLY method we override from the wrapped generator.
+     * Get the surface height at (x, z), derived from canon geography.
+     * This is the ONLY method that determines surface terrain shape —
+     * {@link #fillFromNoise}, {@link #getBaseHeight}, and
+     * {@link #getBaseColumn} all consult this.
      *
-     * <p>The wrapped NoiseBasedChunkGenerator computes the noise-based height
-     * (identical every save via CANON_SEED from DeterministicSeedHandler).
-     * We add canon terrain warping from the blueprint on top.
-     *
-     * <p>This affects: structure placement height, mob spawning height,
-     * initial player spawn height, and heightmap queries.
+     * <p>The height is deterministic: same x, z, CANON_SEED → same result,
+     * every save, every chunk load.
      */
     @Override
     public int getBaseHeight(int x, int z, Heightmap.Types heightmap,
                              LevelHeightAccessor level, RandomState randomState) {
-        int vanillaHeight = wrapped.getBaseHeight(x, z, heightmap, level, randomState);
-        return vanillaHeight + getCanonTerrainOffset(x, z);
+        return canonSurfaceHeight(x, z);
     }
 
     /**
-     * Get the base noise column at (x, z), with canon terrain offsets.
-     * This is used for structure placement and height queries.
-     *
-     * <p>We get the vanilla column from the wrapped generator and then
-     * shift the terrain surface up/down by the canon offset.
+     * Get the base noise column at (x, z), built from canon surface height.
+     * Returns bedrock at the bottom, stone up to the canon surface, water
+     * up to sea level, air above.
      */
     @Override
     public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level,
                                       RandomState randomState) {
-        // Delegate to the wrapped generator. The actual terrain height
-        // modification is done in fillFromNoise via getBaseHeight, which
-        // affects structure placement and spawn positioning.
-        // Shifting the NoiseColumn would require re-implementing noise
-        // interpolation — not worth the complexity.
-        return wrapped.getBaseColumn(x, z, level, randomState);
+        int minY = level.getMinBuildHeight();
+        int height = level.getHeight();
+        int surfaceHeight = canonSurfaceHeight(x, z);
+
+        BlockState[] states = new BlockState[height];
+        for (int i = 0; i < height; i++) {
+            int y = minY + i;
+            if (y == minY) {
+                states[i] = Blocks.BEDROCK.defaultBlockState();
+            } else if (y < surfaceHeight) {
+                states[i] = Blocks.STONE.defaultBlockState();
+            } else if (y < SEA_LEVEL) {
+                states[i] = Blocks.WATER.defaultBlockState();
+            } else {
+                states[i] = Blocks.AIR.defaultBlockState();
+            }
+        }
+        return new NoiseColumn(minY, states);
     }
 
     @Override
     public void addDebugScreenInfo(List<String> info, RandomState randomState, BlockPos pos) {
         wrapped.addDebugScreenInfo(info, randomState, pos);
-        info.add("[Er Gen Verse] Blueprint Chunk Generator (canon-aware)");
+        info.add("[Er Gen Verse] Blueprint Chunk Generator (CANON-DRIVEN TERRAIN)");
         info.add("[Er Gen Verse] Canon Seed: " + DeterministicSeedHandler.CANON_SEED);
-        info.add("[Er Gen Verse] Canon Terrain Offset: " + getCanonTerrainOffset(pos.getX(), pos.getZ()));
+        int sx = pos.getX();
+        int sz = pos.getZ();
+        info.add("[Er Gen Verse] Canon Surface Height: " + canonSurfaceHeight(sx, sz)
+                + " (offset " + getCanonTerrainOffset(sx, sz)
+                + " + noise " + canonNoiseVariation(sx, sz) + ")");
     }
 
     // ════════════════════════════════════════════════════════════════════
-    //  CANON-AWARE TERRAIN SHAPING
+    //  CANON SURFACE HEIGHT — pure deterministic function of (x, z)
     // ════════════════════════════════════════════════════════════════════
 
     /**
-     * Calculate the canon terrain offset at (worldX, worldZ).
+     * Compute the canon-derived surface height at (worldX, worldZ).
+     *
+     * <p>{@code BASE_SURFACE_HEIGHT + canonTerrainOffset + canonNoiseVariation},
+     * clamped to a non-negative minimum (bedrock layer at {@code minY} must
+     * always have at least one stone block above it).
+     */
+    static int canonSurfaceHeight(int worldX, int worldZ) {
+        int offset = getCanonTerrainOffset(worldX, worldZ);
+        int noise = canonNoiseVariation(worldX, worldZ);
+        int h = BASE_SURFACE_HEIGHT + offset + noise;
+        // Clamp: never let the surface drop to or below 1 (need at least
+        // bedrock + stone). Also never exceed a sane cap to avoid Y=320
+        // pillars on canon warps (current max warp is +30, so the cap is
+        // mostly a defensive measure).
+        if (h < 2) return 2;
+        if (h > 256) return 256;
+        return h;
+    }
+
+    /**
+     * Compute the canon terrain offset at (worldX, worldZ).
      * Returns the sum of all nearby canon location influences.
      * Positive = raise terrain (mountain), Negative = lower terrain (sea/tomb).
      *
      * <p>Each canon location has an influence that decays linearly from its
-     * center to TERRAIN_WARP_RADIUS blocks away. The offset is deterministic
-     * and based on the blueprint's geography.
+     * center to {@link #TERRAIN_WARP_RADIUS} blocks away. The offset is
+     * deterministic and based on the blueprint's geography.
      */
     static int getCanonTerrainOffset(int worldX, int worldZ) {
         PlanetSuzakuBlueprint blueprint = PlanetSuzakuBlueprint.canonical();
@@ -260,6 +449,60 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
         }
 
         return totalOffset;
+    }
+
+    /**
+     * Compute a small deterministic value-noise variation at (worldX, worldZ).
+     * Bilinear interpolation of a per-cell hash, scaled to ±{@link #NOISE_AMPLITUDE}.
+     * Period = {@link #NOISE_PERIOD} blocks.
+     *
+     * <p>The hash is seeded by {@link DeterministicSeedHandler#CANON_SEED},
+     * so the variation is identical every save. The purpose of this noise is
+     * NOT to mimic natural terrain — it is to break the perfectly-flat plateau
+     * that pure canon warping would produce between canon locations.
+     */
+    static int canonNoiseVariation(int worldX, int worldZ) {
+        int cellX = Math.floorDiv(worldX, NOISE_PERIOD);
+        int cellZ = Math.floorDiv(worldZ, NOISE_PERIOD);
+        int fracX = worldX - cellX * NOISE_PERIOD;
+        int fracZ = worldZ - cellZ * NOISE_PERIOD;
+
+        // Smoothstep interpolation weights
+        double sx = (double) fracX / NOISE_PERIOD;
+        double sz = (double) fracZ / NOISE_PERIOD;
+        sx = sx * sx * (3 - 2 * sx);
+        sz = sz * sz * (3 - 2 * sz);
+
+        // Four corner values in range [0, 2*NOISE_AMPLITUDE]
+        double v00 = noiseHash(cellX,     cellZ);
+        double v10 = noiseHash(cellX + 1, cellZ);
+        double v01 = noiseHash(cellX,     cellZ + 1);
+        double v11 = noiseHash(cellX + 1, cellZ + 1);
+
+        double ix0 = v00 + (v10 - v00) * sx;
+        double ix1 = v01 + (v11 - v01) * sx;
+        double val = ix0 + (ix1 - ix0) * sz;
+
+        // Center around zero: range [-NOISE_AMPLITUDE, +NOISE_AMPLITUDE]
+        return (int) Math.round(val - NOISE_AMPLITUDE);
+    }
+
+    /**
+     * Deterministic hash → value in [0, 2 * NOISE_AMPLITUDE]. Uses a
+     * splitmix64-style mixing of (cellX, cellZ, CANON_SEED) so that
+     * adjacent cells produce decorrelated values.
+     */
+    private static long noiseHash(int cellX, int cellZ) {
+        long h = DeterministicSeedHandler.CANON_SEED;
+        h ^= (long) cellX * 0x9E3779B97F4A7C15L;
+        h ^= (long) cellZ * 0xC2B2AE3D27D4EB4FL;
+        h ^= h >>> 33;
+        h *= 0xFF51AFD7ED558CCDL;
+        h ^= h >>> 33;
+        h *= 0xC4CEB9FE1A85EC53L;
+        h ^= h >>> 33;
+        // Map to [0, 2 * NOISE_AMPLITUDE]
+        return (h & 0xFFFFFFFFL) % (2L * NOISE_AMPLITUDE + 1);
     }
 
     /**
