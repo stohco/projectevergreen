@@ -407,8 +407,24 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
      * <p>{@code BASE_SURFACE_HEIGHT + canonTerrainOffset + canonNoiseVariation},
      * clamped to a non-negative minimum (bedrock layer at {@code minY} must
      * always have at least one stone block above it).
+     *
+     * <p><b>CRON-COMPLETIONIST-67:</b> this method is now {@code public} so that
+     * structure builders can resolve their center Y from the <i>same canon
+     * authority</i> that the chunk generator uses — eliminating the heightmap
+     * race condition where {@code level.getHeightmapPos(MOTION_BLOCKING_NO_LEAVES, ...)}
+     * would return y=0 or a stale value if the chunk at the canon center wasn't
+     * loaded yet when {@code buildForChunk} fired for an adjacent chunk. The
+     * canon surface height is a pure deterministic function of (x, z) — it does
+     * NOT depend on chunk-load state, so it returns the correct Y every time,
+     * regardless of which chunks are loaded.
+     *
+     * <p>Builders should call this instead of {@code level.getHeightmapPos(...)}:
+     * <pre>{@code
+     *   int surfaceY = BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
+     *   return new BlockPos(SECT_X, surfaceY, SECT_Z);
+     * }</pre>
      */
-    static int canonSurfaceHeight(int worldX, int worldZ) {
+    public static int canonSurfaceHeight(int worldX, int worldZ) {
         int offset = getCanonTerrainOffset(worldX, worldZ);
         int noise = canonNoiseVariation(worldX, worldZ);
         int h = BASE_SURFACE_HEIGHT + offset + noise;

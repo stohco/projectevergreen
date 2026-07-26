@@ -8,7 +8,6 @@ import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -132,9 +131,14 @@ public final class SpawnEventHandler {
                 // to find the village.
                 int spawnX = WangFamilyVillageBuilder.VILLAGE_X - SPAWN_DISTANCE_FROM_VILLAGE;
                 int spawnZ = WangFamilyVillageBuilder.VILLAGE_Z;
-                int spawnY = suzakuLevel.getHeightmapPos(
-                        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                        new BlockPos(spawnX, 0, spawnZ)).getY();
+                // CRON-COMPLETIONIST-67: use canonSurfaceHeight (pure deterministic,
+                // chunk-load-state-independent) instead of getHeightmapPos which
+                // could return y=0 if the spawn chunk wasn't loaded yet at
+                // server-start. The canon surface height is the SAME function
+                // the chunk generator uses to shape the terrain, so the player
+                // spawns exactly on the canon surface every time.
+                int spawnY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator
+                        .canonSurfaceHeight(spawnX, spawnZ);
 
                 // Ensure the chunk is loaded.
                 suzakuLevel.getChunkAt(new BlockPos(spawnX, spawnY, spawnZ));

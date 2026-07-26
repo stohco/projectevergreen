@@ -145,10 +145,21 @@ private static final BlockState REDSTONE_BLOCK = ErgenverseBlocks.BLOOD_STONE.ge
     public static final int SECT_Z = PlanetSuzakuBlueprint.XUAN_DAO_SECT.z;
 
     /**
-     * Resolve the sect center BlockPos. The X/Z come from
-     * {@link PlanetSuzakuBlueprint#XUAN_DAO_SECT}; the Y uses the builder's
-     * hardcoded {@code BASE_Y} (preserves existing Y behavior — the heightmap
-     * migration is a separate round per CRON-65 critique #3).
+     * Resolve the sect center BlockPos.
+     *
+     * <p><b>CRON-COMPLETIONIST-67 NOTE:</b> XuanDaoSectBuilder's district
+     * builders use absolute Y from {@code BASE_Y = -2}, NOT relative Y from
+     * {@code center.getY()}. Switching getSectCenter to use
+     * {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}
+     * would change the center Y but NOT the district placements (they'd
+     * still be at y=-2). This would create a worse inconsistency — the
+     * isAlreadyBuilt guard (which checks center.offset(0, 3, -3)) would
+     * check a surface position while the sect is buried at y=-2.
+     *
+     * <p>Leaving {@code BASE_Y} as the center Y for now. A future round must
+     * refactor all 12+ district builders to use {@code c.getY() + offset}
+     * instead of {@code BASE_Y + offset}, THEN switch getSectCenter to
+     * canonSurfaceHeight. Tracked as CRON-67 critique #4.
      */
     public static BlockPos getSectCenter(ServerLevel level) {
         return new BlockPos(SECT_X, BASE_Y, SECT_Z);

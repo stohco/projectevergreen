@@ -162,12 +162,14 @@ public final class WangFamilyVillageBuilder {
 
     /**
      * The village center is the fixed canonical position. The Y coordinate
-     * is found by scanning the surface height at (VILLAGE_X, VILLAGE_Z).
+     * comes from {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}
+     * — the same pure deterministic function the chunk generator uses to
+     * shape the surface. This eliminates the heightmap race condition
+     * (CRON-67): the canon Y is correct regardless of which chunks are loaded
+     * when this method is called.
      */
     public static BlockPos getVillageCenter(ServerLevel level) {
-        int surfaceY = level.getHeightmapPos(
-                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                new BlockPos(VILLAGE_X, 0, VILLAGE_Z)).getY();
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(VILLAGE_X, VILLAGE_Z);
         return new BlockPos(VILLAGE_X, surfaceY, VILLAGE_Z);
     }
 

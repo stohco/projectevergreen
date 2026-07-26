@@ -175,14 +175,17 @@ public final class TengFamilyCityBuilder {
     public static final int SECT_Z = PlanetSuzakuBlueprint.TENG_FAMILY_CITY.z;
 
     /**
-     * Resolve the city center BlockPos by sampling the surface heightmap at
-     * (SECT_X, SECT_Z). Defensive fallback to y=64 if heightmap returns bogus.
+     * Resolve the city center BlockPos using the canon surface height from
+     * {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}.
+     *
+     * <p>CRON-COMPLETIONIST-67: replaces the prior heightmap-based Y resolution
+     * that had a race condition (if the chunk at (SECT_X, SECT_Z) wasn't
+     * loaded when buildForChunk fired for an adjacent chunk, getHeightmapPos
+     * returned y=0 or stale). The canon surface height is a pure function
+     * of (x, z) — does NOT depend on chunk-load state.
      */
     public static BlockPos getSectCenter(ServerLevel level) {
-        int surfaceY = level.getHeightmapPos(
-                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                new BlockPos(SECT_X, 0, SECT_Z)).getY();
-        if (surfaceY <= 0) surfaceY = 64;
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
         return new BlockPos(SECT_X, surfaceY, SECT_Z);
     }
 

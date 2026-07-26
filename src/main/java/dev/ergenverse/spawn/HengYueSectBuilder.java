@@ -171,17 +171,19 @@ public final class HengYueSectBuilder {
     public static final int SECT_Z = PlanetSuzakuBlueprint.HENG_YUE_SECT.z;
 
     /**
-     * Resolve the sect center BlockPos by sampling the surface heightmap at
-     * (SECT_X, SECT_Z). The Y coordinate is the tallest non-leaves block at
-     * that column (typically the canon terrain height set by
-     * BlueprintChunkGenerator). If the heightmap returns a bogus Y (e.g. the
-     * chunk isn't loaded and MC returns y=0), we fall back to a sane minimum.
+     * Resolve the sect center BlockPos using the canon surface height
+     * from {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}
+     * — the same pure deterministic function the chunk generator uses.
+     *
+     * <p>CRON-COMPLETIONIST-67: this replaces the prior heightmap-based Y
+     * resolution that had a race condition — if the chunk at (SECT_X, SECT_Z)
+     * wasn't loaded when {@code buildForChunk} fired for an adjacent chunk,
+     * {@code level.getHeightmapPos(MOTION_BLOCKING_NO_LEAVES, ...)} would
+     * return y=0 or a stale value. The canon surface height is a pure
+     * function of (x, z) — it does NOT depend on chunk-load state.
      */
     public static BlockPos getSectCenter(ServerLevel level) {
-        int surfaceY = level.getHeightmapPos(
-                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                new BlockPos(SECT_X, 0, SECT_Z)).getY();
-        if (surfaceY <= 0) surfaceY = 64; // defensive fallback
+        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
         return new BlockPos(SECT_X, surfaceY, SECT_Z);
     }
 
