@@ -50,14 +50,31 @@ const nSnow = canonNoise2D('snow.drift')
 
 /** Sample the biome + heightmap at a world (x, z). */
 export function sampleBiome(worldX: number, worldZ: number): BiomeSample {
+  // Distance from spawn village origin (0,0) — Wang Lin's birthplace.
+  const distFromSpawn = Math.sqrt(worldX * worldX + worldZ * worldZ)
+  const SPAWN_FLATTEN_RADIUS = 48 // blocks around spawn kept gentle
+
   // Base elevation: large-scale rolling hills.
   const baseElev =
     nElev(worldX * 0.0035, worldZ * 0.0035) * 12 +
     nElev2(worldX * 0.012, worldZ * 0.012) * 4
-  // Mountain mask: ridges at certain spots.
+  // Mountain mask: ridges at certain spots — suppressed near spawn.
   const mountainMask = Math.max(0, nMountain(worldX * 0.0025, worldZ * 0.0025))
-  const mountainBonus = mountainMask * mountainMask * 60
+  let mountainBonus = mountainMask * mountainMask * 60
+  // Flatten near spawn: taper mountain bonus to zero within SPAWN_FLATTEN_RADIUS.
+  if (distFromSpawn < SPAWN_FLATTEN_RADIUS) {
+    const t = distFromSpawn / SPAWN_FLATTEN_RADIUS
+    const flatten = 1 - (1 - t) * (1 - t) // quadratic falloff
+    mountainBonus *= flatten
+  }
   let height = SEA_LEVEL + 4 + baseElev + mountainBonus
+  // Near spawn, clamp to a gentle plain so the village is walkable.
+  if (distFromSpawn < SPAWN_FLATTEN_RADIUS) {
+    const targetPlain = SEA_LEVEL + 8 // y=64 — a flat shelf above sea level
+    const t = Math.min(1, distFromSpawn / SPAWN_FLATTEN_RADIUS)
+    const blend = 1 - t * t // strong flatten at center, tapers out
+    height = height * (1 - blend * 0.85) + targetPlain * (blend * 0.85)
+  }
   let temp = 0.5 + nTemp(worldX * 0.0015, worldZ * 0.0015) * 0.5
   let hum = 0.5 + nHum(worldX * 0.0017, worldZ * 0.0017) * 0.5
   temp = Math.max(0, Math.min(1, temp))
@@ -72,6 +89,10 @@ export function sampleBiome(worldX: number, worldZ: number): BiomeSample {
   if (mountainBonus > 30) biome = 'mountains'
   if (height < SEA_LEVEL) {
     biome = height < SEA_LEVEL - 4 ? 'sea' : 'coast'
+  }
+  // Force plains near spawn — no mountain biome at the village.
+  if (distFromSpawn < SPAWN_FLATTEN_RADIUS && biome === 'mountains') {
+    biome = 'plains'
   }
 
   // Canon placement bias: scan all placements, find the strongest influence.
@@ -195,12 +216,20 @@ export function generateChunk(chunk: VoxelChunk, chunkX: number, chunkZ: number)
       }
 
       // Decoration: trees in forest/plains.
-      if (sample.biome === 'forest' || (sample.biome === 'plains' && sample.humidity > 0.6)) {
+      // Near spawn, plant a spirit-pine grove at moderate density so the village
+      // feels sheltered but the camera sightlines stay clear.
+      const distFromSpawn2 = Math.sqrt(wx * wx + wz * wz)
+      const nearSpawn = distFromSpawn2 < 48
+      if (sample.biome === 'forest' || (sample.biome === 'plains' && (sample.humidity > 0.6 || nearSpawn))) {
+        // Trees avoid the village plaza (20-block radius around origin) so the
+        // cultivator + camera sightlines + future huts have open ground.
+        const inPlaza = distFromSpawn2 < 20
+        const treeThreshold = nearSpawn ? 0.78 : 0.75
         const treeNoise = nTree(wx * 0.7, wz * 0.7)
-        if (treeNoise > 0.75 && height > SEA_LEVEL && height < CHUNK_SIZE_Y - 16) {
-          plantTree(chunk, lx, height, lz, sample.biome === 'plains' ? 'pine' : pickForestTree(wx, wz))
+        if (!inPlaza && treeNoise > treeThreshold && height > SEA_LEVEL && height < CHUNK_SIZE_Y - 16) {
+          plantTree(chunk, lx, height, lz, nearSpawn ? 'pine' : (sample.biome === 'plains' ? 'pine' : pickForestTree(wx, wz)))
         }
-        if (nBush(wx * 1.1, wz * 1.1) > 0.85) {
+        if (nBush(wx * 1.1, wz * 1.1) > 0.85 && !inPlaza) {
           chunk.set(lx, height, lz, BlockId.PINE_LEAVES)
         }
       } else if (sample.biome === 'swamp' && nTree(wx * 0.6, wz * 0.6) > 0.8) {

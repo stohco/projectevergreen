@@ -6,19 +6,25 @@ import { ChunkManager } from '@/engine/voxels/ChunkManager'
 import { createSky, type SkyHandle } from '@/engine/render/SkySystem'
 import { createPostFX, type PostFXHandle } from '@/engine/render/PostProcessing'
 import { createCultivatorModel, type CultivatorModelHandle } from '@/engine/entities/CultivatorModel'
+import { createPlayer, type PlayerHandle } from '@/engine/entities/PlayerEntity'
 import { BlockId } from '@/engine/voxels/BlockRegistry'
 import { raycastVoxels } from '@/engine/voxels/VoxelRaycaster'
+import { WorldGraph } from '@/engine/graph/WorldGraph'
+import { GraphQueryService } from '@/engine/graph/GraphQueryService'
+import { bootstrapGraphFromCanon } from '@/engine/graph/CanonGraphLoader'
 
 /**
  * WorldCanvas — the Er Gen Verse Three.js mount.
  *
- * Composes the AAA voxel world (ChunkManager + DeterministicTerrainGenerator),
- * the procedural sky dome (Rayleigh + Mie scattering + 28-mansion stars), the
- * volumetric cloud layer (raymarched fBm), a cultivator entity (Wang Lin at
- * the spawn village), and the post-FX stack (SSAO + bloom + god rays + CA +
- * vignette + grain + ACES color grade).
+ * CRITICAL: The player is NOT Wang Lin. The player is a first-class actor
+ * (ivory-robed traveler, Qi Condensation). Wang Lin exists in the world as
+ * a manifestation NPC (jade-green robes, Foundation realm) — his real self
+ * is on the Immortal Astral Continent (仙罡大陆). The player encounters
+ * Wang Lin's manifestation.
  *
- * Camera is fly-mode (WASD + mouse look + space/shift up/down).
+ * Camera: third-person, behind the player avatar.
+ * Controls: WASD move, mouse look, SPACE jump/fly up, SHIFT sprint,
+ *           F toggle flight (御剑飞行, costs qi).
  */
 export default function WorldCanvas() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -31,6 +37,9 @@ export default function WorldCanvas() {
     y: 0,
     z: 0,
     biome: 'plains',
+    qi: 100,
+    maxQi: 100,
+    realm: 'Qi Condensation',
   })
 
   useEffect(() => {
@@ -43,7 +52,10 @@ export default function WorldCanvas() {
     let chunkMgr: ChunkManager
     let sky: SkyHandle
     let postFX: PostFXHandle
-    let cultivator: CultivatorModelHandle
+    let player: PlayerHandle
+    let wanglinNpc: CultivatorModelHandle
+    let graph: WorldGraph
+    let graphQuery: GraphQueryService
     let frameId = 0
     let resizeObserver: ResizeObserver | null = null
     let pointerLocked = false
@@ -59,23 +71,24 @@ export default function WorldCanvas() {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       renderer.setSize(container.clientWidth, container.clientHeight)
       renderer.toneMapping = THREE.ACESFilmicToneMapping
-      renderer.toneMappingExposure = 1.4
+      renderer.toneMappingExposure = 1.2
       renderer.shadowMap.enabled = true
       renderer.shadowMap.type = THREE.PCFSoftShadowMap
       renderer.outputColorSpace = THREE.SRGBColorSpace
       container.appendChild(renderer.domElement)
 
       scene = new THREE.Scene()
-      scene.fog = new THREE.FogExp2(0xbcd6ff, 0.0012)
+      // Soft atmospheric fog — not too dense, lets terrain colors through.
+      scene.fog = new THREE.FogExp2(0xc8d6e8, 0.0008)
 
       camera = new THREE.PerspectiveCamera(
-        70,
+        65,
         container.clientWidth / container.clientHeight,
         0.1,
         4000,
       )
-      camera.position.set(6, 74, 10)
-      camera.lookAt(0, 73, 4)
+      camera.position.set(4, 73, 14)
+      camera.lookAt(4, 66, 8)
 
       // Sky.
       sky = createSky(scene)
@@ -84,43 +97,83 @@ export default function WorldCanvas() {
       chunkMgr = new ChunkManager(scene)
       chunkMgr.updateCamera(camera.position.x, camera.position.z)
 
-      // Post-FX.
+      // Post-FX — subtle, not crushing.
       postFX = createPostFX(renderer, scene, camera, container.clientWidth, container.clientHeight, {
         ssao: false,
         bloom: true,
-        bloomStrength: 0.4,
+        bloomStrength: 0.3,
         chromaticAberration: false,
         vignette: true,
         grain: false,
         colorGrade: true,
       })
 
-      // Wang Lin cultivator at spawn village.
-      cultivator = createCultivatorModel('foundation', false)
-      cultivator.group.position.set(0, 72, 4)
-      cultivator.group.scale.setScalar(1.5) // make him visible from a distance
-      cultivator.setAnimation('idle')
-      cultivator.setAuraVisible(true)
-      scene.add(cultivator.group)
+      // ---- PLAYER (the user, NOT Wang Lin) ----
+      // Ivory white robes, Qi Condensation, starts near the village plaza.
+      // Start at y=70 (well above the y=64 platform) so gravity settles
+      // the player onto the surface, not inside it.
+      player = createPlayer({
+        name: 'Traveler',
+        nameCn: '行道者',
+        spiritRoot: 'wood',
+        startPosition: [4, 70, 8],
+      })
+      player.setAnimation('idle')
+      scene.add(player.group)
 
-      // Spotlight on Wang Lin so he's always visible.
-      const cultivatorSpot = new THREE.SpotLight(0xfff4d6, 4.0, 40, Math.PI / 5, 0.5, 1.5)
-      cultivatorSpot.position.set(0, 90, 8)
-      cultivatorSpot.target.position.set(0, 72, 4)
-      scene.add(cultivatorSpot)
-      scene.add(cultivatorSpot.target)
+      // ---- WANG LIN (manifestation NPC) ----
+      // Jade green robes, Foundation realm. Stands in the village plaza.
+      // His real self is on the Immortal Astral Continent (仙罡大陆).
+      wanglinNpc = createCultivatorModel('foundation', false)
+      wanglinNpc.group.position.set(0, 64, 0)
+      wanglinNpc.group.scale.setScalar(1.2)
+      wanglinNpc.setAnimation('idle')
+      wanglinNpc.setAuraVisible(false)
+      scene.add(wanglinNpc.group)
 
-      // Spirit-vein glow point light near spawn.
-      const veinLight = new THREE.PointLight(0x9be15d, 2.0, 80, 1.6)
-      veinLight.position.set(-80, 65, -120)
+      // Soft ambient + hemisphere light (no harsh specular).
+      const ambient = new THREE.AmbientLight(0xbcd6ff, 0.4)
+      scene.add(ambient)
+
+      const hemi = new THREE.HemisphereLight(0xbcd6ff, 0x4a3520, 0.6)
+      scene.add(hemi)
+
+      // Spirit-vein glow point light near the cliff of 天逆珠.
+      const veinLight = new THREE.PointLight(0x9be15d, 1.5, 40, 1.8)
+      veinLight.position.set(-80, 68, -120)
       scene.add(veinLight)
+
+      // ---- WorldGraph + GraphQueryService ----
+      graph = new WorldGraph()
+      graphQuery = new GraphQueryService(graph)
+      // Bootstrap asynchronously (fetches /ri_canon_database.json).
+      bootstrapGraphFromCanon(graph).then((count) => {
+        console.log('[WorldCanvas] graph bootstrapped:', count, 'nodes')
+        ;(globalThis as { __ergenGraph?: unknown }).__ergenGraph = graph
+        ;(globalThis as { __ergenGraphQuery?: unknown }).__ergenGraphQuery = graphQuery
+      }).catch((e) => {
+        console.error('[WorldCanvas] graph bootstrap failed', e)
+      })
 
       setStatus('live')
 
-      // ---- Input: fly-mode camera ----
+      // ---- Input: third-person camera + player movement ----
       const onKeyDown = (e: KeyboardEvent) => {
         keys[e.code] = true
         if (e.code === 'Space') e.preventDefault()
+        // Toggle flight.
+        if (e.code === 'KeyF' && !player.state.isFlying) {
+          if (player.consumeQi(10)) {
+            player.setFlying(true)
+            console.log('[Player] sword-flight engaged (御剑飞行)')
+          }
+        } else if (e.code === 'KeyF' && player.state.isFlying) {
+          player.setFlying(false)
+        }
+        // Toggle meditation.
+        if (e.code === 'KeyQ') {
+          player.setMeditating(!player.state.isMeditating)
+        }
       }
       const onKeyUp = (e: KeyboardEvent) => {
         keys[e.code] = false
@@ -135,18 +188,10 @@ export default function WorldCanvas() {
       }
       const onMouseMove = (e: MouseEvent) => {
         if (!pointerLocked) return
-        // Simple yaw/pitch on the camera.
-        const yaw = (camera.userData.yaw ?? 0) - e.movementX * 0.0025
-        const pitch = (camera.userData.pitch ?? -0.3) - e.movementY * 0.0025
+        const yaw = (camera.userData.yaw ?? 0) - e.movementX * 0.003
+        const pitch = (camera.userData.pitch ?? -0.2) - e.movementY * 0.003
         camera.userData.yaw = yaw
-        camera.userData.pitch = Math.max(-1.4, Math.min(1.4, pitch))
-        // Apply to camera.
-        const dir = new THREE.Vector3(
-          Math.sin(yaw) * Math.cos(pitch),
-          Math.sin(pitch),
-          Math.cos(yaw) * Math.cos(pitch),
-        )
-        camera.lookAt(camera.position.clone().add(dir))
+        camera.userData.pitch = Math.max(-1.2, Math.min(0.8, pitch))
       }
       window.addEventListener('keydown', onKeyDown)
       window.addEventListener('keyup', onKeyUp)
@@ -154,11 +199,8 @@ export default function WorldCanvas() {
       document.addEventListener('pointerlockchange', onPointerLockChange)
       document.addEventListener('mousemove', onMouseMove)
 
-      // Initial yaw/pitch.
       camera.userData.yaw = 0
-      camera.userData.pitch = -0.3
-      const initDir = new THREE.Vector3(0, -0.3, -1).normalize()
-      camera.lookAt(camera.position.clone().add(initDir))
+      camera.userData.pitch = -0.2
 
       // ---- Main loop ----
       const clock = new THREE.Clock()
@@ -166,58 +208,104 @@ export default function WorldCanvas() {
       let fpsFrames = 0
       let fpsTimer = 0
       let hudTimer = 0
-      let cultivatorYaw = 0
-      let cultivatorSwapped = false
+      let wanglinYaw = 0
 
       const animate = () => {
         frameId = requestAnimationFrame(animate)
         const dt = Math.min(clock.getDelta(), 0.1)
 
-        // Camera movement (fly-mode).
-        const speed = (keys['ShiftLeft'] || keys['ShiftRight'] ? 60 : 25) * dt
-        const fwd = new THREE.Vector3()
-        camera.getWorldDirection(fwd)
-        fwd.y = 0
-        fwd.normalize()
-        const right = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0)).normalize()
-        if (keys['KeyW']) camera.position.addScaledVector(fwd, speed)
-        if (keys['KeyS']) camera.position.addScaledVector(fwd, -speed)
-        if (keys['KeyA']) camera.position.addScaledVector(right, -speed)
-        if (keys['KeyD']) camera.position.addScaledVector(right, speed)
-        if (keys['Space']) camera.position.y += speed
-        if (keys['KeyC']) camera.position.y -= speed
-
-        // Reapply lookAt after position change (yaw/pitch already set).
+        // ---- Player movement ----
+        const speed = (player.state.isFlying ? 40 : (keys['ShiftLeft'] ? 12 : 6)) * dt
         const yaw = camera.userData.yaw ?? 0
-        const pitch = camera.userData.pitch ?? -0.3
-        const dir = new THREE.Vector3(
-          Math.sin(yaw) * Math.cos(pitch),
-          Math.sin(pitch),
-          Math.cos(yaw) * Math.cos(pitch),
-        )
-        camera.lookAt(camera.position.clone().add(dir))
+        const fwd = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw))
+        const right = new THREE.Vector3(fwd.z, 0, -fwd.x)
 
-        // Update systems.
+        let moved = false
+        if (keys['KeyW']) { player.state.position.addScaledVector(fwd, speed); moved = true }
+        if (keys['KeyS']) { player.state.position.addScaledVector(fwd, -speed); moved = true }
+        if (keys['KeyA']) { player.state.position.addScaledVector(right, -speed); moved = true }
+        if (keys['KeyD']) { player.state.position.addScaledVector(right, speed); moved = true }
+
+        if (player.state.isFlying) {
+          if (keys['Space']) { player.state.position.y += speed; moved = true }
+          if (keys['KeyC']) { player.state.position.y -= speed; moved = true }
+          // Flight costs qi.
+          if (!player.consumeQi(2.0 * dt)) {
+            player.setFlying(false) // out of qi, stop flying
+          }
+        } else {
+          // Ground movement: simple gravity + surface snap.
+          // Check the block at the player's feet level.
+          const feetBlock = chunkMgr.getBlock(
+            Math.floor(player.state.position.x),
+            Math.floor(player.state.position.y),
+            Math.floor(player.state.position.z),
+          )
+          const belowFeet = chunkMgr.getBlock(
+            Math.floor(player.state.position.x),
+            Math.floor(player.state.position.y) - 1,
+            Math.floor(player.state.position.z),
+          )
+          if (feetBlock !== BlockId.AIR) {
+            // Inside a solid block — push up.
+            player.state.position.y = Math.floor(player.state.position.y) + 1
+          } else if (belowFeet === BlockId.AIR) {
+            // Falling.
+            player.state.position.y -= 20 * dt
+          } else {
+            // Standing on surface — snap to integer.
+            player.state.position.y = Math.floor(player.state.position.y) + 0.0
+          }
+          if (keys['Space']) {
+            // Jump.
+            player.state.position.y += 1.5
+          }
+        }
+
+        // Player yaw follows camera yaw.
+        player.setYaw(yaw + Math.PI) // face away from camera (third-person)
+
+        // Player animation.
+        if (player.state.isMeditating) {
+          player.setAnimation('cast')
+        } else if (player.state.isFlying) {
+          player.setAnimation('fly')
+        } else if (moved) {
+          player.setAnimation(keys['ShiftLeft'] ? 'run' : 'walk')
+        } else {
+          player.setAnimation('idle')
+        }
+
+        player.update(dt)
+
+        // ---- Wang Lin NPC idle (slowly rotates, meditates occasionally) ----
+        wanglinYaw += dt * 0.2
+        wanglinNpc.setYaw(wanglinYaw)
+        wanglinNpc.update(dt)
+
+        // ---- Third-person camera ----
+        // Camera follows behind and above the player.
+        const camDistance = 6
+        const camHeight = 3
+        const pitch = camera.userData.pitch ?? -0.2
+        const camOffset = new THREE.Vector3(
+          -Math.sin(yaw) * Math.cos(pitch) * camDistance,
+          -Math.sin(pitch) * camDistance + camHeight,
+          -Math.cos(yaw) * Math.cos(pitch) * camDistance,
+        )
+        const targetCamPos = player.state.position.clone().add(camOffset)
+        camera.position.lerp(targetCamPos, 0.15) // smooth follow
+        camera.lookAt(player.state.position.x, player.state.position.y + 1.5, player.state.position.z)
+
+        // ---- Update systems ----
         chunkMgr.updateCamera(camera.position.x, camera.position.z)
         chunkMgr.update(dt)
         sky.update(dt)
-        cultivator.update(dt)
-
-        // Idle animation cycling for demo.
-        cultivatorYaw += dt * 0.3
-        if (!cultivatorSwapped) {
-          cultivator.setYaw(cultivatorYaw)
-          if (cultivatorYaw > Math.PI * 2) {
-            cultivator.setAnimation('cast')
-            setTimeout(() => cultivator.setAnimation('idle'), 2000)
-            cultivatorSwapped = true
-          }
-        }
 
         postFX.update(dt)
         postFX.composer.render()
 
-        // FPS counter.
+        // ---- FPS counter + HUD ----
         fpsAccum += dt
         fpsFrames++
         fpsTimer += dt
@@ -233,17 +321,51 @@ export default function WorldCanvas() {
               fps,
               chunks: chunkMgr.loadedCount(),
               tris: chunkMgr.triangleCount(),
-              x: Math.floor(camera.position.x),
-              y: Math.floor(camera.position.y),
-              z: Math.floor(camera.position.z),
-              biome: (() => {
-                const chunk = chunkMgr.getChunkAt(camera.position.x, camera.position.z)
-                return chunk?.biomeTag ?? 'unknown'
-              })(),
+              x: Math.floor(player.state.position.x),
+              y: Math.floor(player.state.position.y),
+              z: Math.floor(player.state.position.z),
+              biome: chunkMgr.getChunkAt(player.state.position.x, player.state.position.z)?.biomeTag ?? 'unknown',
+              qi: Math.floor(player.state.qi),
+              maxQi: player.state.maxQi,
+              realm: player.state.realm.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
             })
           }
         }
       }
+
+      // ---- Village structures: spawn after chunks load ----
+      const villageSpawnedRef = { done: false }
+      const trySpawnVillage = () => {
+        if (villageSpawnedRef.done) return
+        const centerChunk = chunkMgr.getChunkAt(0, 0)
+        if (!centerChunk) return
+        villageSpawnedRef.done = true
+        // Meditation platform: 5x5 jade brick at y=64.
+        for (let dx = -2; dx <= 2; dx++) {
+          for (let dz = -2; dz <= 2; dz++) {
+            chunkMgr.setBlock(dx, 64, dz, BlockId.JADE_BRICKS)
+          }
+        }
+        // Four stone lanterns at the platform corners.
+        const lanternPositions: Array<[number, number]> = [[-6, -6], [6, -6], [-6, 6], [6, 6]]
+        for (const [lx, lz] of lanternPositions) {
+          chunkMgr.setBlock(lx, 64, lz, BlockId.COBBLESTONE)
+          chunkMgr.setBlock(lx, 65, lz, BlockId.COBBLESTONE)
+          chunkMgr.setBlock(lx, 66, lz, BlockId.JADE_BRICKS)
+          chunkMgr.setBlock(lx, 67, lz, BlockId.JADE_BRICKS)
+          chunkMgr.setBlock(lx, 68, lz, BlockId.BLUE_TILE)
+        }
+        // Spirit-pine windbreak to the north.
+        for (let dx = -8; dx <= 8; dx += 2) {
+          chunkMgr.setBlock(dx, 64, -10, BlockId.PINE_WOOD)
+          chunkMgr.setBlock(dx, 65, -10, BlockId.PINE_WOOD)
+          chunkMgr.setBlock(dx, 66, -10, BlockId.PINE_WOOD)
+          chunkMgr.setBlock(dx, 67, -10, BlockId.PINE_LEAVES)
+          chunkMgr.setBlock(dx, 68, -10, BlockId.PINE_LEAVES)
+        }
+      }
+      const villageInterval = setInterval(trySpawnVillage, 200)
+
       animate()
 
       resizeObserver = new ResizeObserver(() => {
@@ -256,59 +378,60 @@ export default function WorldCanvas() {
       })
       resizeObserver.observe(container)
 
-      // Bridge to HUD: register globalThis.__ergenBridge so the HUD's
-      // useEngine hook can pull live state from the running engine.
+      // ---- Bridge to HUD ----
+      // CRITICAL: player is NOT Wang Lin. Player name is "Traveler" (行道者).
+      // Wang Lin is an NPC.
       const bridge = {
         getState() {
           return {
             player: {
-              name: '王林 Wang Lin',
-              realm: 'Foundation Establishment',
-              realmCn: '筑基期',
-              qi: 480,
-              maxQi: 500,
-              health: 100,
-              maxHealth: 100,
-              position: [camera.position.x, camera.position.y, camera.position.z] as [number, number, number],
+              name: player.state.name,
+              nameCn: player.state.nameCn,
+              realm: player.state.realm.replace(/_/g, ' '),
+              realmCn: '凝气期',
+              qi: Math.floor(player.state.qi),
+              maxQi: player.state.maxQi,
+              health: player.state.health,
+              maxHealth: player.state.maxHealth,
+              position: [player.state.position.x, player.state.position.y, player.state.position.z] as [number, number, number],
               hostility: 0,
               faction: 'independent',
+              isFlying: player.state.isFlying,
+              isMeditating: player.state.isMeditating,
+              spiritRoot: player.state.spiritRoot,
             },
             world: {
               time: sky.getTimeOfDay(),
               weather: 'clear' as const,
-              biome: chunkMgr.getChunkAt(camera.position.x, camera.position.z)?.biomeTag ?? 'plains',
-              nearbyActors: [],
+              biome: chunkMgr.getChunkAt(player.state.position.x, player.state.position.z)?.biomeTag ?? 'plains',
+              nearbyActors: [
+                { name: 'Wang Lin (Manifestation)', nameCn: '王林 (化身)', realm: 'Foundation Establishment', hostility: 0, distance: Math.floor(player.state.position.distanceTo(wanglinNpc.group.position)) },
+              ],
               nearbyThreats: [],
-              spiritVeinNear: false,
+              spiritVeinNear: player.state.position.distanceTo(new THREE.Vector3(-80, 0, -120)) < 100,
             },
             debug: {
               fps: hud.fps,
               frameTime: 16.6,
               chunks: chunkMgr.loadedCount(),
               tris: chunkMgr.triangleCount(),
-              pos: [camera.position.x, camera.position.y, camera.position.z],
+              pos: [player.state.position.x, player.state.position.y, player.state.position.z],
               yaw: (camera.userData.yaw ?? 0),
               pitch: (camera.userData.pitch ?? 0),
-              biome: chunkMgr.getChunkAt(camera.position.x, camera.position.z)?.biomeTag ?? 'unknown',
+              biome: chunkMgr.getChunkAt(player.state.position.x, player.state.position.z)?.biomeTag ?? 'unknown',
               mem: 0,
-              entities: 1,
+              entities: 2, // player + Wang Lin
               drawCalls: 0,
             },
           }
         },
-        saveWorld(_key: string) {
-          // Future: serialize WorldDeltaStore.
-        },
-        loadWorld(_key: string) {
-          // Future: deserialize WorldDeltaStore.
-        },
-        onTick(_cb: () => void) {
-          return () => {}
-        },
+        saveWorld(_key: string) { /* Future: serialize WorldDeltaStore */ },
+        loadWorld(_key: string) { /* Future: deserialize WorldDeltaStore */ },
+        onTick(_cb: () => void) { return () => {} },
       }
       ;(globalThis as { __ergenBridge?: unknown }).__ergenBridge = bridge
 
-      // Block placement / removal on mouse buttons (uses raycaster).
+      // Block placement / removal on mouse buttons (player writes through facade).
       const onMouseDown = (e: MouseEvent) => {
         if (!pointerLocked) return
         const origin = camera.position.clone()
@@ -322,10 +445,10 @@ export default function WorldCanvas() {
         )
         if (!hit) return
         if (e.button === 0) {
-          // Remove block.
+          // Player breaks block (PLAYER provenance).
           chunkMgr.setBlock(hit.block.x, hit.block.y, hit.block.z, BlockId.AIR)
         } else if (e.button === 2) {
-          // Place block adjacent (on the face normal).
+          // Player places block (PLAYER provenance).
           const px = hit.block.x + hit.normal.x
           const py = hit.block.y + hit.normal.y
           const pz = hit.block.z + hit.normal.z
@@ -337,6 +460,7 @@ export default function WorldCanvas() {
 
       return () => {
         cancelAnimationFrame(frameId)
+        clearInterval(villageInterval)
         resizeObserver?.disconnect()
         window.removeEventListener('keydown', onKeyDown)
         window.removeEventListener('keyup', onKeyUp)
@@ -345,7 +469,8 @@ export default function WorldCanvas() {
         document.removeEventListener('pointerlockchange', onPointerLockChange)
         document.removeEventListener('mousemove', onMouseMove)
         sky.dispose()
-        cultivator.dispose()
+        player.dispose()
+        wanglinNpc.dispose()
         postFX.dispose()
         renderer.dispose()
         renderer.domElement.remove()
@@ -375,6 +500,8 @@ export default function WorldCanvas() {
         <div>TRI <span className="text-emerald-300">{(hud.tris / 1000).toFixed(1)}k</span></div>
         <div>POS <span className="text-emerald-300">{hud.x},{hud.y},{hud.z}</span></div>
         <div>BIO <span className="text-emerald-300">{hud.biome}</span></div>
+        <div>QI <span className="text-emerald-300">{hud.qi}/{hud.maxQi}</span></div>
+        <div>RLM <span className="text-emerald-300">{hud.realm}</span></div>
       </div>
       {/* Bottom-center lore */}
       <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 select-none text-center font-serif text-amber-100/60">
@@ -386,7 +513,9 @@ export default function WorldCanvas() {
       {/* Controls hint */}
       <div className="pointer-events-none absolute bottom-4 right-4 z-10 select-none rounded-md border border-amber-500/30 bg-black/50 px-3 py-2 font-mono text-[10px] text-amber-100/70 backdrop-blur-sm">
         <div>WASD move · MOUSE look</div>
-        <div>SPACE up · C down · SHIFT fast</div>
+        <div>SPACE jump/fly · SHIFT sprint</div>
+        <div>F sword-flight (御剑飞行, 2qi/s)</div>
+        <div>Q meditate (3x qi regen)</div>
         <div>L-CLICK break · R-CLICK place</div>
       </div>
     </div>

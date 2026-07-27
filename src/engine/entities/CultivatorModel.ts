@@ -79,9 +79,10 @@ void main() {
   if (vUv.y > 0.30 && vUv.y < 0.40) base = uSashColor;
   // Trim at edges.
   if (vUv.y < 0.04 || vUv.y > 0.96) base = uTrimColor;
-  // Fake lambert.
+  // Fake lambert — kept bright (0.65..1.0) so the cultivator is always visible.
   vec3 N = normalize(vNormal);
-  float diff = clamp(dot(N, vec3(0.4, 0.9, 0.3)), 0.3, 1.0);
+  float diff = clamp(dot(N, vec3(0.4, 0.9, 0.3)), 0.0, 1.0);
+  diff = 0.65 + diff * 0.35; // remap to 0.65..1.0
   gl_FragColor = vec4(base * diff, 1.0);
 }
 `
