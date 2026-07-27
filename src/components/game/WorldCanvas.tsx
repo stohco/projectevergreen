@@ -122,10 +122,16 @@ export default function WorldCanvas() {
 
       // ---- Wang Family Village (compiled from semantic data) ----
       const villageGroup = compileSettlement(WANG_FAMILY_VILLAGE)
-      // The village buildings have Y=0 in semantic data; we need to place
-      // them at terrain height. The settlement origin is (0,0,0) so buildings
-      // are already at the right XZ. We lift the entire group to terrain Y.
-      villageGroup.position.y = terrainHeight(0, 0)
+      // Each building sits on the terrain at its own XZ position — NOT a
+      // single Y for the whole settlement. This prevents floating buildings
+      // on sloped terrain. We walk the village group and adjust each building
+      // child to terrainHeight(child.x, child.z).
+      villageGroup.children.forEach((child) => {
+        const buildingX = villageGroup.position.x + child.position.x
+        const buildingZ = villageGroup.position.z + child.position.z
+        const groundY = terrainHeight(buildingX, buildingZ)
+        child.position.y = groundY
+      })
       scene.add(villageGroup)
 
       // ---- Player (NOT Wang Lin) ----
@@ -171,34 +177,60 @@ export default function WorldCanvas() {
       setStatus('live')
 
       // ---- Input ----
+      // Y key = toggle camera lock (NMS-style).
+      // When unlocked: right-click-drag orbits the camera, left-click interacts with UI.
+      // When locked: mouse looks around + crosshair appears.
       const onKeyDown = (e: KeyboardEvent) => {
         keys[e.code] = true
         if (e.code === 'Space') e.preventDefault()
+        if (e.code === 'KeyY') {
+          // Toggle camera lock.
+          if (pointerLocked) {
+            document.exitPointerLock?.()
+          } else {
+            renderer.domElement.requestPointerLock?.()
+          }
+        }
         if (e.code === 'KeyF') {
-          // Sword-flight requires qi. A mortal (maxQi=0) cannot fly.
           if (player.state.isFlying) { player.setFlying(false) }
           else if (player.state.maxQi > 0 && player.consumeQi(10)) { player.setFlying(true) }
         }
         if (e.code === 'KeyQ') {
-          // Meditation requires at least some qi capacity.
           if (player.state.maxQi > 0) player.setMeditating(!player.state.isMeditating)
         }
       }
       const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false }
-      // NMS-style camera: the canvas click does NOT lock the pointer.
-      // The pointer is locked ONLY via the dedicated "Lock Camera" button.
-      // When unlocked, the mouse cursor is free for UI interaction.
-      // When locked, mouse looks around + crosshair appears for aiming/combat.
+
+      // Right-click-drag to orbit camera when unlocked (NMS-style free camera).
+      let rightMouseDown = false
+      const onMouseDown = (e: MouseEvent) => {
+        if (e.button === 2) {
+          rightMouseDown = true
+          e.preventDefault()
+        }
+      }
+      const onMouseUp = (e: MouseEvent) => {
+        if (e.button === 2) {
+          rightMouseDown = false
+        }
+      }
+      const onContextMenu = (e: Event) => { e.preventDefault() }
+
       const onPointerLockChange = () => {
         pointerLocked = document.pointerLockElement === renderer.domElement
         setCameraLocked(pointerLocked)
       }
       const onMouseMove = (e: MouseEvent) => {
-        if (!pointerLocked) return
-        camera.userData.yaw = (camera.userData.yaw ?? 0) - e.movementX * 0.003
-        camera.userData.pitch = Math.max(-1.0, Math.min(0.6, (camera.userData.pitch ?? -0.15) - e.movementY * 0.003))
+        if (pointerLocked) {
+          // Locked: mouse always looks.
+          camera.userData.yaw = (camera.userData.yaw ?? 0) - e.movementX * 0.003
+          camera.userData.pitch = Math.max(-1.0, Math.min(0.6, (camera.userData.pitch ?? -0.15) - e.movementY * 0.003))
+        } else if (rightMouseDown) {
+          // Unlocked + right-click-drag: orbit camera.
+          camera.userData.yaw = (camera.userData.yaw ?? 0) - e.movementX * 0.005
+          camera.userData.pitch = Math.max(-1.0, Math.min(0.6, (camera.userData.pitch ?? -0.15) - e.movementY * 0.005))
+        }
       }
-      // Scroll-to-zoom: works whether locked or unlocked.
       const onWheel = (e: WheelEvent) => {
         e.preventDefault()
         const zoom = (camera.userData.zoom ?? 7) + e.deltaY * 0.01
@@ -206,6 +238,9 @@ export default function WorldCanvas() {
       }
       window.addEventListener('keydown', onKeyDown)
       window.addEventListener('keyup', onKeyUp)
+      window.addEventListener('mousedown', onMouseDown)
+      window.addEventListener('mouseup', onMouseUp)
+      window.addEventListener('contextmenu', onContextMenu)
       renderer.domElement.addEventListener('wheel', onWheel, { passive: false })
       document.addEventListener('pointerlockchange', onPointerLockChange)
       document.addEventListener('mousemove', onMouseMove)
@@ -370,6 +405,9 @@ export default function WorldCanvas() {
         resizeObserver?.disconnect()
         window.removeEventListener('keydown', onKeyDown)
         window.removeEventListener('keyup', onKeyUp)
+        window.removeEventListener('mousedown', onMouseDown)
+        window.removeEventListener('mouseup', onMouseUp)
+        window.removeEventListener('contextmenu', onContextMenu)
         renderer.domElement.removeEventListener('wheel', onWheel)
         document.removeEventListener('pointerlockchange', onPointerLockChange)
         document.removeEventListener('mousemove', onMouseMove)
@@ -401,7 +439,7 @@ export default function WorldCanvas() {
         </div>
       )}
 
-      {/* Unlock/Lock Camera button (top-center) */}
+      {/* Lock/Unlock Camera button (top-center). Also toggled by Y key. */}
       <button
         onClick={() => {
           if (cameraLocked) {
@@ -413,7 +451,7 @@ export default function WorldCanvas() {
         }}
         className="absolute left-1/2 top-4 z-30 -translate-x-1/2 select-none rounded-md border border-amber-500/40 bg-black/60 px-4 py-1.5 font-mono text-[10px] uppercase tracking-widest text-amber-200/80 backdrop-blur-sm transition-colors hover:border-amber-400/60 hover:text-amber-100"
       >
-        {cameraLocked ? '🔓 Unlock Camera (ESC)' : '🔒 Lock Camera (Mouse Look)'}
+        {cameraLocked ? '🔓 Unlock Camera [Y]' : '🔒 Lock Camera [Y]'}
       </button>
 
       {/* Top-left status */}
@@ -437,8 +475,9 @@ export default function WorldCanvas() {
         <div>WASD move · SCROLL zoom</div>
         <div>SPACE jump · SHIFT sprint</div>
         <div>F sword-flight (needs qi) · Q meditate (needs qi)</div>
-        <div className="mt-1 text-amber-300/70">Lock Camera button → mouse look + crosshair</div>
-        <div className="text-amber-300/70">ESC → unlock camera (free cursor)</div>
+        <div className="mt-1 text-amber-300/70">Y = toggle camera lock</div>
+        <div className="text-amber-300/70">Right-click-drag = orbit camera (unlocked)</div>
+        <div className="text-amber-300/70">ESC = unlock camera</div>
       </div>
     </div>
   )
