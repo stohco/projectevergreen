@@ -156,6 +156,8 @@ function compileHut(group: THREE.Group, building: CanonBuilding): void {
 
   // Door (closed by default, openable via E key interaction).
   // The door pivots on its left edge (hinge) to swing open.
+  // When closed, the door is collidable (blocks the player). When open,
+  // it's non-collidable (player can walk through the doorway).
   const door = new THREE.Mesh(
     new THREE.BoxGeometry(doorWidth * 0.9, doorHeight * 0.95, 0.05),
     doorMat,
@@ -165,8 +167,10 @@ function compileHut(group: THREE.Group, building: CanonBuilding): void {
   door.position.set(-doorWidth * 0.45, doorHeight / 2, d / 2 + 0.05)
   door.userData.isDoor = true
   door.userData.isOpen = false
+  door.userData.collidable = true // closed door blocks movement
   door.userData.buildingId = building.id
   door.userData.openAngle = -Math.PI / 2.5 // swing inward
+  door.name = 'door'
   door.castShadow = true
   group.add(door)
 

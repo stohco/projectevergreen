@@ -245,6 +245,8 @@ export default function WorldCanvas() {
           if (nearestDoor) {
             const isOpen = nearestDoor.userData.isOpen as boolean
             nearestDoor.userData.isOpen = !isOpen
+            // Toggle collidable: closed door blocks movement, open door doesn't.
+            nearestDoor.userData.collidable = isOpen
             console.log(`[Door] ${nearestDoor.userData.buildingId} ${isOpen ? 'closed' : 'opened'}`)
           }
         }

@@ -56,17 +56,16 @@ export class MeshCollisionSystem {
 
   /**
    * Check if the player can move from (prevX, prevZ) to (newX, newZ) without
-   * hitting a wall. Returns the corrected position.
+   * hitting a wall or closed door. Returns the corrected position.
    *
    * Strategy: cast rays in 8 directions from the new position. If any ray
-   * hits a wall within playerRadius, push the player back along that ray
-   * to just outside the hit point. This prevents:
-   *   - Walking through walls (ray stops you)
-   *   - Clipping into walls when sliding (8-direction coverage)
-   *   - Teleporting through walls (we check from the NEW position, not push to faces)
+   * hits a collidable mesh within playerRadius, push the player back along
+   * that ray to just outside the hit point.
    *
-   * Doorways work naturally: the door gap has no wall mesh, so rays pass
-   * through and the player can enter.
+   * Doorways: the door gap has no wall mesh, so rays pass through the gap.
+   * But a CLOSED door IS a collidable mesh — it blocks the player. When the
+   * door is opened (userData.collidable = false), it stops blocking and the
+   * player can walk through.
    */
   resolve(
     newX: number, newY: number, newZ: number,
@@ -74,12 +73,13 @@ export class MeshCollisionSystem {
   ): { x: number; z: number; hit: boolean } {
     if (this.collidables.length === 0) return { x: newX, z: newZ, hit: false }
 
+    // Filter to only currently-collidable meshes (doors toggle this).
+    const activeCollidables = this.collidables.filter((m) => m.userData.collidable !== false)
+
     let resultX = newX
     let resultZ = newZ
     let hit = false
 
-    // Cast rays in 8 directions from the player's body center.
-    // The ray origin is at the player's chest height (newY + 0.9).
     const origin = new THREE.Vector3(resultX, newY + 0.9, resultZ)
     const directions = [
       new THREE.Vector3(1, 0, 0),   // +X (east)
@@ -95,12 +95,10 @@ export class MeshCollisionSystem {
     for (const dir of directions) {
       this.raycaster.set(origin, dir)
       this.raycaster.far = this.playerRadius
-      const intersects = this.raycaster.intersectObjects(this.collidables, false)
+      const intersects = this.raycaster.intersectObjects(activeCollidables, false)
       if (intersects.length > 0) {
-        const hitPoint = intersects[0].point
         const dist = intersects[0].distance
         if (dist < this.playerRadius) {
-          // Push the player back along the reverse of the ray direction.
           const pushDist = this.playerRadius - dist + 0.01
           resultX -= dir.x * pushDist
           resultZ -= dir.z * pushDist
@@ -111,17 +109,15 @@ export class MeshCollisionSystem {
       }
     }
 
-    // Also check the movement direction specifically — if moving into a wall,
-    // stop the player at the wall surface.
+    // Movement-direction ray.
     const moveDir = new THREE.Vector3(newX - prevX, 0, newZ - prevZ)
     if (moveDir.lengthSq() > 0.0001) {
       moveDir.normalize()
       const moveOrigin = new THREE.Vector3(prevX, newY + 0.9, prevZ)
       this.raycaster.set(moveOrigin, moveDir)
       this.raycaster.far = this.playerRadius + moveDir.length() * 0.5
-      const moveHits = this.raycaster.intersectObjects(this.collidables, false)
+      const moveHits = this.raycaster.intersectObjects(activeCollidables, false)
       if (moveHits.length > 0 && moveHits[0].distance < this.playerRadius) {
-        // Can't move in this direction — stay at previous position on this axis.
         resultX = prevX
         resultZ = prevZ
         hit = true
