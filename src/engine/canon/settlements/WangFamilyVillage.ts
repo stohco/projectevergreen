@@ -31,7 +31,7 @@ export const WANG_FAMILY_VILLAGE: CanonSettlement = {
   parentLocationId: 'L:zhao_country',
   regionId: 'L:zhao_country',
   position: [0, 0, 0], // world origin — player spawns here
-  radius: 40,
+  radius: 80, // ~100 families need a bigger village
   canonStatus: 'unverified', // village name is unverified; birthplace is canon
   buildings: [
     // ---- Wang Lin's childhood home ----
@@ -201,11 +201,17 @@ export const WANG_FAMILY_VILLAGE: CanonSettlement = {
       nameCn: '村门',
       purpose: 'gate',
       shellTheme: 'wooden_gate',
-      position: [0, 0, 12],
+      position: [0, 0, 20],
       rotation: 0,
       size: [5, 4, 1],
       rooms: [],
     },
+    // ---- Additional village huts (~100 families per canon) ----
+    // These are simple mortal homes arranged in a loose grid around the plaza.
+    // Canon: Wang Lin's village had ~100 families of the impoverished Wang
+    // Family Carpenter Clan. We place ~20 visible huts (representing the
+    // densest part of the village).
+    ...generateVillageHuts(),
   ],
   roads: [
     {
@@ -238,4 +244,41 @@ export const WANG_FAMILY_VILLAGE: CanonSettlement = {
       element: 'wood',
     },
   ],
+}
+
+/**
+ * Generate ~20 village huts arranged in a loose grid around the plaza.
+ * Canon: Wang Family Village had ~100 families (CANON_RI_COMPLETE_WORLD.md L34).
+ * We place 20 visible huts representing the densest part of the village.
+ * Each hut is a simple mortal home (poor_village_wood theme, 5x3x4 meters).
+ */
+function generateVillageHuts() {
+  const huts: typeof WANG_FAMILY_VILLAGE.buildings = []
+  const positions: Array<[number, number, number]> = [
+    // East row
+    [14, 0, 6], [18, 0, 2], [22, 0, -2], [16, 0, -8], [20, 0, -12],
+    // West row
+    [-14, 0, 6], [-18, 0, 2], [-22, 0, -2], [-16, 0, -8], [-20, 0, -12],
+    // North row (behind plaza)
+    [-8, 0, -16], [-2, 0, -18], [4, 0, -16], [10, 0, -18],
+    // South row (near gate)
+    [-10, 0, 14], [-4, 0, 16], [6, 0, 14], [12, 0, 16],
+    // Scattered
+    [-24, 0, 6], [24, 0, 8],
+  ]
+  for (let i = 0; i < positions.length; i++) {
+    const [x, y, z] = positions[i]
+    huts.push({
+      id: `building:hut_${i}`,
+      name: `Villager Hut ${i + 1}`,
+      nameCn: `村民屋 ${i + 1}`,
+      purpose: 'home',
+      shellTheme: 'poor_village_wood',
+      position: [x, y, z],
+      rotation: Math.floor(Math.random() * 360),
+      size: [5, 3, 4],
+      rooms: [],
+    })
+  }
+  return huts
 }

@@ -168,12 +168,20 @@ function compileHut(group: THREE.Group, building: CanonBuilding): void {
   rightWall.castShadow = true
   group.add(rightWall)
 
-  // Door (closed)
+  // Door (closed by default, openable via E key interaction).
+  // The door pivots on its left edge (hinge) to swing open.
   const door = new THREE.Mesh(
     new THREE.BoxGeometry(doorWidth * 0.9, doorHeight * 0.95, 0.05),
     doorMat,
   )
-  door.position.set(0, doorHeight / 2, d / 2 + 0.05)
+  // Offset the door geometry so its left edge is at x=0 (the hinge).
+  door.geometry.translate(doorWidth * 0.45, 0, 0)
+  door.position.set(-doorWidth * 0.45, doorHeight / 2, d / 2 + 0.05)
+  door.userData.isDoor = true
+  door.userData.isOpen = false
+  door.userData.buildingId = building.id
+  door.userData.openAngle = -Math.PI / 2.5 // swing inward
+  door.castShadow = true
   group.add(door)
 
   // Pitched roof — two slanted planes forming a triangle prism.

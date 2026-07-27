@@ -82,12 +82,14 @@ export class CollisionSystem {
   }
 
   /**
-   * Resolve collision: given a desired position (x, y, z) and the previous
-   * position (prevX, prevY, prevZ), push the entity out of any solid AABB
-   * it's intersecting. Returns the corrected position.
+   * Resolve collision using the PREVIOUS position to determine which side
+   * the entity came from. This prevents the teleport-through-walls bug
+   * where a fast-moving player gets pushed to the wrong side.
    *
-   * This is a simple push-out: for each axis, if the entity is inside a box,
-   * push it back to the nearest edge.
+   * Strategy: for each colliding box, determine which face the entity
+   * entered from (based on prevPos relative to box center), then push
+   * back to that face. This ensures the entity is pushed BACK to where
+   * it came from, not through to the other side.
    */
   resolve(
     x: number, y: number, z: number,
@@ -95,23 +97,52 @@ export class CollisionSystem {
     radius: number, height: number,
   ): { x: number; y: number; z: number } {
     let result = { x, y, z }
-    // Check up to 3 times (for corner cases where pushing out of one box
-    // pushes into another).
-    for (let iter = 0; iter < 3; iter++) {
+    for (let iter = 0; iter < 4; iter++) {
       const hit = this.checkCylinder(result.x, result.y, result.z, radius, height)
       if (!hit) break
       const b = hit.box
-      // Push out along the axis of least penetration.
-      const penX = result.x < (b.minX + b.maxX) / 2 ? result.x - b.minX : result.x - b.maxX
-      const penZ = result.z < (b.minZ + b.maxZ) / 2 ? result.z - b.minZ : result.z - b.maxZ
-      const absPenX = Math.abs(penX) + radius
-      const absPenZ = Math.abs(penZ) + radius
-      if (absPenX < absPenZ) {
-        // Push along X.
-        result.x = penX < 0 ? b.minX - radius : b.maxX + radius
+      const centerX = (b.minX + b.maxX) / 2
+      const centerZ = (b.minZ + b.maxZ) / 2
+
+      // Determine which face the entity entered from using the PREVIOUS position.
+      // If prevX was outside the box on the -X side, push to -X face.
+      // If prevX was outside on +X side, push to +X face.
+      // If prevZ was outside on -Z side, push to -Z face.
+      // If prevZ was outside on +Z side, push to +Z face.
+      // If both were outside (corner entry), push along the axis of greater movement.
+
+      const wasOutsideMinX = prevX + radius <= b.minX
+      const wasOutsideMaxX = prevX - radius >= b.maxX
+      const wasOutsideMinZ = prevZ + radius <= b.minZ
+      const wasOutsideMaxZ = prevZ - radius >= b.maxZ
+
+      const movedX = Math.abs(x - prevX)
+      const movedZ = Math.abs(z - prevZ)
+
+      if (wasOutsideMinX) {
+        // Came from -X side — push back to -X face.
+        result.x = b.minX - radius
+      } else if (wasOutsideMaxX) {
+        // Came from +X side — push back to +X face.
+        result.x = b.maxX + radius
+      } else if (wasOutsideMinZ) {
+        // Came from -Z side.
+        result.z = b.minZ - radius
+      } else if (wasOutsideMaxZ) {
+        // Came from +Z side.
+        result.z = b.maxZ + radius
       } else {
-        // Push along Z.
-        result.z = penZ < 0 ? b.minZ - radius : b.maxZ + radius
+        // Entity was already inside the box (shouldn't happen normally).
+        // Fall back to nearest-face push based on current position.
+        const distMinX = Math.abs(result.x - b.minX)
+        const distMaxX = Math.abs(result.x - b.maxX)
+        const distMinZ = Math.abs(result.z - b.minZ)
+        const distMaxZ = Math.abs(result.z - b.maxZ)
+        const minDist = Math.min(distMinX, distMaxX, distMinZ, distMaxZ)
+        if (minDist === distMinX) result.x = b.minX - radius
+        else if (minDist === distMaxX) result.x = b.maxX + radius
+        else if (minDist === distMinZ) result.z = b.minZ - radius
+        else result.z = b.maxZ + radius
       }
     }
     return result

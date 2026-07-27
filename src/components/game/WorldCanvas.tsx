@@ -101,9 +101,28 @@ export default function WorldCanvas() {
       scene.add(fillLight)
 
       // ---- Smooth terrain (NOT blocky voxels) ----
-      const terrainSize = 400
-      const terrain = createSmoothTerrain(0, 0, terrainSize, 120)
+      // Planet Suzaku is an ocean-dominated planet (CANON_RI_COMPLETE_WORLD.md L14).
+      // The terrain is vast — 800 blocks across — with oceans to the horizon.
+      // Wang Family Village sits on a coastal plain in Zhao Country.
+      const terrainSize = 800
+      const terrain = createSmoothTerrain(0, 0, terrainSize, 160)
       scene.add(terrain)
+
+      // ---- Ocean plane (Planet Suzaku is ocean-dominated) ----
+      // A vast blue plane at sea level (y=0) extending to the horizon.
+      const oceanGeo = new THREE.PlaneGeometry(terrainSize * 3, terrainSize * 3)
+      oceanGeo.rotateX(-Math.PI / 2)
+      const oceanMat = new THREE.MeshStandardMaterial({
+        color: 0x1a4a7a,
+        roughness: 0.2,
+        metalness: 0.1,
+        transparent: true,
+        opacity: 0.85,
+      })
+      const ocean = new THREE.Mesh(oceanGeo, oceanMat)
+      ocean.position.y = -0.5
+      ocean.receiveShadow = true
+      scene.add(ocean)
 
       // ---- Spirit pines (instanced, not blocky) ----
       const pines = createSpiritPines(0, 0, 200, 150)
@@ -216,6 +235,30 @@ export default function WorldCanvas() {
         }
         if (e.code === 'KeyQ') {
           if (player.state.maxQi > 0) player.setMeditating(!player.state.isMeditating)
+        }
+        if (e.code === 'KeyE') {
+          // Door interaction: find the nearest door within 3 blocks and toggle it.
+          const doors: THREE.Mesh[] = []
+          villageGroup.traverse((child) => {
+            const mesh = child as THREE.Mesh
+            if (mesh.userData?.isDoor) doors.push(mesh)
+          })
+          let nearestDoor: THREE.Mesh | null = null
+          let nearestDist = 3.0
+          for (const door of doors) {
+            const doorWorldPos = new THREE.Vector3()
+            door.getWorldPosition(doorWorldPos)
+            const dist = player.state.position.distanceTo(doorWorldPos)
+            if (dist < nearestDist) {
+              nearestDist = dist
+              nearestDoor = door
+            }
+          }
+          if (nearestDoor) {
+            const isOpen = nearestDoor.userData.isOpen as boolean
+            nearestDoor.userData.isOpen = !isOpen
+            console.log(`[Door] ${nearestDoor.userData.buildingId} ${isOpen ? 'closed' : 'opened'}`)
+          }
         }
       }
       const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false }
@@ -337,6 +380,15 @@ export default function WorldCanvas() {
         wanglinYaw += dt * 0.15
         wanglinNpc.setYaw(wanglinYaw)
         wanglinNpc.update(dt)
+
+        // Animate doors (swing open/closed).
+        villageGroup.traverse((child) => {
+          const mesh = child as THREE.Mesh
+          if (mesh.userData?.isDoor) {
+            const targetAngle = mesh.userData.isOpen ? mesh.userData.openAngle : 0
+            mesh.rotation.y += (targetAngle - mesh.rotation.y) * Math.min(1, dt * 8)
+          }
+        })
 
         // Third-person camera (smooth follow + scroll zoom).
         const pitch = camera.userData.pitch ?? -0.15
@@ -506,10 +558,9 @@ export default function WorldCanvas() {
       <div className="pointer-events-none absolute bottom-4 right-4 z-10 select-none rounded-md border border-amber-500/30 bg-black/50 px-3 py-2 font-mono text-[10px] text-amber-100/70 backdrop-blur-sm">
         <div>WASD move · SCROLL zoom</div>
         <div>SPACE jump · SHIFT sprint</div>
-        <div>F sword-flight (needs qi) · Q meditate (needs qi)</div>
-        <div className="mt-1 text-amber-300/70">Y = toggle camera lock</div>
-        <div className="text-amber-300/70">Right-click-drag = orbit camera (unlocked)</div>
-        <div className="text-amber-300/70">ESC = unlock camera</div>
+        <div>E open/close door · F sword-flight (needs qi)</div>
+        <div>Q meditate (needs qi) · Y toggle camera lock</div>
+        <div className="text-amber-300/70">Right-click-drag = orbit · ESC = unlock</div>
       </div>
     </div>
   )
