@@ -8,6 +8,7 @@ import { createCultivatorModel, type CultivatorModelHandle } from '@/engine/enti
 import { createPlayer, type PlayerHandle } from '@/engine/entities/PlayerEntity'
 import { createSmoothTerrain, createSpiritPines, createGrassTufts, createRocks, createSpiritFlowers, terrainHeight } from '@/engine/world/SmoothTerrain'
 import { createOcean, type OceanHandle } from '@/engine/world/OceanSystem'
+import { CanonSpawner } from '@/engine/world/CanonSpawner'
 import { compileSettlement } from '@/engine/world/compiler/SettlementCompiler'
 import { WANG_FAMILY_VILLAGE } from '@/engine/canon/settlements/WangFamilyVillage'
 import { MeshCollisionSystem } from '@/engine/world/CollisionSystem'
@@ -141,6 +142,15 @@ export default function WorldCanvas() {
       // ---- Spirit flowers (qi-infused xianxia atmosphere) ----
       const flowers = createSpiritFlowers(0, 0, 150, 60)
       scene.add(flowers)
+
+      // ---- Canon herbs + beasts (from ri_canon_herbs.json + ri_canon_beast_ecology.json) ----
+      // Canon: Qi-Gathering Grass, Foundation-Root Vine, Sword-Edge Moss grow
+      // in Zhao Country. Stone-Backed Boar, Cloud-Walk Rabbit, Iron-Feathered
+      // Hawk, Teng-Clan War Hound roam Zhao Country.
+      const spawner = new CanonSpawner(scene)
+      spawner.spawnZhaoHerbs(0, 0, 120)
+      spawner.spawnZhaoBeasts(0, 0, 150)
+      console.log('[WorldCanvas] canon entities spawned:', spawner.getEntities().length)
 
       // ---- Wang Family Village (compiled from semantic data) ----
       const villageGroup = compileSettlement(WANG_FAMILY_VILLAGE)
@@ -370,7 +380,20 @@ export default function WorldCanvas() {
           }
         }
 
-        player.setYaw(yaw)
+        // Player facing: when camera is LOCKED, face camera direction.
+        // When camera is UNLOCKED, face the direction the player is walking.
+        if (pointerLocked) {
+          player.setYaw(yaw)
+        } else if (moved) {
+          // Face the movement direction (atan2 of movement vector).
+          const moveX = player.state.position.x - prevPos.x
+          const moveZ = player.state.position.z - prevPos.z
+          if (Math.abs(moveX) > 0.001 || Math.abs(moveZ) > 0.001) {
+            const moveYaw = Math.atan2(moveX, moveZ)
+            player.setYaw(moveYaw)
+          }
+        }
+        // When not moving and camera unlocked, keep current facing.
         if (player.state.isMeditating) player.setAnimation('cast')
         else if (player.state.isFlying) player.setAnimation('fly')
         else if (moved) player.setAnimation(keys['ShiftLeft'] ? 'run' : 'walk')
@@ -407,6 +430,7 @@ export default function WorldCanvas() {
         // Update systems.
         sky.update(dt)
         ocean.update(dt)
+        spawner.update(dt, terrainHeight)
         postFX.update(dt)
         postFX.composer.render()
 
@@ -466,8 +490,17 @@ export default function WorldCanvas() {
               biome: 'plains',
               nearbyActors: [
                 { name: 'Wang Lin (Manifestation)', nameCn: '王林 (化身)', realm: 'Foundation Establishment', hostility: 0, distance: Math.floor(player.state.position.distanceTo(wanglinNpc.group.position)) },
+                ...spawner.getNearby(player.state.position.x, player.state.position.z, 50).map((e) => ({
+                  name: e.name,
+                  nameCn: e.nameCn ?? '',
+                  realm: e.type === 'beast' ? 'Spirit Beast' : 'Herb',
+                  hostility: e.type === 'beast' ? (e.name.includes('War Hound') ? 80 : 20) : 0,
+                  distance: Math.floor(player.state.position.distanceTo(e.position)),
+                })),
               ],
-              nearbyThreats: [],
+              nearbyThreats: spawner.getNearby(player.state.position.x, player.state.position.z, 30)
+                .filter((e) => e.type === 'beast')
+                .map((e) => ({ name: e.name, distance: Math.floor(player.state.position.distanceTo(e.position)) })),
               spiritVeinNear: player.state.position.distanceTo(new THREE.Vector3(-80, 0, -120)) < 100,
             },
             debug: {
