@@ -101,16 +101,20 @@ export function createSpiritPines(
   size: number,
   count: number,
 ): THREE.InstancedMesh {
-  // Tree geometry: a trunk (cylinder) + foliage (cone) — fuller, NMS-style.
-  const trunkGeo = new THREE.CylinderGeometry(0.2, 0.3, 3, 8)
-  trunkGeo.translate(0, 1.5, 0)
-  // Triple-layer foliage for a fuller canopy.
-  const foliageGeo = new THREE.ConeGeometry(2.0, 4, 8)
+  // Tree geometry: thick trunk + FULL spherical foliage clusters.
+  // NOT thin cones — actual 3D foliage that looks like a pine tree.
+  const trunkGeo = new THREE.CylinderGeometry(0.25, 0.35, 4, 10)
+  trunkGeo.translate(0, 2, 0)
+
+  // Foliage: 3 overlapping SPHERES (not cones) for a full, bushy canopy.
+  // Spheres look solid from every angle — no invisible thin-cone problem.
+  const foliageGeo = new THREE.IcosahedronGeometry(2.2, 1) // low-poly sphere, looks organic
   foliageGeo.translate(0, 4.5, 0)
-  const foliageGeo2 = new THREE.ConeGeometry(1.6, 3, 8)
+  const foliageGeo2 = new THREE.IcosahedronGeometry(1.8, 1)
   foliageGeo2.translate(0, 5.8, 0)
-  const foliageGeo3 = new THREE.ConeGeometry(1.1, 2.2, 8)
+  const foliageGeo3 = new THREE.IcosahedronGeometry(1.3, 1)
   foliageGeo3.translate(0, 7.0, 0)
+
   // Merge into a single geometry.
   const trunkPos = trunkGeo.attributes.position
   const foliagePos = foliageGeo.attributes.position
@@ -216,42 +220,44 @@ export function createGrassTufts(
   size: number,
   count: number,
 ): THREE.InstancedMesh {
-  // Grass tuft geometry — a small bushy cluster of 4 crossed planes.
-  // Each plane is short (0.25m) and wide (0.3m), forming a dense clump.
+  // Grass tuft geometry — a cluster of thin, flat blades that curve outward.
+  // NOT crossed planes (those look like christmas trees). Each blade is a
+  // thin triangle that curves, and we place 6-8 of them in a fan pattern.
   const tuftGeo = new THREE.BufferGeometry()
   const positions: number[] = []
   const normals: number[] = []
-  const uvs: number[] = []
   const indices: number[] = []
-  // 4 crossed planes, each 0.3m wide, 0.25m tall.
-  const bladeW = 0.15
-  const bladeH = 0.25
-  for (let i = 0; i < 4; i++) {
-    const angle = (i / 4) * Math.PI
+  const numBlades = 7
+  const bladeHeight = 0.18
+  const bladeWidth = 0.04
+
+  for (let i = 0; i < numBlades; i++) {
+    const angle = (i / numBlades) * Math.PI * 2 + Math.random() * 0.3
     const cos = Math.cos(angle)
     const sin = Math.sin(angle)
-    const baseIdx = i * 4
-    // 4 vertices per plane (2 triangles).
-    positions.push(
-      -bladeW * cos, 0, -bladeW * sin, // bottom-left
-      bladeW * cos, 0, bladeW * sin,   // bottom-right
-      bladeW * cos * 0.2, bladeH, bladeW * sin * 0.2,  // top-right (tapered)
-      -bladeW * cos * 0.2, bladeH, -bladeW * sin * 0.2, // top-left (tapered)
-    )
-    // Normal pointing outward from the plane.
-    normals.push(sin, 0.5, -cos, sin, 0.5, -cos, sin, 0.8, -cos, sin, 0.8, -cos)
-    uvs.push(0, 0, 1, 0, 1, 1, 0, 1)
-    indices.push(baseIdx, baseIdx + 1, baseIdx + 2, baseIdx, baseIdx + 2, baseIdx + 3)
+    // Each blade: a thin triangle from base to tip, curving slightly.
+    const baseIdx = i * 3 // 3 vertices per blade (1 triangle)
+    // Base center
+    positions.push(0, 0, 0)
+    // Base left (offset perpendicular to blade direction)
+    positions.push(-bladeWidth * sin, 0, bladeWidth * cos)
+    // Tip (curved outward + up)
+    const curve = 0.02 * (i % 2 === 0 ? 1 : -1)
+    positions.push(cos * curve, bladeHeight, sin * curve)
+    // Normal: pointing outward + up
+    normals.push(cos * 0.5, 0.8, sin * 0.5)
+    normals.push(cos * 0.5, 0.8, sin * 0.5)
+    normals.push(cos * 0.5, 0.9, sin * 0.5)
+    indices.push(baseIdx, baseIdx + 1, baseIdx + 2)
   }
   tuftGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
   tuftGeo.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3))
-  tuftGeo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2))
   tuftGeo.setIndex(indices)
 
-  // Grass material — rich green, alpha-tested for soft edges.
+  // Grass material — rich green, double-sided so blades are visible from all angles.
   const grassMat = new THREE.MeshStandardMaterial({
-    color: 0x5a9a3a,
-    roughness: 0.85,
+    color: 0x4a8a2a,
+    roughness: 0.8,
     metalness: 0.0,
     side: THREE.DoubleSide,
     transparent: false,
@@ -267,53 +273,42 @@ export function createGrassTufts(
   let placed = 0
   let attempts = 0
 
-  // Poisson-disk-like distribution: reject points too close to previous ones.
-  // This creates organic patches with natural gaps, not a uniform scatter.
-  const minDist = 0.8 // minimum distance between tufts
+  // Poisson-disk-like distribution.
+  const minDist = 0.6
   const placedPositions: Array<{ x: number; z: number }> = []
-  const maxCheck = Math.min(20, placedPositions.length) // only check recent
+  const maxCheck = 20
 
   while (placed < count && attempts < count * 4) {
     attempts++
     const x = centerX + (Math.random() - 0.5) * size
     const z = centerZ + (Math.random() - 0.5) * size
     const h = rbfTerrainHeight(x, z)
-    // Grass only on grass terrain (not water, not snow, not high rock).
     if (h < 1 || h > 8) continue
-    // No grass in the village plaza (15-block radius).
     const dist = Math.sqrt(x * x + z * z)
     if (dist < 15) continue
 
-    // Poisson-disk check: reject if too close to recent placements.
     let tooClose = false
     const start = Math.max(0, placedPositions.length - maxCheck)
     for (let i = start; i < placedPositions.length; i++) {
       const p = placedPositions[i]
       const dx = p.x - x
       const dz = p.z - z
-      if (dx * dx + dz * dz < minDist * minDist) {
-        tooClose = true
-        break
-      }
+      if (dx * dx + dz * dz < minDist * minDist) { tooClose = true; break }
     }
     if (tooClose) continue
-
     placedPositions.push({ x, z })
 
     dummy.position.set(x, h, z)
     dummy.rotation.y = Math.random() * Math.PI * 2
-    // Vary scale: some tufts small, some larger — natural variation.
-    const scale = 0.6 + Math.random() * 0.8
+    const scale = 0.8 + Math.random() * 0.6
     dummy.scale.set(scale, scale, scale)
     dummy.updateMatrix()
     instanced.setMatrixAt(placed, dummy.matrix)
 
-    // Per-instance color: rich green spectrum (emerald to lime).
+    // Green spectrum variation.
     const v = 0.7 + Math.random() * 0.3
-    const hue = 0.25 + Math.random() * 0.08 // green range
-    color.setHSL(hue, 0.5 * v, 0.35 * v)
+    color.setHSL(0.25 + Math.random() * 0.06, 0.55 * v, 0.30 * v)
     instanced.setColorAt(placed, color)
-
     placed++
   }
   instanced.count = placed

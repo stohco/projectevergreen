@@ -9,6 +9,7 @@ import { createPlayer, type PlayerHandle } from '@/engine/entities/PlayerEntity'
 import { createSmoothTerrain, createSpiritPines, createGrassTufts, createRocks, createSpiritFlowers, terrainHeight } from '@/engine/world/SmoothTerrain'
 import { compileSettlement } from '@/engine/world/compiler/SettlementCompiler'
 import { WANG_FAMILY_VILLAGE } from '@/engine/canon/settlements/WangFamilyVillage'
+import { CollisionSystem } from '@/engine/world/CollisionSystem'
 import { WorldGraph } from '@/engine/graph/WorldGraph'
 import { GraphQueryService } from '@/engine/graph/GraphQueryService'
 import { bootstrapGraphFromCanon } from '@/engine/graph/CanonGraphLoader'
@@ -126,13 +127,31 @@ export default function WorldCanvas() {
       // single Y for the whole settlement. This prevents floating buildings
       // on sloped terrain. We walk the village group and adjust each building
       // child to terrainHeight(child.x, child.z).
+      const collision = new CollisionSystem()
       villageGroup.children.forEach((child) => {
         const buildingX = villageGroup.position.x + child.position.x
         const buildingZ = villageGroup.position.z + child.position.z
         const groundY = terrainHeight(buildingX, buildingZ)
         child.position.y = groundY
+        // Register collision AABB for this building.
+        // Use the building's world position + a reasonable bounding box.
+        // The building group has walls/roof — we use a box slightly smaller
+        // than the building footprint for walkable doorways.
+        const buildingData = WANG_FAMILY_VILLAGE.buildings.find((b) => b.id === child.name?.replace('building:', ''))
+        if (buildingData) {
+          const [w, h, d] = buildingData.size
+          collision.registerBox(buildingData.id, {
+            minX: buildingX - w / 2 + 0.5, // inset for doorway
+            maxX: buildingX + w / 2 - 0.5,
+            minY: groundY,
+            maxY: groundY + h,
+            minZ: buildingZ - d / 2 + 0.5,
+            maxZ: buildingZ + d / 2 - 0.5,
+          })
+        }
       })
       scene.add(villageGroup)
+      console.log('[WorldCanvas] collision boxes registered:', collision.count())
 
       // ---- Player (NOT Wang Lin) ----
       // Player name comes from the character creation screen (English, typed).
@@ -263,10 +282,23 @@ export default function WorldCanvas() {
         const fwd = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw))
         const right = new THREE.Vector3(-fwd.z, 0, fwd.x)
         let moved = false
+        const prevPos = player.state.position.clone()
         if (keys['KeyW']) { player.state.position.addScaledVector(fwd, speed); moved = true }
         if (keys['KeyS']) { player.state.position.addScaledVector(fwd, -speed); moved = true }
         if (keys['KeyA']) { player.state.position.addScaledVector(right, -speed); moved = true }
         if (keys['KeyD']) { player.state.position.addScaledVector(right, speed); moved = true }
+
+        // Collision check: if the player's new position intersects a building
+        // AABB, push them back. Player body = cylinder radius 0.4, height 1.8.
+        if (!player.state.isFlying) {
+          const resolved = collision.resolve(
+            player.state.position.x, player.state.position.y, player.state.position.z,
+            prevPos.x, prevPos.y, prevPos.z,
+            0.4, 1.8,
+          )
+          player.state.position.x = resolved.x
+          player.state.position.z = resolved.z
+        }
 
         // Ground clamp: player stands on terrain surface.
         if (player.state.isFlying) {
