@@ -89,27 +89,8 @@ export function createPlayer(opts?: {
   // (the lowest realm) but with mortal stats: 0 qi, 0 maxQi, cannot cast.
   // The player must discover cultivation in-world (NMS-style: find a sect,
   // learn from an elder, or find a technique scroll).
-  const model = createCultivatorModel('qi_condensation', false)
-
-  // Override robe color to rough brown/grey — a MORTAL's clothing, not a
-  // cultivator's robes. The player looks like a peasant from Zhao Country.
-  // This visual distinction is critical: player = mortal peasant (brown),
-  // Wang Lin = Foundation cultivator (jade green).
-  model.group.traverse((child) => {
-    const mesh = child as THREE.Mesh
-    if (mesh.material && mesh.material instanceof THREE.ShaderMaterial) {
-      const mat = mesh.material
-      if (mat.uniforms.uRobeColor) {
-        mat.uniforms.uRobeColor.value = new THREE.Color(0x8a7a5a) // rough brown peasant clothes
-      }
-      if (mat.uniforms.uTrimColor) {
-        mat.uniforms.uTrimColor.value = new THREE.Color(0x6a5a3a) // darker brown trim
-      }
-      if (mat.uniforms.uSashColor) {
-        mat.uniforms.uSashColor.value = new THREE.Color(0x5a4a2a) // simple rope sash
-      }
-    }
-  })
+  // Mortal wears rough brown peasant clothes (robeColorOverride).
+  const model = createCultivatorModel('qi_condensation', false, 0x8a7a5a)
 
   group.add(model.group)
 

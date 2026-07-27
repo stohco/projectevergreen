@@ -130,12 +130,11 @@ export default function WorldCanvas() {
       // ---- Player (NOT Wang Lin) ----
       // Player name comes from the character creation screen (English, typed).
       // Player starts as a MORTAL: 0 qi, 0 maxQi, brown peasant clothes.
+      // No spirit root selection — the protagonist gains roots through gameplay.
       const playerName = (globalThis as { __ergenPlayerName?: string }).__ergenPlayerName ?? 'Mortal'
-      const playerSpiritRoot = ((globalThis as { __ergenPlayerSpiritRoot?: string }).__ergenPlayerSpiritRoot ?? 'wood') as 'metal' | 'wood' | 'water' | 'fire' | 'earth' | 'void'
       const spawnY = terrainHeight(4, 8)
       player = createPlayer({
         name: playerName,
-        spiritRoot: playerSpiritRoot,
         startPosition: [4, spawnY, 8],
       })
       player.setAnimation('idle')
@@ -254,7 +253,7 @@ export default function WorldCanvas() {
           }
         }
 
-        player.setYaw(yaw + Math.PI)
+        player.setYaw(yaw)
         if (player.state.isMeditating) player.setAnimation('cast')
         else if (player.state.isFlying) player.setAnimation('fly')
         else if (moved) player.setAnimation(keys['ShiftLeft'] ? 'run' : 'walk')
