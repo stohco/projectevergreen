@@ -8,7 +8,7 @@ import { loadCanonDatabase } from '@/engine/canon/RICanonicalDatabase'
 /**
  * LoadingScreen — boot loading screen.
  *
- * Full-screen black with 凝聚元神 (CONJURING THE WORLD) text + progress bar
+ * Full-screen black with Loading the World text + progress bar
  * + spinning taiji. Calls loadCanonDatabase() to drive the progress bar.
  */
 export default function LoadingScreen() {
@@ -24,7 +24,7 @@ export default function LoadingScreen() {
     if (boot) return
     let cancelled = false
     const phases: Array<[string, number, number]> = [
-      ['Gathering qi 凝聚元神', 0.05, 250],
+      ['Gathering qi', 0.05, 250],
       ['Loading canon database 加载典籍', 0.25, 300],
       ['Building world graph 构筑境界图', 0.55, 350],
       ['Materializing Planet Suzaku 物化朱雀星', 0.85, 300],
@@ -145,7 +145,7 @@ export default function LoadingScreen() {
                 lineHeight: 1,
               }}
             >
-              凝聚元神
+              Conjuring the World
             </div>
             <div
               className="font-en italic"
@@ -202,7 +202,7 @@ export default function LoadingScreen() {
             className="absolute bottom-6 font-cn"
             style={{ fontSize: 11, color: 'var(--ivory-dim)', opacity: 0.5, letterSpacing: '0.3em' }}
           >
-            天地不仁 · 以万物为刍狗
+            Heaven is impartial; all things are straw dogs
           </div>
         </motion.div>
       )}

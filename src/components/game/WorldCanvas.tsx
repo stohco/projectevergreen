@@ -6,7 +6,7 @@ import { createSky, type SkyHandle } from '@/engine/render/SkySystem'
 import { createPostFX, type PostFXHandle } from '@/engine/render/PostProcessing'
 import { createCultivatorModel, type CultivatorModelHandle } from '@/engine/entities/CultivatorModel'
 import { createPlayer, type PlayerHandle } from '@/engine/entities/PlayerEntity'
-import { createSmoothTerrain, createSpiritPines, createGrassTufts, createRocks, createSpiritFlowers, terrainHeight } from '@/engine/world/SmoothTerrain'
+import { createSolidTerrain, createVariedSpiritPines, createGrassTufts, createRocks, createSpiritFlowers, terrainHeight } from '@/engine/world/VoxelTerrain'
 import { createOcean, type OceanHandle } from '@/engine/world/OceanSystem'
 import { CanonSpawner } from '@/engine/world/CanonSpawner'
 import { compileSettlement } from '@/engine/world/compiler/SettlementCompiler'
@@ -103,13 +103,18 @@ export default function WorldCanvas() {
       fillLight.shadow.bias = -0.0003
       scene.add(fillLight)
 
-      // ---- Smooth terrain (NOT blocky voxels) ----
-      // Planet Suzaku is an ocean-dominated planet (CANON_RI_COMPLETE_WORLD.md L14).
-      // The terrain is vast — 800 blocks across — with oceans to the horizon.
-      // Wang Family Village sits on a coastal plain in Zhao Country.
+      // ---- Solid terrain (with skirt — you can't see through to ocean) ----
+      // Planet Suzaku is ocean-dominated. Terrain is a thick landmass, not
+      // a thin sheet. The skirt extends 25 blocks below the surface so the
+      // ground is SOLID — you can dig into it (NMS-style voxel world).
       const terrainSize = 800
-      const terrain = createSmoothTerrain(0, 0, terrainSize, 160)
-      scene.add(terrain)
+      const terrainMesh = createSolidTerrain(0, 0, terrainSize, 160)
+      const terrainGroup = terrainMesh.userData.terrainGroup as THREE.Group
+      if (terrainGroup) {
+        scene.add(terrainGroup)
+      } else {
+        scene.add(terrainMesh)
+      }
 
       // ---- Ocean (Gerstner wave ocean — Planet Suzaku is ocean-dominated) ----
       // Vast ocean with GPU Gerstner waves, fresnel reflection, foam at crests.
@@ -127,8 +132,8 @@ export default function WorldCanvas() {
       ocean.mesh.position.y = -0.5
       scene.add(ocean.mesh)
 
-      // ---- Spirit pines (instanced, not blocky) ----
-      const pines = createSpiritPines(0, 0, 200, 150)
+      // ---- Varied spirit pines (4 variants, different sizes/shapes) ----
+      const pines = createVariedSpiritPines(0, 0, 200, 150)
       scene.add(pines)
 
       // ---- Grass tufts (spread out, NMS-style clusters) ----
@@ -380,20 +385,30 @@ export default function WorldCanvas() {
           }
         }
 
-        // Player facing: when camera is LOCKED, face camera direction.
-        // When camera is UNLOCKED, face the direction the player is walking.
+        // Player facing: separate camera yaw from body yaw.
+        // Camera LOCKED: bodyYaw follows cameraYaw (for combat/aiming).
+        // Camera UNLOCKED: bodyYaw follows movement direction (walk naturally).
+        // Deadzone: if movement is tiny, keep previous facing (no spinning).
+        // Lerp: smoothly interpolate toward target yaw (natural turns).
+        const moveX = player.state.position.x - prevPos.x
+        const moveZ = player.state.position.z - prevPos.z
+        const moveMag = Math.sqrt(moveX * moveX + moveZ * moveZ)
+        const deadzone = 0.01
+        const turnSpeed = 10 * dt // how fast the body turns
+
         if (pointerLocked) {
+          // Camera locked: body follows camera.
           player.setYaw(yaw)
-        } else if (moved) {
-          // Face the movement direction (atan2 of movement vector).
-          const moveX = player.state.position.x - prevPos.x
-          const moveZ = player.state.position.z - prevPos.z
-          if (Math.abs(moveX) > 0.001 || Math.abs(moveZ) > 0.001) {
-            const moveYaw = Math.atan2(moveX, moveZ)
-            player.setYaw(moveYaw)
-          }
+        } else if (moveMag > deadzone) {
+          // Camera unlocked + moving: face the walk direction.
+          const targetYaw = Math.atan2(moveX, moveZ)
+          // Lerp angle (shortest path).
+          let diff = targetYaw - (player.state.yaw ?? 0)
+          while (diff > Math.PI) diff -= Math.PI * 2
+          while (diff < -Math.PI) diff += Math.PI * 2
+          player.setYaw((player.state.yaw ?? 0) + diff * Math.min(1, turnSpeed))
         }
-        // When not moving and camera unlocked, keep current facing.
+        // else: not moving + unlocked → keep current facing.
         if (player.state.isMeditating) player.setAnimation('cast')
         else if (player.state.isFlying) player.setAnimation('fly')
         else if (moved) player.setAnimation(keys['ShiftLeft'] ? 'run' : 'walk')
@@ -586,8 +601,8 @@ export default function WorldCanvas() {
       </div>
       {/* Bottom-center lore */}
       <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 select-none text-center font-serif text-amber-100/60">
-        <p className="text-sm italic">天地不仁，以万物为刍狗</p>
-        <p className="mt-1 text-[10px] uppercase tracking-[0.3em] text-amber-200/40">Heaven is impartial</p>
+        <p className="text-sm italic">Heaven is impartial; all things are straw dogs</p>
+        <p className="mt-1 text-[10px] uppercase tracking-[0.3em] text-amber-200/40">Er Gen Verse</p>
       </div>
       {/* Controls hint */}
       <div className="pointer-events-none absolute bottom-4 right-4 z-10 select-none rounded-md border border-amber-500/30 bg-black/50 px-3 py-2 font-mono text-[10px] text-amber-100/70 backdrop-blur-sm">
