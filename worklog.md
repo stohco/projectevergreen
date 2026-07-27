@@ -13874,3 +13874,23 @@ Stage Summary:
   instanced on terrain, (c) all 5 village buildings visible (scale/position fix),
   (d) better player avatar model, (e) wire GraphQueryService into actor materialization.
 - CRON JOB: 292872 (every 15min, OptMem-powered, webDevReview) will continue iteration.
+
+---
+Task ID: CRON-THREEJS-4
+Agent: threejs-aaa-loop
+Task: Implement user's field-driven simulation spec — W(t)=B⊕S(t)⊕P(t) + RBF terrain with canon control points
+
+Work Log:
+- Woke OptMem. Read user's 12-section mathematical spec for field-driven simulation.
+- Wrote honest assessment: spec is correct, my current state violates it (renderer owns state instead of sampling field). Identified 7 areas where spec is right and I'm wrong.
+- Created WorldState.ts: formalizes W(t) = B ⊕ S(t) ⊕ P(t). FieldWorldState.sample(x,z,t) returns WorldSample. Player/sim deltas are incremental. The renderer will sample this field — it does NOT own state.
+- Created RBFTerrain.ts: h(x,z) = Σᵢ aᵢ·φ(‖(x,z)−cᵢ‖) + r(x,z). Wendland C² RBF with compact support. Control points from PLANET_SUZAKU_PLACEMENT (10 canon locations). Mountains sit where canon says (Heng Yue Sect amplitude=40, Snow Domain=50, Sea of Devils=−20). Village area flattened. Cliff SDF + river SDF for carved features.
+- Updated SmoothTerrain.ts to use rbfTerrainHeight() instead of pure simplex. Terrain material now canon-aware via terrainMaterialAt().
+- Wrote MATH_IMPLEMENTATION_PLAN.md: 10-section spec covering all 12 areas (terrain SDF, building constraint solving, character parametric manifolds + DQS + XPBD, qi vector field, 5 graph projections, coherence invariants, performance budget, implementation order).
+
+Stage Summary:
+- SHIPPED: CRON-THREEJS-4 (git hash d1249301). Build: bun run lint 0 errors. Dev server 200.
+- VLM CRITIC: 4/10 → 6/10. "Clean atmospheric terrain, trees visible, player visible, sparse but fitting cultivation aesthetic."
+- HARSH CRITIQUE: terrain is now canon-authored (RBF) but the renderer still constructs meshes directly instead of sampling the field. The WorldState field exists but WorldCanvas doesn't call sample() — it calls rbfTerrainHeight() directly. The inversion (renderer = view over field) is architecturally present but not yet wired. Next round must wire WorldState.sample() into the render loop.
+- NEXT PRIORITY: (1) Wire WorldState.sample() into renderer. (2) Building layout constraint solver (simulated annealing). (3) Character parametric manifold (blendshapes). (4) Qi vector field. (5) 5 graph projections. (6) Worker-thread mesh compilation. (7) Automated blind QA harness with Chamfer/LPIPS/SSIM metrics.
+- The cron job (292872, every 15min, OptMem-powered) will continue this iteration loop.
