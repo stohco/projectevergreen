@@ -75,7 +75,20 @@ public final class CanonGeographyPlacer {
         if (!(event.getLevel() instanceof ServerLevel level)) return;
         if (level.isClientSide()) return;
 
-        // Only run in the overworld (which is Planet Suzaku via our dimension override).
+        // CRON-138: This placer is SUPERSEDED and intentionally dead on Planet
+        // Suzaku. The active structure-materialization path is
+        // PlanetSuzakuChunkMaterializer (correctly gated on ergenverse:planet_suzaku)
+        // -> StructureBuilderRegistry, which builds the SAME 11 canon structures
+        // (WangFamilyVillage, HengYue, TengFamily, TianShui, Qilin, NanDou,
+        // SnowDomain, VermilionBird, SoulRefining, XuanDao, LuoHe) plus SuzakuTomb
+        // and RanyunStar, but CHUNK-SCOPED (buildForChunk + ChunkBounds) and
+        // provenance-aware (CRON-62/72/105/120). This legacy placer uses full
+        // build(level)/build(level,center) with NO chunk filtering, so re-enabling
+        // it on Suzaku would (a) double-build every structure and (b) reintroduce
+        // the cascading-chunk-load bug CRON-62 fixed. The gate below therefore
+        // deliberately targets minecraft:overworld, where no ergenverse canon
+        // coordinates live, so it is a permanent no-op. Do NOT "fix" this gate by
+        // pointing it at ergenverse:planet_suzaku. To be removed in a cleanup pass.
         if (!level.dimension().location().toString().equals("minecraft:overworld")) return;
 
         int chunkX = event.getChunk().getPos().x;

@@ -43,16 +43,35 @@ public class CultivatorCombatGoal extends Goal {
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
+    /**
+     * CRON-130: Maximum effective range of this goal. Vanilla tick logic only
+     * handles targets within 18 blocks (melee + mid-range path); beyond 18
+     * blocks the tick falls into the "give up" branch. Prior to CRON-130, the
+     * goal still claimed MOVE+LOOK flags at >18 blocks, starving any
+     * higher-level movement strategy (such as CultivatorFlightGoal) that
+     * could close the distance. The distance gate below lets combat yield
+     * gracefully so flight can take over.
+     */
+    private static final double EFFECTIVE_RANGE_SQ = 18.0D * 18.0D;  // 324.0
+
     @Override
     public boolean canUse() {
         LivingEntity target = mob.getTarget();
-        return target != null && target.isAlive();
+        if (target == null || !target.isAlive()) return false;
+        // CRON-130: yield to flight when target is beyond effective range.
+        // Without this gate, combat would activate, claim MOVE+LOOK, then
+        // do nothing useful in tick (the >18-block "give up" branch), while
+        // a Foundation+ cultivator could have flown to close the distance.
+        return mob.distanceToSqr(target) <= EFFECTIVE_RANGE_SQ;
     }
 
     @Override
     public boolean canContinueToUse() {
         LivingEntity target = mob.getTarget();
-        return target != null && target.isAlive() && !mob.isLeashed();
+        if (target == null || !target.isAlive() || mob.isLeashed()) return false;
+        // CRON-130: same distance gate — yield when target escapes beyond
+        // effective range, so flight can take over the pursuit.
+        return mob.distanceToSqr(target) <= EFFECTIVE_RANGE_SQ;
     }
 
     @Override

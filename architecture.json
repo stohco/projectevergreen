@@ -1,0 +1,206 @@
+{
+  "project": "Ergenverse",
+  "version": "0.1.13-alpha",
+  "generated": "2026-07-27 (CRON-137)",
+  "description": "Architecture snapshot of the Er Gen Verse Minecraft Forge 1.20.1 mod — a Renegade Immortal (仙逆) novel adaptation. Captures all systems, data flows, and integration points for session continuity.",
+
+  "fourLayerArchitecture": {
+    "description": "Constitution Art XLII — four-layer separation of canon, authored geography, initial snapshot, and simulation delta.",
+    "layer0": {
+      "name": "Read-only JAR (Canon)",
+      "contents": ["RICanonicalDatabase", "WangLinMasterRegistry"],
+      "description": "Immutable canon facts from the novel. 158 characters, 80 locations, 178 artifacts, 214 techniques. Never modified at runtime."
+    },
+    "layer1": {
+      "name": "Authored Geography",
+      "contents": ["planet_suzaku.json", "wang_family_village.json", "blueprint JSONs"],
+      "description": "Authored world blueprints — countries, settlements, mountain ranges, spirit veins. The stage is fixed; the simulation varies."
+    },
+    "layer2": {
+      "name": "Initial Snapshot (WorldGraph)",
+      "contents": ["WorldGraph", "GraphBootstrap", "GraphQueryService"],
+      "description": "CRON-137: WorldGraph IS Layer 2's runtime representation. Populated from Layer 0+1 at bootstrap. 630+ nodes, 500+ edges. Single integration point for all simulation systems."
+    },
+    "layer3": {
+      "name": "Simulation Delta",
+      "contents": ["WorldRuntimeState (SavedData)", "WorldDeltaStore", "Provenance enum"],
+      "description": "Runtime changes write ONLY here. Player actions, beast harvests, weather damage — all journal through the facade → store → replay on reload."
+    }
+  },
+
+  "worldGraph": {
+    "description": "CRON-137: The single integration point for all simulation systems.",
+    "class": "dev.ergenverse.graph.WorldGraph",
+    "lines": 676,
+    "storage": "ConcurrentHashMap-backed nodes + bidirectional adjacency lists",
+    "nodeCount": "~630 (158 NPC + 80 LOCATION + 178 ARTIFACT + 214 TECHNIQUE)",
+    "edgeCount": "~500+ (social + ownership + spatial)",
+    "api": {
+      "node": ["addNode", "replaceNode", "getNode", "requireNode", "hasNode", "nodes", "nodesOfType", "nodeCount"],
+      "edge": ["addEdge", "addCanonEdge", "addSimEdge", "addBootstrapEdge", "outEdges", "inEdges", "allOutEdges", "allInEdges", "neighbors", "edgeCount"],
+      "traversal": ["walk (BFS)", "sumWeights", "path", "subgraph", "findNodes"],
+      "history": ["history", "historyOf"],
+      "serialization": ["serialize (NBT)", "deserialize (NBT)"]
+    },
+    "holder": "GraphBootstrap.GRAPH (static volatile field)",
+    "bootstrap": "GraphBootstrap.bootstrap() — called in Ergenverse() constructor after WangLinMasterRegistry.bootstrap()"
+  },
+
+  "graphBootstrap": {
+    "file": "dev/ergenverse/graph/GraphBootstrap.java",
+    "cron": "CRON-137",
+    "description": "Populates WorldGraph from RICanonicalDatabase. Creates nodes for all canon entities and edges from canon relationships.",
+    "populates": {
+      "nodes": {
+        "NPC": "158 nodes from RICanonicalDatabase.ALL_CHARACTERS (id=N01→npc:N01)",
+        "LOCATION": "80 nodes from RICanonicalDatabase.ALL_LOCATIONS (id=L01→location:L01)",
+        "ARTIFACT": "178 nodes from RICanonicalDatabase.ALL_ARTIFACTS (id=I01→artifact:I01)",
+        "TECHNIQUE": "214 nodes from RICanonicalDatabase.ALL_TECHNIQUES (id=T01→technique:T01)"
+      },
+      "edges": {
+        "social": "From CanonCharacter.relationships — love_interest→LOVES, family→FAMILY_OF, master→MENTORED_BY, enemy→ENEMY_OF, disciple→DISCIPLE_OF, rival→RIVALS, ally→ALLY_OF, friend→FAMILIAR_WITH",
+        "ownership": "From CanonArtifact.currentOwner — OWNS edge from owner NPC to artifact",
+        "spatial": "From CanonLocation.parentLocation — LOCATED_IN edge from child location to parent location"
+      }
+    },
+    "nameResolution": "Case-insensitive name→entity maps built at bootstrap. CanonCharacter/CanonLocation relationships use NAMES, not IDs. Unresolved names logged as warnings, edge skipped.",
+    "idempotent": true
+  },
+
+  "graphQueryService": {
+    "file": "dev/ergenverse/graph/GraphQueryService.java",
+    "cron": "CRON-137",
+    "description": "Wraps WorldGraph traversal into simulation-ready queries. The API consumers use — no raw edge traversal needed.",
+    "queries": {
+      "social": {
+        "socialContacts(npcId)": "Direct social contacts (FAMILIAR_WITH, ALLY_OF, FAMILY_OF, MENTORED_BY, DAO_COMPANION, SWORN_SIBLING, SERVES, DISCIPLE_OF, SAVED, LOVES, RESPECTS)",
+        "socialNetwork(npcId, maxDepth)": "BFS walk of social edges — all reachable NPCs within maxDepth hops"
+      },
+      "spatial": {
+        "settlementResidents(settlementId)": "NPCs LOCATED_IN the settlement",
+        "locationContents(locationId)": "All entities at a location",
+        "whatExistsAt(locationId)": "Graph-backed WorldStateEngine Q1 — returns LocationEntry records"
+      },
+      "ownership": {
+        "findOwner(entityId)": "The NPC that OWNS this entity (incoming OWNS edge)",
+        "ownedEntities(npcId)": "All entities owned by an NPC (outgoing OWNS edges)",
+        "whoOwns(entityId)": "Graph-backed WorldStateEngine Q2 — returns OwnershipInfo record"
+      },
+      "karmic": {
+        "netKarmicBurden(npcId)": "Weighted sum: negative karma +1 per edge, positive karma -1 per edge",
+        "karmicConnections(npcId)": "All NPCs connected by karmic edges",
+        "whoWants(entityId)": "Graph-backed WorldStateEngine Q3 — NPCs with desire edges (KARMIC_DEBT, GRUDGE, VENGEANCE_OBLIGATION, HATES, ENEMY_OF)"
+      },
+      "threats": {
+        "threatsNearSettlement(settlementId, maxDepth)": "BEAST nodes via LOCATED_IN subtree walk"
+      },
+      "information": {
+        "whoKnowsAbout(entityId)": "Graph-backed WorldStateEngine Q4 — NPCs with WITNESSED or FAMILIAR_WITH edges"
+      },
+      "diagnostic": {
+        "describeNode(nodeId)": "Human-readable summary: name, type, registry ID, edge counts"
+      }
+    },
+    "resultRecords": ["LocationEntry", "OwnershipInfo", "DesireInfo", "KnowledgeInfo"]
+  },
+
+  "consumers": {
+    "rumorNetwork": {
+      "file": "dev/ergenverse/npc/rumor/RumorNetwork.java",
+      "cron": "CRON-137",
+      "status": "WIRED — graph-first with fallback",
+      "description": "Rumors now propagate along social connections (FAMILIAR_WITH, ALLY_OF, etc.) instead of ActorRegistry.all() brute-force spatial proximity. Canon-faithful: xianxia cultivators communicate via jade slips, sound transmission, and sect networks across vast distances. Fallback to spatial brute-force for procedural NPCs not in the graph."
+    },
+    "worldStateEngine": {
+      "file": "dev/ergenverse/simulation/WorldStateEngine.java",
+      "status": "PENDING — still brute-force JSON iteration",
+      "description": "6 query methods (queryWhatExists, queryWhoOwns, queryWhoWants, queryWhoKnows, queryWhyUntaken, queryNaturalNext) still iterate JSON subsystems. GraphQueryService provides graph-backed equivalents (whatExistsAt, whoOwns, whoWants, whoKnowsAbout) — next CRON should wire WorldStateEngine to call graph-first with JSON fallback."
+    },
+    "actorMaterializer": {
+      "file": "dev/ergenverse/simulation/settlement/ActorMaterializer.java",
+      "status": "PENDING — still uses SettlementThreatIndex + OpportunityRegistry",
+      "description": "materializeAroundPlayer() builds WorldSituation inline from SettlementThreatIndex.getSituationThreat() + OpportunityRegistry.getLiveOpportunitiesNear(). Next CRON should wire to GraphQueryService.threatsNearSettlement() + whatExistsAt()."
+    }
+  },
+
+  "cultivatorFlight": {
+    "description": "CRON-130 through CRON-136 — cultivator sword-flight (御剑飞行) system.",
+    "components": {
+      "CultivatorFlightGoal": "CRON-130: Foundation+ cultivators take flight when hostile mob >18 blocks away. 30s timeout, 8-block yield distance.",
+      "CultivatorFlightNavigator": "CRON-133/135/136: Obstacle-aware velocity computation. Forward ray-cast (3 body heights) + upward ray-cast (3 tall-obstacle heights +3/+6/+9) + perpendicular dodge (3 height probes +1/+3/+6) + upward vault (standard 0.8D, tall 3.0D math-derived).",
+      "ride_sword ModelPart": "CRON-132: Visible sword under cultivator's feet during flight. Metallic blade gradient painted to 23 textures.",
+      "qiSystem": "CRON-134: EntityCultivator qi system. maxQi per realm (Foundation=100, Core=500, Nascent=2000, Soul+=10000). Flight costs 0.2 qi/tick. 10% activation gate, 5% abort gate. 1.0/sec regen when grounded."
+    },
+    "canonFidelity": "Foundation Establishment (筑基) is the canonical minimum realm for flight (Baidu Baike-verified). Sword flight universally attested in 仙逆 as flying OVER mountains and around cliffs. NO fabricated chapter citations."
+  },
+
+  "edgeTypes": {
+    "total": "90+ in 11 categories",
+    "categories": [
+      "Ownership & Possession (18): OWNS, CARRIES, EQUIPPED_WITH, ...",
+      "Cultivation & Comprehension (14): COMPREHENDS, PRACTICES, TEACHES, INHERITED_FROM, ...",
+      "Social & Relationship (16): LOVES, HATES, FEARS, RESPECTS, RIVALS, SERVES, MENTORED_BY, BETRAYED, DAO_COMPANION, SWORN_SIBLING, FAMILY_OF, DISCIPLE_OF, ALLY_OF, ENEMY_OF, SAVED, FAMILIAR_WITH",
+      "Cosmological & Spatial (8): LOCATED_IN, PARENT_OF, SEALED_BY, ...",
+      "Karma & Causality (11): KARMIC_DEBT, GRUDGE, GRATITUDE, KARMIC_THREAD, VENGEANCE_OBLIGATION, ...",
+      "Temporal & Historical (8): PRECEDES, CAUSED_BY, WITNESSED, PARTICIPATED_IN, ...",
+      "Economy & Tribute (4): TRIBUTE_TO, TRADES_WITH, TREATY_WITH, ...",
+      "Ecological (7): PREYS_ON, HABITAT_IN, GUARDS, TAMED_BY, ...",
+      "Position & Authority (5): HOLDS_POSITION, GOVERNS, MEMBER_OF, ...",
+      "World Law & Boundary (6): LAW_SUPPRESSES, LAW_HOSTILE_TO, ...",
+      "Perception & Concealment (3): PERCEIVED, CONCEALS, HIDDEN_FROM"
+    ],
+    "predicates": ["isNegativeKarma()", "isPositiveKarma()", "isKarmic()", "isOwnership()", "isBoundaryInteraction()"],
+    "missing": "No HEARD edge type (referenced in RumorNetwork javadoc but not in EdgeType). Use FAMILIAR_WITH or WITNESSED as substitute."
+  },
+
+  "nodeTypes": {
+    "total": 54,
+    "canon": ["ARTIFACT", "TECHNIQUE", "BEAST", "COMPANION", "AVATAR", "BODY", "RESTRICTION", "FORMATION", "DAO", "NPC", "LOCATION", "EVENT", "KNOWLEDGE", "TITLE", "SKILL", "EXPERIENCE", "ALLY", "ENEMY", "REALM"],
+    "simulation": ["PLANT", "FACTION", "INVENTORY", "TREASURY", "MARKET", "STRUCTURE", "SPIRIT_VEIN", "RUMOR", "CONTRACT", "LAW", "KARMA_THREAD", "ESSENCE", "BRIDGE", "TRIBULATION", "INHERITANCE", "POSITION", "BLOODLINE", "HISTORY_EVENT", "ROUTE"],
+    "note": "No SETTLEMENT type — use FACTION (deprecated SECT alias)."
+  },
+
+  "ricanonicalDatabase": {
+    "file": "dev/ergenverse/wanglin/RICanonicalDatabase.java",
+    "lines": 8124,
+    "collections": {
+      "ALL_CHARACTERS": "158 CanonCharacter entries (line 219)",
+      "ALL_LOCATIONS": "80 CanonLocation entries (line 1967)",
+      "ALL_ARTIFACTS": "178 CanonArtifact entries (line 3162)",
+      "ALL_TECHNIQUES": "214 CanonTechnique entries (line 5258)"
+    },
+    "classes": {
+      "CanonCharacter": "final class with public fields: id, name, nameCn, type, peakRealm, affiliation, status, canonConfidence, firstAppearance, location, knownFacts, relationships, source",
+      "CanonLocation": "final class with public fields: id, name, nameCn, type, parentLocation, cosmologyLayer, worldLawTier, isSealed, sealedBy, spiritVeins, canonConfidence, associatedFactions, keyEvents, source",
+      "CanonArtifact": "final class with public fields: id, name, nameCn, type, category, currentOwner, abilities, origin, canonConfidence, source",
+      "CanonTechnique": "final class with public fields: id, name, nameCn, type, origin, effects, knownUsers, canonConfidence, source"
+    },
+    "important": "CanonCharacter/CanonLocation are final classes with public fields (NOT records). Relationships use NAMES, not IDs."
+  },
+
+  "releaseArtifacts": {
+    "version": "0.1.13-alpha",
+    "jar": "ergenverse-0.1.13-alpha.jar (~9.2 MB)",
+    "modpackZip": "ergenverse-modpack-0.1.13-alpha.zip (~7.4 MB, CurseForge-importable)",
+    "locations": ["/home/z/my-project/download/", "/home/z/my-project/forge-mod/releases/"],
+    "buildScript": "scripts/build_importable_modpack.py"
+  },
+
+  "pendingWork": {
+    "highPriority": [
+      "Wire WorldStateEngine 6 query methods to graph-first with JSON fallback (queryWhatExists → whatExistsAt, queryWhoOwns → whoOwns, queryWhoWants → whoWants, queryWhoKnows → whoKnowsAbout)",
+      "Wire ActorMaterializer.materializeAroundPlayer() to use GraphQueryService.threatsNearSettlement() + whatExistsAt()",
+      "Add graph write-back: WorldEventBus events → graph edges (beast events create LOCATED_IN edges, social events create FAMILIAR_WITH edges, etc.)"
+    ],
+    "mediumPriority": [
+      "Create Component classes (CultivationComponent, LocationComponent, OwnershipComponent, KarmaComponent) — currently zero Component implementations exist",
+      "Add HEARD edge type to EdgeType enum for rumor propagation (or use FAMILIAR_WITH)",
+      "Wire GraphBootstrap.GRAPH persistence to SavedData (currently in-memory only, lost on world unload)"
+    ],
+    "standingPriority": [
+      "Playtest CRON-130 through CRON-137 end-to-end (cultivator flight + graph integration)",
+      "3D models / animations / collision / AI for beasts and cultivators",
+      "Items & mechanics — forge canon items (flying swords, beads, talismans, pills, flags, scrolls, banners)"
+    ]
+  }
+}

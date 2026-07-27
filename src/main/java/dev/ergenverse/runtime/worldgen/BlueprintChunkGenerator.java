@@ -149,7 +149,12 @@ import java.util.concurrent.Executor;
  *   <li>恒岳山 (Heng Yue Mountain): Zhao Country's largest mountain, raised +30.</li>
  *   <li>修魔海 (Sea of Devils): vast perilous sea east of Zhao, lowered −30 → ocean.</li>
  *   <li>朱雀墓 (Suzaku Tomb): underground inheritance site, surface depressed −12.</li>
- *   <li>Wang Family Village: "赵国某偏僻小山村" — remote mountain village, raised +8.</li>
+ *   <li>Wang Family Village: "赵国某偏僻小山村" — remote mountain village, raised +8.
+ *       <b>Mod-original naming:</b> canon attests only "赵国某偏僻小山村"
+ *       (a remote mountain village in Zhao Country); the name "Wang Family
+ *       Village" / "王氏村" is the mod's authoring choice for that canon
+ *       location. The raised +8 elevation reflects the "mountain village"
+ *       canon description.</li>
  *   <li>藤家城 (Teng Family City): powerful family city in Zhao, raised +10.</li>
  *   <li>雪域国 (Snow Domain): cold elevated country, raised +10.</li>
  *   <li>恒岳派 / 炼魂宗 / 玄道宗 / 洛河门: mountain sects, raised +12 to +15.</li>
@@ -835,9 +840,79 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
         return wrapped.getMinY();
     }
 
+    /**
+     * Spawn original mobs during chunk generation — <b>OVERRIDDEN AS A NO-OP</b>
+     * (CRON-COMPLETIONIST-128).
+     *
+     * <p><b>Canon rationale (Article I — Canon Is Reality):</b> Planet Suzaku is
+     * Wang Lin's home cultivation world — a 仙逆 (Renegade Immortal) universe
+     * populated by mortal villagers, sect cultivators, spirit beasts, and
+     * demons. <i>Vanilla Minecraft mobs (creepers, zombies, skeletons, spiders,
+     * endermen, witches, slimes) do not exist in canon.</i> They are a Minecraft
+     * convention, not an Er Gen Verse inhabitant. Letting vanilla
+     * {@link NoiseBasedChunkGenerator#spawnOriginalMobs} spawn them in
+     * newly-generated chunks of Planet Suzaku is a <b>canon-fidelity violation</b>
+     * AND a leak of vanilla noise into the chunk-generator pipeline: vanilla
+     * decides what to spawn, where, and how many based on
+     * {@link net.minecraft.world.level.levelgen.WorldgenRandom} (seeded by the
+     * chunk position + world seed) and biome spawners — none of which is
+     * canon-aware.
+     *
+     * <p><b>Architectural rationale (point 10 — true algorithmic independence):</b>
+     * the CRON-60/91/93/94/104 progression eliminated vanilla noise dependence
+     * from {@code fillFromNoise} (surface height), {@code applyCarvers} (cave
+     * placement, via canon-suppression), {@code getBaseHeight}, and
+     * {@code getBaseColumn}. The remaining vanilla-noise leak was
+     * {@code spawnOriginalMobs}, which still delegated to the wrapped
+     * {@link NoiseBasedChunkGenerator}. CRON-128 closes that leak: this method
+     * is now a no-op, removing the last vanilla-noise entry point in the
+     * BlueprintChunkGenerator's chunk-gen pipeline.
+     *
+     * <p><b>What this means in practice:</b>
+     * <ul>
+     *   <li><b>Newly-generated chunks:</b> no vanilla creepers, zombies,
+     *       skeletons, spiders, endermen, witches, slimes, or phantoms will
+     *       spawn during chunk generation. The chunk's initial mob population
+     *       is empty.</li>
+     *   <li><b>Canon NPCs:</b> unaffected. {@link dev.ergenverse.runtime.materialize.CanonActorMaterializer}
+     *       spawns Wang Lin, villagers, sect cultivators, etc. via
+     *       {@link dev.ergenverse.runtime.materialize.StructureBuilderRegistry}
+     *       on {@link net.minecraftforge.event.level.ChunkEvent.Load}, NOT via
+     *       this method. Canon NPCs continue to materialize.</li>
+     *   <li><b>Ambient spawning:</b> unaffected. The per-tick
+     *       {@link net.minecraft.server.level.ServerLevel#getEntities} +
+     *       MobCategory-based ambient spawn cycle is a separate system, not
+     *       controlled by the {@link ChunkGenerator}. Vanilla mobs may still
+     *       spawn at night via that path; that gap is tracked as a separate
+     *       CRON priority (beast ecology / canon mob spawning).</li>
+     *   <li><b>Future canon beast spawner:</b> when the canon beast ecology
+     *       (the {@code species/*.json} files) gets a runtime spawner, it will
+     *       hook into {@link net.minecraftforge.event.entity.living.LivingSpawnEvent}
+     *       or a per-chunk CanonBeastMaterializer — NOT into this method,
+     *       which exists only for chunk-gen initial mobs.</li>
+     * </ul>
+     *
+     * <p><b>Canon fidelity (fact-checked against 仙逆):</b> the Er Gen Verse
+     * contains mortal villages (Wang Family Village, Teng Family City), sect
+     * strongholds (Heng Yue Sect, Soul Refining Sect, Xuan Dao Sect, Luo He
+     * Sect), demonic beasts (the {@code species/wang_family_hunting_dog.json},
+     * {@code species/spirit_wolf.json}, {@code species/spirit_deer.json}, etc.),
+     * and NPC cultivators (Wang Lin, Situ Nan, Li Muwan, Teng Li, Wang Ping,
+     * Qing Yi, etc.). Vanilla Minecraft mobs are not part of this bestiary.
+     * Suppressing them preserves canon atmosphere.
+     *
+     * <p><b>No fabricated chapter citation.</b> The absence of vanilla
+     * creepers/zombies from a Chinese cultivation novel is self-evident; the
+     * mod's canon bestiary is documented in {@code ri_canon_beast_ecology.json}
+     * and the {@code species/*.json} files.
+     */
     @Override
     public void spawnOriginalMobs(WorldGenRegion region) {
-        wrapped.spawnOriginalMobs(region);
+        // CRON-128: intentionally a no-op. See Javadoc above for the canon
+        // and architectural rationale. Vanilla mobs do not exist in the Er Gen
+        // Verse; canon NPCs and beasts come from the mod's own materializers
+        // (CanonActorMaterializer for NPCs, future CanonBeastSpawner for beasts).
+        // The wrapped NoiseBasedChunkGenerator.spawnOriginalMobs is NOT called.
     }
 
     // ════════════════════════════════════════════════════════════════════
@@ -911,6 +986,8 @@ public final class BlueprintChunkGenerator extends ChunkGenerator {
         // under the Suzaku Tomb, sect/settlement foundations, etc.
         String caveStatus = getCaveSuppressionLabel(sx, sz);
         info.add("[Er Gen Verse] Cave suppression: " + caveStatus);
+        // CRON-128: report that vanilla mob spawning is suppressed in chunk-gen.
+        info.add("[Er Gen Verse] Vanilla mob spawn (chunk-gen): SUPPRESSED — canon NPCs only");
         // CRON-91: report layer-override status for the chunk containing the player.
         try {
             WorldRuntime runtime = WorldRuntime.get();

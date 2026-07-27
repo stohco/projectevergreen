@@ -196,6 +196,13 @@ public class EntityCultivatorRenderer extends MobRenderer<EntityCultivator, Cult
         model.setGuarding(entity.isGuarding());
         model.setPursuing(entity.isPursuing());
         model.setSocializing(entity.isSocializing());
+        // CRON-130: sword-flight (御剑飞行) pose. CultivatorFlightGoal sets
+        // POSE_FLYING on the server; this synced flag triggers the flight
+        // animation (forward body lean, swept-back arms, robe billowing up,
+        // wind-pushed hair, altitude bob). Only fires for Foundation+
+        // cultivators — Qi Condensation and mortal never fly (enforced by
+        // the goal's canUse, not the renderer).
+        model.setFlying(entity.isFlying());
 
         // CRON-COMPLETIONIST-97: Per-character held weapons + scale.
         // Maps canon characterId → weapon type (SWORD/FAN/STAFF/HOE/FLY_WHISK/NONE)

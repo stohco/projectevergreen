@@ -3,6 +3,9 @@ package dev.ergenverse.spawn;
 import dev.ergenverse.block.ErgenverseBlocks;
 import dev.ergenverse.core.Ergenverse;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -30,6 +33,22 @@ import java.util.Map;
  *
  * <p>Per the user's directive: "there should be 0 vanilla minecraft blocks."
  *
+ * <p><b>CRON-138 (dimension-gate fix):</b> Previously this class gated conversion
+ * on {@code player.level().dimension() != Level.OVERWORLD}. That was a leftover
+ * from the old design where Planet Suzaku WAS the overworld (via a runtime
+ * dimension override that no longer exists). The mod now uses a <b>separate</b>
+ * {@code ergenverse:planet_suzaku} dimension (see
+ * {@code data/ergenverse/dimension/planet_suzaku.json}, chunk generator
+ * {@code ergenverse:blueprint}), and {@link dev.ergenverse.spawn.SpawnEventHandler}
+ * teleports first-join players there. The old overworld gate therefore meant
+ * the spiritifier <b>never ran</b> on Planet Suzaku — so the player saw vanilla
+ * stone/grass/trees on canon-shaped terrain. The gate now targets
+ * {@link #SUZAKU_KEY} ({@code ergenverse:planet_suzaku}) directly. This is a
+ * block-<i>palette</i> fix only; the canon <i>shape</i> was already handcrafted
+ * and deterministic (see {@link dev.ergenverse.runtime.worldgen.BiomeTerrainProfile}
+ * + {@link dev.ergenverse.spawn.DeterministicSeedHandler}) — no randomness is
+ * introduced.
+ *
  * <p>Conversion strategy:
  * <ul>
  *   <li>Every 10 ticks (0.5 sec), for each online player, convert ONE
@@ -56,6 +75,16 @@ import java.util.Map;
 public final class TerrainSpiritifier {
 
     private TerrainSpiritifier() {}
+
+    /**
+     * The Planet Suzaku dimension key ({@code ergenverse:planet_suzaku}).
+     *
+     * <p>This is the ONLY dimension the spiritifier converts. Mirrors the idiom
+     * in {@link dev.ergenverse.runtime.materialize.PlanetSuzakuChunkMaterializer#SUZAKU_KEY}
+     * so the two systems agree on exactly one source of truth for the key.
+     */
+    private static final ResourceKey<Level> SUZAKU_KEY = ResourceKey.create(
+            Registries.DIMENSION, new ResourceLocation(Ergenverse.MOD_ID, "planet_suzaku"));
 
     /** Chunks already converted this session. Key = ChunkPos.asLong(). */
     private static final java.util.Set<Long> convertedChunks = java.util.Collections.synchronizedSet(new java.util.HashSet<>());
@@ -195,7 +224,11 @@ public final class TerrainSpiritifier {
         // For each online player, convert the nearest unconverted chunk
         // within CHUNK_RADIUS of the player.
         for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
-            if (player.level().dimension() != Level.OVERWORLD) continue;
+            // CRON-138: gate on Planet Suzaku, NOT Level.OVERWORLD. The player
+            // is teleported to ergenverse:planet_suzaku by SpawnEventHandler;
+            // the old overworld gate meant conversion never ran on Suzaku, so
+            // the player saw vanilla blocks on canon-shaped terrain.
+            if (!player.level().dimension().equals(SUZAKU_KEY)) continue;
             ServerLevel level = (ServerLevel) player.level();
             int playerChunkX = player.chunkPosition().x;
             int playerChunkZ = player.chunkPosition().z;

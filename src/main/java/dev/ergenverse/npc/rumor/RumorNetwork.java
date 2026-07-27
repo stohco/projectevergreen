@@ -1,6 +1,9 @@
 package dev.ergenverse.npc.rumor;
 
 import dev.ergenverse.core.Ergenverse;
+import dev.ergenverse.graph.GraphBootstrap;
+import dev.ergenverse.graph.NodeId;
+import dev.ergenverse.graph.NodeType;
 import dev.ergenverse.npc.memory.NpcMemoryTickHandler;
 import dev.ergenverse.simulation.actor.Actor;
 import dev.ergenverse.simulation.actor.ActorRegistry;
@@ -250,55 +253,76 @@ public class RumorNetwork extends SavedData {
             // Update the rumor in the network
             rumors.put(rumorId, distorted);
 
-            // Art XXXI.5: Propagate to REAL linked NPCs near the source.
-            // Replaces synthetic NPC IDs (Phase B.8 — this IS Phase B.8).
-            // Each nearby NPC who doesn't already know this rumor hears it,
-            // records a RUMOR memory, and can retell it later.
+            // CRON-137: Graph-first propagation. Rumors spread along SOCIAL
+            // connections (FAMILIAR_WITH, ALLY_OF, FAMILY_OF, MENTORED_BY, etc.),
+            // NOT spatial proximity. This is canon-faithful: xianxia cultivators
+            // communicate via jade slips, sound transmission, and sect networks
+            // across vast distances — a rumor in Wang Family Village reaches
+            // Heng Yue Sect via Wang Lin's social ties, not because someone
+            // happened to be standing within 48 blocks.
+            //
+            // Fallback: if the source NPC is not in the graph (procedural NPCs),
+            // fall back to the old ActorRegistry.all() + spatial distance check.
             int newlyInformed = 0;
             String sourceId = rumor.getSourceNpcId();
-            Actor sourceActor = (!sourceId.isEmpty()) ? ActorRegistry.get(sourceId) : null;
 
-            for (Actor nearby : ActorRegistry.all()) {
+            // Build the candidate list: graph social contacts first, fallback to all actors.
+            List<String> candidateNpcIds = new ArrayList<>();
+            boolean usedGraph = false;
+            if (!sourceId.isEmpty() && GraphBootstrap.GRAPH != null) {
+                try {
+                    NodeId sourceNodeId = new NodeId(sourceId, NodeType.NPC);
+                    if (GraphBootstrap.GRAPH.hasNode(sourceNodeId)) {
+                        List<NodeId> contacts = GraphBootstrap.query().socialContacts(sourceNodeId);
+                        for (NodeId contactId : contacts) {
+                            candidateNpcIds.add(contactId.id());
+                        }
+                        usedGraph = !candidateNpcIds.isEmpty();
+                    }
+                } catch (Exception e) {
+                    // NodeId construction can throw on blank/null — fall through to brute-force
+                }
+            }
+            if (!usedGraph) {
+                for (Actor nearby : ActorRegistry.all()) {
+                    candidateNpcIds.add(nearby.id);
+                }
+            }
+
+            for (String npcId : candidateNpcIds) {
                 if (newlyInformed >= 3) break; // max 3 NPCs per hop
-                if (nearby.id.equals(sourceId)) continue;
-                if (!ActorEntityLink.isLinked(nearby.id)) continue;
+                if (npcId.equals(sourceId)) continue;
+                if (!ActorEntityLink.isLinked(npcId)) continue;
 
                 // Already knows this rumor — skip
-                Set<String> known = npcKnowledge.get(nearby.id);
+                Set<String> known = npcKnowledge.get(npcId);
                 if (known != null && known.contains(rumorId)) continue;
 
-                // Distance check: 48 blocks from source actor (or any informed NPC)
-                double distSq;
-                if (sourceActor != null) {
-                    distSq = Math.pow(sourceActor.blockX - nearby.blockX, 2)
-                          + Math.pow(sourceActor.blockZ - nearby.blockZ, 2);
-                } else {
-                    // No source actor — find nearest informed NPC
-                    distSq = Double.MAX_VALUE;
-                    for (String informedId : npcKnowledge.keySet()) {
-                        Actor informed = ActorRegistry.get(informedId);
-                        if (informed != null && ActorEntityLink.isLinked(informed.id)) {
-                            double d = Math.pow(informed.blockX - nearby.blockX, 2)
-                                     + Math.pow(informed.blockZ - nearby.blockZ, 2);
-                            if (d < distSq) distSq = d;
-                        }
+                // If using brute-force fallback, apply spatial distance check.
+                // If using graph, no distance check — social connections span any distance.
+                if (!usedGraph) {
+                    Actor sourceActor = ActorRegistry.get(sourceId);
+                    Actor nearbyActor = ActorRegistry.get(npcId);
+                    if (sourceActor != null && nearbyActor != null) {
+                        double distSq = Math.pow(sourceActor.blockX - nearbyActor.blockX, 2)
+                              + Math.pow(sourceActor.blockZ - nearbyActor.blockZ, 2);
+                        if (distSq > 48.0 * 48.0) continue;
                     }
                 }
-                if (distSq > 48.0 * 48.0) continue;
 
                 // This NPC hears the rumor!
-                npcKnowledge.computeIfAbsent(nearby.id, k -> ConcurrentHashMap.newKeySet())
+                npcKnowledge.computeIfAbsent(npcId, k -> ConcurrentHashMap.newKeySet())
                         .add(rumorId);
 
                 // Record as RUMOR memory in cognitive store (Art XXXI.5)
                 // This is the "child tells the story" mechanism.
                 NpcMemoryTickHandler.recordRumorHeard(
-                        nearby.id, rumorId,
+                        npcId, rumorId,
                         distorted.getCurrentContent(), tick);
 
                 newlyInformed++;
-                Ergenverse.LOGGER.debug("[RumorNetwork] {} heard rumor '{}' (hop {})",
-                        nearby.id, rumorId, distorted.getHopCount());
+                Ergenverse.LOGGER.debug("[RumorNetwork] {} heard rumor '{}' (hop {}, via {})",
+                        npcId, rumorId, distorted.getHopCount(), usedGraph ? "graph" : "spatial");
             }
 
             propagated++;
