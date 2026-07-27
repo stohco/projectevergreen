@@ -81,6 +81,10 @@ export class NPCCognition {
   private wanderTarget: THREE.Vector3 | null = null
   private wanderTimer: number = 0
 
+  // Collision resolver: called before each movement step to check walls.
+  // Returns the corrected position. If null, no collision checking.
+  private collisionResolver: ((x: number, y: number, z: number, prevX: number, prevY: number, prevZ: number) => { x: number; z: number; hit: boolean }) | null = null
+
   constructor(config: NPCCognitionConfig, model: CultivatorModelHandle) {
     this.config = config
     this.model = model
@@ -98,6 +102,15 @@ export class NPCCognition {
       patience: 0.8,
       fatigue: 0.0,
     }
+  }
+
+  /**
+   * Set the collision resolver. The NPC will call this before each movement
+   * step to check if the new position hits a wall. This prevents NPCs from
+   * walking through buildings.
+   */
+  setCollisionResolver(resolver: (x: number, y: number, z: number, prevX: number, prevY: number, prevZ: number) => { x: number; z: number; hit: boolean }): void {
+    this.collisionResolver = resolver
   }
 
   /**
@@ -205,6 +218,8 @@ export class NPCCognition {
   private executeCommitment(dt: number, playerPos: THREE.Vector3): void {
     const pos = this.model.group.position
     const speed = 2 * dt // NPCs walk slowly (2 blocks/sec)
+    const prevX = pos.x
+    const prevZ = pos.z
 
     switch (this.state.commitment) {
       case 'approaching': {
@@ -214,6 +229,18 @@ export class NPCCognition {
           if (dir.length() > 1.5) {
             dir.normalize().multiplyScalar(speed)
             pos.add(dir)
+            // Check collision — NPCs can't walk through walls.
+            if (this.collisionResolver) {
+              const resolved = this.collisionResolver(pos.x, pos.y, pos.z, prevX, pos.y, prevZ)
+              pos.x = resolved.x
+              pos.z = resolved.z
+              if (resolved.hit) {
+                // Hit a wall — stop approaching, switch to observing.
+                this.state.commitment = 'observing'
+                this.model.setAnimation('idle')
+                break
+              }
+            }
             // Face the target.
             this.model.setYaw(Math.atan2(dir.x, dir.z))
             this.model.setAnimation('walk')
@@ -230,6 +257,12 @@ export class NPCCognition {
         if (dir.length() > 0.01) {
           dir.normalize().multiplyScalar(speed)
           pos.add(dir)
+          // Check collision.
+          if (this.collisionResolver) {
+            const resolved = this.collisionResolver(pos.x, pos.y, pos.z, prevX, pos.y, prevZ)
+            pos.x = resolved.x
+            pos.z = resolved.z
+          }
           this.model.setYaw(Math.atan2(dir.x, dir.z))
           this.model.setAnimation('run')
         }
@@ -252,6 +285,19 @@ export class NPCCognition {
         if (dir.length() > 0.5) {
           dir.normalize().multiplyScalar(speed * 0.7)
           pos.add(dir)
+          // Check collision.
+          if (this.collisionResolver) {
+            const resolved = this.collisionResolver(pos.x, pos.y, pos.z, prevX, pos.y, prevZ)
+            pos.x = resolved.x
+            pos.z = resolved.z
+            if (resolved.hit) {
+              // Hit a wall — pick a new wander target.
+              this.wanderTarget = null
+              this.wanderTimer = 0
+              this.model.setAnimation('idle')
+              break
+            }
+          }
           this.model.setYaw(Math.atan2(dir.x, dir.z))
           this.model.setAnimation('walk')
         } else {

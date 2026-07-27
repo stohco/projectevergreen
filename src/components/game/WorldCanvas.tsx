@@ -219,6 +219,10 @@ export default function WorldCanvas() {
         perceptionRange: 3,
         baseHostility: 0, // Wang Lin is not hostile to the player
       }, wanglinNpc)
+      // Wire NPC collision — Wang Lin can't walk through walls.
+      wanglinCognition.setCollisionResolver((x, y, z, prevX, prevY, prevZ) => {
+        return collision.resolve(x, y, z, prevX, prevY, prevZ)
+      })
 
       // ---- Canon fidelity check ----
       const violations = checkCanonFidelity({
