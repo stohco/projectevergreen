@@ -33,10 +33,14 @@ import net.minecraft.world.phys.Vec3;
  *       this because the cultivator's body height (0.5-1.5) is below the
  *       obstacle's leading edge.</li>
  *   <li>If blocked (forward OR upward), probe perpendicular dodge directions
- *       (left and right) at {@value #DODGE_PROBE_DIST} blocks. If exactly one
- *       is clear, dodge that way. If both are clear, pick one based on the
- *       cultivator's entity ID parity (deterministic per-cultivator bias to
- *       prevent oscillation — left if ID is even, right if odd).</li>
+ *       (left and right) at {@value #DODGE_PROBE_DIST} blocks. <b>CRON-136:</b>
+ *       Each dodge direction is now probed at THREE heights (chest +1.0, +3.0,
+ *       +6.0 above entity Y) — not just chest height — to prevent dodging
+ *       INTO a tall obstacle that curves into the dodge path. If exactly one
+ *       direction is clear at all three heights, dodge that way. If both are
+ *       clear, pick one based on the cultivator's entity ID parity
+ *       (deterministic per-cultivator bias to prevent oscillation — left if
+ *       ID is even, right if odd).</li>
  *   <li>If neither dodge is clear, vault upward (strong vertical impulse) —
  *       the cultivator rises above the obstacle. When the upward ray-cast
  *       detected the obstacle (tall obstacle case), the vault impulse is
@@ -111,11 +115,56 @@ public final class CultivatorFlightNavigator {
      * CRON-135: Vault upward impulse scale for TALL obstacles detected by
      * the upward ray-cast. Stronger than standard vault because the cultivator
      * needs to gain more altitude to clear a mountainside or cliff.
+     *
+     * <p><b>CRON-136 — math-derived value (closes CRON-135 self-critique #2).</b>
+     * The warning window is {@code LOOKAHEAD / cruiseSpeed} = {@code 3.0 / 0.4}
+     * = 7.5 ticks. The upward ray-cast detects obstacles up to +9 above entity
+     * Y. To clear a +9 obstacle, the cultivator must gain 9 blocks of altitude
+     * in 7.5 ticks = 1.2 blocks/tick upward velocity. At cruise speed 0.4
+     * blocks/tick, that requires a scale of {@code 1.2 / 0.4} = <b>3.0</b>.
+     *
+     * <p>The CRON-135 value of 1.2D produced only {@code 0.4 * 1.2} = 0.48
+     * blocks/tick (3.6 blocks in 7.5 ticks) — sufficient for +3 obstacles but
+     * crashing into +6 and +9 obstacles. The CRON-136 value of 3.0D produces
+     * {@code 0.4 * 3.0} = 1.2 blocks/tick (9.0 blocks in 7.5 ticks) — exactly
+     * enough to clear the maximum +9 sample.
+     *
+     * <p><b>Trade-off:</b> 3.0D is a strong vertical impulse (3× cruise speed).
+     * At Foundation cruise speed 0.4, the cultivator gains 1.2 blocks/tick = 24
+     * blocks/sec upward — visually a steep climb but canon-faithful (cultivators
+     * vault mountainsides rapidly in 仙逆). The alternative (lower scale, accept
+     * crashing into +6/+9) is a canon violation. 3.0D is the minimum value that
+     * clears the maximum detected obstacle.
      */
-    public static final double TALL_VAULT_SPEED_SCALE = 1.2D;
+    public static final double TALL_VAULT_SPEED_SCALE = 3.0D;
 
     /** Forward speed reduction when vaulting (slow forward progress while rising). */
     public static final double VAULT_FORWARD_SCALE = 0.3D;
+
+    /**
+     * CRON-136: Height samples (relative to entity Y) for dodge-path probing.
+     * Probes the dodge direction at chest height AND at two upward heights to
+     * prevent dodging INTO a tall obstacle (mountainside curving left/right).
+     *
+     * <p>Closes CRON-135 self-critique #4: 'No UPWARD ray-cast DURING dodge.
+     * The dodge path probes perpendicular at chest height only. If the
+     * cultivator dodges left to avoid a forward obstacle, but the left path
+     * has a TALL obstacle, the dodge probe returns clear (chest height is
+     * below the mountainside's leading edge) and the cultivator dodges INTO
+     * the mountainside.'
+     *
+     * <p>Samples:
+     * <ul>
+     *   <li>+1.0: chest height (existing — catches short obstacles)</li>
+     *   <li>+3.0: catches 3-block-tall walls in the dodge path</li>
+     *   <li>+6.0: catches 6-block-tall structures in the dodge path</li>
+     * </ul>
+     * +9 is omitted because at {@link #DODGE_PROBE_DIST} = 2.0 (perpendicular),
+     * a +9 obstacle in the dodge direction is rare and the cultivator can vault
+     * instead. Probing 3 heights (vs 1) is the minimum to prevent the
+     * dodge-INTO-mountain regression.
+     */
+    public static final double[] DODGE_HEIGHT_SAMPLES = {1.0D, 3.0D, 6.0D};
 
     /** Upward bias applied during diagonal dodge (helps clear the obstacle). */
     public static final double DODGE_UPWARD_BIAS_SCALE = 0.15D;
@@ -325,17 +374,34 @@ public final class CultivatorFlightNavigator {
 
     /**
      * Probe a perpendicular dodge direction. Returns true if the dodge path
-     * is clear (no solid block at {@link #DODGE_PROBE_DIST} perpendicular
-     * at chest height).
+     * is clear (no solid block at {@link #DODGE_PROBE_DIST} perpendicular at
+     * ALL dodge height samples).
+     *
+     * <p><b>CRON-136:</b> Previously probed only at chest height (Y+1.0). Now
+     * probes at {@link #DODGE_HEIGHT_SAMPLES} (chest + two upward heights) to
+     * prevent dodging INTO a tall obstacle. Closes CRON-135 self-critique #4:
+     * a cultivator dodging left to avoid a forward obstacle, where the left
+     * path has a mountainside curving left, would previously see 'clear' at
+     * chest height but crash into the mountainside. Now the probe at +3 and +6
+     * catches the mountainside's leading edge and refuses the dodge, forcing a
+     * vault instead.
+     *
+     * <p>Returns true only if ALL height samples are clear. If any sample hits
+     * a solid block, the dodge path is considered blocked (returns false).
      */
     private static boolean isDodgeClear(EntityCultivator cultivator, double perpX, double perpZ) {
         Level level = cultivator.level();
-        double checkX = cultivator.getX() + perpX * DODGE_PROBE_DIST;
-        double checkY = cultivator.getY() + 1.0D;  // chest height
-        double checkZ = cultivator.getZ() + perpZ * DODGE_PROBE_DIST;
-        BlockPos pos = BlockPos.containing(checkX, checkY, checkZ);
-        BlockState state = level.getBlockState(pos);
-        return !state.isSolidRender(level, pos);
+        double baseX = cultivator.getX() + perpX * DODGE_PROBE_DIST;
+        double baseZ = cultivator.getZ() + perpZ * DODGE_PROBE_DIST;
+        for (double h : DODGE_HEIGHT_SAMPLES) {
+            double checkY = cultivator.getY() + h;
+            BlockPos pos = BlockPos.containing(baseX, checkY, baseZ);
+            BlockState state = level.getBlockState(pos);
+            if (state.isSolidRender(level, pos)) {
+                return false;  // this height is blocked — dodge path is NOT clear
+            }
+        }
+        return true;  // all heights clear — dodge path is clear
     }
 
     /**

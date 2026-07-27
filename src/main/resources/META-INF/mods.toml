@@ -5,7 +5,7 @@ issueTrackerURL="https://example.com/issues"
 
 [[mods]]
 modId="ergenverse"
-version="0.1.11-alpha"
+version="0.1.12-alpha"
 displayName="Ergenverse"
 authors="Ergenverse Team"
 description='''

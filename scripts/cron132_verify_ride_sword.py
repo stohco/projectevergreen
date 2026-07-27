@@ -19,7 +19,10 @@ import io
 FORGE_MOD = Path("/home/z/my-project/forge-mod")
 MODEL_JAVA = FORGE_MOD / "src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java"
 TEX_DIR = FORGE_MOD / "src/main/resources/assets/ergenverse/textures/entity/cultivator"
-JAR = FORGE_MOD / "build/libs/ergenverse-0.1.7-alpha.jar"
+
+# Find the latest built JAR (CRON-136+: no longer hardcoded to a specific version).
+_jar_candidates = sorted((FORGE_MOD / "build/libs").glob("ergenverse-*.jar")) if (FORGE_MOD / "build/libs").exists() else []
+JAR = _jar_candidates[-1] if _jar_candidates else FORGE_MOD / "build/libs/ergenverse-0.1.7-alpha.jar"
 
 errors = []
 checks = 0

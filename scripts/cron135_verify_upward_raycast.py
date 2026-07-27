@@ -96,10 +96,14 @@ check("UPWARD_SAMPLES javadoc explains tall obstacle detection",
 print("\n[2] TALL_VAULT_SPEED_SCALE constant")
 check("TALL_VAULT_SPEED_SCALE constant declared",
       "public static final double TALL_VAULT_SPEED_SCALE" in nav_src)
-check("TALL_VAULT_SPEED_SCALE = 1.2D",
-      "TALL_VAULT_SPEED_SCALE = 1.2D" in nav_src)
+check("TALL_VAULT_SPEED_SCALE declared and >= 1.2D (CRON-136 corrected to 3.0D)",
+      re.search(r"TALL_VAULT_SPEED_SCALE\s*=\s*([0-9.]+)D", nav_src) is not None and
+      float(re.search(r"TALL_VAULT_SPEED_SCALE\s*=\s*([0-9.]+)D", nav_src).group(1)) >= 1.2,
+      "expected TALL_VAULT_SPEED_SCALE >= 1.2D (CRON-136 set 3.0D)")
 check("TALL_VAULT_SPEED_SCALE > VAULT_SPEED_SCALE (0.8D)",
-      "TALL_VAULT_SPEED_SCALE = 1.2D" in nav_src and "VAULT_SPEED_SCALE = 0.8D" in nav_src)
+      re.search(r"TALL_VAULT_SPEED_SCALE\s*=\s*([0-9.]+)D", nav_src) is not None and
+      float(re.search(r"TALL_VAULT_SPEED_SCALE\s*=\s*([0-9.]+)D", nav_src).group(1)) > 0.8 and
+      "VAULT_SPEED_SCALE = 0.8D" in nav_src)
 check("TALL_VAULT_SPEED_SCALE javadoc references CRON-135",
       re.search(r"CRON-135:\s*Vault\s+upward\s+impulse\s+scale\s+for\s+TALL", nav_src) is not None)
 
