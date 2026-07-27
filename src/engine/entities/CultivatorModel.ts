@@ -137,6 +137,20 @@ export function createCultivatorModel(
   torso.castShadow = true
   group.add(torso)
 
+  // Shoulders (wide flattened sphere across top of torso — gives human silhouette).
+  const shoulderGeo = new THREE.SphereGeometry(female ? 0.22 : 0.26, 16, 8)
+  const shoulders = new THREE.Mesh(shoulderGeo, robeMat)
+  shoulders.position.y = 1.30
+  shoulders.scale.set(1.4, 0.5, 0.8) // flatten + widen
+  shoulders.castShadow = true
+  group.add(shoulders)
+
+  // Collar (small cylinder around neck base — robe neckline).
+  const collarGeo = new THREE.CylinderGeometry(0.10, 0.12, 0.06, 12)
+  const collar = new THREE.Mesh(collarGeo, trimMat)
+  collar.position.y = 1.33
+  group.add(collar)
+
   // Sash (thin torus around waist at y=0.95).
   const sashGeo = new THREE.TorusGeometry(0.22, 0.04, 8, 16)
   const sash = new THREE.Mesh(sashGeo, sashMat)
@@ -157,12 +171,20 @@ export function createCultivatorModel(
   neck.position.y = 1.39
   group.add(neck)
 
-  // Head (sphere) — sits directly on neck, no gap.
+  // Head (sphere + jaw extension for human face shape).
   const headGeo = new THREE.SphereGeometry(0.14, 16, 12)
   const head = new THREE.Mesh(headGeo, skinMat)
   head.position.y = 1.50
+  head.scale.set(0.9, 1.05, 0.95) // slightly oval
   head.castShadow = true
   group.add(head)
+
+  // Jaw/chin (small cone extending forward from lower face).
+  const jawGeo = new THREE.SphereGeometry(0.08, 8, 6)
+  const jaw = new THREE.Mesh(jawGeo, skinMat)
+  jaw.position.set(0, 1.45, 0.08)
+  jaw.scale.set(0.8, 0.6, 0.7)
+  group.add(jaw)
 
   // Hair cap (half-sphere covering top of head, NOT bald).
   const hairCapGeo = new THREE.SphereGeometry(0.15, 16, 8, 0, Math.PI * 2, 0, Math.PI * 0.55)

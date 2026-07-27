@@ -31,6 +31,7 @@ import { bootstrapGraphFromCanon } from '@/engine/graph/CanonGraphLoader'
 export default function WorldCanvas() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [status, setStatus] = useState<string>('booting')
+  const [cameraLocked, setCameraLocked] = useState(false)
   const [hud, setHud] = useState({
     fps: 0,
     x: 0, y: 0, z: 0,
@@ -184,8 +185,12 @@ export default function WorldCanvas() {
         }
       }
       const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false }
+      // Click to lock pointer (NMS-style: locked = crosshair + mouse look).
       const onClick = () => { if (!pointerLocked) renderer.domElement.requestPointerLock?.() }
-      const onPointerLockChange = () => { pointerLocked = document.pointerLockElement === renderer.domElement }
+      const onPointerLockChange = () => {
+        pointerLocked = document.pointerLockElement === renderer.domElement
+        setCameraLocked(pointerLocked)
+      }
       const onMouseMove = (e: MouseEvent) => {
         if (!pointerLocked) return
         camera.userData.yaw = (camera.userData.yaw ?? 0) - e.movementX * 0.003
@@ -382,6 +387,35 @@ export default function WorldCanvas() {
   return (
     <div className="relative h-full w-full bg-black">
       <div ref={containerRef} className="absolute inset-0" />
+
+      {/* Crosshair (NMS-style, only when camera locked) */}
+      {cameraLocked && (
+        <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
+          <div className="relative h-6 w-6">
+            <div className="absolute left-1/2 top-0 h-2 w-px -translate-x-1/2 bg-amber-300/70" />
+            <div className="absolute bottom-0 left-1/2 h-2 w-px -translate-x-1/2 bg-amber-300/70" />
+            <div className="absolute top-1/2 left-0 h-px w-2 -translate-y-1/2 bg-amber-300/70" />
+            <div className="absolute top-1/2 right-0 h-px w-2 -translate-y-1/2 bg-amber-300/70" />
+            <div className="absolute left-1/2 top-1/2 h-0.5 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-300/90" />
+          </div>
+        </div>
+      )}
+
+      {/* Unlock/Lock Camera button (top-center) */}
+      <button
+        onClick={() => {
+          if (cameraLocked) {
+            document.exitPointerLock?.()
+          } else {
+            const canvas = containerRef.current?.querySelector('canvas')
+            canvas?.requestPointerLock?.()
+          }
+        }}
+        className="absolute left-1/2 top-4 z-30 -translate-x-1/2 select-none rounded-md border border-amber-500/40 bg-black/60 px-4 py-1.5 font-mono text-[10px] uppercase tracking-widest text-amber-200/80 backdrop-blur-sm transition-colors hover:border-amber-400/60 hover:text-amber-100"
+      >
+        {cameraLocked ? '🔓 Unlock Camera (ESC)' : '🔒 Lock Camera (Click)'}
+      </button>
+
       {/* Top-left status */}
       <div className="pointer-events-none absolute left-4 top-4 z-10 select-none font-mono text-[11px] uppercase tracking-[0.3em] text-amber-200/80">
         Er Gen Verse · {status}
@@ -403,6 +437,7 @@ export default function WorldCanvas() {
         <div>WASD move · MOUSE look · SCROLL zoom</div>
         <div>SPACE jump · SHIFT sprint</div>
         <div>F sword-flight (needs qi) · Q meditate (needs qi)</div>
+        <div>ESC unlock camera · CLICK lock camera</div>
       </div>
     </div>
   )
