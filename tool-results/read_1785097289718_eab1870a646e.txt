@@ -1,0 +1,841 @@
+     1→package dev.ergenverse.wanglin.bead;
+     2→
+     3→import dev.ergenverse.core.Ergenverse;
+     4→import dev.ergenverse.entity.EntityCultivator;
+     5→import dev.ergenverse.history.HistoryManager;
+     6→import dev.ergenverse.runtime.CanonUUID;
+     7→import dev.ergenverse.runtime.NPCRuntime;
+     8→import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+     9→import dev.ergenverse.runtime.WorldRuntime;
+    10→import dev.ergenverse.runtime.delta.WorldDeltaStore;
+    11→import net.minecraft.ChatFormatting;
+    12→import net.minecraft.core.BlockPos;
+    13→import net.minecraft.core.particles.ParticleTypes;
+    14→import net.minecraft.network.chat.Component;
+    15→import net.minecraft.server.level.ServerLevel;
+    16→import net.minecraft.server.level.ServerPlayer;
+    17→import net.minecraft.sounds.SoundEvents;
+    18→import net.minecraft.sounds.SoundSource;
+    19→import net.minecraft.world.level.levelgen.Heightmap;
+    20→
+    21→/**
+    22→ * Wang Ping Redemption Event — CRON-COMPLETIONIST-117.
+    23→ *
+    24→ * <p>Implements the canon-faithful "Wang Lin rebuilds Wang Ping's body from
+    25→ * sword qi" narrative beat — the redemption of Wang Ping (王平), Wang Lin's
+    26→ * biological son by 木冰眉 / 柳眉 (Mu Bingmei's ninth avatar Liu Mei).
+    27→ *
+    28→ * <p>CRON-116 registered Wang Ping as a canon NPC at the Suzaku Tomb
+    29→ * (his conception site) with {@code deadUntilRevived=true} — meaning
+    30→ * CanonActorMaterializer refused to spawn him on chunk load. CRON-117
+    31→ * closes this gap by clearing the flag and materializing him as a
+    32→ * mortal boy when the player (Wang Lin) triggers the redemption event.
+    33→ *
+    34→ * <h2>Canon Basis (fact-checked via web-search 2026-07-27)</h2>
+    35→ * <p>In the novel 仙逆 by 耳根, after Wang Lin slays Liu Mei and reclaims
+    36→ * Wang Ping's remnant soul (残魂) — which had been refined into a 怨婴
+    37→ * (resentment infant) by Liu Mei for ~100 years — Wang Lin rebuilds
+    38→ * Wang Ping's body using:
+    39→ *
+    40→ * <ul>
+    41→ *   <li><b>Two strands of sword qi (两道剑气)</b> from <b>凌天侯 (Ling Tianhou)</b>,
+    42→ *       the Sword Venerable (剑尊) and founder of the 大罗剑宗 (Da Luo Sword
+    43→ *       Sect). Ling Tianhou is at 净涅后期 (Quiet Nirvana late stage); his
+    44→ *       true identity is a clone/servant of 灭生老人 (Mie Sheng Lao Ren),
+    45→ *       a Fourth-Step cultivator of the Ni Chen Realm. Ling Tianhou
+    46→ *       <b>personally</b> gave the sword qi to Wang Lin (canon: Sohu
+    47→ *       https://www.sohu.com/a/849321229_568249) — not via an intermediary
+    48→ *       disciple. (The earlier CRON-117 note that it was "originally a
+    49→ *       life-saving treasure given by Ling Tianhou to his disciple" was
+    50→ *       an UNVERIFIED claim from a research subagent and is now retracted;
+    51→ *       the canon-faithful path is direct grant from Ling Tianhou to
+    52→ *       Wang Lin, modeled in {@link LingTianhouSwordQiGrantEvent}.)</li>
+    53→ *   <li><b>One strand condensed into flesh; the other guarded his soul.</b>
+    54→ *       CRON-122 canon verification: Baidu Baike 王平 entry (PRIMARY,
+    55→ *       https://baike.baidu.com/item/王平/62563845) — "一道化作王平的血肉之躯，
+    56→ *       另一道守护其魂魄". Multiple secondary sources (Sohu, Zhihu, 163.com)
+    57→ *       confirm. The result is a <b>"False Life" (虚假生命)</b>:
+    58→ *       outwardly human (handsome features, pure eyes, "no different from
+    59→ *       an ordinary person"), but inwardly a sword-qi construct that
+    60→ *       <b>cannot cry, cannot sire children, has no cultivation talent,
+    61→ *       and cannot sense spiritual qi</b>.</li>
+    62→ * </ul>
+    63→ *
+    64→ * <p><b>Canon chapter citations</b> (Baidu Baike-attested):
+    65→ * <ul>
+    66→ *   <li>Vol 7 Ch 680 《柳眉的特殊法宝》 — Wang Ping first appears as "厉儿
+    67→ *       (Li'er)", Liu Mei deploys the resentment infant against Wang Lin.</li>
+    68→ *   <li>Vol 7 Ch 681 — Wang Lin names him 王平 (Wang Ping).</li>
+    69→ *   <li>Ch 695 《王平的要求》 — references the Sun family on Ranyun Star.</li>
+    70→ *   <li>Ch 700 《惊变》 / Ch 701 《修为》 — arc beats.</li>
+    71→ * </ul>
+    72→ *
+    73→ * <p>Sources: Baidu Baike (https://baike.baidu.com/item/王平/62563845),
+    74→ * Sohu (https://www.sohu.com/a/1015521494_122415633),
+    75→ * Baidu Baike for 凌天侯 (https://baike.baidu.com/item/凌天侯/65285935),
+    76→ * Fandom wiki (https://xian-ni.fandom.com/wiki/Wang_Ping).
+    77→ *
+    78→ * <h2>Canon-Faithful Location Note (mod-original condensation)</h2>
+    79→ * <p>In canon, Wang Ping's body reconstruction happens on <b>冉云星
+    80→ * (Ranyun Star)</b> in the <b>罗天星域 (Luo Tian Star Domain)</b>, NOT
+    81→ * at the Suzaku Tomb. Suzaku Tomb is only Wang Ping's <b>conception</b>
+    82→ * site (Ch 443-450+, Wang Lin's union with Liu Mei under Mei Ji's
+    83→ * aphrodisiac influence). The 100-year refining into 怨婴 by Liu Mei
+    84→ * and the later sword-qi reconstruction both occur off-world, on
+    85→ * Ranyun Star, during Wang Lin's 问鼎 (Ascendant) stage.
+    86→ *
+    87→ * <p><b>Mod-original condensation</b>: this event triggers at the
+    88→ * Cultivation Planet Crystal at the Suzaku Tomb (the conception site),
+    89→ * not on Ranyun Star. <b>CRON-120 closes this canon-fidelity gap:</b>
+    90→ * the right-click on the Crystal at the Suzaku Tomb is still the trigger
+    91→ * (the Crystal is the spiritual-focus point), but on success the player
+    92→ * is TELEPORTED to {@link PlanetSuzakuBlueprint#RANYUN_STAR}
+    93→ * (-5000, surface, -5000) — a remote overworld region representing
+    94→ * 冉云星 — and Wang Ping materializes at 落月村 (Luo Yue Village, the
+    95→ * woodcarver village at the foot of 祁连峰, materialized by
+    96→ * {@link dev.ergenverse.spawn.RanyunStarBuilder}). The Suzaku Tomb
+    97→ * remains the conception site; the redemption happens on Ranyun Star
+    98→ * (canon-faithful). The mod-original condensation is RETIRED in CRON-120.
+    99→ *
+   100→ * <h2>Trigger Mechanism — Player Right-Click on the Inherited Crystal</h2>
+   101→ * <p>The redemption fires when the player right-clicks the
+   102→ * {@link dev.ergenverse.block.CultivationPlanetCrystalBlock} (in the
+   103→ * {@code INHERITED=true} state) at the Suzaku Tomb. The right-click is
+   104→ * gated by all of the following (checked in
+   105→ * {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}):
+   106→ *
+   107→ * <ol>
+   108→ *   <li><b>Crystal is inherited.</b> Canon-chronological: Wang Lin
+   109→ *       inherits the Suzaku Son status (Ch 443-450+) BEFORE Wang Ping's
+   110→ *       redemption (Ch 680+). The inheritance is a strict prerequisite.</li>
+   111→ *   <li><b>Player has exactly 1 FLESH strand AND 1 SOUL_GUARD strand in inventory.</b>
+   112→ *       CRON-118 canon correction: the prior CRON-117 implementation
+   113→ *       checked the bead's {@code isLiMuwanRevived} flag as a proxy for
+   114→ *       "Wang Lin has the prerequisites to channel Ling Tianhou's sword
+   115→ *       qi". This was chronologically INVERTED — Li Muwan is revived at
+   116→ *       the END of the novel (Wang Lin at 踏天境), which is FAR AFTER
+   117→ *       Wang Ping's redemption (Wang Lin at 问鼎). CRON-118 removes the
+   118→ *       Li Muwan revived proxy and replaces it with the canon-faithful
+   119→ *       Sword Qi Strand item (obtained from Ling Tianhou at the Da Luo
+   120→ *       Sword Sect, CRON-118).<br>
+   121→ *       CRON-122 canon-faithful strand-type differentiation: the prior
+   122→ *       CRON-118 check was "≥2 sword qi strands of any type". This
+   123→ *       incorrectly accepted 2 strands of the same type. CRON-122
+   124→ *       tightens the check to "exactly 1 FLESH + 1 SOUL_GUARD strand",
+   125→ *       matching the Baidu Baike 王平 entry: "一道化作王平的血肉之躯，
+   126→ *       另一道守护其魂魄" (one strand became Wang Ping's fleshly body,
+   127→ *       the other guarded his soul). Both functions are canon-required;
+   128→ *       the 2 strands (1 FLESH + 1 SOUL_GUARD) are consumed on successful
+   129→ *       redemption. See {@link dev.ergenverse.item.SwordQiStrandItem.StrandType}
+   130→ *       and {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}.</li>
+   131→ *   <li><b>Player's cultivation realm ≥ {@link dev.ergenverse.cultivation.RealmId#ASCENDANT}
+   132→ *       (问鼎 / Ascendant).</b> Canon: Wang Lin is at 问鼎 (Ascendant)
+   133→ *       during the redemption arc, breaking through to 问鼎中期 (Ascendant
+   134→ *       middle stage) by the arc's end. CRON-119 corrected the
+   135→ *       {@code RealmId.ASCENDANT.nameCn} from {@code "合体"} (a realm from
+   136→ *       凡人修仙传, NOT 仙逆) to the canon {@code "问鼎"} (WenDing). The
+   137→ *       intent is "Wang Lin has reached the Ascendant-tier power needed
+   138→ *       to wield Ling Tianhou's sword qi".</li>
+   139→ *   <li><b>Wang Ping's {@code deadUntilRevived} flag is true.</b> The
+   140→ *       redemption is a one-time event per save. Once Wang Ping is
+   141→ *       redeemed, the flag is cleared (persisted via
+   142→ *       {@link WorldDeltaStore#markActorRevived}) and the right-click
+   143→ *       falls through to the "Crystal is silent" message.</li>
+   144→ * </ol>
+   145→ *
+   146→ * <h2>On Success</h2>
+   147→ * <ol>
+   148→ *   <li>Clears Wang Ping's {@code deadUntilRevived} flag (in-memory via
+   149→ *       {@link NPCRuntime#markActorAlive}, persisted via
+   150→ *       {@link WorldDeltaStore#markActorRevived}).</li>
+   151→ *   <li>Updates Wang Ping's ActorState position to the Crystal's (x, z)
+   152→ *       so future chunk reloads re-materialize him at the Suzaku Tomb.</li>
+   153→ *   <li>Materializes Wang Ping as a living {@link EntityCultivator} at
+   154→ *       the Crystal's position, with:
+   155→ *     <ul>
+   156→ *       <li>characterId = "wang_ping"</li>
+   157→ *       <li>displayName = "Wang Ping 王平"</li>
+   158→ *       <li>realm = "mortal" (canon: the sword-qi body has NO cultivation
+   159→ *           talent — Wang Ping cannot cultivate)</li>
+   160→ *       <li>HP = 20.0F (mortal — he is a child)</li>
+   161→ *     </ul>
+   162→ *   </li>
+   163→ *   <li>Spawns canon-faithful particle + sound effects (see below).</li>
+   164→ *   <li>Displays a bilingual message (Chinese + English).</li>
+   165→ *   <li>Records the event in HistoryManager.</li>
+   166→ * </ol>
+   167→ *
+   168→ * <h2>Particle + Sound Design (canon-faithful: sword-qi coalescing)</h2>
+   169→ * <ul>
+   170→ *   <li><b>END_ROD spiral ascending</b> at the Crystal — sword qi
+   171→ *       condensing downward into a body (descending spiral, mirror of
+   172→ *       the MuBingmeiAcceptanceEvent's ascending spiral).</li>
+   173→ *   <li><b>END_ROD ring at Wang Ping's spawn point</b> — the body
+   174→ *       forming, ring of condensing sword qi.</li>
+   175→ *   <li><b>FIREWORK central flash</b> at Wang Ping's chest — the moment
+   176→ *       of reconstruction (the "False Life" igniting).</li>
+   177→ *   <li><b>AMETHYST_BLOCK_CHIME sound at both ends</b> — the crystalline
+   178→ *       tone of sword qi (sword qi is canonically "crystalline" in
+   179→ *       texture — Ling Tianhou is the Sword Venerable of Da Luo Sword
+   180→ *       Sect, and the sword qi manifests as a crystalline tone).</li>
+   181→ *   <li><b>BELL sound at the midpoint</b> — the formal moment of
+   182→ *       redemption (like a temple bell, mirroring the MuBingmeiAcceptanceEvent).</li>
+   183→ *   <li><b>PLAYER_LEVELUP sound at Wang Ping</b> — the bright ascending
+   184→ *       tone of new life (a child's first breath).</li>
+   185→ * </ul>
+   186→ *
+   187→ * <p>Deliberately AVOIDS:
+   188→ * <ul>
+   189→ *   <li>ENDER_DRAGON_GROWL — too apocalyptic for a redemption arc.</li>
+   190→ *   <li>WITHER_SPAWN — too dark; Wang Ping's redemption is a positive
+   191→ *       narrative beat (father-son love), not a dark event.</li>
+   192→ *   <li>DRAGON_BREATH particles — too aggressive.</li>
+   193→ *   <li>LIGHTNING_BOLT — too destructive; this is a creation event,
+   194→ *       not a destruction event.</li>
+   195→ * </ul>
+   196→ *
+   197→ * <h2>State Transition Diagram</h2>
+   198→ * <pre>
+   199→ *   CRON-99:  Li Muwan dies → bead.hasLiMuwanSoul = true
+   200→ *   CRON-100/101/102: Player invokes /ergenverse bead revive (137 attempts)
+   201→ *             → bead.isLiMuwanRevived = true
+   202→ *             → Li Muwan materializes as companion at player position
+   203→ *   CRON-106: Player right-clicks Crystal with bead + realm ≥ NASCENT_SOUL
+   204→ *             → Crystal.INHERITED = true
+   205→ *             → bead.isSuzakuSon = true
+   206→ *             → Tuo Sen spawns (CRON-107)
+   207→ *   CRON-117: Player right-clicks INHERITED Crystal with bead (Li Muwan revived)
+   208→ *             + realm ≥ ASCENDANT + Wang Ping deadUntilRevived=true
+   209→ *             → Wang Ping deadUntilRevived = false (persisted)
+   210→ *             → Wang Ping materializes at Suzaku Tomb as mortal boy
+   211→ *             → (future CRON: Wang Ping mortal-life arc — woodcarving,
+   212→ *                marriage to 青宜, emperor reign, body dispersion,
+   213→ *                残魂 sealing into 天逆珠)
+   214→ * </pre>
+   215→ *
+   216→ * <h2>Single-Player Maximalism (Article XLIII)</h2>
+   217→ * <p>The redemption only fires when the player is at the Suzaku Tomb
+   218→ * with all prerequisites met. In single-player maximalism, this means
+   219→ * the player must:
+   220→ * <ol>
+   221→ *   <li>Reach Ascendant realm (问鼎).</li>
+   222→ *   <li>Complete the Suzaku Son inheritance (CRON-106).</li>
+   223→ *   <li>Complete Li Muwan's revival (CRON-100/101/102).</li>
+   224→ *   <li>Return to the Suzaku Tomb and right-click the (now-inherited)
+   225→ *       Crystal with the bead.</li>
+   226→ * </ol>
+   227→ * <p>This is a high-friction canon-faithful gate — the redemption is
+   228→ * a mid-late-game narrative beat, not a day-1 event.
+   229→ *
+   230→ * <h2>Architecture</h2>
+   231→ * <p>This event is a static utility class (mirrors the CRON-102
+   232→ * {@link LiMuwanRevivalEvent} and CRON-107 {@link TuoSenSpawnEvent}
+   233→ * patterns). The sole entry point is
+   234→ * {@link #redeemAtSuzakuTomb(ServerPlayer, BlockPos, long)}, called by
+   235→ * {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use} after
+   236→ * the prerequisites are checked.
+   237→ *
+   238→ * <p>The event uses the existing {@link WorldRuntime} singleton to access
+   239→ * the {@link NPCRuntime} (for ActorState) and the
+   240→ * {@link dev.ergenverse.runtime.materialize.CanonActorMaterializer} (for
+   241→ * entity creation). It persists the revived state via
+   242→ * {@link WorldDeltaStore#markActorRevived} (CRON-103 pattern).
+   243→ *
+   244→ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.
+   245→ *
+   246→ * @see dev.ergenverse.block.CultivationPlanetCrystalBlock#use (trigger)
+   247→ * @see LiMuwanRevivalEvent (predecessor — CRON-102, revival pattern)
+   248→ * @see TuoSenSpawnEvent (parallel — CRON-107, post-inheritance spawn)
+   249→ * @see dev.ergenverse.runtime.CanonUUID#WANG_PING
+   250→ * @see dev.ergenverse.runtime.PlanetSuzakuBlueprint#SUZAKU_TOMB
+   251→ */
+   252→public final class WangPingRedemptionEvent {
+   253→
+   254→    /**
+   255→     * Stable identifier for the HistoryManager subject on Wang Ping's
+   256→     * redemption (the body reconstruction beat). Distinct from other
+   257→     * subjects so subscribers can react specifically to this beat.
+   258→     *
+   259→     * <p>CRON-120: subject retained as the legacy id for backward
+   260→     * compatibility with prior CRON-117 history records. The actual
+   261→     * event now fires on Ranyun Star — see {@link #redeemAtRanyunStar}.
+   262→     */
+   263→    public static final String SUBJECT_WANG_PING_REDEEMED = "wang_ping_redeemed_at_suzaku_tomb";
+   264→
+   265→    /**
+   266→     * CRON-120: the new HistoryManager subject reflecting the canon-
+   267→     * faithful location (Ranyun Star). Both the legacy id and this new
+   268→     * id are written on a successful redemption — the legacy id for
+   269→     * subscriber backward-compat, this new id for canon-faithful
+   270→     * attribution. Subscribers can listen to either.
+   271→     */
+   272→    public static final String SUBJECT_WANG_PING_REDEEMED_AT_RANYUN_STAR =
+   273→            "wang_ping_redeemed_at_ranyun_star";
+   274→
+   275→    /**
+   276→     * The cultivation realm Wang Ping attains after redemption.
+   277→     * Canon: the sword-qi body has NO cultivation talent — Wang Ping
+   278→     * cannot cultivate. The realm is "mortal" (凡人) for life.
+   279→     *
+   280→     * <p>Wang Ping twice asked Wang Lin to learn cultivation and was
+   281→     * refused both times — because cultivating the sword-qi body would
+   282→     * detonate the residual resentment and kill him (Baidu Baike,
+   283→     * Fandom wiki). The mod honors this: realm = "mortal" permanently.
+   284→     */
+   285→    public static final String REDEEMED_REALM = "mortal";
+   286→
+   287→    /**
+   288→     * Wang Ping's HP after redemption. Canon: he is a mortal child
+   289→     * with a sword-qi body — outwardly human but inwardly a construct.
+   290→     * The mod uses the standard mortal HP (20.0 = 10 hearts) to reflect
+   291→     * his mortal vulnerability. He is NOT a cultivator; he cannot
+   292→     * withstand combat with cultivation-tier threats.
+   293→     *
+   294→     * <p>Canon: Wang Ping's sword-qi body is a "False Life" — it does
+   295→     * not age normally, but it can be "killed" by dispersing the sword
+   296→     * qi. At age 72, Wang Ping voluntarily disperses his sword-qi body.
+   297→     * The mod does not implement the dispersion event (future CRON).
+   298→     */
+   299→    public static final float REDEEMED_HP = 20.0F;
+   300→
+   301→    /**
+   302→     * Number of END_ROD particles in the descending sword-qi spiral
+   303→     * at the Crystal. The spiral represents sword qi condensing
+   304→     * downward into a body — the inverse of the MuBingmeiAcceptanceEvent's
+   305→     * ascending spiral (which represents Qi rising).
+   306→     */
+   307→    private static final int CRYSTAL_SPIRAL_PARTICLE_COUNT = 40;
+   308→
+   309→    /**
+   310→     * Number of END_ROD particles in the body-formation ring at Wang
+   311→     * Ping's spawn point. The ring represents the body coalescing
+   312→     * from the descending sword qi.
+   313→     */
+   314→    private static final int BODY_RING_PARTICLE_COUNT = 32;
+   315→
+   316→    /**
+   317→     * Number of END_ROD particles in the stream from the Crystal to
+   318→     * Wang Ping's spawn point. The stream represents the sword qi
+   319→     * flowing from the Crystal (the spiritual core) to the body
+   320→     * being reconstructed.
+   321→     */
+   322→    private static final int SWORD_QI_STREAM_PARTICLE_COUNT = 24;
+   323→
+   324→    /**
+   325→     * Number of FIREWORK particles for the central flash at Wang Ping's
+   326→     * chest — the moment of "False Life" ignition.
+   327→     */
+   328→    private static final int CENTRAL_FLASH_PARTICLE_COUNT = 12;
+   329→
+   330→    /**
+   331→     * Number of AMETHYST particles for the crystalline sword-qi burst
+   332→     * at both ends (Crystal + Wang Ping).
+   333→     */
+   334→    private static final int CRYSTAL_BURST_PARTICLE_COUNT = 16;
+   335→
+   336→    /**
+   337→     * Vertical offset (blocks) above Wang Ping's feet where the body
+   338→     * forms. 1.0 = chest height. Used for particle spawning.
+   339→     */
+   340→    private static final double BODY_FORMATION_HEIGHT = 1.0;
+   341→
+   342→    private WangPingRedemptionEvent() {}
+   343→
+   344→    /**
+   345→     * Redeem Wang Ping — clear his {@code deadUntilRevived} flag and
+   346→     * materialize him as a mortal boy on Ranyun Star (冉云星).
+   347→     *
+   348→     * <p><b>CRON-COMPLETIONIST-120 — CANON-FAITHFUL RELOCATION.</b>
+   349→     * Prior to CRON-120, this method materialized Wang Ping at the
+   350→     * Suzaku Tomb (the conception site) — a mod-original condensation
+   351→     * flagged in CRON-117 self-critique #1. The canon clearly establishes
+   352→     * (Baidu Baike 仙逆编年史) that Wang Lin rebuilt Wang Ping's body
+   353→     * <b>on 冉云星 (Ranyun Star)</b> in the 罗天星域 / 雷之仙界 domain,
+   354→     * NOT at the Suzaku Tomb. CRON-120 closes this canon-fidelity gap:
+   355→     *
+   356→     * <p>The redemption now fires when the player right-clicks the
+   357→     * Cultivation Planet Crystal at the Suzaku Tomb (still the spiritual-
+   358→     * focus trigger), but on success the player is TELEPORTED to Ranyun
+   359→     * Star and Wang Ping is materialized at 落月村 (Luo Yue Village, the
+   360→     * woodcarver village at the foot of 祁连峰). The Suzaku Tomb remains
+   361→     * the conception site (Ch 443-450+); the redemption happens on
+   362→     * Ranyun Star (Ch 680+).
+   363→     *
+   364→     * <p>Called by {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}
+   365→     * AFTER all prerequisites are verified (Crystal inherited, ≥2 Sword
+   366→     * Qi Strand items in inventory, player realm ≥ ASCENDANT, Wang Ping's
+   367→     * deadUntilRevived flag still true). This method performs the
+   368→     * canon-faithful redemption:
+   369→     * <ol>
+   370→     *   <li>Validates prerequisites (defensive — caller already checked).</li>
+   371→     *   <li>Force-loads the Ranyun Star destination chunk.</li>
+   372→     *   <li>Spawns a departure burst at the Crystal (Suzaku Tomb).</li>
+   373→     *   <li>Teleports the player to Ranyun Star (落月村 village center).</li>
+   374→     *   <li>Updates Wang Ping's ActorState.x/z to the Ranyun Star position.</li>
+   375→     *   <li>Persists the redeemed state and clears deadUntilRevived.</li>
+   376→     *   <li>Materializes Wang Ping at Ranyun Star via CanonActorMaterializer.</li>
+   377→     *   <li>Configures Wang Ping's realm="mortal" and HP=20.0F.</li>
+   378→     *   <li>Spawns redemption particle + sound effects at Ranyun Star.</li>
+   379→     *   <li>Displays the canon-faithful bilingual message (referencing 冉云星).</li>
+   380→     *   <li>Records in HistoryManager (both legacy + new subject ids).</li>
+   381→     * </ol>
+   382→     *
+   383→     * <p>Defensive: any failure (WorldRuntime unavailable, ActorState
+   384→     * missing, materialization failure) is logged at WARN level and the
+   385→     * method returns {@code false}. The caller (CultivationPlanetCrystalBlock)
+   386→     * does NOT undo the right-click — the player can retry by right-clicking
+   387→     * again. The redemption is idempotent: if it succeeds once, the flag
+   388→     * is cleared and subsequent right-clicks fall through to the "Crystal
+   389→     * is silent" message.
+   390→     *
+   391→     * @param player     the server player (Wang Lin) who triggered the
+   392→     *                   redemption by right-clicking the Crystal
+   393→     * @param crystalPos the position of the Cultivation Planet Crystal
+   394→     *                   at the Suzaku Tomb (the spiritual-focus trigger
+   395→     *                   point; the player is teleported FROM here TO
+   396→     *                   Ranyun Star)
+   397→     * @param currentTick the current game tick (for HistoryManager)
+   398→     * @return {@code true} if Wang Ping was successfully redeemed and
+   399→     *         materialized on Ranyun Star; {@code false} on any failure
+   400→     *         (logged at WARN)
+   401→     */
+   402→    public static boolean redeemAtRanyunStar(ServerPlayer player,
+   403→                                              BlockPos crystalPos,
+   404→                                              long currentTick) {
+   405→        ServerLevel level = player.serverLevel();
+   406→
+   407→        // 1. Get the WorldRuntime singleton (defensive — mirrors LiMuwanRevivalEvent).
+   408→        WorldRuntime runtime;
+   409→        try {
+   410→            runtime = WorldRuntime.get();
+   411→        } catch (Throwable t) {
+   412→            Ergenverse.LOGGER.error("[Ergenverse] CRON-120: WorldRuntime not available — "
+   413→                    + "cannot redeem Wang Ping. Error: {}", t.getMessage(), t);
+   414→            player.sendSystemMessage(Component.literal(
+   415→                    "王平的残魂在天逆珠中叹息——世界运行时尚未就绪。")
+   416→                    .withStyle(ChatFormatting.RED));
+   417→            return false;
+   418→        }
+   419→
+   420→        // 2. Get Wang Ping's ActorState from the NPCRuntime.
+   421→        NPCRuntime.ActorState state = runtime.npcs().getActor(CanonUUID.WANG_PING);
+   422→        if (state == null) {
+   423→            Ergenverse.LOGGER.error("[Ergenverse] CRON-120: Wang Ping's ActorState not found "
+   424→                    + "in NPCRuntime (canon UUID {}). Cannot redeem.", CanonUUID.WANG_PING);
+   425→            player.sendSystemMessage(Component.literal(
+   426→                    "王平的数据未在世界中注册。")
+   427→                    .withStyle(ChatFormatting.RED));
+   428→            return false;
+   429→        }
+   430→
+   431→        // 3. Idempotency guard: if Wang Ping is already redeemed (deadUntilRevived=false),
+   432→        //    this method should not have been called. But defensive: check and return.
+   433→        if (!state.deadUntilRevived) {
+   434→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-120: Wang Ping is already redeemed "
+   435→                    + "(deadUntilRevived=false). The right-click should have fallen through "
+   436→                    + "to the 'Crystal is silent' message. Treating as a no-op.");
+   437→            return false;
+   438→        }
+   439→
+   440→        // 4. Dematerialize existing Wang Ping entity (if any — defensive).
+   441→        if (runtime.npcs().isMaterialized(CanonUUID.WANG_PING)) {
+   442→            runtime.npcs().dematerializeActor(CanonUUID.WANG_PING, runtime);
+   443→            Ergenverse.LOGGER.info("[Ergenverse] CRON-120: Dematerialized existing Wang Ping "
+   444→                    + "entity before re-spawning on Ranyun Star.");
+   445→        }
+   446→
+   447→        // ── 5. CRON-120: Compute Ranyun Star destination ──
+   448→        // The destination is the 落月村 village center at the foot of 祁连峰.
+   449→        // We force-load the destination chunk and query the surface Y via the
+   450→        // MOTION_BLOCKING heightmap (mirrors the ZhouRuKunxuDepartureEvent
+   451→        // teleport-safety pattern from CRON-112).
+   452→        int destX = PlanetSuzakuBlueprint.RANYUN_STAR.x;
+   453→        int destZ = PlanetSuzakuBlueprint.RANYUN_STAR.z;
+   454→        BlockPos destBlockPos = new BlockPos(destX, 0, destZ);
+   455→
+   456→        // Force-load the destination chunk so the heightmap query is accurate
+   457→        // and the teleport destination is safe.
+   458→        level.getChunk(destBlockPos.getX() >> 4, destBlockPos.getZ() >> 4);
+   459→
+   460→        // Query the surface Y via MOTION_BLOCKING heightmap (highest non-
+   461→        // motion-blocking block: ignores air, leaves, etc.).
+   462→        BlockPos surfacePos = level.getHeightmapPos(
+   463→                Heightmap.Types.MOTION_BLOCKING, destBlockPos);
+   464→        int destSurfaceY = surfacePos.getY();
+   465→
+   466→        double destCenterX = destX + 0.5;
+   467→        double destCenterY = destSurfaceY + 1.0;  // stand on the surface
+   468→        double destCenterZ = destZ + 0.5;
+   469→
+   470→        // ── 6. CRON-120: Spawn departure burst at the Crystal (Suzaku Tomb) ──
+   471→        // The Crystal flares as Wang Lin channels the sword qi — the visual
+   472→        // cue that the player is about to be teleported to Ranyun Star.
+   473→        spawnDepartureBurst(level, crystalPos);
+   474→
+   475→        // ── 7. CRON-120: Teleport the PLAYER to Ranyun Star ──
+   476→        // Mirrors ZhouRuKunxuDepartureEvent's teleport pattern, but for
+   477→        // ServerPlayer (not EntityCultivator). ServerPlayer extends Player
+   478→        // extends LivingEntity extends Entity, so teleportTo(x, y, z) is
+   479→        // available. Same-dimension teleport (overworld → overworld, just
+   480→        // from Suzaku Tomb to Ranyun Star region).
+   481→        //
+   482→        // Canon narrative: Wang Lin channels Ling Tianhou's sword qi through
+   483→        // the Crystal at the Suzaku Tomb; the Crystal tears open a void-rift
+   484→        // to Ranyun Star (where the redemption will happen). The player
+   485→        // steps through the rift and arrives at 落月村.
+   486→        player.teleportTo(destCenterX, destCenterY, destCenterZ);
+   487→        Ergenverse.LOGGER.info("[Ergenverse] CRON-120: Teleported player {} from Suzaku Tomb "
+   488→                        + "({}, {}, {}) to Ranyun Star ({}, {}, {}).",
+   489→                player.getName().getString(),
+   490→                crystalPos.getX(), crystalPos.getY(), crystalPos.getZ(),
+   491→                destX, destSurfaceY, destZ);
+   492→
+   493→        // ── 8. Update Wang Ping's ActorState to the Ranyun Star position ──
+   494→        // Future chunk reloads will re-materialize Wang Ping at 落月村.
+   495→        state.x = destX;
+   496→        state.z = destZ;
+   497→
+   498→        // 9. CRON-117/120: persist the redeemed state and clear the deadUntilRevived
+   499→        //    flag. Mirrors the CRON-103 Li Muwan pattern + CRON-107 Tuo Sen pattern:
+   500→        //    write the UUID to the WorldDeltaStore's revived-actor set (persists
+   501→        //    across world reload), and clear the in-memory deadUntilRevived flag.
+   502→        try {
+   503→            runtime.deltaStore().markActorRevived(CanonUUID.WANG_PING);
+   504→            runtime.npcs().markActorAlive(CanonUUID.WANG_PING);
+   505→            Ergenverse.LOGGER.info("[Ergenverse] CRON-120: marked Wang Ping as redeemed in "
+   506→                    + "WorldDeltaStore (persisted) and cleared deadUntilRevived flag in NPCRuntime.");
+   507→        } catch (Throwable t) {
+   508→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-120: failed to persist redeemed-actor "
+   509→                    + "state for Wang Ping: {}", t.getMessage());
+   510→            // Non-fatal: we still attempt the materialization below.
+   511→        }
+   512→
+   513→        // 10. Materialize Wang Ping at Ranyun Star via the standard
+   514→        //     CanonActorMaterializer. This sets the canon profile data
+   515→        //     (characterId="wang_ping", displayName="Wang Ping 王平",
+   516→        //     sectId="none", realm="mortal"). The materializer will use
+   517→        //     the updated state.x/z (Ranyun Star) to spawn him.
+   518→        int entityId = runtime.npcs().materializeActor(CanonUUID.WANG_PING, runtime);
+   519→        if (entityId < 0) {
+   520→            Ergenverse.LOGGER.error("[Ergenverse] CRON-120: CanonActorMaterializer failed to "
+   521→                    + "spawn Wang Ping at Ranyun Star ({}, {}).", destX, destZ);
+   522→            player.sendSystemMessage(Component.literal(
+   523→                    "王平的剑气未能凝聚成形——物化失败。")
+   524→                    .withStyle(ChatFormatting.RED));
+   525→            return false;
+   526→        }
+   527→
+   528→        // 11. Find the spawned entity and configure it.
+   529→        EntityCultivator wangPing = findEntityById(level, entityId);
+   530→        if (wangPing == null) {
+   531→            Ergenverse.LOGGER.error("[Ergenverse] CRON-120: Wang Ping entity (id={}) not found "
+   532→                    + "after materialization on Ranyun Star.", entityId);
+   533→            return false;
+   534→        }
+   535→
+   536→        // 12. Set his cultivation realm to "mortal" (canon: sword-qi body
+   537→        //     has NO cultivation talent).
+   538→        wangPing.setCultivationRealm(REDEEMED_REALM);
+   539→
+   540→        // 13. Set his HP to the mortal value (canon: mortal child).
+   541→        try {
+   542→            wangPing.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH)
+   543→                    .setBaseValue(REDEEMED_HP);
+   544→            wangPing.setHealth(REDEEMED_HP);
+   545→        } catch (Throwable t) {
+   546→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-120: Failed to set Wang Ping's HP: {}",
+   547→                    t.getMessage());
+   548→        }
+   549→
+   550→        // 14. Move Wang Ping to a position near the village center (offset by
+   551→        //     1 block east so he stands beside the woodcarver's bench, not on
+   552→        //     top of it). The materializer may have placed him at a slightly
+   553→        //     off position.
+   554→        double spawnX = destX + 1.0;
+   555→        double spawnY = destSurfaceY + 1.0;  // stand on the surface
+   556→        double spawnZ = destZ + 0.5;
+   557→        wangPing.moveTo(spawnX, spawnY, spawnZ,
+   558→                0.0F, 0.0F);  // facing south (toward the south path exit)
+   559→
+   560→        // 15. Spawn the redemption particle + sound effects at Ranyun Star.
+   561→        //     Use a virtual "Crystal position" at the destination (the player
+   562→        //     is now at Ranyun Star; the effects should appear around Wang Ping
+   563→        //     and the woodcarver's altar).
+   564→        BlockPos ranyunCrystalPos = new BlockPos(destX, destSurfaceY, destZ);
+   565→        spawnRedemptionEffects(level, ranyunCrystalPos, wangPing);
+   566→
+   567→        // 16. Display the canon-faithful redemption message (bilingual).
+   568→        //     CRON-120: text updated to reference 冉云星 (Ranyun Star) and
+   569→        //     落月村 (Luo Yue Village), not the Suzaku Tomb.
+   570→        player.sendSystemMessage(Component.literal(
+   571→                "─────────────────────────────────────")
+   572→                .withStyle(ChatFormatting.LIGHT_PURPLE));
+   573→        player.sendSystemMessage(Component.literal(
+   574→                "天逆珠中两道剑气迸发，撕裂虚空——朱雀墓与冉云星相连。")
+   575→                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   576→        player.sendSystemMessage(Component.literal(
+   577→                "你踏过虚空裂缝，降临在罗天星域·冉云星·落月村。")
+   578→                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   579→        player.sendSystemMessage(Component.literal(
+   580→                "剑气凝肉，剑气凝魂——王平的肉身在木雕师的山村中重塑。")
+   581→                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   582→        player.sendSystemMessage(Component.literal(
+   583→                "「爹……」孩子睁开双眼，那双眼眸清明如水。")
+   584→                .withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC));
+   585→        player.sendSystemMessage(Component.literal(
+   586→                "Two strands of sword qi burst from the Heaven-Defying Bead, "
+   587→                        + "tearing the void — Suzaku Tomb and Ranyun Star are joined.")
+   588→                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   589→        player.sendSystemMessage(Component.literal(
+   590→                "You step through the rift, arriving at Luo Yue Village on "
+   591→                        + "Ranyun Star in the Luo Tian Star Domain.")
+   592→                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   593→        player.sendSystemMessage(Component.literal(
+   594→                "Sword qi condenses into flesh, sword qi condenses into soul — "
+   595→                        + "Wang Ping's body is rebuilt in the woodcarver's village.")
+   596→                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   597→        player.sendSystemMessage(Component.literal(
+   598→                "\"Father...\" The child opens his eyes — their clarity like water.")
+   599→                .withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC));
+   600→        player.sendSystemMessage(Component.literal(
+   601→                "他不能哭，不能修炼，不能感受灵气——但他是你的儿子。")
+   602→                .withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
+   603→        player.sendSystemMessage(Component.literal(
+   604→                "He cannot cry, cannot cultivate, cannot sense spiritual qi — "
+   605→                        + "but he is your son.")
+   606→                .withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
+   607→        player.sendSystemMessage(Component.literal(
+   608→                "─────────────────────────────────────")
+   609→                .withStyle(ChatFormatting.LIGHT_PURPLE));
+   610→
+   611→        // 17. Record in HistoryManager — write BOTH subject ids for backward
+   612→        //     compatibility (legacy id) and canon-faithful attribution (new id).
+   613→        HistoryManager.onDiscovery(player, SUBJECT_WANG_PING_REDEEMED,
+   614→                "Wang Ping (王平) materialized as a mortal boy on Ranyun Star (冉云星), "
+   615→                        + "at 落月村 (Luo Yue Village, the woodcarver village at the foot of "
+   616→                        + "祁连峰). His body was rebuilt from two strands of sword qi (剑气) "
+   617→                        + "from Ling Tianhou (凌天侯), channeled through the Heaven-Defying "
+   618→                        + "Bead at the Cultivation Planet Crystal at the Suzaku Tomb. The "
+   619→                        + "Crystal tore open a void-rift; Wang Lin stepped through to Ranyun "
+   620→                        + "Star where the redemption took place. The sword-qi body is a "
+   621→                        + "'False Life' (虚假生命) — outwardly human but unable to cry, "
+   622→                        + "cultivate, or sense spiritual qi. Wang Lin has reclaimed his son "
+   623→                        + "from Liu Mei's resentment infant (怨婴). The mortal-life arc "
+   624→                        + "(二次化凡) may now begin on Ranyun Star.",
+   625→                currentTick);
+   626→        HistoryManager.onDiscovery(player, SUBJECT_WANG_PING_REDEEMED_AT_RANYUN_STAR,
+   627→                "Wang Ping redeemed on Ranyun Star (CRON-120 canon-faithful relocation). "
+   628→                        + "Redemption location: 落月村 at (" + destX + ", " + destSurfaceY
+   629→                        + ", " + destZ + ").",
+   630→                currentTick);
+   631→
+   632→        Ergenverse.LOGGER.info("[Ergenverse] CRON-120: Wang Ping redeemed on Ranyun Star "
+   633→                        + "({}, {}, {}) for player {}. Realm={}, HP={}, characterId={}.",
+   634→                destX, destSurfaceY, destZ,
+   635→                player.getName().getString(), REDEEMED_REALM, REDEEMED_HP,
+   636→                wangPing.getCharacterId());
+   637→
+   638→        return true;
+   639→    }
+   640→
+   641→    /**
+   642→     * <b>CRON-COMPLETIONIST-120: DEPRECATED.</b> Use
+   643→     * {@link #redeemAtRanyunStar(ServerPlayer, BlockPos, long)} instead.
+   644→     *
+   645→     * <p>CRON-117's original implementation materialized Wang Ping at the
+   646→     * Suzaku Tomb — a mod-original condensation flagged in CRON-117 self-
+   647→     * critique #1 as canon-incorrect (canon places the redemption on
+   648→     * Ranyun Star, not at the Suzaku Tomb). CRON-120 closes this canon-
+   649→     * fidelity gap: this method now delegates to
+   650→     * {@link #redeemAtRanyunStar}, which teleports the player to Ranyun
+   651→     * Star and materializes Wang Ping at 落月村.
+   652→     *
+   653→     * <p>Retained as a {@code @Deprecated} delegator for backward
+   654→     * compatibility with any callers that still reference the old name.
+   655→     * The canonical entry point is now
+   656→     * {@link #redeemAtRanyunStar(ServerPlayer, BlockPos, long)}.
+   657→     *
+   658→     * @param player     the server player (Wang Lin)
+   659→     * @param crystalPos the position of the Cultivation Planet Crystal
+   660→     * @param currentTick the current game tick
+   661→     * @return {@code true} if Wang Ping was successfully redeemed
+   662→     * @deprecated since CRON-120; use {@link #redeemAtRanyunStar}
+   663→     */
+   664→    @Deprecated(since = "CRON-120", forRemoval = false)
+   665→    public static boolean redeemAtSuzakuTomb(ServerPlayer player,
+   666→                                               BlockPos crystalPos,
+   667→                                               long currentTick) {
+   668→        return redeemAtRanyunStar(player, crystalPos, currentTick);
+   669→    }
+   670→
+   671→    /**
+   672→     * CRON-120: spawn a departure burst at the Crystal (Suzaku Tomb) before
+   673→     * teleporting the player to Ranyun Star. The visual idiom: the Crystal
+   674→     * flares as Wang Lin channels the sword qi — the rift to Ranyun Star
+   675→     * opens. Mirrors the ZhouRuKunxuDepartureEvent departure-burst pattern.
+   676→     */
+   677→    private static void spawnDepartureBurst(ServerLevel level, BlockPos crystalPos) {
+   678→        double cx = crystalPos.getX() + 0.5;
+   679→        double cy = crystalPos.getY() + 1.0;
+   680→        double cz = crystalPos.getZ() + 0.5;
+   681→
+   682→        // END_ROD outward burst (the rift opening)
+   683→        level.sendParticles(ParticleTypes.END_ROD,
+   684→                cx, cy, cz, 24,
+   685→                0.6, 0.8, 0.6, 0.05);
+   686→
+   687→        // PORTAL particles (the void-rift color)
+   688→        level.sendParticles(ParticleTypes.DRAGON_BREATH,
+   689→                cx, cy, cz, 16,
+   690→                0.4, 0.6, 0.4, 0.02);
+   691→
+   692→        // AMETHYST_BLOCK_CHIME (the crystalline tone of sword qi)
+   693→        level.playSound(null, crystalPos,
+   694→                SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.AMBIENT,
+   695→                1.2F, 0.7F);  // louder + lower pitch = heavier tone (the rift opening)
+   696→
+   697→        // ENDERMAN_TELEPORT (the teleport sound — the player is about to leave)
+   698→        level.playSound(null, crystalPos,
+   699→                SoundEvents.ENDERMAN_TELEPORT, SoundSource.AMBIENT,
+   700→                1.0F, 0.8F);
+   701→    }
+   702→
+   703→    /**
+   704→     * Find an entity by Minecraft entity ID in the server level.
+   705→     * (Helper — ServerLevel has no direct getEntity(int) in 1.20.1; iteration
+   706→     * is the supported approach. The entity count is small at spawn time.)
+   707→     * Mirrors the {@link LiMuwanRevivalEvent#findEntityById} pattern.
+   708→     *
+   709→     * @param level    the server level
+   710→     * @param entityId the Minecraft entity ID
+   711→     * @return the EntityCultivator, or null if not found
+   712→     */
+   713→    private static EntityCultivator findEntityById(ServerLevel level, int entityId) {
+   714→        for (net.minecraft.world.entity.Entity e : level.getAllEntities()) {
+   715→            if (e.getId() == entityId && e instanceof EntityCultivator ec) {
+   716→                return ec;
+   717→            }
+   718→        }
+   719→        return null;
+   720→    }
+   721→
+   722→    /**
+   723→     * Spawn canon-faithful particle + sound effects for the redemption.
+   724→     * The visual idiom (sword-qi coalescing into a body):
+   725→     * <ul>
+   726→     *   <li><b>END_ROD descending spiral at the Crystal</b> — sword qi
+   727→     *       condensing downward from the Crystal into the world.</li>
+   728→     *   <li><b>END_ROD ring at Wang Ping's spawn point</b> — the body
+   729→     *       coalescing from the descending sword qi.</li>
+   730→     *   <li><b>END_ROD stream from Crystal to Wang Ping</b> — the sword
+   731→     *       qi flowing from the spiritual core to the body being built.</li>
+   732→     *   <li><b>FIREWORK central flash at Wang Ping's chest</b> — the
+   733→     *       moment of "False Life" ignition.</li>
+   734→     *   <li><b>AMETHYST_BLOCK_CHIME at both ends</b> — the crystalline
+   735→     *       tone of sword qi (Ling Tianhou is the Sword Venerable; his
+   736→     *       sword qi manifests as a crystalline tone).</li>
+   737→     *   <li><b>BELL at midpoint</b> — the formal moment of redemption
+   738→     *       (like a temple bell, mirroring MuBingmeiAcceptanceEvent).</li>
+   739→     *   <li><b>PLAYER_LEVELUP at Wang Ping</b> — the bright ascending
+   740→     *       tone of new life (a child's first breath).</li>
+   741→     * </ul>
+   742→     *
+   743→     * @param level     the server level
+   744→     * @param crystalPos the Crystal's block position (sword-qi source)
+   745→     * @param wangPing  the materialized Wang Ping entity (sword-qi destination)
+   746→     */
+   747→    private static void spawnRedemptionEffects(ServerLevel level,
+   748→                                                 BlockPos crystalPos,
+   749→                                                 EntityCultivator wangPing) {
+   750→        double crystalX = crystalPos.getX() + 0.5;
+   751→        double crystalY = crystalPos.getY() + 1.0;  // chest height
+   752→        double crystalZ = crystalPos.getZ() + 0.5;
+   753→
+   754→        double bodyX = wangPing.getX();
+   755→        double bodyY = wangPing.getY() + BODY_FORMATION_HEIGHT;
+   756→        double bodyZ = wangPing.getZ();
+   757→
+   758→        double midX = (crystalX + bodyX) / 2.0;
+   759→        double midY = (crystalY + bodyY) / 2.0;
+   760→        double midZ = (crystalZ + bodyZ) / 2.0;
+   761→
+   762→        // ── Descending END_ROD spiral at the Crystal (sword qi condensing) ──
+   763→        // A spiral that descends from 4 blocks above the Crystal to chest height,
+   764→        // representing sword qi condensing downward into the world.
+   765→        for (int i = 0; i < CRYSTAL_SPIRAL_PARTICLE_COUNT; i++) {
+   766→            double t = i / (double) CRYSTAL_SPIRAL_PARTICLE_COUNT;
+   767→            double theta = t * Math.PI * 4;  // 2 full turns
+   768→            double radius = 0.8 * (1.0 - t * 0.5);  // narrowing spiral
+   769→            double dx = Math.cos(theta) * radius;
+   770→            double dz = Math.sin(theta) * radius;
+   771→            // Descending from 4 blocks above to chest height
+   772→            double dy = 4.0 * (1.0 - t);
+   773→            level.sendParticles(ParticleTypes.END_ROD,
+   774→                    crystalX + dx, crystalPos.getY() + dy, crystalZ + dz, 1,
+   775→                    0.0, -0.08, 0.0, 0.0);
+   776→        }
+   777→
+   778→        // ── Body-formation END_ROD ring at Wang Ping (body coalescing) ──
+   779→        // A ring at chest height, expanding outward — the body forming.
+   780→        for (int i = 0; i < BODY_RING_PARTICLE_COUNT; i++) {
+   781→            double theta = (i / (double) BODY_RING_PARTICLE_COUNT) * Math.PI * 2;
+   782→            double radius = 0.6;
+   783→            double dx = Math.cos(theta) * radius;
+   784→            double dz = Math.sin(theta) * radius;
+   785→            // Slight vertical jitter for a "body forming" effect
+   786→            double dy = (i % 3 - 1) * 0.15;
+   787→            level.sendParticles(ParticleTypes.END_ROD,
+   788→                    bodyX + dx, bodyY + dy, bodyZ + dz, 1,
+   789→                    0.0, 0.02, 0.0, 0.0);
+   790→        }
+   791→
+   792→        // ── END_ROD stream from Crystal to Wang Ping (sword qi flowing) ──
+   793→        for (int i = 0; i < SWORD_QI_STREAM_PARTICLE_COUNT; i++) {
+   794→            double t = i / (double) (SWORD_QI_STREAM_PARTICLE_COUNT - 1);
+   795→            double px = crystalX + (bodyX - crystalX) * t;
+   796→            double py = crystalY + (bodyY - crystalY) * t;
+   797→            double pz = crystalZ + (bodyZ - crystalZ) * t;
+   798→            // Small lateral jitter for visual richness
+   799→            double jitterX = (i % 3 - 1) * 0.08;
+   800→            double jitterZ = (i % 5 - 2) * 0.08;
+   801→            level.sendParticles(ParticleTypes.END_ROD,
+   802→                    px + jitterX, py, pz + jitterZ, 1,
+   803→                    0.0, 0.0, 0.0, 0.0);
+   804→        }
+   805→
+   806→        // ── AMETHYST crystalline burst at both ends (sword qi tone) ──
+   807→        level.sendParticles(ParticleTypes.END_ROD,
+   808→                crystalX, crystalY, crystalZ, CRYSTAL_BURST_PARTICLE_COUNT,
+   809→                0.4, 0.4, 0.4, 0.05);
+   810→        level.sendParticles(ParticleTypes.END_ROD,
+   811→                bodyX, bodyY, bodyZ, CRYSTAL_BURST_PARTICLE_COUNT,
+   812→                0.4, 0.4, 0.4, 0.05);
+   813→
+   814→        // ── Central FIREWORK flash at Wang Ping's chest (False Life igniting) ──
+   815→        level.sendParticles(ParticleTypes.FIREWORK,
+   816→                bodyX, bodyY, bodyZ, CENTRAL_FLASH_PARTICLE_COUNT,
+   817→                0.3, 0.3, 0.3, 0.05);
+   818→
+   819→        // ── Sounds ──
+   820→        // AMETHYST_BLOCK_CHIME at the Crystal (crystalline sword-qi source)
+   821→        level.playSound(null, crystalPos,
+   822→                SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.AMBIENT,
+   823→                0.9F, 1.0F);  // volume 0.9, pitch 1.0 (clear crystalline tone)
+   824→
+   825→        // AMETHYST_BLOCK_CHIME at Wang Ping (crystalline sword-qi coalescing)
+   826→        level.playSound(null, wangPing.blockPosition(),
+   827→                SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.AMBIENT,
+   828→                0.8F, 1.3F);  // volume 0.8, pitch 1.3 (slightly brighter at body)
+   829→
+   830→        // PLAYER_LEVELUP at Wang Ping (bright ascending — new life)
+   831→        level.playSound(null, wangPing.blockPosition(),
+   832→                SoundEvents.PLAYER_LEVELUP, SoundSource.AMBIENT,
+   833→                0.7F, 1.4F);  // volume 0.7, pitch 1.4 (bright, ascending)
+   834→
+   835→        // BELL at midpoint (formal redemption — like a temple bell)
+   836→        level.playSound(null, BlockPos.containing(midX, midY, midZ),
+   837→                SoundEvents.BELL_BLOCK, SoundSource.AMBIENT,
+   838→                1.0F, 1.0F);  // volume 1.0, pitch 1.0 (clear bell tone)
+   839→    }
+   840→}
+   841→

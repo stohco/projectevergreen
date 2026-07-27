@@ -1,0 +1,601 @@
+   460→     * @param chunk the chunk being assembled (Phase 1 base terrain already placed)
+   461→     * @param pos   a reusable MutableBlockPos (avoids per-delta allocation)
+   462→     */
+   463→    private void applyLayerOverrides(ChunkAccess chunk, BlockPos.MutableBlockPos pos) {
+   464→        // Defensive: WorldRuntime may not be initialized yet during the very
+   465→        // first chunk-gen pass at server start. The materializer will catch up.
+   466→        WorldRuntime runtime;
+   467→        try {
+   468→            runtime = WorldRuntime.get();
+   469→            if (!runtime.isInitialized()) return;
+   470→        } catch (Throwable t) {
+   471→            Ergenverse.LOGGER.debug("[Ergenverse] BlueprintChunkGenerator: WorldRuntime unavailable during fillFromNoise — deferring layer overrides to materializer. Reason: {}",
+   472→                    t.getMessage());
+   473→            return;
+   474→        }
+   475→
+   476→        CompositeWorldLayer worldLayer = runtime.worldLayer();
+   477→        if (worldLayer == null) return;
+   478→
+   479→        int chunkX = chunk.getPos().x;
+   480→        int chunkZ = chunk.getPos().z;
+   481→
+   482→        // Iterate in materialization order: CANON first → SIMULATION → PLAYER.
+   483→        // PLAYER wins on conflict (applied last). CANON layer's c.structures
+   484→        // are skipped (need a live ServerLevel — materializer handles those).
+   485→        for (WorldLayer layer : worldLayer.layersInMaterializationOrder()) {
+   486→            if (layer.provenance() == Provenance.CANON) continue;
+   487→
+   488→            ChunkContribution contribution;
+   489→            try {
+   490→                contribution = layer.getChunkContribution(chunkX, chunkZ);
+   491→            } catch (Throwable t) {
+   492→                Ergenverse.LOGGER.debug("[Ergenverse] BlueprintChunkGenerator: layer {} getChunkContribution failed for chunk ({},{}): {}",
+   493→                        layer.provenance(), chunkX, chunkZ, t.getMessage());
+   494→                continue;
+   495→            }
+   496→            if (contribution == null || contribution.isEmpty()) continue;
+   497→
+   498→            for (BlockChangeDelta delta : contribution.blockChanges) {
+   499→                BlockState state = resolveBlockState(delta.blockState());
+   500→                if (state == null) continue;
+   501→                pos.set(delta.x(), delta.y(), delta.z());
+   502→                chunk.setBlockState(pos, state, false);
+   503→            }
+   504→        }
+   505→    }
+   506→
+   507→    /**
+   508→     * Resolve a block state string to a {@link BlockState}.
+   509→     *
+   510→     * <p><b>CRON-COMPLETIONIST-94:</b> now delegates to
+   511→     * {@link dev.ergenverse.runtime.delta.BlockStateCodec#parse} which
+   512→     * supports property overrides (e.g. {@code "minecraft:chest[facing=north]"}).
+   513→     * Before CRON-94, this method called {@code block.defaultBlockState()},
+   514→     * discarding all property information — PLAYER/SIMULATION deltas with
+   515→     * directional blocks (stairs, slabs, chests, doors) reverted to default
+   516→     * facing when the chunk regenerated via {@code fillFromNoise}.
+   517→     *
+   518→     * <p>The codec lives in the {@code delta} package, which is already a
+   519→     * dependency of this class (it imports {@link BlockChangeDelta}). The
+   520→     * chunk-gen purity constraint (no dependency on WorldFacade) is preserved
+   521→     * — the codec has no WorldFacade dependency.
+   522→     *
+   523→     * <p>Backward compatible: bare block ids ({@code "minecraft:stone"})
+   524→     * still resolve to the default state.
+   525→     */
+   526→    private static BlockState resolveBlockState(String blockId) {
+   527→        return dev.ergenverse.runtime.delta.BlockStateCodec.parse(blockId);
+   528→    }
+   529→
+   530→    /**
+   531→     * Apply cave carvers. Delegated to the wrapped NoiseBasedChunkGenerator
+   532→     * — caves are carved through whatever stone we placed in
+   533→     * {@link #fillFromNoise}. The wrapped generator will lazily compute
+   534→     * {@code NoiseChunk} for this chunk if it hasn't already been computed.
+   535→     */
+   536→    @Override
+   537→    public void applyCarvers(WorldGenRegion region, long seed, RandomState randomState,
+   538→                              net.minecraft.world.level.biome.BiomeManager biomeManager,
+   539→                              StructureManager structureManager,
+   540→                              ChunkAccess chunk, GenerationStep.Carving step) {
+   541→        wrapped.applyCarvers(region, seed, randomState, biomeManager, structureManager, chunk, step);
+   542→    }
+   543→
+   544→    /**
+   545→     * Apply biome surface rules (grass on plains, sand on beaches, snow on
+   546→     * Snow Domain, podzol/taiga in mountains, etc.). Delegated to the wrapped
+   547→     * NoiseBasedChunkGenerator — it queries the chunk's existing stone
+   548→     * surface (which we placed in {@link #fillFromNoise}) and replaces the
+   549→     * top few layers with the biome-appropriate block.
+   550→     */
+   551→    @Override
+   552→    public void buildSurface(WorldGenRegion region, StructureManager structureManager,
+   553→                             RandomState randomState, ChunkAccess chunk) {
+   554→        wrapped.buildSurface(region, structureManager, randomState, chunk);
+   555→    }
+   556→
+   557→    @Override
+   558→    public int getGenDepth() {
+   559→        return wrapped.getGenDepth();
+   560→    }
+   561→
+   562→    @Override
+   563→    public int getSeaLevel() {
+   564→        return SEA_LEVEL;
+   565→    }
+   566→
+   567→    @Override
+   568→    public int getMinY() {
+   569→        return wrapped.getMinY();
+   570→    }
+   571→
+   572→    @Override
+   573→    public void spawnOriginalMobs(WorldGenRegion region) {
+   574→        wrapped.spawnOriginalMobs(region);
+   575→    }
+   576→
+   577→    // ════════════════════════════════════════════════════════════════════
+   578→    //  CANON-AWARE HEIGHT/COLUMN QUERIES — surface shape from canon
+   579→    // ════════════════════════════════════════════════════════════════════
+   580→
+   581→    /**
+   582→     * Get the surface height at (x, z), derived from canon geography + biome.
+   583→     * This is the ONLY method that determines surface terrain shape —
+   584→     * {@link #fillFromNoise}, {@link #getBaseHeight}, and
+   585→     * {@link #getBaseColumn} all consult {@link #biomeAwareSurfaceHeight}.
+   586→     *
+   587→     * <p>The height is deterministic: same x, z, CANON_SEED → same result,
+   588→     * every save, every chunk load.
+   589→     */
+   590→    @Override
+   591→    public int getBaseHeight(int x, int z, Heightmap.Types heightmap,
+   592→                             LevelHeightAccessor level, RandomState randomState) {
+   593→        return biomeAwareSurfaceHeight(x, z, randomState);
+   594→    }
+   595→
+   596→    /**
+   597→     * Get the base noise column at (x, z), built from biome-aware surface height.
+   598→     * Returns bedrock at the bottom, stone up to the surface, water
+   599→     * up to sea level, air above.
+   600→     */
+   601→    @Override
+   602→    public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level,
+   603→                                      RandomState randomState) {
+   604→        int minY = level.getMinBuildHeight();
+   605→        int height = level.getHeight();
+   606→        int surfaceHeight = biomeAwareSurfaceHeight(x, z, randomState);
+   607→
+   608→        BlockState[] states = new BlockState[height];
+   609→        for (int i = 0; i < height; i++) {
+   610→            int y = minY + i;
+   611→            if (y == minY) {
+   612→                states[i] = Blocks.BEDROCK.defaultBlockState();
+   613→            } else if (y < surfaceHeight) {
+   614→                states[i] = Blocks.STONE.defaultBlockState();
+   615→            } else if (y < SEA_LEVEL) {
+   616→                states[i] = Blocks.WATER.defaultBlockState();
+   617→            } else {
+   618→                states[i] = Blocks.AIR.defaultBlockState();
+   619→            }
+   620→        }
+   621→        return new NoiseColumn(minY, states);
+   622→    }
+   623→
+   624→    @Override
+   625→    public void addDebugScreenInfo(List<String> info, RandomState randomState, BlockPos pos) {
+   626→        wrapped.addDebugScreenInfo(info, randomState, pos);
+   627→        info.add("[Er Gen Verse] Blueprint Chunk Generator (BIOME-AWARE + CANON + LAYER OVERRIDE)");
+   628→        info.add("[Er Gen Verse] Canon Seed: " + DeterministicSeedHandler.CANON_SEED);
+   629→        int sx = pos.getX();
+   630→        int sz = pos.getZ();
+   631→        // CRON-93: report biome-aware height + biome identity at the player position.
+   632→        int biomeAware = biomeAwareSurfaceHeight(sx, sz, randomState);
+   633→        int legacy = canonSurfaceHeight(sx, sz);
+   634→        int offset = getCanonTerrainOffset(sx, sz);
+   635→        int fineNoise = canonNoiseVariation(sx, sz);
+   636→        BiomeTerrainProfile profile = sampleBiomeProfile(sx, sz, randomState);
+   637→        info.add("[Er Gen Verse] Biome-Aware Height: " + biomeAware
+   638→                + " (biome base " + profile.baseHeight() + " + amplitude " + profile.amplitude()
+   639→                + " + canon offset " + offset
+   640→                + " + fine noise " + fineNoise + ")");
+   641→        info.add("[Er Gen Verse] Legacy Canon Height: " + legacy + " (no biome awareness)");
+   642→        // CRON-91: report layer-override status for the chunk containing the player.
+   643→        try {
+   644→            WorldRuntime runtime = WorldRuntime.get();
+   645→            if (runtime.isInitialized()) {
+   646→                int chunkX = sx >> 4;
+   647→                int chunkZ = sz >> 4;
+   648→                int playerDeltas = runtime.deltaStore().blockChangeCount(Provenance.PLAYER);
+   649→                int simDeltas = runtime.deltaStore().blockChangeCount(Provenance.SIMULATION);
+   650→                info.add("[Er Gen Verse] Layer journal: PLAYER=" + playerDeltas
+   651→                        + " SIMULATION=" + simDeltas + " (chunk " + chunkX + "," + chunkZ + ")");
+   652→            } else {
+   653→                info.add("[Er Gen Verse] Layer journal: WorldRuntime not initialized (deferred to materializer)");
+   654→            }
+   655→        } catch (Throwable t) {
+   656→            info.add("[Er Gen Verse] Layer journal: unavailable (" + t.getMessage() + ")");
+   657→        }
+   658→    }
+   659→
+   660→    // ════════════════════════════════════════════════════════════════════
+   661→    //  BIOME-AWARE SURFACE HEIGHT (CRON-93) — the authoritative height
+   662→    // ════════════════════════════════════════════════════════════════════
+   663→
+   664→    /**
+   665→     * Compute the biome-aware surface height at (worldX, worldZ), the
+   666→     * authoritative height function used by {@link #fillFromNoise},
+   667→     * {@link #getBaseHeight}, {@link #getBaseColumn}, and (via
+   668→     * {@link #surfaceHeightFor}) structure builders.
+   669→     *
+   670→     * <p>Formula (CRON-93):
+   671→     * <pre>{@code
+   672→     *   biomeProfile.baseHeight                  // plains=64, mountains=110, ocean=35
+   673→     *     + biomeAmplitudeNoise(x, z, amplitude) // ±amplitude, period 24
+   674→     *     + canonTerrainOffset(x, z)             // ±30 from canon locations
+   675→     *     + canonNoiseVariation(x, z)            // ±8 fine noise (period 8)
+   676→     *     clamped to [2, 256]
+   677→     * }</pre>
+   678→     *
+   679→     * <p>The biome is sampled at (worldX, worldZ) via
+   680→     * {@link BiomeSource#getNoiseBiome} using the {@link RandomState}'s
+   681→     * {@link RandomState#sampler() climate sampler}. The quart Y is
+   682→     * {@link #BIOME_SAMPLE_QUART_Y} (sea level), ensuring we get the surface
+   683→     * biome, not a cave or high-altitude variant.
+   684→     *
+   685→     * <p><b>Fallback behavior:</b> if {@code randomState} is {@code null}, or
+   686→     * the biome lookup fails for any reason, this method falls back to the
+   687→     * legacy {@link #canonSurfaceHeight(int, int)} (no biome awareness).
+   688→     * This ensures robustness during edge cases (early chunk-gen race,
+   689→     * non-Suzaku levels) at the cost of biome-blind height.
+   690→     *
+   691→     * @param worldX      the world X coordinate
+   692→     * @param worldZ      the world Z coordinate
+   693→     * @param randomState the world's random state (provides the climate sampler);
+   694→     *                    may be {@code null} for fallback behavior
+   695→     * @return the biome-aware surface height, clamped to [2, 256]
+   696→     */
+   697→    public int biomeAwareSurfaceHeight(int worldX, int worldZ, RandomState randomState) {
+   698→        // Fallback: no randomState → use legacy static (no biome awareness)
+   699→        if (randomState == null) {
+   700→            return canonSurfaceHeight(worldX, worldZ);
+   701→        }
+   702→
+   703→        BiomeTerrainProfile profile = sampleBiomeProfile(worldX, worldZ, randomState);
+   704→        int offset = getCanonTerrainOffset(worldX, worldZ);
+   705→        int fineNoise = canonNoiseVariation(worldX, worldZ);
+   706→        int biomeNoise = biomeAmplitudeNoise(worldX, worldZ, profile.amplitude());
+   707→
+   708→        int h = profile.baseHeight() + biomeNoise + offset + fineNoise;
+   709→        // Clamp: same [2, 256] bounds as canonSurfaceHeight
+   710→        if (h < 2) return 2;
+   711→        if (h > 256) return 256;
+   712→        return h;
+   713→    }
+   714→
+   715→    /**
+   716→     * Sample the biome at (worldX, worldZ) and return its terrain profile.
+   717→     *
+   718→     * <p>Uses {@link BiomeSource#getNoiseBiome} with the climate sampler from
+   719→     * {@code randomState}. The quart Y is {@link #BIOME_SAMPLE_QUART_Y}
+   720→     * (sea level). Returns {@link BiomeTerrainProfile#DEFAULT} if the lookup
+   721→     * fails for any reason (defensive — should not occur in practice).
+   722→     */
+   723→    private BiomeTerrainProfile sampleBiomeProfile(int worldX, int worldZ, RandomState randomState) {
+   724→        try {
+   725→            int quartX = worldX >> 2;
+   726→            int quartZ = worldZ >> 2;
+   727→            // In 1.20.1 Mojmaps, RandomState.sampler() returns the Climate.Sampler
+   728→            // used by the multi-noise biome source. Quart resolution is 4 blocks;
+   729→            // quartY = 16 corresponds to world Y = 64 (sea level) — see BIOME_SAMPLE_QUART_Y.
+   730→            Climate.Sampler sampler = randomState.sampler();
+   731→            Holder<Biome> biome = biomeSource.getNoiseBiome(quartX, BIOME_SAMPLE_QUART_Y, quartZ, sampler);
+   732→            if (biome == null) return BiomeTerrainProfile.DEFAULT;
+   733→            return biome.unwrapKey()
+   734→                    .map(key -> BiomeTerrainProfile.forBiome(key.location()))
+   735→                    .orElse(BiomeTerrainProfile.DEFAULT);
+   736→        } catch (Throwable t) {
+   737→            Ergenverse.LOGGER.debug("[Ergenverse] BlueprintChunkGenerator: biome sample failed at ({},{}): {}",
+   738→                    worldX, worldZ, t.getMessage());
+   739→            return BiomeTerrainProfile.DEFAULT;
+   740→        }
+   741→    }
+   742→
+   743→    /**
+   744→     * Get the biome-aware surface height at (worldX, worldZ) for the given
+   745→     * {@link ServerLevel}. This is the entry point structure builders
+   746→     * should use (CRON-93).
+   747→     *
+   748→     * <p>If the level's chunk generator is a {@link BlueprintChunkGenerator},
+   749→     * this delegates to {@link #biomeAwareSurfaceHeight} with the level's
+   750→     * {@link RandomState}. Otherwise (e.g., non-Suzaku levels, fallback
+   751→     * generators), it falls back to the legacy {@link #canonSurfaceHeight}
+   752→     * (no biome awareness).
+   753→     *
+   754→     * <p><b>Migration guide (CRON-93):</b> structure builders should replace
+   755→     * calls to the static {@code canonSurfaceHeight(x, z)} with
+   756→     * {@code surfaceHeightFor(level, x, z)}. Both return the same value when
+   757→     * the level is Suzaku, but the new method accounts for the biome at
+   758→     * (x, z), producing canon-faithful elevations (mountains at Y=110,
+   759→     * plains at Y=64, oceans at Y=35, etc.).
+   760→     *
+   761→     * <pre>{@code
+   762→     *   // BEFORE (CRON-67, no biome awareness):
+   763→     *   int surfaceY = BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
+   764→     *
+   765→     *   // AFTER (CRON-93, biome-aware):
+   766→     *   int surfaceY = BlueprintChunkGenerator.surfaceHeightFor(level, SECT_X, SECT_Z);
+   767→     * }</pre>
+   768→     *
+   769→     * @param level  the server level (must be Planet Suzaku for biome-aware
+   770→     *               results; other levels fall back to legacy behavior)
+   771→     * @param worldX the world X coordinate
+   772→     * @param worldZ the world Z coordinate
+   773→     * @return the biome-aware surface height for Suzaku levels; legacy
+   774→     *         canonSurfaceHeight for other levels
+   775→     */
+   776→    public static int surfaceHeightFor(ServerLevel level, int worldX, int worldZ) {
+   777→        try {
+   778→            ChunkGenerator gen = level.getChunkSource().getGenerator();
+   779→            if (gen instanceof BlueprintChunkGenerator bcg) {
+   780→                RandomState randomState = level.getChunkSource().randomState();
+   781→                return bcg.biomeAwareSurfaceHeight(worldX, worldZ, randomState);
+   782→            }
+   783→        } catch (Throwable t) {
+   784→            Ergenverse.LOGGER.warn("[Ergenverse] BlueprintChunkGenerator.surfaceHeightFor: " +
+   785→                    "failed to compute biome-aware height at ({},{}) on level {}: {}. " +
+   786→                    "Falling back to legacy canonSurfaceHeight.",
+   787→                    worldX, worldZ, level.dimension(), t.getMessage());
+   788→        }
+   789→        return canonSurfaceHeight(worldX, worldZ);
+   790→    }
+   791→
+   792→    // ════════════════════════════════════════════════════════════════════
+   793→    //  CANON SURFACE HEIGHT — legacy static (biome-blind fallback)
+   794→    // ════════════════════════════════════════════════════════════════════
+   795→
+   796→    /**
+   797→     * Compute the canon-derived surface height at (worldX, worldZ) — the
+   798→     * <b>legacy, biome-blind</b> version.
+   799→     *
+   800→     * <p>{@code BASE_SURFACE_HEIGHT + canonTerrainOffset + canonNoiseVariation},
+   801→     * clamped to a non-negative minimum (bedrock layer at {@code minY} must
+   802→     * always have at least one stone block above it).
+   803→     *
+   804→     * <p><b>CRON-COMPLETIONIST-93:</b> this method is RETAINED as a fallback
+   805→     * for contexts where no {@link RandomState} or {@link ServerLevel} is
+   806→     * available (e.g., early chunk-gen race, non-Suzaku levels, defensive
+   807→     * code paths). For all structure-builder contexts where a
+   808→     * {@link ServerLevel} is available, prefer
+   809→     * {@link #surfaceHeightFor(ServerLevel, int, int)} — it accounts for
+   810→     * the biome at (x, z) and produces canon-faithful elevations.
+   811→     *
+   812→     * <p><b>CRON-COMPLETIONIST-67:</b> this method is {@code public} so that
+   813→     * structure builders can resolve their center Y from the <i>same canon
+   814→     * authority</i> that the chunk generator uses — eliminating the heightmap
+   815→     * race condition where {@code level.getHeightmapPos(MOTION_BLOCKING_NO_LEAVES, ...)}
+   816→     * would return y=0 or a stale value if the chunk at the canon center wasn't
+   817→     * loaded yet when {@code buildForChunk} fired for an adjacent chunk. The
+   818→     * canon surface height is a pure deterministic function of (x, z) — it does
+   819→     * NOT depend on chunk-load state, so it returns the correct Y every time,
+   820→     * regardless of which chunks are loaded.
+   821→     *
+   822→     * <p>For contexts without a {@link ServerLevel} (e.g., static helpers,
+   823→     * tests), continue to call this directly:
+   824→     * <pre>{@code
+   825→     *   int surfaceY = BlueprintChunkGenerator.canonSurfaceHeight(SECT_X, SECT_Z);
+   826→     * }</pre>
+   827→     *
+   828→     * For contexts WITH a {@link ServerLevel}, prefer the biome-aware version:
+   829→     * <pre>{@code
+   830→     *   int surfaceY = BlueprintChunkGenerator.surfaceHeightFor(level, SECT_X, SECT_Z);
+   831→     * }</pre>
+   832→     */
+   833→    public static int canonSurfaceHeight(int worldX, int worldZ) {
+   834→        int offset = getCanonTerrainOffset(worldX, worldZ);
+   835→        int noise = canonNoiseVariation(worldX, worldZ);
+   836→        int h = BASE_SURFACE_HEIGHT + offset + noise;
+   837→        // Clamp: never let the surface drop to or below 1 (need at least
+   838→        // bedrock + stone). Also never exceed a sane cap to avoid Y=320
+   839→        // pillars on canon warps (current max warp is +30, so the cap is
+   840→        // mostly a defensive measure).
+   841→        if (h < 2) return 2;
+   842→        if (h > 256) return 256;
+   843→        return h;
+   844→    }
+   845→
+   846→    /**
+   847→     * Compute the biome-amplitude noise at (worldX, worldZ) — a bilinear
+   848→     * value noise with period {@link #BIOME_NOISE_PERIOD} and the given
+   849→     * amplitude. Used by {@link #biomeAwareSurfaceHeight} to produce
+   850→     * biome-scale terrain variation (mountain peaks, valley undulations).
+   851→     *
+   852→     * <p>Returns 0 when {@code amplitude <= 0} (no variation needed for
+   853→     * flat biomes like plains, though plains still use amplitude 4 for
+   854→     * gentle rolling).
+   855→     *
+   856→     * <p>The hash function is the same splitmix64 mixer used by
+   857→     * {@link #canonNoiseVariation}, but with a different cell period (24
+   858→     * vs 8), so the two noise layers are decorrelated. Both are seeded by
+   859→     * {@link DeterministicSeedHandler#CANON_SEED}, ensuring determinism.
+   860→     */
+   861→    static int biomeAmplitudeNoise(int worldX, int worldZ, int amplitude) {
+   862→        if (amplitude <= 0) return 0;
+   863→        int cellX = Math.floorDiv(worldX, BIOME_NOISE_PERIOD);
+   864→        int cellZ = Math.floorDiv(worldZ, BIOME_NOISE_PERIOD);
+   865→        int fracX = worldX - cellX * BIOME_NOISE_PERIOD;
+   866→        int fracZ = worldZ - cellZ * BIOME_NOISE_PERIOD;
+   867→
+   868→        // Smoothstep interpolation weights
+   869→        double sx = (double) fracX / BIOME_NOISE_PERIOD;
+   870→        double sz = (double) fracZ / BIOME_NOISE_PERIOD;
+   871→        sx = sx * sx * (3 - 2 * sx);
+   872→        sz = sz * sz * (3 - 2 * sz);
+   873→
+   874→        // Four corner values in range [0, 2*amplitude]
+   875→        double v00 = amplitudeHash(cellX,     cellZ,     amplitude);
+   876→        double v10 = amplitudeHash(cellX + 1, cellZ,     amplitude);
+   877→        double v01 = amplitudeHash(cellX,     cellZ + 1, amplitude);
+   878→        double v11 = amplitudeHash(cellX + 1, cellZ + 1, amplitude);
+   879→
+   880→        double ix0 = v00 + (v10 - v00) * sx;
+   881→        double ix1 = v01 + (v11 - v01) * sx;
+   882→        double val = ix0 + (ix1 - ix0) * sz;
+   883→
+   884→        // Center around zero: range [-amplitude, +amplitude]
+   885→        return (int) Math.round(val - amplitude);
+   886→    }
+   887→
+   888→    /**
+   889→     * Salt value mixed into the amplitude-noise hash to decorrelate it from
+   890→     * the fine-noise hash (so the two noise layers don't produce correlated
+   891→     * values). Arbitrary 64-bit constant; chosen to be distinct from any
+   892→     * multiplier used in {@link #noiseHash}.
+   893→     */
+   894→    private static final long AMPLITUDE_HASH_SALT = 0xA5A5A5A5A5A5A5A5L;
+   895→
+   896→    /**
+   897→     * Deterministic hash for the biome-amplitude noise → value in
+   898→     * [0, 2 * amplitude]. Same splitmix64 mixing as {@link #noiseHash} but
+   899→     * parameterized by amplitude (so different amplitudes produce different
+   900→     * value ranges). Uses {@link #AMPLITUDE_HASH_SALT} to decorrelate from
+   901→     * the fine noise (otherwise the two noise layers would be correlated,
+   902→     * producing unrealistic terrain).
+   903→     */
+   904→    private static long amplitudeHash(int cellX, int cellZ, int amplitude) {
+   905→        long h = DeterministicSeedHandler.CANON_SEED ^ AMPLITUDE_HASH_SALT;
+   906→        h ^= (long) cellX * 0x9E3779B97F4A7C15L;
+   907→        h ^= (long) cellZ * 0xC2B2AE3D27D4EB4FL;
+   908→        h ^= h >>> 33;
+   909→        h *= 0xFF51AFD7ED558CCDL;
+   910→        h ^= h >>> 33;
+   911→        h *= 0xC4CEB9FE1A85EC53L;
+   912→        h ^= h >>> 33;
+   913→        return (h & 0xFFFFFFFFL) % (2L * amplitude + 1);
+   914→    }
+   915→
+   916→    /**
+   917→     * Compute the canon terrain offset at (worldX, worldZ).
+   918→     * Returns the sum of all nearby canon location influences.
+   919→     * Positive = raise terrain (mountain), Negative = lower terrain (sea/tomb).
+   920→     *
+   921→     * <p>Each canon location has an influence that decays linearly from its
+   922→     * center to {@link #TERRAIN_WARP_RADIUS} blocks away. The offset is
+   923→     * deterministic and based on the blueprint's geography.
+   924→     */
+   925→    static int getCanonTerrainOffset(int worldX, int worldZ) {
+   926→        PlanetSuzakuBlueprint blueprint = PlanetSuzakuBlueprint.canonical();
+   927→        int totalOffset = 0;
+   928→
+   929→        for (PlanetSuzakuBlueprint.CanonLocation loc : blueprint.allLocations().values()) {
+   930→            int dx = worldX - loc.x;
+   931→            int dz = worldZ - loc.z;
+   932→            int distSq = dx * dx + dz * dz;
+   933→
+   934→            if (distSq >= TERRAIN_WARP_RADIUS_SQ) continue;
+   935→
+   936→            double dist = Math.sqrt(distSq);
+   937→            double factor = 1.0 - (dist / TERRAIN_WARP_RADIUS);
+   938→
+   939→            int warp = getTerrainWarpForLocation(loc);
+   940→            totalOffset += (int) (warp * factor);
+   941→        }
+   942→
+   943→        return totalOffset;
+   944→    }
+   945→
+   946→    /**
+   947→     * Compute a small deterministic value-noise variation at (worldX, worldZ).
+   948→     * Bilinear interpolation of a per-cell hash, scaled to ±{@link #NOISE_AMPLITUDE}.
+   949→     * Period = {@link #NOISE_PERIOD} blocks.
+   950→     *
+   951→     * <p>The hash is seeded by {@link DeterministicSeedHandler#CANON_SEED},
+   952→     * so the variation is identical every save. The purpose of this noise is
+   953→     * NOT to mimic natural terrain — it is to break the perfectly-flat plateau
+   954→     * that pure canon warping would produce between canon locations.
+   955→     */
+   956→    static int canonNoiseVariation(int worldX, int worldZ) {
+   957→        int cellX = Math.floorDiv(worldX, NOISE_PERIOD);
+   958→        int cellZ = Math.floorDiv(worldZ, NOISE_PERIOD);
+   959→        int fracX = worldX - cellX * NOISE_PERIOD;
+   960→        int fracZ = worldZ - cellZ * NOISE_PERIOD;
+   961→
+   962→        // Smoothstep interpolation weights
+   963→        double sx = (double) fracX / NOISE_PERIOD;
+   964→        double sz = (double) fracZ / NOISE_PERIOD;
+   965→        sx = sx * sx * (3 - 2 * sx);
+   966→        sz = sz * sz * (3 - 2 * sz);
+   967→
+   968→        // Four corner values in range [0, 2*NOISE_AMPLITUDE]
+   969→        double v00 = noiseHash(cellX,     cellZ);
+   970→        double v10 = noiseHash(cellX + 1, cellZ);
+   971→        double v01 = noiseHash(cellX,     cellZ + 1);
+   972→        double v11 = noiseHash(cellX + 1, cellZ + 1);
+   973→
+   974→        double ix0 = v00 + (v10 - v00) * sx;
+   975→        double ix1 = v01 + (v11 - v01) * sx;
+   976→        double val = ix0 + (ix1 - ix0) * sz;
+   977→
+   978→        // Center around zero: range [-NOISE_AMPLITUDE, +NOISE_AMPLITUDE]
+   979→        return (int) Math.round(val - NOISE_AMPLITUDE);
+   980→    }
+   981→
+   982→    /**
+   983→     * Deterministic hash → value in [0, 2 * NOISE_AMPLITUDE]. Uses a
+   984→     * splitmix64-style mixing of (cellX, cellZ, CANON_SEED) so that
+   985→     * adjacent cells produce decorrelated values.
+   986→     */
+   987→    private static long noiseHash(int cellX, int cellZ) {
+   988→        long h = DeterministicSeedHandler.CANON_SEED;
+   989→        h ^= (long) cellX * 0x9E3779B97F4A7C15L;
+   990→        h ^= (long) cellZ * 0xC2B2AE3D27D4EB4FL;
+   991→        h ^= h >>> 33;
+   992→        h *= 0xFF51AFD7ED558CCDL;
+   993→        h ^= h >>> 33;
+   994→        h *= 0xC4CEB9FE1A85EC53L;
+   995→        h ^= h >>> 33;
+   996→        // Map to [0, 2 * NOISE_AMPLITUDE]
+   997→        return (h & 0xFFFFFFFFL) % (2L * NOISE_AMPLITUDE + 1);
+   998→    }
+   999→
+  1000→    /**
+  1001→     * Get the terrain warp height for a canon location.
+  1002→     * Positive = raise (mountains), Negative = lower (seas/tombs).
+  1003→     *
+  1004→     * <p><b>Canon fidelity (fact-checked against 仙逆):</b>
+  1005→     * <ul>
+  1006→     *   <li>恒岳山 (Heng Yue Mountain): the mountain where Heng Yue Sect is
+  1007→     *       located. Canon describes it as Zhao Country's largest mountain.
+  1008→     *       Raised terrain is correct.</li>
+  1009→     *   <li>修魔海 (Sea of Devils): a vast, perilous sea east of Zhao Country.
+  1010→     *       Lowered terrain (below sea level) creates ocean.</li>
+  1011→     *   <li>朱雀墓 (Suzaku Tomb): underground inheritance site. The entrance
+  1012→     *       is on the surface but leads underground. Slight depression is
+  1013→     *       appropriate for the entrance area.</li>
+  1014→     *   <li>Wang Family Village: "赵国某偏僻小山村" — a remote mountain village.
+  1015→     *       Slight elevation fits the "mountain" description.</li>
+  1016→     *   <li>藤家城 (Teng Family City): powerful family city in Zhao Country.
+  1017→     *       Moderate elevation for a walled city.</li>
+  1018→     * </ul>
+  1019→     */
+  1020→    private static int getTerrainWarpForLocation(PlanetSuzakuBlueprint.CanonLocation loc) {
+  1021→        return switch (loc.id) {
+  1022→            // Mountainous sect locations — raised terrain
+  1023→            case "heng_yue_sect" -> MAX_WARP_HEIGHT; // 恒岳山 — largest mountain in Zhao
+  1024→            case "soul_refining_sect" -> 15; // 炼魂宗 — mountain sect
+  1025→            case "xuan_dao_sect" -> 15; // 玄道宗 — mountain sect
+  1026→            case "luo_he_sect" -> 12; // 洛河门 — sect with spirit veins
+  1027→
+  1028→            // Settlement cities — moderate elevation
+  1029→            case "teng_family_city" -> 10; // 藤家城 — powerful family, elevated city
+  1030→            case "tian_shui_city" -> 8; // 天水城 — northern military city
+  1031→            case "four_sects_alliance" -> 6; // 四派联盟 — mortal towns
+  1032→
+  1033→            // Wang Family Village — mountain village
+  1034→            case "wang_family_village" -> 8; // 赵国偏僻小山村 — mountain village
+  1035→
+  1036→            // Sea of Devils — significantly below sea level (oceanic)
+  1037→            case "sea_of_devils" -> -MAX_WARP_HEIGHT; // 修魔海 — vast sea
+  1038→
+  1039→            // Beast cities in/near Sea of Devils — slightly above sea
+  1040→            case "qilin_city" -> -5; // 麒麟城 — beast-city near sea
+  1041→            case "nan_dou_city" -> -5; // 南斗城 — beast-city near sea
+  1042→
+  1043→            // Suzaku Tomb — underground, surface depression
+  1044→            case "suzaku_tomb" -> -12; // 朱雀墓 — underground entrance
+  1045→
+  1046→            // Snow Domain — slightly raised (cold highlands)
+  1047→            case "snow_domain_capital" -> 10; // 雪域国 — cold elevated country
+  1048→
+  1049→            // Vermilion Bird Capital — central, moderate terrain
+  1050→            case "vermilion_bird_capital" -> 5; // 朱雀国 — central continent
+  1051→
+  1052→            // Jue Ming Valley (决明谷) — Valley of Certain Death, slightly lower
+  1053→            case "jue_ming_valley" -> -3; // 决明谷 — valley, slightly lower
+  1054→
+  1055→            // Other countries — slight variation
+  1056→            default -> 2;
+  1057→        };
+  1058→    }
+  1059→}
+  1060→

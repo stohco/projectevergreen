@@ -1,0 +1,445 @@
+     1→     1→package dev.ergenverse.block;
+     2→     2→
+     3→     3→import dev.ergenverse.core.Ergenverse;
+     4→     4→import net.minecraft.core.registries.Registries;
+     5→     5→import net.minecraft.network.chat.Component;
+     6→     6→import net.minecraft.resources.ResourceLocation;
+     7→     7→import net.minecraft.world.item.BlockItem;
+     8→     8→import net.minecraft.world.item.CreativeModeTab;
+     9→     9→import net.minecraft.world.item.Item;
+    10→    10→import net.minecraft.world.item.ItemStack;
+    11→    11→import net.minecraft.world.level.block.Block;
+    12→    12→import net.minecraft.world.level.block.FlowerBlock;
+    13→    13→import net.minecraft.world.level.block.SlabBlock;
+    14→    14→import net.minecraft.world.level.block.StairBlock;
+    15→    15→import net.minecraft.world.level.block.WallBlock;
+    16→    16→import net.minecraft.world.level.block.SoundType;
+    17→    17→import net.minecraft.world.level.block.state.BlockBehaviour;
+    18→    18→import net.minecraft.world.effect.MobEffects;
+    19→    19→import net.minecraftforge.eventbus.api.IEventBus;
+    20→    20→import net.minecraftforge.registries.DeferredRegister;
+    21→    21→import net.minecraftforge.registries.ForgeRegistries;
+    22→    22→import net.minecraftforge.registries.RegistryObject;
+    23→    23→
+    24→    24→import java.util.function.Supplier;
+    25→    25→
+    26→    26→/**
+    27→    27→ * ErgenverseBlocks — DeferredRegister for all custom blocks.
+    28→    28→ *
+    29→    29→ * <p>Registers:
+    30→    30→ * <ul>
+    31→    31→ *   <li>3 Realm-Sealing Grand Array anchor blocks (realm_sealing_flag,
+    32→    32→ *       heaven_splitting_axe_pedestal, dao_binding_stone)</li>
+    33→    33→ *   <li>14 canon spirit herb blocks (replacing vanilla stand-ins in worldgen)</li>
+    34→    34→ * </ul>
+    35→    35→ *
+    36→    36→ * <p>Per the Prime Directive: these blocks exist objectively in the world.
+    37→    37→ * A mortal sees "a strange glowing flower" — the PerceptionEngine handles
+    38→    38→ * what the player UNDERSTANDS, not whether the block exists.
+    39→    39→ *
+    40→    40→ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17 APIs only.
+    41→    41→ */
+    42→    42→public final class ErgenverseBlocks {
+    43→    43→
+    44→    44→    private ErgenverseBlocks() {}
+    45→    45→
+    46→    46→    public static final DeferredRegister<Block> BLOCKS =
+    47→    47→            DeferredRegister.create(ForgeRegistries.BLOCKS, Ergenverse.MOD_ID);
+    48→    48→
+    49→    49→    public static final DeferredRegister<Item> BLOCK_ITEMS =
+    50→    50→            DeferredRegister.create(ForgeRegistries.ITEMS, Ergenverse.MOD_ID);
+    51→    51→
+    52→    52→    public static final net.minecraftforge.registries.DeferredRegister<net.minecraft.world.level.block.entity.BlockEntityType<?>> BLOCK_ENTITIES =
+    53→    53→            net.minecraftforge.registries.DeferredRegister.create(net.minecraft.core.registries.Registries.BLOCK_ENTITY_TYPE, Ergenverse.MOD_ID);
+    54→    54→
+    55→    55→    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
+    56→    56→            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Ergenverse.MOD_ID);
+    57→    57→
+    58→    58→    /** Ergenverse Blocks creative tab. */
+    59→    59→    public static RegistryObject<CreativeModeTab> ERGENVERSE_BLOCKS_TAB;
+    60→    60→
+    61→    61→    // ── Workstation Blocks ──────────────────────────────────────────────
+    62→    62→
+    63→    63→    /**
+    64→    64→     * Alchemy Furnace — the first Minecraft crafting block in the Ergenverse.
+    65→    65→     *
+    66→    66→     * <p>A directional, horizontal-facing block. Right-clicking opens the
+    67→    67→     * Alchemy Furnace menu (5 ingredient slots + 1 fuel + 1 output). The
+    68→    68→     * block entity ticks on the server, consuming fuel and producing a
+    69→    69→     * placeholder "basic pill" output (sugar, until a proper pill item is
+    70→    70→     * registered).
+    71→    71→     *
+    72→    72→     * <p>Strength/sound matches vanilla furnace (3.5 hardness, 1500 explosion
+    73→    73→     * resistance, metal sound, requires correct tool for drops).
+    74→    74→     */
+    75→    75→    public static final RegistryObject<Block> ALCHEMY_FURNACE = registerWorkstation(
+    76→    76→            "alchemy_furnace",
+    77→    77→            BlockBehaviour.Properties.of()
+    78→    78→                    .strength(3.5f, 1500.0f)
+    79→    79→                    .sound(SoundType.METAL)
+    80→    80→                    .requiresCorrectToolForDrops(),
+    81→    81→            AlchemyFurnaceBlock::new);
+    82→    82→
+    83→    83→    // ── Anchor Blocks (Realm-Sealing Grand Array) ──────────────────────
+    84→    84→
+    85→    85→    /** Realm Sealing Flag — primary anchor for the Realm-Sealing Grand Array. */
+    86→    86→    public static final RegistryObject<Block> REALM_SEALING_FLAG = registerAnchor(
+    87→    87→            "realm_sealing_flag",
+    88→    88→            BlockBehaviour.Properties.of()
+    89→    89→                    .strength(5.0f, 1200.0f)
+    90→    90→                    .sound(SoundType.METAL)
+    91→    91→                    .requiresCorrectToolForDrops());
+    92→    92→    
+    93→    93→
+    94→    94→    /** Heaven-Splitting Axe Pedestal — the seat of the array's spirit. */
+    95→    95→    public static final RegistryObject<Block> HEAVEN_SPLITTING_AXE_PEDESTAL = registerAnchor(
+    96→    96→            "heaven_splitting_axe_pedestal",
+    97→    97→            BlockBehaviour.Properties.of()
+    98→    98→                    .strength(8.0f, 2000.0f)
+    99→    99→                    .sound(SoundType.STONE)
+   100→   100→                    .requiresCorrectToolForDrops());
+   101→   101→    
+   102→   102→
+   103→   103→    /** Dao Binding Stone — inscribed with the Seven-Colored Daoist's dao. */
+   104→   104→    public static final RegistryObject<Block> DAO_BINDING_STONE = registerAnchor(
+   105→   105→            "dao_binding_stone",
+   106→   106→            BlockBehaviour.Properties.of()
+   107→   107→                    .strength(6.0f, 1500.0f)
+   108→   108→                    .sound(SoundType.STONE)
+   109→   109→                    .requiresCorrectToolForDrops());
+   110→   110→    
+   111→   111→
+   112→   112→    // ── Spirit Herb Blocks ──────────────────────────────────────────────
+   113→   113→    // These replace the vanilla stand-ins (lily_of_the_valley, sea_pickle,
+   114→   114→    // glow_berries, cyan_terracotta, orange_tulip, brown_mushroom, red_mushroom)
+   115→   115→    // used in configured_feature JSONs.
+   116→   116→
+   117→   117→    /** Snow-Heart Herb — ice-aspect spirit herb from Snow Domain Country. */
+   118→   118→    public static final RegistryObject<Block> SNOW_HEART_HERB = registerHerb(
+   119→   119→            "snow_heart_herb", MobEffects.MOVEMENT_SLOWDOWN, 8);
+   120→   120→
+   121→   121→    /** Soul Nourishing Lotus — water-aspect herb, nourishes soul power. */
+   122→   122→    public static final RegistryObject<Block> SOUL_NOURISHING_LOTUS = registerHerb(
+   123→   123→            "soul_nourishing_lotus", MobEffects.REGENERATION, 6);
+   124→   124→
+   125→   125→    /** Fire Bloom Lotus — fire-aspect herb from Fire Demon Country. */
+   126→   126→    public static final RegistryObject<Block> FIRE_BLOOM_LOTUS = registerHerb(
+   127→   127→            "fire_bloom_lotus", MobEffects.FIRE_RESISTANCE, 6);
+   128→   128→
+   129→   129→    /** Nine-Leaf Clover — rare lucky herb, canon-attested in Zhao Kingdom. */
+   130→   130→    public static final RegistryObject<Block> NINE_LEAF_CLOVER = registerHerb(
+   131→   131→            "nine_leaf_clover", MobEffects.LUCK, 100);
+   132→   132→
+   133→   133→    /** Qi Gathering Grass — base meditation herb, found across all countries. */
+   134→   134→    public static final RegistryObject<Block> QI_GATHERING_GRASS = registerHerb(
+   135→   135→            "qi_gathering_grass", null, 00);
+   136→   136→
+   137→   137→    /** Blood Forgetting Grass — memory-affecting herb from Sea of Devils. */
+   138→   138→    public static final RegistryObject<Block> BLOOD_FORGETTING_GRASS = registerHerb(
+   139→   139→            "blood_forgetting_grass", MobEffects.CONFUSION, 6);
+   140→   140→
+   141→   141→    /** Void Nether Grass — void-aspect herb from border zones. */
+   142→   142→    public static final RegistryObject<Block> VOID_NETHER_GRASS = registerHerb(
+   143→   143→            "void_nether_grass", MobEffects.WEAKNESS, 6);
+   144→   144→
+   145→   145→    /** Dao Trace Vine — vine that bears the imprint of a cultivation dao. */
+   146→   146→    public static final RegistryObject<Block> DAO_TRACE_VINE = registerHerb(
+   147→   147→            "dao_trace_vine", null, 00);
+   148→   148→
+   149→   149→    /** Sword Edge Moss — moss growing on ancient sword-edge terrain. */
+   150→   150→    public static final RegistryObject<Block> SWORD_EDGE_MOSS = registerHerb(
+   151→   151→            "sword_edge_moss", MobEffects.DAMAGE_BOOST, 40);
+   152→   152→
+   153→   153→    /** Five-Color Ginseng — multi-aspect ginseng, high-value herb. */
+   154→   154→    public static final RegistryObject<Block> FIVE_COLOR_GINSENG = registerHerb(
+   155→   155→            "five_color_ginseng", MobEffects.REGENERATION, 100);
+   156→   156→
+   157→   157→    /** Foundation Root Vine — root vine used in foundation-establishing pills. */
+   158→   158→    public static final RegistryObject<Block> FOUNDATION_ROOT_VINE = registerHerb(
+   159→   159→            "foundation_root_vine", null, 00);
+   160→   160→
+   161→   161→    /** Reincarnation Lily — reincarnation-aspect herb. */
+   162→   162→    public static final RegistryObject<Block> REINCARNATION_LILY = registerHerb(
+   163→   163→            "reincarnation_lily", MobEffects.DAMAGE_RESISTANCE, 80);
+   164→   164→
+   165→   165→    /** Heart Devil Flower — induces heart-devil tribulation. */
+   166→   166→    public static final RegistryObject<Block> HEART_DEVIL_FLOWER = registerHerb(
+   167→   167→            "heart_devil_flower", MobEffects.BLINDNESS, 6);
+   168→   168→
+   169→   169→    /** Demon Corpse Mushroom — grows on ancient battlefield remains. */
+   170→   170→    public static final RegistryObject<Block> DEMON_CORPSE_MUSHROOM = registerHerb(
+   171→   171→            "demon_corpse_mushroom", MobEffects.WITHER, 80);
+   172→   172→
+   173→   173→    /** Vermilion Blood Ginseng — fire-blood ginseng from Vermilion Bird Country. */
+   174→   174→    public static final RegistryObject<Block> VERMILION_BLOOD_GINSENG = registerHerb(
+   175→   175→            "vermilion_blood_ginseng", MobEffects.ABSORPTION, 100);
+   176→   176→
+   177→   177→    // ── Helpers ─────────────────────────────────────────────────────────
+   178→   178→
+   179→   179→    private static RegistryObject<Block> registerAnchor(String name, BlockBehaviour.Properties props) {
+   180→   180→        RegistryObject<Block> block = BLOCKS.register(name, () -> new Block(props));
+   181→   181→        BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(),
+   182→   182→                new Item.Properties()));
+   183→   183→        return block;
+   184→   184→    }
+   185→   185→
+   186→   186→    /**
+   187→   187→     * Register a workstation block + its BlockItem. Uses a custom Block
+   188→   188→     * supplier (e.g., {@link AlchemyFurnaceBlock::new}) so directional /
+   189→   189→     * block-entity-bearing blocks can be instantiated with the properties.
+   190→   190→     */
+   191→   191→    private static RegistryObject<Block> registerWorkstation(String name,
+   192→   192→                                                              BlockBehaviour.Properties props,
+   193→   193→                                                              java.util.function.Function<BlockBehaviour.Properties, Block> factory) {
+   194→   194→        RegistryObject<Block> block = BLOCKS.register(name, () -> factory.apply(props));
+   195→   195→        BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(),
+   196→   196→                new Item.Properties()));
+   197→   197→        return block;
+   198→   198→    }
+   199→   199→
+   200→   200→    private static RegistryObject<Block> registerHerb(String name,
+   201→   201→                                                      @javax.annotation.Nullable net.minecraft.world.effect.MobEffect stewEffect,
+   202→   202→                                                      int effectDuration) {
+   203→   203→        // FIX CRON-COMPLETIONIST-65: Previously passed `null` as the Supplier when
+   204→   204→        // stewEffect was null, causing NPE during block registration (FlowerBlock
+   205→   205→        // constructor calls .get() on the Supplier). Now always passes a non-null
+   206→   206→        // Supplier that may return null (harmless — just no stew effect applied).
+   207→   207→        RegistryObject<Block> block = BLOCKS.register(name, () -> new FlowerBlock(
+   208→   208→                () -> stewEffect, effectDuration,
+   209→   209→                BlockBehaviour.Properties.of()
+   210→   210→                        .noCollission()
+   211→   211→                        .instabreak()
+   212→   212→                        .sound(SoundType.GRASS)
+   213→   213→                        .offsetType(BlockBehaviour.OffsetType.XZ)));
+   214→   214→        BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(),
+   215→   215→                new Item.Properties()));
+   216→   216→        return block;
+   217→   217→    }
+   218→   218→
+   219→   219→    /** Convenience: get the ResourceLocation for a registered block. */
+   220→   220→    public static ResourceLocation getBlockId(Block block) {
+   221→   221→        return ForgeRegistries.BLOCKS.getKey(block);
+   222→   222→    }
+   223→   223→
+   224→   224→
+   225→   225→    // ── Spirit Ore Blocks ──────────────────────────────────────────────
+   226→   226→    public static final RegistryObject<Block> SPIRIT_IRON_ORE = registerSimple("spirit_iron_ore", 3.0F, 3.0F);
+   227→   227→    public static final RegistryObject<Block> COLD_IRON_ORE = registerSimple("cold_iron_ore", 3.0F, 3.0F);
+   228→   228→    public static final RegistryObject<Block> SPIRIT_STONE_ORE = registerSimple("spirit_stone_ore", 3.0F, 3.0F);
+   229→   229→    public static final RegistryObject<Block> THUNDER_IRON_ORE = registerSimple("thunder_iron_ore", 3.5F, 3.5F);
+   230→   230→    public static final RegistryObject<Block> FIRE_CRYSTAL_ORE = registerSimple("fire_crystal_ore", 3.0F, 3.0F);
+   231→   231→    public static final RegistryObject<Block> NETHER_IRON_ORE = registerSimple("nether_iron_ore", 4.0F, 4.0F);
+   232→   232→
+   233→   233→    // ── Spirit Wood Blocks ─────────────────────────────────────────────
+   234→   234→    public static final RegistryObject<Block> SPIRIT_WOOD_LOG = registerSimple("spirit_wood_log", 2.0F, 2.0F);
+   235→   235→    public static final RegistryObject<Block> SPIRIT_WOOD_PLANKS = registerSimple("spirit_wood_planks", 2.0F, 2.0F);
+   236→   236→    public static final RegistryObject<Block> SPIRIT_WOOD_LEAVES = registerSimple("spirit_wood_leaves", 0.2F, 0.2F);
+   237→   237→    public static final RegistryObject<Block> ANCIENT_SPIRIT_LOG = registerSimple("ancient_spirit_log", 2.5F, 2.5F);
+   238→   238→    public static final RegistryObject<Block> ANCIENT_SPIRIT_LEAVES = registerSimple("ancient_spirit_leaves", 0.2F, 0.2F);
+   239→   239→
+   240→   240→    // ── Formation Blocks ───────────────────────────────────────────────
+   241→   241→    public static final RegistryObject<Block> FORMATION_CORE_STONE = registerSimple("formation_core_stone", 3.5F, 3.5F);
+   242→   242→    public static final RegistryObject<Block> FORMATION_FLAG_BASE = registerSimple("formation_flag_base", 2.0F, 2.0F);
+   243→   243→    public static final RegistryObject<Block> RESTRICTION_STONE = registerSimple("restriction_stone", 4.0F, 4.0F);
+   244→   244→    public static final RegistryObject<Block> SPIRIT_VEIN_STONE = registerSimple("spirit_vein_stone", 3.0F, 3.0F);
+   245→   245→
+   246→   246→    // ── CRON-COMPLETIONIST-75 / CRON-77: Canon discovery block ────────
+   247→   247→    // The "Mysterious Stone" (神秘石头) — the stone on Heng Yue Mountain
+   248→   248→    // in which Wang Lin found the Heaven-Defying Bead (天逆珠) per RI Ch. 8.
+   249→   249→    // Canon: 仙逆编年史 — "王林不合格被拒门外，凭借毅力独自上山遇险后
+   250→   250→    // 发现天逆珠法宝" (Wang Lin failed the entry test, climbed the mountain
+   251→   251→    // alone with perseverance, encountered danger, THEN discovered the bead).
+   252→   252→    //
+   253→   253→    // CRON-77: Promoted from a plain Block to MysteriousStoneBlock — now
+   254→   254→    // overrides getDrops() to call HeavenDefyingBeadItem.applyInitialOpening()
+   255→   255→    // programmatically (eliminates NBT duplication with the loot table JSON),
+   256→   256→    // and overrides animateTick() to emit subtle MYCELIUM particles matching
+   257→   257→    // the violet-crack-vein texture and the "veins like frozen lightning"
+   258→   258→    // hint-book description. Light level stays at 0 (the hint book says
+   259→   259→    // "darker than the others" — no glow). See MysteriousStoneBlock Javadoc.
+   260→   260→    public static final RegistryObject<Block> MYSTERIOUS_STONE = registerMysteriousStone(
+   261→   261→            "mysterious_stone", 3.0F, 6.0F);
+   262→   262→
+   263→   263→    // ── Terrain Blocks ─────────────────────────────────────────────────
+   264→   264→    public static final RegistryObject<Block> SPIRIT_DIRT = registerSimple("spirit_dirt", 0.5F, 0.5F);
+   265→   265→    public static final RegistryObject<Block> SPIRIT_GRASS = registerSimple("spirit_grass", 0.6F, 0.6F);
+   266→   266→    public static final RegistryObject<Block> SPIRIT_STONE_BLOCK = registerSimple("spirit_stone", 1.5F, 6.0F);
+   267→   267→    public static final RegistryObject<Block> JADE_STONE = registerSimple("jade_stone", 2.0F, 6.0F);
+   268→   268→    public static final RegistryObject<Block> BLOOD_STONE = registerSimple("blood_stone", 2.0F, 6.0F);
+   269→   269→    public static final RegistryObject<Block> SCORCHED_STONE = registerSimple("scorched_stone", 1.8F, 6.0F);
+   270→   270→    public static final RegistryObject<Block> SPIRIT_SAND = registerSimple("spirit_sand", 0.5F, 0.5F);
+   271→   271→    public static final RegistryObject<Block> SPIRIT_SANDSTONE = registerSimple("spirit_sandstone", 0.8F, 4.0F);
+   272→   272→
+   273→   273→
+   274→   274→    private static RegistryObject<Block> registerSimple(String name, float hardness, float resistance) {
+   275→   275→        RegistryObject<Block> block = BLOCKS.register(name, () -> new Block(
+   276→   276→                BlockBehaviour.Properties.of()
+   277→   277→                        .strength(hardness, resistance)
+   278→   278→                        .sound(SoundType.STONE)));
+   279→   279→        BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+   280→   280→        return block;
+   281→   281→    }
+   282→   282→
+   283→   283→    /**
+   284→   284→     * CRON-77: Register a MysteriousStoneBlock with the given hardness and
+   285→   285→     * resistance. Same default sound (STONE) and item registration as
+   286→   286→     * {@link #registerSimple}, but uses the MysteriousStoneBlock subclass
+   287→   287→     * which overrides getDrops (programmatic bead drop via
+   288→   288→     * {@link dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem#applyInitialOpening})
+   289→   289→     * and animateTick (subtle MYCELIUM particles).
+   290→   290→     */
+   291→   291→    private static RegistryObject<Block> registerMysteriousStone(String name, float hardness, float resistance) {
+   292→   292→        RegistryObject<Block> block = BLOCKS.register(name, () -> new MysteriousStoneBlock(
+   293→   293→                BlockBehaviour.Properties.of()
+   294→   294→                        .strength(hardness, resistance)
+   295→   295→                        .sound(SoundType.STONE)));
+   296→   296→        BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+   297→   297→        return block;
+   298→   298→    }
+   299→   299→
+   300→   300→
+   301→   301→    // ── Variant Blocks (stairs, slabs, walls) ─────────────────────────────
+   302→   302→    // CRON-COMPLETIONIST-26: Stairs, slabs, walls for custom blocks so structures
+   303→   303→    // can be built entirely from canon materials, not vanilla stand-ins.
+   304→   304→
+   305→   305→    public static final RegistryObject<Block> SPIRIT_STONE_STAIRS = BLOCKS.register("spirit_stone_stairs",
+   306→   306→        () -> new StairBlock(SPIRIT_STONE_BLOCK.get().defaultBlockState(),
+   307→   307→            BlockBehaviour.Properties.of()
+   308→   308→                .strength(1.5F, 6.0F)
+   309→   309→                .sound(SoundType.STONE)));
+   310→   310→
+   311→   311→    public static final RegistryObject<Block> SPIRIT_STONE_SLAB = BLOCKS.register("spirit_stone_slab",
+   312→   312→        () -> new SlabBlock(BlockBehaviour.Properties.of()
+   313→   313→                .strength(1.5F, 6.0F)
+   314→   314→                .sound(SoundType.STONE)));
+   315→   315→
+   316→   316→    public static final RegistryObject<Block> SPIRIT_STONE_WALL = BLOCKS.register("spirit_stone_wall",
+   317→   317→        () -> new WallBlock(BlockBehaviour.Properties.of()
+   318→   318→                .strength(1.5F, 6.0F)
+   319→   319→                .sound(SoundType.STONE)));
+   320→   320→
+   321→   321→    public static final RegistryObject<Block> SPIRIT_WOOD_PLANKS_STAIRS = BLOCKS.register("spirit_wood_planks_stairs",
+   322→   322→        () -> new StairBlock(SPIRIT_WOOD_PLANKS.get().defaultBlockState(),
+   323→   323→            BlockBehaviour.Properties.of()
+   324→   324→                .strength(2.0F, 2.0F)
+   325→   325→                .sound(SoundType.WOOD)));
+   326→   326→
+   327→   327→    public static final RegistryObject<Block> ANCIENT_SPIRIT_STAIRS = BLOCKS.register("ancient_spirit_stairs",
+   328→   328→        () -> new StairBlock(ANCIENT_SPIRIT_LOG.get().defaultBlockState(),
+   329→   329→            BlockBehaviour.Properties.of()
+   330→   330→                .strength(2.5F, 2.5F)
+   331→   331→                .sound(SoundType.WOOD)));
+   332→   332→
+   333→   333→    // ── Talisman Desk Block ────────────────────────────────────────────
+   334→   334→    public static final RegistryObject<Block> TALISMAN_DESK = registerSimple("talisman_desk", 2.0F, 2.0F);
+   335→   335→
+   336→   336→    // ── Formation Platform Block ──────────────────────────────────────
+   337→   337→    public static final RegistryObject<Block> FORMATION_PLATFORM = registerSimple("formation_platform", 3.5F, 3.5F);
+   338→   338→
+   339→   339→
+   340→   340→    // ── Artifact Forge Block ───────────────────────────────────────────
+   341→   341→    public static final RegistryObject<Block> ARTIFACT_FORGE = registerSimple("artifact_forge", 3.5F, 3.5F);
+   342→   342→    public static final net.minecraftforge.registries.RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<dev.ergenverse.forge.ArtifactForgeBlockEntity>> ARTIFACT_FORGE_ENTITY =
+   343→   343→            BLOCK_ENTITIES.register("artifact_forge", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
+   344→   344→                    .of(dev.ergenverse.forge.ArtifactForgeBlockEntity::new, ARTIFACT_FORGE.get())
+   345→   345→                    .build(null));
+   346→   346→
+   347→   347→
+   348→   348→    // ── Pill Furnace Block (alchemy workstation) ──────────────────────
+   349→   349→    public static final RegistryObject<Block> PILL_FURNACE = registerSimple("pill_furnace", 3.5F, 3.5F);
+   350→   350→    public static final net.minecraftforge.registries.RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<dev.ergenverse.alchemy.PillFurnaceBlockEntity>> PILL_FURNACE_ENTITY =
+   351→   351→            BLOCK_ENTITIES.register("pill_furnace", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
+   352→   352→                    .of(dev.ergenverse.alchemy.PillFurnaceBlockEntity::new, PILL_FURNACE.get())
+   353→   353→                    .build(null));
+   354→   354→
+   355→   355→
+   356→   356→    public static final RegistryObject<Block> TALISMAN_DESK_CRAFT = registerSimple("talisman_desk_craft", 2.0F, 2.0F);
+   357→   357→
+   358→   358→    public static final net.minecraftforge.registries.RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<dev.ergenverse.talisman.crafting.TalismanDeskBlockEntity>> TALISMAN_DESK_ENTITY =
+   359→   359→            BLOCK_ENTITIES.register("talisman_desk_craft", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
+   360→   360→                    .of(dev.ergenverse.talisman.crafting.TalismanDeskBlockEntity::new, TALISMAN_DESK_CRAFT.get())
+   361→   361→                    .build(null));
+   362→   362→
+   363→   363→
+   364→   364→    // ── RestrictionAltarBlock ──────────────────────────────────────────────────
+   365→   365→    public static final RegistryObject<Block> RESTRICTION_ALTAR = registerSimple("restriction_altar", 3.5F, 3.5F);
+   366→   366→    public static final net.minecraftforge.registries.RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<dev.ergenverse.restriction.crafting.RestrictionAltarBlockEntity>> RESTRICTION_ALTAR_ENTITY =
+   367→   367→            BLOCK_ENTITIES.register("restriction_altar", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
+   368→   368→                    .of(dev.ergenverse.restriction.crafting.RestrictionAltarBlockEntity::new, RESTRICTION_ALTAR.get())
+   369→   369→                    .build(null));
+   370→   370→
+   371→   371→    // ── SoulRefiningCauldronBlock ──────────────────────────────────────────────────
+   372→   372→    public static final RegistryObject<Block> SOUL_REFINING_CAULDRON = registerSimple("soul_refining_cauldron", 3.5F, 3.5F);
+   373→   373→    public static final net.minecraftforge.registries.RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<dev.ergenverse.soul.crafting.SoulRefiningCauldronBlockEntity>> SOUL_REFINING_CAULDRON_ENTITY =
+   374→   374→            BLOCK_ENTITIES.register("soul_refining_cauldron", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
+   375→   375→                    .of(dev.ergenverse.soul.crafting.SoulRefiningCauldronBlockEntity::new, SOUL_REFINING_CAULDRON.get())
+   376→   376→                    .build(null));
+   377→   377→
+   378→   378→    // ── RefiningPoolBlock ──────────────────────────────────────────────────
+   379→   379→    public static final RegistryObject<Block> REFINING_POOL = registerSimple("refining_pool", 3.5F, 3.5F);
+   380→   380→    public static final net.minecraftforge.registries.RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<dev.ergenverse.body.crafting.RefiningPoolBlockEntity>> REFINING_POOL_ENTITY =
+   381→   381→            BLOCK_ENTITIES.register("refining_pool", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
+   382→   382→                    .of(dev.ergenverse.body.crafting.RefiningPoolBlockEntity::new, REFINING_POOL.get())
+   383→   383→                    .build(null));
+   384→   384→
+   385→   385→    // ── PuppetPlatformBlock ──────────────────────────────────────────────────
+   386→   386→    public static final RegistryObject<Block> PUPPET_PLATFORM = registerSimple("puppet_platform", 3.5F, 3.5F);
+   387→   387→    public static final net.minecraftforge.registries.RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<dev.ergenverse.puppet.crafting.PuppetPlatformBlockEntity>> PUPPET_PLATFORM_ENTITY =
+   388→   388→            BLOCK_ENTITIES.register("puppet_platform", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
+   389→   389→                    .of(dev.ergenverse.puppet.crafting.PuppetPlatformBlockEntity::new, PUPPET_PLATFORM.get())
+   390→   390→                    .build(null));
+   391→   391→
+   392→   392→    // ── BeastPactAltarBlock ──────────────────────────────────────────────────
+   393→   393→    public static final RegistryObject<Block> BEAST_PACT_ALTAR = registerSimple("beast_pact_altar", 3.5F, 3.5F);
+   394→   394→    public static final net.minecraftforge.registries.RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<dev.ergenverse.beast.crafting.BeastPactAltarBlockEntity>> BEAST_PACT_ALTAR_ENTITY =
+   395→   395→            BLOCK_ENTITIES.register("beast_pact_altar", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
+   396→   396→                    .of(dev.ergenverse.beast.crafting.BeastPactAltarBlockEntity::new, BEAST_PACT_ALTAR.get())
+   397→   397→                    .build(null));
+   398→   398→    public static final RegistryObject<Block> FORMATION_PLATFORM_CRAFT = registerSimple("formation_platform_craft", 3.5F, 3.5F);
+   399→   399→    public static final net.minecraftforge.registries.RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<dev.ergenverse.formation.crafting.FormationPlatformBlockEntity>> FORMATION_PLATFORM_ENTITY =
+   400→   400→            BLOCK_ENTITIES.register("formation_platform_craft", () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder
+   401→   401→                    .of(dev.ergenverse.formation.crafting.FormationPlatformBlockEntity::new, FORMATION_PLATFORM_CRAFT.get())
+   402→   402→                    .build(null));
+   403→   403→
+   404→   404→    public static void register(IEventBus modEventBus) {
+   405→   405→        BLOCKS.register(modEventBus);
+   406→   406→        BLOCK_ENTITIES.register(modEventBus);
+   407→   407→        // CRON-COMPLETIONIST-26: Variant block items
+   408→   408→        BLOCK_ITEMS.register("spirit_stone_stairs", () -> new BlockItem(SPIRIT_STONE_STAIRS.get(), new Item.Properties()));
+   409→   409→        BLOCK_ITEMS.register("spirit_stone_slab", () -> new BlockItem(SPIRIT_STONE_SLAB.get(), new Item.Properties()));
+   410→   410→        BLOCK_ITEMS.register("spirit_stone_wall", () -> new BlockItem(SPIRIT_STONE_WALL.get(), new Item.Properties()));
+   411→   411→        BLOCK_ITEMS.register("spirit_wood_planks_stairs", () -> new BlockItem(SPIRIT_WOOD_PLANKS_STAIRS.get(), new Item.Properties()));
+   412→   412→        BLOCK_ITEMS.register("ancient_spirit_stairs", () -> new BlockItem(ANCIENT_SPIRIT_STAIRS.get(), new Item.Properties()));
+   413→   413→        // NOTE: FormationPlatformBlockEntity.TYPE and TalismanDeskBlockEntity.TYPE
+   414→   414→        // are already registered via BLOCK_ENTITIES above (FORMATION_PLATFORM_ENTITY
+   415→   415→        // at line 326 with name "formation_platform_craft", and TALISMAN_DESK_ENTITY
+   416→   416→        // at line 285 with name "talisman_desk_craft"). The previous inline
+   417→   417→        // DeferredRegister.create() calls here were NEVER wired to the modEventBus,
+   418→   418→        // so those RegistryObjects would never resolve. Removed to avoid confusion.
+   419→   419→        BLOCK_ITEMS.register(modEventBus);
+   420→   420→        CREATIVE_TABS.register(modEventBus);
+   421→   421→        ERGENVERSE_BLOCKS_TAB = CREATIVE_TABS.register("ergenverse_blocks", () ->
+   422→   422→                CreativeModeTab.builder()
+   423→   423→                        .title(Component.literal("Ergenverse Blocks"))
+   424→   424→                        .icon(() -> new ItemStack(REALM_SEALING_FLAG.get()))
+   425→   425→                        .displayItems((params, output) -> {
+   426→   426→                            // Workstation blocks first (explicit)
+   427→   427→                            output.accept(ALCHEMY_FURNACE.get().asItem());
+   428→   428→                            // Anchor blocks next (explicit)
+   429→   429→                            output.accept(REALM_SEALING_FLAG.get().asItem());
+   430→   430→                            output.accept(HEAVEN_SPLITTING_AXE_PEDESTAL.get().asItem());
+   431→   431→                            output.accept(DAO_BINDING_STONE.get().asItem());
+   432→   432→                            // Then all herb block items (skip explicit entries to avoid duplicates)
+   433→   433→                            for (var entry : BLOCK_ITEMS.getEntries()) {
+   434→   434→                                Item it = entry.get();
+   435→   435→                                if (it == ALCHEMY_FURNACE.get().asItem()) continue;
+   436→   436→                                if (it == REALM_SEALING_FLAG.get().asItem()) continue;
+   437→   437→                                if (it == HEAVEN_SPLITTING_AXE_PEDESTAL.get().asItem()) continue;
+   438→   438→                                if (it == DAO_BINDING_STONE.get().asItem()) continue;
+   439→   439→                                output.accept(it);
+   440→   440→                            }
+   441→   441→                        })
+   442→   442→                        .build());
+   443→   443→        Ergenverse.LOGGER.info("[Ergenverse] ErgenverseBlocks: registered 1 workstation + 3 anchor blocks + 14 spirit herb blocks.");
+   444→   444→    }
+   445→   445→}

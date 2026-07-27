@@ -1,0 +1,562 @@
+     1→package dev.ergenverse.wanglin.bead;
+     2→
+     3→import dev.ergenverse.core.Ergenverse;
+     4→import dev.ergenverse.entity.EntityCultivator;
+     5→import dev.ergenverse.history.HistoryManager;
+     6→import dev.ergenverse.simulation.WorldRuntimeState;
+     7→import net.minecraft.ChatFormatting;
+     8→import net.minecraft.core.BlockPos;
+     9→import net.minecraft.core.particles.ParticleTypes;
+    10→import net.minecraft.nbt.CompoundTag;
+    11→import net.minecraft.network.chat.Component;
+    12→import net.minecraft.server.level.ServerLevel;
+    13→import net.minecraft.server.level.ServerPlayer;
+    14→import net.minecraft.sounds.SoundEvents;
+    15→import net.minecraft.sounds.SoundSource;
+    16→import net.minecraft.world.entity.Entity;
+    17→
+    18→import java.util.List;
+    19→
+    20→/**
+    21→ * Mu Bingmei Acceptance Event — CRON-COMPLETIONIST-113.
+    22→ *
+    23→ * <p>Implements the canon-faithful "Mu Bingmei takes Zhou Ru as her disciple"
+    24→ * narrative beat. After CRON-112's Kunxu departure (周茹 teleported to the
+    25→ * Kunxu Realm at (-3500, surface, -3500)), Mu Bingmei senses the soul of
+    26→ * Li Muwan within 周茹 and formally accepts her as a disciple. This is the
+    27→ * narrative bridge between CRON-112 (arrival) and CRON-111 (cultivation
+    28→ * growth, which requires the disciple-master bond to be canonically
+    29→ * established).
+    30→ *
+    31→ * <h2>Canon Basis (fact-checked against RICanonicalDatabase)</h2>
+    32→ * <p>In the novel 仙逆 (Renegade Immortal) by 耳根:
+    33→ * <ul>
+    34→ *   <li><b>N10 (Zhou Ru)</b>: cultivation = "Soul Transformation",
+    35→ *       location = "Kunxu Realm (disciple of Mu Bingmei)",
+    36→ *       relationships include {@code Mu Bingmei: disciple}.
+    37→ *       Traits: "Wang Lin's adopted daughter; vessel for Li Muwan's soul
+    38→ *       (intended)", "Li Muwan chose not to devour Zhou Ru's soul; calls
+    39→ *       Wang Lin 'uncle'", "Reincarnated on IAC and lives an ordinary life".</li>
+    40→ *   <li><b>N19 (Mu Bingmei)</b>: cultivation = "Ascendant+",
+    41→ *       relationships include {@code Zhou Ru: disciple}.
+    42→ *       Traits: "Liu Mei's true form; Wang Lin's third wife",
+    43→ *       "Had a son with Wang Lin (Wang Ping) whom she refined into a
+    44→ *       resentful spirit out of hatred",
+    45→ *       "Wang Lin severed karmic ties with her via the Dream Dao; one of
+    46→ *       his clones accompanies her".</li>
+    47→ *   <li><b>L74 (Kunxu Realm)</b>: traits include
+    48→ *       "Mu Bingmei entered here; took Zhou Ru as her disciple",
+    49→ *       "Zhou Ru's cultivation arc takes place here".</li>
+    50→ * </ul>
+    51→ *
+    52→ * <p><b>Canon honesty:</b> The novel explicitly narrates that Mu Bingmei
+    53→ * "took Zhou Ru as her disciple" (L74 + N10 + N19 relationships). This is
+    54→ * NOT mod-original — it is direct canon. The exact chapter is not cited
+    55→ * here to avoid fabrication. Sources: RICanonicalDatabase N10/N19/L74,
+    56→ * Baidu Baike (周茹, 慕冰媚), Fandom wiki.
+    57→ *
+    58→ * <h2>Trigger Mechanism — Automatic Tick Service (NOT interaction-gated)</h2>
+    59→ * <p>The acceptance fires AUTOMATICALLY when 周茹 is near Mu Bingmei at the
+    60→ * Kunxu Realm — it is a story beat, not a player action. Canon: Wang Lin
+    61→ * entrusts 周茹 to Mu Bingmei (CRON-112), and Mu Bingmei accepts. The novel
+    62→ * does not narrate a "player clicks Mu Bingmei to make her accept 周茹"
+    63→ * mechanic — the acceptance is an autonomous narrative event.
+    64→ *
+    65→ * <p>This mirrors how a disciple-master relationship actually forms: when
+    66→ * the disciple arrives at the master's retreat, the master senses the
+    67→ * disciple's potential (in this case, the Li Muwan soul within 周茹) and
+    68→ * accepts them. The player can witness the acceptance by traveling to the
+    69→ * Kunxu Realm after CRON-112's departure.
+    70→ *
+    71→ * <h2>Tick Cadence</h2>
+    72→ * <p>The service runs every server tick (called from
+    73→ * {@link dev.ergenverse.core.Ergenverse#onServerTick} Loop K), but throttles
+    74→ * internally to {@link #ACCEPTANCE_CHECK_INTERVAL_TICKS} (200 ticks = 10s).
+    75→ * This is responsive enough that the player sees the acceptance promptly
+    76→ * after 周茹 arrives, but doesn't waste CPU on a per-tick O(n) entity scan.
+    77→ *
+    78→ * <h2>Gates (in order)</h2>
+    79→ * <ol>
+    80→ *   <li><b>Server-side check.</b> Never run on client.</li>
+    81→ *   <li><b>Throttle check.</b> Only run every 200 ticks (10s).</li>
+    82→ *   <li><b>Find 周茹.</b> Must be materialized (chunk loaded). If not,
+    83→ *       no-op — the acceptance can only fire when 周茹 is "on-screen".</li>
+    84→ *   <li><b>CRON-112 prerequisite.</b> 周茹's runtime state must have
+    85→ *       {@code "sent_to_kunxu": true}. If the departure hasn't fired,
+    86→ *       the acceptance cannot fire.</li>
+    87→ *   <li><b>Write-once guard.</b> 周茹's runtime state must NOT have
+    88→ *       {@code "accepted_as_disciple": true}. The acceptance is a one-time
+    89→ *       event per save.</li>
+    90→ *   <li><b>Find Mu Bingmei.</b> Must be materialized. If not, no-op —
+    91→ *       the acceptance requires the master's presence.</li>
+    92→ *   <li><b>Proximity check.</b> 周茹 must be within
+    93→ *       {@link #ACCEPTANCE_PROXIMITY_RADIUS} (32 blocks) of Mu Bingmei.
+    94→ *       This is TIGHTER than CRON-111's 64-block cultivation proximity —
+    95→ *       the formal acceptance is a deliberate ceremony, not ambient
+    96→ *       cultivation. 32 blocks = 2 chunks; close enough for a face-to-face
+    97→ *       ritual.</li>
+    98→ *   <li><b>Find nearby player.</b> Used for the bilingual message + history
+    99→ *       record. If no player is within {@link #WITNESS_RADIUS} (48 blocks),
+   100→ *       the acceptance STILL fires (sets the flag, spawns effects) but no
+   101→ *       message is displayed and no history record is created. This is
+   102→ *       canon-faithful: the acceptance happens whether or not the player
+   103→ *       witnesses it.</li>
+   104→ * </ol>
+   105→ *
+   106→ * <h2>On Success</h2>
+   107→ * <ol>
+   108→ *   <li>Sets 周茹's runtime state:
+   109→ *     <ul>
+   110→ *       <li>{@code accepted_as_disciple: true}</li>
+   111→ *       <li>{@code disciple_acceptance_tick: currentTick}</li>
+   112→ *       <li>{@code master_character_id: "mu_bingmei"}</li>
+   113→ *     </ul>
+   114→ *   </li>
+   115→ *   <li>Spawns canon-faithful particle + sound effects:
+   116→ *     <ul>
+   117→ *       <li>At Mu Bingmei (master): END_ROD ring (master's Qi descending)
+   118→ *           + AMETHYST_BLOCK_CHIME (crystalline bond).</li>
+   119→ *       <li>At 周茹 (disciple): END_ROD ring (disciple receiving Qi)
+   120→ *           + AMETHYST_BLOCK_CHIME + PLAYER_LEVELUP (disciple's recognition).</li>
+   121→ *       <li>Between them: a stream of END_ROD particles from Mu Bingmei
+   122→ *           to 周茹 (the bond visually forming).</li>
+   123→ *       <li>A central BELL sound (the formal acceptance — like a temple
+   124→ *           bell).</li>
+   125→ *     </ul>
+   126→ *   </li>
+   127→ *   <li>Displays a bilingual message to the witnessing player (if any).</li>
+   128→ *   <li>Records the event in HistoryManager (if a witness is present).</li>
+   129→ * </ol>
+   130→ *
+   131→ * <h2>Why a dedicated class (not inline in ZhouRuCultivationGrowthService)</h2>
+   132→ * <p>The acceptance is a one-shot narrative event, while the cultivation
+   133→ * growth service is a recurring daily tick. Mixing them would couple
+   134→ * one-shot semantics with recurring semantics, making the code harder to
+   135→ * reason about. A dedicated class also makes the acceptance independently
+   136→ * testable and follows the pattern established by CRON-99/110/112 (one
+   137→ * class per narrative event).
+   138→ *
+   139→ * <h2>State Transition Diagram</h2>
+   140→ * <pre>
+   141→ *   CRON-99:  Li Muwan dies  →  bead.hasLiMuwanSoul = true
+   142→ *   CRON-110: Player interacts with Zhou Ru (1st right-click)
+   143→ *             →  bead.hasSoulTransferredToZhouRu = true
+   144→ *             →  Zhou Ru runtime: pregnant_with_li_muwan_soul = true
+   145→ *             →  Zhou Ru runtime: soul_transfer_tick = currentTick
+   146→ *   CRON-112: Player interacts with Zhou Ru (2nd right-click, later tick)
+   147→ *             →  Zhou Ru teleports to KUNXU_REALM (-3500, surface, -3500)
+   148→ *             →  Zhou Ru runtime: sent_to_kunxu = true
+   149→ *             →  Zhou Ru runtime: kunxu_departure_tick = currentTick
+   150→ *   CRON-113: Zhou Ru near Mu Bingmei (automatic tick, every 200 ticks)
+   151→ *             →  Zhou Ru runtime: accepted_as_disciple = true
+   152→ *             →  Zhou Ru runtime: disciple_acceptance_tick = currentTick
+   153→ *             →  Zhou Ru runtime: master_character_id = "mu_bingmei"
+   154→ *   CRON-111: Zhou Ru near Mu Bingmei (daily tick) → Zhou Ru realm advances
+   155→ *             mortal → qi_condensation → ... → soul_transformation (CANON_CAP)
+   156→ *   CRON-100: Player invokes /ergenverse bead revive → revivalAttempts++
+   157→ *   CRON-102: 137th attempt with World Origin Essence → bead.isLiMuwanRevived = true
+   158→ * </pre>
+   159→ *
+   160→ * <h2>Single-Player Maximalism (Article XLIII)</h2>
+   161→ * <p>The acceptance only fires when both 周茹 and Mu Bingmei are materialized
+   162→ * (chunks loaded). In single-player maximalism, this means the player must
+   163→ * travel to the Kunxu Realm after CRON-112's departure to witness the
+   164→ * acceptance. This is canon-faithful: Wang Lin witnesses 周茹's acceptance
+   165→ * under Mu Bingmei. If the player never travels to the Kunxu Realm, the
+   166→ * acceptance still fires (when chunks load due to player proximity) but
+   167→ * the player won't see the message until they next interact with 周茹's
+   168→ * runtime state (e.g., via a future /ergenverse zhou_ru status command).
+   169→ *
+   170→ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.
+   171→ *
+   172→ * @see ZhouRuKunxuDepartureEvent (predecessor — CRON-112)
+   173→ * @see ZhouRuCultivationGrowthService (successor — CRON-111)
+   174→ * @see dev.ergenverse.runtime.CanonUUID#ZHOU_RU
+   175→ * @see dev.ergenverse.runtime.CanonUUID#MU_BINGMEI
+   176→ * @see dev.ergenverse.runtime.PlanetSuzakuBlueprint#KUNXU_REALM
+   177→ * @see dev.ergenverse.core.Ergenverse#onServerTick (Loop K)
+   178→ */
+   179→public final class MuBingmeiAcceptanceEvent {
+   180→
+   181→    /** Canon character ID for Zhou Ru. Must match CanonUUID.ZHOU_RU's profile. */
+   182→    public static final String ZHOU_RU_CHARACTER_ID = "zhou_ru";
+   183→
+   184→    /** Canon character ID for Mu Bingmei. Must match CanonUUID.MU_BINGMEI's profile. */
+   185→    public static final String MU_BINGMEI_CHARACTER_ID = "mu_bingmei";
+   186→
+   187→    /**
+   188→     * Acceptance check interval: 200 ticks = 10 seconds. The service is
+   189→     * called every server tick from Loop K, but throttles internally to
+   190→     * this interval. 10s is responsive enough that the player sees the
+   191→     * acceptance promptly after 周茹 arrives, but doesn't waste CPU on a
+   192→     * per-tick O(n) entity scan.
+   193→     */
+   194→    public static final long ACCEPTANCE_CHECK_INTERVAL_TICKS = 200L;
+   195→
+   196→    /**
+   197→     * Maximum distance (in blocks, Euclidean) between 周茹 and Mu Bingmei
+   198→     * at which the acceptance can fire. 32 blocks = 2 chunks; close
+   199→     * enough for a face-to-face ritual. This is TIGHTER than CRON-111's
+   200→     * 64-block cultivation proximity because the formal acceptance is a
+   201→     * deliberate ceremony, not ambient cultivation.
+   202→     */
+   203→    public static final double ACCEPTANCE_PROXIMITY_RADIUS = 32.0;
+   204→
+   205→    /** Squared proximity radius (for distance comparison without sqrt). */
+   206→    public static final double ACCEPTANCE_PROXIMITY_RADIUS_SQ =
+   207→            ACCEPTANCE_PROXIMITY_RADIUS * ACCEPTANCE_PROXIMITY_RADIUS;
+   208→
+   209→    /**
+   210→     * Maximum distance (in blocks, Euclidean) from 周茹 (or Mu Bingmei) at
+   211→     * which a player can witness the acceptance. 48 blocks = 3 chunks.
+   212→     * If no player is within this radius, the acceptance STILL fires (sets
+   213→     * the flag, spawns effects) but no message is displayed and no history
+   214→     * record is created. This is canon-faithful: the acceptance happens
+   215→     * whether or not the player witnesses it.
+   216→     */
+   217→    public static final double WITNESS_RADIUS = 48.0;
+   218→
+   219→    /** Number of END_ROD particles in the master's Qi-descending ring. */
+   220→    private static final int MASTER_RING_PARTICLE_COUNT = 32;
+   221→
+   222→    /** Number of END_ROD particles in the disciple's Qi-receiving ring. */
+   223→    private static final int DISCIPLE_RING_PARTICLE_COUNT = 24;
+   224→
+   225→    /** Number of END_ROD particles in the bond stream (master → disciple). */
+   226→    private static final int BOND_STREAM_PARTICLE_COUNT = 20;
+   227→
+   228→    /** Number of FIREWORK particles for the central flash (at midpoint). */
+   229→    private static final int CENTRAL_FLASH_PARTICLE_COUNT = 8;
+   230→
+   231→    /** Number of AMETHYST particles for the crystalline bond burst. */
+   232→    private static final int CRYSTAL_BURST_PARTICLE_COUNT = 16;
+   233→
+   234→    private MuBingmeiAcceptanceEvent() {}
+   235→
+   236→    /**
+   237→     * Run one acceptance-check tick. Called from
+   238→     * {@link dev.ergenverse.core.Ergenverse#onServerTick} every server tick
+   239→     * (phase=END, Loop K). The method internally gates to
+   240→     * {@link #ACCEPTANCE_CHECK_INTERVAL_TICKS} — callers do NOT need to
+   241→     * throttle.
+   242→     *
+   243→     * @param level       the overworld ServerLevel
+   244→     * @param currentTick the current server game tick
+   245→     */
+   246→    public static void tick(ServerLevel level, long currentTick) {
+   247→        // Gate 1: throttle to every ACCEPTANCE_CHECK_INTERVAL_TICKS
+   248→        if (currentTick % ACCEPTANCE_CHECK_INTERVAL_TICKS != 0) return;
+   249→        // Gate 2: server-side only
+   250→        if (level == null || level.isClientSide()) return;
+   251→
+   252→        try {
+   253→            tickImpl(level, currentTick);
+   254→        } catch (Throwable t) {
+   255→            // Defensive: never crash the server tick loop.
+   256→            Ergenverse.LOGGER.error("[Ergenverse] CRON-113: MuBingmeiAcceptanceEvent "
+   257→                    + "threw an exception: {}", t.getMessage(), t);
+   258→        }
+   259→    }
+   260→
+   261→    private static void tickImpl(ServerLevel level, long currentTick) {
+   262→        // ── Gate 3: Find 周茹's materialized EntityCultivator ──
+   263→        EntityCultivator zhouRu = findCultivatorByCharacterId(level, ZHOU_RU_CHARACTER_ID);
+   264→        if (zhouRu == null) {
+   265→            // 周茹 not materialized (chunk not loaded) — no-op.
+   266→            return;
+   267→        }
+   268→
+   269→        // ── Gate 4: CRON-112 prerequisite — sent_to_kunxu must be true ──
+   270→        WorldRuntimeState runtime = WorldRuntimeState.get(level);
+   271→        CompoundTag zhouRuState = runtime.getNpcState(ZHOU_RU_CHARACTER_ID);
+   272→        if (zhouRuState == null) {
+   273→            // No runtime state at all — CRON-110/112 haven't fired. No-op.
+   274→            return;
+   275→        }
+   276→        if (!zhouRuState.getBoolean("sent_to_kunxu")) {
+   277→            // CRON-112's departure hasn't fired. No-op.
+   278→            return;
+   279→        }
+   280→
+   281→        // ── Gate 5: Write-once guard — accepted_as_disciple must be false ──
+   282→        if (zhouRuState.getBoolean("accepted_as_disciple")) {
+   283→            // Already accepted — one-time event per save. No-op.
+   284→            return;
+   285→        }
+   286→
+   287→        // ── Gate 6: Find Mu Bingmei's materialized EntityCultivator ──
+   288→        EntityCultivator muBingmei = findCultivatorByCharacterId(level, MU_BINGMEI_CHARACTER_ID);
+   289→        if (muBingmei == null) {
+   290→            // Mu Bingmei not materialized — no-op. The acceptance requires
+   291→            // the master's presence.
+   292→            return;
+   293→        }
+   294→
+   295→        // ── Gate 7: Proximity check — 周茹 within 32 blocks of Mu Bingmei ──
+   296→        double distSq = zhouRu.distanceToSqr(muBingmei);
+   297→        if (distSq > ACCEPTANCE_PROXIMITY_RADIUS_SQ) {
+   298→            // 周茹 too far from Mu Bingmei — no-op. The formal acceptance
+   299→            // requires close proximity (a face-to-face ritual).
+   300→            return;
+   301→        }
+   302→
+   303→        // ── All gates pass — execute the acceptance ──
+   304→
+   305→        // ── Step 1: Set the runtime state flags ──
+   306→        zhouRuState.putBoolean("accepted_as_disciple", true);
+   307→        zhouRuState.putLong("disciple_acceptance_tick", currentTick);
+   308→        zhouRuState.putString("master_character_id", MU_BINGMEI_CHARACTER_ID);
+   309→        runtime.updateNpcState(ZHOU_RU_CHARACTER_ID, zhouRuState);
+   310→
+   311→        // ── Step 2: Spawn particle + sound effects ──
+   312→        spawnAcceptanceEffects(level, zhouRu, muBingmei);
+   313→
+   314→        // ── Step 3: Find a nearby player to witness ──
+   315→        ServerPlayer witness = findNearbyPlayer(level, zhouRu, WITNESS_RADIUS);
+   316→
+   317→        // ── Step 4: Display bilingual message (if witness present) ──
+   318→        if (witness != null) {
+   319→            announceAcceptance(witness, zhouRu, muBingmei);
+   320→
+   321→            // ── Step 5: Record in HistoryManager ──
+   322→            HistoryManager.onDiscovery(witness,
+   323→                    "mu_bingmei_accepts_zhou_ru_as_disciple",
+   324→                    "Mu Bingmei (慕冰媚) formally accepted Zhou Ru (周茹) as her "
+   325→                            + "disciple at the Kunxu Realm (昆虚界), teaching her "
+   326→                            + "the cultivation methods of the Kunxu Realm. Zhou Ru "
+   327→                            + "calls Wang Lin 'uncle' (王林叔叔) — the soul of Li "
+   328→                            + "Muwan within her is the bridge between master and "
+   329→                            + "disciple. The disciple-master cultivation arc begins.",
+   330→                    level.getGameTime());
+   331→        }
+   332→
+   333→        Ergenverse.LOGGER.info("[Ergenverse] CRON-113: Mu Bingmei (慕冰媚) accepted Zhou Ru "
+   334→                        + "(周茹) as her disciple at tick {}. Position: Zhou Ru={}, "
+   335→                        + "Mu Bingmei={}, distance={:.1f} blocks. Witness: {}.",
+   336→                currentTick,
+   337→                zhouRu.blockPosition(),
+   338→                muBingmei.blockPosition(),
+   339→                Math.sqrt(distSq),
+   340→                witness != null ? witness.getName().getString() : "(none — silent acceptance)");
+   341→    }
+   342→
+   343→    /**
+   344→     * Find a materialized EntityCultivator by characterId. Iterates the
+   345→     * level's all-entities list (O(n) where n is the loaded entity count).
+   346→     * Mirrors {@link ZhouRuCultivationGrowthService#findCultivatorByCharacterId}.
+   347→     *
+   348→     * @param level       the server level
+   349→     * @param characterId the canon character id (e.g. "zhou_ru", "mu_bingmei")
+   350→     * @return the EntityCultivator, or null if not found / not materialized
+   351→     */
+   352→    private static EntityCultivator findCultivatorByCharacterId(ServerLevel level,
+   353→                                                                 String characterId) {
+   354→        for (Entity e : level.getAllEntities()) {
+   355→            if (!(e instanceof EntityCultivator cultivator)) continue;
+   356→            if (!e.isAlive()) continue;
+   357→            if (characterId.equals(cultivator.getCharacterId())) {
+   358→                return cultivator;
+   359→            }
+   360→        }
+   361→        return null;
+   362→    }
+   363→
+   364→    /**
+   365→     * Find the nearest ServerPlayer within {@code radius} blocks of the
+   366→     * given entity. Used to find a witness for the acceptance event
+   367→     * (for the bilingual message + HistoryManager recording).
+   368→     *
+   369→     * <p>In single-player maximalism, there is exactly one player. This
+   370→     * method is defensive for future MP support.
+   371→     *
+   372→     * @param level  the server level
+   373→     * @param entity the entity to search around
+   374→     * @param radius the search radius (blocks, Euclidean)
+   375→     * @return the nearest ServerPlayer, or null if none in radius
+   376→     */
+   377→    private static ServerPlayer findNearbyPlayer(ServerLevel level,
+   378→                                                  EntityCultivator entity,
+   379→                                                  double radius) {
+   380→        List<ServerPlayer> players = level.players();
+   381→        ServerPlayer nearest = null;
+   382→        double nearestDistSq = radius * radius;
+   383→        for (ServerPlayer p : players) {
+   384→            double dSq = p.distanceToSqr(entity);
+   385→            if (dSq <= nearestDistSq) {
+   386→                nearestDistSq = dSq;
+   387→                nearest = p;
+   388→            }
+   389→        }
+   390→        return nearest;
+   391→    }
+   392→
+   393→    /**
+   394→     * Spawn canon-faithful particle + sound effects for the acceptance.
+   395→     * The visual idiom:
+   396→     * <ul>
+   397→     *   <li><b>END_ROD ring at Mu Bingmei (master)</b> — the master's Qi
+   398→     *       descending. END_ROD is bright white-rising.</li>
+   399→     *   <li><b>END_ROD ring at 周茹 (disciple)</b> — the disciple receiving
+   400→     *       the master's Qi.</li>
+   401→     *   <li><b>END_ROD stream from Mu Bingmei to 周茹</b> — the disciple-
+   402→     *       master bond forming visually.</li>
+   403→     *   <li><b>FIREWORK central flash at the midpoint</b> — the formal
+   404→     *       acceptance burst.</li>
+   405→     *   <li><b>AMETHYST burst at both ends</b> — the crystalline bond.</li>
+   406→     *   <li><b>AMETHYST_BLOCK_CHIME sound at both ends</b> — the crystalline
+   407→     *       tone of the bond.</li>
+   408→     *   <li><b>PLAYER_LEVELUP sound at 周茹</b> — the bright ascending tone
+   409→     *       of the disciple's recognition.</li>
+   410→     *   <li><b>BELL sound at the midpoint</b> — the formal acceptance
+   411→     *       (like a temple bell).</li>
+   412→     * </ul>
+   413→     *
+   414→     * <p>Deliberately AVOIDS:
+   415→     * <ul>
+   416→     *   <li>ENDER_DRAGON_GROWL — too apocalyptic for a disciple's acceptance.</li>
+   417→     *   <li>WITHER_SPAWN — too dark; Mu Bingmei's relationship with Wang Lin
+   418→     *       is complex (she refined their son Wang Ping into a resentful
+   419→     *       spirit), but the acceptance itself is a positive narrative beat.</li>
+   420→     *   <li>DRAGON_BREATH particles — too aggressive; this is a sacred bond,
+   421→     *       not a combat event.</li>
+   422→     * </ul>
+   423→     *
+   424→     * @param level     the server level
+   425→     * @param zhouRu    the disciple EntityCultivator (周茹)
+   426→     * @param muBingmei the master EntityCultivator (慕冰媚)
+   427→     */
+   428→    private static void spawnAcceptanceEffects(ServerLevel level,
+   429→                                                EntityCultivator zhouRu,
+   430→                                                EntityCultivator muBingmei) {
+   431→        double masterX = muBingmei.getX();
+   432→        double masterY = muBingmei.getY() + 1.0;  // chest height
+   433→        double masterZ = muBingmei.getZ();
+   434→
+   435→        double discipleX = zhouRu.getX();
+   436→        double discipleY = zhouRu.getY() + 1.0;  // chest height
+   437→        double discipleZ = zhouRu.getZ();
+   438→
+   439→        double midX = (masterX + discipleX) / 2.0;
+   440→        double midY = (masterY + discipleY) / 2.0;
+   441→        double midZ = (masterZ + discipleZ) / 2.0;
+   442→
+   443→        // ── Master's Qi-descending ring (at Mu Bingmei) ──
+   444→        for (int i = 0; i < MASTER_RING_PARTICLE_COUNT; i++) {
+   445→            double theta = (i / (double) MASTER_RING_PARTICLE_COUNT) * Math.PI * 2;
+   446→            double radius = 1.2;
+   447→            double dx = Math.cos(theta) * radius;
+   448→            double dz = Math.sin(theta) * radius;
+   449→            // Descending from 3 blocks above head to chest height
+   450→            double dy = 2.0 - ((i % 4) * 0.4);
+   451→            level.sendParticles(ParticleTypes.END_ROD,
+   452→                    masterX + dx, muBingmei.getY() + dy, masterZ + dz, 1,
+   453→                    0.0, -0.05, 0.0, 0.0);
+   454→        }
+   455→
+   456→        // ── Disciple's Qi-receiving ring (at 周茹) ──
+   457→        for (int i = 0; i < DISCIPLE_RING_PARTICLE_COUNT; i++) {
+   458→            double theta = (i / (double) DISCIPLE_RING_PARTICLE_COUNT) * Math.PI * 2;
+   459→            double radius = 0.9;
+   460→            double dx = Math.cos(theta) * radius;
+   461→            double dz = Math.sin(theta) * radius;
+   462→            // Ascending from feet to chest (receiving Qi upward)
+   463→            double dy = 0.5 + ((i % 3) * 0.5);
+   464→            level.sendParticles(ParticleTypes.END_ROD,
+   465→                    discipleX + dx, zhouRu.getY() + dy, discipleZ + dz, 1,
+   466→                    0.0, 0.05, 0.0, 0.0);
+   467→        }
+   468→
+   469→        // ── Bond stream (Mu Bingmei → 周茹) ──
+   470→        // A series of END_ROD particles along the line from master to disciple,
+   471→        // simulating the Qi flowing from master to disciple.
+   472→        for (int i = 0; i < BOND_STREAM_PARTICLE_COUNT; i++) {
+   473→            double t = i / (double) (BOND_STREAM_PARTICLE_COUNT - 1);
+   474→            double px = masterX + (discipleX - masterX) * t;
+   475→            double py = masterY + (discipleY - masterY) * t;
+   476→            double pz = masterZ + (discipleZ - masterZ) * t;
+   477→            // Small lateral jitter for visual richness
+   478→            double jitterX = (i % 3 - 1) * 0.1;
+   479→            double jitterZ = (i % 5 - 2) * 0.1;
+   480→            level.sendParticles(ParticleTypes.END_ROD,
+   481→                    px + jitterX, py, pz + jitterZ, 1,
+   482→                    0.0, 0.0, 0.0, 0.0);
+   483→        }
+   484→
+   485→        // ── AMETHYST crystalline bond burst (at both ends) ──
+   486→        level.sendParticles(ParticleTypes.END_ROD,
+   487→                masterX, masterY, masterZ, CRYSTAL_BURST_PARTICLE_COUNT,
+   488→                0.5, 0.5, 0.5, 0.05);
+   489→        level.sendParticles(ParticleTypes.END_ROD,
+   490→                discipleX, discipleY, discipleZ, CRYSTAL_BURST_PARTICLE_COUNT,
+   491→                0.5, 0.5, 0.5, 0.05);
+   492→
+   493→        // ── Central FIREWORK flash at midpoint ──
+   494→        level.sendParticles(ParticleTypes.FIREWORK,
+   495→                midX, midY, midZ, CENTRAL_FLASH_PARTICLE_COUNT,
+   496→                0.4, 0.4, 0.4, 0.05);
+   497→
+   498→        // ── Sounds ──
+   499→        // AMETHYST_BLOCK_CHIME at both ends (crystalline bond)
+   500→        level.playSound(null, muBingmei.blockPosition(),
+   501→                SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.AMBIENT,
+   502→                0.8F, 1.2F);  // volume 0.8, pitch 1.2 (crystalline)
+   503→        level.playSound(null, zhouRu.blockPosition(),
+   504→                SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.AMBIENT,
+   505→                0.8F, 1.4F);  // volume 0.8, pitch 1.4 (slightly brighter at disciple)
+   506→
+   507→        // PLAYER_LEVELUP at 周茹 (bright ascending — the disciple's recognition)
+   508→        level.playSound(null, zhouRu.blockPosition(),
+   509→                SoundEvents.PLAYER_LEVELUP, SoundSource.AMBIENT,
+   510→                0.6F, 1.3F);  // volume 0.6, pitch 1.3
+   511→
+   512→        // BELL at midpoint (formal acceptance — like a temple bell)
+   513→        level.playSound(null, BlockPos.containing(midX, midY, midZ),
+   514→                SoundEvents.BELL_BLOCK, SoundSource.AMBIENT,
+   515→                0.9F, 1.0F);  // volume 0.9, pitch 1.0 (clear bell tone)
+   516→    }
+   517→
+   518→    /**
+   519→     * Announce the acceptance with a canon-faithful bilingual message.
+   520→     * The bilingual format mirrors CRON-110/111/112's pattern: Chinese
+   521→     * (the novel's original language) first, English second, both styled
+   522→     * with light-purple + italic for the sacred/journey tone.
+   523→     *
+   524→     * <p>The message honors:
+   525→     * <ul>
+   526→     *   <li>The disciple-master relationship (周茹 under Mu Bingmei).</li>
+   527→     *   <li>The Li Muwan soul arc (the soul within 周茹 is the bridge).</li>
+   528→     *   <li>The 王林叔叔 (uncle) canon detail (周茹 calls Wang Lin uncle).</li>
+   529→     *   <li>The Kunxu Realm setting (the disciple-master arc takes place here).</li>
+   530→     * </ul>
+   531→     *
+   532→     * @param player    the witnessing player
+   533→     * @param zhouRu    the disciple EntityCultivator (周茹)
+   534→     * @param muBingmei the master EntityCultivator (慕冰媚)
+   535→     */
+   536→    private static void announceAcceptance(ServerPlayer player,
+   537→                                            EntityCultivator zhouRu,
+   538→                                            EntityCultivator muBingmei) {
+   539→        player.sendSystemMessage(
+   540→                Component.literal("─────────────────────────────────────")
+   541→                        .withStyle(ChatFormatting.DARK_PURPLE));
+   542→        player.sendSystemMessage(
+   543→                Component.literal("慕冰媚收周茹为徒，传以昆虚界修行之法。")
+   544→                        .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
+   545→        player.sendSystemMessage(
+   546→                Component.literal("Mu Bingmei takes Zhou Ru as her disciple, "
+   547→                        + "teaching her the cultivation methods of the Kunxu Realm.")
+   548→                        .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   549→        player.sendSystemMessage(
+   550→                Component.literal("Mu Bingmei senses the soul of Li Muwan within Zhou Ru — "
+   551→                        + "the master's recognition bridges two lifetimes.")
+   552→                        .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   553→        player.sendSystemMessage(
+   554→                Component.literal("Zhou Ru calls Wang Lin 'uncle' (王林叔叔) — the bond of "
+   555→                        + "family and the path of cultivation now intertwine.")
+   556→                        .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+   557→        player.sendSystemMessage(
+   558→                Component.literal("─────────────────────────────────────")
+   559→                        .withStyle(ChatFormatting.DARK_PURPLE));
+   560→    }
+   561→}
+   562→

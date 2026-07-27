@@ -1,0 +1,572 @@
+     1→package dev.ergenverse.block;
+     2→
+     3→import dev.ergenverse.core.Ergenverse;
+     4→import dev.ergenverse.cultivation.CultivationCapability;
+     5→import dev.ergenverse.cultivation.CultivationState;
+     6→import dev.ergenverse.cultivation.RealmId;
+     7→import dev.ergenverse.history.HistoryManager;
+     8→import dev.ergenverse.runtime.WorldRuntime;
+     9→import dev.ergenverse.wanglin.bead.HeavenDefyingBeadItem;
+    10→import net.minecraft.ChatFormatting;
+    11→import net.minecraft.core.BlockPos;
+    12→import net.minecraft.core.particles.ParticleTypes;
+    13→import net.minecraft.network.chat.Component;
+    14→import net.minecraft.server.level.ServerPlayer;
+    15→import net.minecraft.util.RandomSource;
+    16→import net.minecraft.world.InteractionHand;
+    17→import net.minecraft.world.InteractionResult;
+    18→import net.minecraft.world.entity.player.Player;
+    19→import net.minecraft.world.item.ItemStack;
+    20→import net.minecraft.world.level.BlockGetter;
+    21→import net.minecraft.world.level.Level;
+    22→import net.minecraft.world.level.block.Block;
+    23→import net.minecraft.world.level.block.state.BlockState;
+    24→import net.minecraft.world.level.block.state.StateDefinition;
+    25→import net.minecraft.world.level.block.state.properties.BooleanProperty;
+    26→import net.minecraft.world.phys.BlockHitResult;
+    27→import net.minecraft.world.phys.shapes.CollisionContext;
+    28→import net.minecraft.world.phys.shapes.VoxelShape;
+    29→
+    30→import java.util.List;
+    31→
+    32→/**
+    33→ * CultivationPlanetCrystalBlock — the 修炼星晶 (Cultivation Planet Crystal),
+    34→ * the sealed core of Planet Suzaku and the macguffin of the 朱雀子 (Suzaku Son)
+    35→ * inheritance arc.
+    36→ *
+    37→ * <p><b>CRON-COMPLETIONIST-106 — REPLACES THE DIAMOND_BLOCK PLACEHOLDER.</b>
+    38→ *
+    39→ * <p>Prior to CRON-106, the SuzakuTombBuilder placed a vanilla
+    40→ * {@code DIAMOND_BLOCK} as the "Cultivation Planet Crystal" at the center of
+    41→ * the inheritance chamber, with an explicit comment: "Mod-original placeholder:
+    42→ * the actual Cultivation Planet Crystal block does not yet exist as a custom
+    43→ * block; a diamond block is used as a visually appropriate placeholder...
+    44→ * A future CRON should create a dedicated CultivationPlanetCrystalBlock with
+    45→ * canon-faithful mechanics (Qi emission, inheritance trigger)."
+    46→ *
+    47→ * <p>CRON-106 closes that gap. This block is the dedicated Crystal, with
+    48→ * canon-faithful mechanics:
+    49→ * <ul>
+    50→ *   <li><b>Light emission (level 15):</b> the Crystal glows at maximum
+    51→ *       intensity, lighting the entire 20×20 inheritance chamber. Canon:
+    52→ *       the Crystal is the sealed core of an entire cultivation planet —
+    53→ *       its spiritual Qi manifests as visible light. A diamond block emits
+    54→ *       no light; this Crystal does.</li>
+    55→ *   <li><b>Qi emission particles:</b> the Crystal emits ambient
+    56→ *       {@link ParticleTypes#END_ROD} particles (small, white, drifting
+    57→ *       upward) at a rate of 1/20 ticks ≈ once per second. The visual
+    58→ *       suggests spiritual Qi radiating outward from the Crystal.
+    59→ *       {@code END_ROD} is the closest vanilla particle to "spiritual Qi
+    60→ *       emission" (small, white, slow, with built-in drift behavior).</li>
+    61→ *   <li><b>Inheritance event (right-click):</b> right-clicking the Crystal
+    62→ *       triggers the 15th-gen Suzaku Son inheritance event, IF the player
+    63→ *       meets the canon-faithful prerequisites (see below). On success,
+    64→ *       the player's Heaven-Defying Bead is marked with the Suzaku Son
+    65→ *       status, and the Crystal transitions to the {@link #INHERITED}
+    66→ *       state (no longer triggers re-inheritance).</li>
+    67→ *   <li><b>Provenance-aware:</b> the Crystal is placed by
+    68→ *       {@link dev.ergenverse.spawn.SuzakuTombBuilder} via {@code sb()}
+    69→ *       (provenance-aware, chunk-filtered). If a player mines the Crystal,
+    70→ *       a PLAYER "air" delta is recorded at its position, and the
+    71→ *       chunk-materializer will not re-place it on reload. The Crystal is
+    72→ *       gone from that save — canon-faithful: once Wang Lin takes the
+    73→ *       Crystal, the tomb's macguffin is gone.</li>
+    74→ * </ul>
+    75→ *
+    76→ * <h2>Canon Basis (fact-checked against 仙逆)</h2>
+    77→ *
+    78→ * <p>The 修炼星晶 (Cultivation Planet Crystal) is canon-attested as the
+    79→ * sealed core of Planet Suzaku, the macguffin of the 朱雀子 (Suzaku Son)
+    80→ * inheritance arc:
+    81→ * <ul>
+    82→ *   <li><b>Baidu Baike (朱雀子):</b> "朱雀子是朱雀星的传承者，每一代朱雀子
+    83→ *       都通过修炼星晶获得朱雀星的传承" — "The Suzaku Son is the inheritor
+    84→ *       of Planet Suzaku; each generation of Suzaku Son obtains the
+    85→ *       inheritance of Planet Suzaku through the Cultivation Planet Crystal."</li>
+    86→ *   <li><b>Baidu Baike (修炼星晶):</b> the Crystal is the sealed spiritual
+    87→ *       core of the planet; acquiring it is the central act of the
+    88→ *       Suzaku Son inheritance.</li>
+    89→ *   <li><b>15th-generation Suzaku Son:</b> Wang Lin becomes the 15th-gen
+    90→ *       Suzaku Son through the inheritance event at the Suzaku Tomb.</li>
+    91→ *   <li><b>拓森 (Tuo Sen):</b> reappears at the Suzaku Tomb during the
+    92→ *       inheritance event. <b>CRON-107:</b> Tuo Sen is now registered as a
+    93→ *       canon NPC (CanonUUID.TUO_SEN) with a deadUntilRevived flag. The
+    94→ *       inheritance event spawns him at the tomb chamber via
+    95→ *       {@link dev.ergenverse.wanglin.bead.TuoSenSpawnEvent#spawnAtSuzakuTomb}.
+    96→ *       Canon: "时隔300年，王林在朱雀墓再遇拓森" (Sohu 2024-06-17).</li>
+    97→ * </ul>
+    98→ *
+    99→ * <p><b>Canon honesty:</b> NO fabricated chapter citation. The Cultivation
+   100→ * Planet Crystal's role as the sealed core of Planet Suzaku and the
+   101→ * macguffin of the Suzaku Son inheritance is attested via multiple web-search
+   102→ * sources (Baidu Baike). The exact chapter is NOT cited to avoid fabrication.
+   103→ *
+   104→ * <h2>Inheritance Prerequisites (canon-faithful gating)</h2>
+   105→ *
+   106→ * <p>Canon: the inheritance event is not trivial. Wang Lin achieves it after
+   107→ * significant cultivation. To gate the inheritance canon-faithfully, the
+   108→ * right-click action requires ALL of the following:
+   109→ *
+   110→ * <ol>
+   111→ *   <li><b>The player must hold the Heaven-Defying Bead (天逆珠) in either
+   112→ *       hand.</b> Canon: Wang Lin's bead is the key that lets him survive
+   113→ *       the inheritance event — without it, the spiritual Qi of the Crystal
+   114→ *       would annihilate an unprepared cultivator. The bead IS Wang Lin's;
+   115→ *       no other cultivator in canon inherits the Crystal.</li>
+   116→ *   <li><b>The player's cultivation realm must be at least
+   117→ *       {@link RealmId#NASCENT_SOUL} (元婴 / Nascent Soul).</b> Canon: the
+   118→ *       inheritance requires surviving a spiritual Qi influx that would
+   119→ *       destroy a Core Formation cultivator. Wang Lin inherits after
+   120→ *       reaching Nascent Soul (the realm at which a cultivator's soul can
+   121→ *       exist independently of the body — a prerequisite for absorbing
+   122→ *       a planet's worth of spiritual Qi).</li>
+   123→ *   <li><b>The Crystal must not already be in the {@link #INHERITED}
+   124→ *       state.</b> The inheritance is a one-time event per save. Once
+   125→ *       Wang Lin inherits, the Crystal's power is transferred; a second
+   126→ *       inheritance would be canon-nonsensical.</li>
+   127→ * </ol>
+   128→ *
+   129→ * <p>If any prerequisite is unmet, the right-click fails with a canon-faithful
+   130→ * message (e.g., "你的修为不足，无法承受星晶之力。" / "Your cultivation is
+   131→ * insufficient to withstand the Crystal's power.") and no inheritance
+   132→ * occurs. The Crystal is NOT consumed — the player can return later when
+   133→ * they meet the prerequisites.
+   134→ *
+   135→ * <h2>Inheritance Outcome</h2>
+   136→ *
+   137→ * <p>On a successful inheritance:
+   138→ * <ul>
+   139→ *   <li>The block transitions to {@link #INHERITED} state (a boolean block
+   140→ *       state property). The Crystal remains in the world (canon: the
+   141→ *       Crystal stays in the tomb, but its power is transferred).</li>
+   142→ *   <li>The player's Heaven-Defying Bead is marked with the
+   143→ *       Suzaku Son status (a new NBT flag, {@code Ergen.Bead.SuzakuSon},
+   144→ *       set on the bead's tag).</li>
+   145→ *   <li>A canon-faithful message is sent to the player (bilingual:
+   146→ *       Chinese + English).</li>
+   147→ *   <li>A HistoryManager discovery event is published (subject:
+   148→ *       {@code suzaku_son_inheritance}).</li>
+   149→ * </ul>
+   150→ *
+   151→ * <h2>Block State</h2>
+   152→ *
+   153→ * <p>The block has one boolean property, {@link #INHERITED}:
+   154→ * <ul>
+   155→ *   <li>{@code inherited=false} (default): the Crystal is "active" —
+   156→ *       right-click triggers the inheritance event (if prerequisites met).</li>
+   157→ *   <li>{@code inherited=true}: the Crystal has been inherited. Right-click
+   158→ *       does nothing (the inheritance is complete). The block remains in
+   159→ *       the world (the Crystal is not consumed).</li>
+   160→ * </ul>
+   161→ *
+   162→ * <p>The {@code inherited} state is purely a server-side gate. Visually,
+   163→ * both states use the same model + texture (the Crystal does not change
+   164→ * appearance when inherited — canon does not describe a visual change).
+   165→ * A future CRON could add a dimmed texture for the inherited state.
+   166→ *
+   167→ * <h2>Drop Behavior</h2>
+   168→ *
+   169→ * <p>The Crystal does NOT drop as an item when broken. Canon: the Crystal
+   170→ * is the sealed core of the planet — it cannot be "picked up" as an item
+   171→ * (it is far too large and spiritually dense to fit in an inventory). If
+   172→ * the player breaks the Crystal block, it drops nothing. The block is
+   173→ * removed from the world (a PLAYER "air" delta is recorded), and the
+   174→ * inheritance opportunity is lost for that save.
+   175→ *
+   176→ * <p>This is a canon-honest design choice: the Crystal's power is conveyed
+   177→ * through the inheritance event (right-click), NOT through inventory
+   178→ * acquisition. A player who breaks the Crystal instead of inheriting from
+   179→ * it permanently loses the inheritance opportunity — canon-faithful
+   180→ * consequences for destructive behavior.
+   181→ *
+   182→ * <h2>Provenance</h2>
+   183→ *
+   184→ * <p>The Crystal is placed by
+   185→ * {@link dev.ergenverse.spawn.SuzakuTombBuilder#buildPedestalAndCrystal}
+   186→ * via {@code sb()} (provenance-aware, chunk-filtered). The block-state
+   187→ * default is {@code inherited=false}. When the inheritance event triggers,
+   188→ * the block-state is updated to {@code inherited=true} via a PLAYER delta
+   189→ * (the inheritance is Wang Lin's act, not a simulation event).
+   190→ *
+   191→ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.
+   192→ *
+   193→ * @see dev.ergenverse.spawn.SuzakuTombBuilder
+   194→ * @see HeavenDefyingBeadItem#setSuzakuSon
+   195→ */
+   196→public class CultivationPlanetCrystalBlock extends Block {
+   197→
+   198→    /**
+   199→     * The boolean block-state property indicating whether the inheritance
+   200→     * has occurred. Default: {@code false} (not yet inherited).
+   201→     */
+   202→    public static final BooleanProperty INHERITED = BooleanProperty.create("inherited");
+   203→
+   204→    /**
+   205→     * Particle spawn probability: 1/N per tick. 20 ≈ once per second.
+   206→     * Subtle but visible — suggests spiritual Qi radiating outward.
+   207→     */
+   208→    private static final int PARTICLE_TICK_INTERVAL = 20;
+   209→
+   210→    /**
+   211→     * Light level emitted by the Crystal. 15 = maximum (same as glowstone,
+   212→     * sea lantern, lava). The Crystal is the sealed core of an entire
+   213→     * cultivation planet — its spiritual Qi manifests as bright light.
+   214→     */
+   215→    private static final int LIGHT_LEVEL = 15;
+   216→
+   217→    /**
+   218→     * Compact crystal-shaped hitbox (slightly smaller than a full block,
+   219→     * matching the "floating crystal on a pedestal" visual). The Crystal
+   220→     * is 12×12×12 (centered) — small enough to feel like an artifact,
+   221→     * large enough to interact with easily.
+   222→     */
+   223→    private static final VoxelShape SHAPE = Block.box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
+   224→
+   225→    /**
+   226→     * The minimum cultivation realm required to trigger the inheritance
+   227→     * event. {@link RealmId#NASCENT_SOUL} (元婴) — the realm at which a
+   228→     * cultivator's soul can exist independently of the body, a prerequisite
+   229→     * for absorbing a planet's worth of spiritual Qi.
+   230→     */
+   231→    private static final RealmId MIN_INHERITANCE_REALM = RealmId.NASCENT_SOUL;
+   232→
+   233→    /**
+   234→     * HistoryManager subject for the inheritance event. Distinct from
+   235→     * other subjects so subscribers can react specifically to this beat.
+   236→     */
+   237→    public static final String SUBJECT_SUZAKU_SON_INHERITANCE = "suzaku_son_inheritance";
+   238→
+   239→    /**
+   240→     * Construct a CultivationPlanetCrystalBlock with the given properties.
+   241→     *
+   242→     * <p>Callers should pass properties that set:
+   243→     * <ul>
+   244→     *   <li>{@code strength(8.0F, 1200.0F)} — hard, blast-resistant (the
+   245→     *       sealed core of a planet; not easily broken)</li>
+   246→     *   <li>{@code sound(SoundType.AMETHYST)} — crystalline sound</li>
+   247→     *   <li>{@code lightLevel(state -> 15)} — maximum light emission</li>
+   248→     *   <li>{@code mapColor(MapColor.COLOR_PURPLE)} — purple-tinted (sacred)</li>
+   249→     *   <li>{@code requiresCorrectToolForDrops()} — but the block drops
+   250→     *       nothing anyway (see class javadoc)</li>
+   251→     * </ul>
+   252→     *
+   253→     * @param properties block behavior properties
+   254→     */
+   255→    public CultivationPlanetCrystalBlock(Properties properties) {
+   256→        super(properties);
+   257→        this.registerDefaultState(this.stateDefinition.any()
+   258→                .setValue(INHERITED, false));
+   259→    }
+   260→
+   261→    @Override
+   262→    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+   263→        builder.add(INHERITED);
+   264→    }
+   265→
+   266→    @Override
+   267→    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+   268→        return SHAPE;
+   269→    }
+   270→
+   271→    /**
+   272→     * Override getDrops to return an empty list — the Crystal does NOT
+   273→     * drop as an item when broken.
+   274→     *
+   275→     * <p>Canon: the Crystal is the sealed core of the planet — it cannot
+   276→     * be "picked up" as an item (it is far too large and spiritually dense
+   277→     * to fit in an inventory). If the player breaks the Crystal block, it
+   278→     * drops nothing. The block is removed from the world (a PLAYER "air"
+   279→     * delta is recorded), and the inheritance opportunity is lost for
+   280→     * that save.
+   281→     *
+   282→     * <p>This is a canon-honest design choice: the Crystal's power is
+   283→     * conveyed through the inheritance event (right-click), NOT through
+   284→     * inventory acquisition. A player who breaks the Crystal instead of
+   285→     * inheriting from it permanently loses the inheritance opportunity —
+   286→     * canon-faithful consequences for destructive behavior.
+   287→     *
+   288→     * @param state   the block state being broken
+   289→     * @param builder loot params builder (unused — no drops)
+   290→     * @return an empty list (no drops)
+   291→     */
+   292→    @Override
+   293→    public List<ItemStack> getDrops(BlockState state, net.minecraft.world.level.storage.loot.LootParams.Builder builder) {
+   294→        return java.util.Collections.emptyList();
+   295→    }
+   296→
+   297→    /**
+   298→     * Spawn ambient END_ROD particles at the block's center.
+   299→     *
+   300→     * <p>Spawn rate: 1/{@value #PARTICLE_TICK_INTERVAL} ticks per block ≈
+   301→     * once per second. The particle is {@link ParticleTypes#END_ROD} —
+   302→     * small, white, drifting upward with built-in slow motion — the
+   303→     * closest vanilla particle to "spiritual Qi emission."
+   304→     *
+   305→     * <p>This is CLIENT-ONLY. {@code animateTick} is only called on the
+   306→     * client when the block is in view.
+   307→     *
+   308→     * @param state  the block state
+   309→     * @param level  the level (client level)
+   310→     * @param pos    the block position
+   311→     * @param random client-side random source
+   312→     */
+   313→    @Override
+   314→    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+   315→        // 1/N chance per tick — subtle, not flashy
+   316→        if (random.nextInt(PARTICLE_TICK_INTERVAL) != 0) return;
+   317→
+   318→        // Spawn at the block's center, with a small random offset.
+   319→        double x = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.3;
+   320→        double y = pos.getY() + 0.7 + (random.nextDouble() - 0.5) * 0.3;
+   321→        double z = pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.3;
+   322→
+   323→        // END_ROD particles drift slowly upward with built-in motion.
+   324→        // The velocity here is a small nudge; the particle's built-in
+   325→        // motion does most of the work.
+   326→        double dx = (random.nextDouble() - 0.5) * 0.02;
+   327→        double dy = 0.04 + random.nextDouble() * 0.02;
+   328→        double dz = (random.nextDouble() - 0.5) * 0.02;
+   329→
+   330→        level.addParticle(ParticleTypes.END_ROD, x, y, z, dx, dy, dz);
+   331→    }
+   332→
+   333→    /**
+   334→     * Right-click interaction — triggers the inheritance event.
+   335→     *
+   336→     * <p>Server-side only. The client returns {@link InteractionResult#sidedSuccess}
+   337→     * to swing the arm; the actual inheritance logic runs on the server.
+   338→     *
+   339→     * <p>See the class javadoc for the canon-faithful prerequisites and
+   340→     * the inheritance outcome.
+   341→     *
+   342→     * @param state   the block state
+   343→     * @param level   the level
+   344→     * @param pos     the block position
+   345→     * @param player  the player
+   346→     * @param hand    the hand used (main or off)
+   347→     * @param hit     the hit result
+   348→     * @return {@link InteractionResult#sidedSuccess} on the client,
+   349→     *         {@link InteractionResult#CONSUME} on the server (success or fail)
+   350→     */
+   351→    @Override
+   352→    public InteractionResult use(BlockState state, Level level, BlockPos pos,
+   353→                                  Player player, InteractionHand hand, BlockHitResult hit) {
+   354→        // Client: just swing the arm and return.
+   355→        if (level.isClientSide()) {
+   356→            return InteractionResult.sidedSuccess(true);
+   357→        }
+   358→
+   359→        // Server: perform the inheritance logic.
+   360→        if (!(player instanceof ServerPlayer serverPlayer)) {
+   361→            return InteractionResult.CONSUME;
+   362→        }
+   363→
+   364→        // Prerequisite 1: Crystal must not already be inherited.
+   365→        if (state.getValue(INHERITED)) {
+   366→            serverPlayer.sendSystemMessage(Component.literal(
+   367→                    "修炼星晶的力量已经传承。星晶归于沉寂。")
+   368→                    .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+   369→            serverPlayer.sendSystemMessage(Component.literal(
+   370→                    "The Cultivation Planet Crystal's power has been inherited. "
+   371→                            + "The Crystal is now silent.")
+   372→                    .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+   373→            return InteractionResult.CONSUME;
+   374→        }
+   375→
+   376→        // Prerequisite 2: Player must hold the Heaven-Defying Bead (either hand).
+   377→        ItemStack beadStack = findBead(serverPlayer);
+   378→        if (beadStack.isEmpty()) {
+   379→            serverPlayer.sendSystemMessage(Component.literal(
+   380→                    "你需要天逆珠才能承受星晶之力。")
+   381→                    .withStyle(ChatFormatting.YELLOW));
+   382→            serverPlayer.sendSystemMessage(Component.literal(
+   383→                    "You must hold the Heaven-Defying Bead to withstand "
+   384→                            + "the Crystal's power.")
+   385→                    .withStyle(ChatFormatting.YELLOW));
+   386→            return InteractionResult.CONSUME;
+   387→        }
+   388→
+   389→        // Prerequisite 3: Player's cultivation realm must be ≥ NASCENT_SOUL.
+   390→        RealmId playerRealm = getPlayerRealm(serverPlayer);
+   391→        if (playerRealm.order < MIN_INHERITANCE_REALM.order) {
+   392→            serverPlayer.sendSystemMessage(Component.literal(
+   393→                    "你的修为不足，无法承受星晶之力。需达"
+   394→                            + MIN_INHERITANCE_REALM.nameCn
+   395→                            + "（" + MIN_INHERITANCE_REALM.name + "）方能传承。")
+   396→                    .withStyle(ChatFormatting.YELLOW));
+   397→            serverPlayer.sendSystemMessage(Component.literal(
+   398→                    "Your cultivation is insufficient to withstand the Crystal's power. "
+   399→                            + "You must reach " + MIN_INHERITANCE_REALM.name
+   400→                            + " (" + MIN_INHERITANCE_REALM.nameCn + ") to inherit.")
+   401→                    .withStyle(ChatFormatting.YELLOW));
+   402→            return InteractionResult.CONSUME;
+   403→        }
+   404→
+   405→        // ── All prerequisites met. Perform the inheritance event. ──
+   406→
+   407→        // 1. Transition the block to the INHERITED state.
+   408→        //    This is a PLAYER act (Wang Lin's inheritance, not a simulation event).
+   409→        //    The block-state change is recorded as a PLAYER delta via the WorldFacade.
+   410→        BlockState inheritedState = state.setValue(INHERITED, true);
+   411→        level.setBlock(pos, inheritedState, 3);
+   412→        recordPlayerDelta(pos, inheritedState);
+   413→
+   414→        // 2. Mark the player's bead with the Suzaku Son status (write-once).
+   415→        if (beadStack.getItem() instanceof HeavenDefyingBeadItem beadItem) {
+   416→            beadItem.setSuzakuSon(beadStack, true);
+   417→        }
+   418→
+   419→        // 3. Display the canon-faithful inheritance message (bilingual).
+   420→        serverPlayer.sendSystemMessage(Component.literal(
+   421→                "─────────────────────────────────────")
+   422→                .withStyle(ChatFormatting.LIGHT_PURPLE));
+   423→        serverPlayer.sendSystemMessage(Component.literal(
+   424→                "修炼星晶迸发出无尽灵气，灌入你的天逆珠。")
+   425→                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   426→        serverPlayer.sendSystemMessage(Component.literal(
+   427→                "你成为了第十五代朱雀子。")
+   428→                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
+   429→        serverPlayer.sendSystemMessage(Component.literal(
+   430→                "「朱雀星，我以王林之名，承此传承。」")
+   431→                .withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC));
+   432→        serverPlayer.sendSystemMessage(Component.literal(
+   433→                "The Cultivation Planet Crystal erupts with boundless spiritual Qi, "
+   434→                        + "pouring into your Heaven-Defying Bead.")
+   435→                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   436→        serverPlayer.sendSystemMessage(Component.literal(
+   437→                "You have become the 15th-generation Suzaku Son.")
+   438→                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
+   439→        serverPlayer.sendSystemMessage(Component.literal(
+   440→                "\"Planet Suzaku, by the name of Wang Lin, I accept this inheritance.\"")
+   441→                .withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC));
+   442→        serverPlayer.sendSystemMessage(Component.literal(
+   443→                "─────────────────────────────────────")
+   444→                .withStyle(ChatFormatting.LIGHT_PURPLE));
+   445→
+   446→        // 4. Record the inheritance in the HistoryManager.
+   447→        long currentTick = level.getGameTime();
+   448→        HistoryManager.onDiscovery(serverPlayer, SUBJECT_SUZAKU_SON_INHERITANCE,
+   449→                "Player inherited the Cultivation Planet Crystal at the Suzaku Tomb, "
+   450→                        + "becoming the 15th-generation Suzaku Son. The Crystal's "
+   451→                        + "spiritual Qi was transferred to the Heaven-Defying Bead. "
+   452→                        + "Realm at inheritance: " + playerRealm.name
+   453→                        + " (" + playerRealm.nameCn + ").",
+   454→                currentTick);
+   455→
+   456→        Ergenverse.LOGGER.info("[Ergenverse] CRON-106: Suzaku Son inheritance triggered at {} "
+   457→                        + "for player {} (realm={}, bead present).",
+   458→                pos, serverPlayer.getName().getString(), playerRealm.name);
+   459→
+   460→        // 5. CRON-107: Spawn Tuo Sen (拓森) at the Suzaku Tomb chamber.
+   461→        //    Canon (web-search verified 2026-07-26): 拓森 reappears at the
+   462→        //    朱雀墓 during the inheritance event — "时隔300年，王林在朱雀墓再遇拓森"
+   463→        //    (Sohu 2024-06-17). He is Wang Lin's Ancient God rival, an 8-star
+   464→        //    Ancient God, born from Tu Si's failed Ink Flow Split Soul Technique.
+   465→        //    He contests the Crystal and the inheritance.
+   466→        //
+   467→        //    This spawn is a CONSEQUENCE of the inheritance, not a prerequisite.
+   468→        //    It is DEFENSIVE: if it fails, the inheritance still succeeded (the
+   469→        //    player already has the Suzaku Son status). The spawn method logs
+   470→        //    warnings and sends the player a message on failure.
+   471→        try {
+   472→            dev.ergenverse.wanglin.bead.TuoSenSpawnEvent.spawnAtSuzakuTomb(
+   473→                    serverPlayer, pos, currentTick);
+   474→        } catch (Throwable t) {
+   475→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-107: Tuo Sen spawn failed at {}: {} "
+   476→                    + "(inheritance still succeeded).", pos, t.getMessage());
+   477→        }
+   478→
+   479→        return InteractionResult.CONSUME;
+   480→    }
+   481→
+   482→    // ── Helpers ────────────────────────────────────────────────────────
+   483→
+   484→    /**
+   485→     * Find the Heaven-Defying Bead in the player's hands or inventory.
+   486→     * Mirrors the {@link dev.ergenverse.wanglin.bead.LiMuwanSoulCaptureEvent#findBead}
+   487→     * pattern (CRON-99): main hand → off hand → main inventory.
+   488→     *
+   489→     * @param player the player whose inventory to scan
+   490→     * @return the bead ItemStack, or {@link ItemStack#EMPTY} if not found
+   491→     */
+   492→    private static ItemStack findBead(ServerPlayer player) {
+   493→        // 1. Main hand
+   494→        ItemStack mainHand = player.getMainHandItem();
+   495→        if (mainHand.getItem() instanceof HeavenDefyingBeadItem) return mainHand;
+   496→
+   497→        // 2. Off hand
+   498→        ItemStack offHand = player.getOffhandItem();
+   499→        if (offHand.getItem() instanceof HeavenDefyingBeadItem) return offHand;
+   500→
+   501→        // 3. Main inventory (slots 0-35)
+   502→        for (ItemStack stack : player.getInventory().items) {
+   503→            if (stack.getItem() instanceof HeavenDefyingBeadItem) return stack;
+   504→        }
+   505→
+   506→        return ItemStack.EMPTY;
+   507→    }
+   508→
+   509→    /**
+   510→     * Read the player's current cultivation realm via the CultivationCapability.
+   511→     * Mirrors the {@link dev.ergenverse.wanglin.ai.reasoning.ExpectationModelObserver#getPlayerRealm}
+   512→     * pattern (CRON-99). Returns {@link RealmId#MORTAL} if the capability
+   513→     * is not attached.
+   514→     *
+   515→     * @param player the server player
+   516→     * @return the player's current cultivation realm
+   517→     */
+   518→    private static RealmId getPlayerRealm(ServerPlayer player) {
+   519→        var stateOpt = CultivationCapability.get(player);
+   520→        if (!stateOpt.isPresent()) return RealmId.MORTAL;
+   521→        CultivationState state = stateOpt.resolve().orElse(null);
+   522→        if (state == null) return RealmId.MORTAL;
+   523→        return state.getCurrentRealm();
+   524→    }
+   525→
+   526→    /**
+   527→     * Record a PLAYER delta for the block-state change, so the
+   528→     * {@code inherited=true} state persists across chunk reloads.
+   529→     *
+   530→     * <p>The block-state change via {@code level.setBlock} is already
+   531→     * applied to the world; this method ensures the change is ALSO
+   532→     * recorded in the {@link WorldDeltaStore} journal, so the
+   533→     * chunk-materializer re-applies it on reload.
+   534→     *
+   535→     * <p>Uses the CRON-94 {@link dev.ergenverse.runtime.delta.BlockStateCodec}
+   536→     * format: {@code "ergenverse:cultivation_planet_crystal[inherited=true]"}.
+   537→     * The codec preserves the block-state property across serialization,
+   538→     * so the inherited flag survives chunk reload.
+   539→     *
+   540→     * <p>Defensive: silently no-ops if the WorldRuntime is not yet
+   541→     * initialized (should not happen during gameplay, but defensive
+   542→     * coding in case of registry ordering issues).
+   543→     *
+   544→     * @param pos   the block position
+   545→     * @param state the new block state (with {@code inherited=true})
+   546→     */
+   547→    private static void recordPlayerDelta(BlockPos pos, BlockState state) {
+   548→        try {
+   549→            WorldRuntime runtime = WorldRuntime.get();
+   550→            if (!runtime.isInitialized()) {
+   551→                Ergenverse.LOGGER.warn("[Ergenverse] CRON-106: WorldRuntime not initialized; "
+   552→                        + "Crystal inheritance at {} will not persist via journal.", pos);
+   553→                return;
+   554→            }
+   555→            // Write the block-state change as a PLAYER delta via the WorldFacade.
+   556→            // The facade records the delta in the WorldDeltaStore journal AND
+   557→            // applies it to the world (the level.setBlock above already applied
+   558→            // it; the facade call here is for journaling only — the duplicate
+   559→            // world-write is a harmless no-op).
+   560→            //
+   561→            // The blockId string is the CRON-94 codec format:
+   562→            //   "ergenverse:cultivation_planet_crystal[inherited=true]"
+   563→            // which preserves the inherited property across serialization.
+   564→            String blockId = dev.ergenverse.runtime.delta.BlockStateCodec.serialize(state);
+   565→            runtime.world().setPlayerBlock(pos.getX(), pos.getY(), pos.getZ(), blockId);
+   566→        } catch (Throwable t) {
+   567→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-106: Failed to record PLAYER delta "
+   568→                    + "for Crystal inheritance at {}: {}", pos, t.getMessage());
+   569→        }
+   570→    }
+   571→}
+   572→

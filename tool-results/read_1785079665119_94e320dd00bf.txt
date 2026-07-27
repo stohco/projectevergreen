@@ -1,0 +1,502 @@
+     1→package dev.ergenverse.wanglin.bead;
+     2→
+     3→import dev.ergenverse.core.Ergenverse;
+     4→import dev.ergenverse.cultivation.CultivationCapability;
+     5→import dev.ergenverse.cultivation.CultivationState;
+     6→import dev.ergenverse.cultivation.RealmId;
+     7→import dev.ergenverse.history.HistoryManager;
+     8→import dev.ergenverse.item.WorldOriginEssenceItem;
+     9→import net.minecraft.ChatFormatting;
+    10→import net.minecraft.network.chat.Component;
+    11→import net.minecraft.server.level.ServerPlayer;
+    12→import net.minecraft.world.item.ItemStack;
+    13→
+    14→/**
+    15→ * Revival Attempt Service — CRON-COMPLETIONIST-100.
+    16→ *
+    17→ * <p>Implements the canon-faithful revival-attempt mechanic for Li Muwan's
+    18→ * Nascent Soul. After CRON-99's soul-capture event, the player can attempt
+    19→ * to revive Li Muwan via the {@code /ergenverse bead revive} command. Each
+    20→ * attempt is gated by canon-faithful requirements and increments the
+    21→ * {@link HeavenDefyingBeadItem#NBT_REVIVAL_ATTEMPTS} counter.
+    22→ *
+    23→ * <h2>Canon Basis (fact-checked via web-search 2026-07-26)</h2>
+    24→ * <p>In the novel 仙逆 by 耳根:
+    25→ * <ul>
+    26→ *   <li>李慕婉 (Li Muwan) perishes after her 结婴 (Nascent Soul formation)
+    27→ *       fails. Wang Lin captures her 元婴 into the 天逆珠 (CRON-99).</li>
+    28→ *   <li>Wang Lin places her soul into 周茹 (Zhou Ru), a pregnant woman's
+    29→ *       fetus. Li Muwan refuses to devour the host soul.</li>
+    30→ *   <li>Wang Lin attempts revival <b>137 times</b> across millennia — all
+    31→ *       fail. The 137th attempt is depicted in the novel: "血色残阳笼罩着
+    32→ *       朱雀墓，王林怀中抱着生机尽散的李慕婉，她白发如雪的身体正在
+    33→ *       化作星芒消散，这是他第137次尝试复活失败" (blood-red sun over the
+    34→ *       Vermilion Bird Tomb, Wang Lin cradles the lifeless Li Muwan, her
+    35→ *       white-haired body dissolving into starlight — his 137th failed
+    36→ *       revival attempt).</li>
+    37→ *   <li>Final success requires the Fourth Step (第四步) + 一界本源 (the
+    38→ *       origin of a world). Wang Lin enters the Fourth Step (TRANSCENDENCE)
+    39→ *       and uses a world's origin to finally revive her.</li>
+    40→ * </ul>
+    41→ *
+    42→ * <p><b>Canon honesty:</b> The 137 number is canon-attested via web-search.
+    43→ * The exact chapter is NOT cited to avoid fabrication. The novel clearly
+    44→ * establishes the 137 failed attempts and the Fourth Step requirement for
+    45→ * success. The in-mod attempt mechanic is a mod-fidelity bridge between
+    46→ * the canon narrative (millennia-spanning attempts) and the gameplay loop
+    47→ * (player-triggered command with cooldown).
+    48→ *
+    49→ * <h2>Attempt Gates</h2>
+    50→ * <p>Each revival attempt must pass ALL of the following gates:
+    51→ * <ol>
+    52→ *   <li><b>Soul gate:</b> {@code hasLiMuwanSoul(stack)} must be true.
+    53→ *       Without Li Muwan's soul in the bead, there is nothing to revive.</li>
+    54→ *   <li><b>Stage gate:</b> Bead must have special functions
+    55→ *       ({@link BeadInteriorStage#hasSpecialFunctions}). This requires
+    56→ *       SMALL_WORLD+ stage. Canon: the revival ritual requires the bead's
+    57→ *       deepest interior — a self-contained world.</li>
+    58→ *   <li><b>Realm gate:</b> Player must be at least SOUL_FORMATION (化神).
+    59→ *       Canon: Wang Lin attempts revival only after reaching high realms.
+    60→ *       The final successful attempt requires TRANSCENDENCE ( Fourth Step).</li>
+    61→ *   <li><b>Cooldown gate:</b> At least {@link #REVIVAL_COOLDOWN_TICKS}
+    62→ *       must have elapsed since the last attempt. Prevents spam. The
+    63→ *       cooldown is 6000 ticks (5 minutes at 20 TPS) — long enough to
+    64→ *       feel weighty, short enough to be playable.</li>
+    65→ *   <li><b>Cap gate:</b> The counter cannot exceed 137. Once 137 failed
+    66→ *       attempts are recorded, additional attempts require TRANSCENDENCE
+    67→ *       realm (the final successful attempt).</li>
+    68→ *   <li><b>Essence gate (CRON-COMPLETIONIST-101):</b> The final successful
+    69→ *       revival (TRANSCENDENCE + 137 prior failures) additionally requires
+    70→ *       the player to hold at least one {@link WorldOriginEssenceItem}
+    71→ *       (一界本源) in their inventory. Canon: "王林踏入第四步后，成功运用
+    72→ *       一界本源将之复活" — Wang Lin uses the origin of a world to revive
+    73→ *       Li Muwan. Without this essence, even the Fourth Step cannot restore
+    74→ *       her. On success, one essence item is consumed (the world is
+    75→ *       irreversibly sacrificed). This gate is ONLY checked on the success
+    76→ *       path — the 137 failed attempts do NOT require the essence.</li>
+    77→ * </ol>
+    78→ *
+    79→ * <h2>Outcomes</h2>
+    80→ * <p>Each attempt has one of four outcomes:
+    81→ * <ul>
+    82→ *   <li><b>FAILURE:</b> The attempt fails (canon: all 137 attempts fail).
+    83→ *       Counter increments. Displayed in RED with a mournful message.</li>
+    84→ *   <li><b>FAILURE_137:</b> The 137th failed attempt. Counter increments
+    85→ *       to 137. Displayed in DARK_PURPLE with the canon "blood-red sun
+    86→ *       over the Vermilion Bird Tomb" narrative. The player is told that
+    87→ *       only the Fourth Step can save her now.</li>
+    88→ *   <li><b>SUCCESS:</b> Only fires at attempt 137 AND TRANSCENDENCE realm.
+    89→ *       The revival succeeds. Displayed in GOLD with a triumphant message.
+    90→ *       Sets a new NBT flag (TODO: future CRON) and records in history.</li>
+    91→ *   <li><b>REJECTED:</b> The attempt was rejected by a gate (soul / stage /
+    92→ *       realm / cooldown / cap). No counter increment. Displayed in GRAY
+    93→ *       with the specific rejection reason.</li>
+    94→ * </ul>
+    95→ *
+    96→ * <h2>Single-Player Maximalism (Article XLIII)</h2>
+    97→ * <p>The service runs only for the single player (Wang Lin). There is no
+    98→ * fairness concern — the player IS Wang Lin, and reviving Li Muwan is his
+    99→ * central motivation. The cooldown exists for gameplay pacing, not fairness.
+   100→ *
+   101→ * <h2>Architecture</h2>
+   102→ * <p>The service is a static utility class. The attempt is triggered by:
+   103→ * <ul>
+   104→ *   <li>The {@code /ergenverse bead revive} command (CRON-100). The command
+   105→ *       locates the player's bead via a findBead helper that mirrors the
+   106→ *       CRON-95 {@link BeadProgressionService#findBead} pattern (main-hand
+   107→ *       → off-hand → main inventory).</li>
+   108→ *   <li>Future: a bead-menu button (would require clickMenuButton support
+   109→ *       in BeadFunctionMenu — out of scope for CRON-100).</li>
+   110→ * </ul>
+   111→ *
+   112→ * <p>The service does NOT touch the WorldDeltaStore or WorldFacade — the
+   113→ * revival attempt is purely an item-NBT event, not a world-block event.
+   114→ * This respects the CRON-69 architecture: item state is Wang Lin's personal
+   115→ * state, not world state.
+   116→ *
+   117→ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.
+   118→ *
+   119→ * @see HeavenDefyingBeadItem#NBT_REVIVAL_ATTEMPTS
+   120→ * @see HeavenDefyingBeadItem#getRevivalAttempts
+   121→ * @see HeavenDefyingBeadItem#setRevivalAttempts
+   122→ */
+   123→public final class RevivalAttemptService {
+   124→
+   125→    /**
+   126→     * Cooldown between revival attempts, in game ticks.
+   127→     *
+   128→     * <p>6000 ticks = 5 minutes at 20 TPS. Long enough to feel weighty
+   129→     * (each attempt is a deliberate ritual, not a spam-click), short
+   130→     * enough to be playable (a determined player can attempt 12 times
+   131→     * per hour, reaching 137 in ~11.5 hours of focused play).
+   132→     */
+   133→    public static final int REVIVAL_COOLDOWN_TICKS = 6000;
+   134→
+   135→    /** Stable identifier for the HistoryManager subject on failure. */
+   136→    public static final String SUBJECT_REVIVAL_FAILED = "li_muwan_revival_failed";
+   137→
+   138→    /** Stable identifier for the HistoryManager subject on the 137th failure. */
+   139→    public static final String SUBJECT_REVIVAL_137TH = "li_muwan_revival_137th_failure";
+   140→
+   141→    /** Stable identifier for the HistoryManager subject on success. */
+   142→    public static final String SUBJECT_REVIVAL_SUCCEEDED = "li_muwan_revival_succeeded";
+   143→
+   144→    /**
+   145→     * CRON-COMPLETIONIST-101: Stable identifier for the HistoryManager subject
+   146→     * recorded when a World Origin Essence (一界本源) item is consumed by the
+   147→     * successful revival. Distinct from {@link #SUBJECT_REVIVAL_SUCCEEDED}
+   148→     * because the essence consumption is a separate canon beat — Wang Lin
+   149→     * sacrificing one of his worlds to permanently restore Li Muwan.
+   150→     */
+   151→    public static final String SUBJECT_REVIVAL_ESSENCE_CONSUMED = "li_muwan_revival_essence_consumed";
+   152→
+   153→    private RevivalAttemptService() {}
+   154→
+   155→    /**
+   156→     * Attempt to revive Li Muwan. The single entry point for the revival
+   157→     * mechanic.
+   158→     *
+   159→     * <p>This method is invoked by the {@code /ergenverse bead revive}
+   160→     * command. It performs all gate checks, increments the counter (if
+   161→     * not rejected), displays the canon-faithful outcome message, and
+   162→     * records the event in {@link HistoryManager}.
+   163→     *
+   164→     * @param player the server player attempting the revival
+   165→     * @param stack  the Heaven-Defying Bead stack (must be in the player's
+   166→     *               inventory; the caller is responsible for locating it)
+   167→     * @return {@code true} if the attempt was made (success or failure);
+   168→     *         {@code false} if the attempt was rejected by a gate
+   169→     */
+   170→    public static boolean attemptRevival(ServerPlayer player, ItemStack stack) {
+   171→        if (!(stack.getItem() instanceof HeavenDefyingBeadItem beadItem)) {
+   172→            player.sendSystemMessage(Component.literal(
+   173→                    "The item you hold is not the Heaven-Defying Bead.")
+   174→                    .withStyle(ChatFormatting.GRAY));
+   175→            return false;
+   176→        }
+   177→
+   178→        // ── Gate 1: Soul gate ──
+   179→        if (!beadItem.hasLiMuwanSoul(stack)) {
+   180→            player.sendSystemMessage(Component.literal(
+   181→                    "The bead does not contain Li Muwan's Nascent Soul. "
+   182→                    + "There is nothing to revive.")
+   183→                    .withStyle(ChatFormatting.GRAY));
+   184→            return false;
+   185→        }
+   186→
+   187→        // ── Gate 2: Stage gate ──
+   188→        BeadInteriorStage stage = beadItem.getStage(stack);
+   189→        if (!stage.hasSpecialFunctions) {
+   190→            player.sendSystemMessage(Component.literal(
+   191→                    "The bead's interior is too immature for the revival ritual. "
+   192→                    + "Canon: the ritual requires a self-contained world within the bead.")
+   193→                    .withStyle(ChatFormatting.GRAY));
+   194→            player.sendSystemMessage(Component.literal(
+   195→                    "(Current stage: " + stage.name() + ". Required: SMALL_WORLD+.)")
+   196→                    .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+   197→            return false;
+   198→        }
+   199→
+   200→        // ── Gate 3: Realm gate ──
+   201→        CultivationState state;
+   202→        try {
+   203→            state = CultivationCapability.getOrThrow(player);
+   204→        } catch (Throwable t) {
+   205→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-100: CultivationState missing "
+   206→                    + "for {} — cannot evaluate revival attempt.", player.getName().getString());
+   207→            player.sendSystemMessage(Component.literal(
+   208→                    "Your cultivation state cannot be determined.")
+   209→                    .withStyle(ChatFormatting.GRAY));
+   210→            return false;
+   211→        }
+   212→        RealmId realm = state.getCurrentRealm();
+   213→        if (realm == null || !realm.isAtLeast(RealmId.SOUL_FORMATION)) {
+   214→            player.sendSystemMessage(Component.literal(
+   215→                    "Your cultivation is insufficient. The revival ritual requires "
+   216→                    + "at least Soul Formation (化神).")
+   217→                    .withStyle(ChatFormatting.GRAY));
+   218→            if (realm != null) {
+   219→                player.sendSystemMessage(Component.literal(
+   220→                        "(Current realm: " + realm.name + " / " + realm.nameCn + ".)")
+   221→                        .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+   222→            }
+   223→            return false;
+   224→        }
+   225→
+   226→        // ── Gate 4: Cooldown gate ──
+   227→        long currentTick = player.serverLevel().getGameTime();
+   228→        long lastAttempt = beadItem.getLastRevivalAttemptTick(stack);
+   229→        if (lastAttempt > 0) {
+   230→            long elapsed = currentTick - lastAttempt;
+   231→            if (elapsed < REVIVAL_COOLDOWN_TICKS) {
+   232→                long remaining = REVIVAL_COOLDOWN_TICKS - elapsed;
+   233→                long remainingSeconds = remaining / 20;
+   234→                player.sendSystemMessage(Component.literal(
+   235→                        "The bead's interior is still recovering from the last attempt. "
+   236→                        + "Wait " + remainingSeconds + " more seconds.")
+   237→                        .withStyle(ChatFormatting.GRAY));
+   238→                return false;
+   239→            }
+   240→        }
+   241→
+   242→        // ── Gate 5: Cap gate ──
+   243→        int attempts = beadItem.getRevivalAttempts(stack);
+   244→        if (attempts >= HeavenDefyingBeadItem.CANON_REVIVAL_ATTEMPT_CAP) {
+   245→            // 137 attempts already made. Only TRANSCENDENCE can succeed now.
+   246→            if (!realm.isAtLeast(RealmId.TRANSCENDENCE)) {
+   247→                player.sendSystemMessage(Component.literal(
+   248→                        "137 attempts have failed. Only the Fourth Step (超脱) "
+   249→                        + "can save her now. Canon: Wang Lin revives Li Muwan "
+   250→                        + "after entering the Fourth Step, using the origin of a world.")
+   251→                        .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+   252→                return false;
+   253→            }
+   254→
+   255→            // ── Gate 6: Essence gate (CRON-COMPLETIONIST-101) ──
+   256→            // The final successful revival requires the World Origin Essence
+   257→            // (一界本源). Canon: "王林踏入第四步后，成功运用一界本源将之复活".
+   258→            // Without this essence, even the Fourth Step cannot restore her.
+   259→            ItemStack essenceStack = WorldOriginEssenceItem.findInInventory(player);
+   260→            if (essenceStack.isEmpty()) {
+   261→                player.sendSystemMessage(Component.literal(
+   262→                        "═══════════════════════════════════════")
+   263→                        .withStyle(ChatFormatting.DARK_PURPLE));
+   264→                player.sendSystemMessage(Component.literal(
+   265→                        "你已踏入第四步，137次复活皆已失败。")
+   266→                        .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+   267→                player.sendSystemMessage(Component.literal(
+   268→                        "但复活李慕婉还需最后一件至宝 —— 一界本源。")
+   269→                        .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   270→                player.sendSystemMessage(Component.literal(
+   271→                        "Canon: Wang Lin entered the Fourth Step, yet 137 attempts "
+   272→                        + "have failed. The final reagent is 一界本源 (World Origin "
+   273→                        + "Essence) — the condensed origin of an entire world. "
+   274→                        + "Without it, even the Fourth Step cannot restore her.")
+   275→                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+   276→                player.sendSystemMessage(Component.literal(
+   277→                        "Acquire World Origin Essence and attempt the revival again.")
+   278→                        .withStyle(ChatFormatting.YELLOW));
+   279→                player.sendSystemMessage(Component.literal(
+   280→                        "═══════════════════════════════════════")
+   281→                        .withStyle(ChatFormatting.DARK_PURPLE));
+   282→                return false;
+   283→            }
+   284→
+   285→            // TRANSCENDENCE + 137 attempts + World Origin Essence = SUCCESS!
+   286→            return doSuccessfulRevival(player, beadItem, stack, currentTick, essenceStack);
+   287→        }
+   288→
+   289→        // ── All gates passed. Perform the failed attempt. ──
+   290→        return doFailedRevival(player, beadItem, stack, currentTick, attempts);
+   291→    }
+   292→
+   293→    /**
+   294→     * Perform a failed revival attempt. Increments the counter, displays
+   295→     * the canon-faithful failure message, and records in history.
+   296→     *
+   297→     * <p>Canon: all 137 attempts fail. The 137th failure is the final
+   298→     * narrative beat before the endgame.
+   299→     */
+   300→    private static boolean doFailedRevival(ServerPlayer player,
+   301→                                            HeavenDefyingBeadItem beadItem,
+   302→                                            ItemStack stack,
+   303→                                            long currentTick,
+   304→                                            int previousAttempts) {
+   305→        int newAttempts = previousAttempts + 1;
+   306→        beadItem.setRevivalAttempts(stack, newAttempts);
+   307→        beadItem.setLastRevivalAttemptTick(stack, currentTick);
+   308→
+   309→        boolean is137th = (newAttempts == HeavenDefyingBeadItem.CANON_REVIVAL_ATTEMPT_CAP);
+   310→
+   311→        if (is137th) {
+   312→            // The 137th failure — the canon narrative beat.
+   313→            player.sendSystemMessage(Component.literal(
+   314→                    "─────────────────────────────────────")
+   315→                    .withStyle(ChatFormatting.DARK_PURPLE));
+   316→            player.sendSystemMessage(Component.literal(
+   317→                    "血色残阳笼罩着朱雀墓。")
+   318→                    .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD));
+   319→            player.sendSystemMessage(Component.literal(
+   320→                    "王林怀中抱着生机尽散的李慕婉，她白发如雪的身体正在化作星芒消散。")
+   321→                    .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   322→            player.sendSystemMessage(Component.literal(
+   323→                    "这是他第137次尝试复活失败。")
+   324→                    .withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+   325→            player.sendSystemMessage(Component.literal(
+   326→                    "A blood-red sun sets over the Vermilion Bird Tomb. Li Muwan's "
+   327→                    + "white-haired body dissolves into starlight in your arms.")
+   328→                    .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   329→            player.sendSystemMessage(Component.literal(
+   330→                    "This is your 137th failed revival attempt.")
+   331→                    .withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+   332→            player.sendSystemMessage(Component.literal(
+   333→                    "Only the Fourth Step (超脱) can save her now.")
+   334→                    .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+   335→            player.sendSystemMessage(Component.literal(
+   336→                    "─────────────────────────────────────")
+   337→                    .withStyle(ChatFormatting.DARK_PURPLE));
+   338→
+   339→            HistoryManager.onDiscovery(player, SUBJECT_REVIVAL_137TH,
+   340→                    "The 137th failed revival attempt at the Vermilion Bird Tomb. "
+   341→                            + "Li Muwan's body dissolved into starlight. Only the Fourth Step remains.",
+   342→                    currentTick);
+   343→
+   344→            Ergenverse.LOGGER.info("[Ergenverse] CRON-100: Player {} reached the 137th "
+   345→                            + "failed revival attempt (canon milestone). Realm={}.",
+   346→                    player.getName().getString(),
+   347→                    player.serverLevel().getGameTime());
+   348→        } else {
+   349→            // A normal failed attempt (1..136).
+   350→            player.sendSystemMessage(Component.literal(
+   351→                    "第 " + newAttempts + " 次尝试复活失败。李慕婉的元婴在 天逆珠 中叹息。")
+   352→                    .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   353→            player.sendSystemMessage(Component.literal(
+   354→                    "Revival attempt " + newAttempts + " of 137 has failed. "
+   355→                    + "Li Muwan's Nascent Soul sighs within the bead.")
+   356→                    .withStyle(ChatFormatting.RED));
+   357→
+   358→            HistoryManager.onDiscovery(player, SUBJECT_REVIVAL_FAILED,
+   359→                    "Revival attempt " + newAttempts + "/137 failed. "
+   360→                            + "Li Muwan's soul remains trapped in the bead.",
+   361→                    currentTick);
+   362→
+   363→            Ergenverse.LOGGER.info("[Ergenverse] CRON-100: Player {} made revival attempt "
+   364→                            + "{}/137 (failed). Realm={}.",
+   365→                    player.getName().getString(), newAttempts,
+   366→                    HeavenDefyingBeadItem.CANON_REVIVAL_ATTEMPT_CAP);
+   367→        }
+   368→
+   369→        return true;
+   370→    }
+   371→
+   372→    /**
+   373→     * Perform the successful revival. Only fires when:
+   374→     * <ul>
+   375→     *   <li>137 failed attempts already recorded</li>
+   376→     *   <li>Player realm is TRANSCENDENCE (Fourth Step)</li>
+   377→     *   <li>Player holds at least one World Origin Essence (一界本源) — CRON-101</li>
+   378→     * </ul>
+   379→     *
+   380→     * <p>Canon: Wang Lin enters the Fourth Step, uses the origin of a
+   381→     * world (一界本源), and finally revives Li Muwan. They transcend
+   382→     * together, beyond life and death.
+   383→     *
+   384→     * <p><b>CRON-COMPLETIONIST-101:</b> This method now CONSUMES one
+   385→     * World Origin Essence item from the player's inventory. Canon: the
+   386→     * world whose origin is extracted is irreversibly sacrificed. The
+   387→     * consumption is logged via {@link HistoryManager} under a separate
+   388→     * subject ({@link #SUBJECT_REVIVAL_ESSENCE_CONSUMED}) to distinguish
+   389→     * the essence-sacrifice beat from the general success beat.
+   390→     *
+   391→     * <p><b>CRON-COMPLETIONIST-102:</b> This method now also marks Li
+   392→     * Muwan as revived on the bead (write-once NBT flag
+   393→     * {@link HeavenDefyingBeadItem#NBT_LI_MUWAN_REVIVED}) and spawns Li
+   394→     * Muwan as a living {@link dev.ergenverse.entity.EntityCultivator} at
+   395→     * the player's position via {@link LiMuwanRevivalEvent#spawnAtPlayer}.
+   396→     * She is configured as a companion: her cultivation realm is set to
+   397→     * TRANSCENDENCE (踏天境), her HP is set to a high value (canon: 弹指灭天),
+   398→     * and her following-player UUID is set to the player's UUID (activating
+   399→     * the {@link dev.ergenverse.entity.ai.FollowPlayerGoal} — she follows
+   400→     * Wang Lin, "两人踏天同行").
+   401→     *
+   402→     * <p>This method does NOT remove Li Muwan's soul flag from the bead —
+   403→     * the soul flag remains as a permanent record alongside the revived
+   404→     * flag. The revived flag distinguishes "soul captured" (CRON-99) from
+   405→     * "soul revived" (CRON-102).
+   406→     */
+   407→    private static boolean doSuccessfulRevival(ServerPlayer player,
+   408→                                                HeavenDefyingBeadItem beadItem,
+   409→                                                ItemStack stack,
+   410→                                                long currentTick,
+   411→                                                ItemStack essenceStack) {
+   412→        // The 138th "attempt" is the success — but we DON'T increment the
+   413→        // counter beyond 137. The counter stays at 137 (canon-attested cap).
+   414→        // Instead, we record the success via HistoryManager and (TODO) a
+   415→        // new NBT flag NBT_LI_MUWAN_REVIVED.
+   416→        beadItem.setLastRevivalAttemptTick(stack, currentTick);
+   417→
+   418→        // CRON-COMPLETIONIST-101: Consume the World Origin Essence.
+   419→        // Canon: the world whose origin is extracted is irreversibly
+   420→        // sacrificed. The shrink(1) reduces the stack by 1; if the stack
+   421→        // size was 1 (which it always is — stacksTo(1)), the slot becomes
+   422→        // empty. This is the canon-faithful permanent loss.
+   423→        String sourceWorld = essenceStack.hasTag()
+   424→                && essenceStack.getTag().contains(WorldOriginEssenceItem.NBT_SOURCE_WORLD)
+   425→                ? essenceStack.getTag().getString(WorldOriginEssenceItem.NBT_SOURCE_WORLD)
+   426→                : WorldOriginEssenceItem.DEFAULT_SOURCE_WORLD;
+   427→        essenceStack.shrink(1);
+   428→        // Defensive: if shrink didn't fully consume (e.g., stacked via
+   429→        // creative pick-block), force-set to empty.
+   430→        if (!essenceStack.isEmpty()) {
+   431→            essenceStack.setCount(0);
+   432→        }
+   433→
+   434→        player.sendSystemMessage(Component.literal(
+   435→                "═══════════════════════════════════════")
+   436→                .withStyle(ChatFormatting.GOLD));
+   437→        player.sendSystemMessage(Component.literal(
+   438→                "王林踏入第四步，以一界本源，逆天复活李慕婉。")
+   439→                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
+   440→        player.sendSystemMessage(Component.literal(
+   441→                "李慕婉睁开了双眼。两人踏天同行，超越生死轮回，相爱相守，生生世世。")
+   442→                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   443→        player.sendSystemMessage(Component.literal(
+   444→                "Wang Lin enters the Fourth Step. Using the origin of a world, "
+   445→                + "he defies heaven and revives Li Muwan.")
+   446→                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
+   447→        player.sendSystemMessage(Component.literal(
+   448→                "Li Muwan opens her eyes. Together they transcend, beyond the "
+   449→                + "cycle of life and death, for all eternity.")
+   450→                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   451→        // CRON-101: explicitly acknowledge the world that was sacrificed.
+   452→        player.sendSystemMessage(Component.literal(
+   453→                "「" + sourceWorld + "」 的本源已化作虚无。一个世界从此陨灭。")
+   454→                .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+   455→        player.sendSystemMessage(Component.literal(
+   456→                "The origin of「" + sourceWorld + "」dissolves into nothing. "
+   457→                + "A world has perished to restore her.")
+   458→                .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+   459→        player.sendSystemMessage(Component.literal(
+   460→                "═══════════════════════════════════════")
+   461→                .withStyle(ChatFormatting.GOLD));
+   462→
+   463→        HistoryManager.onDiscovery(player, SUBJECT_REVIVAL_SUCCEEDED,
+   464→                "After 137 failed attempts across millennia, Wang Lin entered the "
+   465→                        + "Fourth Step and used the origin of a world to revive Li Muwan. "
+   466→                        + "They transcended together, beyond life and death.",
+   467→                currentTick);
+   468→
+   469→        // CRON-101: separate subject for the essence-sacrifice beat.
+   470→        HistoryManager.onDiscovery(player, SUBJECT_REVIVAL_ESSENCE_CONSUMED,
+   471→                "Wang Lin sacrificed the origin of「" + sourceWorld + "」to revive "
+   472→                        + "Li Muwan. The world is irreversibly consumed — its rules, "
+   473→                        + "its essence, its very being, dissolved into her restoration.",
+   474→                currentTick);
+   475→
+   476→        Ergenverse.LOGGER.info("[Ergenverse] CRON-101: Player {} achieved the SUCCESSFUL "
+   477→                        + "revival of Li Muwan (TRANSCENDENCE realm, 137 prior failures, "
+   478→                        + "World Origin Essence consumed from world「{}」). "
+   479→                        + "This is the endgame event of Wang Lin's central arc.",
+   480→                player.getName().getString(), sourceWorld);
+   481→
+   482→        // CRON-COMPLETIONIST-102: Mark Li Muwan as revived on the bead
+   483→        // (write-once flag — permanent record of the endgame event).
+   484→        beadItem.setLiMuwanRevived(stack, true);
+   485→
+   486→        // CRON-COMPLETIONIST-102: Spawn Li Muwan as a living NPC at the
+   487→        // player's position. She follows Wang Lin as his eternal companion
+   488→        // ("两人踏天同行"). This is the emotional capstone of the Li Muwan arc.
+   489→        boolean spawned = LiMuwanRevivalEvent.spawnAtPlayer(player, currentTick);
+   490→        if (!spawned) {
+   491→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-102: Li Muwan spawn failed — the "
+   492→                    + "revival succeeded but she did not appear as an NPC. The bead's "
+   493→                    + "revived flag is set; a future chunk reload may materialize her.");
+   494→            player.sendSystemMessage(Component.literal(
+   495→                    "李慕婉的灵魂已回归天地，但她的形体尚未凝聚。她会在你身边的某处出现。")
+   496→                    .withStyle(ChatFormatting.YELLOW, ChatFormatting.ITALIC));
+   497→        }
+   498→
+   499→        return true;
+   500→    }
+   501→}
+   502→

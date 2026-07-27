@@ -1,0 +1,550 @@
+     1→package dev.ergenverse.wanglin.bead;
+     2→
+     3→import dev.ergenverse.core.Ergenverse;
+     4→import dev.ergenverse.entity.EntityCultivator;
+     5→import dev.ergenverse.history.HistoryManager;
+     6→import dev.ergenverse.runtime.PlanetSuzakuBlueprint;
+     7→import dev.ergenverse.simulation.WorldRuntimeState;
+     8→import net.minecraft.ChatFormatting;
+     9→import net.minecraft.core.BlockPos;
+    10→import net.minecraft.core.particles.ParticleTypes;
+    11→import net.minecraft.nbt.CompoundTag;
+    12→import net.minecraft.network.chat.Component;
+    13→import net.minecraft.server.level.ServerLevel;
+    14→import net.minecraft.server.level.ServerPlayer;
+    15→import net.minecraft.sounds.SoundEvents;
+    16→import net.minecraft.sounds.SoundSource;
+    17→import net.minecraft.world.InteractionHand;
+    18→import net.minecraft.world.item.ItemStack;
+    19→import net.minecraft.world.level.levelgen.Heightmap;
+    20→
+    21→/**
+    22→ * Zhou Ru Kunxu Departure Event — CRON-COMPLETIONIST-112.
+    23→ *
+    24→ * <p>Implements the canon-faithful post-transfer quest step: after CRON-110's
+    25→ * soul transfer (Li Muwan's 元婴 placed into 周茹), Wang Lin escorts 周茹 to
+    26→ * the Kunxu Realm (昆虚界) and entrusts her to 慕冰媚 (Mu Bingmei) for
+    27→ * cultivation. This is the bridge between CRON-110 (soul transfer at
+    28→ * Vermilion Bird Capital) and CRON-111 (cultivation growth service, which
+    29→ * requires 周茹 to be near Mu Bingmei at the Kunxu Realm).
+    30→ *
+    31→ * <h2>Canon Basis (fact-checked via web-search 2026-07-26)</h2>
+    32→ * <p>In the novel 仙逆 (Renegade Immortal) by 耳根:
+    33→ * <ul>
+    34→ *   <li>After Wang Lin places Li Muwan's soul into 周茹 (CRON-110), 周茹
+    35→ *       eventually becomes a Soul Transformation (炼虚) cultivator under
+    36→ *       慕冰媚 (Mu Bingmei) in the Kunxu Realm (昆虚界).</li>
+    37→ *   <li>The novel does not dwell on the logistics of how 周茹 travels to
+    38→ *       the Kunxu Realm. The Kunxu Realm is canonically a pocket-realm
+    39→ *       accessible from the Cave World — the journey is implied rather
+    40→ *       than narrated beat-by-beat.</li>
+    41→ *   <li>The disciple-master relationship between 周茹 and Mu Bingmei is
+    42→ *       canon-attested: Mu Bingmei takes 周茹 as her disciple (RICanonicalDatabase
+    43→ *       N19 + L74 + N10).</li>
+    44→ *   <li>Wang Lin's role in placing 周茹 under Mu Bingmei's care is the
+    45→ *       narrative bridge — he entrusts his "niece" (周茹 calls him
+    46→ *       王林叔叔) to his third wife (Mu Bingmei) for cultivation.</li>
+    47→ * </ul>
+    48→ *
+    49→ * <p><b>Canon honesty:</b> The novel clearly establishes (1) the soul
+    50→ * transfer to 周茹 as Wang Lin's first revival attempt (CRON-110),
+    51→ * (2) Mu Bingmei as 周茹's master in the Kunxu Realm, (3) 周茹's eventual
+    52→ * cultivation to Soul Transformation. The exact chapter of the journey
+    53→ * is not cited here to avoid fabrication. Sources: Baidu Baike 周茹,
+    54→ * RICanonicalDatabase entry N10 (Zhou Ru), N19 (Mu Bingmei), L74 (Kunxu
+    55→ * Realm), Fandom wiki.
+    56→ *
+    57→ * <h2>Trigger</h2>
+    58→ * <p>Called from {@link dev.ergenverse.history.HistoryEvents#onEntityInteract}
+    59→ * when a ServerPlayer right-clicks an EntityCultivator whose characterId
+    60→ * equals {@value #CHARACTER_ID}, AND the player's main-hand bead already
+    61→ * has {@link HeavenDefyingBeadItem#hasSoulTransferredToZhouRu} == true
+    62→ * (i.e., CRON-110's soul transfer has already fired on a prior right-click).
+    63→ *
+    64→ * <p>The handler implements the following gates:
+    65→ * <ol>
+    66→ *   <li><b>Same-tick guard.</b> If the soul transfer fired on THIS tick
+    67→ *       (i.e., {@code level.getGameTime() == soul_transfer_tick}), no-op.
+    68→ *       This prevents the departure from firing on the same right-click
+    69→ *       as the transfer — the player must right-click 周茹 a second time
+    70→ *       to send her to the Kunxu Realm. Canon-faithful: the transfer
+    71→ *       and the journey are distinct narrative beats.</li>
+    72→ *   <li><b>Write-once guard.</b> If 周茹's runtime state already has
+    73→ *       {@code "sent_to_kunxu": true}, no-op with a canon-faithful
+    74→ *       "already departed" message. The departure is a one-time event
+    75→ *       per save.</li>
+    76→ *   <li><b>CRON-110 prerequisite.</b> If the soul transfer flag is
+    77→ *       absent from 周茹's runtime state (e.g., world was reset, NPC
+    78→ *       state was cleared), the departure cannot fire. Defensive — the
+    79→ *       caller gates on the bead's {@code hasSoulTransferredToZhouRu}
+    80→ *       flag, but this double-checks the runtime state.</li>
+    81→ * </ol>
+    82→ *
+    83→ * <p>If all gates pass: teleports 周茹 to {@link PlanetSuzakuBlueprint#KUNXU_REALM}
+    84→ * (-3500, surface, -3500), sets the {@code "sent_to_kunxu": true} flag in
+    85→ * her runtime state, spawns canon-faithful particle/sound effects at both
+    86→ * the origin (departure burst) and the destination (arrival burst),
+    87→ * displays a bilingual message, and records the event in
+    88→ * {@link HistoryManager#onDiscovery}.
+    89→ *
+    90→ * <h2>Why a dedicated class (not inline in HistoryEvents)</h2>
+    91→ * <p>Mirrors CRON-99's {@link LiMuwanSoulCaptureEvent} and CRON-110's
+    92→ * {@link ZhouRuSoulTransferEvent} — a dedicated static-utility class keeps
+    93→ * the event listener clean and makes the departure logic independently
+    94→ * testable. The class lives in the {@code wanglin.bead} package because
+    95→ * the departure is gated on the bead's {@code hasSoulTransferredToZhouRu}
+    96→ * flag (the bead is the canon-faithful state record of the transfer).
+    97→ *
+    98→ * <h2>Teleportation Safety</h2>
+    99→ * <p>The destination chunk at (-3500, -3500) is typically unloaded when
+   100→ * the departure fires (the player is near 周茹 at Vermilion Bird Capital,
+   101→ * ~5000 blocks away). The handler:
+   102→ * <ol>
+   103→ *   <li>Force-loads the destination chunk via
+   104→ *       {@link ServerLevel#getChunk(int, int)} (synchronous load).</li>
+   105→ *   <li>Queries the surface Y via
+   106→ *       {@link ServerLevel#getHeightmapPos(Heightmap.Types#MOTION_BLOCKING, BlockPos)}
+   107→ *       to find a safe teleport Y.</li>
+   108→ *   <li>Teleports 周茹 via {@link EntityCultivator#teleportTo(double, double, double)}.</li>
+   109→ * </ol>
+   110→ * If the destination is in an unloaded chunk after teleport, the
+   111→ * {@link dev.ergenverse.runtime.materialize.CanonActorMaterializer}
+   112→ * will dematerialize 周茹 on chunk unload and rematerialize her when the
+   113→ * player next loads the area. The canon UUID persistence ensures 周茹
+   114→ * is the same entity across dematerialize/rematerialize cycles.
+   115→ *
+   116→ * <h2>State Transition Diagram</h2>
+   117→ * <pre>
+   118→ *   CRON-99:  Li Muwan dies  →  bead.hasLiMuwanSoul = true
+   119→ *   CRON-110: Player interacts with Zhou Ru (1st right-click)
+   120→ *             →  bead.hasSoulTransferredToZhouRu = true
+   121→ *             →  Zhou Ru runtime: pregnant_with_li_muwan_soul = true
+   122→ *             →  Zhou Ru runtime: soul_transfer_tick = currentTick
+   123→ *   CRON-112: Player interacts with Zhou Ru (2nd right-click, later tick)
+   124→ *             →  Zhou Ru teleports to KUNXU_REALM (-3500, surface, -3500)
+   125→ *             →  Zhou Ru runtime: sent_to_kunxu = true
+   126→ *             →  Zhou Ru runtime: kunxu_departure_tick = currentTick
+   127→ *   CRON-111: Zhou Ru near Mu Bingmei (daily tick) → Zhou Ru realm advances
+   128→ *             mortal → qi_condensation → ... → soul_transformation (CANON_CAP)
+   129→ *   CRON-100: Player invokes /ergenverse bead revive → revivalAttempts++
+   130→ *   CRON-102: 137th attempt with World Origin Essence → bead.isLiMuwanRevived = true
+   131→ * </pre>
+   132→ *
+   133→ * <h2>Single-Player Maximalism (Article XLIII)</h2>
+   134→ * <p>There is exactly one player (Wang Lin). The {@code serverPlayer}
+   135→ * parameter is the sole candidate. There is exactly one 周茹 (canon UUID
+   136→ * {@link dev.ergenverse.runtime.CanonUUID#ZHOU_RU}). The departure is a
+   137→ * one-time event per save. After departure, 周茹 persists at the Kunxu
+   138→ * Realm across save/load cycles via CanonActorMaterializer + WorldRuntimeState.
+   139→ *
+   140→ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17.
+   141→ *
+   142→ * @see ZhouRuSoulTransferEvent (predecessor — CRON-110)
+   143→ * @see ZhouRuCultivationGrowthService (successor — CRON-111)
+   144→ * @see dev.ergenverse.runtime.PlanetSuzakuBlueprint#KUNXU_REALM
+   145→ * @see dev.ergenverse.runtime.CanonUUID#ZHOU_RU
+   146→ * @see dev.ergenverse.runtime.CanonUUID#MU_BINGMEI
+   147→ * @see dev.ergenverse.history.HistoryEvents#onEntityInteract
+   148→ */
+   149→public final class ZhouRuKunxuDepartureEvent {
+   150→
+   151→    /** Canon character ID for Zhou Ru. Must match CanonUUID.ZHOU_RU's profile. */
+   152→    public static final String CHARACTER_ID = "zhou_ru";
+   153→
+   154→    /**
+   155→     * Maximum distance (in blocks, Euclidean) between the player and 周茹
+   156→     * at which the departure can fire. Vanilla right-click reach is ~4.5
+   157→     * blocks; this is a defensive upper bound in case of latency desync.
+   158→     * Mirrors {@link ZhouRuSoulTransferEvent#MAX_INTERACT_DISTANCE}.
+   159→     */
+   160→    public static final double MAX_INTERACT_DISTANCE = 8.0;
+   161→
+   162→    /** Number of END_ROD particles in the departure ring at origin. */
+   163→    private static final int DEPARTURE_RING_PARTICLE_COUNT = 32;
+   164→
+   165→    /** Number of DRAGON_BREATH particles for the rift-tear visual. */
+   166→    private static final int RIFT_PARTICLE_COUNT = 24;
+   167→
+   168→    /** Number of END_ROD particles in the arrival burst at Kunxu Realm. */
+   169→    private static final int ARRIVAL_PARTICLE_COUNT = 24;
+   170→
+   171→    /** Number of END_ROD particles in the ascending soul-stream column. */
+   172→    private static final int STREAM_PARTICLE_COUNT = 12;
+   173→
+   174→    private ZhouRuKunxuDepartureEvent() {}
+   175→
+   176→    /**
+   177→     * Handle the Kunxu departure interaction. Called from
+   178→     * {@link dev.ergenverse.history.HistoryEvents#onEntityInteract} when
+   179→     * the player right-clicks an EntityCultivator whose characterId equals
+   180→     * {@value #CHARACTER_ID} AND the player's main-hand bead already has
+   181→     * {@link HeavenDefyingBeadItem#hasSoulTransferredToZhouRu} == true.
+   182→     *
+   183→     * <p>This method is the SOLE caller that sets the {@code "sent_to_kunxu"}
+   184→     * runtime state flag. Before CRON-112, there was no path for 周茹 to
+   185→     * reach the Kunxu Realm — the player had to physically herd her across
+   186→     * thousands of blocks. CRON-112 closes this gap with a canon-faithful
+   187→     * "Wang Lin escorts 周茹 to the Kunxu Realm" quest step.
+   188→     *
+   189→     * @param serverPlayer the player who right-clicked 周茹 (Wang Lin)
+   190→     * @param zhouRu       the EntityCultivator whose characterId is "zhou_ru"
+   191→     */
+   192→    public static void handleDeparture(ServerPlayer serverPlayer,
+   193→                                        EntityCultivator zhouRu) {
+   194→        // Defensive: never run on client side.
+   195→        if (serverPlayer.level().isClientSide()) return;
+   196→
+   197→        // Defensive: validate the target's characterId. The caller
+   198→        // (HistoryEvents) gates on this, but defensive validation is
+   199→        // cheap and prevents subtle bugs if the caller changes.
+   200→        if (!CHARACTER_ID.equals(zhouRu.getCharacterId())) {
+   201→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-112: ZhouRuKunxuDepartureEvent "
+   202→                    + "invoked with wrong characterId='{}'. Expected '{}'. No-op.",
+   203→                    zhouRu.getCharacterId(), CHARACTER_ID);
+   204→            return;
+   205→        }
+   206→
+   207→        ServerLevel serverLevel = (ServerLevel) serverPlayer.level();
+   208→
+   209→        // ── 1. Defensive: re-validate the bead is in main hand and the
+   210→        // transfer flag is set. The caller (HistoryEvents) gates on this,
+   211→        // but defensive validation prevents subtle bugs. ──
+   212→        ItemStack mainHand = serverPlayer.getItemInHand(InteractionHand.MAIN_HAND);
+   213→        if (mainHand.isEmpty() || !(mainHand.getItem() instanceof HeavenDefyingBeadItem beadItem)) {
+   214→            // No bead in main hand — this branch should never fire because
+   215→            // the caller dispatches to the transfer handler (CRON-110) when
+   216→            // there's no bead or no transfer flag. Included for robustness.
+   217→            announceNoBead(serverPlayer);
+   218→            return;
+   219→        }
+   220→        if (!beadItem.hasSoulTransferredToZhouRu(mainHand)) {
+   221→            // Defensive: the transfer flag is not set. The caller should
+   222→            // have dispatched to the transfer handler instead. No-op.
+   223→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-112: ZhouRuKunxuDepartureEvent "
+   224→                    + "invoked but bead.hasSoulTransferredToZhouRu is false. No-op.");
+   225→            return;
+   226→        }
+   227→
+   228→        // ── 2. Fetch 周茹's runtime state ──
+   229→        CompoundTag zhouRuState;
+   230→        try {
+   231→            WorldRuntimeState runtime = WorldRuntimeState.get(serverLevel);
+   232→            zhouRuState = runtime.getNpcState(zhouRu.getCharacterId());
+   233→            if (zhouRuState == null) zhouRuState = new CompoundTag();
+   234→        } catch (Throwable t) {
+   235→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-112: failed to fetch Zhou Ru's "
+   236→                    + "runtime state: {}", t.getMessage());
+   237→            announceInternalError(serverPlayer);
+   238→            return;
+   239→        }
+   240→
+   241→        // ── 3. CRON-110 prerequisite: pregnant_with_li_muwan_soul must be true ──
+   242→        // Defensive: the bead's hasSoulTransferredToZhouRu flag is the canonical
+   243→        // record, but the runtime state should also have the flag set by CRON-110.
+   244→        // If the runtime state is missing the flag (e.g., world was reset), the
+   245→        // departure cannot fire — we cannot teleport 周茹 to the Kunxu Realm
+   246→        // without the canon-faithful soul-transfer prerequisite.
+   247→        if (!zhouRuState.getBoolean("pregnant_with_li_muwan_soul")) {
+   248→            announceNoSoulTransferred(serverPlayer);
+   249→            return;
+   250→        }
+   251→
+   252→        // ── 4. Write-once guard: sent_to_kunxu must be false ──
+   253→        // The departure is a one-time event per save. Calling this a second
+   254→        // time is a no-op with a canon-faithful "already departed" message.
+   255→        if (zhouRuState.getBoolean("sent_to_kunxu")) {
+   256→            announceAlreadyDeparted(serverPlayer);
+   257→            return;
+   258→        }
+   259→
+   260→        // ── 5. Same-tick guard: departure must fire on a DIFFERENT right-click
+   261→        // than the soul transfer. ──
+   262→        // CRON-110 records soul_transfer_tick in 周茹's runtime state. If the
+   263→        // current tick equals that value, the transfer fired on THIS right-click
+   264→        // — the player has not yet had a chance to read the transfer message.
+   265→        // We require the departure to fire on a SUBSEQUENT right-click.
+   266→        long currentTick = serverLevel.getGameTime();
+   267→        long soulTransferTick = zhouRuState.getLong("soul_transfer_tick");
+   268→        if (currentTick == soulTransferTick) {
+   269→            // Same-tick — silently no-op. The player will right-click again
+   270→            // on a subsequent tick and the departure will fire then.
+   271→            // We do NOT print a message here — the CRON-110 transfer message
+   272→            // has already been displayed this tick.
+   273→            return;
+   274→        }
+   275→
+   276→        // ── 6. All gates pass — execute the Kunxu departure ──
+   277→        // Record the origin position BEFORE teleporting (for the departure burst).
+   278→        double originX = zhouRu.getX();
+   279→        double originY = zhouRu.getY();
+   280→        double originZ = zhouRu.getZ();
+   281→
+   282→        // Compute the destination surface position.
+   283→        BlockPos destBlockPos = new BlockPos(
+   284→                PlanetSuzakuBlueprint.KUNXU_REALM.x,
+   285→                PlanetSuzakuBlueprint.KUNXU_REALM.y,
+   286→                PlanetSuzakuBlueprint.KUNXU_REALM.z);
+   287→
+   288→        // Force-load the destination chunk so the heightmap query is accurate
+   289→        // and the teleport destination is safe.
+   290→        serverLevel.getChunk(destBlockPos.getX() >> 4, destBlockPos.getZ() >> 4);
+   291→
+   292→        // Query the surface Y via MOTION_BLOCKING heightmap (highest non-
+   293→        // motion-blocking block: ignores air, leaves, etc.; returns the
+   294→        // first solid block from the top).
+   295→        BlockPos surfacePos = serverLevel.getHeightmapPos(
+   296→                Heightmap.Types.MOTION_BLOCKING, destBlockPos);
+   297→
+   298→        double destX = surfacePos.getX() + 0.5;
+   299→        double destY = surfacePos.getY();
+   300→        double destZ = surfacePos.getZ() + 0.5;
+   301→
+   302→        // ── 7. Spawn departure burst at origin (before teleport) ──
+   303→        spawnDepartureBurst(serverLevel, originX, originY, originZ);
+   304→
+   305→        // ── 8. Teleport 周茹 to the Kunxu Realm surface ──
+   306→        // Use the simple same-dimension teleportTo(x, y, z). 周茹 is an
+   307→        // EntityCultivator (extends Mob → LivingEntity → Entity), so this
+   308→        // method is available.
+   309→        zhouRu.teleportTo(destX, destY, destZ);
+   310→
+   311→        // ── 9. Spawn arrival burst at destination (after teleport) ──
+   312→        spawnArrivalBurst(serverLevel, destX, destY, destZ);
+   313→
+   314→        // ── 10. Set the sent_to_kunxu flag in 周茹's runtime state ──
+   315→        zhouRuState.putBoolean("sent_to_kunxu", true);
+   316→        zhouRuState.putLong("kunxu_departure_tick", currentTick);
+   317→        zhouRuState.putInt("kunxu_x", surfacePos.getX());
+   318→        zhouRuState.putInt("kunxu_y", surfacePos.getY());
+   319→        zhouRuState.putInt("kunxu_z", surfacePos.getZ());
+   320→        try {
+   321→            WorldRuntimeState runtime = WorldRuntimeState.get(serverLevel);
+   322→            runtime.updateNpcState(zhouRu.getCharacterId(), zhouRuState);
+   323→        } catch (Throwable t) {
+   324→            Ergenverse.LOGGER.warn("[Ergenverse] CRON-112: failed to persist Zhou Ru's "
+   325→                    + "sent_to_kunxu flag: {}", t.getMessage());
+   326→        }
+   327→
+   328→        // ── 11. Display canon-faithful bilingual message ──
+   329→        announceDepartureSuccess(serverPlayer, zhouRu);
+   330→
+   331→        // ── 12. Record in HistoryManager ──
+   332→        HistoryManager.onDiscovery(serverPlayer,
+   333→                "zhou_ru_kunxu_departure",
+   334→                "Wang Lin sent Zhou Ru (周茹) to the Kunxu Realm (昆虚界) at "
+   335→                        + "(" + surfacePos.getX() + ", " + surfacePos.getY() + ", "
+   336→                        + surfacePos.getZ() + "), entrusting her to Mu Bingmei (慕冰媚) "
+   337→                        + "for cultivation. The Li Muwan soul within her begins its "
+   338→                        + "long cultivation arc toward Soul Transformation.",
+   339→                serverLevel.getGameTime());
+   340→
+   341→        Ergenverse.LOGGER.info("[Ergenverse] CRON-112: Zhou Ru (周茹) departed for the "
+   342→                        + "Kunxu Realm at tick {}. Origin: ({:.1f}, {:.1f}, {:.1f}). "
+   343→                        + "Destination: ({:.1f}, {:.1f}, {:.1f}). Player: {}. "
+   344→                        + "sent_to_kunxu=true recorded in runtime state.",
+   345→                currentTick,
+   346→                originX, originY, originZ,
+   347→                destX, destY, destZ,
+   348→                serverPlayer.getName().getString());
+   349→    }
+   350→
+   351→    /**
+   352→     * Spawn the departure burst at 周茹's origin position. The visual idiom:
+   353→     * <ul>
+   354→     *   <li><b>END_ROD particles in an ascending ring</b> — the soul-stream
+   355→     *       rising as 周茹 departs. END_ROD is bright white-rising.</li>
+   356→     *   <li><b>DRAGON_BREATH particles in a magenta burst</b> — the rift
+   357→     *       tear opening. DRAGON_BREATH is purple-magenta, matching the
+   358→     *       teleportation-rift visual idiom.</li>
+   359→     *   <li><b>END_ROD particles in a vertical stream</b> — 周茹's form
+   360→     *       ascending into the rift.</li>
+   361→     *   <li><b>ENDERMAN_TELEPORT sound</b> — the classic teleport sound.</li>
+   362→     *   <li><b>AMETHYST_BLOCK_CHIME sound at high pitch</b> — the bright
+   363→     *       crystalline tone of the bead's release.</li>
+   364→     * </ul>
+   365→     */
+   366→    private static void spawnDepartureBurst(ServerLevel serverLevel,
+   367→                                              double x, double y, double z) {
+   368→        BlockPos pos = BlockPos.containing(x, y, z);
+   369→
+   370→        // ── Ascending ring of END_ROD around 周茹 ──
+   371→        for (int i = 0; i < DEPARTURE_RING_PARTICLE_COUNT; i++) {
+   372→            double theta = (i / (double) DEPARTURE_RING_PARTICLE_COUNT) * Math.PI * 2;
+   373→            double radius = 0.9;
+   374→            double dx = Math.cos(theta) * radius;
+   375→            double dz = Math.sin(theta) * radius;
+   376→            double dy = 1.0 + ((i % 4) * 0.5);  // chest height to 2.5 above feet
+   377→            serverLevel.sendParticles(ParticleTypes.END_ROD,
+   378→                    x + dx, y + dy, z + dz, 1,
+   379→                    0.0, 0.05, 0.0, 0.0);
+   380→        }
+   381→
+   382→        // ── DRAGON_BREATH burst (rift tear) ──
+   383→        serverLevel.sendParticles(ParticleTypes.DRAGON_BREATH,
+   384→                x, y + 1.0, z, RIFT_PARTICLE_COUNT,
+   385→                0.8, 0.4, 0.8, 0.05);
+   386→
+   387→        // ── Vertical END_ROD stream above 周茹 (form ascending) ──
+   388→        for (int i = 0; i < STREAM_PARTICLE_COUNT; i++) {
+   389→            double dy = 2.0 + (i * 0.4);
+   390→            double dx = (i % 3 - 1) * 0.1;
+   391→            double dz = (i % 5 - 2) * 0.1;
+   392→            serverLevel.sendParticles(ParticleTypes.END_ROD,
+   393→                    x + dx, y + dy, z + dz, 1,
+   394→                    0.0, 0.0, 0.0, 0.0);
+   395→        }
+   396→
+   397→        // ── Sounds ──
+   398→        // ENDERMAN_TELEPORT: the classic teleport sound.
+   399→        serverLevel.playSound(null, pos,
+   400→                SoundEvents.ENDERMAN_TELEPORT, SoundSource.HOSTILE,
+   401→                0.9F, 1.0F);
+   402→        // AMETHYST_BLOCK_CHIME: bright crystalline — the bead's release.
+   403→        serverLevel.playSound(null, pos,
+   404→                SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.AMBIENT,
+   405→                0.8F, 1.4F);
+   406→
+   407→        // ── Central flash ──
+   408→        serverLevel.sendParticles(ParticleTypes.FIREWORK,
+   409→                x, y + 1.0, z, 6,
+   410→                0.5, 0.5, 0.5, 0.05);
+   411→    }
+   412→
+   413→    /**
+   414→     * Spawn the arrival burst at the Kunxu Realm destination. Mirrors the
+   415→     * departure burst but uses fewer particles (the arrival is quieter
+   416→     * than the departure — the rift closes gently).
+   417→     */
+   418→    private static void spawnArrivalBurst(ServerLevel serverLevel,
+   419→                                            double x, double y, double z) {
+   420→        BlockPos pos = BlockPos.containing(x, y, z);
+   421→
+   422→        // ── END_ROD descending ring (soul-stream descending into arrival) ──
+   423→        for (int i = 0; i < ARRIVAL_PARTICLE_COUNT; i++) {
+   424→            double theta = (i / (double) ARRIVAL_PARTICLE_COUNT) * Math.PI * 2;
+   425→            double radius = 0.9;
+   426→            double dx = Math.cos(theta) * radius;
+   427→            double dz = Math.sin(theta) * radius;
+   428→            double dy = 1.0 + ((i % 3) * 0.6);
+   429→            serverLevel.sendParticles(ParticleTypes.END_ROD,
+   430→                    x + dx, y + dy, z + dz, 1,
+   431→                    0.0, 0.05, 0.0, 0.0);
+   432→        }
+   433→
+   434→        // ── DRAGON_BREATH small burst (rift closing) ──
+   435→        serverLevel.sendParticles(ParticleTypes.DRAGON_BREATH,
+   436→                x, y + 1.0, z, 12,
+   437→                0.4, 0.2, 0.4, 0.03);
+   438→
+   439→        // ── Sound: ENDERMAN_TELEPORT (softer) ──
+   440→        serverLevel.playSound(null, pos,
+   441→                SoundEvents.ENDERMAN_TELEPORT, SoundSource.HOSTILE,
+   442→                0.6F, 1.2F);
+   443→    }
+   444→
+   445→    /**
+   446→     * Announce successful departure with a canon-faithful bilingual
+   447→     * message. The bilingual format mirrors CRON-110's pattern: Chinese
+   448→     * (the novel's original language) first, English second, both styled
+   449→     * with light-purple + italic for the sacred/journey tone.
+   450→     *
+   451→     * <p>The message honors the canon-faithful narrative: Wang Lin
+   452→     * escorts 周茹 to the Kunxu Realm and entrusts her to Mu Bingmei's
+   453→     * care. The Li Muwan soul within her begins its long cultivation arc.
+   454→     */
+   455→    private static void announceDepartureSuccess(ServerPlayer player,
+   456→                                                   EntityCultivator zhouRu) {
+   457→        player.sendSystemMessage(
+   458→                Component.literal("─────────────────────────────────────")
+   459→                        .withStyle(ChatFormatting.DARK_PURPLE));
+   460→        player.sendSystemMessage(
+   461→                Component.literal("王林将周茹送往昆虚界，托付于慕冰媚门下。")
+   462→                        .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
+   463→        player.sendSystemMessage(
+   464→                Component.literal("Wang Lin sends Zhou Ru to the Kunxu Realm, "
+   465→                        + "entrusting her to Mu Bingmei's care.")
+   466→                        .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   467→        player.sendSystemMessage(
+   468→                Component.literal("From this day forth, Zhou Ru walks the path of "
+   469→                        + "cultivation under Mu Bingmei's guidance.")
+   470→                        .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   471→        player.sendSystemMessage(
+   472→                Component.literal("The Li Muwan soul within her stirs — the path of "
+   473→                        + "revival stretches onward across millennia.")
+   474→                        .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+   475→        player.sendSystemMessage(
+   476→                Component.literal("─────────────────────────────────────")
+   477→                        .withStyle(ChatFormatting.DARK_PURPLE));
+   478→    }
+   479→
+   480→    /**
+   481→     * Announce that the player has no bead in main hand. Defensive — the
+   482→     * caller (HistoryEvents) gates on the bead presence and dispatches to
+   483→     * the transfer handler (CRON-110) when there's no bead. This branch
+   484→     * should never fire in normal gameplay.
+   485→     */
+   486→    private static void announceNoBead(ServerPlayer player) {
+   487→        player.sendSystemMessage(
+   488→                Component.literal("周茹静静地看着你，什么也没有发生。")
+   489→                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+   490→        player.sendSystemMessage(
+   491→                Component.literal("Zhou Ru watches you quietly. Nothing happens.")
+   492→                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+   493→    }
+   494→
+   495→    /**
+   496→     * Announce that the soul has not yet been transferred. Defensive — the
+   497→     * caller dispatches to the departure handler only when the bead's
+   498→     * {@code hasSoulTransferredToZhouRu} flag is true, but the runtime
+   499→     * state's {@code pregnant_with_li_muwan_soul} flag may be missing
+   500→     * (e.g., world was reset, NPC state was cleared). This branch
+   501→     * indicates a state inconsistency that should be investigated.
+   502→     */
+   503→    private static void announceNoSoulTransferred(ServerPlayer player) {
+   504→        player.sendSystemMessage(
+   505→                Component.literal("周茹尚未承载李慕婉的元婴——此刻送往昆虚界为时尚早。")
+   506→                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+   507→        player.sendSystemMessage(
+   508→                Component.literal("Zhou Ru has not yet received Li Muwan's soul — "
+   509→                        + "it is not yet time to send her to the Kunxu Realm.")
+   510→                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+   511→        player.sendSystemMessage(
+   512→                Component.literal("(State inconsistency: the bead's transfer flag is set "
+   513→                        + "but Zhou Ru's runtime state is missing the vessel flag. "
+   514→                        + "This may indicate a world-state reset.)")
+   515→                        .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+   516→    }
+   517→
+   518→    /**
+   519→     * Announce that 周茹 has already departed for the Kunxu Realm. Canon-
+   520→     * faithful safeguard: the departure is a one-time event per save.
+   521→     */
+   522→    private static void announceAlreadyDeparted(ServerPlayer player) {
+   523→        player.sendSystemMessage(
+   524→                Component.literal("周茹已启程前往昆虚界，投于慕冰媚门下修行。")
+   525→                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+   526→        player.sendSystemMessage(
+   527→                Component.literal("Zhou Ru has already departed for the Kunxu Realm "
+   528→                        + "to cultivate under Mu Bingmei.")
+   529→                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+   530→        player.sendSystemMessage(
+   531→                Component.literal("(Travel to the Kunxu Realm at (-3500, -3500) to "
+   532→                        + "witness her cultivation arc.)")
+   533→                        .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+   534→    }
+   535→
+   536→    /**
+   537→     * Announce that an internal error occurred while fetching 周茹's runtime
+   538→     * state. Defensive — should never fire in normal gameplay.
+   539→     */
+   540→    private static void announceInternalError(ServerPlayer player) {
+   541→        player.sendSystemMessage(
+   542→                Component.literal("一阵天地异象搅动了周茹的气息——请稍后再试。")
+   543→                        .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
+   544→        player.sendSystemMessage(
+   545→                Component.literal("A disturbance in the world's aura disrupts Zhou Ru's "
+   546→                        + "presence — please try again later.")
+   547→                        .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
+   548→    }
+   549→}
+   550→

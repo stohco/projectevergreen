@@ -1,0 +1,677 @@
+     1→     1→package dev.ergenverse.graph;
+     2→     2→
+     3→     3→import java.util.ArrayList;
+     4→     4→import java.util.Collection;
+     5→     5→import java.util.Collections;
+     6→     6→import java.util.HashMap;
+     7→     7→import java.util.HashSet;
+     8→     8→import java.util.LinkedHashSet;
+     9→     9→import java.util.List;
+    10→    10→import java.util.Map;
+    11→    11→import java.util.Optional;
+    12→    12→import java.util.Set;
+    13→    13→import java.util.concurrent.ConcurrentHashMap;
+    14→    14→import java.util.function.Predicate;
+    15→    15→
+    16→    16→/**
+    17→    17→ * <h1>WorldGraph — the living knowledge graph</h1>
+    18→    18→ *
+    19→    19→ * <p>Layer 2 of the Ergenverse three-layer architecture: a mutable, directed,
+    20→    20→ * typed property graph recording every entity and every relationship in the
+    21→    21→ * simulated world. Sits alongside (and references) the Layer 1 immutable
+    22→    22→ * canon registry in {@code dev.ergenverse.wanglin.registry}.
+    23→    23→ *
+    24→    24→ * <h2>What the graph stores</h2>
+    25→    25→ * <ul>
+    26→    26→ *   <li><b>Nodes</b> — keyed by {@link NodeId}. Each is an immutable value
+    27→    27→ *       object carrying zero or more typed {@link Component}s (cultivation
+    28→    28→ *       state, inventory, karmic profile, qi-fortune, etc.). Mutation =
+    29→    29→ *       replace the node via {@link #replaceNode}.</li>
+    30→    30→ *   <li><b>Edges</b> — directed, typed by {@link EdgeType}, carrying
+    31→    31→ *       provenance, timestamp, and weight. Stored as bidirectional adjacency
+    32→    32→ *       indexes for fast traversal in either direction.</li>
+    33→    33→ * </ul>
+    34→    34→ *
+    35→    35→ * <h2>The integration point for engines and solvers</h2>
+    36→    36→ * <p>Every engine and every Active State Solver reads from and writes to
+    37→    37→ * this graph. The graph is the <b>single integration point</b> — engines
+    38→    38→ * don't call each other directly; they read each other's state via the
+    39→    39→ * graph. This means:
+    40→    40→ * <ul>
+    41→    41→ *   <li>Adding a new engine = adding new node/edge types + components</li>
+    42→    42→ *   <li>Adding a new solver = writing a graph-walker that reads existing edges</li>
+    43→    43→ *   <li>Per-object provenance = path query (FOLLOW edges of given types)</li>
+    44→    44→ *   <li>NPC AI state = a component read off the NPC's node</li>
+    45→    45→ * </ul>
+    46→    46→ *
+    47→    47→ * <h2>Solver-facing traversal APIs</h2>
+    48→    48→ * <p>The Active State Solvers each need to walk the graph in a specific way.
+    49→    49→ * The graph provides:
+    50→    50→ * <ul>
+    51→    51→ *   <li>{@link #outEdges(NodeId, EdgeType)} / {@link #inEdges(NodeId, EdgeType)} —
+    52→    52→ *       direct adjacency lookup (O(1) on the index)</li>
+    53→    53→ *   <li>{@link #walk(NodeId, Set, int, boolean, boolean)} — bounded-depth BFS
+    54→    54→ *       over edges of given types. Used by the Karmic Resonance Solver to
+    55→    55→ *       walk depth 3-4 of GRUDGE/KARMIC_DEBT edges.</li>
+    56→    56→ *   <li>{@link #sumWeights(NodeId, Set, int, boolean, boolean)} — sum the
+    57→    57→ *       weights of all matching edges within a depth. Used to compute total
+    58→    58→ *       karmic burden, net qi-fortune, total cosmic debt.</li>
+    59→    59→ *   <li>{@link #path(NodeId, NodeId, Set, int)} — find a path between two
+    60→    60→ *       nodes using only given edge types. Used by Provenance queries.</li>
+    61→    61→ *   <li>{@link #subgraph(Set, Set)} — extract all nodes/edges matching the
+    62→    62→ *       given type filters. Used by the per-object provenance UI.</li>
+    63→    63→ *   <li>{@link #neighbors(NodeId, EdgeType, boolean)} — direct neighbors
+    64→    64→ *       via a single edge type. Used by fast lookup paths.</li>
+    65→    65→ * </ul>
+    66→    66→ *
+    67→    67→ * <h2>Immutability contract</h2>
+    68→    68→ * <p>Nodes are immutable value objects (per the pre-existing {@link Node}
+    69→    69→ * design). To modify a node, call {@link #replaceNode} with a new Node
+    70→    70→ * built via {@link Node#toBuilder()} (package-private) or
+    71→    71→ * {@link Node.Builder}. The graph swaps the old node for the new one
+    72→    72→ * atomically. Edge mutations (add only — edges are never removed, only
+    73→    73→ * superseded by terminal edges like KARMA_RESOLVED) are append-only.
+    74→    74→ *
+    75→    75→ * <h2>Cause-effect &amp; the Prime Directive</h2>
+    76→    76→ * <p>The graph records what <b>is</b>. It does not fabricate. Every edge
+    77→    77→ * carries a {@link EdgeProvenance}. Simulation-generated edges are marked
+    78→    78→ * SIMULATION, not CANON. The graph is honest about the difference between
+    79→    79→ * "Er Gen wrote this" and "the simulation created this."
+    80→    80→ *
+    81→    81→ * @see Node the (immutable) entities
+    82→    82→ * @see Edge the (append-only) relationships
+    83→    83→ * @see EdgeType the relationship vocabulary (15 families, 100+ types)
+    84→    84→ * @see Component the typed data slots on nodes
+    85→    85→ */
+    86→    86→public final class WorldGraph {
+    87→    87→
+    88→    88→    // ─── Node storage (mutable map of immutable nodes) ─────────────
+    89→    89→    private final Map<NodeId, Node> nodes = new ConcurrentHashMap<>();
+    90→    90→
+    91→    91→    // ─── Edge adjacency indexes (bidirectional) ────────────────────
+    92→    92→    private final Map<NodeId, Map<EdgeType, List<Edge>>> outEdges = new ConcurrentHashMap<>();
+    93→    93→    private final Map<NodeId, Map<EdgeType, List<Edge>>> inEdges = new ConcurrentHashMap<>();
+    94→    94→
+    95→    95→    // ─── History log (Layer 3 — append-only provenance) ────────────
+    96→    96→    private final List<Edge> historyLog = Collections.synchronizedList(new ArrayList<>());
+    97→    97→
+    98→    98→    // ════════════════════════════════════════════════════════════════
+    99→    99→    //  NODE API
+   100→   100→    // ════════════════════════════════════════════════════════════════
+   101→   101→
+   102→   102→    /**
+   103→   103→     * Add a node to the graph. Returns false if a node with the same id
+   104→   104→     * already exists (use {@link #replaceNode} to update).
+   105→   105→     */
+   106→   106→    public boolean addNode(Node node) {
+   107→   107→        return nodes.putIfAbsent(node.id(), node) == null;
+   108→   108→    }
+   109→   109→
+   110→   110→    /**
+   111→   111→     * Atomically replace an existing node with a new (modified) version.
+   112→   112→     * The new node must have the same id as the old one. Used by engines
+   113→   113→     * to update component state: read node → toBuilder → modify → replace.
+   114→   114→     *
+   115→   115→     * @return the previous node, or null if no node with that id existed
+   116→   116→     */
+   117→   117→    public Node replaceNode(Node newNode) {
+   118→   118→        NodeId id = newNode.id();
+   119→   119→        if (!nodes.containsKey(id)) return null;
+   120→   120→        return nodes.put(id, newNode);
+   121→   121→    }
+   122→   122→
+   123→   123→    /** Get a node by id, or empty if absent. */
+   124→   124→    public Optional<Node> getNode(NodeId id) {
+   125→   125→        return Optional.ofNullable(nodes.get(id));
+   126→   126→    }
+   127→   127→
+   128→   128→    /**
+   129→   129→     * Get a node by id, or throw if absent.
+   130→   130→     * Use when the caller's contract requires the node to exist.
+   131→   131→     */
+   132→   132→    public Node requireNode(NodeId id) {
+   133→   133→        Node n = nodes.get(id);
+   134→   134→        if (n == null) {
+   135→   135→            throw new IllegalStateException("WorldGraph has no node " + id);
+   136→   136→        }
+   137→   137→        return n;
+   138→   138→    }
+   139→   139→
+   140→   140→    /** Whether the graph contains a node with the given id. */
+   141→   141→    public boolean hasNode(NodeId id) {
+   142→   142→        return nodes.containsKey(id);
+   143→   143→    }
+   144→   144→
+   145→   145→    /** All nodes in the graph (unmodifiable view). */
+   146→   146→    public Collection<Node> nodes() {
+   147→   147→        return Collections.unmodifiableCollection(nodes.values());
+   148→   148→    }
+   149→   149→
+   150→   150→    /** All nodes of a given type. */
+   151→   151→    public List<Node> nodesOfType(NodeType type) {
+   152→   152→        List<Node> result = new ArrayList<>();
+   153→   153→        for (Node n : nodes.values()) {
+   154→   154→            if (n.id().type() == type) result.add(n);
+   155→   155→        }
+   156→   156→        return result;
+   157→   157→    }
+   158→   158→
+   159→   159→    /** Total node count. */
+   160→   160→    public int nodeCount() { return nodes.size(); }
+   161→   161→
+   162→   162→    // ════════════════════════════════════════════════════════════════
+   163→   163→    //  EDGE API
+   164→   164→    // ════════════════════════════════════════════════════════════════
+   165→   165→
+   166→   166→    /**
+   167→   167→     * Add an edge to the graph. Both endpoints must already exist as nodes.
+   168→   168→     * The edge is appended to the history log (Layer 3). Edges are never
+   169→   169→     * removed — they're superseded by terminal edges (e.g. KARMA_RESOLVED).
+   170→   170→     *
+   171→   171→     * @return true if the edge was added; false if either endpoint is missing
+   172→   172→     */
+   173→   173→    public boolean addEdge(Edge edge) {
+   174→   174→        if (!nodes.containsKey(edge.from())) return false;
+   175→   175→        if (!nodes.containsKey(edge.to())) return false;
+   176→   176→        outEdges.computeIfAbsent(edge.from(), k -> new HashMap<>())
+   177→   177→                .computeIfAbsent(edge.type(), k -> new ArrayList<>())
+   178→   178→                .add(edge);
+   179→   179→        inEdges.computeIfAbsent(edge.to(), k -> new HashMap<>())
+   180→   180→                .computeIfAbsent(edge.type(), k -> new ArrayList<>())
+   181→   181→                .add(edge);
+   182→   182→        historyLog.add(edge);
+   183→   183→        return true;
+   184→   184→    }
+   185→   185→
+   186→   186→    /** Convenience: add a canon edge. Endpoints must exist. */
+   187→   187→    public boolean addCanonEdge(NodeId from, NodeId to, EdgeType type, String source, int confidence) {
+   188→   188→        return addEdge(Edge.canon(from, to, type, source, confidence));
+   189→   189→    }
+   190→   190→
+   191→   191→    /** Convenience: add a canon edge with a chapter reference. */
+   192→   192→    public boolean addCanonChEdge(NodeId from, NodeId to, EdgeType type, String chapter) {
+   193→   193→        return addEdge(Edge.canonCh(from, to, type, chapter));
+   194→   194→    }
+   195→   195→
+   196→   196→    /** Convenience: add a simulation edge. Endpoints must exist. */
+   197→   197→    public boolean addSimEdge(NodeId from, NodeId to, EdgeType type, long tick) {
+   198→   198→        return addEdge(Edge.sim(from, to, type, tick));
+   199→   199→    }
+   200→   200→
+   201→   201→    /** Convenience: add a weighted simulation edge. */
+   202→   202→    public boolean addSimEdge(NodeId from, NodeId to, EdgeType type, long tick, double weight) {
+   203→   203→        return addEdge(Edge.sim(from, to, type, tick, weight));
+   204→   204→    }
+   205→   205→
+   206→   206→    /** Convenience: add a bootstrap (canon-derived structural) edge. */
+   207→   207→    public boolean addBootstrapEdge(NodeId from, NodeId to, EdgeType type, String source) {
+   208→   208→        return addEdge(Edge.bootstrap(from, to, type, source));
+   209→   209→    }
+   210→   210→
+   211→   211→    /**
+   212→   212→     * All outgoing edges of a specific type from a node.
+   213→   213→     * Returns an empty list if the node has no such edges.
+   214→   214→     */
+   215→   215→    public List<Edge> outEdges(NodeId from, EdgeType type) {
+   216→   216→        Map<EdgeType, List<Edge>> byType = outEdges.get(from);
+   217→   217→        if (byType == null) return List.of();
+   218→   218→        List<Edge> edges = byType.get(type);
+   219→   219→        return edges == null ? List.of() : Collections.unmodifiableList(edges);
+   220→   220→    }
+   221→   221→
+   222→   222→    /**
+   223→   223→     * All incoming edges of a specific type to a node.
+   224→   224→     */
+   225→   225→    public List<Edge> inEdges(NodeId to, EdgeType type) {
+   226→   226→        Map<EdgeType, List<Edge>> byType = inEdges.get(to);
+   227→   227→        if (byType == null) return List.of();
+   228→   228→        List<Edge> edges = byType.get(type);
+   229→   229→        return edges == null ? List.of() : Collections.unmodifiableList(edges);
+   230→   230→    }
+   231→   231→
+   232→   232→    /**
+   233→   233→     * All outgoing edges of any of the given types from a node.
+   234→   234→     * Used by solvers that consume a family of edge types (e.g. the Karmic
+   235→   235→     * Resonance Solver asks for all karmic-family outgoing edges).
+   236→   236→     */
+   237→   237→    public List<Edge> outEdges(NodeId from, Set<EdgeType> types) {
+   238→   238→        List<Edge> result = new ArrayList<>();
+   239→   239→        Map<EdgeType, List<Edge>> byType = outEdges.get(from);
+   240→   240→        if (byType == null) return result;
+   241→   241→        for (EdgeType t : types) {
+   242→   242→            List<Edge> edges = byType.get(t);
+   243→   243→            if (edges != null) result.addAll(edges);
+   244→   244→        }
+   245→   245→        return result;
+   246→   246→    }
+   247→   247→
+   248→   248→    /** All incoming edges of any of the given types to a node. */
+   249→   249→    public List<Edge> inEdges(NodeId to, Set<EdgeType> types) {
+   250→   250→        List<Edge> result = new ArrayList<>();
+   251→   251→        Map<EdgeType, List<Edge>> byType = inEdges.get(to);
+   252→   252→        if (byType == null) return result;
+   253→   253→        for (EdgeType t : types) {
+   254→   254→            List<Edge> edges = byType.get(t);
+   255→   255→            if (edges != null) result.addAll(edges);
+   256→   256→        }
+   257→   257→        return result;
+   258→   258→    }
+   259→   259→
+   260→   260→    /** All outgoing edges (any type) from a node. */
+   261→   261→    public List<Edge> allOutEdges(NodeId from) {
+   262→   262→        List<Edge> result = new ArrayList<>();
+   263→   263→        Map<EdgeType, List<Edge>> byType = outEdges.get(from);
+   264→   264→        if (byType == null) return result;
+   265→   265→        for (List<Edge> edges : byType.values()) result.addAll(edges);
+   266→   266→        return result;
+   267→   267→    }
+   268→   268→
+   269→   269→    /** All incoming edges (any type) to a node. */
+   270→   270→    public List<Edge> allInEdges(NodeId to) {
+   271→   271→        List<Edge> result = new ArrayList<>();
+   272→   272→        Map<EdgeType, List<Edge>> byType = inEdges.get(to);
+   273→   273→        if (byType == null) return result;
+   274→   274→        for (List<Edge> edges : byType.values()) result.addAll(edges);
+   275→   275→        return result;
+   276→   276→    }
+   277→   277→
+   278→   278→    /**
+   279→   279→     * The set of node ids directly reachable from {@code from} via edges of
+   280→   280→     * the given type. Convenience for fast neighbor lookup.
+   281→   281→     *
+   282→   282→     * @param from     the source node
+   283→   283→     * @param type     the edge type to follow
+   284→   284→     * @param outgoing if true, follow outgoing edges; if false, follow incoming
+   285→   285→     */
+   286→   286→    public Set<NodeId> neighbors(NodeId from, EdgeType type, boolean outgoing) {
+   287→   287→        Set<NodeId> result = new LinkedHashSet<>();
+   288→   288→        List<Edge> edges = outgoing ? outEdges(from, type) : inEdges(from, type);
+   289→   289→        for (Edge e : edges) {
+   290→   290→            result.add(outgoing ? e.to() : e.from());
+   291→   291→        }
+   292→   292→        return result;
+   293→   293→    }
+   294→   294→
+   295→   295→    /** Total edge count (each edge counted once). */
+   296→   296→    public int edgeCount() { return historyLog.size(); }
+   297→   297→
+   298→   298→    // ════════════════════════════════════════════════════════════════
+   299→   299→    //  SOLVER-FACING TRAVERSAL APIs
+   300→   300→    //  These are the methods the Active State Solvers call.
+   301→   301→    // ════════════════════════════════════════════════════════════════
+   302→   302→
+   303→   303→    /**
+   304→   304→     * <h2>Bounded-depth graph walk</h2>
+   305→   305→     *
+   306→   306→     * <p>Walk the graph from a starting node, following edges whose type is
+   307→   307→     * in {@code edgeTypes}, up to a maximum {@code depth}. Returns the set
+   308→   308→     * of all nodes reachable (excluding the start node itself).
+   309→   309→     *
+   310→   310→     * <p>This is the primary API for:
+   311→   311→     * <ul>
+   312→   312→     *   <li><b>Karmic Resonance Solver</b> — walks depth 3-4 of GRUDGE /
+   313→   313→     *       KARMIC_DEBT edges to compute total karmic burden.</li>
+   314→   314→     *   <li><b>Cause-Effect Weaver</b> — walks CAUSE_OF / CONSEQUENCE_OF
+   315→   315→     *       edges to find ripple effects of an action.</li>
+   316→   316→     *   <li><b>Heart Demon Resolver</b> — walks PSYCHIC_WOUND_FROM /
+   317→   317→     *       HEART_DEMON_FROM edges to enumerate unresolved wounds.</li>
+   318→   318→     * </ul>
+   319→   319→     *
+   320→   320→     * @param start      the starting node id
+   321→   321→     * @param edgeTypes  the set of edge types to follow (others ignored)
+   322→   322→     * @param maxDepth   the maximum traversal depth (1 = direct neighbors)
+   323→   323→     * @param followOut  if true, follow outgoing edges
+   324→   324→     * @param followIn   if true, follow incoming edges
+   325→   325→     * @return the set of reachable node ids (unmodifiable; excludes start)
+   326→   326→     */
+   327→   327→    public Set<NodeId> walk(NodeId start, Set<EdgeType> edgeTypes, int maxDepth,
+   328→   328→                             boolean followOut, boolean followIn) {
+   329→   329→        Set<NodeId> visited = new LinkedHashSet<>();
+   330→   330→        if (maxDepth <= 0 || !nodes.containsKey(start)) return visited;
+   331→   331→        List<NodeId> frontier = new ArrayList<>();
+   332→   332→        frontier.add(start);
+   333→   333→        visited.add(start);
+   334→   334→        for (int depth = 0; depth < maxDepth && !frontier.isEmpty(); depth++) {
+   335→   335→            List<NodeId> nextFrontier = new ArrayList<>();
+   336→   336→            for (NodeId current : frontier) {
+   337→   337→                if (followOut) {
+   338→   338→                    for (Edge e : outEdges(current, edgeTypes)) {
+   339→   339→                        if (visited.add(e.to())) nextFrontier.add(e.to());
+   340→   340→                    }
+   341→   341→                }
+   342→   342→                if (followIn) {
+   343→   343→                    for (Edge e : inEdges(current, edgeTypes)) {
+   344→   344→                        if (visited.add(e.from())) nextFrontier.add(e.from());
+   345→   345→                    }
+   346→   346→                }
+   347→   347→            }
+   348→   348→            frontier = nextFrontier;
+   349→   349→        }
+   350→   350→        visited.remove(start);
+   351→   351→        return Collections.unmodifiableSet(visited);
+   352→   352→    }
+   353→   353→
+   354→   354→    /**
+   355→   355→     * <h2>Sum of edge weights within a bounded walk</h2>
+   356→   356→     *
+   357→   357→     * <p>Walk the graph from a starting node, following edges of the given
+   358→   358→     * types up to {@code maxDepth}, and sum the {@link Edge#weight()} of
+   359→   359→     * every edge traversed. Used by:
+   360→   360→     * <ul>
+   361→   361→     *   <li><b>Karmic Resonance Solver</b> — total outstanding karmic burden
+   362→   362→     *       (sum of KARMIC_DEBT + GRUDGE weights, minus KARMIC_CREDIT +
+   363→   363→     *       GRATITUDE, minus KARMA_RESOLVED).</li>
+   364→   364→     *   <li><b>Qiyun Flux Engine</b> — net qi-fortune (stolen + inherited +
+   365→   365→     *       granted − burned).</li>
+   366→   366→     *   <li><b>Cause-Effect Weaver</b> — total cosmic debt registered against
+   367→   367→     *       the entity by the Heavenly Dao.</li>
+   368→   368→     * </ul>
+   369→   369→     *
+   370→   370→     * <p>For the karmic-burden use case, callers should call this twice:
+   371→   371→     * once with the "negative" edge types (debts/grudges) and once with
+   372→   372→     * the "positive" types (credits/gratitude), then subtract.
+   373→   373→     *
+   374→   374→     * @param start      the starting node id
+   375→   375→     * @param edgeTypes  the set of edge types to follow
+   376→   376→     * @param maxDepth   the maximum traversal depth
+   377→   377→     * @param followOut  if true, follow outgoing edges (debts the start OWES)
+   378→   378→     * @param followIn   if true, follow incoming edges (debts OWED TO the start)
+   379→   379→     * @return the sum of weights (never negative — clamped to 0)
+   380→   380→     */
+   381→   381→    public double sumWeights(NodeId start, Set<EdgeType> edgeTypes, int maxDepth,
+   382→   382→                              boolean followOut, boolean followIn) {
+   383→   383→        double sum = 0;
+   384→   384→        Set<NodeId> visited = new HashSet<>();
+   385→   385→        visited.add(start);
+   386→   386→        List<NodeId> frontier = new ArrayList<>();
+   387→   387→        frontier.add(start);
+   388→   388→        for (int depth = 0; depth < maxDepth && !frontier.isEmpty(); depth++) {
+   389→   389→            List<NodeId> nextFrontier = new ArrayList<>();
+   390→   390→            for (NodeId current : frontier) {
+   391→   391→                if (followOut) {
+   392→   392→                    for (Edge e : outEdges(current, edgeTypes)) {
+   393→   393→                        sum += e.weight();
+   394→   394→                        if (visited.add(e.to())) nextFrontier.add(e.to());
+   395→   395→                    }
+   396→   396→                }
+   397→   397→                if (followIn) {
+   398→   398→                    for (Edge e : inEdges(current, edgeTypes)) {
+   399→   399→                        sum += e.weight();
+   400→   400→                        if (visited.add(e.from())) nextFrontier.add(e.from());
+   401→   401→                    }
+   402→   402→                }
+   403→   403→            }
+   404→   404→            frontier = nextFrontier;
+   405→   405→        }
+   406→   406→        return Math.max(0, sum);
+   407→   407→    }
+   408→   408→
+   409→   409→    /**
+   410→   410→     * <h2>Find a path between two nodes</h2>
+   411→   411→     *
+   412→   412→     * <p>BFS path-finding restricted to edges of the given types. Returns
+   413→   413→     * the list of edges forming the shortest path, or empty if no path
+   414→   414→     * exists within {@code maxDepth} hops.
+   415→   415→     *
+   416→   416→     * <p>Used by the per-object provenance UI: "show me the life of this
+   417→   417→     * sword" = path query following FORGED_BY → USED_IN → TAKEN_BY →
+   418→   418→     * SOLD_TO → LOST_IN → RECOVERED_BY edges from the sword node.
+   419→   419→     *
+   420→   420→     * @param from       the starting node
+   421→   421→     * @param to         the target node
+   422→   422→     * @param edgeTypes  the set of edge types allowed in the path
+   423→   423→     * @param maxDepth   the maximum path length
+   424→   424→     * @return the list of edges forming the path, or empty if no path
+   425→   425→     */
+   426→   426→    public List<Edge> path(NodeId from, NodeId to, Set<EdgeType> edgeTypes, int maxDepth) {
+   427→   427→        if (!nodes.containsKey(from) || !nodes.containsKey(to)) return List.of();
+   428→   428→        if (from.equals(to)) return List.of();
+   429→   429→        Map<NodeId, Edge> cameFrom = new HashMap<>();
+   430→   430→        Set<NodeId> visited = new HashSet<>();
+   431→   431→        List<NodeId> frontier = new ArrayList<>();
+   432→   432→        frontier.add(from);
+   433→   433→        visited.add(from);
+   434→   434→        boolean found = false;
+   435→   435→        for (int depth = 0; depth < maxDepth && !frontier.isEmpty() && !found; depth++) {
+   436→   436→            List<NodeId> nextFrontier = new ArrayList<>();
+   437→   437→            for (NodeId current : frontier) {
+   438→   438→                for (Edge e : outEdges(current, edgeTypes)) {
+   439→   439→                    if (visited.add(e.to())) {
+   440→   440→                        cameFrom.put(e.to(), e);
+   441→   441→                        if (e.to().equals(to)) { found = true; break; }
+   442→   442→                        nextFrontier.add(e.to());
+   443→   443→                    }
+   444→   444→                }
+   445→   445→                if (found) break;
+   446→   446→                for (Edge e : inEdges(current, edgeTypes)) {
+   447→   447→                    if (visited.add(e.from())) {
+   448→   448→                        cameFrom.put(e.from(), e);
+   449→   449→                        if (e.from().equals(to)) { found = true; break; }
+   450→   450→                        nextFrontier.add(e.from());
+   451→   451→                    }
+   452→   452→                }
+   453→   453→                if (found) break;
+   454→   454→            }
+   455→   455→            frontier = nextFrontier;
+   456→   456→        }
+   457→   457→        if (!found) return List.of();
+   458→   458→        List<Edge> path = new ArrayList<>();
+   459→   459→        NodeId cursor = to;
+   460→   460→        while (!cursor.equals(from)) {
+   461→   461→            Edge e = cameFrom.get(cursor);
+   462→   462→            if (e == null) break;
+   463→   463→            path.add(0, e);
+   464→   464→            cursor = e.from().equals(cursor) ? e.to() : e.from();
+   465→   465→        }
+   466→   466→        return Collections.unmodifiableList(path);
+   467→   467→    }
+   468→   468→
+   469→   469→    /**
+   470→   470→     * <h2>Extract a subgraph</h2>
+   471→   471→     *
+   472→   472→     * <p>Return all nodes whose type is in {@code nodeTypes} and all edges
+   473→   473→     * whose type is in {@code edgeTypes}, restricted to the subgraph induced
+   474→   474→     * by those nodes. Used by the per-object provenance UI to render a
+   475→   475→     * focused view of, e.g., "all artifacts and their ownership history".
+   476→   476→     *
+   477→   477→     * @param nodeTypes the node types to include (null = all)
+   478→   478→     * @param edgeTypes the edge types to include (null = all)
+   479→   479→     * @return a 2-element list: [List&lt;Node&gt;, List&lt;Edge&gt;]
+   480→   480→     */
+   481→   481→    public List<Object> subgraph(Set<NodeType> nodeTypes, Set<EdgeType> edgeTypes) {
+   482→   482→        List<Node> subNodes = new ArrayList<>();
+   483→   483→        Set<NodeId> subNodeIds = new HashSet<>();
+   484→   484→        for (Node n : nodes.values()) {
+   485→   485→            if (nodeTypes == null || nodeTypes.contains(n.id().type())) {
+   486→   486→                subNodes.add(n);
+   487→   487→                subNodeIds.add(n.id());
+   488→   488→            }
+   489→   489→        }
+   490→   490→        List<Edge> subEdges = new ArrayList<>();
+   491→   491→        synchronized (historyLog) {
+   492→   492→            for (Edge e : historyLog) {
+   493→   493→                if (edgeTypes != null && !edgeTypes.contains(e.type())) continue;
+   494→   494→                if (subNodeIds.contains(e.from()) && subNodeIds.contains(e.to())) {
+   495→   495→                    subEdges.add(e);
+   496→   496→                }
+   497→   497→            }
+   498→   498→        }
+   499→   499→        return List.of(subNodes, subEdges);
+   500→   500→    }
+   501→   501→
+   502→   502→    /**
+   503→   503→     * Find all nodes matching a predicate. Used by engines that need to
+   504→   504→     * query "all cultivators above Soul Formation" or "all sects with at
+   505→   505→     * least 100 members" or "all NPCs with unresolved karmic debt".
+   506→   506→     */
+   507→   507→    public List<Node> findNodes(Predicate<Node> predicate) {
+   508→   508→        List<Node> result = new ArrayList<>();
+   509→   509→        for (Node n : nodes.values()) {
+   510→   510→            if (predicate.test(n)) result.add(n);
+   511→   511→        }
+   512→   512→        return result;
+   513→   513→    }
+   514→   514→
+   515→   515→    // ════════════════════════════════════════════════════════════════
+   516→   516→    //  HISTORY LOG (Layer 3 — append-only provenance)
+   517→   517→    // ════════════════════════════════════════════════════════════════
+   518→   518→
+   519→   519→    /**
+   520→   520→     * The full append-only history log. Every edge ever added to the graph
+   521→   521→     * (including ones later "resolved" by terminal edges) appears here in
+   522→   522→     * insertion order. This is the canonical record for Layer 3 provenance.
+   523→   523→     *
+   524→   524→     * <p>The per-object provenance UI reads this log filtered by node id.
+   525→   525→     */
+   526→   526→    public List<Edge> history() {
+   527→   527→        synchronized (historyLog) {
+   528→   528→            return Collections.unmodifiableList(new ArrayList<>(historyLog));
+   529→   529→        }
+   530→   530→    }
+   531→   531→
+   532→   532→    /** All history edges involving a given node (in either direction). */
+   533→   533→    public List<Edge> historyOf(NodeId node) {
+   534→   534→        List<Edge> result = new ArrayList<>();
+   535→   535→        synchronized (historyLog) {
+   536→   536→            for (Edge e : historyLog) {
+   537→   537→                if (e.from().equals(node) || e.to().equals(node)) result.add(e);
+   538→   538→            }
+   539→   539→        }
+   540→   540→        return result;
+   541→   541→    }
+   542→   542→
+   543→   543→    /** All history edges of specific types involving a node. */
+   544→   544→    public List<Edge> historyOf(NodeId node, Set<EdgeType> types) {
+   545→   545→        List<Edge> result = new ArrayList<>();
+   546→   546→        synchronized (historyLog) {
+   547→   547→            for (Edge e : historyLog) {
+   548→   548→                if (!types.contains(e.type())) continue;
+   549→   549→                if (e.from().equals(node) || e.to().equals(node)) result.add(e);
+   550→   550→            }
+   551→   551→        }
+   552→   552→        return result;
+   553→   553→    }
+   554→   554→
+   555→   555→    // ════════════════════════════════════════════════════════════════
+   556→   556→    //  SERIALIZATION (world save / load)
+   557→   557→    //  Nodes are immutable value objects without their own NBT methods;
+   558→   558→    //  the graph serializes their identity + component class names. Full
+   559→   559→    //  component NBT is delegated to each component class's Codec (TBD
+   560→   560→    //  as engines register their components).
+   561→   561→    // ════════════════════════════════════════════════════════════════
+   562→   562→
+   563→   563→    /**
+   564→   564→     * Serialize the graph's structural state (nodes + edges) to NBT.
+   565→   565→     * Component payloads are serialized via their registered Codec (future
+   566→   566→     * engine work). For now, this captures identity + edges, enough to
+   567→   567→     * reconstruct topology on load.
+   568→   568→     */
+   569→   569→    public net.minecraft.nbt.CompoundTag serialize() {
+   570→   570→        var tag = new net.minecraft.nbt.CompoundTag();
+   571→   571→        tag.putInt("nodeCount", nodes.size());
+   572→   572→        tag.putInt("edgeCount", historyLog.size());
+   573→   573→
+   574→   574→        var nodesTag = new net.minecraft.nbt.ListTag();
+   575→   575→        for (Node n : nodes.values()) {
+   576→   576→            var nTag = new net.minecraft.nbt.CompoundTag();
+   577→   577→            nTag.putString("id", n.id().namespaced());
+   578→   578→            nTag.putString("displayName", n.displayName());
+   579→   579→            if (n.registryId() != null) nTag.putString("registryId", n.registryId());
+   580→   580→            nTag.putInt("canonConfidence", n.canonConfidence());
+   581→   581→            // Component payloads: serialized via registered Codecs (future).
+   582→   582→            // For now we record the component class names so the loader
+   583→   583→            // knows which components were present.
+   584→   584→            var compsTag = new net.minecraft.nbt.ListTag();
+   585→   585→            for (Class<?> c : n.componentTypes()) {
+   586→   586→                compsTag.add(net.minecraft.nbt.StringTag.valueOf(c.getName()));
+   587→   587→            }
+   588→   588→            nTag.put("componentClasses", compsTag);
+   589→   589→            nodesTag.add(nTag);
+   590→   590→        }
+   591→   591→        tag.put("nodes", nodesTag);
+   592→   592→
+   593→   593→        var edgesTag = new net.minecraft.nbt.ListTag();
+   594→   594→        synchronized (historyLog) {
+   595→   595→            for (Edge e : historyLog) {
+   596→   596→                var eTag = new net.minecraft.nbt.CompoundTag();
+   597→   597→                eTag.putString("from", e.from().namespaced());
+   598→   598→                eTag.putString("to", e.to().namespaced());
+   599→   599→                eTag.putString("type", e.type().name());
+   600→   600→                eTag.putString("provenanceSource", e.provenance().source().name());
+   601→   601→                eTag.putString("provenanceRef", e.provenance().reference());
+   602→   602→                eTag.putInt("provenanceConfidence", e.provenance().confidence());
+   603→   603→                eTag.putLong("timestamp", e.timestamp());
+   604→   604→                eTag.putDouble("weight", e.weight());
+   605→   605→                edgesTag.add(eTag);
+   606→   606→            }
+   607→   607→        }
+   608→   608→        tag.put("edges", edgesTag);
+   609→   609→        return tag;
+   610→   610→    }
+   611→   611→
+   612→   612→    /**
+   613→   613→     * Deserialize the graph from NBT. Clears existing state first.
+   614→   614→     * Note: full component reconstruction requires registered Codecs (future
+   615→   615→     * engine work); for now this restores topology (nodes + edges) only.
+   616→   616→     */
+   617→   617→    public void deserialize(net.minecraft.nbt.CompoundTag tag) {
+   618→   618→        nodes.clear();
+   619→   619→        outEdges.clear();
+   620→   620→        inEdges.clear();
+   621→   621→        historyLog.clear();
+   622→   622→
+   623→   623→        var nodesTag = tag.getList("nodes", net.minecraft.nbt.Tag.TAG_COMPOUND);
+   624→   624→        for (int i = 0; i < nodesTag.size(); i++) {
+   625→   625→            var nTag = nodesTag.getCompound(i);
+   626→   626→            NodeId id = NodeId.parse(nTag.getString("id"));
+   627→   627→            String displayName = nTag.getString("displayName");
+   628→   628→            String registryId = nTag.contains("registryId") ? nTag.getString("registryId") : null;
+   629→   629→            int confidence = nTag.getInt("canonConfidence");
+   630→   630→            Node node = registryId != null
+   631→   631→                    ? Node.canon(id, displayName, registryId, confidence)
+   632→   632→                    : Node.generated(id, displayName);
+   633→   633→            nodes.put(id, node);
+   634→   634→        }
+   635→   635→
+   636→   636→        var edgesTag = tag.getList("edges", net.minecraft.nbt.Tag.TAG_COMPOUND);
+   637→   637→        for (int i = 0; i < edgesTag.size(); i++) {
+   638→   638→            var eTag = edgesTag.getCompound(i);
+   639→   639→            NodeId from = NodeId.parse(eTag.getString("from"));
+   640→   640→            NodeId to = NodeId.parse(eTag.getString("to"));
+   641→   641→            EdgeType type;
+   642→   642→            try {
+   643→   643→                type = EdgeType.valueOf(eTag.getString("type"));
+   644→   644→            } catch (IllegalArgumentException ex) {
+   645→   645→                continue; // unknown type in save (newer mod version) — skip
+   646→   646→            }
+   647→   647→            var source = EdgeProvenance.Source.valueOf(eTag.getString("provenanceSource"));
+   648→   648→            String ref = eTag.getString("provenanceRef");
+   649→   649→            int conf = eTag.getInt("provenanceConfidence");
+   650→   650→            long ts = eTag.getLong("timestamp");
+   651→   651→            double w = eTag.getDouble("weight");
+   652→   652→            Edge edge = new Edge(from, to, type, new EdgeProvenance(source, ref, conf), ts, w, Map.of());
+   653→   653→            if (nodes.containsKey(from) && nodes.containsKey(to)) {
+   654→   654→                outEdges.computeIfAbsent(from, k -> new HashMap<>())
+   655→   655→                        .computeIfAbsent(type, k -> new ArrayList<>())
+   656→   656→                        .add(edge);
+   657→   657→                inEdges.computeIfAbsent(to, k -> new HashMap<>())
+   658→   658→                        .computeIfAbsent(type, k -> new ArrayList<>())
+   659→   659→                        .add(edge);
+   660→   660→                historyLog.add(edge);
+   661→   661→            }
+   662→   662→        }
+   663→   663→    }
+   664→   664→
+   665→   665→    // ════════════════════════════════════════════════════════════════
+   666→   666→    //  DIAGNOSTICS
+   667→   667→    // ════════════════════════════════════════════════════════════════
+   668→   668→
+   669→   669→    /** A one-line summary of graph size, for debug overlays. */
+   670→   670→    public String summarize() {
+   671→   671→        return "WorldGraph{nodes=" + nodes.size() + ", edges=" + historyLog.size() + "}";
+   672→   672→    }
+   673→   673→
+   674→   674→    @Override
+   675→   675→    public String toString() { return summarize(); }
+   676→   676→}
+   677→   677→

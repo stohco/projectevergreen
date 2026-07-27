@@ -1,0 +1,602 @@
+     1→     1→package dev.ergenverse.wanglin;
+     2→     2→
+     3→     3→import java.util.*;
+     4→     4→import java.util.stream.*;
+     5→     5→
+     6→     6→/**
+     7→     7→ * RI Canonical Database — structured query engine for all 630 canon entries.
+     8→     8→ *
+     9→     9→ * <p>This class bridges the critical gap between the markdown canon documents
+    10→    10→ * and the Java runtime. Previously, only the 3 canon-markdown-based engines
+    11→    11→ * (Timeline, Ecology, Civilization) and the item-specific HeavenDefyingBead.java
+    12→    12→ * existed. The 178 artifacts, 214 techniques, 158 characters, and 80 locations
+    13→    13→ * defined in {{@code ri_canon_database.json} had ZERO Java representation.
+    14→    14→ *
+    15→    15→ * <p>Data source: {{@code ri_canon_database.json} (14,909 lines, 630 entries).
+    16→    16→ * <ul>
+    17→    17→ *   <li>{@link CanonCharacter} — 158 characters (N01-N160)</li>
+    18→    18→ *   <li>{@link CanonLocation} — 80 locations (L01-L80)</li>
+    19→    19→ *   <li>{@link CanonArtifact} — 178 artifacts (I01-I178)</li>
+    20→    20→ *   <li>{@link CanonTechnique} — 214 techniques (T01-T170 + AT01-09 + VA01-04 + OS01-07 + B01-09 + E01-14)</li>
+    21→    21→ * </ul>
+    22→    22→ *
+    23→    23→ * <p>All data is loaded from the JSON at construction time and cached in
+    24→    24→ * typed lists. Query methods provide filtered access by confidence, type,
+    25→    25→ * owner, user, location, and free-text search.
+    26→    26→ *
+    27→    27→ * <p><b>Prime Directive:</b> Every entry traces back to the 3 canon docs
+    28→    28→ * (WORLD.md, ITEMS.md, TECHNIQUES.md) with chapter citations. Zero generic
+    29→    29→ * fantasy content. Confidence 5 = explicitly attested; 4 = strongly implied;
+    30→    30→ * 3 = logically necessary; 2 = derived speculation; 1 = bare conjecture.
+    31→    31→ *
+    32→    32→ * <p>Per user corrections in SYSTEMS_AUDIT_COMPLETE.md:
+    33→    33→ * <ul>
+    34→    34→ *   <li>No Allheaven-as-Wang-Lin-antagonist (correction #1)</li>
+    35→    35→ *   <li>No 9-9-1 tribulation structure (correction #2)</li>
+    36→    36→ *   <li>Suzaku is a planet, not a continent (correction #6)</li>
+    37→    37→ *   <li>Heavenly Fate is a planet, not a continent (correction #7)</li>
+    38→    38→ *   <li>Essences do not unlock at realm X (correction #5)</li>
+    39→    39→ * </ul>
+    40→    40→ */
+    41→    41→public final class RICanonicalDatabase {
+    42→    42→
+    43→    43→    private RICanonicalDatabase() {}
+    44→    44→
+    45→    45→    // ── Character type taxonomy ──────────────────────────────────────────
+    46→    46→    public enum CharType {
+    47→    47→        ANTAGONIST,
+    48→    48→        DISCIPLE,
+    49→    49→        ELDER,
+    50→    50→        OTHER,
+    51→    51→        PATRIARCH,
+    52→    52→        PROTAGONIST;
+    53→    53→    }
+    54→    54→
+    55→    55→    // ── Location type taxonomy ───────────────────────────────────────────
+    56→    56→    public enum LocType {
+    57→    57→        CAVE,
+    58→    58→        CITY,
+    59→    59→        CONTINENT,
+    60→    60→        COUNTRY,
+    61→    61→        MOUNTAIN,
+    62→    62→        OTHER,
+    63→    63→        PLANET,
+    64→    64→        REALM,
+    65→    65→        SECRET_REALM,
+    66→    66→        SECT,
+    67→    67→        STAR_DOMAIN,
+    68→    68→        STAR_SYSTEM;
+    69→    69→    }
+    70→    70→
+    71→    71→    // ── Artifact type taxonomy ───────────────────────────────────────────
+    72→    72→    public enum ArtType {
+    73→    73→        ARMOR,
+    74→    74→        BANNER,
+    75→    75→        BEAD_PART,
+    76→    76→        COMPASS,
+    77→    77→        FORMATION,
+    78→    78→        MATERIAL,
+    79→    79→        OTHER,
+    80→    80→        TALISMAN;
+    81→    81→    }
+    82→    82→
+    83→    83→    // ── Technique type taxonomy ──────────────────────────────────────────
+    84→    84→    public enum TechType {
+    85→    85→        ACCOMPANYING_THUNDER,
+    86→    86→        BRIDGE,
+    87→    87→        CULTIVATION_ART,
+    88→    88→        ESSENCE,
+    89→    89→        MOVEMENT,
+    90→    90→        ORIGINAL_SPELL,
+    91→    91→        OTHER,
+    92→    92→        RESTRICTION;
+    93→    93→    }
+    94→    94→
+    95→    95→    // ── Data records (immutable) ─────────────────────────────────────────
+    96→    96→
+    97→    97→    /** A named character from the RI canon. */
+    98→    98→    public static final class CanonCharacter {
+    99→    99→        public final String id;
+   100→   100→        public final String name;
+   101→   101→        public final String nameCn;
+   102→   102→        public final CharType type;
+   103→   103→        public final String peakRealm;
+   104→   104→        public final String affiliation;
+   105→   105→        public final String status;
+   106→   106→        public final int canonConfidence;
+   107→   107→        public final String firstAppearance;
+   108→   108→        public final String location;
+   109→   109→        public final List<String> knownFacts;
+   110→   110→        public final List<RelationShip> relationships;
+   111→   111→        public final String source;
+   112→   112→
+   113→   113→        public CanonCharacter(String id, String name, String nameCn, CharType type,
+   114→   114→                String peakRealm, String affiliation, String status, int canonConfidence,
+   115→   115→                String firstAppearance, String location, List<String> knownFacts,
+   116→   116→                List<RelationShip> relationships, String source) {
+   117→   117→            this.id = id; this.name = name; this.nameCn = nameCn; this.type = type;
+   118→   118→            this.peakRealm = peakRealm; this.affiliation = affiliation; this.status = status;
+   119→   119→            this.canonConfidence = canonConfidence; this.firstAppearance = firstAppearance;
+   120→   120→            this.location = location; this.knownFacts = knownFacts;
+   121→   121→            this.relationships = relationships; this.source = source;
+   122→   122→        }
+   123→   123→    }
+   124→   124→
+   125→   125→    /** A character-to-character relationship. */
+   126→   126→    public static final class RelationShip {
+   127→   127→        public final String target;
+   128→   128→        public final String relation;
+   129→   129→
+   130→   130→        public RelationShip(String target, String relation) {
+   131→   131→            this.target = target; this.relation = relation;
+   132→   132→        }
+   133→   133→    }
+   134→   134→
+   135→   135→    /** A named location from the RI canon, following the cosmological hierarchy. */
+   136→   136→    public static final class CanonLocation {
+   137→   137→        public final String id;
+   138→   138→        public final String name;
+   139→   139→        public final String nameCn;
+   140→   140→        public final LocType type;
+   141→   141→        public final String parentLocation;
+   142→   142→        public final String cosmologyLayer;
+   143→   143→        public final String worldLawTier;
+   144→   144→        public final boolean isSealed;
+   145→   145→        public final String sealedBy;
+   146→   146→        public final String spiritVeins;
+   147→   147→        public final int canonConfidence;
+   148→   148→        public final String firstAppearance;
+   149→   149→        public final List<String> knownFacts;
+   150→   150→        public final List<String> associatedFactions;
+   151→   151→        public final List<String> keyEvents;
+   152→   152→        public final String source;
+   153→   153→
+   154→   154→        public CanonLocation(String id, String name, String nameCn, LocType type,
+   155→   155→                String parentLocation, String cosmologyLayer, String worldLawTier,
+   156→   156→                boolean isSealed, String sealedBy, String spiritVeins, int canonConfidence,
+   157→   157→                String firstAppearance, List<String> knownFacts, List<String> associatedFactions,
+   158→   158→                List<String> keyEvents, String source) {
+   159→   159→            this.id = id; this.name = name; this.nameCn = nameCn; this.type = type;
+   160→   160→            this.parentLocation = parentLocation; this.cosmologyLayer = cosmologyLayer;
+   161→   161→            this.worldLawTier = worldLawTier; this.isSealed = isSealed;
+   162→   162→            this.sealedBy = sealedBy; this.spiritVeins = spiritVeins;
+   163→   163→            this.canonConfidence = canonConfidence; this.firstAppearance = firstAppearance;
+   164→   164→            this.knownFacts = knownFacts; this.associatedFactions = associatedFactions;
+   165→   165→            this.keyEvents = keyEvents; this.source = source;
+   166→   166→        }
+   167→   167→    }
+   168→   168→
+   169→   169→    /** A named artifact from the RI canon. */
+   170→   170→    public static final class CanonArtifact {
+   171→   171→        public final String id;
+   172→   172→        public final String name;
+   173→   173→        public final String nameCn;
+   174→   174→        public final ArtType type;
+   175→   175→        public final String category;
+   176→   176→        public final String currentOwner;
+   177→   177→        public final List<String> abilities;
+   178→   178→        public final String origin;
+   179→   179→        public final int canonConfidence;
+   180→   180→        public final List<String> knownFacts;
+   181→   181→        public final String source;
+   182→   182→
+   183→   183→        public CanonArtifact(String id, String name, String nameCn, ArtType type,
+   184→   184→                String category, String currentOwner, List<String> abilities,
+   185→   185→                String origin, int canonConfidence, List<String> knownFacts, String source) {
+   186→   186→            this.id = id; this.name = name; this.nameCn = nameCn; this.type = type;
+   187→   187→            this.category = category; this.currentOwner = currentOwner;
+   188→   188→            this.abilities = abilities; this.origin = origin;
+   189→   189→            this.canonConfidence = canonConfidence; this.knownFacts = knownFacts; this.source = source;
+   190→   190→        }
+   191→   191→    }
+   192→   192→
+   193→   193→    /** A named technique from the RI canon. */
+   194→   194→    public static final class CanonTechnique {
+   195→   195→        public final String id;
+   196→   196→        public final String name;
+   197→   197→        public final String nameCn;
+   198→   198→        public final TechType type;
+   199→   199→        public final String origin;
+   200→   200→        public final List<String> effects;
+   201→   201→        public final List<String> knownUsers;
+   202→   202→        public final int canonConfidence;
+   203→   203→        public final List<String> knownFacts;
+   204→   204→        public final String source;
+   205→   205→
+   206→   206→        public CanonTechnique(String id, String name, String nameCn, TechType type,
+   207→   207→                String origin, List<String> effects, List<String> knownUsers,
+   208→   208→                int canonConfidence, List<String> knownFacts, String source) {
+   209→   209→            this.id = id; this.name = name; this.nameCn = nameCn; this.type = type;
+   210→   210→            this.origin = origin; this.effects = effects;
+   211→   211→            this.knownUsers = knownUsers; this.canonConfidence = canonConfidence;
+   212→   212→            this.knownFacts = knownFacts; this.source = source;
+   213→   213→        }
+   214→   214→    }
+   215→   215→
+   216→   216→    // ── Static data (populated from ri_canon_database.json) ──────────────
+   217→   217→
+   218→   218→    /** All 158 canon characters. */
+   219→   219→    public static final List<CanonCharacter> ALL_CHARACTERS = List.of(
+   220→   220→        new CanonCharacter(
+   221→   221→            "N01", "Wang Lin", "王林", CharType.PROTAGONIST,
+   222→   222→            "Heaven Trampling", "independent (multi-sect legacy: Heng Yue Sect → Cloud Sky Sect → Soul Refining Sect → Heavenly Fate Sect → Da Lou Sword Sect → Vermilion Bird Divine Sect → Origin Sect → Great Soul Sect → Dark Scorpion Clan → Sealed Realm → Cave World owner)", "transcended", 5,
+   223→   223→            "unknown", "Planet Suzaku / Cave World / Immortal Astral Continent",
+   224→   224→            java.util.List.of(
+   225→   225→                "Discovered the Heaven Defying Bead in a dead bird under a cliff as a child",
+   226→   226→                "Awakened the Ji Realm and later inherited Tu Si's Ancient God knowledge",
+   227→   227→                "Became the 6th-Generation Vermilion Bird Divine Emperor and Lord of the Sealed Realm",
+   228→   228→                "Killed the Seven-Colored Daoist to become the owner of the Cave World",
+   229→   229→                "Transcended with Li Muwan after crossing the 9 Heaven Trampling Bridges"
+   230→   230→            ),
+   231→   231→            List.of(new RelationShip("Li Muwan", "love_interest"), new RelationShip("Li Qianmei", "love_interest"), new RelationShip("Mu Bingmei", "love_interest"), new RelationShip("Wang Ping", "family"), new RelationShip("Wang Yiyi", "family"), new RelationShip("Situ Nan", "master"), new RelationShip("Xuan Luo", "master"), new RelationShip("All-Seer", "enemy"), new RelationShip("Teng Huayuan", "enemy"), new RelationShip("Seven-Colored Daoist", "enemy"), new RelationShip("Tianyunzi", "enemy"), new RelationShip("Xu Liguo", "disciple"), new RelationShip("Thirteen", "disciple"), new RelationShip("Xie Qing", "disciple"), new RelationShip("Xi Zifeng", "disciple"), new RelationShip("Lian Daofei", "disciple"), new RelationShip("Tuo Sen", "rival"), new RelationShip("Gu Dao", "rival")),
+   232→   232→            "novel Ch.1+; Fandom wiki (main/cultivation/clones); Baidu Baike"
+   233→   233→        ),
+   234→   234→        new CanonCharacter(
+   235→   235→            "N02", "Wang Tianshui", "王天水", CharType.OTHER,
+   236→   236→            "mortal", "Wang Clan", "reincarnated", 5,
+   237→   237→            "unknown", "Wang Family Village, Country of Zhao",
+   238→   238→            java.util.List.of(
+   239→   239→                "Wang Lin's father; called him 'Tie Zhu' to ward off bad fortune",
+   240→   240→                "Killed by Teng Huayuan; soul trapped in Teng's soul flag",
+   241→   241→                "Soul rescued by Situ Nan into the Heaven Defying Bead; later released"
+   242→   242→            ),
+   243→   243→            List.of(new RelationShip("Wang Lin", "family"), new RelationShip("Zhou Tingsu", "family"), new RelationShip("Teng Huayuan", "enemy")),
+   244→   244→            "novel (early chapters); Fandom wiki; Baidu Baike"
+   245→   245→        ),
+   246→   246→        new CanonCharacter(
+   247→   247→            "N03", "Zhou Tingsu", "周婷苏 / 周颖苏", CharType.OTHER,
+   248→   248→            "mortal", "Wang Clan", "reincarnated", 5,
+   249→   249→            "unknown", "Wang Family Village, Country of Zhao",
+   250→   250→            java.util.List.of(
+   251→   251→                "Wang Lin's mother",
+   252→   252→                "Killed by Teng Huayuan; soul trapped in Teng's soul flag",
+   253→   253→                "Soul rescued by Situ Nan and later released"
+   254→   254→            ),
+   255→   255→            List.of(new RelationShip("Wang Lin", "family"), new RelationShip("Wang Tianshui", "family")),
+   256→   256→            "novel (early chapters); Fandom wiki; Baidu Baike"
+   257→   257→        ),
+   258→   258→        new CanonCharacter(
+   259→   259→            "N04", "Wang Tianshan", "王天山", CharType.ELDER,
+   260→   260→            "low-tier cultivator", "Wang Clan / Heng Yue Sect", "alive", 4,
+   261→   261→            "unknown", "Wang Family Village, Country of Zhao",
+   262→   262→            java.util.List.of(
+   263→   263→                "Wang Lin's fourth uncle; risked his sect position to get Wang Lin into Heng Yue Sect",
+   264→   264→                "Targeted by Teng Huayuan's diviner but spared",
+   265→   265→                "Survived the Wang Clan annihilation"
+   266→   266→            ),
+   267→   267→            List.of(new RelationShip("Wang Lin", "family"), new RelationShip("Teng Huayuan", "enemy")),
+   268→   268→            "novel; Fandom wiki; Baidu Baike"
+   269→   269→        ),
+   270→   270→        new CanonCharacter(
+   271→   271→            "N05", "Wang Zhuo", "王卓", CharType.DISCIPLE,
+   272→   272→            "Nascent Soul", "Wang Clan / Heng Yue Sect", "deceased", 4,
+   273→   273→            "unknown", "Wang Family Village, Country of Zhao",
+   274→   274→            java.util.List.of(
+   275→   275→                "Wang Lin's cousin; married Teng Xiuxiu under duress after clan annihilation",
+   276→   276→                "Killed his wife and himself rather than betray the Wang clan; Wang Lin saved and reincarnated him",
+   277→   277→                "Wang Lin helped him form Nascent Soul; guarded the Wang family until lifespan ended"
+   278→   278→            ),
+   279→   279→            List.of(new RelationShip("Wang Lin", "family"), new RelationShip("Teng Xiuxiu", "family"), new RelationShip("Qing Yi", "family")),
+   280→   280→            "novel; Fandom wiki; Baidu Baike"
+   281→   281→        ),
+   282→   282→        new CanonCharacter(
+   283→   283→            "N06", "Wang Hao", "王浩", CharType.DISCIPLE,
+   284→   284→            "low-tier cultivator", "Wang Clan / Heng Yue Sect", "alive", 4,
+   285→   285→            "unknown", "Wang Family Village, Country of Zhao",
+   286→   286→            java.util.List.of(
+   287→   287→                "Wang Lin's cousin",
+   288→   288→                "Spared by Teng Huayuan because he was a sect member",
+   289→   289→                "One of the few Wang Clan survivors"
+   290→   290→            ),
+   291→   291→            List.of(new RelationShip("Wang Lin", "family")),
+   292→   292→            "novel; Fandom wiki; Baidu Baike"
+   293→   293→        ),
+   294→   294→        new CanonCharacter(
+   295→   295→            "N07", "Wang Ping", "王平", CharType.OTHER,
+   296→   296→            "mortal", "none (mortal)", "reincarnated", 5,
+   297→   297→            "unknown", "Planet Ran Yun",
+   298→   298→            java.util.List.of(
+   299→   299→                "Wang Lin's son by Mu Bingmei/Liu Mei; refined into a resentful spirit by Liu Mei",
+   300→   300→                "Raised by Wang Lin as a mortal in a desolate village",
+   301→   301→                "His death triggered Wang Lin's Karma Domain evolution; eventually reunited with Wang Lin"
+   302→   302→            ),
+   303→   303→            List.of(new RelationShip("Wang Lin", "family"), new RelationShip("Mu Bingmei", "family"), new RelationShip("Qing Yi", "family")),
+   304→   304→            "novel; Fandom wiki; Baidu Baike"
+   305→   305→        ),
+   306→   306→        new CanonCharacter(
+   307→   307→            "N08", "Wang Yiyi", "王一一", CharType.OTHER,
+   308→   308→            "Paragon-tier", "Vast Dao Palace / Wang Lin's lineage", "alive", 5,
+   309→   309→            "unknown", "Xiangang Continent / AWWP Weiyang Boundary",
+   310→   310→            java.util.List.of(
+   311→   311→                "Wang Lin and Li Muwan's daughter; Saintess of the Vast Dao Palace",
+   312→   312→                "Escaped destruction of Vast Dao Palace by inhabiting a mask",
+   313→   313→                "Married Wang Baole (AWWP protagonist); brought back to Xiangang Continent by Wang Lin"
+   314→   314→            ),
+   315→   315→            List.of(new RelationShip("Wang Lin", "family"), new RelationShip("Li Muwan", "family"), new RelationShip("Wang Baole", "family")),
+   316→   316→            "novel; Fandom wiki; Baidu Baike"
+   317→   317→        ),
+   318→   318→        new CanonCharacter(
+   319→   319→            "N09", "Wang Jiduo", "王继多 / 继度", CharType.OTHER,
+   320→   320→            "Imperial Venerable", "Ancient Clan (Primordial Ancient lineage)", "alive", 4,
+   321→   321→            "unknown", "Immortal Astral Continent",
+   322→   322→            java.util.List.of(
+   323→   323→                "Wang Lin's adopted son/godson on the IAC",
+   324→   324→                "Of the Ancient Clan Primordial lineage",
+   325→   325→                "Wang Lin enabled him to become Imperial Venerable"
+   326→   326→            ),
+   327→   327→            List.of(new RelationShip("Wang Lin", "family"), new RelationShip("Song Yu", "family")),
+   328→   328→            "novel (IAC arc); Fandom wiki; Baidu Baike"
+   329→   329→        ),
+   330→   330→        new CanonCharacter(
+   331→   331→            "N10", "Zhou Ru", "周茹", CharType.OTHER,
+   332→   332→            "Infant Transformation", "Kunxu Realm (disciple of Mu Bingmei)", "reincarnated", 5,  // CRON-119: was "Soul Transformation" (炼虚), corrected to "Infant Transformation" (婴变)
+   333→   333→            "unknown", "Planet Suzaku / IAC",
+   334→   334→            java.util.List.of(
+   335→   335→                "Wang Lin's adopted daughter; vessel for Li Muwan's soul (intended)",
+   336→   336→                "Li Muwan chose not to devour Zhou Ru's soul; calls Wang Lin 'uncle'",
+   337→   337→                "Reincarnated on IAC and lives an ordinary life"
+   338→   338→            ),
+   339→   339→            List.of(new RelationShip("Wang Lin", "family"), new RelationShip("Li Muwan", "family"), new RelationShip("Mu Bingmei", "master"), new RelationShip("Xiao Bai", "ally")),
+   340→   340→            "novel; Fandom wiki; Baidu Baike"
+   341→   341→        ),
+   342→   342→        new CanonCharacter(
+   343→   343→            // CRON-COMPLETIONIST-121: 青宜 (Qing Yi, with 宜 — NOT 青衣) —
+   344→   344→            // canon-corrected entry. Web-search verified 2026-07-27 via
+   345→   345→            // Baidu Baike dedicated entry (https://baike.baidu.com/item/青宜/637430)
+   346→   346→            // + Sohu + QQ News + Zhihu timeline.
+   347→   347→            // Prior entry had: faction="Wang family" (wrong — she's Sun family),
+   348→   348→            //                 cultivation="unknown" (wrong — 炼气后期 at first appearance),
+   349→   349→            //                 location="unknown" (wrong — 冉云星 落月村).
+   350→   350→            // CRON-121 corrects all three + adds the 60-year deal, empress of
+   351→   351→            // 天行帝国, voluntary death at 72, and final revival at novel's end.
+   352→   352→            "N11", "Qing Yi", "青宜", CharType.OTHER,
+   353→   353→            "Qi Condensation Late Stage (炼气后期) → Late Nascent Soul grand completion (元婴后期大圆满)",
+   354→   354→            "Sun family (孙家) outer-surname affiliated clan on Ranyun Star", "alive", 5,
+   355→   355→            "Ranyun Star (冉云星) — 落月村 woodcarver village",
+   356→   356→            "Luo Tian Star Domain (罗天星域) north sub-region",
+   357→   357→            java.util.List.of(
+   358→   358→                "Wang Ping's wife (daughter-in-law to Wang Lin)",
+   359→   359→                "Empress (皇后) of 天行帝国 during Wang Ping's 10-year reign",
+   360→   360→                "60-year deal with Wang Lin: companionship with Wang Ping → cultivation elevation",
+   361→   361→                "Voluntarily followed Wang Ping in death at age 72 (殉情而亡); soul collected into 天逆珠",
+   362→   362→                "Revived as ordinary mortal at novel's end (Wang Lin at 踏天境)"
+   363→   363→            ),
+   364→   364→            List.of(
+   365→   365→                new RelationShip("Wang Ping", "family"),
+   366→   366→                new RelationShip("Wang Lin", "family"),
+   367→   367→                new RelationShip("Sun family (孙家)", "faction")
+   368→   368→            ),
+   369→   369→            "novel Vol 7 Ch 693 《青宜》; Baidu Baike (https://baike.baidu.com/item/青宜/637430); Sohu (https://www.sohu.com/a/1021093654_121458245); QQ News (https://view.inews.qq.com/a/20260507A07ELJ00); Zhihu timeline (https://zhuanlan.zhihu.com/p/713215901)"
+   370→   370→        ),
+   371→   371→        new CanonCharacter(
+   372→   372→            "N12", "Song Yu", "宋玉", CharType.OTHER,
+   373→   373→            "unknown", "Wang family", "alive", 4,
+   374→   374→            "unknown", "Immortal Astral Continent",
+   375→   375→            java.util.List.of("Wang Jiduo's wife"),
+   376→   376→            List.of(new RelationShip("Wang Jiduo", "family"), new RelationShip("Wang Lin", "family")),
+   377→   377→            "novel; Fandom wiki"
+   378→   378→        ),
+   379→   379→        new CanonCharacter(
+   380→   380→            "N13", "Wang Baole", "王宝乐", CharType.PROTAGONIST,
+   381→   381→            "Summer Immortal (9th Step)", "Federation / Wang Lin's lineage", "transcended", 5,
+   382→   382→            "unknown", "AWWP world",
+   383→   383→            java.util.List.of(
+   384→   384→                "AWWP protagonist; Wang Yiyi's husband, therefore Wang Lin's son-in-law",
+   385→   385→                "Mentored/protected by Wang Lin ('Paragon Wang') in AWWP",
+   386→   386→                "Inherits the Eight Extreme Dao from Wang Lin"
+   387→   387→            ),
+   388→   388→            List.of(new RelationShip("Wang Lin", "family"), new RelationShip("Wang Yiyi", "love_interest")),
+   389→   389→            "AWWP Ch.60s & Ch.69 (cross-novel); Fandom wiki; Baidu Baike"
+   390→   390→        ),
+   391→   391→        new CanonCharacter(
+   392→   392→            "N14", "Li Qiqing", "李齐青", CharType.DISCIPLE,
+   393→   393→            "elite disciple", "Luo He Sect", "alive", 4,
+   394→   394→            "unknown", "Fire Burn Country",
+   395→   395→            java.util.List.of("Li Muwan's older brother; raised her after their parents died", "Luo He Sect elite disciple"),
+   396→   396→            List.of(new RelationShip("Li Muwan", "family")),
+   397→   397→            "novel; Fandom wiki; Baidu Baike"
+   398→   398→        ),
+   399→   399→        new CanonCharacter(
+   400→   400→            "N15", "Teng Xiuxiu", "藤秀秀", CharType.OTHER,
+   401→   401→            "low-tier cultivator", "Teng Clan", "deceased", 4,
+   402→   402→            "unknown", "Country of Zhao",
+   403→   403→            java.util.List.of(
+   404→   404→                "Wang Zhuo's wife (forced marriage after Wang Clan annihilation)",
+   405→   405→                "Killed by Wang Zhuo when he chose the Wang clan over her"
+   406→   406→            ),
+   407→   407→            List.of(new RelationShip("Wang Zhuo", "family"), new RelationShip("Teng Huayuan", "family")),
+   408→   408→            "novel; Fandom wiki"
+   409→   409→        ),
+   410→   410→        new CanonCharacter(
+   411→   411→            "N16", "Dao Master Blue Dreams", "蓝梦道主", CharType.ELDER,
+   412→   412→            "Void Tribulant+", "Blue Silk Clan", "alive", 4,
+   413→   413→            "unknown", "Blue Silk Clan Star Domain",
+   414→   414→            java.util.List.of(
+   415→   415→                "Li Qianmei's father; taught Wang Lin Light Shadow Shield and Dao Art Fusion",
+   416→   416→                "Healed Li Qianmei at the cost of her memories",
+   417→   417→                "Wang Lin injured his palm at one point"
+   418→   418→            ),
+   419→   419→            List.of(new RelationShip("Li Qianmei", "family"), new RelationShip("Wang Lin", "ally")),
+   420→   420→            "novel; Fandom wiki"
+   421→   421→        ),
+   422→   422→        new CanonCharacter(
+   423→   423→            "N17", "Li Muwan", "李慕婉", CharType.OTHER,
+   424→   424→            "Treading Heaven Realm", "Luo He Sect / Cloud Sky Sect", "transcended", 5,
+   425→   425→            "unknown", "Fire Burn Country / Chu Country / Cave World",
+   426→   426→            java.util.List.of(
+   427→   427→                "Met Wang Lin escaping a Fire Beast; drained life force to refine Azure Dragon Jade Slip for him",
+   428→   428→                "Failed Nascent Soul formation multiple times; died at 500 years old",
+   429→   429→                "Soul preserved in Heaven Defying Bead 700 years; resurrected by Wang Lin at 4th Step; transcends with him"
+   430→   430→            ),
+   431→   431→            List.of(new RelationShip("Wang Lin", "love_interest"), new RelationShip("Li Qiqing", "family"), new RelationShip("Wang Yiyi", "family"), new RelationShip("Sun Zhenwei", "enemy")),
+   432→   432→            "novel; Fandom wiki; Baidu Baike"
+   433→   433→        ),
+   434→   434→        new CanonCharacter(
+   435→   435→            "N18", "Li Qianmei", "李千媚", CharType.OTHER,
+   436→   436→            "Nirvana Scryer+", "Ghost Sect / Wang Lin's lineage", "alive", 5,
+   437→   437→            "unknown", "Origin Sect / IAC",
+   438→   438→            java.util.List.of(
+   439→   439→                "Daughter of Dao Master Blue Dream; Wang Lin's second wife",
+   440→   440→                "Smeared blood on Wang Lin's stone-petrified body for 10 years to save him from Daoist Water",
+   441→   441→                "Healed by her father at the cost of losing most memories of Wang Lin"
+   442→   442→            ),
+   443→   443→            List.of(new RelationShip("Wang Lin", "love_interest"), new RelationShip("Dao Master Blue Dreams", "family"), new RelationShip("Wang Yiyi", "family")),
+   444→   444→            "novel; Fandom wiki; Baidu Baike"
+   445→   445→        ),
+   446→   446→        new CanonCharacter(
+   447→   447→            "N19", "Mu Bingmei", "木冰眉 / 柳眉", CharType.OTHER,
+   448→   448→            "Ascendant+", "Vermilion Bird Country / Divine Sect", "alive", 4,
+   449→   449→            "unknown", "Planet Suzaku / IAC",
+   450→   450→            java.util.List.of(
+   451→   451→                "Liu Mei's true form; Wang Lin's third wife",
+   452→   452→                "Had a son with Wang Lin (Wang Ping) whom she refined into a resentful spirit out of hatred",
+   453→   453→                "Wang Lin severed karmic ties with her via the Dream Dao; one of his clones accompanies her"
+   454→   454→            ),
+   455→   455→            List.of(new RelationShip("Wang Lin", "love_interest"), new RelationShip("Wang Ping", "family"), new RelationShip("Zhou Ru", "disciple")),
+   456→   456→            "novel; Fandom wiki; Baidu Baike (木冰眉 — https://baike.baidu.com/item/木冰眉/8802287)"
+   457→   457→        ),
+   458→   458→        new CanonCharacter(
+   459→   459→            "N20", "Situ Nan", "司徒南", CharType.OTHER,
+   460→   460→            "Yang Solid Peak (reconstructed); Heaven Trampling (IAC reincarnation)", "Vermilion Bird Country / Wu Xuan Country", "alive", 5,
+   461→   461→            "unknown", "Planet Suzaku / Immortal Execution Star",
+   462→   462→            java.util.List.of(
+   463→   463→                "Originally the Green Soul of the Seven-Colored Immortal Venerable; betrayed by 3rd-Gen Vermilion Bird",
+   464→   464→                "Fled into the Heaven Defying Pearl; met Wang Lin and became his first mentor",
+   465→   465→                "Sacrificed his remaining power to save Wang Lin; reincarnated on IAC as 'Si Nan' Grand Marshal of Wu Xuan Country"
+   466→   466→            ),
+   467→   467→            List.of(new RelationShip("Wang Lin", "ally"), new RelationShip("Ye Wuyou", "ally"), new RelationShip("Seven-Colored Daoist", "enemy"), new RelationShip("Third Generation Vermilion Bird Master", "enemy"), new RelationShip("Tan Lang", "enemy")),
+   468→   468→            "novel; Fandom wiki; Baidu Baike (Green Soul/2nd-Gen VB)"
+   469→   469→        ),
+   470→   470→        new CanonCharacter(
+   471→   471→            "N21", "All-Seer", "全知者", CharType.PATRIARCH,
+   472→   472→            "peak Third Step", "Heavenly Fate Sect", "deceased", 5,
+   473→   473→            "unknown", "Planet Tian Yun",
+   474→   474→            java.util.List.of(
+   475→   475→                "Mortal-realm schemer ruling the Heavenly Fate Sect; false mentor to Wang Lin",
+   476→   476→                "Plotted to absorb source origins of Wang Lin, Ling Tianhou, and Blood Ancestor",
+   477→   477→                "Taught Wang Lin the Celestial Slaughter Art with a trap inside; killed by Wang Lin"
+   478→   478→            ),
+   479→   479→            List.of(new RelationShip("Wang Lin", "enemy"), new RelationShip("Tianyunzi", "family"), new RelationShip("Blood Ancestor", "enemy"), new RelationShip("Ling Tianhou", "enemy")),
+   480→   480→            "novel; Fandom wiki; Baidu Baike"
+   481→   481→        ),
+   482→   482→        new CanonCharacter(
+   483→   483→            "N22", "Tu Si", "涂司", CharType.ELDER,
+   484→   484→            "Ancient God 8-Star", "Ancient Clan", "deceased", 5,
+   485→   485→            "unknown", "Chaotic Broken Stars",
+   486→   486→            java.util.List.of(
+   487→   487→                "His body became the Land of the Ancient God (3-level Chaotic Broken Stars realm)",
+   488→   488→                "Granted Wang Lin the 'Great Enlightened One' title and 'knowledge' inheritance",
+   489→   489→                "Tuo Sen inherited his 'power' inheritance (born from Tu Si's failed Ink Flow Split Soul Technique)"
+   490→   490→            ),
+   491→   491→            List.of(new RelationShip("Wang Lin", "disciple"), new RelationShip("Tuo Sen", "family")),
+   492→   492→            "novel; Fandom wiki; Baidu Baike"
+   493→   493→        ),
+   494→   494→        new CanonCharacter(
+   495→   495→            "N23", "Du Tian", "顿天", CharType.ELDER,
+   496→   496→            "Nirvana Scryer+", "Soul Refining Sect", "self_erased", 5,
+   497→   497→            "unknown", "Pilu Kingdom",
+   498→   498→            java.util.List.of(
+   499→   499→                "Soul Refining Sect ancestor; gave Wang Lin the Ten Billion Soul Banner and sect inheritance",
+   500→   500→                "Helped Wang Lin's clone reach Nascent Soul peak and true body reach 3-Star Ancient God",
+   501→   501→                "Erased his own consciousness to become a soul within the Soul Banner"
+   502→   502→            ),
+   503→   503→            List.of(new RelationShip("Wang Lin", "ally"), new RelationShip("Nian Tian", "family")),
+   504→   504→            "novel; Fandom wiki"
+   505→   505→        ),
+   506→   506→        new CanonCharacter(
+   507→   507→            "N24", "Bai Fan", "白凡", CharType.OTHER,
+   508→   508→            "Immortal Emperor (Third Step+)", "Thunder Immortal World", "deceased", 4,
+   509→   509→            "unknown", "Thunder Immortal World",
+   510→   510→            java.util.List.of(
+   511→   511→                "Wang Lin inherited Bai Fan's Mountain Crumble spell and Six Paths Triple Techniques",
+   512→   512→                "Found Bai Fan's Collection Pavilion in the Thunder Immortal World",
+   513→   513→                "Long dead; inheritance passed to Wang Lin"
+   514→   514→            ),
+   515→   515→            List.of(new RelationShip("Wang Lin", "disciple"), new RelationShip("Qing Shui", "ally")),
+   516→   516→            "novel (Thunder Immortal Realm); Fandom wiki"
+   517→   517→        ),
+   518→   518→        new CanonCharacter(
+   519→   519→            "N25", "Lu Yun", "陆云", CharType.OTHER,
+   520→   520→            "Void Flame Cultivator", "Four Divine Sect / Vermilion Bird Divine Sect / Heng Yue Sect", "deceased", 4,
+   521→   521→            "unknown", "Planet Suzaku",
+   522→   522→            java.util.List.of(
+   523→   523→                "5th-Gen Vermilion Bird Divine Emperor; secret identity was Huang Long Zhenren, Heng Yue Sect master",
+   524→   524→                "Gave Wang Lin the Vermilion Bird Sequence and taught him the Nine Mysterious Transformations",
+   525→   525→                "Infiltrated Cultivation Alliance HQ to gather info on Qing Shui; died after returning"
+   526→   526→            ),
+   527→   527→            List.of(new RelationShip("Wang Lin", "master")),
+   528→   528→            "novel; Fandom wiki"
+   529→   529→        ),
+   530→   530→        new CanonCharacter(
+   531→   531→            "N26", "Qing Lin", "青林", CharType.OTHER,
+   532→   532→            "Immortal Emperor", "Xiangang Continent", "alive", 4,
+   533→   533→            "unknown", "Xiangang Continent",
+   534→   534→            java.util.List.of(
+   535→   535→                "Wang Lin's 'master in name'; father of Qing Shuang",
+   536→   536→                "Left the Body Fixation Art for Qing Shuang; Wang Lin accidentally obtained it",
+   537→   537→                "Possessed by Taga (ancient demon); Wang Lin fought to save him"
+   538→   538→            ),
+   539→   539→            List.of(new RelationShip("Wang Lin", "disciple"), new RelationShip("Qing Shuang", "family"), new RelationShip("Taga", "enemy")),
+   540→   540→            "novel; Fandom wiki"
+   541→   541→        ),
+   542→   542→        new CanonCharacter(
+   543→   543→            "N27", "Su Dao", "苏道", CharType.OTHER,
+   544→   544→            "unknown", "independent (scholar)", "unknown", 3,
+   545→   545→            "unknown", "unknown",
+   546→   546→            java.util.List.of("Wang Lin's 'Scholar' mentor", "Tangential figure in the story"),
+   547→   547→            List.of(new RelationShip("Wang Lin", "master")),
+   548→   548→            "novel (implicit); Fandom wiki; C3"
+   549→   549→        ),
+   550→   550→        new CanonCharacter(
+   551→   551→            "N28", "Xuan Luo", "玄罗", CharType.ELDER,
+   552→   552→            "Great Heavenly Venerable", "Ancient Clan (Dao Gu lineage)", "alive", 5,
+   553→   553→            "unknown", "Immortal Astral Continent",
+   554→   554→            java.util.List.of(
+   555→   555→                "Wang Lin's true master (the only one he formally acknowledges on the IAC)",
+   556→   556→                "Fought Dao Yi Great Heavenly Venerable over a Primordial God Realm fragment",
+   557→   557→                "Helped over a dozen of Wang Lin's friends reincarnate into the Immortal Execution Continent"
+   558→   558→            ),
+   559→   559→            List.of(new RelationShip("Wang Lin", "disciple"), new RelationShip("Dao Yi Great Celestial Venerable", "enemy")),
+   560→   560→            "novel (IAC arc); Fandom wiki"
+   561→   561→        ),
+   562→   562→        new CanonCharacter(
+   563→   563→            "N30", "Qing Shui", "清水", CharType.ELDER,
+   564→   564→            "Third Step", "Qing Shui Kingdom / Colorful Immortal Venerable's slaughter soul", "alive", 5,
+   565→   565→            "unknown", "Cave World / Immortal Execution Star",
+   566→   566→            java.util.List.of(
+   567→   567→                "Formed from the Seven-Colored Immortal Venerable's lifetime of slaughter",
+   568→   568→                "Wang Lin's senior brother via Bai Fan's technique; saved him multiple times",
+   569→   569→                "Killed Russell with Ji Realm for offending Wang Lin; reincarnated on IAC with memories auto-recovered"
+   570→   570→            ),
+   571→   571→            List.of(new RelationShip("Wang Lin", "ally"), new RelationShip("Hong Die", "family"), new RelationShip("Seven-Colored Daoist", "family"), new RelationShip("Russell", "enemy")),
+   572→   572→            "novel; Fandom wiki"
+   573→   573→        ),
+   574→   574→        new CanonCharacter(
+   575→   575→            "N31", "Zhou Yi", "周逸", CharType.DISCIPLE,
+   576→   576→            "Wending realm", "independent (defected from original sect)", "reincarnated", 5,
+   577→   577→            "unknown", "Rain Immortal Realm / IAC",
+   578→   578→            java.util.List.of(
+   579→   579→                "Found Qing Shuang's corpse and called her 'Ting'er'; defected from his sect to protect her",
+   580→   580→                "Burned his primordial spirit in defense; reached Wending realm; gave Wending Crystal to Wang Lin",
+   581→   581→                "His primordial spirit transformed into the sword spirit of the Rain Immortal Sword"
+   582→   582→            ),
+   583→   583→            List.of(new RelationShip("Wang Lin", "ally"), new RelationShip("Qing Shuang", "love_interest")),
+   584→   584→            "novel; Fandom wiki"
+   585→   585→        ),
+   586→   586→        new CanonCharacter(
+   587→   587→            "N32", "Qing Shuang", "青霜", CharType.DISCIPLE,
+   588→   588→            "Immortal-tier", "Qing Lin lineage", "reincarnated", 5,
+   589→   589→            "unknown", "Rain Immortal Realm / IAC",
+   590→   590→            java.util.List.of(
+   591→   591→                "Qing Lin's daughter; 'Ting'er' to Zhou Yi; the Body Fixation Art was her inheritance",
+   592→   592→                "Her corpse was protected by Zhou Yi for years",
+   593→   593→                "Her remnant soul awakened and transformed Zhou Yi into the Rain Immortal Sword's spirit; reincarnated with Zhou Yi on IAC"
+   594→   594→            ),
+   595→   595→            List.of(new RelationShip("Qing Lin", "family"), new RelationShip("Zhou Yi", "love_interest"), new RelationShip("Wang Lin", "ally")),
+   596→   596→            "novel; Fandom wiki"
+   597→   597→        ),
+   598→   598→        new CanonCharacter(
+   599→   599→            "N33", "Chi Hu", "赤虎", CharType.OTHER,
+   600→   600→            "unknown", "Giant Demon Clan", "alive", 4,
+   601→
+   602→[showing lines 1-600 of 8124; use offset=601 with limit to continue reading]

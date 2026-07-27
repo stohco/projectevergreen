@@ -1,0 +1,1019 @@
+     1→package dev.ergenverse.wanglin.bead;
+     2→
+     3→import dev.ergenverse.core.Ergenverse;
+     4→import dev.ergenverse.wanglin.HeavenDefyingBead;
+     5→import dev.ergenverse.wanglin.WangLinItem;
+     6→import dev.ergenverse.wanglin.WangLinItems;
+     7→import net.minecraft.ChatFormatting;
+     8→import net.minecraft.core.particles.ParticleTypes;
+     9→import net.minecraft.network.chat.Component;
+    10→import net.minecraft.server.level.ServerPlayer;
+    11→import net.minecraft.world.InteractionHand;
+    12→import net.minecraft.world.InteractionResultHolder;
+    13→import net.minecraft.world.MenuProvider;
+    14→import net.minecraft.world.entity.player.Inventory;
+    15→import net.minecraft.world.entity.player.Player;
+    16→import net.minecraft.world.item.Item;
+    17→import net.minecraft.world.item.ItemStack;
+    18→import net.minecraft.world.item.TooltipFlag;
+    19→import net.minecraft.world.level.Level;
+    20→import net.minecraftforge.registries.ForgeRegistries;
+    21→import net.minecraftforge.registries.RegistryObject;
+    22→
+    23→import org.jetbrains.annotations.Nullable;
+    24→
+    25→import java.util.List;
+    26→
+    27→/**
+    28→ * The Heaven-Defying Bead as a Minecraft {@link Item} — the most important
+    29→ * artifact in the mod and the single most important object in Wang Lin's story.
+    30→ *
+    31→ * <p><b>Canon (Renegade Immortal, Ch. 8+):</b> Found as a youth inside the Heng
+    32→ * Yue Sect stone. Contains Situ Nan's remnant soul. Houses a growing interior
+    33→ * world with 10x time dilation. Stores Li Muwan's Nascent Soul. Fuses with
+    34→ * Wang Lin's primordial spirit at Heaven Trampling. Cross-novel artifact (Su
+    35→ * Ming, Xuan Zang also wield beads — Wang Lin's is the original).
+    36→ *
+    37→ * <h2>Dual-Nature Interaction</h2>
+    38→ * <ul>
+    39→ *   <li><b>Right-click (Divine-Sense Access):</b> Opens the bead's storage menu
+    40→ *       (BeadFunctionMenu). No dimension entry needed. Available from
+    41→ *       CRACK_OPENED stage onward.</li>
+    42→ *   <li><b>Shift+Right-click (Physical Entry):</b> Teleports the player INTO the
+    43→ *       bead's interior dimension. Available from VALLEY stage onward.</li>
+    44→ * </ul>
+    45→ *
+    46→ * <h2>NBT State</h2>
+    47→ * <p>The bead's per-stack state is stored in NBT:
+    48→ * <ul>
+    49→ *   <li>{@code Ergen.Bead.Stage} — current {@link BeadInteriorStage} ordinal</li>
+    50→ *   <li>{@code Ergen.Bead.PartsAligned} — count of 9 Parts aligned (0-9)</li>
+    51→ *   <li>{@code Ergen.Bead.SpatialStability} — spatial stability 0..10000</li>
+    52→ *   <li>{@code Ergen.Bead.OwnerAuthority} — owner authority 0..10000</li>
+    53→ *   <li>{@code Ergen.Bead.InteriorGrowth} — interior growth 0..10000</li>
+    54→ *   <li>{@code Ergen.Bead.Spirit} — current {@link HeavenDefyingBead.Spirit} ordinal</li>
+    55→ *   <li>{@code Ergen.Bead.LiMuwanSoul} — whether Li Muwan's Nascent Soul is stored</li>
+    56→ *   <li>{@code Ergen.Bead.SamsaraCount} — Samsara incarnation count</li>
+    57→ *   <li>{@code Ergen.Bead.ActiveTab} — last-opened {@link BeadFunctionTab} ordinal</li>
+    58→ * </ul>
+    59→ *
+    60→ * <h2>Prime Directive Compliance</h2>
+    61→ * <p>The bead EXISTS objectively. A mortal sees a stone bead. A Foundation+
+    62→ * cultivator senses its faint pulse. A Soul Formation+ cultivator can enter
+    63→ * the interior. The bead does not change based on who looks at it —
+    64→ * what changes is the observer's ability to interact with it.
+    65→ *
+    66→ * @see HeavenDefyingBead        — canon data model (Layer 1)
+    67→ * @see BeadInteriorStage       — interior growth stages (Layer 2)
+    68→ * @see BeadCapacityModel       — capacity calculation (Layer 2)
+    69→ * @see BeadFunctionMenu        — the storage GUI (Layer 2)
+    70→ * @see BeadDimension           — the interior dimension (Layer 2)
+    71→ */
+    72→public class HeavenDefyingBeadItem extends WangLinItem {
+    73→
+    74→    // ── NBT Keys ────────────────────────────────────────────────────
+    75→
+    76→    public static final String NBT_STAGE = "Ergen.Bead.Stage";
+    77→    public static final String NBT_PARTS_ALIGNED = "Ergen.Bead.PartsAligned";
+    78→    public static final String NBT_SPATIAL_STABILITY = "Ergen.Bead.SpatialStability";
+    79→    public static final String NBT_OWNER_AUTHORITY = "Ergen.Bead.OwnerAuthority";
+    80→    public static final String NBT_INTERIOR_GROWTH = "Ergen.Bead.InteriorGrowth";
+    81→    public static final String NBT_SPIRIT = "Ergen.Bead.Spirit";
+    82→    public static final String NBT_LI_MUWAN_SOUL = "Ergen.Bead.LiMuwanSoul";
+    83→    public static final String NBT_SAMARA_COUNT = "Ergen.Bead.SamsaraCount";
+    84→    public static final String NBT_ACTIVE_TAB = "Ergen.Bead.ActiveTab";
+    85→
+    86→    /**
+    87→     * CRON-COMPLETIONIST-100: The revival-attempt counter.
+    88→     *
+    89→     * <p>Canon basis (fact-checked via web-search 2026-07-26): Wang Lin
+    90→     * attempts to revive Li Muwan <b>137 times</b> across millennia — all
+    91→     * fail. The 137th attempt is the final failed attempt, depicted in
+    92→     * the novel as: "血色残阳笼罩着朱雀墓，王林怀中抱着生机尽散的李慕婉，
+    93→     * 她白发如雪的身体正在化作星芒消散，这是他第137次尝试复活失败"
+    94→     * (blood-red sun over the Vermilion Bird Tomb, Wang Lin cradles the
+    95→     * lifeless Li Muwan, her white-haired body dissolving into starlight —
+    96→     * this is his 137th failed revival attempt). Final success requires
+    97→     * the Fourth Step (第四步) + 一界本源 (origin of a world).
+    98→     *
+    99→     * <p>This counter tracks the player's revival attempts. Each attempt
+   100→     * is gated by:
+   101→     * <ul>
+   102→     *   <li>{@code hasLiMuwanSoul(stack)} must be true (CRON-99 event fired)</li>
+   103→     *   <li>Bead stage must have special functions (SMALL_WORLD+)</li>
+   104→     *   <li>Player realm must be at least SOUL_FORMATION (化神) — canon:
+   105→     *       Wang Lin attempts revival only after reaching high realms</li>
+   106→     *   <li>Cooldown of {@code REVIVAL_COOLDOWN_TICKS} between attempts</li>
+   107→     * </ul>
+   108→     *
+   109→     * <p>At 137 attempts, a special "final attempt" event fires. Actual
+   110→     * success requires Fourth Step realm (TRANSCENDENCE) AND a World Origin
+   111→     * Essence (一界本源) item in the player's inventory — separate gates
+   112→     * enforced by {@link RevivalAttemptService#attemptRevival}. The World
+   113→     * Origin Essence is consumed on success (CRON-COMPLETIONIST-101) —
+   114→     * canon: the world whose origin is extracted is irreversibly sacrificed.
+   115→     *
+   116→     * <p>NO fabricated chapter citation. The 137 number is canon-attested
+   117→     * via web-search; the exact chapter is not cited to avoid fabrication.
+   118→     */
+   119→    public static final String NBT_REVIVAL_ATTEMPTS = "Ergen.Bead.RevivalAttempts";
+   120→
+   121→    /**
+   122→     * CRON-COMPLETIONIST-100: The game tick of the last revival attempt.
+   123→     * Used to enforce the cooldown between attempts. Stored as a long
+   124→     * because game time is a long.
+   125→     */
+   126→    public static final String NBT_LAST_REVIVAL_TICK = "Ergen.Bead.LastRevivalTick";
+   127→
+   128→    /** Canon-attested maximum number of failed revival attempts. */
+   129→    public static final int CANON_REVIVAL_ATTEMPT_CAP = 137;
+   130→
+   131→    /**
+   132→     * CRON-COMPLETIONIST-102: Flag indicating Li Muwan has been successfully
+   133→     * revived. Set to {@code true} by {@link RevivalAttemptService#doSuccessfulRevival}
+   134→     * after the World Origin Essence is consumed and Li Muwan spawns as a
+   135→     * living NPC at the player's position.
+   136→     *
+   137→     * <p>Canon basis (web-search verified 2026-07-26): "王林踏入第四步后，
+   138→     * 成功运用一界本源将之复活，此后，两人踏天同行，超越生死轮回"
+   139→     * — after Wang Lin enters the Fourth Step and uses 一界本源 to revive
+   140→     * her, they transcend together. The revived flag marks this permanent
+   141→     * state transition: Li Muwan is no longer a trapped soul — she lives
+   142→     * again as Wang Lin's companion.
+   143→     *
+   144→     * <p>Once set to {@code true}, this flag is NEVER reset. The revival
+   145→     * is irreversible — canon: the world whose origin was extracted is
+   146→     * gone forever, and Li Muwan lives beyond the cycle of life and death.
+   147→     *
+   148→     * <p>NO fabricated chapter citation. The revival is canon-attested;
+   149→     * the exact chapter is NOT cited to avoid fabrication.
+   150→     */
+   151→    public static final String NBT_LI_MUWAN_REVIVED = "Ergen.Bead.LiMuwanRevived";
+   152→
+   153→    /**
+   154→     * CRON-COMPLETIONIST-106: NBT key tracking whether the player has
+   155→     * become the 15th-generation Suzaku Son (朱雀子) by inheriting the
+   156→     * Cultivation Planet Crystal (修炼星晶) at the Suzaku Tomb.
+   157→     *
+   158→     * <p>Canon: Wang Lin inherits the Cultivation Planet Crystal at the
+   159→     * Suzaku Tomb, becoming the 15th-generation Suzaku Son of Planet
+   160→     * Suzaku. The bead is the medium through which the inheritance's
+   161→     * spiritual Qi is absorbed — without the bead, the inheritance's
+   162→     * Qi would annihilate an unprepared cultivator.
+   163→     *
+   164→     * <p>Write-once: once set to {@code true}, never reset. The inheritance
+   165→     * is a one-time event per save (canon: Wang Lin inherits ONCE).
+   166→     *
+   167→     * <p>Set by {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}
+   168→     * when the inheritance event triggers. Read by future code that grants
+   169→     * Suzaku Son privileges (e.g., access to sealed chambers, recognition
+   170→     * by 拓森 (Tuo Sen) — now registered as a canon NPC via CRON-107,
+   171→     * {@link dev.ergenverse.runtime.CanonUUID#TUO_SEN}).
+   172→     */
+   173→    public static final String NBT_SUZAKU_SON = "Ergen.Bead.SuzakuSon";
+   174→
+   175→    /**
+   176→     * CRON-COMPLETIONIST-95: A bitfield tracking WHICH of the 9 Parts have
+   177→     * been aligned. Bit i corresponds to {@link HeavenDefyingBead.Part}
+   178→     * ordinal i (so bit 0 = CORE, bit 1 = METAL, ..., bit 8 = DEEP_MYSTERY_3).
+   179→     * Stored as a single int. Bits beyond 8 are reserved.
+   180→     *
+   181→     * <p>This is required to prevent a player from absorbing the same
+   182→     * essence twice (which would corrupt the parts-aligned count and
+   183→     * break the BeadCapacityModel's stage calculation). Without this
+   184→     * bitfield, the only state was a counter (0..9), and we couldn't
+   185→     * distinguish "2 parts aligned, both metal" from "2 parts aligned,
+   186→     * metal + wood".
+   187→     */
+   188→    public static final String NBT_ALIGNED_PARTS = "Ergen.Bead.AlignedParts";
+   189→
+   190→    // ── Constants ───────────────────────────────────────────────────
+   191→
+   192→    public HeavenDefyingBeadItem(Properties properties) {
+   193→        super(properties,
+   194→                "heaven_defying_bead",
+   195→                "Heaven-Defying Bead",
+   196→                "\u9006\u5929\u73e0",
+   197→                ArsenalCategory.ARTIFACT,
+   198→                5,   // maximum canon confidence — directly attested
+   199→                "heaven_defying_bead",
+   200→                0.0f,
+   201→                "Renegade Immortal, Ch. 8+ — Wang Lin's defining artifact");
+   202→        // Registry name is set by DeferredRegister, NOT by setRegistryName.
+   203→    }
+   204→
+   205→    // ── Interaction ─────────────────────────────────────────────────
+   206→
+   207→    /**
+   208→     * Right-click interaction — dispatches to one of three behaviors based
+   209→     * on context:
+   210→     *
+   211→     * <ol>
+   212→     *   <li><b>If the off-hand holds an Element or Dao essence</b> →
+   213→     *       absorb the essence into the bead (CRON-COMPLETIONIST-95).
+   214→     *       This is the active side of bead progression — the player
+   215→     *       aligns the 9 Parts by feeding essences to the bead. Consumes
+   216→     *       one essence item per right-click.</li>
+   217→     *   <li><b>Else if shift is held and the stage allows physical entry</b> →
+   218→     *       teleport into the bead's interior dimension (existing behavior).</li>
+   219→     *   <li><b>Else if the stage allows storage access</b> →
+   220→     *       open the divine-sense storage menu (existing behavior).</li>
+   221→     * </ol>
+   222→     *
+   223→     * <p>The essence-absorption branch takes priority over menu open so
+   224→     * the player can absorb without accidental menu popups. To open the
+   225→     * menu, the player must empty their off-hand first.
+   226→     */
+   227→    @Override
+   228→    public InteractionResultHolder<ItemStack> use(net.minecraft.world.level.Level level,
+   229→                                                   Player player, InteractionHand hand) {
+   230→        ItemStack stack = player.getItemInHand(hand);
+   231→
+   232→        if (level.isClientSide()) {
+   233→            return InteractionResultHolder.success(stack);
+   234→        }
+   235→
+   236→        BeadInteriorStage stage = getStage(stack);
+   237→
+   238→        // DORMANT_STONE: nothing happens — it's just a stone.
+   239→        if (stage == BeadInteriorStage.DORMANT_STONE) {
+   240→            player.sendSystemMessage(
+   241→                    Component.literal("The bead is cold and lifeless. A faint pattern "
+   242→                            + "of five elements is barely visible on its surface.")
+   243→                            .withStyle(ChatFormatting.GRAY));
+   244→            return InteractionResultHolder.fail(stack);
+   245→        }
+   246→
+   247→        // CRON-COMPLETIONIST-95: Essence absorption (off-hand priority).
+   248→        // If the off-hand holds an Element or Dao essence, absorb it into
+   249→        // the bead. This takes priority over menu open and dimension entry.
+   250→        ItemStack offHand = player.getItemInHand(InteractionHand.OFF_HAND);
+   251→        if (!offHand.isEmpty()) {
+   252→            EssenceType essence = identifyEssence(offHand);
+   253→            if (essence != null) {
+   254→                return tryAbsorbEssence(level, player, hand, stack, offHand, essence);
+   255→            }
+   256→        }
+   257→
+   258→        if (player.isShiftKeyDown() && stage.hasPhysicalEntry) {
+   259→            // Physical entry into the bead dimension
+   260→            if (player instanceof ServerPlayer serverPlayer) {
+   261→                enterBeadDimension(serverPlayer, stack);
+   262→            }
+   263→            return InteractionResultHolder.success(stack);
+   264→        }
+   265→
+   266→        // Divine-sense access: open the storage menu
+   267→        if (stage.hasStorageAccess) {
+   268→            if (player instanceof ServerPlayer serverPlayer) {
+   269→                openBeadMenu(serverPlayer, stack);
+   270→            }
+   271→            return InteractionResultHolder.success(stack);
+   272→        }
+   273→
+   274→        // Should not happen (CRACK_OPENED and SMALL_SPACE both have storage),
+   275→        // but handle gracefully.
+   276→        player.sendSystemMessage(
+   277→                Component.literal("The bead pulses faintly but you cannot yet "
+   278→                        + "comprehend how to access it.")
+   279→                        .withStyle(ChatFormatting.DARK_GRAY));
+   280→        return InteractionResultHolder.fail(stack);
+   281→    }
+   282→
+   283→    // ── Essence Absorption (CRON-COMPLETIONIST-95) ──────────────────────
+   284→
+   285→    /**
+   286→     * Identifies which {@link HeavenDefyingBead.Part} a given off-hand
+   287→     * stack would align. Returns {@code null} if the stack is not an
+   288→     * essence used for bead alignment.
+   289→     *
+   290→     * <p><b>Canon mapping (mod-original — see HeavenDefyingBead.Part
+   291→     * javadoc for canon vs. mod-original distinction):</b>
+   292→     * <ul>
+   293→     *   <li>{@code metal_essence} → Part METAL (canonical — Wang Lin aligns the Five Elements)</li>
+   294→     *   <li>{@code wood_essence}  → Part WOOD  (canonical)</li>
+   295→     *   <li>{@code water_essence} → Part WATER (canonical)</li>
+   296→     *   <li>{@code fire_essence}  → Part FIRE  (canonical)</li>
+   297→     *   <li>{@code earth_essence} → Part EARTH (canonical)</li>
+   298→     *   <li>{@code dao_fragment}  → Part DEEP_MYSTERY_1 (mod-original — the canon mentions 3 hidden fragments but does not enumerate which Dao items map to which; this is a reasonable mod choice as dao_fragment is the most generic Dao piece)</li>
+   299→     *   <li>{@code dao_karma}     → Part DEEP_MYSTERY_2 (mod-original — karmic resonance, matches the "reincarnation imprint" bridging-policy name)</li>
+   300→     *   <li>{@code dao_life_death}→ Part DEEP_MYSTERY_3 (mod-original — life/death is the most transcendent Dao, matches the "Heaven-Trampling bridge resonance" bridging-policy name)</li>
+   301→     * </ul>
+   302→     *
+   303→     * <p>The remaining Dao items ({@code dao_slaughter}, {@code dao_time})
+   304→     * are NOT used for bead alignment — they are separate Dao items in
+   305→     * Wang Lin's arsenal but do not correspond to a bead Part. This is
+   306→     * a deliberate mod-design choice; canon does not specify how the 3
+   307→     * hidden fragments align, so we picked the three most thematically
+   308→     * resonant Dao items.
+   309→     */
+   310→    @Nullable
+   311→    private EssenceType identifyEssence(ItemStack offHand) {
+   312→        String itemId = ForgeRegistries.ITEMS.getKey(offHand.getItem()).toString();
+   313→        return switch (itemId) {
+   314→            case "ergenverse:metal_essence"     -> EssenceType.of(HeavenDefyingBead.Part.METAL,
+   315→                    "Metal essence", "金源精魄 merges with the bead. The Metal pattern flares.");
+   316→            case "ergenverse:wood_essence"      -> EssenceType.of(HeavenDefyingBead.Part.WOOD,
+   317→                    "Wood essence",  "木源精魄 merges with the bead. The Wood pattern pulses.");
+   318→            case "ergenverse:water_essence"     -> EssenceType.of(HeavenDefyingBead.Part.WATER,
+   319→                    "Water essence", "水源精魄 merges with the bead. The Water pattern ripples.");
+   320→            case "ergenverse:fire_essence"      -> EssenceType.of(HeavenDefyingBead.Part.FIRE,
+   321→                    "Fire essence",  "火源精魄 merges with the bead. The Fire pattern blazes.");
+   322→            case "ergenverse:earth_essence"     -> EssenceType.of(HeavenDefyingBead.Part.EARTH,
+   323→                    "Earth essence", "土源精魄 merges with the bead. The Earth pattern stabilizes.");
+   324→            case "ergenverse:dao_fragment"      -> EssenceType.of(HeavenDefyingBead.Part.DEEP_MYSTERY_1,
+   325→                    "Dao Fragment",  "A fragment of the Dao sinks into the bead. A hidden resonance awakens.");
+   326→            case "ergenverse:dao_karma"         -> EssenceType.of(HeavenDefyingBead.Part.DEEP_MYSTERY_2,
+   327→                    "Dao of Karma",  "Karmic Dao sinks into the bead. The reincarnation imprint stirs.");
+   328→            case "ergenverse:dao_life_death"    -> EssenceType.of(HeavenDefyingBead.Part.DEEP_MYSTERY_3,
+   329→                    "Dao of Life and Death",  "The Dao of Life and Death sinks into the bead. The Heaven-Trampling bridge resonance awakens.");
+   330→            default -> null;
+   331→        };
+   332→    }
+   333→
+   334→    /**
+   335→     * Attempt to absorb one essence from the off-hand into the bead.
+   336→     *
+   337→     * <p>Behavior:
+   338→     * <ol>
+   339→     *   <li>If the corresponding Part is already aligned → fail with a
+   340→     *       chat message ("This essence has already been absorbed.").
+   341→     *       The essence is NOT consumed.</li>
+   342→     *   <li>Otherwise: align the Part (sets the bit + increments the
+   343→     *       counter), consumes one essence from the off-hand, spawns
+   344→     *       celebration particles, and sends a canon-flavored chat
+   345→     *       message describing the absorption.</li>
+   346→     * </ol>
+   347→     */
+   348→    private InteractionResultHolder<ItemStack> tryAbsorbEssence(
+   349→            net.minecraft.world.level.Level level, Player player,
+   350→            InteractionHand hand, ItemStack beadStack, ItemStack offHand,
+   351→            EssenceType essence) {
+   352→
+   353→        int partBitIndex = essence.part.ordinal();
+   354→
+   355→        // 1. Check if the Part is already aligned.
+   356→        if (isPartAligned(beadStack, partBitIndex)) {
+   357→            player.sendSystemMessage(
+   358→                    Component.literal("The bead rejects the " + essence.displayName
+   359→                            + " — that pattern is already aligned.")
+   360→                            .withStyle(ChatFormatting.YELLOW));
+   361→            return InteractionResultHolder.fail(beadStack);
+   362→        }
+   363→
+   364→        // 2. Canon ordering check: the Five Elements must be aligned
+   365→        //    in order (Metal → Wood → Water → Fire → Earth). The 3 hidden
+   366→        //    fragments can only be aligned after all 5 Elements are done.
+   367→        //    This is a soft canon-faithful gate — the novel depicts Wang
+   368→        //    Lin aligning the Five Elements roughly in this order, and the
+   369→        //    3 hidden fragments are late-game.
+   370→        HeavenDefyingBead.Part[] order = HeavenDefyingBead.Part.values();
+   371→        for (int i = 0; i < partBitIndex; i++) {
+   372→            if (!isPartAligned(beadStack, i)) {
+   373→                HeavenDefyingBead.Part prerequisite = order[i];
+   374→                player.sendSystemMessage(
+   375→                        Component.literal("The bead cannot yet accept the "
+   376→                                + essence.displayName + ". The "
+   377→                                + prerequisite.name
+   378→                                + " must be aligned first.")
+   379→                                .withStyle(ChatFormatting.RED));
+   380→                return InteractionResultHolder.fail(beadStack);
+   381→            }
+   382→        }
+   383→
+   384→        // 3. Consume one essence from the off-hand.
+   385→        if (!player.getAbilities().instabuild) {
+   386→            offHand.shrink(1);
+   387→        }
+   388→
+   389→        // 4. Align the Part (sets the bit + increments the counter).
+   390→        alignPart(beadStack, partBitIndex);
+   391→
+   392→        // 5. Server-side feedback: chat message + particles.
+   393→        if (player instanceof ServerPlayer serverPlayer) {
+   394→            int newCount = getPartsAligned(beadStack);
+   395→            serverPlayer.sendSystemMessage(
+   396→                    Component.literal(essence.flavorText)
+   397→                            .withStyle(ChatFormatting.GOLD));
+   398→            serverPlayer.sendSystemMessage(
+   399→                    Component.literal("  Parts Aligned: " + newCount + " / 9")
+   400→                            .withStyle(ChatFormatting.AQUA));
+   401→
+   402→            // Spawn celebration particles around the player.
+   403→            spawnAbsorptionParticles(serverPlayer);
+   404→
+   405→            Ergenverse.LOGGER.info("[Ergenverse] Player {} absorbed {} into the bead "
+   406→                            + "(parts aligned: {}/9, part={}).",
+   407→                    serverPlayer.getName().getString(), essence.displayName,
+   408→                    newCount, essence.part.name());
+   409→        }
+   410→
+   411→        return InteractionResultHolder.success(beadStack);
+   412→    }
+   413→
+   414→    /**
+   415→     * Spawn gold and dust particles around the player to celebrate the
+   416→     * absorption. Visible at any light level.
+   417→     */
+   418→    private void spawnAbsorptionParticles(ServerPlayer player) {
+   419→        if (!(player.level() instanceof net.minecraft.server.level.ServerLevel serverLevel)) return;
+   420→        double x = player.getX();
+   421→        double y = player.getY() + 1.0;  // chest height
+   422→        double z = player.getZ();
+   423→        // 20 gold particles in a sphere
+   424→        for (int i = 0; i < 20; i++) {
+   425→            double theta = (i / 20.0) * Math.PI * 2;
+   426→            double phi = ((i * 13) % 7) / 7.0 * Math.PI;  // pseudo-random sphere
+   427→            double r = 1.2;
+   428→            double dx = Math.sin(phi) * Math.cos(theta) * r;
+   429→            double dy = Math.cos(phi) * r;
+   430→            double dz = Math.sin(phi) * Math.sin(theta) * r;
+   431→            serverLevel.sendParticles(ParticleTypes.END_ROD,
+   432→                    x + dx, y + dy, z + dz, 1,
+   433→                    0.0, 0.0, 0.0, 0.0);
+   434→        }
+   435→        // Central flash
+   436→        serverLevel.sendParticles(ParticleTypes.FIREWORK,
+   437→                x, y, z, 5, 0.5, 0.5, 0.5, 0.05);
+   438→    }
+   439→
+   440→    /**
+   441→     * Returns true if the Part at {@code partIndex} (0..8) is aligned.
+   442→     */
+   443→    public boolean isPartAligned(ItemStack stack, int partIndex) {
+   444→        if (partIndex < 0 || partIndex >= 9) return false;
+   445→        if (stack.isEmpty() || !stack.hasTag()) return false;
+   446→        int bits = stack.getTag().getInt(NBT_ALIGNED_PARTS);
+   447→        return (bits & (1 << partIndex)) != 0;
+   448→    }
+   449→
+   450→    /**
+   451→     * Align the Part at {@code partIndex} (0..8). Sets the bit and
+   452→     * increments the parts-aligned counter. Does NOT recompute the stage
+   453→     * (the counter setter does that).
+   454→     */
+   455→    public void alignPart(ItemStack stack, int partIndex) {
+   456→        if (partIndex < 0 || partIndex >= 9) return;
+   457→        int bits = stack.getOrCreateTag().getInt(NBT_ALIGNED_PARTS);
+   458→        if ((bits & (1 << partIndex)) != 0) return;  // already aligned
+   459→        bits |= (1 << partIndex);
+   460→        stack.getOrCreateTag().putInt(NBT_ALIGNED_PARTS, bits);
+   461→        // Increment the parts-aligned counter (which calls recalculateStage).
+   462→        setPartsAligned(stack, getPartsAligned(stack) + 1);
+   463→    }
+   464→
+   465→    /**
+   466→     * Returns the raw aligned-parts bitfield. Bit i corresponds to Part
+   467→     * ordinal i. Useful for debugging or save-state inspection.
+   468→     */
+   469→    public int getAlignedPartsBits(ItemStack stack) {
+   470→        if (stack.isEmpty() || !stack.hasTag()) return 0;
+   471→        return stack.getTag().getInt(NBT_ALIGNED_PARTS);
+   472→    }
+   473→
+   474→    /**
+   475→     * Opens the bead's storage menu (divine-sense access).
+   476→     * The menu shows tabs based on the current interior stage.
+   477→     */
+   478→    private void openBeadMenu(ServerPlayer player, ItemStack stack) {
+   479→        BeadInteriorStage stage = getStage(stack);
+   480→        int slots = getCurrentSlots(stack);
+   481→        int activeTab = getActiveTab(stack);
+   482→
+   483→        net.minecraft.world.inventory.MenuType<?> menuType = BeadFunctionMenu.TYPE.get();
+   484→        MenuProvider provider = new MenuProvider() {
+   485→            @Override
+   486→            public Component getDisplayName() {
+   487→                return Component.literal("\u9006\u5929\u73e0 \u2014 Heaven-Defying Bead")
+   488→                        .withStyle(ChatFormatting.GOLD);
+   489→            }
+   490→
+   491→            @Override
+   492→            public net.minecraft.world.inventory.AbstractContainerMenu createMenu(
+   493→                    int containerId, Inventory playerInv, Player player) {
+   494→                return BeadFunctionMenu.create(containerId, playerInv, stack,
+   495→                        stage, slots, activeTab);
+   496→            }
+   497→        };
+   498→
+   499→        // Forge: open the menu on the server side
+   500→        net.minecraftforge.network.NetworkHooks.openScreen(player, provider, buf -> {
+   501→            buf.writeVarInt(stage.ordinal());
+   502→            buf.writeVarInt(slots);
+   503→            buf.writeVarInt(activeTab);
+   504→        });
+   505→
+   506→        Ergenverse.LOGGER.debug("[Ergenverse] Player {} opened Heaven-Defying Bead menu "
+   507→                + "(stage={}, slots={})",
+   508→                player.getName().getString(), stage, slots);
+   509→    }
+   510→
+   511→    /**
+   512→     * Teleports the player into the bead's interior dimension.
+   513→     *
+   514→     * <p>Canon: Wang Lin could physically enter the bead's interior world
+   515→     * once it had grown sufficiently (valley stage and above). Inside,
+   516→     * time runs 10x faster relative to the outside world.
+   517→     */
+   518→    private void enterBeadDimension(ServerPlayer player, ItemStack stack) {
+   519→        BeadInteriorStage stage = getStage(stack);
+   520→        double timeDilation = BeadCapacityModel.timeDilationFactor(stage);
+   521→
+   522→        if (BeadDimension.KEY == null) {
+   523→            player.sendSystemMessage(
+   524→                    Component.literal("The bead's interior dimension is not yet available.")
+   525→                            .withStyle(ChatFormatting.RED));
+   526→            return;
+   527→        }
+   528→
+   529→        // Teleport to the bead dimension
+   530→        var destination = player.server.getLevel(BeadDimension.KEY);
+   531→        if (destination == null) {
+   532→            Ergenverse.LOGGER.warn("[Ergenverse] Bead dimension not loaded, "
+   533→                    + "cannot teleport player {}", player.getName().getString());
+   534→            player.sendSystemMessage(
+   535→                    Component.literal("The bead's interior world is still forming...")
+   536→                            .withStyle(ChatFormatting.GRAY));
+   537→            return;
+   538→        }
+   539→
+   540→        player.teleportTo(destination,
+   541→                destination.getSharedSpawnPos().getX() + 0.5,
+   542→                destination.getSharedSpawnPos().getY() + 1,
+   543→                destination.getSharedSpawnPos().getZ() + 0.5,
+   544→                player.getYRot(), player.getXRot());
+   545→
+   546→        player.sendSystemMessage(
+   547→                Component.literal("You step into the Heaven-Defying Bead.")
+   548→                        .withStyle(ChatFormatting.GOLD)
+   549→                        .append(Component.literal(" Time flows " + timeDilation
+   550→                                + "x faster here.")
+   551→                                .withStyle(ChatFormatting.AQUA)));
+   552→
+   553→        Ergenverse.LOGGER.info("[Ergenverse] Player {} entered the Heaven-Defying Bead "
+   554→                + "interior (stage={}, timeDilation={})",
+   555→                player.getName().getString(), stage, timeDilation);
+   556→    }
+   557→
+   558→    // ── Tooltip ─────────────────────────────────────────────────────
+   559→
+   560→    @Override
+   561→    public void appendHoverText(ItemStack stack, @Nullable Level level,
+   562→                                List<Component> tooltip, TooltipFlag flag) {
+   563→        super.appendHoverText(stack, level, tooltip, flag);
+   564→
+   565→        BeadInteriorStage stage = getStage(stack);
+   566→        int partsAligned = getPartsAligned(stack);
+   567→        int slots = getCurrentSlots(stack);
+   568→
+   569→        // Interior stage description
+   570→        tooltip.add(Component.literal("")
+   571→                .withStyle(ChatFormatting.DARK_GRAY));
+   572→        tooltip.add(Component.literal("Interior: ")
+   573→                .withStyle(ChatFormatting.DARK_GRAY)
+   574→                .append(Component.literal(stage.description)
+   575→                        .withStyle(ChatFormatting.GOLD)));
+   576→
+   577→        // Five Elements / Parts alignment progress
+   578→        tooltip.add(Component.literal("Parts Aligned: ")
+   579→                .withStyle(ChatFormatting.DARK_GRAY)
+   580→                .append(Component.literal(partsAligned + " / 9")
+   581→                        .withStyle(partsAligned >= 6
+   582→                                ? ChatFormatting.GOLD : ChatFormatting.AQUA)));
+   583→
+   584→        if (partsAligned < 6) {
+   585→            tooltip.add(Component.literal("  (Align all 5 elements to gain true ownership)")
+   586→                    .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+   587→        }
+   588→
+   589→        // Storage capacity
+   590→        if (stage.hasStorageAccess) {
+   591→            tooltip.add(Component.literal("Storage: ")
+   592→                    .withStyle(ChatFormatting.DARK_GRAY)
+   593→                    .append(Component.literal(slots + " slots")
+   594→                            .withStyle(ChatFormatting.GREEN)));
+   595→        }
+   596→
+   597→        // Spirit
+   598→        HeavenDefyingBead.Spirit spirit = getSpirit(stack);
+   599→        if (spirit != HeavenDefyingBead.Spirit.NONE) {
+   600→            tooltip.add(Component.literal("Spirit: ")
+   601→                    .withStyle(ChatFormatting.DARK_GRAY)
+   602→                    .append(Component.literal(spirit.name)
+   603→                            .withStyle(ChatFormatting.LIGHT_PURPLE)));
+   604→        }
+   605→
+   606→        // Time dilation
+   607→        if (stage.hasTimeDilation) {
+   608→            tooltip.add(Component.literal("Time Dilation: ")
+   609→                    .withStyle(ChatFormatting.DARK_GRAY)
+   610→                    .append(Component.literal("10x (1h inside = 10h outside)")
+   611→                            .withStyle(ChatFormatting.AQUA)));
+   612→        }
+   613→
+   614→        // Li Muwan's Nascent Soul
+   615→        if (hasLiMuwanSoul(stack)) {
+   616→            tooltip.add(Component.literal("Contains: ")
+   617→                    .withStyle(ChatFormatting.DARK_GRAY)
+   618→                    .append(Component.literal("Li Muwan's Nascent Soul")
+   619→                            .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC)));
+   620→
+   621→            // CRON-COMPLETIONIST-100: Revival attempt counter.
+   622→            // Only shown when Li Muwan's soul is present (the counter is
+   623→            // meaningless without it). Displays "Revival Attempts: X / 137"
+   624→            // in GOLD for visibility — this is Wang Lin's central quest.
+   625→            int attempts = getRevivalAttempts(stack);
+   626→            tooltip.add(Component.literal("Revival Attempts: ")
+   627→                    .withStyle(ChatFormatting.DARK_GRAY)
+   628→                    .append(Component.literal(attempts + " / " + CANON_REVIVAL_ATTEMPT_CAP)
+   629→                            .withStyle(ChatFormatting.GOLD)));
+   630→
+   631→            // CRON-COMPLETIONIST-102: Revived flag.
+   632→            // Only shown when Li Muwan has been successfully revived — the
+   633→            // endgame state. Displays "Li Muwan: REVIVED" in GOLD+BOLD.
+   634→            if (isLiMuwanRevived(stack)) {
+   635→                tooltip.add(Component.literal("李慕婉：已复活  ·  ")
+   636→                        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
+   637→                        .append(Component.literal("Li Muwan: REVIVED")
+   638→                                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)));
+   639→                tooltip.add(Component.literal("  两人踏天同行，超越生死轮回")
+   640→                        .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+   641→            }
+   642→        }
+   643→
+   644→        // Available tabs
+   645→        tooltip.add(Component.literal("")
+   646→                .withStyle(ChatFormatting.DARK_GRAY));
+   647→        tooltip.add(Component.literal("Functions: ")
+   648→                .withStyle(ChatFormatting.DARK_GRAY));
+   649→        for (BeadFunctionTab tab : BeadFunctionTab.values()) {
+   650→            if (stage.tabAvailable(tab)) {
+   651→                tooltip.add(Component.literal("  [")
+   652→                        .withStyle(ChatFormatting.DARK_GRAY)
+   653→                        .append(Component.literal(tab.label)
+   654→                                .withStyle(ChatFormatting.GREEN))
+   655→                        .append(Component.literal("]")
+   656→                                .withStyle(ChatFormatting.DARK_GRAY)));
+   657→            }
+   658→        }
+   659→
+   660→        // Interaction hints
+   661→        tooltip.add(Component.literal("")
+   662→                .withStyle(ChatFormatting.DARK_GRAY));
+   663→        if (stage.hasStorageAccess) {
+   664→            tooltip.add(Component.literal("Right-click: Open storage menu")
+   665→                    .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+   666→        }
+   667→        if (stage.hasPhysicalEntry) {
+   668→            tooltip.add(Component.literal("Shift+Right-click: Enter interior world")
+   669→                    .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+   670→        }
+   671→
+   672→        // Canon source
+   673→        tooltip.add(Component.literal("Renegade Immortal, Ch. 8+ — Wang Lin's defining artifact")
+   674→                .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+   675→
+   676→        if (flag.isAdvanced()) {
+   677→            tooltip.add(Component.literal("BeadID: heaven_defying_bead")
+   678→                    .withStyle(ChatFormatting.DARK_GRAY));
+   679→        }
+   680→    }
+   681→
+   682→    // ── NBT State Accessors ─────────────────────────────────────────
+   683→
+   684→    /** Get the current interior stage. */
+   685→    public BeadInteriorStage getStage(ItemStack stack) {
+   686→        if (stack.isEmpty() || !stack.hasTag()) return BeadInteriorStage.DORMANT_STONE;
+   687→        int ordinal = stack.getTag().getInt(NBT_STAGE);
+   688→        BeadInteriorStage[] values = BeadInteriorStage.values();
+   689→        if (ordinal < 0 || ordinal >= values.length) return BeadInteriorStage.DORMANT_STONE;
+   690→        return values[ordinal];
+   691→    }
+   692→
+   693→    /** Set the interior stage. Called by event-driven progression. */
+   694→    public void setStage(ItemStack stack, BeadInteriorStage stage) {
+   695→        stack.getOrCreateTag().putInt(NBT_STAGE, stage.ordinal());
+   696→    }
+   697→
+   698→    /** Get the number of the 9 Parts aligned (0-9). */
+   699→    public int getPartsAligned(ItemStack stack) {
+   700→        if (stack.isEmpty() || !stack.hasTag()) return 0;
+   701→        return Math.min(9, Math.max(0, stack.getTag().getInt(NBT_PARTS_ALIGNED)));
+   702→    }
+   703→
+   704→    /** Set parts aligned count. */
+   705→    public void setPartsAligned(ItemStack stack, int count) {
+   706→        stack.getOrCreateTag().putInt(NBT_PARTS_ALIGNED, Math.min(9, Math.max(0, count)));
+   707→        recalculateStage(stack);
+   708→    }
+   709→
+   710→    /** Get spatial stability (0-10000). */
+   711→    public int getSpatialStability(ItemStack stack) {
+   712→        if (stack.isEmpty() || !stack.hasTag()) return 0;
+   713→        return Math.min(10000, Math.max(0, stack.getTag().getInt(NBT_SPATIAL_STABILITY)));
+   714→    }
+   715→
+   716→    /** Set spatial stability. */
+   717→    public void setSpatialStability(ItemStack stack, int value) {
+   718→        stack.getOrCreateTag().putInt(NBT_SPATIAL_STABILITY, Math.min(10000, Math.max(0, value)));
+   719→        recalculateStage(stack);
+   720→    }
+   721→
+   722→    /** Get owner authority (0-10000). */
+   723→    public int getOwnerAuthority(ItemStack stack) {
+   724→        if (stack.isEmpty() || !stack.hasTag()) return 0;
+   725→        return Math.min(10000, Math.max(0, stack.getTag().getInt(NBT_OWNER_AUTHORITY)));
+   726→    }
+   727→
+   728→    /** Set owner authority. */
+   729→    public void setOwnerAuthority(ItemStack stack, int value) {
+   730→        stack.getOrCreateTag().putInt(NBT_OWNER_AUTHORITY, Math.min(10000, Math.max(0, value)));
+   731→        recalculateStage(stack);
+   732→    }
+   733→
+   734→    /** Get interior growth (0-10000). */
+   735→    public int getInteriorGrowth(ItemStack stack) {
+   736→        if (stack.isEmpty() || !stack.hasTag()) return 0;
+   737→        return Math.min(10000, Math.max(0, stack.getTag().getInt(NBT_INTERIOR_GROWTH)));
+   738→    }
+   739→
+   740→    /** Set interior growth. */
+   741→    public void setInteriorGrowth(ItemStack stack, int value) {
+   742→        stack.getOrCreateTag().putInt(NBT_INTERIOR_GROWTH, Math.min(10000, Math.max(0, value)));
+   743→        recalculateStage(stack);
+   744→    }
+   745→
+   746→    /** Get the bound spirit. */
+   747→    public HeavenDefyingBead.Spirit getSpirit(ItemStack stack) {
+   748→        if (stack.isEmpty() || !stack.hasTag()) return HeavenDefyingBead.Spirit.NONE;
+   749→        int ordinal = stack.getTag().getInt(NBT_SPIRIT);
+   750→        HeavenDefyingBead.Spirit[] values = HeavenDefyingBead.Spirit.values();
+   751→        if (ordinal < 0 || ordinal >= values.length) return HeavenDefyingBead.Spirit.NONE;
+   752→        return values[ordinal];
+   753→    }
+   754→
+   755→    /** Set the bound spirit. */
+   756→    public void setSpirit(ItemStack stack, HeavenDefyingBead.Spirit spirit) {
+   757→        stack.getOrCreateTag().putInt(NBT_SPIRIT, spirit.ordinal());
+   758→    }
+   759→
+   760→    /** Whether Li Muwan's Nascent Soul is stored in this bead. */
+   761→    public boolean hasLiMuwanSoul(ItemStack stack) {
+   762→        if (stack.isEmpty() || !stack.hasTag()) return false;
+   763→        return stack.getTag().getBoolean(NBT_LI_MUWAN_SOUL);
+   764→    }
+   765→
+   766→    /** Store Li Muwan's Nascent Soul. Canon: after her body perished. */
+   767→    public void setLiMuwanSoul(ItemStack stack, boolean present) {
+   768→        stack.getOrCreateTag().putBoolean(NBT_LI_MUWAN_SOUL, present);
+   769→        if (present) {
+   770→            Ergenverse.LOGGER.info("[Ergenverse] Heaven-Defying Bead: Li Muwan's "
+   771→                    + "Nascent Soul stored. The motivation is now absolute.");
+   772→        }
+   773→    }
+   774→
+   775→    // ── CRON-COMPLETIONIST-100: Revival Attempt Accessors ──────────────
+   776→
+   777→    /**
+   778→     * Get the number of failed revival attempts (0..137).
+   779→     *
+   780→     * <p>Canon: Wang Lin attempts revival 137 times, all fail. The counter
+   781→     * caps at {@link #CANON_REVIVAL_ATTEMPT_CAP} (137) — additional attempts
+   782→     * beyond 137 are rejected by {@link RevivalAttemptService}.
+   783→     *
+   784→     * @param stack the bead stack
+   785→     * @return the attempt count, clamped to [0, 137]
+   786→     */
+   787→    public int getRevivalAttempts(ItemStack stack) {
+   788→        if (stack.isEmpty() || !stack.hasTag()) return 0;
+   789→        return Math.min(CANON_REVIVAL_ATTEMPT_CAP,
+   790→                Math.max(0, stack.getTag().getInt(NBT_REVIVAL_ATTEMPTS)));
+   791→    }
+   792→
+   793→    /**
+   794→     * Set the revival attempt count. Clamped to [0, 137].
+   795→     *
+   796→     * <p>Does NOT call {@code recalculateStage} — the attempt count does
+   797→     * not affect the bead's interior stage (it's a quest tracker, not a
+   798→     * progression factor).
+   799→     *
+   800→     * @param stack the bead stack
+   801→     * @param count the new attempt count
+   802→     */
+   803→    public void setRevivalAttempts(ItemStack stack, int count) {
+   804→        stack.getOrCreateTag().putInt(NBT_REVIVAL_ATTEMPTS,
+   805→                Math.min(CANON_REVIVAL_ATTEMPT_CAP, Math.max(0, count)));
+   806→    }
+   807→
+   808→    /**
+   809→     * Get the game tick of the last revival attempt.
+   810→     *
+   811→     * <p>Used by {@link RevivalAttemptService} to enforce the cooldown.
+   812→     * Returns 0 if no attempt has been made (treated as "cooldown expired"
+   813→     * by the service).
+   814→     *
+   815→     * @param stack the bead stack
+   816→     * @return the game tick, or 0 if never attempted
+   817→     */
+   818→    public long getLastRevivalAttemptTick(ItemStack stack) {
+   819→        if (stack.isEmpty() || !stack.hasTag()) return 0L;
+   820→        return stack.getTag().getLong(NBT_LAST_REVIVAL_TICK);
+   821→    }
+   822→
+   823→    /**
+   824→     * Set the game tick of the last revival attempt.
+   825→     *
+   826→     * @param stack the bead stack
+   827→     * @param tick  the game tick
+   828→     */
+   829→    public void setLastRevivalAttemptTick(ItemStack stack, long tick) {
+   830→        stack.getOrCreateTag().putLong(NBT_LAST_REVIVAL_TICK, Math.max(0L, tick));
+   831→    }
+   832→
+   833→    /**
+   834→     * CRON-COMPLETIONIST-102: Check whether Li Muwan has been successfully
+   835→     * revived. Returns {@code false} for beads that have never reached the
+   836→     * success path (the vast majority of beads).
+   837→     *
+   838→     * <p>Once {@code true}, this flag is permanent — the revival is
+   839→     * irreversible (canon: the sacrificed world is gone forever).
+   840→     *
+   841→     * @param stack the bead stack
+   842→     * @return {@code true} if Li Muwan has been revived via the success path
+   843→     */
+   844→    public boolean isLiMuwanRevived(ItemStack stack) {
+   845→        if (stack.isEmpty() || !stack.hasTag()) return false;
+   846→        return stack.getTag().getBoolean(NBT_LI_MUWAN_REVIVED);
+   847→    }
+   848→
+   849→    /**
+   850→     * CRON-COMPLETIONIST-102: Mark Li Muwan as revived. Called ONLY by
+   851→     * {@link RevivalAttemptService#doSuccessfulRevival} after the World
+   852→     * Origin Essence is consumed and Li Muwan spawns as a living NPC.
+   853→     *
+   854→     * <p>This flag is write-once — once set to {@code true}, it is never
+   855→     * reset. Calling this with {@code false} is a no-op if the flag is
+   856→     * already {@code true} (defensive: prevents accidental un-revival).
+   857→     *
+   858→     * @param stack the bead stack
+   859→     * @param revived {@code true} to mark Li Muwan as revived
+   860→     */
+   861→    public void setLiMuwanRevived(ItemStack stack, boolean revived) {
+   862→        if (!revived) return;  // write-once: can't un-revive
+   863→        stack.getOrCreateTag().putBoolean(NBT_LI_MUWAN_REVIVED, true);
+   864→    }
+   865→
+   866→    /**
+   867→     * CRON-COMPLETIONIST-106: Check whether the player has become the
+   868→     * 15th-generation Suzaku Son by inheriting the Cultivation Planet Crystal.
+   869→     *
+   870→     * @param stack the bead stack
+   871→     * @return {@code true} if the Suzaku Son inheritance has been triggered
+   872→     *         via {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}
+   873→     */
+   874→    public boolean isSuzakuSon(ItemStack stack) {
+   875→        if (stack.isEmpty() || !stack.hasTag()) return false;
+   876→        return stack.getTag().getBoolean(NBT_SUZAKU_SON);
+   877→    }
+   878→
+   879→    /**
+   880→     * CRON-COMPLETIONIST-106: Mark the player as the 15th-generation Suzaku
+   881→     * Son. Called ONLY by {@link dev.ergenverse.block.CultivationPlanetCrystalBlock#use}
+   882→     * after the inheritance event triggers (prerequisites: bead in hand,
+   883→     * realm ≥ Nascent Soul, Crystal not yet inherited).
+   884→     *
+   885→     * <p>This flag is write-once — once set to {@code true}, it is never
+   886→     * reset. Calling this with {@code false} is a no-op if the flag is
+   887→     * already {@code true} (defensive: prevents accidental un-inheritance).
+   888→     *
+   889→     * @param stack the bead stack
+   890→     * @param suzakuSon {@code true} to mark as Suzaku Son
+   891→     */
+   892→    public void setSuzakuSon(ItemStack stack, boolean suzakuSon) {
+   893→        if (!suzakuSon) return;  // write-once: can't un-inherit
+   894→        stack.getOrCreateTag().putBoolean(NBT_SUZAKU_SON, true);
+   895→    }
+   896→
+   897→    /** Get the Samsara incarnation count stored in the bead. */
+   898→    public int getSamsaraCount(ItemStack stack) {
+   899→        if (stack.isEmpty() || !stack.hasTag()) return 0;
+   900→        return Math.max(0, stack.getTag().getInt(NBT_SAMARA_COUNT));
+   901→    }
+   902→
+   903→    /** Set the Samsara incarnation count. */
+   904→    public void setSamsaraCount(ItemStack stack, int count) {
+   905→        stack.getOrCreateTag().putInt(NBT_SAMARA_COUNT, Math.max(0, count));
+   906→    }
+   907→
+   908→    /** Get the last-opened function tab. */
+   909→    public int getActiveTab(ItemStack stack) {
+   910→        if (stack.isEmpty() || !stack.hasTag()) return 0;
+   911→        return stack.getTag().getInt(NBT_ACTIVE_TAB);
+   912→    }
+   913→
+   914→    /** Set the last-opened function tab. */
+   915→    public void setActiveTab(ItemStack stack, int tabOrdinal) {
+   916→        stack.getOrCreateTag().putInt(NBT_ACTIVE_TAB, tabOrdinal);
+   917→    }
+   918→
+   919→    /** Get current storage slot count. */
+   920→    public int getCurrentSlots(ItemStack stack) {
+   921→        double stability = getSpatialStability(stack) / 10000.0;
+   922→        double restoration = getPartsAligned(stack) / 9.0;
+   923→        double authority = getOwnerAuthority(stack) / 10000.0;
+   924→        double interior = getInteriorGrowth(stack) / 10000.0;
+   925→        return BeadCapacityModel.storageSlots(stability, restoration, authority, interior);
+   926→    }
+   927→
+   928→    /**
+   929→     * Recalculate the interior stage from the four factors and update NBT.
+   930→     * Called whenever any factor changes.
+   931→     */
+   932→    private void recalculateStage(ItemStack stack) {
+   933→        double stability = getSpatialStability(stack) / 10000.0;
+   934→        double restoration = getPartsAligned(stack) / 9.0;
+   935→        double authority = getOwnerAuthority(stack) / 10000.0;
+   936→        double interior = getInteriorGrowth(stack) / 10000.0;
+   937→        BeadInteriorStage newStage = BeadCapacityModel.stageFor(
+   938→                stability, restoration, authority, interior);
+   939→        setStage(stack, newStage);
+   940→    }
+   941→
+   942→    /**
+   943→     * Initialize a fresh bead stack to CRACK_OPENED stage with Situ Nan.
+   944→     * Called when the player first obtains the bead (e.g., via command or
+   945→     * the Heng Yue Sect discovery event).
+   946→     *
+   947→     * <p>Canon: the bead starts as a stone (DORMANT_STONE). After Situ Nan
+   948→     * blasts it open, it reveals a small interior chamber (CRACK_OPENED).
+   949→     * This method simulates that first opening.
+   950→     *
+   951→     * <p><b>CRON-COMPLETIONIST-95 FIX:</b> Previously this returned
+   952→     * {@link ItemStack#EMPTY}, leaving no programmatic way to create an
+   953→     * initialized bead. Now resolves the bead item via {@link WangLinItems}
+   954→     * and applies the opening event. Returns {@link ItemStack#EMPTY} only
+   955→     * if the bead item is not yet registered (e.g., called before
+   956→     * Forge registry event fires).
+   957→     */
+   958→    public static ItemStack createInitialBead() {
+   959→        RegistryObject<Item> beadRO = WangLinItems.get("wanglin/heaven_defying_bead");
+   960→        if (beadRO == null || !beadRO.isPresent()) {
+   961→            Ergenverse.LOGGER.warn("[Ergenverse] HeavenDefyingBeadItem.createInitialBead: "
+   962→                    + "heaven_defying_bead not registered — returning EMPTY.");
+   963→            return ItemStack.EMPTY;
+   964→        }
+   965→        ItemStack stack = new ItemStack(beadRO.get());
+   966→        applyInitialOpening(stack);
+   967→        return stack;
+   968→    }
+   969→
+   970→    /**
+   971→     * Apply the initial opening event to an existing bead stack.
+   972→     * Transitions from DORMANT_STONE to CRACK_OPENED with Situ Nan present.
+   973→     *
+   974→     * <p>Canon: Ch. 8 — Wang Lin finds the bead as a stone. Situ Nan's
+   975→     * remnant soul is inside. The bead cracks open, revealing a small chamber.
+   976→     *
+   977→     * <p><b>CRON-COMPLETIONIST-95:</b> Also sets the CORE bit in the
+   978→     * AlignedParts bitfield, so the player cannot accidentally absorb a
+   979→     * "core" essence (there is none — the core is the bead itself).
+   980→     */
+   981→    public static void applyInitialOpening(ItemStack stack) {
+   982→        if (!(stack.getItem() instanceof HeavenDefyingBeadItem beadItem)) return;
+   983→
+   984→        // CRON-95: align the CORE part (bit 0) BEFORE setting the counter,
+   985→        // so the bitfield and counter stay in sync.
+   986→        int bits = stack.getOrCreateTag().getInt(NBT_ALIGNED_PARTS);
+   987→        bits |= (1 << HeavenDefyingBead.Part.CORE.ordinal());
+   988→        stack.getOrCreateTag().putInt(NBT_ALIGNED_PARTS, bits);
+   989→
+   990→        beadItem.setPartsAligned(stack, 1);  // CORE only
+   991→        beadItem.setSpatialStability(stack, 1000);  // unstable but present
+   992→        beadItem.setOwnerAuthority(stack, 500);  // faint recognition
+   993→        beadItem.setInteriorGrowth(stack, 0);
+   994→        beadItem.setSpirit(stack, HeavenDefyingBead.Spirit.SITU_NAN);
+   995→        // recalculateStage is called inside setPartsAligned
+   996→    }
+   997→
+   998→    // ── Essence Type Helper (CRON-COMPLETIONIST-95) ────────────────────
+   999→
+  1000→    /**
+  1001→     * A resolved essence type — the Part it aligns plus display info.
+  1002→     * Used by {@link #identifyEssence} to dispatch absorption.
+  1003→     */
+  1004→    private static final class EssenceType {
+  1005→        final HeavenDefyingBead.Part part;
+  1006→        final String displayName;
+  1007→        final String flavorText;
+  1008→
+  1009→        private EssenceType(HeavenDefyingBead.Part part, String displayName, String flavorText) {
+  1010→            this.part = part;
+  1011→            this.displayName = displayName;
+  1012→            this.flavorText = flavorText;
+  1013→        }
+  1014→
+  1015→        static EssenceType of(HeavenDefyingBead.Part part, String displayName, String flavorText) {
+  1016→            return new EssenceType(part, displayName, flavorText);
+  1017→        }
+  1018→    }
+  1019→}

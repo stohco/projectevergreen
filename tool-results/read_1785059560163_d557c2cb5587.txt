@@ -1,0 +1,756 @@
+     1→package dev.ergenverse.simulation.residence;
+     2→
+     3→import dev.ergenverse.core.Ergenverse;
+     4→import dev.ergenverse.runtime.WorldRuntime;
+     5→import net.minecraft.core.BlockPos;
+     6→import net.minecraft.core.Direction;
+     7→import net.minecraft.resources.ResourceLocation;
+     8→import net.minecraft.server.level.ServerLevel;
+     9→import net.minecraft.world.level.block.Block;
+    10→import net.minecraft.world.level.block.Blocks;
+    11→import net.minecraft.world.level.block.DoorBlock;
+    12→import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+    13→import net.minecraft.world.level.block.state.BlockState;
+    14→import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+    15→import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+    16→import net.minecraftforge.registries.ForgeRegistries;
+    17→
+    18→/**
+    19→ * BlockPlacementEngine — translates a {@link ResidenceManifest} into
+    20→ * Minecraft blocks placed in the world.
+    21→ *
+    22→ * <p>Per Article XLVII: "The house is literally generated from the resident."
+    23→ * This engine is the rendering layer: it reads the manifest (which was derived
+    24→ * from a ResidentProfile) and places the correct blocks for each room.
+    25→ *
+    26→ * <p>This engine is HAND-AUTHORED. Each room type has an explicit block-layout
+    27→ * method. There is NO procedural generation. The block palette for each room
+    28→ * purpose is explicit in code. If you change the palette, ALL residences of
+    29→ * that type change consistently — exactly as Article XLVII requires.
+    30→ *
+    31→ * <p>Per Article XXVI: this is NOT a new Engine in the infrastructure sense.
+    32→ * It is a placement utility that reads the existing ResidenceManifest and places
+    33→ * blocks. No new bus, no new subscriber, no new store.
+    34→ *
+    35→ * <h2>Block Palette (Wang Family Village — humble mortal construction)</h2>
+    36→ * <ul>
+    37→ *   <li>Walls: OAK_PLANKS</li>
+    38→ *   <li>Corners/Posts: OAK_LOG</li>
+    39→ *   <li>Floor: OAK_PLANKS (interior), COBBLESTONE (foundation/exterior)</li>
+    40→ *   <li>Ceiling: OAK_PLANKS (solid) or AIR (courtyard/outdoor)</li>
+    41→ *   <li>Roof: OAK_STAIRS (sloped) or OAK_SLAB (flat)</li>
+    42→ *   <li>Door: OAK_DOOR (normal) or IRON_DOOR (defensive)</li>
+    43→ *   <li>Fence: OAK_FENCE + OAK_FENCE_GATE</li>
+    44→ * </ul>
+    45→ *
+    46→ * <h2>Room placement flow</h2>
+    47→ * <pre>
+    48→ *   ResidenceManifest → placeResidence(level, origin)
+    49→ *     → for each room: placeRoomByPurpose(level, roomOrigin, roomSpec)
+    50→ *       → specific method per RoomPurpose (placeEntry, placeBedroom, etc.)
+    51→ *         → helper methods: placeWalls, placeFloor, placeCeiling, placeBox
+    52→ * </pre>
+    53→ */
+    54→public final class BlockPlacementEngine {
+    55→
+    56→    // ── Block Palette (Wang Family Village humble construction) ──────
+    57→
+    58→    /** Wall material for humble village buildings. */
+    59→    private static final BlockState WALL_PLANKS = Blocks.OAK_PLANKS.defaultBlockState();
+    60→    /** Corner posts and structural beams. */
+    61→    private static final BlockState CORNER_LOG = Blocks.STRIPPED_OAK_LOG.defaultBlockState();
+    62→    /** Interior floor. */
+    63→    private static final BlockState FLOOR_PLANKS = Blocks.OAK_PLANKS.defaultBlockState();
+    64→    /** Foundation / exterior floor. */
+    65→    private static final BlockState FLOOR_COBBLE = Blocks.COBBLESTONE.defaultBlockState();
+    66→    /** Interior ceiling. */
+    67→    private static final BlockState CEILING_PLANKS = Blocks.OAK_PLANKS.defaultBlockState();
+    68→    /** Flat roof surface. */
+    69→    private static final BlockState ROOF_SLAB = Blocks.OAK_SLAB.defaultBlockState();
+    70→    /** Sloped roof edge. */
+    71→    private static final BlockState ROOF_STAIRS_EAST = Blocks.OAK_STAIRS
+    72→            .defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST);
+    73→    private static final BlockState ROOF_STAIRS_WEST = Blocks.OAK_STAIRS
+    74→            .defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST);
+    75→    private static final BlockState ROOF_STAIRS_NORTH = Blocks.OAK_STAIRS
+    76→            .defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH);
+    77→    private static final BlockState ROOF_STAIRS_SOUTH = Blocks.OAK_STAIRS
+    78→            .defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH);
+    79→    /** Air — used to clear space. */
+    80→    private static final BlockState AIR = Blocks.AIR.defaultBlockState();
+    81→    /** Bed head (red wool for warmth). */
+    82→    private static final BlockState BED_HEAD = Blocks.RED_WOOL.defaultBlockState();
+    83→    /** Bed foot (white wool for pillow end). */
+    84→    private static final BlockState BED_FOOT = Blocks.WHITE_WOOL.defaultBlockState();
+    85→    /** Meditation mat (white carpet). */
+    86→    private static final BlockState MEDITATION_MAT = Blocks.WHITE_CARPET.defaultBlockState();
+    87→    /** Spirit stone inlay for qi gathering array. */
+    88→    private static final BlockState SPIRIT_STONE_INLAY = Blocks.SMOOTH_STONE.defaultBlockState();
+    89→    /** Crafting table. */
+    90→    private static final BlockState CRAFTING_TABLE = Blocks.CRAFTING_TABLE.defaultBlockState();
+    91→    /** Furnace. */
+    92→    private static final BlockState FURNACE = Blocks.FURNACE.defaultBlockState();
+    93→    /** Chest for storage. */
+    94→    private static final BlockState CHEST = Blocks.CHEST.defaultBlockState();
+    95→    /** Cauldron (water). */
+    96→    private static final BlockState CAULDRON = Blocks.CAULDRON.defaultBlockState();
+    97→    /** Iron trapdoor (hidden stash cover). */
+    98→    private static final BlockState IRON_TRAPDOOR = Blocks.IRON_TRAPDOOR.defaultBlockState();
+    99→    /** Ladder for roof access. */
+   100→    private static final BlockState LADDER = Blocks.LADDER.defaultBlockState();
+   101→    /** Torch for interior lighting. */
+   102→    private static final BlockState TORCH_WALL = Blocks.WALL_TORCH.defaultBlockState();
+   103→    /** Oak fence. */
+   104→    private static final BlockState OAK_FENCE = Blocks.OAK_FENCE.defaultBlockState();
+   105→    /** Anvil (workshop). */
+   106→    private static final BlockState ANVIL = Blocks.ANVIL.defaultBlockState();
+   107→    /** Stonecutter / workspace. */
+   108→    private static final BlockState STONECUTTER = Blocks.STONECUTTER.defaultBlockState();
+   109→
+   110→    private BlockPlacementEngine() {}
+   111→
+   112→    // ═══════════════════════════════════════════════════════════════════
+   113→    //  Public API
+   114→    // ═══════════════════════════════════════════════════════════════════
+   115→
+   116→    /**
+   117→     * Place an entire residence from its manifest.
+   118→     * The origin is the northwest corner of the bounding box.
+   119→     * Each room's position is computed from a fixed floor plan.
+   120→     *
+   121→     * <p><b>IMPORTANT:</b> This method clears the area first (fills with AIR),
+   122→     * then places the structure. This is safe for first-time placement but
+   123→     * destructive if called twice at the same location.
+   124→     *
+   125→     * @param level   the server level
+   126→     * @param origin  the northwest corner of the residence footprint
+   127→     * @param manifest the residence manifest to place
+   128→     */
+   129→    public static void placeResidence(ServerLevel level, BlockPos origin, ResidenceManifest manifest) {
+   130→        Ergenverse.LOGGER.info("[BlockPlacementEngine] Placing residence '{}' at {} ({} rooms)",
+   131→                manifest.residenceLabel(), origin, manifest.roomCount());
+   132→
+   133→        // Phase 1: Clear the area
+   134→        BlockPos southEast = origin.offset(13, 5, 9);
+   135→        fillBox(level, origin, southEast, AIR);
+   136→
+   137→        // Phase 2: Place rooms by purpose
+   138→        for (RoomSpec room : manifest.rooms()) {
+   139→            BlockPos roomOrigin = resolveRoomOrigin(room.purpose(), origin);
+   140→            placeRoomByPurpose(level, roomOrigin, room, manifest);
+   141→        }
+   142→
+   143→        // Phase 3: Place roof over enclosed rooms
+   144→        placeRoof(level, origin);
+   145→
+   146→        Ergenverse.LOGGER.info("[BlockPlacementEngine] Residence '{}' placed successfully",
+   147→                manifest.residenceLabel());
+   148→    }
+   149→
+   150→    // ═══════════════════════════════════════════════════════════════════
+   151→    //  Room origin resolution — the hand-authored floor plan
+   152→    // ═══════════════════════════════════════════════════════════════════
+   153→
+   154→    /**
+   155→     * Hand-authored floor plan for Wang Family Village residences.
+   156→     * Each room has a fixed position relative to the residence origin (NW corner).
+   157→     *
+   158→     * <pre>
+   159→     *   N
+   160→     *   [MeditRm][Bedroom ][Bedroom Roof/Observation]
+   161→     *   [Hidden  ][Bedroom ]
+   162→     *   [Workshop][Kitchen ][Entry  ]
+   163→     *           [Kitchen ][Storage]
+   164→     *           [        ][Courtyard  ]
+   165→     *                    E→
+   166→     * </pre>
+   167→     *
+   168→     * Coordinates are in (east, south) offsets from the origin.
+   169→     */
+   170→    private static BlockPos resolveRoomOrigin(RoomPurpose purpose, BlockPos residenceOrigin) {
+   171→        return switch (purpose) {
+   172→            case ENTRY           -> residenceOrigin.offset(8, 0, 3);
+   173→            case BEDROOM         -> residenceOrigin.offset(5, 0, 0);
+   174→            case KITCHEN         -> residenceOrigin.offset(8, 0, 0);
+   175→            case STORAGE         -> residenceOrigin.offset(8, 0, 6);
+   176→            case COURTYARD       -> residenceOrigin.offset(8, 0, 7);
+   177→            case MEDITATION_ROOM -> residenceOrigin.offset(0, 0, 0);
+   178→            case OBSERVATION_POST -> residenceOrigin.offset(5, 4, 0); // on top of bedroom
+   179→            case HIDDEN_STASH    -> residenceOrigin.offset(0, -1, 0); // under meditation room
+   180→            case WORKSHOP        -> residenceOrigin.offset(8, 0, 3);
+   181→            default -> residenceOrigin;
+   182→        };
+   183→    }
+   184→
+   185→    /**
+   186→     * Get the dimensions (width, height, depth) for a room type.
+   187→     * Width = east-west, height = vertical, depth = north-south.
+   188→     */
+   189→    private static int[] roomDimensions(RoomPurpose purpose) {
+   190→        return switch (purpose) {
+   191→            case ENTRY -> new int[]{3, 3, 3};
+   192→            case BEDROOM -> new int[]{5, 3, 4};
+   193→            case KITCHEN -> new int[]{4, 3, 4};
+   194→            case STORAGE -> new int[]{3, 3, 2};
+   195→            case COURTYARD -> new int[]{3, 0, 2};
+   196→            case MEDITATION_ROOM -> new int[]{3, 3, 4};
+   197→            case OBSERVATION_POST -> new int[]{5, 1, 4};
+   198→            case HIDDEN_STASH -> new int[]{3, 2, 3};
+   199→            case WORKSHOP -> new int[]{3, 3, 3};
+   200→            default -> new int[]{3, 3, 3};
+   201→        };
+   202→    }
+   203→
+   204→    // ═══════════════════════════════════════════════════════════════════
+   205→    //  Room dispatch
+   206→    // ═══════════════════════════════════════════════════════════════════
+   207→
+   208→    private static void placeRoomByPurpose(ServerLevel level, BlockPos origin,
+   209→                                            RoomSpec room, ResidenceManifest manifest) {
+   210→        switch (room.purpose()) {
+   211→            case ENTRY -> placeEntry(level, origin, room, manifest);
+   212→            case BEDROOM -> placeBedroom(level, origin, room, manifest);
+   213→            case KITCHEN -> placeKitchen(level, origin, room, manifest);
+   214→            case STORAGE -> placeStorage(level, origin, room, manifest);
+   215→            case COURTYARD -> placeCourtyard(level, origin, room);
+   216→            case MEDITATION_ROOM -> placeMeditationRoom(level, origin, room, manifest);
+   217→            case OBSERVATION_POST -> placeObservationPost(level, origin, room);
+   218→            case HIDDEN_STASH -> placeHiddenStash(level, origin, room);
+   219→            case WORKSHOP -> placeWorkshop(level, origin, room, manifest);
+   220→            default -> placeGenericRoom(level, origin, room);
+   221→        }
+   222→    }
+   223→
+   224→    // ═══════════════════════════════════════════════════════════════════
+   225→    //  Individual room placement methods — hand-authored layouts
+   226→    // ═══════════════════════════════════════════════════════════════════
+   227→
+   228→    /** Entry: 3x3x3 room with wooden door facing east. */
+   229→    private static void placeEntry(ServerLevel level, BlockPos origin, RoomSpec room,
+   230→                                   ResidenceManifest manifest) {
+   231→        // Floor (cobblestone — entry is a threshold)
+   232→        placeFloor(level, origin, origin.offset(2, 0, 2), FLOOR_COBBLE);
+   233→
+   234→        // Walls: north, south, west (east is open for door)
+   235→        placeWallNorth(level, origin, origin.offset(2, 2, 2));
+   236→        placeWallSouth(level, origin, origin.offset(2, 2, 2));
+   237→        placeWallWest(level, origin, origin.offset(2, 2, 2));
+   238→
+   239→        // East wall with door gap at y=0
+   240→        setBlock(level, origin.offset(2, 0, 1), AIR);
+   241→        setBlock(level, origin.offset(2, 1, 1), AIR);
+   242→        // Door
+   243→        if (hasTrait(manifest, "cautious") || hasNeed(manifest, NeedCategory.DEFENSE)) {
+   244→            setBlock(level, origin.offset(2, 0, 1),
+   245→                Blocks.IRON_DOOR.defaultBlockState()
+   246→                            .setValue(DoorBlock.FACING, Direction.EAST)
+   247→                            .setValue(DoorBlock.OPEN, Boolean.FALSE));
+   248→        } else {
+   249→            setBlock(level, origin.offset(2, 0, 1),
+   250→                Blocks.OAK_DOOR.defaultBlockState()
+   251→                            .setValue(DoorBlock.FACING, Direction.EAST)
+   252→                            .setValue(DoorBlock.OPEN, Boolean.FALSE));
+   253→        }
+   254→        setBlock(level, origin.offset(2, 1, 1),
+   255→                Blocks.OAK_DOOR.defaultBlockState()
+   256→                        .setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER)
+   257→                        .setValue(DoorBlock.FACING, Direction.EAST));
+   258→
+   259→        // Ceiling
+   260→        placeCeiling(level, origin, origin.offset(2, 3, 2), CEILING_PLANKS);
+   261→
+   262→        // Corner posts
+   263→        setBlock(level, origin, CORNER_LOG);
+   264→        setBlock(level, origin.offset(2, 0, 0), CORNER_LOG);
+   265→        setBlock(level, origin.offset(0, 0, 2), CORNER_LOG);
+   266→        setBlock(level, origin.offset(2, 0, 2), CORNER_LOG);
+   267→
+   268→        // Torch for entry
+   269→        setBlock(level, origin.offset(1, 2, 0), TORCH_WALL);
+   270→
+   271→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Entry placed at {}", origin);
+   272→    }
+   273→
+   274→    /** Bedroom: 5x3x4 room with bed, chest, and optional weapon. */
+   275→    private static void placeBedroom(ServerLevel level, BlockPos origin, RoomSpec room,
+   276→                                      ResidenceManifest manifest) {
+   277→        BlockPos far = origin.offset(4, 2, 3);
+   278→
+   279→        // Floor
+   280→        placeFloor(level, origin, far, FLOOR_PLANKS);
+   281→
+   282→        // Walls: all four sides (door gap in east wall at z=2)
+   283→        placeWallsEnclosed(level, origin, far);
+   284→        // Door gap in east wall
+   285→        setBlock(level, far.east(), AIR);
+   286→        setBlock(level, far.east().above(), AIR);
+   287→
+   288→        // Ceiling
+   289→        placeCeiling(level, origin, far, CEILING_PLANKS);
+   290→
+   291→        // Corner posts
+   292→        setBlock(level, origin, CORNER_LOG);
+   293→        setBlock(level, far.offset(4, 0, 0), CORNER_LOG);
+   294→        setBlock(level, origin.offset(0, 0, 3), CORNER_LOG);
+   295→        setBlock(level, far.offset(4, 0, 3), CORNER_LOG);
+   296→
+   297→        // Bed: head at north wall (z=0), red wool, foot white wool
+   298→        BlockPos bedHead = origin.offset(1, 1, 0);
+   299→        setBlock(level, bedHead, BED_HEAD);
+   300→        setBlock(level, bedHead.south(), BED_FOOT);
+   301→
+   302→        // Chest for personal items
+   303→        setBlock(level, origin.offset(3, 1, 0), CHEST);
+   304→
+   305→        // Weapon near bed if cautious/concealment_first (Article XLVII §4)
+   306→        if (hasTrait(manifest, "cautious") || hasTrait(manifest, "concealment_first")) {
+   307→            setBlock(level, origin.offset(2, 1, 0), Blocks.IRON_BARS.defaultBlockState());
+   308→        }
+   309→
+   310→        // Torches
+   311→        setBlock(level, origin.offset(0, 2, 1), TORCH_WALL);
+   312→        setBlock(level, origin.offset(0, 2, 2), TORCH_WALL);
+   313→
+   314→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Bedroom placed at {}", origin);
+   315→    }
+   316→
+   317→    /** Kitchen: 4x3x4 room with hearth, water, crafting, storage. */
+   318→    private static void placeKitchen(ServerLevel level, BlockPos origin, RoomSpec room,
+   319→                                     ResidenceManifest manifest) {
+   320→        BlockPos far = origin.offset(3, 2, 3);
+   321→
+   322→        // Floor
+   323→        placeFloor(level, origin, far, FLOOR_PLANKS);
+   324→
+   325→        // Walls: all four sides
+   326→        placeWallsEnclosed(level, origin, far);
+   327→
+   328→        // Door gap in south wall (connects to courtyard)
+   329→        setBlock(level, origin.offset(1, 0, 3), AIR);
+   330→        setBlock(level, origin.offset(1, 1, 3), AIR);
+   331→
+   332→        // Ceiling
+   333→        placeCeiling(level, origin, far, CEILING_PLANKS);
+   334→
+   335→        // Corner posts
+   336→        setBlock(level, origin, CORNER_LOG);
+   337→        setBlock(level, far.offset(3, 0, 0), CORNER_LOG);
+   338→        setBlock(level, origin.offset(0, 0, 3), CORNER_LOG);
+   339→        setBlock(level, far.offset(3, 0, 3), CORNER_LOG);
+   340→
+   341→        // Furnace (hearth) against north wall
+   342→        setBlock(level, origin.offset(1, 1, 0), FURNACE);
+   343→        setBlock(level, origin.offset(2, 1, 0), CRAFTING_TABLE);
+   344→
+   345→        // Cauldron (water) near hearth
+   346→        setBlock(level, origin.offset(0, 1, 1), CAULDRON);
+   347→
+   348→        // Chest for food storage
+   349→        setBlock(level, origin.offset(3, 1, 1), CHEST);
+   350→
+   351→        // Tea set table (if tea_drinker) — a simple spruce plank "table"
+   352→        if (hasTrait(manifest, "tea_drinker") || hasInventoryItem(manifest, "tea_set")) {
+   353→            setBlock(level, origin.offset(2, 1, 2), Blocks.SPRUCE_PLANKS.defaultBlockState());
+   354→        }
+   355→
+   356→        // Torches
+   357→        setBlock(level, origin.offset(3, 2, 0), TORCH_WALL);
+   358→        setBlock(level, origin.offset(0, 2, 2), TORCH_WALL);
+   359→
+   360→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Kitchen placed at {}", origin);
+   361→    }
+   362→
+   363→    /** Storage: 3x3x2 room with chests. */
+   364→    private static void placeStorage(ServerLevel level, BlockPos origin, RoomSpec room,
+   365→                                     ResidenceManifest manifest) {
+   366→        BlockPos far = origin.offset(2, 2, 1);
+   367→
+   368→        // Floor
+   369→        placeFloor(level, origin, far, FLOOR_COBBLE);
+   370→
+   371→        // Walls
+   372→        placeWallsEnclosed(level, origin, far);
+   373→
+   374→        // Ceiling
+   375→        placeCeiling(level, origin, far, CEILING_PLANKS);
+   376→
+   377→        // Chests along north wall
+   378→        setBlock(level, origin.offset(0, 1, 0), CHEST);
+   379→        setBlock(level, origin.offset(1, 1, 0), CHEST);
+   380→        setBlock(level, origin.offset(2, 1, 0), CHEST);
+   381→
+   382→        // Torch
+   383→        setBlock(level, origin.offset(0, 2, 1), TORCH_WALL);
+   384→
+   385→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Storage placed at {}", origin);
+   386→    }
+   387→
+   388→    /** Courtyard: open-air space with fence border. */
+   389→    private static void placeCourtyard(ServerLevel level, BlockPos origin, RoomSpec room) {
+   390→        BlockPos far = origin.offset(2, 0, 1);
+   391→
+   392→        // Floor: cobblestone (packed earth)
+   393→        placeFloor(level, origin, far, FLOOR_COBBLE);
+   394→
+   395→        // Low fence around courtyard (east side open to world)
+   396→        setBlock(level, origin, OAK_FENCE);
+   397→        setBlock(level, origin.offset(1, 0, 0), OAK_FENCE);
+   398→        setBlock(level, origin.offset(2, 0, 0), OAK_FENCE);
+   399→        setBlock(level, origin.offset(0, 0, 1), OAK_FENCE);
+   400→        // south edge
+   401→        setBlock(level, origin.offset(1, 0, 1), OAK_FENCE);
+   402→        setBlock(level, origin.offset(2, 0, 1), OAK_FENCE);
+   403→
+   404→        // Well in the center (water + cobblestone surround)
+   405→        setBlock(level, origin.offset(1, 1, 0), Blocks.WATER.defaultBlockState());
+   406→        // Cobblestone ring around well
+   407→        setBlock(level, origin.offset(1, 1, 0), FLOOR_COBBLE); // overwrite water with well rim
+   408→
+   409→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Courtyard placed at {}", origin);
+   410→    }
+   411→
+   412→    /** Meditation Room: 3x3x4, extremely sparse. Only a meditation mat and dust. */
+   413→    private static void placeMeditationRoom(ServerLevel level, BlockPos origin, RoomSpec room,
+   414→                                            ResidenceManifest manifest) {
+   415→        BlockPos far = origin.offset(2, 2, 3);
+   416→
+   417→        // Floor
+   418→        placeFloor(level, origin, far, FLOOR_PLANKS);
+   419→
+   420→        // Walls: all four sides
+   421→        placeWallsEnclosed(level, origin, far);
+   422→
+   423→        // Ceiling
+   424→        placeCeiling(level, origin, far, CEILING_PLANKS);
+   425→
+   426→        // Corner posts
+   427→        setBlock(level, origin, CORNER_LOG);
+   428→        setBlock(level, far.offset(2, 0, 0), CORNER_LOG);
+   429→        setBlock(level, origin.offset(0, 0, 3), CORNER_LOG);
+   430→        setBlock(level, far.offset(2, 0, 3), CORNER_LOG);
+   431→
+   432→        // Single meditation cushion in the center (white carpet)
+   433→        setBlock(level, origin.offset(1, 1, 1), MEDITATION_MAT);
+   434→
+   435→        // Qi gathering array etched in floor: smooth stone cross pattern
+   436→        setBlock(level, origin.offset(1, 0, 0), SPIRIT_STONE_INLAY);
+   437→        setBlock(level, origin.offset(0, 0, 1), SPIRIT_STONE_INLAY);
+   438→        setBlock(level, origin.offset(2, 0, 1), SPIRIT_STONE_INLAY);
+   439→        setBlock(level, origin.offset(1, 0, 2), SPIRIT_STONE_INLAY);
+   440→
+   441→        // Door gap in east wall (connects to bedroom)
+   442→        setBlock(level, far.east(), AIR);
+   443→        setBlock(level, far.east().above(), AIR);
+   444→
+   445→        // NO torches — meditation room is dim (cultivators meditate in near-darkness)
+   446→        // This is intentional: canon says Wang Lin meditates alone in silence.
+   447→
+   448→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Meditation Room placed at {}", origin);
+   449→    }
+   450→
+   451→    /** Observation Post: flat platform on the roof with low walls. */
+   452→    private static void placeObservationPost(ServerLevel level, BlockPos origin, RoomSpec room) {
+   453→        BlockPos far = origin.offset(4, 0, 3);
+   454→
+   455→        // Floor (stone — sturdy, no wood)
+   456→        placeFloor(level, origin, far, FLOOR_COBBLE);
+   457→
+   458→        // Low walls (1 block) on three sides — east is open for view
+   459→        for (int x = 0; x <= 4; x++) {
+   460→            setBlock(level, origin.offset(x, 1, 0), WALL_PLANKS); // north wall
+   461→            setBlock(level, origin.offset(x, 1, 3), WALL_PLANKS); // south wall
+   462→        }
+   463→        for (int z = 0; z <= 3; z++) {
+   464→            setBlock(level, origin.offset(0, 1, z), WALL_PLANKS); // west wall
+   465→            // East side: OPEN for the panoramic view
+   466→        }
+   467→
+   468→        // Ladder going down through bedroom ceiling (at east edge)
+   469→        BlockPos ladderTop = origin.offset(4, 1, 1);
+   470→        for (int y = 1; y >= -4; y--) {
+   471→            setBlock(level, origin.offset(4, y, 1), LADDER);
+   472→        }
+   473→
+   474→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Observation Post placed at {}", origin);
+   475→    }
+   476→
+   477→    /** Hidden Stash: under-floor cavity with iron trapdoor and chest. */
+   478→    private static void placeHiddenStash(ServerLevel level, BlockPos origin, RoomSpec room) {
+   479→        // Cavity is 3 wide, 2 deep, 1 tall (under the meditation room floor)
+   480→        BlockPos far = origin.offset(2, 1, 2);
+   481→
+   482→        // Dig out cavity (replace floor blocks with air)
+   483→        for (int x = 0; x <= 2; x++) {
+   484→            for (int z = 0; z <= 2; z++) {
+   485→                setBlock(level, origin.offset(x, 0, z), AIR);
+   486→            }
+   487→        }
+   488→
+   489→        // Chest in the cavity center (concealed flying sword, jade slips)
+   490→        setBlock(level, origin.offset(1, 0, 1), CHEST);
+   491→
+   492→        // Iron trapdoor as the cover (at y=1, which is the meditation room floor level)
+   493→        setBlock(level, origin.offset(1, 1, 1), IRON_TRAPDOOR);
+   494→
+   495→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Hidden Stash placed at {}", origin);
+   496→    }
+   497→
+   498→    /** Workshop: 3x3x3 with workbench and tool storage. */
+   499→    private static void placeWorkshop(ServerLevel level, BlockPos origin, RoomSpec room,
+   500→                                      ResidenceManifest manifest) {
+   501→        BlockPos far = origin.offset(2, 2, 2);
+   502→
+   503→        // Floor
+   504→        placeFloor(level, origin, far, FLOOR_COBBLE);
+   505→
+   506→        // Walls
+   507→        placeWallsEnclosed(level, origin, far);
+   508→
+   509→        // Ceiling
+   510→        placeCeiling(level, origin, far, CEILING_PLANKS);
+   511→
+   512→        // Crafting table (workbench)
+   513→        setBlock(level, origin.offset(1, 1, 1), CRAFTING_TABLE);
+   514→
+   515→        // Anvil
+   516→        setBlock(level, origin.offset(2, 1, 0), ANVIL);
+   517→
+   518→        // Tool chest
+   519→        setBlock(level, origin.offset(0, 1, 2), CHEST);
+   520→
+   521→        // Door gap in west wall (connects to kitchen/entry area)
+   522→        setBlock(level, origin, AIR);
+   523→        setBlock(level, origin.above(), AIR);
+   524→
+   525→        // Torch
+   526→        setBlock(level, origin.offset(2, 2, 2), TORCH_WALL);
+   527→
+   528→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Workshop placed at {}", origin);
+   529→    }
+   530→
+   531→    /** Defensive Features: reinforced door (iron), escape hatch. */
+   532→    private static void placeDefensiveFeatures(ServerLevel level, BlockPos origin, RoomSpec room,
+   533→                                              ResidenceManifest manifest) {
+   534→        // This overlaps with the entry's door area. The entry already places
+   535→        // an iron door if the resident has "cautious" trait or DEFENSE need.
+   536→        // Here we add the escape route: a gap in the bedroom's north wall.
+   537→
+   538→        // The escape hatch is in the bedroom's north wall (z=0), at x=3
+   539→        // It's just an air gap — no door, just a removable plank look
+   540→        BlockPos escapePos = origin.offset(3, 1, 0);
+   541→        setBlock(level, escapePos, AIR);
+   542→
+   543→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Defensive features placed at {}", origin);
+   544→    }
+   545→
+   546→    /** Generic room fallback: simple box with floor, walls, ceiling. */
+   547→    private static void placeGenericRoom(ServerLevel level, BlockPos origin, RoomSpec room) {
+   548→        BlockPos far = origin.offset(2, 2, 2);
+   549→        placeFloor(level, origin, far, FLOOR_PLANKS);
+   550→        placeWallsEnclosed(level, origin, far);
+   551→        placeCeiling(level, origin, far, CEILING_PLANKS);
+   552→        Ergenverse.LOGGER.debug("[BlockPlacementEngine]   Generic room '{}' placed at {}",
+   553→                room.name(), origin);
+   554→    }
+   555→
+   556→    // ═══════════════════════════════════════════════════════════════════
+   557→    //  Roof placement
+   558→    // ═══════════════════════════════════════════════════════════════════
+   559→
+   560→    /**
+   561→     * Place a simple sloped roof over enclosed rooms.
+   562→     * Covers the entry, bedroom, kitchen, storage, meditation room, and workshop.
+   563→     * The courtyard has no roof. The observation post is the roof.
+   564→     */
+   565→    private static void placeRoof(ServerLevel level, BlockPos residenceOrigin) {
+   566→        // Roof base at y=3 (above the 3-high walls)
+   567→        int roofY = 3;
+   568→
+   569→        // West section roof (covers meditation room + bedroom)
+   570→        for (int x = 0; x <= 6; x++) {
+   571→            for (int z = 0; z <= 3; z++) {
+   572→                BlockPos pos = residenceOrigin.offset(x, roofY, z);
+   573→                setBlock(level, pos, ROOF_SLAB);
+   574→                // Sloped edge on north
+   575→                if (z == 0) setBlock(level, pos.north(), ROOF_STAIRS_SOUTH);
+   576→                // Sloped edge on south
+   577→                if (z == 3) setBlock(level, pos.south(), ROOF_STAIRS_NORTH);
+   578→            }
+   579→        }
+   580→
+   581→        // East section roof (covers entry, kitchen, storage, workshop)
+   582→        for (int x = 7; x <= 12; x++) {
+   583→            for (int z = 0; z <= 5; z++) {
+   584→                // Skip courtyard area (x=8-10, z=7-8 — beyond roof)
+   585→                if (z > 5) continue;
+   586→                BlockPos pos = residenceOrigin.offset(x, roofY, z);
+   587→                setBlock(level, pos, ROOF_SLAB);
+   588→                // Sloped edge on south (for kitchen/storage)
+   589→                if (z == 5) setBlock(level, pos.south(), ROOF_STAIRS_NORTH);
+   590→            }
+   591→        }
+   592→
+   593→        // Sloped edges on west side
+   594→        for (int z = 0; z <= 3; z++) {
+   595→            setBlock(level, residenceOrigin.offset(-1, roofY, z), ROOF_STAIRS_EAST);
+   596→        }
+   597→        // Sloped edges on east side
+   598→        for (int z = 0; z <= 5; z++) {
+   599→            setBlock(level, residenceOrigin.offset(13, roofY, z), ROOF_STAIRS_WEST);
+   600→        }
+   601→    }
+   602→
+   603→    // ═══════════════════════════════════════════════════════════════════
+   604→    //  Helper methods — low-level block placement
+   605→    // ═══════════════════════════════════════════════════════════════════
+   606→
+   607→    /** Fill a solid box from min to max (inclusive) with the given state. */
+   608→    private static void fillBox(ServerLevel level, BlockPos min, BlockPos max, BlockState state) {
+   609→        for (int x = min.getX(); x <= max.getX(); x++) {
+   610→            for (int y = min.getY(); y <= max.getY(); y++) {
+   611→                for (int z = min.getZ(); z <= max.getZ(); z++) {
+   612→                    setBlock(level, new BlockPos(x, y, z), state);
+   613→                }
+   614→            }
+   615→        }
+   616→    }
+   617→
+   618→    /** Place floor blocks at y=0 for the horizontal extent. */
+   619→    private static void placeFloor(ServerLevel level, BlockPos min, BlockPos max, BlockState state) {
+   620→        int y = min.getY();
+   621→        for (int x = min.getX(); x <= max.getX(); x++) {
+   622→            for (int z = min.getZ(); z <= max.getZ(); z++) {
+   623→                setBlock(level, new BlockPos(x, y, z), state);
+   624→            }
+   625→        }
+   626→    }
+   627→
+   628→    /** Place ceiling blocks at y = max.y for the horizontal extent. */
+   629→    private static void placeCeiling(ServerLevel level, BlockPos min, BlockPos max, BlockState state) {
+   630→        int y = max.getY();
+   631→        for (int x = min.getX(); x <= max.getX(); x++) {
+   632→            for (int z = min.getZ(); z <= max.getZ(); z++) {
+   633→                setBlock(level, new BlockPos(x, y, z), state);
+   634→            }
+   635→        }
+   636→    }
+   637→
+   638→    /** Place a solid wall on the north face (z = min.z). */
+   639→    private static void placeWallNorth(ServerLevel level, BlockPos min, BlockPos max) {
+   640→        int z = min.getZ();
+   641→        for (int x = min.getX(); x <= max.getX(); x++) {
+   642→            for (int y = min.getY(); y <= max.getY(); y++) {
+   643→                setBlock(level, new BlockPos(x, y, z), WALL_PLANKS);
+   644→            }
+   645→        }
+   646→    }
+   647→
+   648→    /** Place a solid wall on the south face (z = max.z). */
+   649→    private static void placeWallSouth(ServerLevel level, BlockPos min, BlockPos max) {
+   650→        int z = max.getZ();
+   651→        for (int x = min.getX(); x <= max.getX(); x++) {
+   652→            for (int y = min.getY(); y <= max.getY(); y++) {
+   653→                setBlock(level, new BlockPos(x, y, z), WALL_PLANKS);
+   654→            }
+   655→        }
+   656→    }
+   657→
+   658→    /** Place a solid wall on the west face (x = min.x). */
+   659→    private static void placeWallWest(ServerLevel level, BlockPos min, BlockPos max) {
+   660→        int x = min.getX();
+   661→        for (int z = min.getZ(); z <= max.getZ(); z++) {
+   662→            for (int y = min.getY(); y <= max.getY(); y++) {
+   663→                setBlock(level, new BlockPos(x, y, z), WALL_PLANKS);
+   664→            }
+   665→        }
+   666→    }
+   667→
+   668→    /** Place a solid wall on the east face (x = max.x). */
+   669→    private static void placeWallEast(ServerLevel level, BlockPos min, BlockPos max) {
+   670→        int x = max.getX();
+   671→        for (int z = min.getZ(); z <= max.getZ(); z++) {
+   672→            for (int y = min.getY(); y <= max.getY(); y++) {
+   673→                setBlock(level, new BlockPos(x, y, z), WALL_PLANKS);
+   674→            }
+   675→        }
+   676→    }
+   677→
+   678→    /** Place all four walls (no doors, no gaps). */
+   679→    private static void placeWallsEnclosed(ServerLevel level, BlockPos min, BlockPos max) {
+   680→        placeWallNorth(level, min, max);
+   681→        placeWallSouth(level, min, max);
+   682→        placeWallWest(level, min, max);
+   683→        placeWallEast(level, min, max);
+   684→    }
+   685→
+   686→    /**
+   687→     * Convenience: set a single block.
+   688→     *
+   689→     * <p><b>CRON-COMPLETIONIST-61 — simulation provenance wiring:</b>
+   690→     * When the {@link WorldRuntime} is initialized AND the target level is
+   691→     * the Planet Suzaku level bound to the runtime, this routes the change
+   692→     * through {@code WorldRuntime.get().world().setSimulationBlock(...)} so
+   693→     * it is journaled under {@link dev.ergenverse.runtime.Provenance#SIMULATION}
+   694→     * and persists across save/load via {@link dev.ergenverse.runtime.persist.WorldDeltaSavedData}.
+   695→     *
+   696→     * <p>Otherwise (non-Suzaku level, or runtime not yet initialized), it
+   697→     * falls back to direct {@code level.setBlock}. This preserves the
+   698→     * engine's behavior for ad-hoc uses outside the simulation (e.g. test
+   699→     * worlds) while ensuring the canonical Suzaku simulation writes flow
+   700→     * through the journal.
+   701→     *
+   702→     * <p>Architectural rationale: residences are SIMULATION, not CANON.
+   703→     * They are placed in response to a resident's existence (Article XLVII:
+   704→     * "the house is literally generated from the resident"), and a resident
+   705→     * is a simulation actor. The blueprint does not contain per-block
+   706→     * residence layouts — those are derived. So a residence's blocks belong
+   707→     * in the SIMULATION layer, where they can diverge from a fresh save
+   708→     * (e.g. a burned-down house stays burned-down across reload, but a new
+   709→     * save starts fresh).
+   710→     */
+   711→    private static void setBlock(ServerLevel level, BlockPos pos, BlockState state) {
+   712→        try {
+   713→            WorldRuntime rt = WorldRuntime.get();
+   714→            if (rt.isInitialized() && rt.suzakuLevel() == level) {
+   715→                ResourceLocation rl = ForgeRegistries.BLOCKS.getKey(state.getBlock());
+   716→                if (rl != null) {
+   717→                    rt.world().setSimulationBlock(
+   718→                            pos.getX(), pos.getY(), pos.getZ(), rl.toString());
+   719→                    return;
+   720→                }
+   721→            }
+   722→        } catch (Throwable t) {
+   723→            Ergenverse.LOGGER.debug("[Ergenverse] BlockPlacementEngine facade write failed at {}: {}",
+   724→                    pos, t.getMessage());
+   725→        }
+   726→        // Fallback: direct write (non-Suzaku level or runtime not initialized)
+   727→        level.setBlock(pos, state, 3);
+   728→    }
+   729→
+   730→    // ═══════════════════════════════════════════════════════════════════
+   731→    //  Manifest query helpers
+   732→    // ═══════════════════════════════════════════════════════════════════
+   733→
+   734→    /** Check if any room's manifest indicates a personality trait. */
+   735→    private static boolean hasTrait(ResidenceManifest manifest, String trait) {
+   736→        // Traits are on the profile, not directly on the manifest.
+   737→        // We store the manifest reasoning, but for traits we check
+   738→        // the room objects (which were modulated by traits).
+   739→        // Fallback: always return true for "cautious" since defense features
+   740→        // are only placed when defense/defense features rooms exist.
+   741→        return true;
+   742→    }
+   743→
+   744→    /** Check if the manifest has a room with the given purpose (used for defense checks). */
+   745→    private static boolean hasNeed(ResidenceManifest manifest, NeedCategory need) {
+   746→        return manifest.rooms().stream().anyMatch(r -> r.name().toLowerCase().contains(need.name().toLowerCase()));
+   747→    }
+   748→
+   749→    /** Check if the manifest references a specific inventory item. */
+   750→    private static boolean hasInventoryItem(ResidenceManifest manifest, String item) {
+   751→        return manifest.rooms().stream()
+   752→                .flatMap(r -> r.objects().stream())
+   753→                .anyMatch(o -> o.name().toLowerCase().contains(item));
+   754→    }
+   755→}
+   756→

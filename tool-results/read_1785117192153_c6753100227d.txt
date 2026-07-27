@@ -1,0 +1,2002 @@
+  1601→            "N126", "White Tiger General", null, CharType.ANTAGONIST,
+  1602→            "Third Step+", "IAC", "alive", 4,
+  1603→            "unknown", "Immortal Astral Continent",
+  1604→            java.util.List.of(
+  1605→                "One of the cruel cultivators with killing intent strong enough to shock even the most cruel",
+  1606→                "Subdued by Wang Lin as a slave"
+  1607→            ),
+  1608→            List.of(new RelationShip("Wang Lin", "enemy")),
+  1609→            "novel; Fandom wiki"
+  1610→        ),
+  1611→        new CanonCharacter(
+  1612→            "N127", "Yun Yifeng", "云一峰", CharType.ANTAGONIST,
+  1613→            "Third Step+", "IAC", "unknown", 3,
+  1614→            "unknown", "Immortal Astral Continent",
+  1615→            java.util.List.of("IAC antagonist in Five Flowers Eight Gates", "Defeated by Wang Lin"),
+  1616→            List.of(new RelationShip("Wang Lin", "enemy")),
+  1617→            "novel (implicit); Fandom wiki; C3"
+  1618→        ),
+  1619→        new CanonCharacter(
+  1620→            "N128", "Lord of the Sealed Realm", "封界尊 / 尊者封界", CharType.OTHER,
+  1621→            "peak Third Step", "Sealed Realm", "unknown", 4,
+  1622→            "unknown", "Sealed Realm",
+  1623→            java.util.List.of(
+  1624→                "Previous 'Lord of the Sealed Realm'; Wang Lin succeeds him",
+  1625→                "Forged the Seven-Colored Divine Sky Nail (108 nails to kill Third Step experts)",
+  1626→                "When Wang Lin was being killed by Daoist Water, his spirit appeared and saved Wang Lin"
+  1627→            ),
+  1628→            List.of(new RelationShip("Wang Lin", "ally"), new RelationShip("Daoist Water", "enemy")),
+  1629→            "novel; Fandom wiki"
+  1630→        ),
+  1631→        new CanonCharacter(
+  1632→            "N129", "Zhan Laogui", "战老子", CharType.ANTAGONIST,
+  1633→            "Third Step+", "IAC", "unknown", 3,
+  1634→            "unknown", "Immortal Astral Continent",
+  1635→            java.util.List.of(
+  1636→                "IAC antagonist in Five Flowers Eight Gates",
+  1637→                "Defeated by Wang Lin after he obtained Ye Mo's heart inheritance"
+  1638→            ),
+  1639→            List.of(new RelationShip("Wang Lin", "enemy")),
+  1640→            "novel (implicit); Fandom wiki; C3"
+  1641→        ),
+  1642→        new CanonCharacter(
+  1643→            "N130", "Yun Kong", "云空", CharType.ANTAGONIST,
+  1644→            "Third Step+", "IAC", "unknown", 3,
+  1645→            "unknown", "Immortal Astral Continent",
+  1646→            java.util.List.of("IAC antagonist; Wang Lin destroyed his clone", "Wang Lin detonated the Immortal Pill"),
+  1647→            List.of(new RelationShip("Wang Lin", "enemy")),
+  1648→            "novel (implicit); Fandom wiki; C3"
+  1649→        ),
+  1650→        new CanonCharacter(
+  1651→            "N131", "Zhan Xingye", "战星野", CharType.ANTAGONIST,
+  1652→            "Third Step+", "Zhan Family (Battle)", "deceased", 3,
+  1653→            "unknown", "Immortal Astral Continent",
+  1654→            java.util.List.of(
+  1655→                "Schemed against Wang Lin",
+  1656→                "Wang Lin merged 3 Zhen Family Battle Scrolls into the golden word 'Battle'; fused with Zhan Xingye's skeletons",
+  1657→                "Killed by Wang Lin"
+  1658→            ),
+  1659→            List.of(new RelationShip("Wang Lin", "enemy")),
+  1660→            "novel (implicit); Fandom wiki; C3"
+  1661→        ),
+  1662→        new CanonCharacter(
+  1663→            "N132", "Green Devil", "绿魔 / 绿蝎", CharType.ANTAGONIST,
+  1664→            "peak Third Step+", "Dao Devil Sect", "deceased", 4,
+  1665→            "unknown", "Immortal Astral Continent",
+  1666→            java.util.List.of(
+  1667→                "Ancient entity; also called Green Devil Scorpion; worshipped by Dao Devil Sect",
+  1668→                "Dao Devil Sect intended to use Wang Lin's body to resurrect him",
+  1669→                "Wang Lin reclaimed his body and devoured the Green Devil → immediately reached Arcane Void"
+  1670→            ),
+  1671→            List.of(new RelationShip("Wang Lin", "enemy"), new RelationShip("Dao Devil Sect Master", "ally")),
+  1672→            "novel; Fandom wiki"
+  1673→        ),
+  1674→        new CanonCharacter(
+  1675→            "N133", "Thirteen", "十三", CharType.DISCIPLE,
+  1676→            "body refining", "Soul Refining Tribe", "alive", 4,
+  1677→            "unknown", "Pilu Kingdom / IAC",
+  1678→            java.util.List.of(
+  1679→                "Wang Lin's eldest disciple; originally a Mountain Valley Tribe native",
+  1680→                "Meridians severed by someone; Wang Lin taught him body refining techniques instead",
+  1681→                "Reincarnated on IAC; memories recovered by Wang Lin; followed Wang Lin"
+  1682→            ),
+  1683→            List.of(new RelationShip("Wang Lin", "master"), new RelationShip("Huo Pao", "ally")),
+  1684→            "novel; Fandom wiki"
+  1685→        ),
+  1686→        new CanonCharacter(
+  1687→            "N134", "Huo Pao", "火炮", CharType.DISCIPLE,
+  1688→            "unknown", "Soul Refining Tribe", "alive", 3,
+  1689→            "unknown", "Pilu Kingdom / Sky Demon Country",
+  1690→            java.util.List.of("Wang Lin's junior disciple; taken with Thirteen to Sky Demon Country for trial"),
+  1691→            List.of(new RelationShip("Wang Lin", "master"), new RelationShip("Thirteen", "ally")),
+  1692→            "novel (implicit); Fandom wiki; C3"
+  1693→        ),
+  1694→        new CanonCharacter(
+  1695→            "N135", "Xie Qing", "谢青", CharType.DISCIPLE,
+  1696→            "Jingnie (Concept-only)", "independent", "deceased", 5,
+  1697→            "unknown", "Planet Qing Ling",
+  1698→            java.util.List.of(
+  1699→                "Wang Lin's 2nd disciple; Third Soul of the Seven-Colored Immortal Venerable",
+  1700→                "Used 'fish, water, net, fishing' analogy to explain Dao → triggered Wang Lin's Nirvana Scryer breakthrough",
+  1701→                "Sat atop a mountain 800 years cultivating only Concepts; ended his own life and entrusted Third Soul memories to Wang Lin"
+  1702→            ),
+  1703→            List.of(new RelationShip("Wang Lin", "master"), new RelationShip("Seven-Colored Daoist", "family")),
+  1704→            "novel; Fandom wiki"
+  1705→        ),
+  1706→        new CanonCharacter(
+  1707→            "N136", "Xi Zifeng", "席紫凤", CharType.DISCIPLE,
+  1708→            "Jingnie", "Luo Tian Thunder Immortal Realm", "alive", 5,
+  1709→            "unknown", "Luo Tian / Cave World",
+  1710→            java.util.List.of(
+  1711→                "Wang Lin's 3rd disciple; sole survivor of her family in the Luo Tian Alliance battle",
+  1712→                "Disfigured her own face for 800 years to prevent covetous gazes",
+  1713→                "Rescued by Wang Lin → beauty restored → cultivation raised to Jingnie → gifted Divine Thunder Blood Sword"
+  1714→            ),
+  1715→            List.of(new RelationShip("Wang Lin", "master")),
+  1716→            "novel; Fandom wiki"
+  1717→        ),
+  1718→        new CanonCharacter(
+  1719→            "N137", "Adai", "阿呆", CharType.OTHER,
+  1720→            "unknown", "Wu Yu's servant", "alive", 4,
+  1721→            "unknown", "Planet Suzaku",
+  1722→            java.util.List.of(
+  1723→                "Blue-skinned man with 9 talismans attached to his body",
+  1724→                "Speaks in a language Wang Lin can't understand",
+  1725→                "Led Wang Lin to Wu Yu's Nascent Soul preserved underground in the Corpse Yin Sect"
+  1726→            ),
+  1727→            List.of(new RelationShip("Wu Yu", "master"), new RelationShip("Wang Lin", "ally")),
+  1728→            "novel; Fandom wiki"
+  1729→        ),
+  1730→        new CanonCharacter(
+  1731→            "N138", "Wu Yu", "吴宇", CharType.ELDER,
+  1732→            "Nascent Soul", "Corpse Yin Sect", "deceased", 4,
+  1733→            "unknown", "Planet Suzaku",
+  1734→            java.util.List.of(
+  1735→                "Corpse Yin Sect elder; only his Nascent Soul remained (long dead)",
+  1736→                "Let Wang Lin leave the forest and teleport to the Corpse Yin Sect"
+  1737→            ),
+  1738→            List.of(new RelationShip("Wang Lin", "ally"), new RelationShip("Adai", "servant")),
+  1739→            "novel; Fandom wiki"
+  1740→        ),
+  1741→        new CanonCharacter(
+  1742→            "N139", "Ye Zi", "叶紫", CharType.ELDER,
+  1743→            "Nascent Soul", "Corpse Yin Sect", "unknown", 4,
+  1744→            "unknown", "Planet Suzaku",
+  1745→            java.util.List.of(
+  1746→                "Corpse Yin Sect elder; gave Wang Lin an immortal cave",
+  1747→                "Made Wang Lin slice a sliver of soul for the Jue Ming Valley competition",
+  1748→                "Wang Lin later attacked Corpse Yin Sect members and took back his soul"
+  1749→            ),
+  1750→            List.of(new RelationShip("Wang Lin", "enemy")),
+  1751→            "novel; Fandom wiki"
+  1752→        ),
+  1753→        new CanonCharacter(
+  1754→            "N140", "Zhao Xingsha", "赵星煞", CharType.DISCIPLE,
+  1755→            "Infant Transformation", "Heavenly Fate Sect", "alive", 4,  // CRON-119: was "Soul Transformation" (炼虚), corrected to "Infant Transformation" (婴变)
+  1756→            "unknown", "Planet Tian Yun",
+  1757→            java.util.List.of(
+  1758→                "Heavenly Fate Sect purple division rival; trapped Wang Lin with Sima Rufeng and others",
+  1759→                "Battled Wang Lin at All-Seer's birthday banquet; heavily injured",
+  1760→                "Elder stopped Wang Lin before he could kill Zhao Xingsha"
+  1761→            ),
+  1762→            List.of(new RelationShip("Wang Lin", "enemy"), new RelationShip("Sima Rufeng", "ally"), new RelationShip("Zhao Xinming", "ally")),
+  1763→            "novel; Fandom wiki"
+  1764→        ),
+  1765→        new CanonCharacter(
+  1766→            "N141", "Sima Rufeng", "司马如风", CharType.DISCIPLE,
+  1767→            "unknown", "Heavenly Fate Sect", "alive", 3,
+  1768→            "unknown", "Planet Tian Yun",
+  1769→            java.util.List.of(
+  1770→                "Heavenly Fate Sect fellow disciple; trapped Wang Lin with Zhao Xingsha",
+  1771→                "Wang Lin broke through mid-Soul Transformation and broke the formation"
+  1772→            ),
+  1773→            List.of(new RelationShip("Wang Lin", "enemy"), new RelationShip("Zhao Xingsha", "ally")),
+  1774→            "novel (implicit); Fandom wiki; C3"
+  1775→        ),
+  1776→        new CanonCharacter(
+  1777→            "N142", "Zhao Xinming", "赵新民", CharType.DISCIPLE,
+  1778→            "unknown", "Heavenly Fate Sect", "alive", 3,
+  1779→            "unknown", "Planet Tian Yun",
+  1780→            java.util.List.of(
+  1781→                "4th sister at Heavenly Fate Sect; battled Wang Lin at the birthday banquet",
+  1782→                "Wang Lin won the fight"
+  1783→            ),
+  1784→            List.of(new RelationShip("Wang Lin", "enemy"), new RelationShip("Zhao Xingsha", "ally")),
+  1785→            "novel (implicit); Fandom wiki; C3"
+  1786→        ),
+  1787→        new CanonCharacter(
+  1788→            "N143", "Chen Tao", "陈涛", CharType.DISCIPLE,
+  1789→            "mid-Ascendant", "Heavenly Fate Sect", "alive", 4,
+  1790→            "unknown", "Planet Tian Yun",
+  1791→            java.util.List.of(
+  1792→                "6th brother at Heavenly Fate Sect; challenged Wang Lin after he defeated Zhao Xinming",
+  1793→                "Wang Lin didn't win but put up a good fight that shocked everyone"
+  1794→            ),
+  1795→            List.of(new RelationShip("Wang Lin", "rival")),
+  1796→            "novel; Fandom wiki"
+  1797→        ),
+  1798→        new CanonCharacter(
+  1799→            "N144", "Wang Zhou", "王周", CharType.DISCIPLE,
+  1800→            "Qi Condensation", "Heng Yue Sect", "alive", 3,
+  1801→            "unknown", "Heng Yue Sect, Country of Zhao",
+  1802→            java.util.List.of(
+  1803→                "Heng Yue Sect fellow disciple; mistaken for a girl due to long braided hair",
+  1804→                "Failed all 3 entrance tests alongside Wang Lin"
+  1805→            ),
+  1806→            List.of(new RelationShip("Wang Lin", "ally")),
+  1807→            "novel; Fandom wiki"
+  1808→        ),
+  1809→        new CanonCharacter(
+  1810→            "N145", "Wang Jie", "王杰", CharType.DISCIPLE,
+  1811→            "Qi Condensation", "Heng Yue Sect", "alive", 3,
+  1812→            "unknown", "Heng Yue Sect, Country of Zhao",
+  1813→            java.util.List.of("Heng Yue Sect fellow disciple; took the entrance test alongside Wang Lin and Wang Zhou"),
+  1814→            List.of(new RelationShip("Wang Lin", "ally")),
+  1815→            "novel; Fandom wiki"
+  1816→        ),
+  1817→        new CanonCharacter(
+  1818→            "N146", "Sun Zhenwei", "孙振威", CharType.DISCIPLE,
+  1819→            "Nascent Soul", "Cloud Sky Sect", "deceased", 4,
+  1820→            "unknown", "Chu Country",
+  1821→            java.util.List.of(
+  1822→                "Li Muwan's suitor; she agreed to marry him to shatter her heart",
+  1823→                "Killed by Wang Lin at the wedding; Wang Lin then became Cloud Sky Sect leader"
+  1824→            ),
+  1825→            List.of(new RelationShip("Wang Lin", "enemy"), new RelationShip("Li Muwan", "love_interest"), new RelationShip("Chen Bailiang", "ally")),
+  1826→            "novel; Fandom wiki"
+  1827→        ),
+  1828→        new CanonCharacter(
+  1829→            "N147", "Chen Bailiang", "陈百良", CharType.ELDER,
+  1830→            "Nascent Soul", "Cloud Sky Sect", "deceased", 4,
+  1831→            "unknown", "Chu Country",
+  1832→            java.util.List.of(
+  1833→                "Cloud Sky Sect elder; killed by Wang Lin",
+  1834→                "Wang Lin became Cloud Sky Sect leader after killing him"
+  1835→            ),
+  1836→            List.of(new RelationShip("Wang Lin", "enemy")),
+  1837→            "novel; Fandom wiki"
+  1838→        ),
+  1839→        new CanonCharacter(
+  1840→            "N148", "Zhang Hu", "张虎", CharType.DISCIPLE,
+  1841→            "Foundation Establishment", "Heng Yue Sect", "deceased", 5,
+  1842→            "unknown", "Country of Zhao",
+  1843→            java.util.List.of(
+  1844→                "Wang Lin's early friend; pretended not to know Wang Lin to save him",
+  1845→                "Wang Lin killed Sun Dazhu to help Zhang Hu (this led to Wang Lin's clan extermination)",
+  1846→                "Wang Lin later bestowed opportunities upon Zhang Hu's descendants to settle karma"
+  1847→            ),
+  1848→            List.of(new RelationShip("Wang Lin", "ally"), new RelationShip("Sun Dazhu", "enemy")),
+  1849→            "novel; Fandom wiki"
+  1850→        ),
+  1851→        new CanonCharacter(
+  1852→            "N149", "Hui Bing", "惠冰", CharType.OTHER,
+  1853→            "unknown", "unknown", "unknown", 3,
+  1854→            "unknown", "unknown",
+  1855→            java.util.List.of("Listed in Wang Lin's relationships (Fandom nav-bar character); tangential"),
+  1856→            List.of(new RelationShip("Wang Lin", "ally")),
+  1857→            "Fandom wiki (nav-bar only); C3"
+  1858→        ),
+  1859→        new CanonCharacter(
+  1860→            "N150", "Zhou Rui", "周瑞", CharType.OTHER,
+  1861→            "unknown", "unknown", "unknown", 3,
+  1862→            "unknown", "unknown",
+  1863→            java.util.List.of(
+  1864→                "Listed in Wang Lin's relationships (Fandom nav-bar female character); separate from Zhou Ru",
+  1865→                "Tangential figure"
+  1866→            ),
+  1867→            List.of(new RelationShip("Wang Lin", "ally")),
+  1868→            "Fandom wiki (nav-bar only); C3"
+  1869→        ),
+  1870→        new CanonCharacter(
+  1871→            "N151", "Leng Sheng", "冷生", CharType.OTHER,
+  1872→            "unknown", "unknown", "unknown", 3,
+  1873→            "unknown", "unknown",
+  1874→            java.util.List.of("Listed in Wang Lin's relationships (Fandom nav-bar female character); tangential"),
+  1875→            List.of(new RelationShip("Wang Lin", "ally")),
+  1876→            "Fandom wiki (nav-bar only); C3"
+  1877→        ),
+  1878→        new CanonCharacter(
+  1879→            "N152", "Da Niu", "大牛", CharType.OTHER,
+  1880→            "mortal", "none", "unknown", 3,
+  1881→            "unknown", "unknown",
+  1882→            java.util.List.of("Listed in Wang Lin's friends; likely a mortal friend from early life"),
+  1883→            List.of(new RelationShip("Wang Lin", "ally")),
+  1884→            "novel (implicit); Fandom wiki; C3"
+  1885→        ),
+  1886→        new CanonCharacter(
+  1887→            "N153", "Zhou Lin", "周林", CharType.DISCIPLE,
+  1888→            "early Core Formation", "Yuntian Sect", "alive", 4,
+  1889→            "unknown", "Chu Country",
+  1890→            java.util.List.of("Li Muwan's disciple; 9th-generation Yuntian Sect disciple", "Master of Wang Lin's doppelganger"),
+  1891→            List.of(new RelationShip("Li Muwan", "master"), new RelationShip("Wang Lin", "ally")),
+  1892→            "novel; Fandom wiki"
+  1893→        ),
+  1894→        new CanonCharacter(
+  1895→            "N154", "Xiao Bai", "小白", CharType.OTHER,
+  1896→            "beast", "none (Zhou Ru's pet)", "alive", 3,
+  1897→            "unknown", "Planet Suzaku",
+  1898→            java.util.List.of("Zhou Ru's pet tiger"),
+  1899→            List.of(new RelationShip("Zhou Ru", "ally")),
+  1900→            "novel (implicit); Fandom wiki; C3"
+  1901→        ),
+  1902→        new CanonCharacter(
+  1903→            "N155", "Mosquito Beast", "蚊兽", CharType.OTHER,
+  1904→            "evolved (king mosquito beast)", "Wang Lin's", "alive", 5,
+  1905→            "unknown", "Sea of Devils / IAC",
+  1906→            java.util.List.of(
+  1907→                "Wang Lin's signature companion found in Sea of Devils; fed Brilliant Golden Fruit to evolve",
+  1908→                "Herd acquired in Wind Celestial Realm; king mosquito beast further evolved",
+  1909→                "Recurring across novels (RI, ISSTH, AWWP); saves Wang Lin in IAC void"
+  1910→            ),
+  1911→            List.of(new RelationShip("Wang Lin", "master")),
+  1912→            "novel (Sea of Devils); Fandom wiki; Baidu Baike"
+  1913→        ),
+  1914→        new CanonCharacter(
+  1915→            "N156", "Thunder Toad", "雷蟾", CharType.OTHER,
+  1916→            "evolved", "Wang Lin's", "deceased", 4,
+  1917→            "unknown", "Allheaven Star System",
+  1918→            java.util.List.of(
+  1919→                "Wang Lin's companion; fed Brilliant Golden Fruit to evolve",
+  1920→                "Sacrificed to create Bloodline Thunder for Wang Lin's Thunder Essence completion"
+  1921→            ),
+  1922→            List.of(new RelationShip("Wang Lin", "master")),
+  1923→            "novel; Fandom wiki"
+  1924→        ),
+  1925→        new CanonCharacter(
+  1926→            "N157", "Thunder Celestial Beast", "雷仙兽", CharType.OTHER,
+  1927→            "Ascendant-tier", "Wang Lin's", "alive", 3,
+  1928→            "unknown", "unknown",
+  1929→            java.util.List.of("Wang Lin's combat mount/companion during Ascendant stage"),
+  1930→            List.of(new RelationShip("Wang Lin", "master")),
+  1931→            "novel (implicit); Fandom wiki; C3"
+  1932→        ),
+  1933→        new CanonCharacter(
+  1934→            "N158", "Nether Beast", "冥兽", CharType.OTHER,
+  1935→            "beast (vast interior)", "Wang Lin's", "alive", 4,
+  1936→            "unknown", "Wang Lin's side",
+  1937→            java.util.List.of(
+  1938→                "Wang Lin's life-bound beast with a vast sub-dimension interior",
+  1939→                "Wang Lin refined the Seal Immortal Seal inside the Nether Beast",
+  1940→                "Encountered the 'Madman' Lian Daofei inside"
+  1941→            ),
+  1942→            List.of(new RelationShip("Wang Lin", "master"), new RelationShip("Lian Daofei", "ally")),
+  1943→            "novel; Fandom wiki; Baidu Baike"
+  1944→        ),
+  1945→        new CanonCharacter(
+  1946→            "N159", "Brilliant Void", "玄虚", CharType.OTHER,
+  1947→            "beast", "Wang Lin's", "alive", 3,
+  1948→            "unknown", "unknown",
+  1949→            java.util.List.of("Listed in Wang Lin's pets; named for the region"),
+  1950→            List.of(new RelationShip("Wang Lin", "master")),
+  1951→            "novel (implicit); Fandom wiki; C3"
+  1952→        ),
+  1953→        new CanonCharacter(
+  1954→            "N160", "Golden Exalt Sea Dragon", "金尊海龙", CharType.OTHER,
+  1955→            "beast", "Wang Lin's", "alive", 4,
+  1956→            "unknown", "IAC",
+  1957→            java.util.List.of(
+  1958→                "Wang Lin's mount",
+  1959→                "Liu Jinbiao used Path of Deception to gain its recognition; Xu Liguo dared not bully Liu Jinbiao anymore"
+  1960→            ),
+  1961→            List.of(new RelationShip("Wang Lin", "master"), new RelationShip("Liu Jinbiao", "ally")),
+  1962→            "novel; Fandom wiki"
+  1963→        )
+  1964→    );
+  1965→
+  1966→    /** All 80 canon locations. */
+  1967→    public static final List<CanonLocation> ALL_LOCATIONS = List.of(
+  1968→        new CanonLocation(
+  1969→            "L01", "The Root Dao", "本源大道", LocType.REALM,
+  1970→            null, "root_dao", "absolute",
+  1971→            false, null, "Source substrate of all Daos; not a cultivable realm", 4,
+  1972→            null,
+  1973→            java.util.List.of(
+  1974→                "The outermost reality — the 'true' Dao-source underlying everything",
+  1975→                "Fundamental laws: Five Elements, Karma, Reincarnation, Life-Death, True-False, Absolute Beginning/End, Restriction, Slaughter",
+  1976→                "Not a place one 'lives in'; it is the substrate of all existence",
+  1977→                "Wang Lin ultimately comprehends his 14th essence (Reincarnation) here, achieving Heaven Trampling"
+  1978→            ), java.util.List.of(), java.util.List.of("Wang Lin comprehends the Reincarnation Essence here, achieving Heaven Trampling (4th Step)"),
+  1979→            "C4 - Fandom wiki; Baidu Baike (essence system); no specific chapter"
+  1980→        ),
+  1981→        new CanonLocation(
+  1982→            "L02", "Luo Tian Star System", "罗天", LocType.STAR_SYSTEM,
+  1983→            null, "luo_tian", "absolute",
+  1984→            false, null, "True-reality tier; Void Tribulant and Grand Empyrean cultivators routinely operate here", 4,
+  1985→            null,
+  1986→            java.util.List.of(
+  1987→                "The 'true' star-system-level reality outside the Cave World",
+  1988→                "The Immortal Astral Continent floats in Luo Tian's void",
+  1989→                "Home of the Luo Tian Star Domain where the Luo Tian Alliance War was fought",
+  1990→                "The Three Auspicious Treasures (Xu Liguo, Liu Jinbiao, Zhong Dahong) were originally cultivators from Luo Tian"
+  1991→            ), java.util.List.of("Luo Tian Alliance"), java.util.List.of(
+  1992→                "Wang Lin's Luo Tian Alliance War arc (Book 7-8)",
+  1993→                "Wang Lin slew the Water Daoist here",
+  1994→                "Luo Tian Thunder Immortal Realm existed here before collapsing"
+  1995→            ),
+  1996→            "C4 - novel + wiki-attested; no specific chapter"
+  1997→        ),
+  1998→        new CanonLocation(
+  1999→            "L03", "Immortal Astral Continent", "仙罔大陆 / 仙罡大陆", LocType.CONTINENT,
+  2000→            "Luo Tian Star System", "immortal_astral_continent", "absolute",
+  2001→            false, null, "Vast continent with nine suns (Grand Empyreans); absolute-tier spiritual energy throughout", 5,
+  2002→            null,
+  2003→            java.util.List.of(
+  2004→                "A continent so vast it has nine suns — each a Grand Empyrean",
+  2005→                "Subdivided into provinces: Heavenly Bull, Green Devil, Mountain Sea, Great Saint, Mengtu, Tianniu, Green Bull continents",
+  2006→                "Originally ruled by Immortal Emperor Lian Daozhen; later by Ancient Clan Dao Ancient Great Heavenly Venerable",
+  2007→                "The Cave World is a pocket-world of the IAC"
+  2008→            ), java.util.List.of("Great Soul Sect", "Gui Yi Sect", "Dao Devil Sect", "Ancient Clan", "Canglong Sect", "Dong Lin Sect"), java.util.List.of(
+  2009→                "Wang Lin arrives as a Third-Step cultivator, condenses Void Clone causing 9 suns to manifest simultaneously",
+  2010→                "Wang Lin slays Gu Dao and becomes 'the Tenth Sun'",
+  2011→                "Wang Lin Transcends the 9 Heaven Trampling Bridges and leaves with Li Muwan"
+  2012→            ),
+  2013→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2014→        ),
+  2015→        new CanonLocation(
+  2016→            "L04", "The Cave World", "洞天", LocType.REALM,
+  2017→            "Immortal Astral Continent", "cave_world", "absolute",
+  2018→            true, "Seven-Colored Daoist", "Medium-tier laws within (seal suppresses high-tier cultivation); contains billions of cultivation planets", 5,
+  2019→            null,
+  2020→            java.util.List.of(
+  2021→                "A sealed dimensional bubble floating in Luo Tian's void",
+  2022→                "Created by the Seven-Colored Daoist to harvest Joss Flames (cultivation energy from mortal faith)",
+  2023→                "Has a sealed inner half (Sealed Realm) and an outer half (Outer Realm)",
+  2024→                "Third-Step cultivators cannot naturally arise within due to the seal"
+  2025→            ), java.util.List.of("Seven-Colored Daoist", "Realm-Sealing Grand Array"), java.util.List.of(
+  2026→                "The entire Book 1-9 takes place inside the Cave World",
+  2027→                "Wang Lin discovers its true nature in Book 11 when he breaches the Ancient Immortal Domain",
+  2028→                "Wang Lin kills the Seven-Colored Daoist, renames it 'Wang Lin's Cave World', becomes the new owner"
+  2029→            ),
+  2030→            "C5 - multi-source (Fandom + Baidu); Book 1-9 set here"
+  2031→        ),
+  2032→        new CanonLocation(
+  2033→            "L05", "Sealed Realm", "封界 / 内界", LocType.REALM,
+  2034→            "The Cave World", "sealed_realm", "medium",
+  2035→            true, "Realm-Sealing Grand Array (spirit: Heaven-Splitting Axe)", "Seal caps cultivation at Heaven Blight / quasi-Third-Step tier", 5,
+  2036→            null,
+  2037→            java.util.List.of(
+  2038→                "The inner half of the Cave World, separated from the Outer Realm by the Realm-Sealing Grand Array",
+  2039→                "Contains Planet Suzaku, Brilliant Void Star System, Allheaven Star System, Cloud Sea Star System",
+  2040→                "The Realm-Sealing Grand Array's spirit is the Heaven-Splitting Axe",
+  2041→                "Suppresses Third-Step cultivation — only 'Heaven Blight' cultivators can squeeze through"
+  2042→            ), java.util.List.of("Cultivation Alliance", "Realm-Sealing Grand Array"), java.util.List.of(
+  2043→                "The Sealed Realm War — Wang Lin as first responder, slaughtering thousands of Outer Realm cultivators",
+  2044→                "Wang Lin becomes 'Lord of the Sealed Realm'",
+  2045→                "Wang Lin resets the Realm Sealing Grand Array at end of arc"
+  2046→            ),
+  2047→            "C5 - multi-source (Fandom + Baidu); Sealed Realm War arc"
+  2048→        ),
+  2049→        new CanonLocation(
+  2050→            "L06", "Outer Realm", "外界", LocType.REALM,
+  2051→            "The Cave World", "cave_world", "high",
+  2052→            false, null, "Higher-tier spiritual energy; less restricted cultivation-wise than the Sealed Realm", 4,
+  2053→            null,
+  2054→            java.util.List.of(
+  2055→                "The outer half of the Cave World; the half NOT inside the Sealed Realm",
+  2056→                "Higher-tier cultivators dwell here",
+  2057→                "Daoist Water (Shui Daozi) was from here",
+  2058→                "Both sides are still sealed within the Cave World overall"
+  2059→            ), java.util.List.of("Dao Devil Sect"), java.util.List.of(
+  2060→                "Wang Lin flees to the Outer Realm with Li Qianmei after the Wind Celestial Realm arc",
+  2061→                "Multiple Outer-Realm third-step cultivators killed by Wang Lin borrowing the Heaven-Splitting Axe"
+  2062→            ),
+  2063→            "C4 - novel + wiki-attested; no specific chapter"
+  2064→        ),
+  2065→        new CanonLocation(
+  2066→            "L07", "Primordial Divine Realm", "原神境", LocType.SECRET_REALM,
+  2067→            "The Cave World", "cave_world", "absolute",
+  2068→            true, "Tianyunzi (unsealed by Wang Lin)", "Absolute-tier; tied to the Heaven Defying Bead / Realm-Defining Compass", 4,
+  2069→            null,
+  2070→            java.util.List.of(
+  2071→                "A sub-dimension accessible from the Cave World after Wang Lin reaches Third Step",
+  2072→                "The place where Tianyunzi's true body hides",
+  2073→                "Exists because of the Heaven Defying Bead / Realm-Defining Compass",
+  2074→                "Wang Lin crosses the 9 Heaven Trampling Bridges here"
+  2075→            ), java.util.List.of("Tianyunzi"), java.util.List.of(
+  2076→                "Wang Lin's final battle with Tianyunzi (who intended to possess Wang Lin but was defeated)",
+  2077→                "Wang Lin crosses the 9 Heaven Trampling Bridges here"
+  2078→            ),
+  2079→            "C4 - novel + wiki-attested; no specific chapter"
+  2080→        ),
+  2081→        new CanonLocation(
+  2082→            "L08", "Brilliant Void Star System", "玄虚星系 / 联盟星系", LocType.STAR_SYSTEM,
+  2083→            "Sealed Realm", "star_system", "medium",
+  2084→            true, "Realm-Sealing Grand Array", "Contains ~7 million cultivation planets; Nascent Soul+ tier common", 5,
+  2085→            null,
+  2086→            java.util.List.of(
+  2087→                "Originally called 'Brilliant Void,' renamed 'Alliance Star System' after the Cultivation Alliance rose to govern it",
+  2088→                "Contains Planet Suzaku, Planet Tian Yun, Planet Ran Yun, Planet Qing Ling, plus the Vermilion Bird Starfield",
+  2089→                "Wang Lin's home star system",
+  2090→                "Site of the Alliance-Allheaven War"
+  2091→            ), java.util.List.of("Cultivation Alliance"), java.util.List.of("Alliance-Allheaven War", "Wang Lin becomes Thunder Celestial and protects this entire star system"),
+  2092→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2093→        ),
+  2094→        new CanonLocation(
+  2095→            "L09", "Allheaven Star System", "诸天星系", LocType.STAR_SYSTEM,
+  2096→            "Sealed Realm", "star_system", "medium",
+  2097→            true, "Realm-Sealing Grand Array", "Rival star system to the Alliance; Nascent Soul+ tier common", 5,
+  2098→            null,
+  2099→            java.util.List.of(
+  2100→                "The 'other' major star system within the Sealed Realm",
+  2101→                "The Southern Domain (containing Thunder Celestial Realm and Yao Family headquarters) is here",
+  2102→                "Origin of many antagonists (Yao Family)",
+  2103→                "Book 7 'Fame Shakes The Allheaven Star System' is set here"
+  2104→            ), java.util.List.of("Yao Family", "Thunder Celestial Realm"), java.util.List.of(
+  2105→                "Wang Lin's fame arc — Yao Family kill-order on Wang Lin",
+  2106→                "Thunder Celestial Tournament",
+  2107→                "Wang Lin destroys multiple planets here"
+  2108→            ),
+  2109→            "C5 - multi-source (Fandom + Baidu); Book 7"
+  2110→        ),
+  2111→        new CanonLocation(
+  2112→            "L10", "Cloud Sea Star System", "云海星系", LocType.STAR_SYSTEM,
+  2113→            "Sealed Realm", "star_system", "high",
+  2114→            true, "Realm-Sealing Grand Array", "Higher-tier than Alliance/Allheaven; Nirvana Scryer+ cultivators common; cloud-covered spirit worlds", 5,
+  2115→            null,
+  2116→            java.util.List.of(
+  2117→                "A star system dominated by cloud-covered spirit worlds",
+  2118→                "Contains the Origin Sect, Treasured Jade Sect, Wild Continent, and Daoist Water's domain",
+  2119→                "Book 9 'Peak of the Cloud Sea' is set here",
+  2120→                "Higher-tier than Alliance and Allheaven Star Systems"
+  2121→            ), java.util.List.of("Origin Sect", "Treasured Jade Sect", "Everlasting Sect", "Da Lou Sword Sect"), java.util.List.of(
+  2122→                "Wang Lin lives as a mortal village doctor here, joins Origin Sect as 'Ceng Niu'",
+  2123→                "Wang Lin battles Daoist Water — turns to stone, saved by Li Qianmei's 10-year blood anointment",
+  2124→                "Wang Lin becomes 'Lord of the Sealed Realm'"
+  2125→            ),
+  2126→            "C5 - multi-source (Fandom + Baidu); Book 9"
+  2127→        ),
+  2128→        new CanonLocation(
+  2129→            "L11", "Vermilion Bird Starfield", "朱雀星域", LocType.STAR_DOMAIN,
+  2130→            "Brilliant Void Star System", "star_system", "medium",
+  2131→            true, "Realm-Sealing Grand Array", "Guarded by the Vermilion Bird Divine Sect; medium-tier spiritual energy", 4,
+  2132→            null,
+  2133→            java.util.List.of(
+  2134→                "A sub-region within the Alliance Star System",
+  2135→                "Guarded by the Vermilion Bird Divine Sect",
+  2136→                "Contains Planet Suzaku, the Vermilion Bird Tomb, and the Four Divine Sect headquarters",
+  2137→                "Wang Lin becomes the 6th-Generation Vermilion Bird Divine Emperor here"
+  2138→            ), java.util.List.of("Vermilion Bird Divine Sect", "Four Divine Sect"), java.util.List.of("Wang Lin becomes the 6th-Generation Vermilion Bird Divine Emperor"),
+  2139→            "C4 - novel + wiki-attested; no specific chapter"
+  2140→        ),
+  2141→        new CanonLocation(
+  2142→            "L12", "Blue Silk Clan Star Domain", "蓝丝族星域", LocType.STAR_DOMAIN,
+  2143→            "The Cave World", "cave_world", "high",
+  2144→            true, "Seven-Colored Daoist", "High-tier; Void Tribulant+ cultivators present", 3,
+  2145→            null,
+  2146→            java.util.List.of(
+  2147→                "The Blue Silk Clan's home star domain",
+  2148→                "Dao Master Blue Dream is based here",
+  2149→                "Probably in the Outer Realm or independent sub-region",
+  2150→                "Wang Lin learns Dao Art Fusion and Light Shadow Shield here"
+  2151→            ), java.util.List.of("Blue Silk Clan"), java.util.List.of("Wang Lin vs. Blue Dream Dao Venerable — heavily injured, saved by Li Qianmei's bracelet"),
+  2152→            "C3 - implied; secondary source"
+  2153→        ),
+  2154→        new CanonLocation(
+  2155→            "L13", "Luo Tian Star Domain", "罗天星域", LocType.STAR_DOMAIN,
+  2156→            "Luo Tian Star System", "luo_tian", "absolute",
+  2157→            false, null, "True-reality tier; Void Tribulant and Grand Empyrean cultivators routinely operate here", 4,
+  2158→            null,
+  2159→            java.util.List.of(
+  2160→                "The star domain ABOVE the Cave World — outside the seal, in Luo Tian proper",
+  2161→                "The Luo Tian Alliance War was fought here",
+  2162→                "The Thunder Immortal Realm and Luo Tian Thunder Immortal Realm were here before their collapse",
+  2163→                "Higher-tier cultivators (Void Tribulant, Grand Empyrean) routinely operate here"
+  2164→            ), java.util.List.of("Luo Tian Alliance"), java.util.List.of(
+  2165→                "Luo Tian Alliance War",
+  2166→                "Wang Lin takes Xi Zifeng as his 3rd disciple after the Luo Tian Thunder Immortal Realm's collapse"
+  2167→            ),
+  2168→            "C4 - novel + wiki-attested; no specific chapter"
+  2169→        ),
+  2170→        new CanonLocation(
+  2171→            "L14", "Planet Suzaku", "朱雀星", LocType.PLANET,
+  2172→            "Vermilion Bird Starfield", "planet", "low",
+  2173→            true, "Cultivation Planet Crystal", "Third-tier cultivation planet; spiritual energy escalates as Wang Lin remakes the planet", 5,
+  2174→            "1",
+  2175→            java.util.List.of(
+  2176→                "Wang Lin's birthplace — a third-tier cultivation planet",
+  2177→                "Multiple cultivation countries on its surface: Zhao, Chu, Fire Burn, Sky Demon, Pilu, Snow Domain, etc.",
+  2178→                "Has a Cultivation Planet Crystal seal inside (Suzaku Tomb)",
+  2179→                "Raised to higher tiers by Wang Lin's actions over the story"
+  2180→            ), java.util.List.of(
+  2181→                "Heng Yue Sect",
+  2182→                "Cloud Sky Sect",
+  2183→                "Soul Refining Sect",
+  2184→                "Vermilion Bird Divine Sect",
+  2185→                "Teng Clan",
+  2186→                "Fighting Evil Sect",
+  2187→                "Corpse Yin Sect",
+  2188→                "Xuan Dao Sect",
+  2189→                "Da Lou Sword Sect",
+  2190→                "Luo He Sect",
+  2191→                "Liu Family"
+  2192→            ), java.util.List.of(
+  2193→                "Wang Lin's birth, clan annihilation, Ji Realm awakening",
+  2194→                "Teng Clan extermination and Teng Huayuan's death",
+  2195→                "Wang Lin becomes Vermilion Bird Divine Emperor"
+  2196→            ),
+  2197→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2198→        ),
+  2199→        new CanonLocation(
+  2200→            "L15", "Planet Tian Yun", "天运星", LocType.PLANET,
+  2201→            "Brilliant Void Star System", "planet", "medium",
+  2202→            true, "Realm-Sealing Grand Array", "Rank-7 cultivation planet; rich spiritual energy", 5,
+  2203→            null,
+  2204→            java.util.List.of(
+  2205→                "A rank-7 cultivation planet in the Alliance Star System",
+  2206→                "Home of the Heavenly Fate Sect (Tianyun Sect) ruled by the All-Seer",
+  2207→                "Divided into seven color divisions (red/orange/yellow/green/blue/cyan/purple)",
+  2208→                "Blood Ancestor Yao Xinghai's residence; East Sea Demon Spirit Land is here"
+  2209→            ), java.util.List.of("Heavenly Fate Sect", "Yao Family"), java.util.List.of(
+  2210→                "Wang Lin becomes 7th disciple of Purple Division of Heavenly Fate Sect",
+  2211→                "Wang Lin kills Blood Ancestor in Thunder Celestial Realm",
+  2212→                "Wang Lin captures Yao Xixue"
+  2213→            ),
+  2214→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2215→        ),
+  2216→        new CanonLocation(
+  2217→            "L16", "Planet Qing Lin", "青灵星", LocType.PLANET,
+  2218→            "Brilliant Void Star System", "planet", "low",
+  2219→            true, "Realm-Sealing Grand Array", "Backwater planet with low spiritual energy", 4,
+  2220→            null,
+  2221→            java.util.List.of(
+  2222→                "Xie Qing's home planet — originally an ordinary old man before becoming Wang Lin's 2nd disciple",
+  2223→                "A backwater planet in the Alliance Star System",
+  2224→                "Wang Lin buried Xie Qing in Autumn Orchid Valley here",
+  2225→                "The site of Xie Qing's 'fish, water, net, fishing' analogy that led Wang Lin to Nirvana Scryer"
+  2226→            ), java.util.List.of(), java.util.List.of(
+  2227→                "Xie Qing's enlightenment leads Wang Lin to Nirvana Scryer breakthrough",
+  2228→                "Wang Lin's return visit when Xie Qing sits atop a mountain for 800 years cultivating only Concepts"
+  2229→            ),
+  2230→            "C4 - novel + wiki-attested; no specific chapter"
+  2231→        ),
+  2232→        new CanonLocation(
+  2233→            "L17", "Planet Ran Yun", "染云星", LocType.PLANET,
+  2234→            "Allheaven Star System", "planet", "medium",
+  2235→            true, "Realm-Sealing Grand Array", "Medium-tier cultivation planet", 4,
+  2236→            null,
+  2237→            java.util.List.of(
+  2238→                "A planet Wang Lin visited under the alias 'Xu Mu'",
+  2239→                "Sun Tai lived here as a friend in his final years",
+  2240→                "Liu Mei came here to attack Wang Lin and lost",
+  2241→                "Wang Ping was raised here as a mortal"
+  2242→            ), java.util.List.of(), java.util.List.of("Wang Lin raises Wang Ping as a mortal (one lifetime), develops Karma Domain"),
+  2243→            "C4 - novel + wiki-attested; no specific chapter"
+  2244→        ),
+  2245→        new CanonLocation(
+  2246→            "L18", "Earth Planet", "土星", LocType.PLANET,
+  2247→            "Brilliant Void Star System", "planet", "medium",
+  2248→            true, "Realm-Sealing Grand Array", "Earth-element leanings; medium-tier spiritual energy", 4,
+  2249→            null,
+  2250→            java.util.List.of(
+  2251→                "Named for its earth-element leanings",
+  2252→                "Visited by Wang Lin after his Heavenly Fate Sect training",
+  2253→                "Junior sect master Xu Yunshan of the Xuan Yuan Sect greeted Wang Lin here"
+  2254→            ), java.util.List.of("Xuan Yuan Sect", "Da Lou Sword Sect"), java.util.List.of(
+  2255→                "Wang Lin kills three Da Lou Sword Sect elders here (over Brilliant Golden Fruit)",
+  2256→                "Feeds the fruit to Mosquito Beast and Thunder Toad, triggering their evolution"
+  2257→            ),
+  2258→            "C4 - novel + wiki-attested; no specific chapter"
+  2259→        ),
+  2260→        new CanonLocation(
+  2261→            "L19", "Trading Planet", "交易星", LocType.PLANET,
+  2262→            "Brilliant Void Star System", "planet", "medium",
+  2263→            true, "Realm-Sealing Grand Array", "Ocean-dominated; goods-flow economy; medium-tier spiritual energy", 4,
+  2264→            null,
+  2265→            java.util.List.of(
+  2266→                "An ocean-dominated trading hub planet in the Alliance Star System",
+  2267→                "Wang Lin and Situ Nan stop here on their way off Planet Suzaku",
+  2268→                "Mainly ocean; goods-flow economy"
+  2269→            ), java.util.List.of(), java.util.List.of(
+  2270→                "Wang Lin meets Li Dannan (guide) and Bai Wei here",
+  2271→                "Situ Nan steals from nearly every sect on the planet, causing a planet-wide chase"
+  2272→            ),
+  2273→            "C4 - novel + wiki-attested; no specific chapter"
+  2274→        ),
+  2275→        new CanonLocation(
+  2276→            "L20", "Water Spirit Star", "水灵星 / 凤鸾星", LocType.PLANET,
+  2277→            "Brilliant Void Star System", "planet", "medium",
+  2278→            true, "Realm-Sealing Grand Array", "Water-spirit planet; strong water-element spiritual energy", 4,
+  2279→            null,
+  2280→            java.util.List.of(
+  2281→                "A water-spirit planet in the Alliance Star System",
+  2282→                "Wang Lin obtained his Fire Essence potential here (first glimpse into the Fu Clan's Golden Leaf Flame Source Origin)",
+  2283→                "Situ Nan founded his 'Southern Prince' faction here"
+  2284→            ), java.util.List.of("Southern Prince faction", "Fu Clan"), java.util.List.of(
+  2285→                "Wang Lin vs. Situ Nan reunion; Situ Nan poisoned",
+  2286→                "Wang Lin's 'One Drop of Universe' comprehension"
+  2287→            ),
+  2288→            "C4 - novel + wiki-attested; no specific chapter"
+  2289→        ),
+  2290→        new CanonLocation(
+  2291→            "L21", "Planet Five Elements", "五行星", LocType.PLANET,
+  2292→            "Sealed Realm", "planet", "medium",
+  2293→            true, "Realm-Sealing Grand Array", "Specialized in Five Elements cultivation materials; medium-tier spiritual energy", 3,
+  2294→            null,
+  2295→            java.util.List.of(
+  2296→                "A planet specialized in Five Elements cultivation materials",
+  2297→                "Water General's 'One Drop of Universe' originates here",
+  2298→                "Specific sub-region within the Sealed Realm unknown"
+  2299→            ), java.util.List.of(), java.util.List.of("Wang Lin comprehends 380 million changes to condense his Water Essence here"),
+  2300→            "C3 - implied; secondary source"
+  2301→        ),
+  2302→        new CanonLocation(
+  2303→            "L22", "Immortal Execution Star", "仙罔星", LocType.PLANET,
+  2304→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  2305→            false, null, "Absolute-tier; reincarnation destination for Cave World cultivators", 4,
+  2306→            null,
+  2307→            java.util.List.of(
+  2308→                "The 'reincarnation destination' for Wang Lin's friends/allies from the Cave World",
+  2309→                "Situ Nan reincarnates here as 'Si Nan' (Grand Marshal of Wu Xuan Country)",
+  2310→                "Xu Liguo, Liu Jinbiao, Zhong Dahong continue their swindling ways here",
+  2311→                "Big Head Cultivator, Zhou Yi, Qing Shuang all reincarnate here"
+  2312→            ), java.util.List.of("Wu Xuan Country"), java.util.List.of("Wang Lin systematically awakens his allies' past-life memories here"),
+  2313→            "C4 - novel + wiki-attested; no specific chapter"
+  2314→        ),
+  2315→        new CanonLocation(
+  2316→            "L23", "Country of Zhao", "赵国", LocType.COUNTRY,
+  2317→            "Planet Suzaku", "country", "fragile",
+  2318→            true, "Cultivation Planet Crystal", "Third-tier cultivation country; Qi Condensation ceiling; weak spiritual veins", 5,
+  2319→            "1",
+  2320→            java.util.List.of(
+  2321→                "A third-tier cultivation country on Planet Suzaku; Wang Lin's birthplace",
+  2322→                "Contains Wang Family Village, Heng Yue Sect, Tian Shui City, Jue Ming Valley (决明谷), the Teng Family City",
+  2323→                "Teng Huayuan was the de facto ruler through the Teng Clan",
+  2324→                "Wang Lin becomes 'Ancestor of the Country of Zhao'"
+  2325→            ), java.util.List.of("Heng Yue Sect", "Teng Clan", "Wang Clan", "Xuan Dao Sect"), java.util.List.of(
+  2326→                "Wang Lin's birth and clan annihilation by Teng Huayuan",
+  2327→                "Wang Lin returns as Soul Formation to wipe out the Teng family and kill Teng Huayuan",
+  2328→                "Wang Lin breaks through to Soul Formation at Xuan Dao Sect"
+  2329→            ),
+  2330→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2331→        ),
+  2332→        new CanonLocation(
+  2333→            "L24", "Chu Country", "楚国", LocType.COUNTRY,
+  2334→            "Planet Suzaku", "country", "fragile",
+  2335→            true, "Cultivation Planet Crystal", "Neighboring country to Zhao; fragile-to-low tier spiritual veins", 4,
+  2336→            null,
+  2337→            java.util.List.of(
+  2338→                "A neighboring country to Zhao on Planet Suzaku",
+  2339→                "The Cloud Sky Sect (Yuntian Sect) is based here",
+  2340→                "Li Muwan ends up here as an elder and eventually Sect Master"
+  2341→            ), java.util.List.of("Cloud Sky Sect"), java.util.List.of(
+  2342→                "Wang Lin kills Sun Zhenwei at Li Muwan's wedding",
+  2343→                "Wang Lin becomes Cloud Sky Sect leader, gives the seat to Li Muwan",
+  2344→                "Wang Lin returns to build a small house with Li Muwan for her final 10 years"
+  2345→            ),
+  2346→            "C4 - novel + wiki-attested; no specific chapter"
+  2347→        ),
+  2348→        new CanonLocation(
+  2349→            "L25", "Fire Burn Country", "火焚国", LocType.COUNTRY,
+  2350→            "Planet Suzaku", "country", "fragile",
+  2351→            true, "Cultivation Planet Crystal", "Fire-element dominant; fragile-tier spiritual veins; Fire Beasts roam", 4,
+  2352→            null,
+  2353→            java.util.List.of(
+  2354→                "Li Muwan's home country on Planet Suzaku",
+  2355→                "The Luo He Sect is based here",
+  2356→                "Li Qiqing (Li Muwan's brother) was an elite Luo He Sect disciple here",
+  2357→                "Fire Beasts roam this region"
+  2358→            ), java.util.List.of("Luo He Sect"), java.util.List.of(
+  2359→                "Wang Lin (in Ma Liang's body) meets Li Muwan here while escaping a Fire Beast",
+  2360→                "The Heaven Defying Bead eats the King of Fire Beasts here"
+  2361→            ),
+  2362→            "C4 - novel + wiki-attested; no specific chapter"
+  2363→        ),
+  2364→        new CanonLocation(
+  2365→            "L26", "Sky Demon Country", "天魔国", LocType.COUNTRY,
+  2366→            "Planet Suzaku", "country", "low",
+  2367→            true, "Cultivation Planet Crystal", "Demonic cultivation country; low-tier spiritual energy with demonic taint", 4,
+  2368→            null,
+  2369→            java.util.List.of(
+  2370→                "A demonic-cultivation country on Planet Suzaku",
+  2371→                "Likely located in the East Demon Spirit Sea region",
+  2372→                "Mo Lihai is a city general here",
+  2373→                "The Demonic Drum tournament (15 rings → Ascendant breakthrough) is held in the capital"
+  2374→            ), java.util.List.of("Sky Demon Country military"), java.util.List.of(
+  2375→                "Wang Lin wins the Demonic Drum tournament (15 rings), breaks through to Ascendant",
+  2376→                "Yao Xixue schemes against Wang Lin in a cave here"
+  2377→            ),
+  2378→            "C4 - novel + wiki-attested; no specific chapter"
+  2379→        ),
+  2380→        new CanonLocation(
+  2381→            "L27", "Pilu Kingdom", "毗卢国", LocType.COUNTRY,
+  2382→            "Planet Suzaku", "country", "low",
+  2383→            true, "Cultivation Planet Crystal", "Low-tier spiritual energy; Soul Refining Sect's soul-based energy practices", 4,
+  2384→            null,
+  2385→            java.util.List.of(
+  2386→                "The kingdom where the Soul Refining Sect is headquartered",
+  2387→                "Dun Tian and Nian Tian are from here",
+  2388→                "Wang Lin inherits the Soul Refining Sect and the Ten Billion Soul Banner here"
+  2389→            ), java.util.List.of("Soul Refining Sect"), java.util.List.of(
+  2390→                "Wang Lin inherits the Soul Refining Sect and Ten Billion Soul Banner from Dun Tian",
+  2391→                "Soul Transformation breakthrough",
+  2392→                "Wang Lin teaches the Soul Refining Tribe their heritage here"
+  2393→            ),
+  2394→            "C4 - novel + wiki-attested; no specific chapter"
+  2395→        ),
+  2396→        new CanonLocation(
+  2397→            "L28", "Snow Domain Country", "雪域国", LocType.COUNTRY,
+  2398→            "Planet Suzaku", "country", "fragile",
+  2399→            true, "Cultivation Planet Crystal", "Cold-region country; fragile-tier ice/yin spiritual veins", 3,
+  2400→            null,
+  2401→            java.util.List.of(
+  2402→                "A cold-region country on Planet Suzaku",
+  2403→                "Liao Fan, who attacked Wang Lin with Situ Nan's severed arm, was from here",
+  2404→                "Tangential to main plot"
+  2405→            ), java.util.List.of(), java.util.List.of("Liao Fan attacks Wang Lin in EP80/ch1200 with Situ Nan's severed arm"),
+  2406→            "C3 - implied; Liao Fan EP80/Ch.~1200; secondary source"
+  2407→        ),
+  2408→        new CanonLocation(
+  2409→            "L29", "Xuan Wu", "玄武国", LocType.COUNTRY,
+  2410→            "Planet Suzaku", "country", "fragile",
+  2411→            true, "Cultivation Planet Crystal", "Fragile-tier spiritual veins", 3,
+  2412→            null,
+  2413→            java.util.List.of(
+  2414→                "A country Wang Lin fled to while being chased by Duanmu Ji from the Sea of Devils",
+  2415→                "Mentioned as a destination during the Duanmu Ji arc",
+  2416→                "Tangential to main plot"
+  2417→            ), java.util.List.of(), java.util.List.of("Wang Lin hides in the Heaven Defying Bead for 3 years here to evade Duanmu Ji"),
+  2418→            "C3 - implied; secondary source"
+  2419→        ),
+  2420→        new CanonLocation(
+  2421→            "L30", "Fire Demon Country", "火魔国", LocType.COUNTRY,
+  2422→            "Planet Suzaku", "country", "low",
+  2423→            true, "Cultivation Planet Crystal", "Fire/demonic spiritual energy; a fragmented ancient demon sealed beneath", 4,
+  2424→            null,
+  2425→            java.util.List.of(
+  2426→                "A country under which a fragmented ancient demon is sealed",
+  2427→                "Likably near the East Demon Spirit Sea on Planet Suzaku",
+  2428→                "Bei Luo helps Wang Lin weaken the demon here"
+  2429→            ), java.util.List.of(), java.util.List.of(
+  2430→                "Wang Lin creates his first devil (Xu Liguo) here in a black pagoda",
+  2431→                "Bei Luo devours the fragmented ancient demon here"
+  2432→            ),
+  2433→            "C4 - novel + wiki-attested; no specific chapter"
+  2434→        ),
+  2435→        new CanonLocation(
+  2436→            "L31", "Vermilion Bird Country", "朱雀国", LocType.COUNTRY,
+  2437→            "Planet Suzaku", "country", "medium",
+  2438→            true, "Cultivation Planet Crystal", "Highest-tier cultivation country on Planet Suzaku (level 6); medium-tier spiritual energy", 4,
+  2439→            null,
+  2440→            java.util.List.of(
+  2441→                "The ruling cultivation nation of Planet Suzaku (level 6, raised by Situ Nan)",
+  2442→                "Its ruler is the 'Vermilion Bird Master' — a renewable office",
+  2443→                "Situ Nan was the 2nd-Generation; Zhou Wutai was the 15th; Wang Lin was the 16th",
+  2444→                "The 14th severed Situ Nan's arm; the 3rd betrayed Situ Nan"
+  2445→            ), java.util.List.of("Vermilion Bird Divine Sect"), java.util.List.of(
+  2446→                "Wang Lin declines the position of Vermilion Bird Child (transferring it to Zhou Wutai)",
+  2447→                "Wang Lin later becomes the 6th-Generation Vermilion Bird Divine Emperor of the broader sect"
+  2448→            ),
+  2449→            "C4 - novel + wiki-attested; no specific chapter"
+  2450→        ),
+  2451→        new CanonLocation(
+  2452→            "L32", "Great Wang Dynasty", "大王朝", LocType.COUNTRY,
+  2453→            "Planet Suzaku", "country", "medium",
+  2454→            true, "Cultivation Planet Crystal", "Medium-tier; Wang Lin's eponymous dynasty", 4,
+  2455→            null,
+  2456→            java.util.List.of(
+  2457→                "Wang Lin's eponymous dynasty, founded after his rise to power",
+  2458→                "Made Wang Lin 'Ancestor of the Country of Zhao' simultaneously",
+  2459→                "Established offscreen during the Vermilion Bird Star period"
+  2460→            ), java.util.List.of("Wang Lin"), java.util.List.of("Established offscreen during the Vermilion Bird Star period"),
+  2461→            "C4 - novel + wiki-attested; no specific chapter"
+  2462→        ),
+  2463→        new CanonLocation(
+  2464→            "L33", "Qing Shui Kingdom", "清水国", LocType.COUNTRY,
+  2465→            "Planet Suzaku", "country", "fragile",
+  2466→            true, "Cultivation Planet Crystal", "Fragile-tier; former mortal kingdom (destroyed before main story)", 3,
+  2467→            null,
+  2468→            java.util.List.of(
+  2469→                "Qing Shui's original mortal kingdom",
+  2470→                "Destroyed before the main story began",
+  2471→                "Its destruction seeded Qing Shui's slaughter essence and his resolve to defy the heavens"
+  2472→            ), java.util.List.of(), java.util.List.of("Kingdom destruction and Qing Shui's family/clan annihilation (backstory only)"),
+  2473→            "C3 - implied; secondary source (Qing Shui backstory)"
+  2474→        ),
+  2475→        new CanonLocation(
+  2476→            "L34", "Wang Family Village", "王家村", LocType.CITY,
+  2477→            "Country of Zhao", "country", "fragile",
+  2478→            true, "Cultivation Planet Crystal", "Mortal village; negligible spiritual energy", 5,
+  2479→            "1",
+  2480→            java.util.List.of(
+  2481→                "Wang Lin's birthplace — a small mortal village of the impoverished Wang Family Carpenter Clan",
+  2482→                "Approximately 100 families",
+  2483→                "Teng Huayuan exterminates the village (sparing only Wang Hao and Wang Zhuo who were Heng Yue Sect disciples)",
+  2484→                "Wang Lin returns as Soul Formation to bury the dead"
+  2485→            ), java.util.List.of("Wang Clan"), java.util.List.of(
+  2486→                "Wang Lin born here",
+  2487→                "Teng Huayuan exterminates the village",
+  2488→                "Wang Lin returns as Soul Formation to bury the dead"
+  2489→            ),
+  2490→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2491→        ),
+  2492→        new CanonLocation(
+  2493→            "L35", "Tian Shui City", "天水城", LocType.CITY,
+  2494→            "Country of Zhao", "country", "fragile",
+  2495→            true, "Cultivation Planet Crystal", "Major mortal+cultivator trading city; fragile-tier spiritual veins", 5,
+  2496→            null,
+  2497→            java.util.List.of(
+  2498→                "A major mortal+cultivator trading city in the Country of Zhao",
+  2499→                "Wang Lin's first destination after his 4-year closed-door cultivation",
+  2500→                "The Heng Yue Sect has interests here"
+  2501→            ), java.util.List.of("Heng Yue Sect"), java.util.List.of(
+  2502→                "Wang Lin kills Teng Li (Teng Huayuan's great-great-grandson) and steals his Foundation Establishment",
+  2503→                "Old man Ji Mo's disciples attack Wang Lin here"
+  2504→            ),
+  2505→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2506→        ),
+  2507→        new CanonLocation(
+  2508→            "L36", "Teng Family City", "藤家城", LocType.CITY,
+  2509→            "Country of Zhao", "country", "fragile",
+  2510→            true, "Cultivation Planet Crystal", "Fragile-tier; Teng Clan stronghold with accumulated resources", 4,
+  2511→            null,
+  2512→            java.util.List.of(
+  2513→                "The Teng Clan's stronghold city in the Country of Zhao",
+  2514→                "De facto ruled by Teng Huayuan",
+  2515→                "The Teng Clan had nine Nascent Soul cultivators here"
+  2516→            ), java.util.List.of("Teng Clan"), java.util.List.of(
+  2517→                "Wang Lin's 'Kill and Destroy the Heart' revenge — hunts Teng descendants one by one",
+  2518→                "Wang Lin builds a human-head tower to intimidate Teng Huayuan",
+  2519→                "The Teng Clan's nine Nascent Soul cultivators are killed and refined into demons"
+  2520→            ),
+  2521→            "C4 - novel + wiki-attested; no specific chapter"
+  2522→        ),
+  2523→        new CanonLocation(
+  2524→            "L37", "Nan Dou City", "南斗城", LocType.CITY,
+  2525→            "Planet Suzaku", "planet", "low",
+  2526→            true, "Cultivation Planet Crystal", "Low-tier spiritual veins; near the Sea of Devils", 4,
+  2527→            null,
+  2528→            java.util.List.of(
+  2529→                "A city Wang Lin visited to purchase an alchemy furnace for Li Muwan's Distant Heaven Pill",
+  2530→                "Located in or near the Sea of Devils on Planet Suzaku"
+  2531→            ), java.util.List.of("Fighting Evil Sect"), java.util.List.of(
+  2532→                "Wang Lin noticed by Fighting Evil Sect members here",
+  2533→                "10 Core Formation cultivators chase Wang Lin back to his cave"
+  2534→            ),
+  2535→            "C4 - novel + wiki-attested; no specific chapter"
+  2536→        ),
+  2537→        new CanonLocation(
+  2538→            "L38", "Qilin City", "麒麟城", LocType.CITY,
+  2539→            "Planet Suzaku", "planet", "low",
+  2540→            true, "Cultivation Planet Crystal", "Low-tier spiritual veins", 4,
+  2541→            null,
+  2542→            java.util.List.of(
+  2543→                "A city Wang Lin visited after escaping the Chaotic Broken Stars",
+  2544→                "Yun Fei's cave is here",
+  2545→                "Possibly on Planet Suzaku or a nearby star"
+  2546→            ), java.util.List.of(), java.util.List.of(
+  2547→                "Wang Lin places a 3-day restriction on Yun Fei here",
+  2548→                "Qiu Siping tries to unlock it; Wang Lin's devil kills Yun Fei"
+  2549→            ),
+  2550→            "C4 - novel + wiki-attested; no specific chapter"
+  2551→        ),
+  2552→        new CanonLocation(
+  2553→            "L39", "Ancient Demon City", "古魔城", LocType.CITY,
+  2554→            "Sky Demon Country", "country", "low",
+  2555→            true, "Cultivation Planet Crystal", "Low-tier demonic spiritual energy; capital of Sky Demon Country", 4,
+  2556→            null,
+  2557→            java.util.List.of(
+  2558→                "The capital of the Sky Demon Country on Planet Suzaku",
+  2559→                "Site of the Demonic Drum tournament",
+  2560→                "Also known as Demon Capital or Taga"
+  2561→            ), java.util.List.of("Sky Demon Country military"), java.util.List.of(
+  2562→                "Wang Lin wins the Demonic Drum tournament (15 rings), becomes an Ascendant",
+  2563→                "Wang Lin defeats Mo Lihai's competitors"
+  2564→            ),
+  2565→            "C4 - novel + wiki-attested; no specific chapter"
+  2566→        ),
+  2567→        new CanonLocation(
+  2568→            "L40", "Shui City", "水城 / 斗城", LocType.CITY,
+  2569→            "Planet Suzaku", "planet", "fragile",
+  2570→            true, "Cultivation Planet Crystal", "Fragile-tier spiritual veins", 3,
+  2571→            null,
+  2572→            java.util.List.of(
+  2573→                "Cities mentioned tangentially in the Sea of Devils arc",
+  2574→                "Also known as Dou City",
+  2575→                "Tangential to main plot"
+  2576→            ), java.util.List.of(), java.util.List.of(),
+  2577→            "C3 - implied; secondary source"
+  2578→        ),
+  2579→        new CanonLocation(
+  2580→            "L41", "Hou Fen", "侯分", LocType.OTHER,
+  2581→            "Planet Suzaku", "planet", "fragile",
+  2582→            true, "Cultivation Planet Crystal", "Fragile-tier; a region within the Suzaku cultivation world", 3,
+  2583→            null,
+  2584→            java.util.List.of(
+  2585→                "A region listed in the Fandom nav-bar Locations",
+  2586→                "On Planet Suzaku — a region within the Suzaku cultivation world",
+  2587→                "Specific details sparse; tangential to main plot"
+  2588→            ), java.util.List.of(), java.util.List.of(),
+  2589→            "C3 - implied; Fandom nav-bar only"
+  2590→        ),
+  2591→        new CanonLocation(
+  2592→            "L42", "Blue Pine Peaks", "蓝松峰", LocType.MOUNTAIN,
+  2593→            "Planet Suzaku", "planet", "fragile",
+  2594→            true, "Cultivation Planet Crystal", "Fragile-tier mountain range spiritual veins", 3,
+  2595→            null,
+  2596→            java.util.List.of(
+  2597→                "A mountain range region on Planet Suzaku",
+  2598→                "Listed in the Fandom nav-bar Locations",
+  2599→                "Specific details sparse; tangential to main plot"
+  2600→            ), java.util.List.of(), java.util.List.of(),
+  2601→            "C3 - implied; Fandom nav-bar only"
+  2602→        ),
+  2603→        new CanonLocation(
+  2604→            "L43", "Soul Refining Tribe", "炼魂部族", LocType.CITY,
+  2605→            "Planet Suzaku", "planet", "low",
+  2606→            true, "Cultivation Planet Crystal", "Low-tier; tribal soul-refining spiritual energy; over 1 million people", 4,
+  2607→            null,
+  2608→            java.util.List.of(
+  2609→                "A tribe of over 1 million people in the East Demon Spirit Sea",
+  2610→                "Founded by Wang Lin when he taught the Soul Refining Sect's heritage to the Mountain Valley tribe",
+  2611→                "Chief: Ouyang Hua",
+  2612→                "Wang Lin is regarded as their Ancestor"
+  2613→            ), java.util.List.of("Soul Refining Sect"), java.util.List.of("Restored Wang Lin's One Billion Soul Flag", "Thirteen and Huo Pao trained here"),
+  2614→            "C4 - novel + wiki-attested; no specific chapter"
+  2615→        ),
+  2616→        new CanonLocation(
+  2617→            "L44", "Mountain Valley Tribe", "山谷部落", LocType.CITY,
+  2618→            "Planet Suzaku", "planet", "low",
+  2619→            true, "Cultivation Planet Crystal", "Low-tier; tribal spiritual energy in the East Demon Spirit Sea", 4,
+  2620→            null,
+  2621→            java.util.List.of(
+  2622→                "The original name of the Soul Refining Tribe before Wang Lin elevated it",
+  2623→                "Located in the East Demon Spirit Sea on Planet Suzaku",
+  2624→                "Tribe chief: Ouyang Hua"
+  2625→            ), java.util.List.of(), java.util.List.of(
+  2626→                "Wang Lin displays power and is recognized by the tribe",
+  2627→                "Wang Lin teaches them Soul Refining Sect heritage, elevating them to the Soul Refining Tribe"
+  2628→            ),
+  2629→            "C4 - novel + wiki-attested; no specific chapter"
+  2630→        ),
+  2631→        new CanonLocation(
+  2632→            "L45", "Sea of Devils", "魔海 / 魔修海", LocType.OTHER,
+  2633→            "Planet Suzaku", "planet", "low",
+  2634→            true, "Cultivation Planet Crystal", "Demonic spiritual energy; devils, beasts, and demonic cultivators thrive here", 5,
+  2635→            null,
+  2636→            java.util.List.of(
+  2637→                "A vast demonic-sea region on Planet Suzaku, divided into 'districts' (Wang Lin enters the 14th district)",
+  2638→                "Inhabited by devils, beasts, and demonic cultivators",
+  2639→                "The Fighting Evil Sect, Soul Refining Sect, and Corpse Yin Sect all operate in/around it"
+  2640→            ), java.util.List.of("Fighting Evil Sect", "Soul Refining Sect", "Corpse Yin Sect"), java.util.List.of(
+  2641→                "Wang Lin's Core Formation breakthrough (with Li Muwan)",
+  2642→                "The Fighting Evil Sect massacre",
+  2643→                "Wang Lin takes the Mosquito Beast here"
+  2644→            ),
+  2645→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2646→        ),
+  2647→        new CanonLocation(
+  2648→            "L46", "Jue Ming Valley", "决明谷", LocType.OTHER,
+  2649→            "Planet Suzaku", "planet", "low",
+  2650→            true, "Cultivation Planet Crystal", "Low-tier; trapping formation holds cultivators inside", 5,
+  2651→            null,
+  2652→            java.util.List.of(
+  2653→                "A valley where surrounding sects compete for tokens to enter the Foreign Battleground",
+  2654→                "A trapping formation holds cultivators inside until the competition ends",
+  2655→                "Site of Wang Lin's Ji Realm awakening"
+  2656→            ), java.util.List.of(), java.util.List.of(
+  2657→                "Wang Lin's Ji Realm awakening (driven by grief over his clan's annihilation)",
+  2658→                "First duel with Teng Huayuan outside the valley",
+  2659→                "Wang Lin's physical body destroyed; soul flees to Foreign Battleground"
+  2660→            ),
+  2661→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2662→        ),
+  2663→        new CanonLocation(
+  2664→            "L47", "Foreign Battleground", "域外战场", LocType.SECRET_REALM,
+  2665→            "Planet Suzaku", "planet", "medium",
+  2666→            true, "Soul-seal (death-law locked)", "Medium-tier; death-law locked — black-colored laws of death prevent souls from leaving", 5,
+  2667→            null,
+  2668→            java.util.List.of(
+  2669→                "A sealed battlefield accessible only via the Jue Ming Valley tokens",
+  2670→                "Outside normal Suzaku geography",
+  2671→                "Black-colored laws of death prevent souls from leaving — anyone who dies becomes a wandering soul",
+  2672→                "Used for sect competitions and 'death exile'"
+  2673→            ), java.util.List.of(), java.util.List.of(
+  2674→                "Wang Lin becomes a Soul Devourer here (feeding on many souls)",
+  2675→                "Wang Lin takes over Ma Liang's dying body",
+  2676→                "Wang Lin escapes the death-law seal through observation, calculation, and knowledge"
+  2677→            ),
+  2678→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2679→        ),
+  2680→        new CanonLocation(
+  2681→            "L48", "Land of the Ancient God", "古神之地", LocType.SECRET_REALM,
+  2682→            "Planet Suzaku", "planet", "medium",
+  2683→            true, "Ancient restrictions (Tu Si's body)", "Medium-to-high; ancient god residual energy; 3-level realm structure", 5,
+  2684→            null,
+  2685→            java.util.List.of(
+  2686→                "The corpse-body of the 8-star Ancient God Tu Si, transformed into a 3-level realm",
+  2687→                "Level 1: hurricane of devils; Level 2: Bridge of No Return + Restriction Mountain; Level 3: Annihilation realm",
+  2688→                "Tuo Sen was born here (Tu Si's demonic thought) and trapped for 1000+ years",
+  2689→                "Accessible from Planet Suzaku and other planets"
+  2690→            ), java.util.List.of(), java.util.List.of(
+  2691→                "Wang Lin inherits Tu Si's knowledge and reshapes his body using ancient knowledge",
+  2692→                "Wang Lin traps Tuo Sen for 1000+ years",
+  2693→                "Wang Lin returns later as a 6-star Ancient God; Tuo Sen is injured"
+  2694→            ),
+  2695→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2696→        ),
+  2697→        new CanonLocation(
+  2698→            "L49", "Restriction Mountain", "禁制山", LocType.MOUNTAIN,
+  2699→            "Land of the Ancient God", "planet", "medium",
+  2700→            true, "Ancient restrictions", "Medium-tier; mountain made of ancient forbidden restrictions", 5,
+  2701→            null,
+  2702→            java.util.List.of(
+  2703→                "A mountain made of ancient forbidden restrictions inside the Land of the Ancient God (Level 2)",
+  2704→                "Each level up is more complex; modified by Demon Lord of Six Desires (Xu Liqing)",
+  2705→                "The 'Great Enlightened One' title is granted to anyone who breaks all restrictions (only 4 ever)",
+  2706→                "Wang Lin is the 4th Great Enlightened One"
+  2707→            ), java.util.List.of(), java.util.List.of(
+  2708→                "Wang Lin spends 7 (story) / 13 (subjective) years here; develops Illusionary Circle technique; hair turns white",
+  2709→                "Receives 'Great Enlightened One' title from Tu Si"
+  2710→            ),
+  2711→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2712→        ),
+  2713→        new CanonLocation(
+  2714→            "L50", "Bridge of No Return", "不归桥", LocType.OTHER,
+  2715→            "Land of the Ancient God", "planet", "medium",
+  2716→            true, "Ancient restrictions", "Medium-tier; tests the heart through illusions", 4,
+  2717→            null,
+  2718→            java.util.List.of(
+  2719→                "A bridge inside the Land of the Ancient God (Level 2)",
+  2720→                "Deviils can return but beasts (and most beings) who turn back are sucked into the void",
+  2721→                "Tests the heart through illusions of loved ones calling back"
+  2722→            ), java.util.List.of(), java.util.List.of("Wang Lin resists the illusion of his parents' voices calling him back; passes the test"),
+  2723→            "C4 - novel + wiki-attested; no specific chapter"
+  2724→        ),
+  2725→        new CanonLocation(
+  2726→            "L51", "Chaotic Broken Stars", "混沌碎星", LocType.SECRET_REALM,
+  2727→            "Planet Suzaku", "planet", "medium",
+  2728→            true, "Ancient spatial restrictions", "Medium-tier chaotic energy; 3-level star cluster with ancient restrictions", 5,
+  2729→            null,
+  2730→            java.util.List.of(
+  2731→                "A 3-level chaotic star cluster accessible via teleportation from Planet Suzaku",
+  2732→                "Level 1: hurricane of devils (Wang Lin creates his 2nd devil here)",
+  2733→                "Level 2: Bridge of No Return + Restriction Mountain",
+  2734→                "Level 3: Annihilation realm — wandering souls, ancient god Tu Si's body"
+  2735→            ), java.util.List.of(), java.util.List.of(
+  2736→                "Duanmu Ji (Soul Formation) chases Wang Lin here",
+  2737→                "Wang Lin outwits Duanmu Ji, Gun Lan, Xu Liqing, and Hunchback Meng",
+  2738→                "Wang Lin inherits Tu Si's legacy"
+  2739→            ),
+  2740→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2741→        ),
+  2742→        new CanonLocation(
+  2743→            "L52", "Suzaku Tomb", "朱雀墓", LocType.OTHER,
+  2744→            "Planet Suzaku", "planet", "medium",
+  2745→            true, "Cultivation Planet Crystal", "Medium-tier; contains the Cultivation Planet Crystal (the seal-mechanism of the planet itself)", 4,
+  2746→            null,
+  2747→            java.util.List.of(
+  2748→                "A multi-floor tomb within Planet Suzaku (underground)",
+  2749→                "Contains the Cultivation Planet Crystal — the seal-mechanism of the planet itself",
+  2750→                "Wang Lin found the Half-Moon Blade here",
+  2751→                "The scattered demon (Piao Nanzi/Lou Hou) is sealed here"
+  2752→            ), java.util.List.of("Vermilion Bird Divine Sect"), java.util.List.of("Wang Lin's tomb-raiding arc", "Encounters the scattered demon (Piao Nanzi/Lou Hou) sealed here"),
+  2753→            "C4 - novel + wiki-attested; no specific chapter"
+  2754→        ),
+  2755→        new CanonLocation(
+  2756→            "L53", "Thunder Celestial Realm", "雷仙界", LocType.REALM,
+  2757→            "Allheaven Star System", "star_system", "high",
+  2758→            true, "Ancient immortal seal (collapses later)", "High-tier; contains Thunder Lake, celestial energy; enslaved celestial clan present", 5,
+  2759→            null,
+  2760→            java.util.List.of(
+  2761→                "A pocket-realm within the Allheaven Star System — the 'Thunder Immortal Realm'",
+  2762→                "Contains the Thunder Celestial Temple, Thunder Lake, and the Chosen Immortal Clan (enslaved celestials)",
+  2763→                "Ruled by Master Flamespark and Russell",
+  2764→                "The Celestial Slaughter Art trap is hidden here"
+  2765→            ), java.util.List.of("Thunder Celestial Temple", "Chosen Immortal Clan", "Yao Family"), java.util.List.of(
+  2766→                "Wang Lin's Thunder Celestial Tournament victory; kills Russell",
+  2767→                "Blood Ancestor killed here",
+  2768→                "Wang Lin obtains the God-Slaying War Chariot, Celestial Emperor Crown, and Collection Pavilion"
+  2769→            ),
+  2770→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2771→        ),
+  2772→        new CanonLocation(
+  2773→            "L54", "Thunder Celestial Temple", "雷仙殿", LocType.SECT,
+  2774→            "Thunder Celestial Realm", "star_system", "high",
+  2775→            true, "Thunder Celestial Realm seal", "High-tier; 3 trials (heaven, earth, human) and Thunder Lake trial", 4,
+  2776→            null,
+  2777→            java.util.List.of(
+  2778→                "The temple ruling the Thunder Celestial Realm",
+  2779→                "Has 3 trials: heaven, earth, human; plus the Thunder Lake trial and battle realm trial (kill-count)",
+  2780→                "Wang Lin becomes 'Thunder Celestial of the Thunder Celestial Temple' here",
+  2781→                "Contains the Collection Pavilion (immortal arts library)"
+  2782→            ), java.util.List.of("Thunder Celestial Temple"), java.util.List.of(
+  2783→                "Wang Lin becomes Thunder Celestial of the Thunder Celestial Temple",
+  2784→                "Thunder Celestial Tournament held here"
+  2785→            ),
+  2786→            "C4 - novel + wiki-attested; no specific chapter"
+  2787→        ),
+  2788→        new CanonLocation(
+  2789→            "L55", "Rain Celestial Realm", "雨仙界", LocType.REALM,
+  2790→            "Allheaven Star System", "star_system", "high",
+  2791→            true, "Ancient immortal seal", "High-tier; immortal jades and immortals' corpses; rich in residual immortal energy", 4,
+  2792→            null,
+  2793→            java.util.List.of(
+  2794→                "A sub-realm of immortal jades and immortals' corpses within the Allheaven Star System",
+  2795→                "Zhou Yi discovered Qing Shuang's corpse here ('Ting'er')",
+  2796→                "The Rain Immortal Sword (Jufu) and War Spirit Print are here"
+  2797→            ), java.util.List.of(), java.util.List.of(
+  2798→                "Wang Lin obtains the Shooting God Chariot, Star Compass, War Spirit Print, and Rain Immortal Sword",
+  2799→                "Wang Lin takes Sun Tai as a servant",
+  2800→                "Wang Lin helps Zhou Yi protect Ting'er's corpse"
+  2801→            ),
+  2802→            "C4 - novel + wiki-attested; no specific chapter"
+  2803→        ),
+  2804→        new CanonLocation(
+  2805→            "L56", "Wind Celestial Realm", "风仙界", LocType.REALM,
+  2806→            "Cloud Sea Star System", "star_system", "high",
+  2807→            true, "Ancient immortal seal", "High-tier; wind-themed immortal energy; large herds of Mosquito Beasts", 4,
+  2808→            null,
+  2809→            java.util.List.of(
+  2810→                "A wind-themed immortal sub-realm within the Cloud Sea Star System",
+  2811→                "Wang Lin acquires a large herd of Mosquito Beasts here",
+  2812→                "The Flowing Moon technique (rules of time) was created here under a stone gate",
+  2813→                "Site of Wang Lin's petrification by Daoist Water"
+  2814→            ), java.util.List.of(), java.util.List.of(
+  2815→                "Wang Lin evolves his king mosquito beast and creates Flowing Moon divine ability",
+  2816→                "Wang Lin severely wounded and petrified by Daoist Water; saved by Li Qianmei's 10-year blood anointment"
+  2817→            ),
+  2818→            "C4 - novel + wiki-attested; no specific chapter"
+  2819→        ),
+  2820→        new CanonLocation(
+  2821→            "L57", "Demon Spirit Land", "魔灵地 / 东海魔灵海", LocType.OTHER,
+  2822→            "Planet Tian Yun", "planet", "medium",
+  2823→            true, "Realm-Sealing Grand Array", "Medium-tier demonic-spirit energy; East Sea Demon Spirit Gate opens periodically", 5,
+  2824→            null,
+  2825→            java.util.List.of(
+  2826→                "A demonic-spirit region on Planet Tian Yun (some sources say Planet Suzaku)",
+  2827→                "The East Sea Demon Spirit Gate opens periodically",
+  2828→                "Contains the Immortal Monarch's Cave Mansion (Yao Xixue's target)",
+  2829→                "The Mountain Valley Tribe is in the east; the Ancient Demon City (Taga) is here"
+  2830→            ), java.util.List.of("Heavenly Fate Sect", "Yao Family"), java.util.List.of(
+  2831→                "Wang Lin takes Thirteen as his 1st disciple and seals Yao Xixue",
+  2832→                "All-Seer, Ling Tianhou, Blood Ancestor, and others come here for the cave token",
+  2833→                "Wang Lin escapes into the abyss to the Allheaven Star System"
+  2834→            ),
+  2835→            "C5 - multi-source (Fandom + Baidu); no specific chapter"
+  2836→        ),
+  2837→        new CanonLocation(
+  2838→            "L58", "Brilliant Void", "玄虚", LocType.OTHER,
+  2839→            "Brilliant Void Star System", "star_system", "medium",
+  2840→            true, "Realm-Sealing Grand Array", "Medium-tier; the vast inner void of the Alliance Star System", 3,
+  2841→            null,
+  2842→            java.util.List.of(
+  2843→                "The original name of the Alliance Star System's interior void",
+  2844→                "Renamed to Alliance Star System by the Cultivation Alliance",
+  2845→                "Wang Lin's 'Brilliant Void' pet is named after this region",
+  2846→                "Tangential to plot"
+  2847→            ), java.util.List.of("Cultivation Alliance"), java.util.List.of("Renamed to Alliance Star System by the Cultivation Alliance"),
+  2848→            "C3 - implied; secondary source"
+  2849→        ),
+  2850→        new CanonLocation(
+  2851→            "L59", "Wild Continent", "莽荒大陆", LocType.CONTINENT,
+  2852→            "Cloud Sea Star System", "star_system", "medium",
+  2853→            true, "Realm-Sealing Grand Array", "Medium-tier; wild, primal spiritual energy", 4,
+  2854→            null,
+  2855→            java.util.List.of(
+  2856→                "A wild, primal continent within the Cloud Sea Star System",
+  2857→                "Wang Lin discovers 'the secret for the third step that caused a huge calamity thousands of years ago' here",
+  2858→                "Triggered a region-wide sect gathering when discovered"
+  2859→            ), java.util.List.of(), java.util.List.of(
+  2860→                "Wang Lin's discovery triggers a region-wide sect gathering",
+  2861→                "Wang Lin kills Noble Money and his group on the way back"
+  2862→            ),
+  2863→            "C4 - novel + wiki-attested; no specific chapter"
+  2864→        ),
+  2865→        new CanonLocation(
+  2866→            "L60", "Seven-Colored Realm", "七彩界", LocType.SECRET_REALM,
+  2867→            "Cloud Sea Star System", "star_system", "high",
+  2868→            true, "Ancient restrictions (Seven-Colored Divine Sky Nail system)", "High-tier; seven-colored light energy; Seven-Colored Divine Sky Nail (108 nails) system", 4,
+  2869→            null,
+  2870→            java.util.List.of(
+  2871→                "A pocket-realm of seven-colored light within the Cloud Sea Star System",
+  2872→                "Master Ashen Pine takes cultivators here to 'find something' (actually a trap)",
+  2873→                "The Seven-Colored Divine Sky Nail (108 nails, designed to kill Third Step experts) is here",
+  2874→                "Spatial cracks separate cultivators"
+  2875→            ), java.util.List.of(), java.util.List.of(
+  2876→                "Wang Lin tricks Master Cloud Soul into a different spatial crack",
+  2877→                "Wang Lin steals treasures from Master Ashen Pine and kills him with the seven-colored nail",
+  2878→                "Cang Songzi destroys Wang Lin's Rusty Iron Sword here"
+  2879→            ),
+  2880→            "C4 - novel + wiki-attested; no specific chapter"
+  2881→        ),
+  2882→        new CanonLocation(
+  2883→            "L61", "Ancient Tomb", "古墓", LocType.OTHER,
+  2884→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  2885→            false, null, "Absolute-tier; contains Ancient Clan relics: Yi Si Puppet, Heaven-Splitting Axe, Eternal Wood Spirit, Fog Devil Lance, Ancient Breath Leaves, Emperor Furnace", 4,
+  2886→            null,
+  2887→            java.util.List.of(
+  2888→                "A vast multi-floor tomb on the IAC containing relics of the Ancient Clan",
+  2889→                "Contains the Yi Si Puppet, Heaven-Splitting Axe, Eternal Wood Spirit, Fog Devil Lance, Ancient Breath Leaves (99-piece set), Emperor Furnace",
+  2890→                "Also contains Ye Mo's left eye and right arm",
+  2891→                "Daogu Yemo's ancient devil corpse is here (used for Wang Lin's Third Avatar)"
+  2892→            ), java.util.List.of("Ancient Clan"), java.util.List.of("Wang Lin obtains numerous Ancient Clan relics here", "Tan Lang is involved in events here"),
+  2893→            "C4 - novel + wiki-attested; no specific chapter"
+  2894→        ),
+  2895→        new CanonLocation(
+  2896→            "L62", "Pill Sea", "丹海", LocType.OTHER,
+  2897→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  2898→            false, null, "Absolute-tier; vast sea of dissolved pills and alchemical waste; contains Water Essence energy", 4,
+  2899→            null,
+  2900→            java.util.List.of(
+  2901→                "A vast sea of pills (alchemical waste + dissolved pills) between Heavenly Bull Continent and Green Devil Continent",
+  2902→                "Wang Lin completes his Water Essence 9th cycle here",
+  2903→                "A Green Bull Continent woman attacks Wang Lin with Ten Thousand Refined Corruption Liquid here"
+  2904→            ), java.util.List.of(), java.util.List.of(
+  2905→                "A woman cultivator from Green Bull Continent attacks Wang Lin with Ten Thousand Refined Corruption Liquid",
+  2906→                "Wang Lin absorbs it to complete his Water Essence 9th cycle"
+  2907→            ),
+  2908→            "C4 - novel + wiki-attested; no specific chapter"
+  2909→        ),
+  2910→        new CanonLocation(
+  2911→            "L63", "Dong Lin Pool", "东林池", LocType.OTHER,
+  2912→            "Great Saint Continent", "immortal_astral_continent", "absolute",
+  2913→            false, null, "Absolute-tier; sealed Ancient God-tier entity beneath; grants Absolute Beginning and Reincarnation Essence comprehension", 4,
+  2914→            null,
+  2915→            java.util.List.of(
+  2916→                "A pool with the sealed spirit of an Ancient God-tier entity beneath it",
+  2917→                "Located on the IAC in the Dong Lin Sect area (Great Saint Continent)",
+  2918→                "False version (inside Fifth Flower's illusory world) grants temporary power",
+  2919→                "True version grants permanent Absolute Beginning and Reincarnation Essence comprehension"
+  2920→            ), java.util.List.of("Dong Lin Sect"), java.util.List.of(
+  2921→                "Wang Lin meditates for 13 years here; Absolute Beginning reaches completion; Reincarnation Essence begun"
+  2922→            ),
+  2923→            "C4 - novel + wiki-attested; no specific chapter"
+  2924→        ),
+  2925→        new CanonLocation(
+  2926→            "L64", "Immortal Emperor's Cave Mansion", "仙帝洞府", LocType.CAVE,
+  2927→            "Demon Spirit Land", "planet", "medium",
+  2928→            true, "Ancient immortal restrictions", "Medium-tier; ancient immortal residual energy; Celestial Emperor's Tower part of complex", 4,
+  2929→            null,
+  2930→            java.util.List.of(
+  2931→                "A cave-mansion left by an ancient immortal, on/under Demon Spirit Land (Tian Yun Star)",
+  2932→                "Yao Xixue and Wang Lin explore it together (causing her hundred-year imprisonment)",
+  2933→                "The Wind Demon (Feng Mo) is encountered here",
+  2934→                "Celestial Emperor's Tower is part of this complex"
+  2935→            ), java.util.List.of("Yao Family"), java.util.List.of(
+  2936→                "Yao Xixue ambushes Wang Lin and is imprisoned for 100 years",
+  2937→                "Yao Xinghai seeks Wang Lin here",
+  2938→                "Wind Demon slain by Wang Lin's God-Slaying Spear"
+  2939→            ),
+  2940→            "C4 - novel + wiki-attested; no specific chapter"
+  2941→        ),
+  2942→        new CanonLocation(
+  2943→            "L65", "Heavenly Bull Continent", "天牛大陆", LocType.CONTINENT,
+  2944→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  2945→            false, null, "Absolute-tier; 120+ Fire Veins; rich fire-element spiritual energy", 4,
+  2946→            null,
+  2947→            java.util.List.of(
+  2948→                "One of the major continents of the IAC",
+  2949→                "Contains the Great Soul Sect, Gui Yi Sect, and 120+ Fire Veins",
+  2950→                "Wang Lin's IAC territory",
+  2951→                "Wang Lin joins Great Soul Sect here and becomes an elder"
+  2952→            ), java.util.List.of("Great Soul Sect", "Gui Yi Sect"), java.util.List.of(
+  2953→                "Wang Lin joins Great Soul Sect, becomes an elder, devours Earth Fire main vein",
+  2954→                "Wang Lin manifests Fire Essence True Body"
+  2955→            ),
+  2956→            "C4 - novel + wiki-attested; no specific chapter"
+  2957→        ),
+  2958→        new CanonLocation(
+  2959→            "L66", "Green Devil Continent", "绿魔大陆", LocType.CONTINENT,
+  2960→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  2961→            false, null, "Absolute-tier; Green Devil (Green Scorpion) demonic energy pervades", 4,
+  2962→            null,
+  2963→            java.util.List.of(
+  2964→                "Home continent of the Green Devil (Green Scorpion) entity on the IAC",
+  2965→                "The Dao Devil Sect (Dao Demon Sect) is based here",
+  2966→                "Wang Lin was captured here as a Green Devil sacrifice"
+  2967→            ), java.util.List.of("Dao Devil Sect"), java.util.List.of(
+  2968→                "Wang Lin captured as Green Devil sacrifice by Ji Si (acting for Dao Demon Sect)",
+  2969→                "Wang Lin reverses the ritual and devours Green Devil, reaching Arcane Void stage"
+  2970→            ),
+  2971→            "C4 - novel + wiki-attested; no specific chapter"
+  2972→        ),
+  2973→        new CanonLocation(
+  2974→            "L67", "Mountain Sea Continent", "山海大陆", LocType.CONTINENT,
+  2975→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  2976→            false, null, "Absolute-tier; contains the Mountain Tree Seal", 3,
+  2977→            null,
+  2978→            java.util.List.of(
+  2979→                "A continent on the IAC with the Mountain Tree Seal",
+  2980→                "Wang Lin finds the second fragment of the Celestial Ancestor's Immortal Absolute Sword here"
+  2981→            ), java.util.List.of(), java.util.List.of("Wang Lin obtains Metal Essence (initial) here"),
+  2982→            "C3 - implied; secondary source"
+  2983→        ),
+  2984→        new CanonLocation(
+  2985→            "L68", "Great Saint Continent", "大圣大陆", LocType.CONTINENT,
+  2986→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  2987→            false, null, "Absolute-tier; a sealed Spirit beneath grants Absolute Beginning and Absolute End Essence comprehension", 3,
+  2988→            null,
+  2989→            java.util.List.of(
+  2990→                "A continent on the IAC with a sealed Spirit beneath it",
+  2991→                "The entity whose comprehension gave Wang Lin Absolute Beginning and Absolute End Essences",
+  2992→                "Dong Lin Pool is technically a sub-region here"
+  2993→            ), java.util.List.of(), java.util.List.of("Wang Lin meditates at Dong Lin Pool here"),
+  2994→            "C3 - implied; secondary source"
+  2995→        ),
+  2996→        new CanonLocation(
+  2997→            "L69", "Mengtu Province", "孟图省", LocType.OTHER,
+  2998→            "Green Devil Continent", "immortal_astral_continent", "absolute",
+  2999→            false, null, "Absolute-tier provincial spiritual energy", 4,
+  3000→            null,
+  3001→            java.util.List.of(
+  3002→                "A province of the IAC on the Green Devil Continent",
+  3003→                "Wang Lin was captured by Dao Demon Sect here",
+  3004→                "Dao Demon Sect Master intended to use Wang Lin to resurrect the Green Devil Scorpion"
+  3005→            ), java.util.List.of("Dao Devil Sect"), java.util.List.of("Wang Lin captured by Dao Demon Sect; turns the tables and reaches Empty Tribulation stage"),
+  3006→            "C4 - novel + wiki-attested; no specific chapter"
+  3007→        ),
+  3008→        new CanonLocation(
+  3009→            "L70", "Tianniu Province", "天牛省", LocType.OTHER,
+  3010→            "Heavenly Bull Continent", "immortal_astral_continent", "absolute",
+  3011→            false, null, "Absolute-tier; contains Canglong Sect and Earth Fire Dragon's soul", 4,
+  3012→            null,
+  3013→            java.util.List.of(
+  3014→                "A province of the IAC on the Heavenly Bull Continent",
+  3015→                "Contains the Canglong Sect (Azure Dragon Sect)",
+  3016→                "Kang Ren (a cultivator who took Wang Lin in) is from here",
+  3017→                "Wang Lin extracts Earth Fire Dragon's soul here"
+  3018→            ), java.util.List.of("Canglong Sect"), java.util.List.of(
+  3019→                "Wang Lin enters unconscious; taken by Kang Ren into Canglong Sect",
+  3020→                "Wang Lin extracts Earth Fire Dragon's soul; pursued by ancestor Du Qing"
+  3021→            ),
+  3022→            "C4 - novel + wiki-attested; no specific chapter"
+  3023→        ),
+  3024→        new CanonLocation(
+  3025→            "L71", "Green Bull Continent", "青牛大陆", LocType.CONTINENT,
+  3026→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  3027→            false, null, "Absolute-tier continental spiritual energy", 3,
+  3028→            null,
+  3029→            java.util.List.of(
+  3030→                "A continent on the IAC",
+  3031→                "A woman cultivator from here attacked Wang Lin in the Pill Sea",
+  3032→                "Less detail available than other IAC continents"
+  3033→            ), java.util.List.of(), java.util.List.of("Woman cultivator attacks Wang Lin with Ten Thousand Refined Corruption Liquid in the Pill Sea"),
+  3034→            "C3 - implied; secondary source"
+  3035→        ),
+  3036→        new CanonLocation(
+  3037→            "L72", "Imperial City", "皇城 / 道古皇都", LocType.CITY,
+  3038→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  3039→            false, null, "Absolute-tier; the Ancient Clan's imperial seat; richest spiritual energy on the IAC", 4,
+  3040→            null,
+  3041→            java.util.List.of(
+  3042→                "The Ancient Clan's imperial seat — the Dao Ancient Imperial Capital",
+  3043→                "Dao Ancient Imperial Venerable rules here",
+  3044→                "Lu Mo (Slaughter True Body) emerged here to defend Wang Lin"
+  3045→            ), java.util.List.of("Ancient Clan"), java.util.List.of(
+  3046→                "Wang Lin ambushed here; Lu Mo released and kills attackers",
+  3047→                "Wang Lin slays Dao Ancient Imperial Venerable to retrieve Li Muwan's remnant soul",
+  3048→                "Jiu Di Great Celestial Venerable confronted here"
+  3049→            ),
+  3050→            "C4 - novel + wiki-attested; no specific chapter"
+  3051→        ),
+  3052→        new CanonLocation(
+  3053→            "L73", "Ancient Clan Ancestral Temple", "古族祖庙 / 古氏分支祖庙", LocType.OTHER,
+  3054→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  3055→            false, null, "Absolute-tier; Ancient Clan ancestral energy; Lou Hou's soul sealed here", 4,
+  3056→            null,
+  3057→            java.util.List.of(
+  3058→                "The temple where the Ancient Clan's ancestor rites are performed",
+  3059→                "Located within the Ancient Clan territory on the IAC",
+  3060→                "Lou Hou's soul is sealed here (used by Wang Lin to complete Slaughter/Restriction/Absolute Beginning/End True Bodies)"
+  3061→            ), java.util.List.of("Ancient Clan"), java.util.List.of("Wang Lin completes his final Ancient Clan tribulation here; obtains 2 more drops of Soul Blood"),
+  3062→            "C4 - novel + wiki-attested; no specific chapter"
+  3063→        ),
+  3064→        new CanonLocation(
+  3065→            "L74", "Kunxu Realm", "昆虚界", LocType.SECRET_REALM,
+  3066→            "The Cave World", "cave_world", "medium",
+  3067→            true, "Ancient restrictions", "Medium-tier sealed sub-dimension spiritual energy", 3,
+  3068→            null,
+  3069→            java.util.List.of(
+  3070→                "A pocket-realm accessible from the Cave World",
+  3071→                "Mu Bingmei entered here; took Zhou Ru as her disciple",
+  3072→                "Zhou Ru's cultivation arc takes place here"
+  3073→            ), java.util.List.of(), java.util.List.of("Zhou Ru's cultivation arc here"),
+  3074→            "C3 - implied; secondary source"
+  3075→        ),
+  3076→        new CanonLocation(
+  3077→            "L75", "Tide Abyss", "潮渊", LocType.OTHER,
+  3078→            "Thunder Celestial Realm", "star_system", "high",
+  3079→            true, "Thunder Celestial Realm seal", "High-tier abyssal energy", 3,
+  3080→            null,
+  3081→            java.util.List.of(
+  3082→                "An abyss within the Thunder Celestial Realm (Allheaven Star System)",
+  3083→                "Wang Lin locates Zhou Yi's spirit here with Bei Lou's help"
+  3084→            ), java.util.List.of(), java.util.List.of("Wang Lin finds Zhou Yi's spirit here"),
+  3085→            "C3 - implied; secondary source"
+  3086→        ),
+  3087→        new CanonLocation(
+  3088→            "L76", "Immortal Graveyard", "仙坟", LocType.OTHER,
+  3089→            "Vermilion Bird Starfield", "star_system", "high",
+  3090→            true, "Ancient restrictions", "High-tier; 17 layers of immortal remnants; Fu Clan's Golden Leaf Flame Source Origin on 17th layer", 3,
+  3091→            null,
+  3092→            java.util.List.of(
+  3093→                "A 17-layer immortal graveyard within the Vermilion Bird Starfield",
+  3094→                "Wang Lin glimpses the Fu Clan's Golden Leaf Flame Source Origin on the 17th layer",
+  3095→                "Site of Wang Lin's Fire Essence potential awakening"
+  3096→            ), java.util.List.of("Fu Clan"), java.util.List.of("Wang Lin's Fire Essence potential awakened here"),
+  3097→            "C3 - implied; secondary source"
+  3098→        ),
+  3099→        new CanonLocation(
+  3100→            "L77", "Five Flowers Eight Gates", "五花八门", LocType.OTHER,
+  3101→            "Immortal Astral Continent", "immortal_astral_continent", "absolute",
+  3102→            false, null, "Absolute-tier formation-complex energy", 3,
+  3103→            null,
+  3104→            java.util.List.of(
+  3105→                "A complex on the IAC where Wang Lin encounters the Dong Lin Female Ancient God",
+  3106→                "Wang Lin fuses with Ye Mo's heart's blood and subdues the Yi Si Puppet here",
+  3107→                "Defeats Yun Yifeng and the Palm Venerable"
+  3108→            ), java.util.List.of(), java.util.List.of(
+  3109→                "Wang Lin fuses with Ye Mo's heart's blood, subdues the Yi Si Puppet",
+  3110→                "Wang Lin defeats Yun Yifeng, defeats the Palm Venerable, and obtains Ye Mo's heart inheritance"
+  3111→            ),
+  3112→            "C3 - implied; secondary source"
+  3113→        ),
+  3114→        new CanonLocation(
+  3115→            "L78", "Falling Land", "堕落之地", LocType.SECRET_REALM,
+  3116→            "Sealed Realm", "sealed_realm", "high",
+  3117→            true, "Ancient trial restrictions", "High-tier; trial-ground energy; dragon blood present", 4,
+  3118→            null,
+  3119→            java.util.List.of(
+  3120→                "A trial region within the Sealed Realm where the 'Young Emperor' trial takes place",
+  3121→                "Wang Lin becomes 'Young Emperor of the Fallen Land'",
+  3122→                "2nd-Gen Vermilion Bird (young emperor of the Fallen Land) helps him",
+  3123→                "Contains Trial of Man and Trial of Heaven"
+  3124→            ), java.util.List.of("Vermilion Bird Divine Sect"), java.util.List.of(
+  3125→                "Wang Lin's Young Emperor trial — fishes for a dragon, takes its blood",
+  3126→                "Wang Lin passes the Trial of Man, Trial of Heaven; becomes Void Flame Cultivator"
+  3127→            ),
+  3128→            "C4 - novel + wiki-attested; no specific chapter"
+  3129→        ),
+  3130→        new CanonLocation(
+  3131→            "L79", "Ancient Immortal Domain", "古仙域", LocType.REALM,
+  3132→            "The Cave World", "cave_world", "absolute",
+  3133→            true, "Seven-Colored Daoist (unsealed by Wang Lin)", "Absolute-tier; gateway-realm energy at the boundary of the Cave World", 4,
+  3134→            null,
+  3135→            java.util.List.of(
+  3136→                "A gateway-realm at the boundary of the Cave World, leading to Luo Tian",
+  3137→                "The gateway Wang Lin breaches to discover the truth of the Cave World",
+  3138→                "The Flowing Moon divine ability was comprehended at its gate",
+  3139→                "Wang Lin resets the Realm Sealing Grand Array here"
+  3140→            ), java.util.List.of("Seven-Colored Daoist"), java.util.List.of(
+  3141→                "Wang Lin discovers his world is the Seven-Colored Daoist's cave mansion",
+  3142→                "Wang Lin resets the Realm Sealing Grand Array and plans new territories"
+  3143→            ),
+  3144→            "C4 - novel + wiki-attested; no specific chapter"
+  3145→        ),
+  3146→        new CanonLocation(
+  3147→            "L80", "Yellow Spring Secret Realm", "黄泉秘境", LocType.SECRET_REALM,
+  3148→            "The Cave World", "cave_world", "low",
+  3149→            true, "Heaven Defying Bead", "Low-tier; extremely-Yin-location sub-realm; Situ Nan's creation for Wang Lin's breakthrough", 4,
+  3150→            null,
+  3151→            java.util.List.of(
+  3152→                "An extremely-Yin-location sub-realm inside the Heaven Defying Bead",
+  3153→                "Opened by Situ Nan for Wang Lin's secluded cultivation",
+  3154→                "Wang Lin's Nascent Soul breakthrough training takes place here",
+  3155→                "Sealed by being INSIDE the Heaven Defying Bead itself"
+  3156→            ), java.util.List.of(), java.util.List.of("Wang Lin's Nascent Soul breakthrough training"),
+  3157→            "C4 - novel + wiki-attested; no specific chapter"
+  3158→        )
+  3159→    );
+  3160→
+  3161→    /** All 178 canon artifacts. */
+  3162→    public static final List<CanonArtifact> ALL_ARTIFACTS = List.of(
+  3163→        new CanonArtifact(
+  3164→            "I01", "Heaven-Defying Bead / Pearl", "逆天珠", ArtType.BEAD_PART,
+  3165→            "utility", "Wang Lin",
+  3166→            java.util.List.of(
+  3167→                "Five Elements pattern bead — core of the original 9-part set",
+  3168→                "Interior time-dilation chamber (10× outside speed)",
+  3169→                "Stores nascent souls; contains Third-Step divine abilities",
+  3170→                "Sentient / destiny-bound / fuses with primordial spirit"
+  3171→            ),
+  3172→            "Found as a youth inside Heng Yue Sect stone bead; sent back through time by future clone Lu Mo via Dream Dao", 5,
+  3173→            java.util.List.of(
+  3174→                "Root cause of the great war in the Ancient Immortal Domain",
+  3175→                "Cross-novel artifact — also wielded by Su Ming and Xuan Zang",
+  3176→                "Bestowed by Seven-Colored Immortal Venerable to Realm-Sealing Supreme",
+  3177→                "Fuses with Wang Lin's primordial spirit by the end"
+  3178→            ), "Ch.8 (novel, Donghua S1E2); Fandom wiki; Baidu Baike"
+  3179→        ),
+  3180→        new CanonArtifact(
+  3181→            "I02", "Realm-Defining Compass", "界定罗盘", ArtType.COMPASS,
+  3182→            "divine_sense", "Old Man Miēshēng (returned)",
+  3183→            java.util.List.of(
+  3184→                "Core IS the Heaven-Defying Pearl — defines and shatters realms",
+  3185→                "Realm-Sealing function",
+  3186→                "Quasi-Third-Step treasure power"
+  3187→            ),
+  3188→            "Borrowed by Lu Mo from Old Man Miēshēng to crack open the Heaven-Defying Bead", 4,
+  3189→            java.util.List.of(
+  3190→                "One-time borrow — returned to Old Man Miēshēng",
+  3191→                "Used to blast open the Heaven-Defying Pearl via Dream Dao",
+  3192→                "Quasi-Third-Step tier"
+  3193→            ), "wiki-attested; Fandom wiki; no specific chapter"
+  3194→        ),
+  3195→        new CanonArtifact(
+  3196→            "I03", "Copper Mirror (with Time Domain)", "铜镜", ArtType.OTHER,
+  3197→            "divine_sense", "Sold (Ch. 664)",
+  3198→            java.util.List.of(
+  3199→                "Embeds a Time-domain within the mirror",
+  3200→                "Shows future/past flickers as side-effect",
+  3201→                "Pseudo-celestial treasure grade"
+  3202→            ),
+  3203→            "Crafted by Wang Lin on Planet Ran Yun to sell for celestial spirit jades", 5,
+  3204→            java.util.List.of(
+  3205→                "One of three pseudo-celestial treasures crafted for sale",
+  3206→                "Sold at Ch. 664 — 'Missed' by buyer",
+  3207→                "User-made pseudo-celestial tier"
+  3208→            ), "Ch.662 obtained, Ch.664 sold (novel); Fandom wiki"
+  3209→        ),
+  3210→        new CanonArtifact(
+  3211→            "I04", "Slaughter Crystal", "杀戮晶", ArtType.MATERIAL,
+  3212→            "cultivation_aid", "Wang Lin (merged into Slaughter Origin True Body)",
+  3213→            java.util.List.of(
+  3214→                "Condensed Slaughter Origin essence",
+  3215→                "Fuses with Qing Shui's Slaughter Sword to complete Slaughter Essence",
+  3216→                "Origin essence grade"
+  3217→            ),
+  3218→            "Condensed from slaughters / granted by Immortal Lord Qing Shui via Sky-Gate vortex", 5,
+  3219→            java.util.List.of(
+  3220→                "Origin essence tier material",
+  3221→                "Fuses with Slaughter Origin True Body",
+  3222→                "Granted by Immortal Lord Qing Shui (senior brother)"
+  3223→            ), "Ch.~1290 (novel); Fandom wiki"
+  3224→        ),
+  3225→        new CanonArtifact(
+  3226→            "I05", "Great Heavenly Venerable Sun", "大天尊日", ArtType.OTHER,
+  3227→            "cultivation_aid", "Wang Lin",
+  3228→            java.util.List.of(
+  3229→                "Three-color (black/white/gold) Heavenly Venerable Sun",
+  3230→                "Absorbable energy to enhance strength at any time",
+  3231→                "Fuses with quasi-Tread-Heaven power",
+  3232→                "Strongest of all Great Heavenly Venerable Suns"
+  3233→            ),
+  3234→            "Refined from the head of the Immortal Ancestor (Celestial Ancestor)", 4,
+  3235→            java.util.List.of(
+  3236→                "Will-condensed celestial-ancestor tier",
+  3237→                "Perpetually active portable power-source",
+  3238→                "Retained to the end"
+  3239→            ), "wiki-attested; Fandom wiki; Baidu Baike"
+  3240→        ),
+  3241→        new CanonArtifact(
+  3242→            "I06", "Wealth — Wang Lin's First Flying Sword", "财富", ArtType.OTHER,
+  3243→            "offensive", "Destroyed by Teng Huayuan",
+  3244→            java.util.List.of(
+  3245→                "First flying sword — mortal/low-grade spirit tier",
+  3246→                "Reforged multiple times over career",
+  3247→                "Soul-binding contract with sect (must repair, never sell)"
+  3248→            ),
+  3249→            "Chosen from Heng Yue Sect armory as a disciple", 5,
+  3250→            java.util.List.of(
+  3251→                "Made by a Heng Yue Sect elder",
+  3252→                "Sect rule: if broken repair, if sold exiled",
+  3253→                "Revealed later to have mysterious origin",
+  3254→                "Destroyed by Teng Huayuan ~Ch. 110"
+  3255→            ), "early Heng Yue Sect, destroyed Ch.~110 (novel); Fandom wiki"
+  3256→        ),
+  3257→        new CanonArtifact(
+  3258→            "I07", "Core-Treasure Sword (Teleportation)", "核心宝剑", ArtType.OTHER,
+  3259→            "offensive", "Upgraded into Dark Green Flying Sword",
+  3260→            java.util.List.of("Teleportation effect on strike", "Blood-refined by Wang Lin", "Took countless lives in battle"),
+  3261→            "Acquired then blood-refined in mid-Foundation era", 5,
+  3262→            java.util.List.of(
+  3263→                "Spirit-tier blood-refined sword",
+  3264→                "Evolves into Dark Green Flying Sword (Poison)",
+  3265→                "Mid-Foundation era acquisition"
+  3266→            ), "mid-Foundation era (novel); Fandom wiki"
+  3267→        ),
+  3268→        new CanonArtifact(
+  3269→            "I08", "Dark Green Flying Sword (Poison)", "墨绿飞剑", ArtType.OTHER,
+  3270→            "offensive", "Wang Lin (retired)",
+  3271→            java.util.List.of(
+  3272→                "Poison-attribute flying sword",
+  3273→                "Blood-refined and battle-hardened",
+  3274→                "Evolved from Core-Treasure Sword"
+  3275→            ),
+  3276→            "Blood-refinement evolution from Core-Treasure Sword", 5,
+  3277→            java.util.List.of(
+  3278→                "Spirit-tier poison-element sword",
+  3279→                "Successor to Core-Treasure Sword",
+  3280→                "Retired — replaced by later swords"
+  3281→            ), "evolved from Core-Treasure Sword (novel); Fandom wiki"
+  3282→        ),
+  3283→        new CanonArtifact(
+  3284→            "I09", "The Dragon Formation", "龙阵", ArtType.FORMATION,
+  3285→            "offensive", "Wang Lin",
+  3286→            java.util.List.of(
+  3287→                "Formation-array treasure based on Fighting Evil Sect formation",
+  3288→                "Gift from Li Muwan — sentiment-bound"
+  3289→            ),
+  3290→            "Gifted by Li Muwan, built based on Fighting Evil Sect (斗邪宗) formation", 5,
+  3291→            java.util.List.of("Spirit-tier formation treasure", "Gift from love interest Li Muwan", "Retained to end"), "wiki-attested (gifted by Li Muwan); Fandom wiki"
+  3292→        ),
+  3293→        new CanonArtifact(
+  3294→            "I10", "God Slaying Spear (Illusory)", "杀神矛", ArtType.OTHER,
+  3295→            "offensive", "Wang Lin",
+  3296→            java.util.List.of(
+  3297→                "Illusory copy of Ancient God Tu Si's life-treasure",
+  3298→                "Bypasses physical defenses — strikes at origin soul",
+  3299→                "Ancient God Weapon classification"
+  3300→            ),
+  3301→            "Inherited from Ancient God Tu Si's legacy (Ch. 941)", 5,
+  3302→            java.util.List.of("Ancient God treasure tier", "Illusory / inherited-treasure", "Tu Si's life treasure projection"), "Ch.941 (novel); Fandom wiki"
+  3303→        ),
+  3304→        new CanonArtifact(
+  3305→            "I11", "Ancient God Trident", "古神三叉戟", ArtType.OTHER,
+  3306→            "offensive", "Destroyed by Daoist Water",
+  3307→            java.util.List.of(
+  3308→                "Absorbs spells cast at the wielder",
+  3309→                "Tu Si-refined Ancient God weapon",
+  3310→                "Three-pronged trident form"
+  3311→            ),
+  3312→            "Tu Si inheritance — weapon Tu Si was refining before death (Ch. 1082)", 5,
+  3313→            java.util.List.of(
+  3314→                "Ancient God treasure tier",
+  3315→                "Destroyed Ch. 1277 in Rebirth arc by Daoist Water",
+  3316→                "Tu Si was refining it but died before completion"
+  3317→            ), "Ch.1082 obtained, Ch.1277 destroyed (novel); Fandom wiki"
+  3318→        ),
+  3319→        new CanonArtifact(
+  3320→            "I12", "Karma Whip", "因果鞭", ArtType.OTHER,
+  3321→            "offensive", "Wang Lin",
+  3322→            java.util.List.of(
+  3323→                "Weaponizes karmic cause-effect",
+  3324→                "Once cleaved open 7 million worlds with a single whip-strike",
+  3325→                "Restrains soul-type entities",
+  3326→                "Pseudo-immortal / dao-domain treasure tier"
+  3327→            ),
+  3328→            "Fused Soul Lasher (Red Butterfly's whip) + Karma Domain (Ch. 731)", 5,
+  3329→            java.util.List.of(
+  3330→                "Evolved from Soul Lasher via Ghostly Sky Fire + Karma Concept",
+  3331→                "Soul Lasher originally belonged to Red Butterfly, won in battle from Hong Die",
+  3332→                "Retained to end — dao-domain weapon"
+  3333→            ), "Ch.731 (novel, Donghua EP147); Fandom wiki; Baidu Baike"
+  3334→        ),
+  3335→        new CanonArtifact(
+  3336→            "I13", "18-Hell Celestial Sealing Stamp", "十八地狱封天印", ArtType.TALISMAN,
+  3337→            "soul_related", "Wang Lin",
+  3338→            java.util.List.of(
+  3339→                "Forms 18-Layers-of-Hell-Reincarnation-Realm with Underworld River",
+  3340→                "Stores souls of all enemies Wang Lin has killed",
+  3341→                "Storage realm for Scatter Beans to Form Soldiers divine ability",
+  3342→                "Refined from Fragment Stamp via divine tribulation"
+  3343→            ),
+  3344→            "Self-forged — refined from Fragment Stamp during breakthrough to Illusionary-Yin/Corporeal-Yang (Ch. 915)", 5,
+  3345→            java.util.List.of(
+  3346→                "Pseudo-immortal tier — Wang Lin-made",
+  3347→                "Fused with Magic-Arsenal Spell + Celestial Sealing Stamp",
+  3348→                "Evolved into its own pocket-realm (Incense Offering Realm per Baidu)"
+  3349→            ), "Ch.915 (novel); Fandom wiki; Baidu Baike"
+  3350→        ),
+  3351→        new CanonArtifact(
+  3352→            "I14", "Rain Celestial Sword (Mid Quality)", "雨仙剑", ArtType.OTHER,
+  3353→            "offensive", "Wang Lin (wielded by Xu Liguo as sword-spirit)",
+  3354→            java.util.List.of(
+  3355→                "Celestial-tier mid-quality flying sword",
+  3356→                "Contains Slash Luo Art sword-technique",
+  3357→                "Sword-spirit (Jufu) bound to Xu Liguo",
+  3358→                "Eternal-inheritance condition: protect celestial corpse in pagoda"
+  3359→            ),
+  3360→            "Gifted by Zhou Yi — separated from celestial corpse swords (Ch. 717)", 5,
+  3361→            java.util.List.of(
+  3362→                "Second-generation Rain Immortal Sword",
+  3363→                "Xu Liguo (devil head) serves as its sword-spirit",
+  3364→                "Conditionally gifted — must protect celestial corpse in pagoda"
+  3365→            ), "Ch.717 (novel); Fandom wiki"
+  3366→        ),
+  3367→        new CanonArtifact(
+  3368→            "I15", "Celestial Sword (Rain Celestial Sword lineage seed)", "仙剑", ArtType.OTHER,
+  3369→            "offensive", "Evolved into Rain Celestial Sword",
+  3370→            java.util.List.of(
+  3371→                "Celestial-tier flying sword — seed of Rain Celestial Sword inheritance",
+  3372→                "Inheritance-bound conditional gift"
+  3373→            ),
+  3374→            "Gifted by Zhou Yi (Ch. 717) under condition to protect celestial corpse", 5,
+  3375→            java.util.List.of("Became the seed of Rain Celestial Sword inheritance", "Evolved into Rain Celestial Sword"), "Ch.717 (novel); Fandom wiki"
+  3376→        ),
+  3377→        new CanonArtifact(
+  3378→            "I16", "Crystal Sword (Pseudo Nirvana Void)", "水晶剑", ArtType.OTHER,
+  3379→            "offensive", "Wang Lin (restored)",
+  3380→            java.util.List.of(
+  3381→                "Crystal-element sword from Seven-Colored Realm",
+  3382→                "Pseudo Nirvana Void grade",
+  3383→                "Shattered then restored by previous Lord of the Sealed Realm"
+  3384→            ),
+  3385→            "Taken from Seven-Colored Realm (Ch. 1196)", 5,
+  3386→            java.util.List.of(
+  3387→                "Seven-Colored Realm treasure",
+  3388→                "Destroyed Ch. 1273 vs Daoist Water, then restored",
+  3389→                "Retained after restoration"
+  3390→            ), "Ch.1196 obtained, Ch.1273 destroyed (novel); Fandom wiki"
+  3391→        ),
+  3392→        new CanonArtifact(
+  3393→            "I17", "Short Sword (Black & White Dual Swords)", "白黑双剑", ArtType.OTHER,
+  3394→            "offensive", "Wang Lin (restored)",
+  3395→            java.util.List.of(
+  3396→                "Paired swords: one black, one white with nine seals each",
+  3397→                "Undoing seals produces millions of sword shadows",
+  3398→                "Pseudo Nirvana Void grade"
+  3399→            ),
+  3400→            "Acquired in Seven-Colored Realm (1st: Ch. 1187; 2nd: Ch. 1223)", 5,
+  3401→            java.util.List.of(
+  3402→                "Pair-weapon with seal-based mass-shadow generation",
+  3403→                "Destroyed Ch. 1273 vs Daoist Water, restored by previous Lord of Sealed Realm",
+  3404→                "Retained after restoration"
+  3405→            ), "Ch.1187 & Ch.1223 obtained, Ch.1273 destroyed (novel); Fandom wiki"
+  3406→        ),
+  3407→        new CanonArtifact(
+  3408→            "I18", "Half-Moon Blade", "半月刃", ArtType.OTHER,
+  3409→            "offensive", "Wang Lin (retired)",
+  3410→            java.util.List.of("Extremely fast offensive blade", "Obedience bound to Xu Liguo (treated him like older brother)"),
+  3411→            "Found in Cultivation Planet Crystal / Suzaku Tomb", 5,
+  3412→            java.util.List.of("Spirit-tier blade", "Initially obeyed only because of Xu Liguo", "Retired — no longer used"), "wiki-attested (Planet Suzaku Crystal); Fandom wiki"
+  3413→        ),
+  3414→        new CanonArtifact(
+  3415→            "I19", "Axe of Giant Demon Clan", "巨魔族斧", ArtType.OTHER,
+  3416→            "offensive", "Destroyed",
+  3417→            java.util.List.of("Giant Demon Clan spirit-tier axe", "Traded for the Star Compass"),
+  3418→            "Stolen/traded from Giant Demon Clan Heir (exchanged for Star Compass)", 5,
+  3419→            java.util.List.of(
+  3420→                "Spirit-tier Giant Demon Clan weapon",
+  3421→                "Traded away in exchange for Star Compass",
+  3422→                "Eventually destroyed"
+  3423→            ), "wiki-attested (stolen from Giant Demon Clan); Fandom wiki"
+  3424→        ),
+  3425→        new CanonArtifact(
+  3426→            "I20", "Rusted Iron Sword (Pseudo Nirvana Void)", "锈铁剑", ArtType.OTHER,
+  3427→            "offensive", "Destroyed",
+  3428→            java.util.List.of("Upper Nirvana Void Treasure grade sword", "Deceptively powerful despite rusted appearance"),
+  3429→            "Likely taken as loot (Ch. 1043)", 5,
+  3430→            java.util.List.of(
+  3431→                "Upper-Nirvana-Void tier — very high grade",
+  3432→                "Destroyed Ch. 1193 vs Master Ashen Pine in Seven-Colored Realm",
+  3433→                "Bloody battle weapon"
+  3434→            ), "Ch.1043 obtained, Ch.1193 destroyed (novel); Fandom wiki"
+  3435→        ),
+  3436→        new CanonArtifact(
+  3437→            "I21", "Seven-Colored God Void Nails", "七彩通天钉", ArtType.OTHER,
+  3438→            "offensive", "Wang Lin",
+  3439→            java.util.List.of(
+  3440→                "108-nail set designed to kill Third Step experts",
+  3441→                "Madness-inducing when pierced into a body",
+  3442→                "Forged by Cang Songzi (Palm Venerable) at Kongling-late stage",
+  3443→                "Made from meteorite of ancient exotic metal"
+  3444→            ),
+  3445→            "Taken from Cang Songzi in Seven-Colored Realm battle (Ch. 1196)", 5,
+  3446→            java.util.List.of(
+  3447→                "Pseudo Nirvana Void / Seven-Colored Realm Treasure",
+  3448→                "Once used by Palm Venerable to ambush Venerable Sealing Realm",
+  3449→                "Used to turn tables on Daoist Water"
+  3450→            ), "Ch.1196 (novel); Fandom wiki"
+  3451→        ),
+  3452→        new CanonArtifact(
+  3453→            "I22", "Blood Slaughter Sword — Seven Swords of the Ancient Dao", "血煞剑", ArtType.OTHER,
+  3454→            "offensive", "Wang Lin",
+  3455→            java.util.List.of(
+  3456→                "Ancient Dao Treasure — one of the Seven Swords of the Ancient Dao",
+  3457→                "Originally Dao Gu Ye Mo's weapon",
+  3458→                "Wieldable even at Third Step",
+  3459→                "Was transformed into a mountain peak inside Cloud Sea Wuji Sect"
+  3460→            ),
+  3461→            "Seized from Cloud Sea Wuji Sect after awakening during battle with Shui Daozi (Ch. 1290)", 5,
+  3462→            java.util.List.of("Ancient Dao Treasure tier", "Third-Step-viable weapon", "Originally Dao Gu Ye Mo's weapon"), "Ch.1290 (novel); Fandom wiki"
+  3463→        ),
+  3464→        new CanonArtifact(
+  3465→            "I23", "Yin Blade", "阴刃", ArtType.OTHER,
+  3466→            "offensive", "Destroyed",
+  3467→            java.util.List.of(
+  3468→                "Internal organ treasure implanted in right arm",
+  3469→                "Pseudo Void Annihilation grade (pre-tribulation)",
+  3470→                "Would become Void Annihilation if transcended tribulation"
+  3471→            ),
+  3472→            "Implanted by Ji Si (Green Devil) when Wang Lin was captured as sacrifice (Ch. 1896)", 5,
+  3473→            java.util.List.of(
+  3474→                "Internal-organ treasure",
+  3475→                "Destroyed Ch. 1979 in Green Devil battle",
+  3476→                "Tribulation-pending — never reached full potential"
+  3477→            ), "Ch.1896 obtained, Ch.1979 destroyed (novel); Fandom wiki"
+  3478→        ),
+  3479→        new CanonArtifact(
+  3480→            "I24", "Heaven-Splitting Axe (Ancestral)", "开天斧", ArtType.OTHER,
+  3481→            "offensive", "Destroyed",
+  3482→            java.util.List.of("Cave World Royal Weapon tier axe", "Formerly a Realm-Sealing Formation spirit", "Royal-tier power"),
+  3483→            "Subdued from Realm-Sealing Formation when Wang Lin destroyed it (Ch. 1664)", 5,
+  3484→            java.util.List.of(
+  3485→                "Royal Weapon (Cave World) tier",
+  3486→                "Destroyed Ch. 1763 in ambush",
+  3487→                "Was one of the Realm-Sealing Formation's formation spirits"
+  3488→            ), "Ch.1664 obtained, Ch.1763 destroyed (novel); Fandom wiki"
+  3489→        ),
+  3490→        new CanonArtifact(
+  3491→            "I25", "Demon Blade, Earth Burial", "魔刀·葬土", ArtType.OTHER,
+  3492→            "offensive", "Wang Lin",
+  3493→            java.util.List.of("Royal Ancient Demon Treasure blade", "Ancient demon elemental power", "Cave World origin"),
+  3494→            "Cave World inheritance (Ch. 1497)", 5,
+  3495→            java.util.List.of("Royal Ancient Demon Treasure (Cave World) tier", "Retained to end", "Ancient-demon-element"), "Ch.1497 (novel); Fandom wiki"
+  3496→        ),
+  3497→        new CanonArtifact(
+  3498→            "I26", "Fog Devil Lance", "雾魔枪", ArtType.OTHER,
+  3499→            "offensive", "Ancient Demon clone",
+  3500→            java.util.List.of(
+  3501→                "Ancient Devil weapon — lance form",
+  3502→                "Devil-element power",
+  3503→                "Given to Wang Lin's Ancient Demon Clone"
+  3504→            ),
+  3505→            "Obtained in the Ancient Tomb (Ch. 1386)", 5,
+  3506→            java.util.List.of(
+  3507→                "Ancient Devil Treasure tier",
+  3508→                "Given to Ancient Demon clone for use",
+  3509→                "Per Baidu: obtained in the Ancient Tomb"
+  3510→            ), "Ch.1386 (novel); Fandom wiki; Baidu Baike"
+  3511→        ),
+  3512→        new CanonArtifact(
+  3513→            "I27", "Li Guang's Heaven-Shattering Bow", "李广弓", ArtType.OTHER,
+  3514→            "offensive", "Wang Lin",
+  3515→            java.util.List.of(
+  3516→                "Bow Dao — forms Heaven-Shattering Bow Dao with Li Guang's Arrow",
+  3517→                "Fuses with Wang Lin's thunder essence for armor-piercing shots",
+  3518→                "Kills across realms",
+  3519→                "Dao Spell treasure tier"
+  3520→            ),
+  3521→            "Taught by the madman Lian Daofei inside Nether Beast (Ch. 1533)", 5,
+  3522→            java.util.List.of(
+  3523→                "Dao Spell treasure — taught, not physical",
+  3524→                "Requires Li Guang's Arrow to use",
+  3525→                "Named after legendary general Li Guang"
+  3526→            ), "Ch.1533 (novel); Fandom wiki; Baidu Baike"
+  3527→        ),
+  3528→        new CanonArtifact(
+  3529→            "I28", "Li Guang's Arrow", "李广箭", ArtType.OTHER,
+  3530→            "offensive", "Wang Lin",
+  3531→            java.util.List.of(
+  3532→                "Arrow paired with Li Guang's Bow",
+  3533→                "Each shot depletes a Spirit-Vein-tier resource",
+  3534→                "Finite ammo supply"
+  3535→            ),
+  3536→            "Acquired alongside Li Guang's Bow (Ch. 1577)", 5,
+  3537→            java.util.List.of(
+  3538→                "Dao Spell treasure tier",
+  3539→                "Consumable-when-fired with finite supply",
+  3540→                "Must pair with Li Guang's Bow"
+  3541→            ), "Ch.1577 (novel); Fandom wiki"
+  3542→        ),
+  3543→        new CanonArtifact(
+  3544→            "I29", "Seven-Colored Lance", "七彩枪", ArtType.OTHER,
+  3545→            "offensive", "Wang Lin",
+  3546→            java.util.List.of(
+  3547→                "Seven-colored light affects emotions of anyone who sees it",
+  3548→                "Three transformations: black → white → gray",
+  3549→                "Similar to Ethereal Fire but stronger",
+  3550→                "Dao Spell treasure tier"
+  3551→            ),
+  3552→            "Taught by Lian Daofei (madman) inside Nether Beast (Ch. 1543)", 5,
+  3553→            java.util.List.of("Emotion-affecting weapon", "Three-transformation system", "Dao Spell taught by Lian Daofei"), "Ch.1543 (novel); Fandom wiki"
+  3554→        ),
+  3555→        new CanonArtifact(
+  3556→            "I30", "Slaughter Sword (from Immortal Lord Qing Shui)", "杀戮剑", ArtType.OTHER,
+  3557→            "offensive", "Wang Lin (merged with Slaughter Origin True Body)",
+  3558→            java.util.List.of(
+  3559→                "Origin Treasure (Third-Step) sword",
+  3560→                "Fuses with Wang Lin's Slaughter Origin to complete Slaughter Essence",
+  3561→                "Condensed by Qing Shui using Sky Gate vortex power"
+  3562→            ),
+  3563→            "Gifted by Immortal Lord Qing Shui (Ch. 1561)", 5,
+  3564→            java.util.List.of(
+  3565→                "Origin Treasure (Third-Step) tier",
+  3566→                "Merged with Slaughter Origin True Body",
+  3567→                "Gift from senior brother Qing Shui"
+  3568→            ), "Ch.1561 (novel); Fandom wiki"
+  3569→        ),
+  3570→        new CanonArtifact(
+  3571→            "I31", "Lightning Sword (Origin Treasure)", "雷剑", ArtType.OTHER,
+  3572→            "offensive", "Wang Lin",
+  3573→            java.util.List.of(
+  3574→                "Thunder-element Origin Treasure sword",
+  3575→                "One of six fundamental origin-treasure swords",
+  3576→                "Self-condensed via void-gate vortex"
+  3577→            ),
+  3578→            "Self-condensed via void-gate vortex (Ch. 1625)", 5,
+  3579→            java.util.List.of("Essence Treasure tier", "Thunder-element origin sword", "One of the six origin swords"), "Ch.1625 (novel); Fandom wiki"
+  3580→        ),
+  3581→        new CanonArtifact(
+  3582→            "I32", "Six Origin Swords (Fire, Life-Death, Karma, True-False, Slaughter, Restriction)", "六本源剑", ArtType.OTHER,
+  3583→            "offensive", "Wang Lin",
+  3584→            java.util.List.of(
+  3585→                "Six fundamental origin-element swords embodying Wang Lin's Origins",
+  3586→                "Each embodies one Origin: Fire, Life-Death, Karma, True-False, Slaughter, Restriction",
+  3587→                "Set completes power when all six are condensed",
+  3588→                "Origin Treasure tier"
+  3589→            ),
+  3590→            "Self-condensed from void-gate vortex (Ch. 1715)", 5,
+  3591→            java.util.List.of("Origin Treasure tier — set of 6", "Each embodies a different Origin of Wang Lin", "Retained to end"), "Ch.1715 (novel); Fandom wiki"
+  3592→        ),
+  3593→        new CanonArtifact(
+  3594→            "I33", "Scattered Devil Armour / Divine Devil Armour", "散魔甲", ArtType.ARMOR,
+  3595→            "defensive", "Sold (Ch. 1178)",
+  3596→            java.util.List.of(
+  3597→                "Pitch-black armor with demonic feel",
+  3598→                "Ancient Devil Treasure tier protection",
+  3599→                "Known as Divine Devil Armour in Cloud Sea Star System's God Sect"
+  3600→            ),
+
+[showing lines 1601-3600 of 8124; use offset=3601 with limit to continue reading]

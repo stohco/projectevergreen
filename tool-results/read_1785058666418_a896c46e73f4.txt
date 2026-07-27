@@ -1,0 +1,599 @@
+     1→package dev.ergenverse.core;
+     2→
+     3→import dev.ergenverse.block.ErgenverseBlocks;
+     4→import dev.ergenverse.cultivation.CultivationCapability;
+     5→import dev.ergenverse.canon.CanonEngine;
+     6→import dev.ergenverse.entity.EREntityTypes;
+     7→import dev.ergenverse.cosmos.CosmologicalTree;
+     8→import dev.ergenverse.ecology.CausalEcology;
+     9→import dev.ergenverse.perception.PerceptionEngine;
+    10→import dev.ergenverse.wanglin.WangLinArsenalCommand;
+    11→import dev.ergenverse.wanglin.WangLinCosmologyRegistry;
+    12→import dev.ergenverse.wanglin.WangLinItems;
+    13→import dev.ergenverse.wanglin.ai.WangLinPersonality;
+    14→import dev.ergenverse.wanglin.bead.BeadDimension;
+    15→import dev.ergenverse.wanglin.bead.BeadFunctionMenu;
+    16→import dev.ergenverse.wanglin.registry.WangLinMasterRegistry;
+    17→import dev.ergenverse.world.WorldLaws;
+    18→import net.minecraftforge.common.MinecraftForge;
+    19→import net.minecraftforge.event.TickEvent;
+    20→import net.minecraftforge.eventbus.api.IEventBus;
+    21→import net.minecraftforge.eventbus.api.SubscribeEvent;
+    22→import net.minecraftforge.fml.ModLoadingContext;
+    23→import net.minecraftforge.fml.common.Mod;
+    24→import net.minecraftforge.fml.config.ModConfig;
+    25→import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+    26→import org.slf4j.Logger;
+    27→import org.slf4j.LoggerFactory;
+    28→
+    29→/**
+    30→ * Ergenverse — A Living Cultivation World.
+    31→ *
+    32→ * <p>This mod reconstructs the Er Gen cultivation multiverse inside Minecraft.
+    33→ *
+    34→ * <p><b>The Prime Directive ({@link WorldPhilosophy}):</b>
+    35→ * <blockquote>
+    36→ *   Never hide or reveal objects because of the player's level. Hide or
+    37→ *   reveal interactions according to the laws of the world. The world is
+    38→ *   objective and exists independently of the player. Cultivation increases
+    39→ *   a character's ability to perceive, understand, and interact with deeper
+    40→ *   layers of reality — it does not create or replace reality.
+    41→ * </blockquote>
+    42→ *
+    43→ * <h2>Phase priority</h2>
+    44→ * <ol>
+    45→ *   <li><b>Phase 0 — The world exists before you arrive.</b> Living ecology,
+    46→ *       atmosphere, danger, no cultivation, no UI, no Wang Lin.</li>
+    47→ *   <li><b>Phase 1 — Discover cultivation.</b> Find a spirit vein, meditate,
+    48→ *       break through. Perception shift: deer was always a Spirit Deer;
+    49→ *       you just didn't know.</li>
+    50→ *   <li><b>Phase 2 — Find a sect (ecosystem).</b> Outer → inner → core →
+    51→ *       elders → patriarch, plus spirit beasts, herb fields, alchemy,
+    52→ *       formations, nearby villages.</li>
+    53→ *   <li><b>Phase 3 — World Pulse.</b> Every Minecraft day, the world
+    54→ *       evolves independently of the player.</li>
+    55→ *   <li><b>Phase 4 — Landmarks + Ocean dread.</b> Rare memorable landmarks.
+    56→ *       Ocean depth system. World-scale entities whose presence reshapes
+    57→ *       the environment.</li>
+    58→ *   <li><b>Phase 5 — Perception as core mechanic.</b> Same entity,
+    59→ *       different understanding at different tiers.</li>
+    60→ *   <li><b>Phase 6 (delayed) — Wang Lin dimension.</b> Rumors →
+    61→ *       investigation → eventual encounter.</li>
+    62→ * </ol>
+    63→ *
+    64→ * <h2>Architecture</h2>
+    65→ * <ul>
+    66→ *   <li>{@link WorldPhilosophy} — the prime directive, encoded.</li>
+    67→ *   <li>{@link dev.ergenverse.world.WorldLayer} — the three layers of reality
+    68→ *       (Physical / Spiritual / Dao) that every chunk contains.</li>
+    69→ *   <li>{@link WorldLaws} — every location knows why it exists; laws
+    70→ *       determine what herbs grow, what beasts evolve, what techniques
+    71→ *       work.</li>
+    72→ *   <li>{@link dev.ergenverse.perception.Objective} — things that exist
+    73→ *       independently of any observer.</li>
+    74→ *   <li>{@link PerceptionEngine} — produces understanding of objective
+    75→ *       reality. Does not change the world.</li>
+    76→ *   <li>{@link dev.ergenverse.perception.DivineSense} — the transformative
+    77→ *       sense mechanic.</li>
+    78→ *   <li>{@link CausalEcology} — every spirit beast exists because of an
+    79→ *       ecosystem. Exterminate herbivores → predators starve → herbs
+    80→ *       spread → sects notice.</li>
+    81→ *   <li>{@link CanonEngine} — canon confidence ratings; Level 0 forbidden
+    82→ *       in known canon regions.</li>
+    83→ * </ul>
+    84→ */
+    85→@Mod(Ergenverse.MOD_ID)
+    86→public final class Ergenverse {
+    87→    public static final String MOD_ID = "ergenverse";
+    88→    public static final Logger LOGGER = LoggerFactory.getLogger("Ergenverse");
+    89→
+    90→    public Ergenverse() {
+    91→        IEventBus modEventBus = net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus();
+    92→        LOGGER.info("[Ergenverse] Booting the Living Mortal World...");
+    93→        LOGGER.info("[Ergenverse] Prime Directive: {}", WorldPhilosophy.PRIME_DIRECTIVE);
+    94→
+    95→        // ── Canon-first: every piece of content carries a canon confidence
+    96→        //    rating. Level 0 (filler) is forbidden in known canon regions.
+    97→        CanonEngine.bootstrap();
+    98→        CosmologicalTree.bootstrap();
+    99→
+   100→        // ── Opportunity Classification (Layer 2 — Simulation): resolves how the
+   101→        //    player can obtain things related to canon opportunities, without ever
+   102→        //    rewriting canonical ownership. Six categories: Transferable, Replicable,
+   103→        //    Successor, Parallel, Relationship Exclusive, Absolute Unique.
+   104→        dev.ergenverse.simulation.opportunity.OpportunityResolver.bootstrap();
+   105→
+   106→        // ── Wang Lin Cosmology (Layer 1 + Layer 2 bridge): concreted the entire
+   107→        //    Renegade Immortal canon into the game — 7 cosmology layers, Cave World
+   108→        //    ownership, Joss Flame economy, Heaven-Defying Bead, Samsara Dao (14
+   109→        //    Essences + 9 Heaven Trampling Bridges), antagonists, Realm-Sealing Grand
+   110→        //    Array, Bridging Policy, Timeline (108 events), Civilization (45 factions),
+   111→        //    Ecology (10 ecotopes), Canonical Database (630 entries), Edge-of-Canon
+   112→        //    State, and the Manifestation Gift System. Must run BEFORE the Wang Lin
+   113→        //    item registration and AI personality, which depend on the cosmology.
+   114→        WangLinCosmologyRegistry.bootstrap();
+   115→
+   116→        // ── Wang Lin AI Personality (Layer 2 — Simulation): the canon-exact mind
+   117→        //    of Wang Lin as a manifestation companion. 14 traits, 11 habits, 7 speech
+   118→        //    patterns, ~23 defining memories, 17 relationships, and the 16-offering
+   119→        //    teaching decision engine (canTeach). Must run AFTER the cosmology
+   120→        //    registry (it depends on canon being loaded) and BEFORE the arsenal
+   121→        //    item registration (the items reference the personality for tooltips).
+   122→        WangLinPersonality.bootstrap();
+   123→
+   124→        // ── Wang Lin Master Registry (Layer 1 — Canon Knowledge Graph): the
+   125→        //    complete canonical knowledge graph of Wang Lin's universe. NOT a
+   126→        //    whitelist — every top-level node (Cultivation, Restrictions,
+   127→        //    Formations, Essences, Dao, Avatars, Bodies, Pets, Companions,
+   128→        //    Realms, History, Knowledge, ...) expands into a tree of concrete
+   129→        //    canon entries, each carrying ownership state, transferability,
+   130→        //    demonstrability, interaction tags, and a Provenance. The
+   131→        //    TeachingResolver walks the graph: Technique → Canonical ownership
+   132→        //    → Transferability → Personality → Relationship → Simulation
+   133→        //    result. Must run AFTER the cosmology registry + personality
+   134→        //    (which the TeachingResolver delegates to) and BEFORE WangLinItems
+   135→        //    (so item tooltips can pull canon metadata from the registry).
+   136→        WangLinMasterRegistry.bootstrap();
+   137→
+   138→        // ── World Laws: every location knows why it exists. The laws
+   139→        //    determine what herbs grow, what beasts evolve, what
+   140→        //    techniques work, what formations fail.
+   141→        WorldLaws.bootstrap();
+   142→
+   143→        // ── Suzaku Features: canon-grounded spirit herbs + spirit vein ore
+   144→        //    are now data-driven via JSON files in
+   145→        //    data/ergenverse/worldgen/configured_feature/ + placed_feature/.
+   146→        //    Biome JSONs reference them directly. The SuzakuFeatureIndex class
+   147→        //    exposes a featuresForBiome() lookup for the future perception
+   148→        //    system (higher-tier cultivators see more feature types).
+   149→
+   150→        // ── World Blueprint: AUTHORED geography of Planet Suzaku.
+   151→        //    The simulation is the source of truth; Minecraft is the renderer.
+   152→        //    Minecraft's random seed does NOT determine geography — this
+   153→        //    blueprint does. Countries, settlements, mountain ranges, rivers,
+   154→        //    spirit veins, and roads are all defined as data. The stage is
+   155→        //    fixed; the simulation (NPCs, ecology, events) varies per playthrough.
+   156→        //    Like Zelda/Elden Ring/Skyrim — Whiterun doesn't randomly spawn
+   157→        //    somewhere else. Neither does Wang Family Village.
+   158→        dev.ergenverse.world.blueprint.WorldBlueprintManager.load();
+   159→
+   160→        // ── Perception Engine: produces understanding of objective
+   161→        //    reality. Does NOT change the world. Does NOT swap models.
+   162→        //    Does NOT spawn things because the player leveled up.
+   163→        PerceptionEngine.bootstrap();
+   164→
+   165→        // ── Causal Ecology: every spirit beast exists because of an
+   166→        //    ecosystem. Exterminate herbivores → predators starve →
+   167→        //    herbs spread → sects notice.
+   168→        // (Registered later, when ecosystems are placed during world-gen.)
+   169→
+   170→        // ── Cognition / LoS / Actor / Location-Layers / Ecology bootstrap.
+   171→        //    These systems were re-applied from the worklog (Task
+   172→        //    REBUILD-COGNITION) after the July 12 sandbox reset.
+   173→        //    Order matters: Location Layers must be seeded before
+   174→        //    Ecosystems (the latter binds to the former's FLORA/FAUNA
+   175→        //    layers). Territory seeding is independent.
+   176→        dev.ergenverse.simulation.LocationLayerBootstrap.bootstrap();
+   177→        dev.ergenverse.ecology.EcosystemSeeder.seed();
+   178→        dev.ergenverse.ecology.EcosystemManager.bindAll();
+   179→        dev.ergenverse.simulation.actor.TerritorySeeder.seed();
+   180→
+   181→        // ── Wang Lin's Arsenal: register ALL 309 arsenal items (every item,
+   182→        //    technique, pet, clone, companion Wang Lin encountered/owned) as
+   183→        //    actual Minecraft items with always-upgradeable evolution chains.
+   184→        //    This is the completionist Wang Lin branch — nothing is locked.
+   185→        //    The Heaven-Defying Bead is registered as its own subclass
+   186→        //    (HeavenDefyingBeadItem) with NBT state, storage menu, and dimension.
+   187→        WangLinItems.register(modEventBus);
+   188→        ErgenverseBlocks.register(modEventBus);
+   189→        dev.ergenverse.item.ErgenverseItems.register(modEventBus);
+   190→        EREntityTypes.ENTITY_TYPES.register(modEventBus);
+   191→        // Projectile entities (flying sword qi-blade) — registered alongside other entity types.
+   192→        dev.ergenverse.entity.projectile.ModProjectiles.PROJECTILES.register(modEventBus);
+   193→
+   194→        // ── Workstation systems: Alchemy Furnace block entity + menu types.
+   195→        //    Block entities MUST be registered AFTER their owning blocks
+   196→        //    (the BlockEntityType.Builder references the Block). Menu types
+   197→        //    MUST be registered AFTER their owning block entities (the
+   198→        //    client factory references the BE class).
+   199→        dev.ergenverse.block.entity.ErgenverseBlockEntities.register(modEventBus);
+   200→        dev.ergenverse.screen.ErgenverseMenus.register(modEventBus);
+   201→
+   202→        // ── Custom Chunk Generators (CRON-70):
+   203→        //    BlueprintChunkGenerator replaces minecraft:noise for Planet Suzaku,
+   204→        //    providing canon-aware terrain shaped by the blueprint's geography.
+   205→        //    Must be registered BEFORE the dimension is loaded.
+   206→        dev.ergenverse.runtime.worldgen.ErgenverseChunkGenerators.register(modEventBus);
+   207→
+   208→        // ── Heaven-Defying Bead systems (Layer 2 — Simulation):
+   209→        //    The bead's storage menu (MenuType) and interior dimension.
+   210→        //    Must run AFTER WangLinItems (which registers the bead item)
+   211→        //    and AFTER all canon registries (which the bead references).
+   212→        BeadFunctionMenu.register(modEventBus);
+   213→        BeadDimension.bootstrap();
+   214→
+   215→        modEventBus.addListener(this::commonSetup);
+   216→        modEventBus.addListener(CultivationCapability::register);
+   217→        // EntityAttributeCreationEvent fires on the MOD event bus, not the FORGE bus.
+   218→        modEventBus.addListener(this::onAttributeRegistry);
+   219→        MinecraftForge.EVENT_BUS.register(this);
+   220→        MinecraftForge.EVENT_BUS.register(WangLinArsenalCommand.class);
+   221→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.WorldStateCommand.class);
+   222→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.PerceptionCommand.class);
+   223→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ManifestationGiftCommand.class);
+   224→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.HistoryCommand.class);
+   225→        // Art XLII/XLIII: WorldChronicle (living history) + CanonDivergenceRecorder (canon-vs-actual).
+   226→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ChronicleCommand.class);
+   227→        // WorldSimCommand: /ergen worldsim — debug window into the macro simulation.
+   228→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.WorldSimCommand.class);
+   229→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.history.HistoryEvents.class);
+   230→        // CRON-COMPLETIONIST-16: PlayerActionBridge — player is a first-class actor.
+   231→        // All player entity interactions now flow through SimulationActions → WorldEventBus.
+   232→        // Registered at HIGHEST priority (before HistoryEvents) so the bus dispatch
+   233→        // happens before existing handlers process the raw Forge event.
+   234→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.simulation.action.PlayerActionBridge.class);
+   235→        // CRON-COMPLETIONIST-74: PlayerCombatBridge — player combat flows through WorldEventBus.
+   236→        // When the player damages or kills an EntityCultivator or SpiritBeastEntity,
+   237→        // a combat event is published. NPC kills also publish semantic act_of_cruelty
+   238→        // if the target was severely weakened. Per the 2026-07-23 event-sourced pivot.
+   239→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.simulation.action.PlayerCombatBridge.class);
+   240→        // CRON-COMPLETIONIST-77: PlayerItemUseBridge — generic mod item use flows through WorldEventBus.
+   241→        // Catches any ergenverse mod item use that doesn't self-publish events (scrolls,
+   242→        // banners, generic materials) so the simulation observes all player actions.
+   243→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.simulation.action.PlayerItemUseBridge.class);
+   244→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.SectMissionInteraction.class);
+   245→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.entity.ai.LectureInteraction.class);
+   246→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.advanced.AdvancedMechanicsCommand.class);
+   247→        // ── Cognition / LoS / Actor / Location-Layers / Ecology commands.
+   248→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.LocationLayersCommand.class);
+   249→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.EcologyCommand.class);
+   250→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ActorCommand.class);
+   251→        // ── Spawn system: village builder + tutorial book + diagnostic command.
+   252→        //    The SpawnEventHandler is @Mod.EventBusSubscriber (auto-registered),
+   253→        //    but the command needs explicit registration on the FORGE bus.
+   254→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.spawn.ErgenverseCommand.class);
+   255→        // ── Unified debug console: one command to inspect everything.
+   256→        MinecraftForge.EVENT_BUS.register(dev.ergenverse.command.ErgenDebugCommand.class);
+   257→
+   258→        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ErgenConfig.SPEC);
+   259→        LOGGER.info("[Ergenverse] The world has existed for ten thousand years before you arrived.");
+   260→    }
+   261→
+   262→    private void commonSetup(final FMLCommonSetupEvent event) {
+   263→        event.enqueueWork(() -> {
+   264→            LOGGER.info("[Ergenverse] Common setup complete.");
+   265→            LOGGER.info("[Ergenverse] Cultivation capability system active.");
+   266→            // Register network channel (must be in enqueueWork — thread-safe)
+   267→            dev.ergenverse.network.ERNetwork.register();
+   268→            LOGGER.info("[Ergenverse] Network channel initialized (protocol v{}).",
+   269→                    dev.ergenverse.network.ERNetwork.PROTOCOL_VERSION);
+   270→        });
+   271→    }
+   272→
+   273→    /**
+   274→     * Register entity attributes (MAX_HEALTH, MOVEMENT_SPEED, etc.) for
+   275→     * mod entities. Required for any Mob-based entity to spawn — without
+   276→     * this, Minecraft throws "No attribute registry entry for ..." at spawn.
+   277→     *
+   278→     * <p>Fires on the MOD event bus during FMLCommonSetup, before world load.
+   279→     * Registered via {@code modEventBus.addListener(this::onAttributeRegistry)}
+   280→     * because EntityAttributeCreationEvent is a mod-lifecycle event, not a
+   281→     * runtime FORGE event.
+   282→     */
+   283→    public void onAttributeRegistry(net.minecraftforge.event.entity.EntityAttributeCreationEvent event) {
+   284→        event.put(dev.ergenverse.entity.EREntityTypes.CULTIVATOR.get(),
+   285→                dev.ergenverse.entity.EntityCultivator.createAttributes().build());
+   286→        LOGGER.info("[Ergenverse] Registered EntityCultivator attributes.");
+   287→
+   288→        // ── Spirit Beast attributes — PER-SPECIES profiles.
+   289→        // CRON-COMPLETIONIST-15: Previously all 6 beast types used createAttributes()
+   290→        // (rabbit defaults: 4HP/0.35spd/1dmg). A fire beast spawned with rabbit
+   291→        // stats. Now each type gets its canonically-correct profile via
+   292→        // createBeastAttributes(BeastType).
+   293→        event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_RABBIT.get(),
+   294→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   295→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.RABBIT).build());
+   296→        event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_WOLF.get(),
+   297→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   298→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.WOLF).build());
+   299→        event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_DEER.get(),
+   300→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   301→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.DEER).build());
+   302→        event.put(dev.ergenverse.entity.EREntityTypes.FIRE_BEAST.get(),
+   303→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   304→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.FIRE_BEAST).build());
+   305→        event.put(dev.ergenverse.entity.EREntityTypes.STONE_BACK_BOAR.get(),
+   306→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   307→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.STONE_BACK_BOAR).build());
+   308→        event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_HAWK.get(),
+   309→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   310→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.HAWK).build());
+   311→        // CRON-COMPLETIONIST-24: Spirit crane attributes
+   312→        event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_CRANE.get(),
+   313→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   314→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.CRANE).build());
+   315→        // CRON-COMPLETIONIST-33: Spirit bat attributes
+   316→        event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_BAT.get(),
+   317→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   318→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.BAT).build());
+   319→        // CRON-COMPLETIONIST-33: Qilin attributes (divine beast, powerful)
+   320→        event.put(dev.ergenverse.entity.EREntityTypes.QILIN.get(),
+   321→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   322→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.QILIN).build());
+   323→        // CRON-COMPLETIONIST-33: Sea serpent attributes (aquatic predator)
+   324→        event.put(dev.ergenverse.entity.EREntityTypes.SEA_SERPENT.get(),
+   325→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   326→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.SEA_SERPENT).build());
+   327→        // CRON-COMPLETIONIST-36: Soul fish attributes (tiny qi-infused fish)
+   328→        event.put(dev.ergenverse.entity.EREntityTypes.SOUL_FISH.get(),
+   329→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   330→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.SOUL_FISH).build());
+   331→        // CRON-COMPLETIONIST-67: Spirit tiger attributes (apex land predator)
+   332→        event.put(dev.ergenverse.entity.EREntityTypes.SPIRIT_TIGER.get(),
+   333→                dev.ergenverse.entity.SpiritBeastEntity.createBeastAttributes(
+   334→                        dev.ergenverse.entity.SpiritBeastEntity.BeastType.TIGER).build());
+   335→        LOGGER.info("[Ergenverse] Registered per-species Spirit Beast attributes.");
+   336→    }
+   337→
+   338→    /**
+   339→     * Server tick — runs the three decoupled loops:
+   340→     *
+   341→     * <ol>
+   342→     *   <li><b>CausalEcology</b> — every tick. The living ecology (spirit
+   343→     *       beasts, herb growth, predator/prey). Existing system, not
+   344→     *       touched.</li>
+   345→     *   <li><b>WorldStateEngine</b> — every 24000 ticks (1 MC day). The
+   346→     *       macro simulation: time events, migrations, karma resolution.
+   347→     *       Advances divergence counter on WorldRuntimeState.</li>
+   348→     *   <li><b>ReificationScan</b> — every 100 ticks (5 sec). The proximity
+   349→     *       scanner that materializes canon NPCs when a player approaches.
+   350→     *       Decoupled from chunk events to avoid cascading generation.</li>
+   351→     * </ol>
+   352→     *
+   353→     * <p>These are THREE SEPARATE LOOPS with different frequencies and
+   354→     * concerns. The prior design conflated ReificationScan with
+   355→     * WorldStateEngine under one 24000-tick interval, which would mean a
+   356→     * player could stand next to Wang Tiangui's spawn point for 20 minutes
+   357→     * before he appeared. Now they're independent.
+   358→     */
+   359→    @SubscribeEvent
+   360→    public void onServerTick(TickEvent.ServerTickEvent event) {
+   361→        if (event.phase != TickEvent.Phase.END) return;
+   362→        net.minecraft.server.level.ServerLevel overworld = event.getServer().overworld();
+   363→        long ticks = overworld.getGameTime();
+   364→
+   365→        // ── Bootstrap: register WorldEventBus subscribers + NpcSpawnRegistry on first tick ──
+   366→        // The bus is cleared on world unload, so subscribers must be
+   367→        // re-registered each session. We do it on tick 1 (before any
+   368→        // events can fire) and guard with a flag to avoid re-registering.
+   369→        if (ticks == 1) {
+   370→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   371→                    new dev.ergenverse.simulation.event.QiDisturbanceSubscriber());
+   372→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   373→                    new dev.ergenverse.simulation.event.BirdFlightSubscriber());
+   374→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   375→                    new dev.ergenverse.simulation.event.ActivityInterruptionSubscriber());
+   376→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   377→                    new dev.ergenverse.npc.memory.MemoryEventSubscriber());
+   378→            // Art XLIII: the WorldChronicle — the simulation writes its own history.
+   379→            // A catch-all subscriber that compiles every notable event into a permanent prose annal.
+   380→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   381→                    new dev.ergenverse.simulation.event.ChronicleSubscriber());
+   382→            // ── Event-Sourced Architecture (2026-07-23 pivot) ──
+   383→            // The player is now a first-class actor. SimulationActions publishes
+   384→            // player/actor/semantic events to the bus; these three subscribers
+   385→            // derive consequences from those facts:
+   386→            //   HistorySubscriber     — records to PlayerHistory, NpcMemory, WorldHistory
+   387→            //   RelationshipEngine    — infers relationship deltas (NO canon checks)
+   388→            //   OpportunityGenerator  — creates new possibilities from notable deeds
+   389→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   390→                    new dev.ergenverse.simulation.action.HistorySubscriber());
+   391→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   392→                    new dev.ergenverse.simulation.action.RelationshipEngine());
+   393→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   394→                    new dev.ergenverse.simulation.action.OpportunityGenerator());
+   395→            // ── Belief layer (2026-07-23 round 2) ──
+   396→            // The missing "belief" subscriber: same event → different beliefs by
+   397→            // different NPC worldviews. Old Chen sees mercy → "courageous".
+   398→            // Teng scout sees mercy → "dangerous". Beliefs drive behavior, not facts.
+   399→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   400→                    new dev.ergenverse.simulation.belief.BeliefFormationSubscriber());
+   401→            // ── Event-Sourced Architecture Wiring (CRON-COMPLETIONIST option f) ──
+   402→            // Register the remaining subscribers created by the architectural pivot
+   403→            // but not yet wired into the bus:
+   404→            //   ExpectationObserver     — detects expectation violations from repeated patterns
+   405→            //   ReputationObserver      — localized reputation that spreads physically
+   406→            //   OpportunityClaimSubscriber — NPCs claim opportunities (inverted ownership)
+   407→            //   WangLinSemanticSubscriber   — Wang Lin observes semantic events, updates opinion
+   408→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   409→                    new dev.ergenverse.simulation.action.ExpectationObserver());
+   410→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   411→                    new dev.ergenverse.simulation.action.ReputationObserver());
+   412→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   413→                    new dev.ergenverse.simulation.action.OpportunityClaimSubscriber());
+   414→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   415→                    new dev.ergenverse.wanglin.ai.reasoning.WangLinSemanticSubscriber());
+   416→            // ── Wang Lin Reasoning Engine — SemanticEventReactor ──
+   417→            // CRON-COMPLETIONIST-77: The SemanticEventReactor was defined as an inner
+   418→            // class of WangLinReasoningEngine but NEVER registered on the bus. This
+   419→            // meant Wang Lin's 6-factor reasoning witness counters (mercyWitnessed,
+   420→            // crueltyWitnessed, promiseBroken, recklessReveal, techniqueNoted) were
+   421→            // never populated from events. Wang Lin's opinion was blind to deeds.
+   422→            // Now his reasoning is truly event-driven.
+   423→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   424→                    new dev.ergenverse.wanglin.ai.reasoning.WangLinReasoningEngine.SemanticEventReactor());
+   425→            // ── General NPC Semantic Relationship Wiring (CRON-COMPLETIONIST) ──
+   426→            // All NPCs (not just Wang Lin) now update their multi-axis relationship
+   427→            // graphs when they witness semantic events. Per Art XLI §2 (simulation
+   428→            // is general) and Art XXXIV (relationships are graphs, not numbers).
+   429→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   430→                    new dev.ergenverse.simulation.action.NpcSemanticRelationshipSubscriber());
+   431→            // ── CRON-32: Opportunity Carrier — NPC awareness of emerging opportunities ──
+   432→            // When an opportunity.*.emerged event fires, the nearest NPC becomes AWARE
+   433→            // of it (pushes an INVESTIGATE goal). The NPC doesn't automatically act —
+   434→            // their Cultivator Mind's scoring decides whether to pursue it.
+   435→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   436→                    new dev.ergenverse.simulation.opportunity.OpportunityCarrierSubscriber());
+   437→            // Load persisted reputation from disk on world start.
+   438→            dev.ergenverse.simulation.action.ReputationObserver.loadFromDisk(overworld);
+   439→            LOGGER.info("[Ergenverse] Registered WorldEventBus subscribers: QiDisturbance + BirdFlight "
+   440→                    + "+ ActivityInterruption + Memory + Chronicle + HistorySubscriber "
+   441→                    + "+ RelationshipEngine + OpportunityGenerator + BeliefFormation "
+   442→                    + "+ ExpectationObserver + ReputationObserver + OpportunityClaimSubscriber "
+   443→                    + "+ WangLinSemanticSubscriber + SemanticEventReactor + NpcSemanticRelationshipSubscriber "
+   444→                    + "+ OpportunityCarrierSubscriber + PlayerItemUseBridge "
+   445→                    + "(event-sourced + belief + expectation + reputation + opportunity-claim + wang-lin-cognition + wang-lin-reasoning-reactor + general-npc-relationship + opportunity-carrier + player-item-use).");
+   446→            // Art XLII/XLIII: seed the chronicle opening + canon divergence ledger on world load.
+   447→            // The chronicle's t₀ entry is the immutable "world at the moment the player arrives" record.
+   448→            dev.ergenverse.history.WorldChronicle chronicle =
+   449→                    dev.ergenverse.history.WorldChronicle.get(overworld);
+   450→            if (chronicle.size() == 0) {
+   451→                chronicle.seedOpening(ticks);
+   452→                dev.ergenverse.history.WorldChronicle.persist(overworld);
+   453→                LOGGER.info("[Ergenverse] WorldChronicle seeded with t₀ opening entry.");
+   454→            }
+   455→            // The divergence recorder auto-seeds all 108 canon events as PENDING on first get().
+   456→            dev.ergenverse.history.CanonDivergenceRecorder.get(overworld);
+   457→            // ── CRON-COMPLETIONIST-46: Seed canon NPC-to-NPC relationships ──
+   458→            // The ActorRelationshipStore starts empty. Without canonically-accurate
+   459→            // seeds (Wang Lin→Li Muwan trust=90, Teng Clan→Wang Lin grievance=90, etc.),
+   460→            // all event-driven relationship changes (NpcSemanticRelationshipSubscriber,
+   461→            // RelationshipEngine, WangLinSemanticSubscriber) operate on blank slates.
+   462→            // This seeder provides the foundation. Article X: NPCs reason, not script.
+   463→            // Article XXXIV: Relationships are multi-axis graphs with history.
+   464→            // Article XLIII §2: Relationships persist across server restart.
+   465→            // Idempotent — only seeds when store has 0 relationships.
+   466→            dev.ergenverse.simulation.action.CanonRelationshipSeeder.seedIfEmpty(overworld);
+   467→            // CRON-COMPLETIONIST-67: Load Living Chapter 1 relationship graph seeds.
+   468→            // CanonRelationshipSeeder seeds the major canon relationships (Wang Lin ↔
+   469→            // Li Muwan, Teng Clan, etc.). RelationshipSeedLoader loads the detailed
+   470→            // village-specific relationships from the Living Chapter JSON (Wang
+   471→            // Tianshui ↔ Zhou Tingsu, Wang Tianshui ↔ Da Niu, etc.). Both are
+   472→            // idempotent — they skip relationships that already exist.
+   473→            int villageSeeds = dev.ergenverse.simulation.action.RelationshipSeedLoader.loadIfNeeded(overworld);
+   474→            if (villageSeeds > 0) {
+   475→                LOGGER.info("[Ergenverse] Seeded {} village NPC relationships from Living Chapter 1 data.", villageSeeds);
+   476→            }
+   477→            // Initialize the NPC spawn registry — maps locations to canon NPCs.
+   478→            // Without this, only wang_tiangui would ever spawn.
+   479→            // DEPRECATED (Article XLIV): the spawn-registry model is being replaced
+   480→            // by the actor-as-source-of-truth SettlementRegistry + ActorMaterializer.
+   481→            // Retained during the transition; will be deleted in a future cycle.
+   482→            dev.ergenverse.simulation.NpcSpawnRegistry.initialize();
+   483→            // Initialize settlement NPC anchors — fixed positions for village NPCs.
+   484→            // Fixes the ghost-town bug where NPCs spawned randomly in biomes.
+   485→            // DEPRECATED (Article XLIV): replaced by SettlementRegistry residences,
+   486→            // whose presence is derived from life (time-of-day + activity), not
+   487→            // fixed offsets. Retained during the transition.
+   488→            dev.ergenverse.simulation.SettlementNpcAnchors.initialize();
+   489→            // Initialize ReificationScan settlement centers (reads builder constants).
+   490→            dev.ergenverse.simulation.ReificationScan.initializeSettlements();
+   491→            // ── Article XLIV: the actor-as-source-of-truth model ──
+   492→            // The NEW primary index for "who lives where." Settlements own
+   493→            // populations; actors have presence derived from their life; the
+   494→            // ActorMaterializer renders those intersecting loaded chunks.
+   495→            // Wang Lin never "spawns" — he already existed; Minecraft catches up.
+   496→            dev.ergenverse.simulation.settlement.SettlementRegistry.initialize();
+   497→            // SettlementThreatIndex — the threat context feeder (Article XLIV §5).
+   498→            // Subscribes to "beast." events and records threats against nearby
+   499→            // settlements. When wolves appear near Wang Family Village, the
+   500→            // ActorReasoningEngine produces different decisions per actor —
+   501→            // Wang Lin observes, the patriarch guards, others flee.
+   502→            // "If wolves appear, everything changes."
+   503→            dev.ergenverse.simulation.event.WorldEventBus.subscribe(
+   504→                    new dev.ergenverse.simulation.settlement.SettlementThreatIndex());
+   505→            // ActorProfileRegistry — the per-actor traits (cultivation tier,
+   506→            // courage, role). Retained for location logic; the CultivatorMind
+   507→            // supersedes the role-based reasoning.
+   508→            dev.ergenverse.simulation.settlement.ActorProfileRegistry.initialize();
+   509→            // CultivatorMindRegistry — the "different minds" table. Per-actor
+   510→            // motivation weights (CONCEAL_STRENGTH, CURIOSITY, SURVIVAL, DUTY...)
+   511→            // that turn one shared WorldSituation into N different Activity
+   512→            // decisions via candidate scoring. Nobody wrote "if Wang Lin" —
+   513→            // the decision emerges from what each actor cares about.
+   514→            dev.ergenverse.simulation.settlement.CultivatorMindRegistry.initialize();
+   515→            // GoldenPathVerifier — records the unforgettable sequence as an
+   516→            // EXPERIENCE (Article XL: prove living moments), not an architecture
+   517→            // check. Wang Lin meditating → wolf stalks → he observes → villagers
+   518→            // react differently → he never intervenes → village remembers.
+   519→            // Runs once at startup; output in dev.log + golden_path_verification.log.
+   520→            dev.ergenverse.simulation.settlement.GoldenPathVerifier.runOnce(ticks);
+   521→        }
+   522→
+   523→        // Loop A: CausalEcology — every tick (existing system, unchanged)
+   524→        CausalEcology.tickAll();
+   525→
+   526→        // Loop B: WorldStateEngine — every 24000 ticks (1 MC day = 1 sim day)
+   527→        // Advances migrations (waypoint movement + beast spawns), ecosystems (seasonal state),
+   528→        // civilizations (recruitment/economy), and opportunities (aging toward maturity).
+   529→        // All advances fire events on the WorldEventBus → auto-chronicled + observable.
+   530→        if (ticks % 24000 == 0) {
+   531→            dev.ergenverse.simulation.WorldStateEngine.tick(overworld);
+   532→            // BeliefStore decay: beliefs atrophy without reinforcement.
+   533→            // Decay of 0.02 per day means a belief at 0.5 takes ~20 days to fade.
+   534→            // Canon: memories in the cultivation world persist — but weaker beliefs fade.
+   535→            try {
+   536→                dev.ergenverse.simulation.belief.BeliefStore.get().decayAll(0.02f);
+   537→            } catch (Exception e) {
+   538→                LOGGER.error("[Ergenverse] BeliefStore decay failed", e);
+   539→            }
+   540→            // ReputationObserver decay: localized reputation atrophies.
+   541→            dev.ergenverse.simulation.action.ReputationObserver.decayAll(ticks);
+   542→            // ReputationObserver persistence: flush to SavedData every game-day.
+   543→            dev.ergenverse.simulation.action.ReputationObserver.flushToDisk(overworld);
+   544→        }
+   545→
+   546→        // Loop C: ReificationScan — every 100 ticks (5 sec proximity scan)
+   547→        // Materializes canon NPCs when players approach their spawn anchors.
+   548→        // DEPRECATED (Article XLIV): the spawn-driven model is being replaced by
+   549→        // the actor-as-source-of-truth ActorMaterializer (Loop C2). Retained
+   550→        // during the transition; both use the same duplicate-detection so they
+   551→        // never double-spawn. Eventually this loop + NpcSpawnRegistry +
+   552→        // SettlementNpcAnchors will be deleted.
+   553→        dev.ergenverse.simulation.ReificationScan.executeTick(
+   554→                overworld, ticks,
+   555→                dev.ergenverse.simulation.SpatialBiomeCacheIndex.getInstance());
+   556→
+   557→        // Loop C2: ActorMaterializer — every 100 ticks (Article XLIV)
+   558→        // The INVERTED renderer query. Instead of "chunk loads → spawn NPC,"
+   559→        // this asks "which actors' current presence intersects loaded chunks?"
+   560→        // and materializes those. Actors already exist (alive, simulating);
+   561→        // Minecraft is simply catching up to reality. Wang Lin never "spawns."
+   562→        dev.ergenverse.simulation.settlement.ActorMaterializer.executeTick(overworld, ticks);
+   563→
+   564→        // Loop D: WorldHistory — every 24000 ticks (daily checkpoint + future timeline advance)
+   565→        // Also ticks on every call; tickWorldHistory internally gates to daily.
+   566→        dev.ergenverse.history.WorldHistory.tickWorldHistory(overworld, ticks);
+   567→
+   568→        // Loop E: Joss Flame Economy — every 24000 ticks (daily harvest loop)
+   569→        // The harvest loop runs OBJECTIVELY regardless of player perception.
+   570→        // Mortal villages generate flames, the owner siphons 30%, uncollected flames dissipate.
+   571→        dev.ergenverse.advanced.AdvancedMechanicsEvents.tickJossFlameEconomy(overworld, ticks / 24000);
+   572→
+   573→        // Loop F: Cave World Ownership persistence — restore on first tick, persist on change
+   574→        // Ensures ownership transfers survive server restarts.
+   575→        if (ticks == 1) {
+   576→            dev.ergenverse.wanglin.CaveWorldOwnership.restoreFromWorldSave(overworld);
+   577→        }
+   578→
+   579→        // Loop G: ActorTickLoop — EVERY tick.
+   580→        // The cognition pipeline (Perception → Beliefs → Goals → Reasoning → Decision → Intent).
+   581→        // Also syncs linked entity positions into Actors so the IntentEngine
+   582→        // has current positions for its situational queries.
+   583→        // Without this call, 5,800+ LOC of cognition is dead code (Art III, V, X).
+   584→        dev.ergenverse.simulation.actor.ActorTickLoop.tick(ticks, overworld);
+   585→
+   586→        // Loop H: VillageBeastActivity — fires beast events on the
+   587→        // WorldEventBus near NPC clusters. This is the event SOURCE
+   588→        // that makes CE #1 possible: without beast events, the
+   589→        // ActivityInterruptionSubscriber has nothing to interrupt.
+   590→        // Throttled internally to every 6000 ticks (5 minutes).
+   591→        dev.ergenverse.ecology.VillageBeastActivity.tick(overworld, ticks);
+   592→
+   593→        // Loop I: WorldEventBus — set current level for write-through.
+   594→        // The bus itself is event-driven (publish/subscribe); this just ensures
+   595→        // it has the ServerLevel reference needed for WorldHistory persistence.
+   596→        dev.ergenverse.simulation.event.WorldEventBus.setCurrentLevel(overworld);
+   597→    }
+   598→}
+   599→

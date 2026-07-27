@@ -1,0 +1,1057 @@
+     1→package dev.ergenverse.simulation;
+     2→
+     3→import com.google.gson.JsonArray;
+     4→import com.google.gson.JsonElement;
+     5→import com.google.gson.JsonObject;
+     6→import dev.ergenverse.core.Ergenverse;
+     7→import dev.ergenverse.cultivation.RealmId;
+     8→import dev.ergenverse.entity.EREntityTypes;
+     9→import dev.ergenverse.entity.MosquitoSwarmEntity;
+    10→import dev.ergenverse.entity.SpiritBeastEntity;
+    11→import dev.ergenverse.perception.PerceptionTier;
+    12→import dev.ergenverse.simulation.event.EnergyType;
+    13→import dev.ergenverse.simulation.event.WorldEventBus;
+    14→import net.minecraft.core.BlockPos;
+    15→import net.minecraft.server.level.ServerLevel;
+    16→
+    17→import java.util.*;
+    18→import java.util.stream.Collectors;
+    19→
+    20→/**
+    21→ * World State Engine — the unifying simulation system that ties together all
+    22→ * data-driven subsystems.
+    23→ *
+    24→ * <p><b>Per user directive:</b> "If I could only ask the agent to build one more
+    25→ * foundational system, it would be this: The World State Engine. Everything should
+    26→ * derive from it."
+    27→ *
+    28→ * <p><b>The 6 Core Questions the engine continuously answers:</b>
+    29→ * <ol>
+    30→ *   <li>What exists?</li>
+    31→ *   <li>Who owns it?</li>
+    32→ *   <li>Who wants it?</li>
+    33→ *   <li>Who knows about it?</li>
+    34→ *   <li>Why hasn't it been taken already?</li>
+    35→ *   <li>What would naturally happen next if the player did nothing?</li>
+    36→ * </ol>
+    37→ *
+    38→ * <p><b>Prime Directive:</b> "Reality is objective; cultivation changes understanding,
+    39→ * not existence." When the player arrives, they aren't spawning content—they're entering
+    40→ * a world that is already moving.
+    41→ *
+    42→ * <p><b>No-Locked-Upgrades Directive:</b> Every canonical state must be obtainable.
+    43→ * A mortal who later reaches Core Formation will see the truth; the terrain does not
+    44→ * change, only understanding does.
+    45→ *
+    46→ * <h2>Subsystem Registry</h2>
+    47→ * <ul>
+    48→ *   <li>{@code data/ergenverse/species/} — canonical beast definitions</li>
+    49→ *   <li>{@code data/ergenverse/species_variants/} — 10 life-state variants per species</li>
+    50→ *   <li>{@code data/ergenverse/ecosystems/} — food webs with seasonality</li>
+    51→ *   <li>{@code data/ergenverse/ecosystem_integration/} — which beings appear where</li>
+    52→ *   <li>{@code data/ergenverse/migrations/} — migration routes with follower chains</li>
+    53→ *   <li>{@code data/ergenverse/macro_terrain/} — terrain that IS a being</li>
+    54→ *   <li>{@code data/ergenverse/provenance/} — artifact lifecycle tracking</li>
+    55→ *   <li>{@code data/ergenverse/civilizations/} — sect/clan/city simulation</li>
+    56→ *   <li>{@code data/ergenverse/npcs/} — every named NPC from RI</li>
+    57→ *   <li>{@code data/ergenverse/faction_relationships/} — allies/enemies/vassals/rivals</li>
+    58→ *   <li>{@code data/ergenverse/opportunities/} — opportunity generation tables</li>
+    59→ *   <li>{@code data/ergenverse/time_events/} — time-system event definitions</li>
+    60→ *   <li>{@code data/ergenverse/item_properties/} — lore-accurate physical properties</li>
+    61→ *   <li>{@code data/ergenverse/world_state/} — master schema + query registries</li>
+    62→ * </ul>
+    63→ *
+    64→ * <h2>Simulation Loop</h2>
+    65→ * <pre>
+    66→ *   1 tick = 1 in-game day
+    67→ *   Per tick:
+    68→ *     1. Advance time_events (check triggers, apply effects)
+    69→ *     2. Advance migrations (move waypoints, spawn markets)
+    70→ *     3. Advance ecosystems (apply seasonal state, adjust populations)
+    71→ *     4. Advance civilizations (recruitment, economy, politics, lifecycle)
+    72→ *     5. Advance opportunities (infer new opportunities at aged locations)
+    73→ *     6. Advance provenance (record state changes to artifacts)
+    74→ *     7. Advance macro_terrain (perception re-roll for changed cultivators)
+    75→ *     8. Answer player queries (what does the player perceive?)
+    76→ * </pre>
+    77→ *
+    78→ * <p>Status: FOUNDATION. The engine defines the tick loop and query API.
+    79→ * Full integration with Forge server tick events is the next step.
+    80→ */
+    81→public final class WorldStateEngine {
+    82→
+    83→    private WorldStateEngine() {}
+    84→
+    85→    // ─── World Time ───────────────────────────────────────────────────
+    86→
+    87→    /** The current world tick. 1 tick = 1 in-game day. */
+    88→    private static long worldTick = 0;
+    89→
+    90→    /** The current server level (set at the start of each tick()). */
+    91→    private static ServerLevel currentLevel = null;
+    92→
+    93→    /** Ticks per in-game year (365 days). Used for opportunity aging. */
+    94→    private static final long TICKS_PER_YEAR = 365L;
+    95→
+    96→    /** The current season. */
+    97→    public enum Season {
+    98→        SPRING("Spring", "万物生"),
+    99→        SUMMER("Summer", "盛夏"),
+   100→        AUTUMN("Autumn", "秋收"),
+   101→        WINTER("Winter", "寒冬");
+   102→
+   103→        public final String name;
+   104→        public final String nameCn;
+   105→        Season(String n, String cn) { this.name = n; this.nameCn = cn; }
+   106→
+   107→        public Season next() {
+   108→            Season[] vals = values();
+   109→            return vals[(ordinal() + 1) % vals.length];
+   110→        }
+   111→    }
+   112→
+   113→    private static Season currentSeason = Season.SPRING;
+   114→
+   115→    /** Get the current world tick (1 tick = 1 day). */
+   116→    public static long getWorldTick() { return worldTick; }
+   117→
+   118→    /** Get the current season. */
+   119→    public static Season getCurrentSeason() { return currentSeason; }
+   120→
+   121→    /** Advance the world by one tick (one day). Requires the server level for event dispatch + beast spawning. */
+   122→    public static void tick(ServerLevel level) {
+   123→        // Lazy-load data on first tick (idempotent)
+   124→        WorldStateDataLoader.loadOnce();
+   125→        currentLevel = level;
+   126→
+   127→        worldTick++;
+   128→        // Season changes every 91 ticks (~3 months)
+   129→        if (worldTick % 91 == 0) {
+   130→            Season prev = currentSeason;
+   131→            currentSeason = currentSeason.next();
+   132→            Ergenverse.LOGGER.info("[WorldStateEngine] Season changed: {} -> {} (tick {})",
+   133→                    prev.name, currentSeason.name, worldTick);
+   134→            // Fire a global season-change event so subscribers (ecology, agriculture, etc.) can react.
+   135→            WorldEventBus.publishGlobal("season.change", EnergyType.QI, 0.5f,
+   136→                    "The season has turned to " + currentSeason.name + ".",
+   137→                    "INFERRED — seasonal rotation", worldTick);
+   138→        }
+   139→        // Execute per-tick subsystem advances
+   140→        advanceTimeEvents();
+   141→        advanceMigrations();
+   142→        advanceEcosystems();
+   143→        advanceCivilizations();
+   144→        advanceOpportunities();
+   145→        advanceProvenance();
+   146→        advanceMacroTerrain();
+   147→
+   148→        // Persist the runtime sim state once per tick.
+   149→        if (currentLevel != null) {
+   150→            WorldSimState.persist(currentLevel);
+   151→        }
+   152→    }
+   153→
+   154→    /** Advance the world by N ticks. */
+   155→    public static void tick(ServerLevel level, int days) {
+   156→        for (int i = 0; i < days; i++) {
+   157→            tick(level);
+   158→        }
+   159→    }
+   160→
+   161→    // ─── Per-Tick Subsystem Advances ───
+   162→
+   163→    /**
+   164→     * Advance time events: check triggers, apply effects.
+   165→     * Reads data/ergenverse/time_events/*.json
+   166→     */
+   167→    private static void advanceTimeEvents() {
+   168→        Map<String, JsonObject> events = WorldStateDataLoader.getSubsystem("time_events");
+   169→        if (events.isEmpty()) return;
+   170→        // Check each time_event for trigger conditions matching the current tick/season.
+   171→        // Full trigger evaluation (seasonal/decennial/centennial/millennial/era/random/political/tribulation)
+   172→        // is a future task. For now, we log the count so the tick is observable.
+   173→        if (worldTick % 100 == 0) {
+   174→            Ergenverse.LOGGER.debug("World State Engine: {} time_events registered at tick {}",
+   175→                    events.size(), worldTick);
+   176→        }
+   177→    }
+   178→
+   179→    /**
+   180→     * Advance migrations: move waypoints, fire arrival events, spawn beasts.
+   181→     * Reads data/ergenverse/migrations/*.json
+   182→     *
+   183→     * <p>Each migration has a list of waypoints, each with a duration_days.
+   184→     * Each tick (= 1 day), we increment daysAtWaypoint. When it exceeds
+   185→     * duration_days, the migration advances to the next waypoint (wrapping
+   186→     * around), fires a {@code migration.arrived} event on the WorldEventBus,
+   187→     * and spawns 2-3 beasts of the migration's species near the waypoint
+   188→     * location (if a player is online to observe).
+   189→     */
+   190→    private static void advanceMigrations() {
+   191→        Map<String, JsonObject> migrations = WorldStateDataLoader.getSubsystem("migrations");
+   192→        if (migrations.isEmpty() || currentLevel == null) return;
+   193→        WorldSimState sim = WorldSimState.get(currentLevel);
+   194→
+   195→        for (Map.Entry<String, JsonObject> entry : migrations.entrySet()) {
+   196→            String migrationId = entry.getKey();
+   197→            JsonObject data = entry.getValue();
+   198→            JsonArray waypoints = data.getAsJsonArray("waypoints");
+   199→            if (waypoints == null || waypoints.size() == 0) continue;
+   200→
+   201→            int currentIdx = sim.getMigrationWaypointIndex(migrationId);
+   202→            int days = sim.incrementMigrationDays(migrationId);
+   203→
+   204→            JsonObject currentWaypoint = waypoints.get(currentIdx).getAsJsonObject();
+   205→            int duration = currentWaypoint.has("duration_days")
+   206→                    ? currentWaypoint.get("duration_days").getAsInt() : 30;
+   207→
+   208→            if (days >= duration) {
+   209→                // Advance to next waypoint (wrap around)
+   210→                int nextIdx = (currentIdx + 1) % waypoints.size();
+   211→                sim.advanceMigrationWaypoint(migrationId, nextIdx);
+   212→                JsonObject nextWaypoint = waypoints.get(nextIdx).getAsJsonObject();
+   213→                String pointName = nextWaypoint.has("point")
+   214→                        ? nextWaypoint.get("point").getAsString() : "unknown";
+   215→                String season = nextWaypoint.has("season")
+   216→                        ? nextWaypoint.get("season").getAsString() : "";
+   217→                String species = data.has("species")
+   218→                        ? data.get("species").getAsString() : "spirit_wolf";
+   219→                String migrationName = data.has("name")
+   220→                        ? data.get("name").getAsString() : migrationId;
+   221→
+   222→                // Fire the migration.arrived event — this gets chronicled automatically.
+   223→                String desc = String.format("%s has arrived at %s (%s). The beasts move.",
+   224→                        migrationName, pointName, season);
+   225→                BlockPos spawnPos = resolveWaypointCoords(pointName);
+   226→                if (spawnPos != null) {
+   227→                    WorldEventBus.publish("migration.arrived", EnergyType.PHYSICAL,
+   228→                            spawnPos, 0.6f, desc, "INFERRED — migration cycle", worldTick);
+   229→                    // Spawn 2-3 beasts of the migration's species at the waypoint.
+   230→                    spawnMigrationBeasts(currentLevel, species, spawnPos);
+   231→                } else {
+   232→                    WorldEventBus.publishGlobal("migration.arrived", EnergyType.SOCIAL,
+   233→                            0.6f, desc, "INFERRED — migration cycle", worldTick);
+   234→                }
+   235→
+   236→                Ergenverse.LOGGER.info("[WorldStateEngine] Migration {} advanced to waypoint {} ({}) — spawned beasts.",
+   237→                        migrationId, nextIdx, pointName);
+   238→            }
+   239→        }
+   240→    }
+   241→
+   242→    /**
+   243→     * Resolve a waypoint point-name (e.g. "mosquito_valley") to world coordinates.
+   244→     * Uses the same coordinates as TerritorySeeder. Returns null if unknown.
+   245→     */
+   246→    private static BlockPos resolveWaypointCoords(String pointName) {
+   247→        switch (pointName) {
+   248→            case "mosquito_valley":           return new BlockPos(120, 64, -380);
+   249→            case "heng_yue_mountain":         return new BlockPos(-240, 120, 400);
+   250→            case "sea_of_devils":             return new BlockPos(800, 64, -1200);
+   251→            case "ancient_god_battlefield":   return new BlockPos(-1600, 80, 1600);
+   252→            case "suzaku_tomb":               return new BlockPos(0, 64, 2400);
+   253→            case "zhao_country":              return new BlockPos(-400, 70, 100);
+   254→            case "approaching_battlefield":   return new BlockPos(400, 64, -800);
+   255→            case "battlefield_aftermath":     return new BlockPos(500, 64, -900);
+   256→            default: return null;
+   257→        }
+   258→    }
+   259→
+   260→    /**
+   261→     * Spawn 2-3 spirit beasts of the given species near the given position.
+   262→     * This is the VISUAL observable proof that a migration arrived.
+   263→     */
+   264→    private static void spawnMigrationBeasts(ServerLevel level, String species, BlockPos center) {
+   265→        // Only spawn if a player is online to observe (saves CPU when no one is watching).
+   266→        if (level.players().isEmpty()) return;
+   267→
+   268→        int count = 2 + level.getRandom().nextInt(2); // 2-3 beasts
+   269→        for (int i = 0; i < count; i++) {
+   270→            // Random offset within 16 blocks
+   271→            int dx = level.getRandom().nextInt(32) - 16;
+   272→            int dz = level.getRandom().nextInt(32) - 16;
+   273→            int x = center.getX() + dx;
+   274→            int z = center.getZ() + dz;
+   275→            int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+   276→
+   277→            try {
+   278→                if (species.contains("mosquito")) {
+   279→                    MosquitoSwarmEntity beast = new MosquitoSwarmEntity(
+   280→                            EREntityTypes.MOSQUITO_SWARM.get(), level);
+   281→                    beast.moveTo(x + 0.5, y, z + 0.5,
+   282→                            level.getRandom().nextFloat() * 360f, 0f);
+   283→                    level.addFreshEntity(beast);
+   284→                } else {
+   285→                    // Default: spawn a spirit beast with an appropriate type.
+   286→                    SpiritBeastEntity.BeastType bt = pickBeastType(species);
+   287→                    var entityType = pickBeastEntityType(bt);
+   288→                    SpiritBeastEntity beast = new SpiritBeastEntity(entityType, level);
+   289→                    beast.setBeastType(bt);
+   290→                    beast.moveTo(x + 0.5, y, z + 0.5,
+   291→                            level.getRandom().nextFloat() * 360f, 0f);
+   292→                    level.addFreshEntity(beast);
+   293→                }
+   294→            } catch (Exception e) {
+   295→                Ergenverse.LOGGER.warn("[WorldStateEngine] Failed to spawn migration beast {}: {}",
+   296→                        species, e.getMessage());
+   297→            }
+   298→        }
+   299→    }
+   300→
+   301→    /** Map a species name to a SpiritBeastEntity.BeastType. */
+   302→    private static SpiritBeastEntity.BeastType pickBeastType(String species) {
+   303→        if (species == null) return SpiritBeastEntity.BeastType.WOLF;
+   304→        String s = species.toLowerCase();
+   305→        if (s.contains("rabbit") || s.contains("hare"))  return SpiritBeastEntity.BeastType.RABBIT;
+   306→        if (s.contains("wolf") || s.contains("dog"))     return SpiritBeastEntity.BeastType.WOLF;
+   307→        if (s.contains("deer") || s.contains("stag"))    return SpiritBeastEntity.BeastType.DEER;
+   308→        if (s.contains("hawk") || s.contains("bird") || s.contains("eagle")) return SpiritBeastEntity.BeastType.HAWK;
+   309→        if (s.contains("fire"))                           return SpiritBeastEntity.BeastType.FIRE_BEAST;
+   310→        if (s.contains("boar") || s.contains("pig"))     return SpiritBeastEntity.BeastType.STONE_BACK_BOAR;
+   311→        if (s.contains("crane"))                         return SpiritBeastEntity.BeastType.CRANE;
+   312→        return SpiritBeastEntity.BeastType.WOLF;
+   313→    }
+   314→
+   315→    /** Map a BeastType to its registered EntityType. */
+   316→    private static net.minecraft.world.entity.EntityType<SpiritBeastEntity> pickBeastEntityType(SpiritBeastEntity.BeastType bt) {
+   317→        return switch (bt) {
+   318→            case RABBIT -> EREntityTypes.SPIRIT_RABBIT.get();
+   319→            case WOLF -> EREntityTypes.SPIRIT_WOLF.get();
+   320→            case DEER -> EREntityTypes.SPIRIT_DEER.get();
+   321→            case HAWK -> EREntityTypes.SPIRIT_HAWK.get();
+   322→            case FIRE_BEAST -> EREntityTypes.FIRE_BEAST.get();
+   323→            case STONE_BACK_BOAR -> EREntityTypes.STONE_BACK_BOAR.get();
+   324→            case CRANE -> EREntityTypes.SPIRIT_CRANE.get();
+   325→            case BAT -> EREntityTypes.SPIRIT_BAT.get();
+   326→            case QILIN -> EREntityTypes.QILIN.get();
+   327→            case SEA_SERPENT -> EREntityTypes.SEA_SERPENT.get();
+   328→            case SOUL_FISH -> EREntityTypes.SOUL_FISH.get();
+   329→            case TIGER -> EREntityTypes.SPIRIT_TIGER.get();
+   330→        };
+   331→    }
+   332→
+   333→    /**
+   334→     * Advance ecosystems: apply seasonal state, detect collapses/booms.
+   335→     * Reads data/ergenverse/ecosystems/*.json + ecosystem_integration/*.json
+   336→     *
+   337→     * <p>Each ecosystem JSON has a {@code seasonal_states} object keyed by
+   338→     * season name (spring/summer/autumn/winter/tribulation_storm). Each state
+   339→     * has population multipliers + a behavior label + a note. We rotate the
+   340→     * ecosystem's active state to match the world season, and fire
+   341→     * {@code ecology.seasonal_shift} when it changes.
+   342→     *
+   343→     * <p>The actual trophic population math is already done by
+   344→     * {@link dev.ergenverse.ecology.CausalEcology#tickAll()} (called every
+   345→     * tick from Ergenverse.onServerTick). Here we sync the data-driven
+   346→     * ecosystem state and fire events when populations cross thresholds.
+   347→     */
+   348→    private static void advanceEcosystems() {
+   349→        Map<String, JsonObject> ecosystems = WorldStateDataLoader.getSubsystem("ecosystems");
+   350→        if (ecosystems.isEmpty() || currentLevel == null) return;
+   351→        WorldSimState sim = WorldSimState.get(currentLevel);
+   352→
+   353→        String seasonKey = currentSeason.name().toLowerCase(); // "spring", "summer", etc.
+   354→
+   355→        for (Map.Entry<String, JsonObject> entry : ecosystems.entrySet()) {
+   356→            String ecoId = entry.getKey();
+   357→            JsonObject data = entry.getValue();
+   358→
+   359→            // Rotate seasonal state.
+   360→            JsonObject seasonalStates = data.has("seasonal_states")
+   361→                    ? data.getAsJsonObject("seasonal_states") : null;
+   362→            if (seasonalStates != null && seasonalStates.has(seasonKey)) {
+   363→                String prevState = sim.getEcosystemSeasonalState(ecoId);
+   364→                if (!seasonKey.equals(prevState)) {
+   365→                    sim.setEcosystemSeasonalState(ecoId, seasonKey);
+   366→                    JsonObject state = seasonalStates.getAsJsonObject(seasonKey);
+   367→                    String behavior = state != null && state.has("behavior")
+   368→                            ? state.get("behavior").getAsString() : "";
+   369→                    String note = state != null && state.has("note")
+   370→                            ? state.get("note").getAsString() : "";
+   371→                    String ecoName = data.has("name") ? data.get("name").getAsString() : ecoId;
+   372→
+   373→                    // Fire a seasonal-shift event (severity 0.3 — below chronicling threshold,
+   374→                    // so it fires on the bus for subscribers but doesn't clutter the Chronicle).
+   375→                    String desc = String.format("%s enters %s: %s. %s",
+   376→                            ecoName, seasonKey, behavior, note);
+   377→                    WorldEventBus.publishGlobal("ecology.seasonal_shift", EnergyType.QI,
+   378→                            0.3f, desc, "INFERRED — seasonal ecology", worldTick);
+   379→                    Ergenverse.LOGGER.debug("[WorldStateEngine] Ecosystem {} shifted to {} state.",
+   380→                            ecoId, seasonKey);
+   381→                }
+   382→            }
+   383→        }
+   384→
+   385→        // Sync CausalEcology events (collapses/booms) to the bus.
+   386→        // CausalEcology already ran this tick; we surface its recentEvents.
+   387→        for (dev.ergenverse.ecology.CausalEcology.Ecosystem eco : dev.ergenverse.ecology.CausalEcology.all()) {
+   388→            if (eco.recentEvents.isEmpty()) continue;
+   389→            String topEvent = eco.recentEvents.get(0);
+   390→            // Determine severity: collapses are high, shifts are moderate.
+   391→            float severity = 0.7f;
+   392→            if (topEvent.contains("collapse") || topEvent.contains("starve")) severity = 0.85f;
+   393→            if (topEvent.contains("boom") || topEvent.contains("spread")) severity = 0.6f;
+   394→
+   395→            // Fire the ecology event on the bus. This gets chronicled automatically
+   396→            // if severity >= 0.45.
+   397→            WorldEventBus.publishGlobal("ecology.shift", EnergyType.QI,
+   398→                    severity, eco.name + ": " + topEvent,
+   399→                    "INFERRED — causal ecology trophic cascade", worldTick);
+   400→        }
+   401→    }
+   402→
+   403→    /**
+   404→     * Advance civilizations: recruitment, economy drift.
+   405→     * Reads data/ergenverse/civilizations/*.json
+   406→     *
+   407→     * <p>Each civilization JSON has a {@code population_structure} with disciple
+   408→     * counts and an {@code economy} block with resource levels. We track a
+   409→     * runtime disciple count + economy level (0-4) in WorldSimState. Each tick:
+   410→     * <ul>
+   411→     *   <li>Spring: +1-3 disciples (recruitment season).</li>
+   412→     *   <li>Winter: -1-2 disciples (beast attacks, harsh conditions).</li>
+   413→     *   <li>Economy level drifts toward 2 (moderate) with random noise.</li>
+   414→     * </ul>
+   415→     * When disciples change by >5% in a tick, fire {@code sect.recruitment}
+   416→     * or {@code sect.decline} on the bus.
+   417→     */
+   418→    private static void advanceCivilizations() {
+   419→        Map<String, JsonObject> civs = WorldStateDataLoader.getSubsystem("civilizations");
+   420→        if (civs.isEmpty() || currentLevel == null) return;
+   421→        WorldSimState sim = WorldSimState.get(currentLevel);
+   422→
+   423→        for (Map.Entry<String, JsonObject> entry : civs.entrySet()) {
+   424→            String civId = entry.getKey();
+   425→            JsonObject data = entry.getValue();
+   426→
+   427→            // Initialize disciples from canon data on first encounter.
+   428→            int disciples = sim.getCivilizationDisciples(civId);
+   429→            if (disciples < 0) {
+   430→                JsonObject popStr = data.has("population_structure")
+   431→                        ? data.getAsJsonObject("population_structure") : null;
+   432→                if (popStr != null) {
+   433→                    int outer = popStr.has("outer_disciples") ? popStr.get("outer_disciples").getAsInt() : 0;
+   434→                    int inner = popStr.has("inner_disciples") ? popStr.get("inner_disciples").getAsInt() : 0;
+   435→                    disciples = outer + inner;
+   436→                } else {
+   437→                    disciples = 100;
+   438→                }
+   439→                sim.setCivilizationState(civId, disciples, 2); // economy = moderate
+   440→            }
+   441→
+   442→            int prevDisciples = disciples;
+   443→            int economyLevel = sim.getCivilizationEconomyLevel(civId);
+   444→
+   445→            // Seasonal recruitment / attrition.
+   446→            switch (currentSeason) {
+   447→                case SPRING:
+   448→                    disciples += 1 + currentLevel.getRandom().nextInt(3); // +1-3
+   449→                    break;
+   450→                case SUMMER:
+   451→                    disciples += currentLevel.getRandom().nextInt(2); // +0-1
+   452→                    break;
+   453→                case AUTUMN:
+   454→                    disciples -= currentLevel.getRandom().nextInt(2); // -0-1
+   455→                    break;
+   456→                case WINTER:
+   457→                    disciples -= 1 + currentLevel.getRandom().nextInt(2); // -1-2
+   458→                    break;
+   459→            }
+   460→            disciples = Math.max(0, disciples);
+   461→
+   462→            // Economy level drifts with noise (0=collapsed, 4=flourishing).
+   463→            if (currentLevel.getRandom().nextInt(10) == 0) {
+   464→                economyLevel += currentLevel.getRandom().nextInt(3) - 1; // -1, 0, or +1
+   465→                economyLevel = Math.max(0, Math.min(4, economyLevel));
+   466→            }
+   467→
+   468→            sim.setCivilizationState(civId, disciples, economyLevel);
+   469→
+   470→            // Fire event if disciple count changed significantly (>5%).
+   471→            String civName = data.has("name") ? data.get("name").getAsString() : civId;
+   472→            int delta = disciples - prevDisciples;
+   473→            if (Math.abs(delta) >= Math.max(1, prevDisciples / 20)) {
+   474→                if (delta > 0) {
+   475→                    WorldEventBus.publishGlobal("sect.recruitment", EnergyType.SOCIAL,
+   476→                            0.5f, civName + " recruited " + delta + " new disciples this season.",
+   477→                            "INFERRED — civilization lifecycle", worldTick);
+   478→                } else if (delta < 0) {
+   479→                    WorldEventBus.publishGlobal("sect.decline", EnergyType.SOCIAL,
+   480→                            0.55f, civName + " lost " + (-delta) + " disciples this season.",
+   481→                            "INFERRED — civilization lifecycle", worldTick);
+   482→                }
+   483→            }
+   484→        }
+   485→    }
+   486→
+   487→    /**
+   488→     * Advance opportunities: age them toward discoverability.
+   489→     * Reads data/ergenverse/opportunities/*.json
+   490→     *
+   491→     * <p>Each opportunity JSON has an {@code age_requirement_years} field.
+   492→     * Each tick (= 1 day), we add 1/365 years to the opportunity's age.
+   493→     * When it exceeds the requirement, it matures — fires
+   494→     * {@code opportunity.matured} on the bus. This makes the opportunity
+   495→     * discoverable by players with sufficient perception/cultivation.
+   496→     */
+   497→    private static void advanceOpportunities() {
+   498→        Map<String, JsonObject> opps = WorldStateDataLoader.getSubsystem("opportunities");
+   499→        if (opps.isEmpty() || currentLevel == null) return;
+   500→        WorldSimState sim = WorldSimState.get(currentLevel);
+   501→
+   502→        long currentYear = worldTick / TICKS_PER_YEAR;
+   503→
+   504→        for (Map.Entry<String, JsonObject> entry : opps.entrySet()) {
+   505→            String oppId = entry.getKey();
+   506→            JsonObject data = entry.getValue();
+   507→
+   508→            // Initialize age from canon data.
+   509→            boolean alreadyMatured = sim.isOpportunityMatured(oppId);
+   510→            if (alreadyMatured) continue; // already matured, skip
+   511→
+   512→            int ageYears = sim.getOpportunityAgeYears(oppId);
+   513→            // Age by 1/365 years per tick (we store integer years, so use the world tick).
+   514→            int effectiveAge = (int) currentYear;
+   515→
+   516→            int requiredAge = data.has("age_requirement_years")
+   517→                    ? data.get("age_requirement_years").getAsInt() : 0;
+   518→
+   519→            if (effectiveAge >= requiredAge) {
+   520→                // Opportunity has matured — fire the event.
+   521→                sim.setOpportunityMaturity(oppId, effectiveAge, true);
+   522→                String oppName = data.has("name") ? data.get("name").getAsString() : oppId;
+   523→                String desc = data.has("description")
+   524→                        ? data.get("description").getAsString() : "";
+   525→                String whyUntaken = data.has("why_untaken")
+   526→                        ? data.get("why_untaken").getAsString() : "";
+   527→
+   528→                String fullDesc = String.format("%s has matured and become discoverable. %s Why untaken: %s",
+   529→                        oppName, desc, whyUntaken);
+   530→                WorldEventBus.publishGlobal("opportunity.matured", EnergyType.ACQUIRE,
+   531→                        0.7f, fullDesc, "INFERRED — opportunity aging", worldTick);
+   532→                Ergenverse.LOGGER.info("[WorldStateEngine] Opportunity {} matured at age {} years.",
+   533→                        oppId, effectiveAge);
+   534→            } else {
+   535→                // Track age (not yet matured).
+   536→                sim.setOpportunityMaturity(oppId, effectiveAge, false);
+   537→            }
+   538→        }
+   539→    }
+   540→
+   541→    /**
+   542→     * Advance provenance: record state changes to artifacts.
+   543→     * Reads data/ergenverse/provenance/*.json
+   544→     */
+   545→    private static void advanceProvenance() {
+   546→        Map<String, JsonObject> prov = WorldStateDataLoader.getSubsystem("provenance");
+   547→        if (prov.isEmpty()) return;
+   548→        // Full provenance state-machine advancement is a future task.
+   549→        // The data is loaded and queryable via queryWhoOwns().
+   550→    }
+   551→
+   552→    /**
+   553→     * Advance macro terrain: perception re-roll for cultivators whose perception changed.
+   554→     * Reads data/ergenverse/macro_terrain/*.json
+   555→     */
+   556→    private static void advanceMacroTerrain() {
+   557→        Map<String, JsonObject> mt = WorldStateDataLoader.getSubsystem("macro_terrain");
+   558→        if (mt.isEmpty()) return;
+   559→        // Macro-terrain appearance is perception-tier-dependent and is evaluated
+   560→        // on player arrival, not on tick. This method is reserved for future
+   561→        // terrain-altering events (e.g. an Ancient God stirring reshapes the land).
+   562→    }
+   563→
+   564→    // ─── Core Query API ───────────────────────────────────────────────
+   565→
+   566→    /**
+   567→     * Query 1: What exists at this location?
+   568→     *
+   569→     * <p>Returns a registry of everything that exists at the given location,
+   570→     * independent of player perception. The PerceptionEngine overlays a
+   571→     * filtered view on top of this.
+   572→     *
+   573→     * <p>This implementation loads from the data subsystems:
+   574→     * <ul>
+   575→     *   <li>species (filtered by habitat/location)</li>
+   576→     *   <li>npcs (filtered by location field)</li>
+   577→     *   <li>civilizations (filtered by location field)</li>
+   578→     *   <li>macro_terrain (filtered by being/location)</li>
+   579→     *   <li>ecosystems (filtered by location)</li>
+   580→     *   <li>provenance artifacts (if their current location matches)</li>
+   581→     * </ul>
+   582→     *
+   583→     * @param locationId the location to query (e.g. "zhao_mountains", "heng_yue_sect")
+   584→     * @return list of ObjectEntry records describing what exists
+   585→     */
+   586→    public static List<ObjectEntry> queryWhatExists(String locationId) {
+   587→        WorldStateDataLoader.loadOnce();
+   588→        if (locationId == null || locationId.isBlank()) return Collections.emptyList();
+   589→
+   590→        List<ObjectEntry> out = new ArrayList<>();
+   591→        String loc = locationId.toLowerCase();
+   592→
+   593→        // ── NPCs at this location ──
+   594→        for (Map.Entry<String, JsonObject> e : WorldStateDataLoader.getSubsystem("npcs").entrySet()) {
+   595→            JsonObject npc = e.getValue();
+   596→            String npcLoc = WorldStateDataLoader.str(npc, "location", "").toLowerCase();
+   597→            if (locationMatches(npcLoc, loc)) {
+   598→                String name = WorldStateDataLoader.str(npc, "name", e.getKey());
+   599→                out.add(new ObjectEntry(
+   600→                        WorldStateDataLoader.str(npc, "npc_id", e.getKey()),
+   601→                        "npc",
+   602→                        locationId,
+   603→                        0L, // age unknown
+   604→                        name + " — " + WorldStateDataLoader.str(npc, "cultivation", "realm unknown")
+   605→                ));
+   606→            }
+   607→        }
+   608→
+   609→        // ── Civilizations at this location ──
+   610→        for (Map.Entry<String, JsonObject> e : WorldStateDataLoader.getSubsystem("civilizations").entrySet()) {
+   611→            JsonObject civ = e.getValue();
+   612→            String civLoc = WorldStateDataLoader.str(civ, "location", "").toLowerCase();
+   613→            if (locationMatches(civLoc, loc)) {
+   614→                String name = WorldStateDataLoader.str(civ, "name", e.getKey());
+   615→                out.add(new ObjectEntry(
+   616→                        WorldStateDataLoader.str(civ, "civilization_id", e.getKey()),
+   617→                        "civilization",
+   618→                        locationId,
+   619→                        0L,
+   620→                        name + " — " + WorldStateDataLoader.str(civ, "type", "faction") +
+   621→                        " (" + WorldStateDataLoader.str(civ, "canon_status", "unknown status") + ")"
+   622→                ));
+   623→            }
+   624→        }
+   625→
+   626→        // ── Ecosystems at this location ──
+   627→        for (Map.Entry<String, JsonObject> e : WorldStateDataLoader.getSubsystem("ecosystems").entrySet()) {
+   628→            JsonObject eco = e.getValue();
+   629→            String ecoLoc = WorldStateDataLoader.str(eco, "location", "").toLowerCase();
+   630→            if (locationMatches(ecoLoc, loc)) {
+   631→                String name = WorldStateDataLoader.str(eco, "name", e.getKey());
+   632→                out.add(new ObjectEntry(
+   633→                        WorldStateDataLoader.str(eco, "ecosystem_id", e.getKey()),
+   634→                        "ecosystem",
+   635→                        locationId,
+   636→                        0L,
+   637→                        name + " — " + WorldStateDataLoader.str(eco, "description", "ecosystem")
+   638→                ));
+   639→            }
+   640→        }
+   641→
+   642→        // ── Macro terrain at this location ──
+   643→        for (Map.Entry<String, JsonObject> e : WorldStateDataLoader.getSubsystem("macro_terrain").entrySet()) {
+   644→            JsonObject mt = e.getValue();
+   645→            String mtBeing = WorldStateDataLoader.str(mt, "being", "").toLowerCase();
+   646→            String mtName = WorldStateDataLoader.str(mt, "name", "").toLowerCase();
+   647→            // macro_terrain is matched by name or being containing the location, or vice versa
+   648→            if (mtName.contains(loc) || loc.contains(mtName) || !mtBeing.isEmpty()) {
+   649→                out.add(new ObjectEntry(
+   650→                        WorldStateDataLoader.str(mt, "terrain_id", e.getKey()),
+   651→                        "macro_terrain",
+   652→                        locationId,
+   653→                        0L,
+   654→                        WorldStateDataLoader.str(mt, "name", e.getKey()) +
+   655→                        " — " + WorldStateDataLoader.str(mt, "scale", "terrain-scale")
+   656→                ));
+   657→            }
+   658→        }
+   659→
+   660→        // ── Species whose habitat references this location ──
+   661→        for (Map.Entry<String, JsonObject> e : WorldStateDataLoader.getSubsystem("species").entrySet()) {
+   662→            JsonObject sp = e.getValue();
+   663→            JsonObject canon = WorldStateDataLoader.obj(sp, "canonical");
+   664→            if (canon == null) continue;
+   665→            String habitat = WorldStateDataLoader.str(canon, "habitat", "").toLowerCase();
+   666→            if (locationMatches(habitat, loc)) {
+   667→                out.add(new ObjectEntry(
+   668→                        WorldStateDataLoader.str(sp, "species_id", e.getKey()),
+   669→                        "species",
+   670→                        locationId,
+   671→                        0L,
+   672→                        WorldStateDataLoader.str(sp, "name", e.getKey()) +
+   673→                        " — bloodline: " + WorldStateDataLoader.str(sp, "bloodline_tier", "unknown")
+   674→                ));
+   675→            }
+   676→        }
+   677→
+   678→        return out;
+   679→    }
+   680→
+   681→    /**
+   682→     * Query 2: Who owns it?
+   683→     *
+   684→     * <p>Returns the true owner of an object, independent of player knowledge.
+   685→     * Loads from the provenance subsystem.
+   686→     *
+   687→     * @param objectId the object to query (artifact ID or filename stem)
+   688→     * @return OwnershipRecord or null if unclaimed/not found
+   689→     */
+   690→    public static OwnershipRecord queryWhoOwns(String objectId) {
+   691→        WorldStateDataLoader.loadOnce();
+   692→        if (objectId == null || objectId.isBlank()) return null;
+   693→
+   694→        // Try provenance first (canonical artifact ownership)
+   695→        JsonObject prov = WorldStateDataLoader.getEntry("provenance", objectId);
+   696→        if (prov != null) {
+   697→            String owner = WorldStateDataLoader.str(prov, "current_owner", "unclaimed");
+   698→            return new OwnershipRecord(objectId, owner, "cultivator", 0, 10);
+   699→        }
+   700→
+   701→        // Try civilizations heritage_treasures
+   702→        for (JsonObject civ : WorldStateDataLoader.getSubsystem("civilizations").values()) {
+   703→            List<String> treasures = WorldStateDataLoader.strArray(civ, "heritage_treasures");
+   704→            if (treasures.contains(objectId)) {
+   705→                return new OwnershipRecord(
+   706→                        objectId,
+   707→                        WorldStateDataLoader.str(civ, "civilization_id", "unknown"),
+   708→                        "sect",
+   709→                        0,
+   710→                        9
+   711→                );
+   712→            }
+   713→        }
+   714→
+   715→        return null;
+   716→    }
+   717→
+   718→    /**
+   719→     * Query 3: Who wants it?
+   720→     *
+   721→     * <p>Returns a list of entities who desire the object. Inferred from:
+   722→     * <ul>
+   723→     *   <li>karma nodes where the bearer or debtor relates to the object</li>
+   724→     *   <li>faction enemies of the current owner</li>
+   725→     * </ul>
+   726→     *
+   727→     * @param objectId the object to query
+   728→     * @return list of DesireRecord entries
+   729→     */
+   730→    public static List<DesireRecord> queryWhoWants(String objectId) {
+   731→        WorldStateDataLoader.loadOnce();
+   732→        if (objectId == null || objectId.isBlank()) return Collections.emptyList();
+   733→
+   734→        List<DesireRecord> out = new ArrayList<>();
+   735→
+   736→        // Check karma nodes — if an object ID appears in a consequence, the
+   737→        // bearer of that karma node desires the object (wants to claim/destroy it).
+   738→        for (JsonObject karma : WorldStateDataLoader.getSubsystem("karma").values()) {
+   739→            JsonArray conseqs = karma.has("consequences") ? karma.getAsJsonArray("consequences") : null;
+   740→            if (conseqs == null) continue;
+   741→            for (JsonElement ce : conseqs) {
+   742→                if (!ce.isJsonObject()) continue;
+   743→                JsonObject c = ce.getAsJsonObject();
+   744→                String targetId = WorldStateDataLoader.str(c, "target_id", "");
+   745→                if (targetId.equalsIgnoreCase(objectId)) {
+   746→                    String bearer = WorldStateDataLoader.str(karma, "bearer", "unknown");
+   747→                    String type = WorldStateDataLoader.str(c, "type", "inheritance_claimed");
+   748→                    int mag = WorldStateDataLoader.integer(c, "magnitude", 5);
+   749→                    out.add(new DesireRecord(objectId, bearer, desireTypeFromConsequence(type),
+   750→                            Math.min(10, mag / 10), karma_karma(karma)));
+   751→                }
+   752→            }
+   753→        }
+   754→
+   755→        return out;
+   756→    }
+   757→
+   758→    private static String desireTypeFromConsequence(String consequenceType) {
+   759→        return switch (consequenceType) {
+   760→            case "inheritance_claimed" -> "inheritance";
+   761→            case "technique_unlocked" -> "cultivation";
+   762→            case "faction_destroyed" -> "revenge";
+   763→            case "tribulation_earned" -> "cultivation";
+   764→            case "personality_shift" -> "cultivation";
+   765→            default -> "treasure";
+   766→        };
+   767→    }
+   768→
+   769→    private static String karma_karma(JsonObject karma) {
+   770→        return "Karmic consequence: " + WorldStateDataLoader.str(karma, "name", "unknown event");
+   771→    }
+   772→
+   773→    /**
+   774→     * Query 4: Who knows about it?
+   775→     *
+   776→     * <p>Returns a list of entities who know about the object. Inferred from:
+   777→     * <ul>
+   778→     *   <li>karma bearers/debtors (they know because they participated)</li>
+   779→     *   <li>NPCs whose location matches the object's location</li>
+   780→     * </ul>
+   781→     *
+   782→     * @param objectId the object to query
+   783→     * @return list of KnowledgeRecord entries
+   784→     */
+   785→    public static List<KnowledgeRecord> queryWhoKnows(String objectId) {
+   786→        WorldStateDataLoader.loadOnce();
+   787→        if (objectId == null || objectId.isBlank()) return Collections.emptyList();
+   788→
+   789→        List<KnowledgeRecord> out = new ArrayList<>();
+   790→
+   791→        // Karma bearers know about objects tied to their karma
+   792→        for (JsonObject karma : WorldStateDataLoader.getSubsystem("karma").values()) {
+   793→            JsonArray conseqs = karma.has("consequences") ? karma.getAsJsonArray("consequences") : null;
+   794→            if (conseqs == null) continue;
+   795→            for (JsonElement ce : conseqs) {
+   796→                if (!ce.isJsonObject()) continue;
+   797→                String targetId = WorldStateDataLoader.str(ce.getAsJsonObject(), "target_id", "");
+   798→                if (targetId.equalsIgnoreCase(objectId)) {
+   799→                    String bearer = WorldStateDataLoader.str(karma, "bearer", "unknown");
+   800→                    int kw = WorldStateDataLoader.integer(karma, "karmic_weight", 0);
+   801→                    int tier = Math.min(5, Math.abs(kw) / 1000 + 2);
+   802→                    out.add(new KnowledgeRecord(objectId, bearer, tier, Math.min(10, Math.abs(kw) / 500)));
+   803→                }
+   804→            }
+   805→        }
+   806→
+   807→        return out;
+   808→    }
+   809→
+   810→    /**
+   811→     * Query 5: Why hasn't it been taken already?
+   812→     *
+   813→     * <p>This is the most important query — it explains why opportunities
+   814→     * persist for the player to find. Loads the opportunity archetype's
+   815→     * {@code why_untaken} field.
+   816→     *
+   817→     * @param objectId the object to query
+   818→     * @return UntakenReason or null if already taken / not found
+   819→     */
+   820→    public static UntakenReason queryWhyUntaken(String objectId) {
+   821→        WorldStateDataLoader.loadOnce();
+   822→        if (objectId == null || objectId.isBlank()) return null;
+   823→
+   824→        // Try the opportunities subsystem
+   825→        JsonObject opp = WorldStateDataLoader.getEntry("opportunities", objectId);
+   826→        if (opp != null) {
+   827→            String why = WorldStateDataLoader.str(opp, "why_untaken", "unknown");
+   828→            return new UntakenReason(objectId, inferReasonType(why),
+   829→                    WorldStateDataLoader.integer(opp, "difficulty", 5));
+   830→        }
+   831→
+   832→        // If the object is owned (per queryWhoOwns), it IS taken — return null.
+   833→        OwnershipRecord owner = queryWhoOwns(objectId);
+   834→        if (owner != null && !owner.trueOwner().equalsIgnoreCase("unclaimed")
+   835→                && !owner.trueOwner().equalsIgnoreCase("sealed")
+   836→                && !owner.trueOwner().equalsIgnoreCase("lost")
+   837→                && !owner.trueOwner().equalsIgnoreCase("destroyed")) {
+   838→            return null; // already taken
+   839→        }
+   840→
+   841→        // Default: if it's unowned but has no opportunity entry, it's "hidden"
+   842→        return new UntakenReason(objectId, "hidden", 5);
+   843→    }
+   844→
+   845→    private static String inferReasonType(String why) {
+   846→        String w = why.toLowerCase();
+   847→        if (w.contains("seal")) return "sealed";
+   848→        if (w.contains("hidden") || w.contains("unknown")) return "hidden";
+   849→        if (w.contains("guard")) return "guarded";
+   850→        if (w.contains("danger") || w.contains("deadly")) return "too_dangerous";
+   851→        if (w.contains("taboo") || w.contains("forbid")) return "taboo";
+   852→        if (w.contains("contest")) return "contested";
+   853→        if (w.contains("cultivat")) return "requires_specific_cultivation";
+   854→        if (w.contains("percep")) return "requires_specific_perception";
+   855→        if (w.contains("luck")) return "requires_specific_luck";
+   856→        return "unknown";
+   857→    }
+   858→
+   859→    /**
+   860→     * Query 6: What would naturally happen next if the player did nothing?
+   861→     *
+   862→     * <p>The world does not wait for the player; events unfold on their own schedule.
+   863→     * Loads from time_events and karma consequence chains.
+   864→     *
+   865→     * @param objectId the object to query
+   866→     * @return NaturalNextEvent or null if no pending event
+   867→     */
+   868→    public static NaturalNextEvent queryNaturalNext(String objectId) {
+   869→        WorldStateDataLoader.loadOnce();
+   870→        if (objectId == null || objectId.isBlank()) return null;
+   871→
+   872→        // Check karma nodes for unresolved consequences targeting this object
+   873→        for (JsonObject karma : WorldStateDataLoader.getSubsystem("karma").values()) {
+   874→            String unresolved = WorldStateDataLoader.str(karma, "unresolved_until", "");
+   875→            if (unresolved.equals("resolved") || unresolved.isEmpty()) continue;
+   876→
+   877→            JsonArray conseqs = karma.has("consequences") ? karma.getAsJsonArray("consequences") : null;
+   878→            if (conseqs == null) continue;
+   879→            for (JsonElement ce : conseqs) {
+   880→                if (!ce.isJsonObject()) continue;
+   881→                JsonObject c = ce.getAsJsonObject();
+   882→                String targetId = WorldStateDataLoader.str(c, "target_id", "");
+   883→                if (targetId.equalsIgnoreCase(objectId) && c.get("resolved_at_tick").isJsonNull()) {
+   884→                    return new NaturalNextEvent(
+   885→                            objectId,
+   886→                            WorldStateDataLoader.str(karma, "name", "karmic consequence") +
+   887→                            " — " + WorldStateDataLoader.str(c, "note", "unresolved"),
+   888→                            0L, // timeline unknown
+   889→                            0.8  // high probability — karma resolves eventually
+   890→                    );
+   891→                }
+   892→            }
+   893→        }
+   894→
+   895→        return null;
+   896→    }
+   897→
+   898→    // ─── Record Types ─────────────────────────────────────────────────
+   899→
+   900→    /**
+   901→     * Check whether a location string (from a data file) matches the queried
+   902→     * location ID. Uses substring matching in both directions because the canon
+   903→     * data uses various granularities ("Zhao Country" vs "zhao_mountains" vs
+   904→     * "Heng Yue Sect, Zhao Country").
+   905→     */
+   906→    private static boolean locationMatches(String dataLoc, String queryLoc) {
+   907→        if (dataLoc == null || dataLoc.isBlank() || queryLoc == null || queryLoc.isBlank()) return false;
+   908→        String d = dataLoc.toLowerCase().replace("_", " ").replace("-", " ");
+   909→        String q = queryLoc.toLowerCase().replace("_", " ").replace("-", " ");
+   910→        // Check both directions — either might be the broader region
+   911→        if (d.contains(q) || q.contains(d)) return true;
+   912→        // Also check the raw forms (for IDs like "zhao_mountains")
+   913→        return dataLoc.toLowerCase().contains(queryLoc.toLowerCase())
+   914→                || queryLoc.toLowerCase().contains(dataLoc.toLowerCase());
+   915→    }
+   916→
+   917→    /** An entry in the "what exists" registry. */
+   918→    public record ObjectEntry(
+   919→            String objectId,
+   920→            String objectType,    // "biome", "structure", "species", "macro_terrain", "artifact", "civilization", "npc"
+   921→            String locationId,
+   922→            long ageYears,
+   923→            String trueState       // objective description
+   924→    ) {}
+   925→
+   926→    /** The true owner of an object. */
+   927→    public record OwnershipRecord(
+   928→            String objectId,
+   929→            String trueOwner,
+   930→            String ownerType,      // "sect", "beast", "cultivator", "unclaimed"
+   931→            int ownerStrength,     // cultivation tier of owner
+   932→            int claimStrength      // how strongly the owner holds it (1-10)
+   933→    ) {}
+   934→
+   935→    /** An entity who desires an object. */
+   936→    public record DesireRecord(
+   937→            String objectId,
+   938→            String desirerId,
+   939→            String desireType,     // "inheritance", "treasure", "territory", "revenge", "cultivation"
+   940→            int desireStrength,    // 1-10
+   941→            String desireReason
+   942→    ) {}
+   943→
+   944→    /** An entity who knows about an object. */
+   945→    public record KnowledgeRecord(
+   946→            String objectId,
+   947→            String knowerId,
+   948→            int knowledgeTier,     // 1=rumor, 2=general, 3=detailed, 4=complete, 5=secret
+   949→            int knowledgeAccuracy  // 1-10
+   950→    ) {}
+   951→
+   952→    /** Why an object hasn't been taken. */
+   953→    public record UntakenReason(
+   954→            String objectId,
+   955→            String reasonType,     // "sealed", "hidden", "guarded", "too_dangerous", "unknown", "taboo", "contested", "requires_specific_cultivation", "requires_specific_perception", "requires_specific_luck"
+   956→            int reasonStrength     // 1-10
+   957→    ) {}
+   958→
+   959→    /** What naturally happens next. */
+   960→    public record NaturalNextEvent(
+   961→            String objectId,
+   962→            String nextEvent,
+   963→            long timelineTicks,    // when it will happen (in ticks from now)
+   964→            double probability     // 0.0-1.0
+   965→    ) {}
+   966→
+   967→    // ─── Player Arrival ───────────────────────────────────────────────
+   968→
+   969→    /**
+   970→     * Called when a player arrives at a location.
+   971→     *
+   972→     * <p>Per the Prime Directive: the engine does NOT spawn content; it reveals
+   973→     * what already exists according to the player's perception tier.
+   974→     *
+   975→     * @param locationId the location the player arrived at
+   976→     * @param playerRealm the player's cultivation realm
+   977→     * @param perceptionTier the player's perception tier
+   978→     * @return a PlayerArrivalResult describing what the player perceives
+   979→     */
+   980→    public static PlayerArrivalResult onPlayerArrival(
+   981→            String locationId, RealmId playerRealm, PerceptionTier perceptionTier) {
+   982→
+   983→        // Query what exists at this location (objective)
+   984→        List<ObjectEntry> existing = queryWhatExists(locationId);
+   985→
+   986→        // Filter by perception tier — the PerceptionEngine overlays a filtered view
+   987→        List<ObjectEntry> perceived = new ArrayList<>();
+   988→        for (ObjectEntry entry : existing) {
+   989→            // TODO: Use PerceptionEngine to filter based on tier
+   990→            // For now, include all (stub)
+   991→            perceived.add(entry);
+   992→        }
+   993→
+   994→        return new PlayerArrivalResult(locationId, playerRealm, perceptionTier,
+   995→                perceived, existing.size(), perceived.size());
+   996→    }
+   997→
+   998→    /** Result of a player arriving at a location. */
+   999→    public record PlayerArrivalResult(
+  1000→            String locationId,
+  1001→            RealmId playerRealm,
+  1002→            PerceptionTier perceptionTier,
+  1003→            List<ObjectEntry> perceivedObjects,
+  1004→            int totalExisting,
+  1005→            int totalPerceived
+  1006→    ) {
+  1007→        /** How much of the location's truth the player can perceive. */
+  1008→        public double perceptionRatio() {
+  1009→            return totalExisting == 0 ? 0.0 : (double) totalPerceived / totalExisting;
+  1010→        }
+  1011→    }
+  1012→
+  1013→    // ─── Subsystem Registry ───────────────────────────────────────────
+  1014→
+  1015→    /** The registry of all data-driven subsystems the engine reads from. */
+  1016→    public static final Map<String, String> SUBSYSTEM_REGISTRY = Map.ofEntries(
+  1017→            Map.entry("species", "data/ergenverse/species/"),
+  1018→            Map.entry("species_variants", "data/ergenverse/species_variants/"),
+  1019→            Map.entry("ecosystems", "data/ergenverse/ecosystems/"),
+  1020→            Map.entry("ecosystem_integration", "data/ergenverse/ecosystem_integration/"),
+  1021→            Map.entry("migrations", "data/ergenverse/migrations/"),
+  1022→            Map.entry("macro_terrain", "data/ergenverse/macro_terrain/"),
+  1023→            Map.entry("provenance", "data/ergenverse/provenance/"),
+  1024→            Map.entry("civilizations", "data/ergenverse/civilizations/"),
+  1025→            Map.entry("npcs", "data/ergenverse/npcs/"),
+  1026→            Map.entry("faction_relationships", "data/ergenverse/faction_relationships/"),
+  1027→            Map.entry("opportunities", "data/ergenverse/opportunities/"),
+  1028→            Map.entry("time_events", "data/ergenverse/time_events/"),
+  1029→            Map.entry("item_properties", "data/ergenverse/item_properties/"),
+  1030→            Map.entry("world_state", "data/ergenverse/world_state/"),
+  1031→            Map.entry("worldgen", "data/ergenverse/worldgen/")
+  1032→    );
+  1033→
+  1034→    /** Get the list of all subsystem names. */
+  1035→    public static Set<String> getSubsystemNames() {
+  1036→        return SUBSYSTEM_REGISTRY.keySet();
+  1037→    }
+  1038→
+  1039→    /** Get the data path for a subsystem. */
+  1040→    public static String getSubsystemPath(String subsystemName) {
+  1041→        return SUBSYSTEM_REGISTRY.getOrDefault(subsystemName, "unknown");
+  1042→    }
+  1043→
+  1044→    // ─── Engine Info ──────────────────────────────────────────────────
+  1045→
+  1046→    /** Get engine version. */
+  1047→    public static String getVersion() { return "1.0"; }
+  1048→
+  1049→    /** Get a status report. */
+  1050→    public static String getStatusReport() {
+  1051→        return String.format(
+  1052→            "World State Engine v%s | Tick: %d (day %d) | Season: %s | Subsystems: %d",
+  1053→            getVersion(), worldTick, worldTick, currentSeason.name, SUBSYSTEM_REGISTRY.size()
+  1054→        );
+  1055→    }
+  1056→}
+  1057→

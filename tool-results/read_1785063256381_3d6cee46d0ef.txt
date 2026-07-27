@@ -1,0 +1,1220 @@
+     1→package dev.ergenverse.spawn;
+     2→
+     3→import dev.ergenverse.block.ErgenverseBlocks;
+     4→import dev.ergenverse.core.Ergenverse;
+     5→import dev.ergenverse.runtime.ChunkBounds;
+     6→import dev.ergenverse.runtime.Provenance;
+     7→import dev.ergenverse.runtime.WorldRuntime;
+     8→import dev.ergenverse.runtime.delta.WorldDeltaStore;
+     9→import net.minecraft.core.BlockPos;
+    10→import net.minecraft.core.Direction;
+    11→import net.minecraft.nbt.CompoundTag;
+    12→import net.minecraft.nbt.ListTag;
+    13→import net.minecraft.nbt.StringTag;
+    14→import net.minecraft.network.chat.Component;
+    15→import net.minecraft.resources.ResourceLocation;
+    16→import net.minecraft.server.level.ServerLevel;
+    17→import net.minecraft.world.entity.decoration.ItemFrame;
+    18→import net.minecraft.world.item.ItemStack;
+    19→import net.minecraft.world.item.Items;
+    20→import net.minecraft.world.level.block.Blocks;
+    21→import net.minecraft.world.level.block.entity.ChestBlockEntity;
+    22→import net.minecraft.world.level.block.entity.LecternBlockEntity;
+    23→import net.minecraft.world.level.block.state.BlockState;
+    24→
+    25→import javax.annotation.Nullable;
+    26→
+    27→/**
+    28→ * WangFamilyVillageBuilder — a FULLY hand-built Wang Family Village (王氏村),
+    29→ * Wang Lin's birthplace in Zhao Country. Every block placed intentionally.
+    30→ *
+    31→ * <p><b>Constitution:</b> "The world is completely hand-built. NEVER write a script
+    32→ * that replaces vanilla blocks with other blocks. Every structure must be
+    33→ * hand-authored." Per Art XXI — "The World Is The Main Character." Per
+    34→ * Art XXIII — "A finished region is worth more than ten partially implemented
+    35→ * systems." Per Art XXVII — "Completion Is Proven By Life."
+    36→ *
+    37→ * <p><b>Canonical location:</b> ALWAYS at (3842, surface, -1184). Every world,
+    38→ * every seed, every player. The village exists before any player joins.
+    39→ *
+    40→ * <p><b>Canon (Renegade Immortal, Ch.1-10):</b>
+    41→ * Wang Lin's village is a small, poor mortal farming village in Zhao Country.
+    42→ * His family is ordinary — father Wang Tian (deceased), mother, younger
+    43→ * brother. The village elder is respected. Spirit herbs grow in hidden
+    44→ * patches near the village. A small spirit vein slumbers beneath the village
+    45→ * center (Wang Lin later discovers it during his cultivation journey).
+    46→ *
+    47→ * <h2>Village Layout (82x82 footprint, radius 41)</h2>
+    48→ * <pre>
+    49→ *   N (toward Heng Yue Sect, ~1600 blocks)
+    50→ *   ┌──────────────────────────────────────────────┐
+    51→ *   │  Forest edge  │  North farm plots  │  Forest │
+    52→ *   │               │                    │         │
+    53→ *   │  Wang home    │  Spirit well       │  Elder  │
+    54→ *   │  (distinct)   │  (village center)  │  home   │
+    55→ *   │               │                    │  (nicer) │
+    56→ *   │  Commoner     │  Central plaza     │  Commoner│
+    57→ *   │  homes x6     │  + formation array │  homes x4│
+    58→ *   │               │                    │         │
+    59→ *   │  Herb garden  │  South path →exit  │  Storage │
+    60→ *   │  (hidden)     │                    │  sheds  │
+    61→ *   │               │  South farm plots  │         │
+    62→ *   │  Forest edge  │                    │  Forest │
+    63→ *   └──────────────────────────────────────────────┘
+    64→ *   S (player approach direction)
+    65→ * </pre>
+    66→ *
+    67→ * <h2>Districts (14 total):</h2>
+    68→ * <ol>
+    69→ *   <li>Central plaza — spirit stone + spirit vein centerpiece + 4 formation
+    70→ *       cores + village well (spirit vein stone column)</li>
+    71→ *   <li>Wang family home — NW quadrant, modest 7x5 house with alchemy
+    72→ *       furnace (Wang Lin's father kept one), identifiable by stone path</li>
+    73→ *   <li>Village elder's home — NE quadrant, slightly larger 7x7 house with
+    74→ *       formation flag base (elder's status symbol), jade stone steps</li>
+    75→ *   <li>Six commoner homes — scattered around, 5x5 each, spirit wood
+    76→ *       construction, each with a small herb pot outside</li>
+    77→ *   <li>Four additional commoner homes — E side, same construction</li>
+    78→ *   <li>North farm plots — 3 rectangular fields of spirit grass with
+    79→ *       qi-gathering grass rows (the village grows spirit herbs as
+    80→ *       mortals grow rice — they don't know what they are)</li>
+    81→ *   <li>South farm plots — 2 more fields</li>
+    82→ *   <li>Herb garden (hidden) — behind Wang family home, enclosed by spirit
+    83→ *       wood fence, rare herbs (five-color ginseng, nine-leaf clover)</li>
+    84→ *   <li>Storage sheds — 2 small 3x3 structures behind the village</li>
+    85→ *   <li>Village well — at the center, spirit vein stone pillar 3 blocks tall</li>
+    86→ *   <li>Main road — spirit sand path N-S through center, E-W crossroad</li>
+    87→ *   <li>Perimeter fence — spirit wood log fence, gaps at N and S entries</li>
+    88→ *   <li>Spirit trees — 12 trees around perimeter and inside village</li>
+    89→ *   <li>Light markers — spirit vein stones along paths (replaces torches)</li>
+    90→ * </ol>
+    91→ *
+    92→ * <h2>Harsh Self-Critique</h2>
+    93→ * <ul>
+    94→ *   <li>Houses are still box-shaped — no xianxia curved roofs, no dougong
+    95→ *       brackets. This is a mortal village, so flat roofs are MORE canonically
+    96→ *       correct than pagoda eaves. Mortal villages don't have upturned eaves.</li>
+    97→ *   <li>No interior furniture — tables, chairs, beds are not placed.
+    98→ *       The Alchemy Furnace in Wang's home is the only interior content.
+    99→ *       Future: add crafting tables (as mortals' woodworking), beds, chests.</li>
+   100→ *   <li>Farms are flat spirit-grass rectangles — no crop rows, no irrigation
+   101→ *       channels. Real mortal farms have tilled earth rows and water channels.</li>
+   102→ *   <li>No NPCs spawn here yet — the buildings exist but nobody lives in them.
+   103→ *       The NpcSpawnRegistry needs wang_family_village entries.</li>
+   104→ *   <li>The "hidden herb garden" is visible from above — not truly hidden.
+   105→ *       Future: place it behind a terrain feature or inside a hollow.</li>
+   106→ *   <li>All houses use the same spirit wood palette — no material variation
+   107→ *       between rich (elder) and poor (commoner) homes. The elder's home
+   108→ *       is larger and has jade steps, but the wall material is the same.</li>
+   109→ * </ul>
+   110→ *
+   111→ * <p>MC 1.20.1 / Forge 47.4.0 / Java 17 APIs only.
+   112→ */
+   113→public final class WangFamilyVillageBuilder {
+   114→
+   115→    /**
+   116→     * Lazy-initialized BlockState holder. ErgenverseBlocks.X.get() throws NPE before
+   117→     * Forge resolves the block registry, so these cannot be static-final in the outer
+   118→     * class. This inner class loads on first reference (during build(), which runs at
+   119→     * world-gen time — well after registry resolution).
+   120→     */
+   121→    private static final class B {
+   122→        private static final BlockState SPIRIT_GRASS = ErgenverseBlocks.SPIRIT_GRASS.get().defaultBlockState();
+   123→        private static final BlockState SPIRIT_DIRT = ErgenverseBlocks.SPIRIT_DIRT.get().defaultBlockState();
+   124→        private static final BlockState SPIRIT_STONE = ErgenverseBlocks.SPIRIT_STONE_BLOCK.get().defaultBlockState();
+   125→        private static final BlockState SPIRIT_SAND = ErgenverseBlocks.SPIRIT_SAND.get().defaultBlockState();
+   126→        private static final BlockState JADE_STONE = ErgenverseBlocks.JADE_STONE.get().defaultBlockState();
+   127→        private static final BlockState FORMATION_CORE = ErgenverseBlocks.FORMATION_CORE_STONE.get().defaultBlockState();
+   128→        private static final BlockState SPIRIT_VEIN = ErgenverseBlocks.SPIRIT_VEIN_STONE.get().defaultBlockState();
+   129→        private static final BlockState PLANKS = ErgenverseBlocks.SPIRIT_WOOD_PLANKS.get().defaultBlockState();
+   130→        private static final BlockState LOG = ErgenverseBlocks.SPIRIT_WOOD_LOG.get().defaultBlockState();
+   131→        private static final BlockState LEAVES = ErgenverseBlocks.SPIRIT_WOOD_LEAVES.get().defaultBlockState();
+   132→        private static final BlockState QI_GRASS = ErgenverseBlocks.QI_GATHERING_GRASS.get().defaultBlockState();
+   133→        private static final BlockState SNOW_HERB = ErgenverseBlocks.SNOW_HEART_HERB.get().defaultBlockState();
+   134→        private static final BlockState FIVE_GINSENG = ErgenverseBlocks.FIVE_COLOR_GINSENG.get().defaultBlockState();
+   135→        private static final BlockState NINE_CLOVER = ErgenverseBlocks.NINE_LEAF_CLOVER.get().defaultBlockState();
+   136→        private static final BlockState SOUL_LOTUS = ErgenverseBlocks.SOUL_NOURISHING_LOTUS.get().defaultBlockState();
+   137→        private static final BlockState FIRE_LOTUS = ErgenverseBlocks.FIRE_BLOOM_LOTUS.get().defaultBlockState();
+   138→        private static final BlockState VERMILION_GINSENG = ErgenverseBlocks.VERMILION_BLOOD_GINSENG.get().defaultBlockState();
+   139→        private static final BlockState SWORD_MOSS = ErgenverseBlocks.SWORD_EDGE_MOSS.get().defaultBlockState();
+   140→        private static final BlockState DAO_VINE = ErgenverseBlocks.DAO_TRACE_VINE.get().defaultBlockState();
+   141→        private static final BlockState FOUNDATION_VINE = ErgenverseBlocks.FOUNDATION_ROOT_VINE.get().defaultBlockState();
+   142→    }
+   143→
+   144→    private WangFamilyVillageBuilder() {}
+   145→
+   146→    /** Village half-extent. Total footprint = (2*RADIUS+1) squared = 83x83. */
+   147→    public static final int VILLAGE_RADIUS = 41;
+   148→
+   149→    /**
+   150→     * Canonical village X coordinate. Fixed for every world/seed/player.
+   151→     * Sourced from {@link dev.ergenverse.runtime.PlanetSuzakuBlueprint#WANG_FAMILY_VILLAGE}.
+   152→     */
+   153→    public static final int VILLAGE_X =
+   154→            dev.ergenverse.runtime.PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.x;
+   155→
+   156→    /**
+   157→     * Canonical village Z coordinate. Fixed for every world/seed/player.
+   158→     * Sourced from {@link dev.ergenverse.runtime.PlanetSuzakuBlueprint#WANG_FAMILY_VILLAGE}.
+   159→     */
+   160→    public static final int VILLAGE_Z =
+   161→            dev.ergenverse.runtime.PlanetSuzakuBlueprint.WANG_FAMILY_VILLAGE.z;
+   162→
+   163→    /**
+   164→     * The village center is the fixed canonical position. The Y coordinate
+   165→     * comes from {@link dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator#canonSurfaceHeight}
+   166→     * — the same pure deterministic function the chunk generator uses to
+   167→     * shape the surface. This eliminates the heightmap race condition
+   168→     * (CRON-67): the canon Y is correct regardless of which chunks are loaded
+   169→     * when this method is called.
+   170→     */
+   171→    public static BlockPos getVillageCenter(ServerLevel level) {
+   172→        int surfaceY = dev.ergenverse.runtime.worldgen.BlueprintChunkGenerator.surfaceHeightFor(level, VILLAGE_X, VILLAGE_Z);
+   173→        return new BlockPos(VILLAGE_X, surfaceY, VILLAGE_Z);
+   174→    }
+   175→
+   176→    /**
+   177→     * Returns true if the village has already been built (the spirit vein
+   178→     * centerpiece block is present above the spawn point).
+   179→     *
+   180→     * <p><b>CRON-COMPLETIONIST-69 — provenance-aware rebuild guard.</b>
+   181→     * If the player (or simulation) has recorded a delta at the centerpiece
+   182→     * position — e.g., the player broke the spirit-vein stone — this method
+   183→     * returns {@code true} (village was built, then edited; don't rebuild).
+   184→     * Without this guard, breaking the centerpiece would cause the next
+   185→     * server-start or {@code /ergenverse build} to re-place the centerpiece,
+   186→     * undoing the player's edit. See
+   187→     * {@link dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard}.
+   188→     */
+   189→    public static boolean isAlreadyBuilt(ServerLevel level) {
+   190→        BlockPos center = getVillageCenter(level);
+   191→        BlockPos markerPos = center.above();
+   192→        // 1. Marker present → already built (canon state).
+   193→        if (level.getBlockState(markerPos).getBlock() == ErgenverseBlocks.SPIRIT_VEIN_STONE.get()) {
+   194→            return true;
+   195→        }
+   196→        // 2. Player/sim delta at marker → was built, then edited → don't rebuild.
+   197→        if (dev.ergenverse.runtime.materialize.ProvenanceAwareRebuildGuard.shouldSkipRebuild(markerPos)) {
+   198→            return true;
+   199→        }
+   200→        // 3. No marker, no delta → never built → rebuild.
+   201→        return false;
+   202→    }
+   203→
+   204→    // ── Chunk-scoped build infrastructure (CRON-COMPLETIONIST-62) ────────
+   205→    //
+   206→    // The chunk-materializer invokes buildForChunk(level, bounds) for EACH
+   207→    // chunk that overlaps the village footprint. The ThreadLocal CURRENT_BOUNDS
+   208→    // holds the active bounds during a buildInternal() call; the sb() helper
+   209→    // checks it and skips any placement outside the bounds. When bounds is null
+   210→    // (full-build path — commands, login events, SpawnEventHandler), no
+   211→    // filtering occurs and every setBlock lands.
+   212→    //
+   213→    // Why ThreadLocal rather than threading bounds through 14 sub-methods:
+   214→    // the village build tree (flattenTerrain, buildRoads, buildCentralPlaza,
+   215→    // buildPerimeterFence, buildWangFamilyHome -> buildWangLinCorner, ...) has
+   216→    // 79 setBlock call sites and a deep call hierarchy. Adding a ChunkBounds
+   217→    // parameter to every method would touch every signature and obscure the
+   218→    // geometric intent. The ThreadLocal is set once at the top of buildForChunk
+   219→    // and read by sb() at each leaf placement — a single global per build pass.
+   220→    //
+   221→    // Thread-safety: chunk materialization is single-threaded on the server
+   222→    // tick thread, so there is no contention. The ThreadLocal guards against
+   223→    // re-entrancy only if a builder were to call another builder (which it
+   224→    // does not today).
+   225→
+   226→    /**
+   227→     * The active chunk bounds during a buildInternal() pass, or null if the
+   228→     * full village is being built (no filtering).
+   229→     */
+   230→    private static final ThreadLocal<ChunkBounds> CURRENT_BOUNDS = new ThreadLocal<>();
+   231→
+   232→    /**
+   233→     * Filtered setBlock — the ONLY block-placement call site in this class.
+   234→     * Three guards, in order:
+   235→     *
+   236→     * <p><b>1. Chunk filter (CRON-COMPLETIONIST-62):</b> if CURRENT_BOUNDS is
+   237→     * non-null and (x, z) falls outside the bounds, skip. This is what makes
+   238→     * buildForChunk chunk-scoped: ~80K candidate placements collapse to ~256
+   239→     * actual level.setBlock calls per chunk.
+   240→     *
+   241→     * <p><b>2. Provenance-aware rebuild guard (CRON-COMPLETIONIST-63):</b> if
+   242→     * CURRENT_BOUNDS is non-null (i.e. we are in the chunk-materializer path),
+   243→     * consult the {@link WorldDeltaStore} for a PLAYER or SIMULATION delta at
+   244→     * (x, y, z). If either exists, skip the placement. The player's edits
+   245→     * (and the simulation's edits) take priority over CANON — re-placing a
+   246→     * CANON block on top of a player edit would be a wasted write (the
+   247→     * materializer replays the player/sim delta afterward and restores the
+   248→     * player's state, but the intermediate write is unnecessary and produces
+   249→     * a visible flicker). This guard is the operational realization of the
+   250→     * Provenance contract: PLAYER &gt; SIMULATION &gt; CANON.
+   251→     *
+   252→     * <p>The provenance guard is <b>only active in the chunk-scoped path</b>
+   253→     * (CURRENT_BOUNDS != null). The full-build path — {@link #build}, used by
+   254→     * SpawnEventHandler at server-start and ErgenverseCommand for manual
+   255→     * rebuild — does NOT consult the delta store, because (a) at server-start
+   256→     * there are no player deltas yet, and (b) the /ergenverse build command
+   257→     * explicitly wants a full rebuild regardless of player edits.
+   258→     *
+   259→     * <p><b>3. Placement:</b> if both guards pass, call level.setBlock.
+   260→     *
+   261→     * <p>Y is intentionally not chunk-filtered — structures are vertically
+   262→     * thin. Y IS used for the provenance check (deltas are 3D-positioned).
+   263→     *
+   264→     * <p>Performance: ~50ns per guard (2x O(1) HashMap lookup + PackedPos.pack).
+   265→     * For ~256 blocks per chunk-load: ~12.8µs total. Negligible vs the ~1-5µs
+   266→     * per saved level.setBlock call.
+   267→     */
+   268→    private static void sb(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+   269→        ChunkBounds b = CURRENT_BOUNDS.get();
+   270→        if (b != null) {
+   271→            // Guard 1: chunk filter.
+   272→            if (!b.contains(pos.getX(), pos.getZ())) return;
+   273→            // Guard 2: provenance-aware rebuild guard.
+   274→            // If the player or simulation has touched this position, the
+   275→            // CANON placement would be overwritten by the materializer's
+   276→            // delta replay anyway — skip the wasted write.
+   277→            if (hasPlayerOrSimulationDelta(pos)) return;
+   278→        }
+   279→        level.setBlock(pos, state, flags);
+   280→    }
+   281→
+   282→    /**
+   283→     * Provenance-aware guard helper (CRON-COMPLETIONIST-63). Returns true if
+   284→     * a PLAYER or SIMULATION delta is recorded at {@code pos}. O(1) per call.
+   285→     *
+   286→     * <p>Defensive: returns false (no delta → proceed with placement) if the
+   287→     * WorldRuntime is not yet initialized. The chunk-materializer already
+   288→     * gates on {@code runtime.isInitialized()} so this should never fire in
+   289→     * the materializer path, but defense-in-depth protects against unexpected
+   290→     * call sites.
+   291→     */
+   292→    private static boolean hasPlayerOrSimulationDelta(BlockPos pos) {
+   293→        try {
+   294→            WorldRuntime runtime = WorldRuntime.get();
+   295→            if (!runtime.isInitialized()) return false;
+   296→            WorldDeltaStore store = runtime.deltaStore();
+   297→            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+   298→            // Block deltas (CRON-63).
+   299→            if (store.hasBlock(x, y, z, Provenance.PLAYER)
+   300→                    || store.hasBlock(x, y, z, Provenance.SIMULATION)) return true;
+   301→            // Entity placement deltas (CRON-78) — covers player-placed frames
+   302→            // (PLACE) and player-removed canon frames (REMOVE). Required so
+   303→            // the canon builder skips re-placement when the player directly
+   304→            // attacks a canon ItemFrame (no support break, no CRON-76 cascade).
+   305→            if (store.hasEntityPlacement(x, y, z, Provenance.PLAYER)
+   306→                    || store.hasEntityPlacement(x, y, z, Provenance.SIMULATION)) return true;
+   307→            return false;
+   308→        } catch (Throwable t) {
+   309→            // Defensive: never let a delta-store query failure block a build.
+   310→            // Log at debug (not error) to avoid log spam if this fires
+   311→            // repeatedly in a broken state.
+   312→            Ergenverse.LOGGER.debug("[Ergenverse] Provenance guard failed at {}: {} — proceeding with placement.",
+   313→                    pos, t.getMessage());
+   314→            return false;
+   315→        }
+   316→    }
+   317→
+   318→    /**
+   319→     * Chunk-scoped build entry point — invoked by the chunk-materializer for
+   320→     * each chunk that overlaps the village footprint.
+   321→     *
+   322→     * <p>When {@code bounds} is non-null, only blocks whose (x, z) fall inside
+   323→     * the bounds are placed; the rest are skipped by {@link #sb}. When
+   324→     * {@code bounds} is null, the full village is built (command/login path).
+   325→     *
+   326→     * <p>This method does NOT call {@link #isAlreadyBuilt} — chunk-scoped
+   327→     * placement is naturally incremental: each chunk places its own slice,
+   328→     * and re-placing an already-present block with the same state is a
+   329→     * harmless no-op. The isAlreadyBuilt guard lives in {@link #build} (the
+   330→     * full-build path) to keep command/login calls idempotent.
+   331→     */
+   332→    public static void buildForChunk(ServerLevel level, @Nullable ChunkBounds bounds) {
+   333→        ChunkBounds prev = CURRENT_BOUNDS.get();
+   334→        CURRENT_BOUNDS.set(bounds);
+   335→        try {
+   336→            buildInternal(level);
+   337→        } finally {
+   338→            if (prev == null) CURRENT_BOUNDS.remove();
+   339→            else CURRENT_BOUNDS.set(prev);
+   340→        }
+   341→    }
+   342→
+   343→    // ── Block palette ─────────────────────────────────────────────────────
+   344→    private static final BlockState AIR = Blocks.AIR.defaultBlockState();
+   345→    private static final BlockState WATER = Blocks.WATER.defaultBlockState();
+   346→    private static final BlockState FARMLAND = Blocks.FARMLAND.defaultBlockState();
+   347→
+   348→    // ── Herb blocks ─────────────────────────────────────────────────────
+   349→    /**
+   350→     * Build the full village — the legacy full-build entry point used by
+   351→     * SpawnEventHandler (server-start) and ErgenverseCommand (manual /ergenverse
+   352→     * build). Idempotent: guarded by {@link #isAlreadyBuilt} so repeated calls
+   353→     * are a no-op once the spirit-vein centerpiece is in place.
+   354→     *
+   355→     * <p>For chunk-load materialization, use {@link #buildForChunk} instead —
+   356→     * it filters placements to a single chunk and avoids the cascading-load
+   357→     * catastrophe where a full 80K-block build fires on every chunk load.
+   358→     */
+   359→    public static void build(ServerLevel level) {
+   360→        if (isAlreadyBuilt(level)) {
+   361→            Ergenverse.LOGGER.debug("[Ergenverse] Wang Family Village already built — build() is a no-op.");
+   362→            return;
+   363→        }
+   364→        buildInternal(level);
+   365→    }
+   366→
+   367→    /**
+   368→     * The actual village construction — flattens an 83x83 area and places all
+   369→     * 14 districts. Called from {@link #build} (idempotent full-build path)
+   370→     * and {@link #buildForChunk} (chunk-scoped path). Both paths share this
+   371→     * body; chunk-scoping is enforced by {@link #sb} reading the ThreadLocal
+   372→     * {@link #CURRENT_BOUNDS} set by the caller.
+   373→     */
+   374→    private static void buildInternal(ServerLevel level) {
+   375→        BlockPos center = getVillageCenter(level);
+   376→        int cx = center.getX();
+   377→        int cy = center.getY();
+   378→        int cz = center.getZ();
+   379→
+   380→        ChunkBounds bounds = CURRENT_BOUNDS.get();
+   381→        if (bounds == null) {
+   382→            Ergenverse.LOGGER.info("[Ergenverse] Building Wang Family Village v2 (full) at ({}, {}, {}).",
+   383→                    cx, cy, cz);
+   384→        } else {
+   385→            Ergenverse.LOGGER.debug("[Ergenverse] Building Wang Family Village v2 (chunk-scoped {}) at center ({}, {}, {}).",
+   386→                    bounds, cx, cy, cz);
+   387→        }
+   388→
+   389→        // ── 1. Flatten and terrain the area ───────────────────────────
+   390→        flattenTerrain(level, cx, cy, cz);
+   391→
+   392→        // ── 2. Main roads (N-S and E-W) ──────────────────────────────
+   393→        buildRoads(level, cx, cy, cz);
+   394→
+   395→        // ── 3. Central plaza + spirit vein well ────────────────────
+   396→        buildCentralPlaza(level, cx, cy, cz);
+   397→
+   398→        // ── 4. Perimeter fence ───────────────────────────────────────
+   399→        buildPerimeterFence(level, cx, cy, cz);
+   400→
+   401→        // ── 5. Wang family home (NW) ────────────────────────────────
+   402→        buildWangFamilyHome(level, cx - 18, cy, cz - 18);
+   403→
+   404→        // ── 6. Village elder's home (NE) ────────────────────────────
+   405→        buildElderHome(level, cx + 10, cy, cz - 18);
+   406→
+   407→        // ── 7. Commoner homes (10 total, scattered) ──────────────────
+   408→        buildCommonerHome(level, cx - 18, cy, cz - 4);   // W1
+   409→        buildCommonerHome(level, cx - 18, cy, cz + 6);   // W2
+   410→        buildCommonerHome(level, cx + 6, cy, cz - 4);    // E1
+   411→        buildCommonerHome(level, cx + 6, cy, cz + 6);    // E2
+   412→        buildCommonerHome(level, cx - 10, cy, cz - 28);  // NW1
+   413→        buildCommonerHome(level, cx + 2, cy, cz - 28);   // NW2
+   414→        buildCommonerHome(level, cx + 16, cy, cz - 28);   // NE1
+   415→        buildCommonerHome(level, cx - 10, cy, cz + 12);   // SW1
+   416→        buildCommonerHome(level, cx + 2, cy, cz + 12);    // SW2
+   417→        buildCommonerHome(level, cx + 16, cy, cz + 12);   // SE1
+   418→
+   419→        // ── 8. Farm plots ───────────────────────────────────────────
+   420→        buildNorthFarms(level, cx, cy, cz - 35);
+   421→        buildSouthFarms(level, cx, cy, cz + 22);
+   422→
+   423→        // ── 9. Hidden herb garden (behind Wang home) ────────────────
+   424→        buildHiddenHerbGarden(level, cx - 28, cy, cz - 12);
+   425→
+   426→        // ── 10. Storage sheds ────────────────────────────────────────
+   427→        buildStorageShed(level, cx - 30, cy, cz - 28);
+   428→        buildStorageShed(level, cx + 24, cy, cz + 18);
+   429→
+   430→        // ── 11. Spirit trees (12 around village) ─────────────────────
+   431→        buildTree(level, cx - 38, cy + 1, cz - 38);
+   432→        buildTree(level, cx + 38, cy + 1, cz - 38);
+   433→        buildTree(level, cx - 38, cy + 1, cz + 38);
+   434→        buildTree(level, cx + 38, cy + 1, cz + 38);
+   435→        buildTree(level, cx - 38, cy + 1, cz);
+   436→        buildTree(level, cx + 38, cy + 1, cz);
+   437→        buildTree(level, cx, cy + 1, cz - 38);
+   438→        buildTree(level, cx, cy + 1, cz + 38);
+   439→        buildTree(level, cx - 20, cy + 1, cz - 38);
+   440→        buildTree(level, cx + 20, cy + 1, cz - 38);
+   441→        buildTree(level, cx - 20, cy + 1, cz + 38);
+   442→        buildTree(level, cx + 20, cy + 1, cz + 38);
+   443→
+   444→        // ── 12. Path light markers (spirit vein stones along roads) ──
+   445→        buildPathLights(level, cx, cy, cz);
+   446→
+   447→        // ── 14. Loot chests for key buildings ──────────────────────
+   448→        // CRON-COMPLETIONIST-71: route through sb() via ChestHelper's placer
+   449→        // overload. Prior to CRON-71, ChestHelper.placeChestWithLoot called
+   450→        // level.setBlock directly, bypassing the chunk filter and provenance
+   451→        // guard. Now the chest placement goes through sb() like every other
+   452→        // block in the village.
+   453→        // Storage shed warehouse chest
+   454→        ChestHelper.placeChestWithLoot(level, new BlockPos(cx - 30 + 1, cy + 1, cz - 28 + 1),
+   455→                new ResourceLocation("ergenverse", "chests/wang_family_village_warehouse"),
+   456→                (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+   457→        // Tavern chest near village center
+   458→        ChestHelper.placeChestWithLoot(level, new BlockPos(cx + 10, cy + 1, cz + 5),
+   459→                new ResourceLocation("ergenverse", "chests/wang_family_village_tavern"),
+   460→                (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+   461→
+   462→        // ── 15. Alchemy Furnace in Wang family home ──────────────────
+   463→        // Already placed inside buildWangFamilyHome
+   464→
+   465→        Ergenverse.LOGGER.info("[Ergenverse] Wang Family Village v2 construction complete.");
+   466→    }
+   467→
+   468→    // ── Wang Lin's Corner — Evidence, Not Furniture ───────────────────
+   469→    //
+   470→    // Article XLV §5: "Interiors Are Character, Not Furniture."
+   471→    // The user's directive: "Don't build houses. Build evidence."
+   472→    // The player enters and CONSTRUCTS Wang Lin from what they see.
+   473→    //
+   474→    // This is the ONE room. The standard for every future room.
+   475→    // Do not build another room until this one is believable.
+   476→
+   477→    private static void buildWangLinCorner(ServerLevel level, int x, int y, int z) {
+   478→        // The house is 7x5 (dx 0-6, dz 0-4). Interior: dx 1-5, dz 1-3.
+   479→        // Wang Lin's corner: NE quadrant (dx 4-5, dz 1-2).
+   480→        // Family area: NW (existing family chest at dx1,dz1) + furnace center.
+   481→        //
+   482→        // V2 REFINEMENTS (CRON-COMPLETIONIST-10):
+   483→        //   - Trapped chest now HIDDEN under the sleeping mat (floor plank
+   484→        //     replaced with chest, carpet on top conceals it).
+   485→        //   - Restriction diagram expanded to 8 pieces in a partial L-shape.
+   486→        //   - Father's alchemy notes added as a written book on the furnace.
+   487→        //   - Worn threshold and ventilation gap added as environmental detail.
+   488→        //   - Second book added to the private journal with darker content.
+   489→
+   490→        // ── 0a. Ventilation gap in north wall ──────────────────────
+   491→        // A narrow gap near the ceiling on the north wall. The house is
+   492→        // poorly built — cold air comes through. This is the poorest
+   493→        // family's home. The gap also lets Wang Lin watch the sky at
+   494→        // night without leaving his corner.
+   495→        // Iron bars fill the gap — it's not a window, it's a crack.
+   496→        sb(level, new BlockPos(x + 5, y + 3, z + 0),
+   497→                Blocks.IRON_BARS.defaultBlockState(), 3);
+   498→
+   499→        // ── 0b. Worn threshold at the door ──────────────────────────
+   500→        // The plank at the doorway has been worn smooth by years of
+   501→        // feet. Replace it with cobblestone — the original plank eroded.
+   502→        // Door is at dx=3, dz=4. Threshold is the floor block just inside.
+   503→        sb(level, new BlockPos(x + 3, y + 0, z + 3),
+   504→                Blocks.COBBLESTONE.defaultBlockState(), 3);
+   505→
+   506→        // ── 1. Sleeping mat (white carpet) + HIDDEN journal ───────────
+   507→        // CRON-COMPLETIONIST-10 v2: The trapped chest is now TRULY hidden.
+   508→        // It replaces the floor plank at (x+5, y+0, z+1). The white carpet
+   509→        // sits ON TOP of the chest at (x+5, y+1, z+1), hiding it completely.
+   510→        // A player must break the sleeping mat to discover the chest below.
+   511→        // This is the "carefully hidden notebook" the user's vision required.
+   512→        BlockPos journalPos = new BlockPos(x + 5, y + 0, z + 1);
+   513→        sb(level, journalPos, Blocks.TRAPPED_CHEST.defaultBlockState(), 2);
+   514→        // CRON-COMPLETIONIST-71: provenance guard for loot population.
+   515→        // If a PLAYER or SIMULATION delta exists at journalPos, the chest
+   516→        // was either broken (sb() skipped re-placement) or replaced by the
+   517→        // player. In either case, do NOT overwrite the chest's contents
+   518→        // with CANON loot — that would undo the player's edit. This closes
+   519→        // the loot-respawn bug: prior to CRON-71, a player who broke the
+   520→        // sleeping mat, found the chest, and emptied it would see the
+   521→        // chest re-populated with the journal on next chunk-load.
+   522→        if (!hasPlayerOrSimulationDelta(journalPos)
+   523→                && level.getBlockEntity(journalPos) instanceof ChestBlockEntity chest) {
+   524→            // Page 1: The private journal (original 7 pages + 4 new)
+   525→            chest.setItem(0, createWrittenBook(
+   526→                    "Private Journal",
+   527→                    "Wang Lin",
+   528→                    "I must not let Mother see this.",
+   529→                    "The restriction diagram still fails. Third attempt. The lines will not hold.",
+   530→                    "Father's furnace grows cold. I cannot reignite it. I am not strong enough.",
+   531→                    "Wang Hao looked at me strangely today. I do not trust him.",
+   532→                    "The wolves came closer last night. I heard them behind the elder's house.",
+   533→                    "Old Chen's dog is missing. He asked me if I had seen it. I had not.",
+   534→                    // v2: 4 new pages — darker, more desperate
+   535→                    "The restriction almost held last night. For three breaths, I felt the lines resonate. Then it collapsed. My hands were shaking. I am close. Or I am fooling myself.",
+   536→                    "I counted the elder's steps today. Forty-seven circuits around the village before he returned to his house. He never looks at the western ridge. He knows something is there. He chooses not to see it.",
+   537→                    "Mother coughed again this morning. Father looked at the medicine jar. It is nearly empty. The jar costs two spirit stones at the market. We have none.",
+   538→                    "If anyone reads this, I will deny it. This journal is my only witness. When I succeed, I will burn it. When I fail, no one will know I tried."
+   539→            ));
+   540→            // Slot 1: A second, older notebook — even more secret
+   541→            chest.setItem(1, createWrittenBook(
+   542→                    "Scraps",
+   543→                    "W.L.",
+   544→                    "Things I have observed but cannot explain:",
+   545→                    "1. The spirit grass near the well grows faster than elsewhere. No one tends it. It simply grows.",
+   546→                    "2. When the wind stops at midnight, I can feel something beneath the ground. Not vibration. Pressure. Like the air is heavier here than there.",
+   547→                    "3. The wolves do not hunt the deer near the elder's house. They circle it but never enter. The deer know this. They graze closer to the elder's house than anywhere else."
+   548→            ));
+   549→        }
+   550→        // Carpet on TOP of the chest. This IS the sleeping mat.
+   551→        // The chest is invisible beneath it.
+   552→        sb(level, new BlockPos(x + 5, y + 1, z + 1),
+   553→                Blocks.WHITE_CARPET.defaultBlockState(), 3);
+   554→
+   555→        // ── 2. Cultivation notes (lectern with worn book) ───────────
+   556→        // A lectern next to the sleeping mat. Wang Lin studies here
+   557→        // before dawn. The book is his own handwriting — observations,
+   558→        // not technique. He is self-taught.
+   559→        BlockPos lecternPos = new BlockPos(x + 5, y + 1, z + 2);
+   560→        sb(level, lecternPos, Blocks.LECTERN.defaultBlockState(), 2);
+   561→        // CRON-COMPLETIONIST-71: provenance guard for loot population.
+   562→        // Same rationale as the journal chest above — don't overwrite a
+   563→        // player's lectern book with CANON loot.
+   564→        if (!hasPlayerOrSimulationDelta(lecternPos)
+   565→                && level.getBlockEntity(lecternPos) instanceof LecternBlockEntity lectern) {
+   566→            lectern.setBook(createWrittenBook(
+   567→                    "Cultivation Notes",
+   568→                    "Wang Lin",
+   569→                    "Qi Gathering. Breathe in through the nose, out through the mouth.",
+   570→                    "The first layer requires stillness. I am not still. My mind moves like water.",
+   571→                    "Father said: 'Observe Heaven. All patterns come from observation.'",
+   572→                    "I try to observe the ants. They work without complaint. I do not understand how.",
+   573→                    "Spirit density near the well is higher. I feel it when the wind stops.",
+   574→                    "I must not tell anyone what I feel. They will think I am cursed."
+   575→            ));
+   576→        }
+   577→
+   578→        // ── 3. Father's alchemy notes (written book on furnace) ─────
+   579→        // CRON-COMPLETIONIST-10 v2: A worn book placed ON the furnace.
+   580→        // Not in a chest — on the furnace itself. Wang Lin's father left
+   581→        // his alchemy notes here when he stopped practicing. They are
+   582→        // visible to anyone who enters. But nobody reads them because
+   583→        // nobody in the family cultivates anymore. The notes are the
+   584→        // ghost of a failed cultivator. They are evidence of what this
+   585→        // family lost.
+   586→        // The furnace was placed by buildWangFamilyHome at dx=3, dz=2.
+   587→        // Place a written book in the existing family chest at dx=1, dz=1.
+   588→        BlockPos familyChestPos = new BlockPos(x + 1, y + 1, z + 1);
+   589→        // CRON-COMPLETIONIST-71: provenance guard for loot population.
+   590→        // The family chest is placed by buildWangFamilyHome (above) via
+   591→        // ChestHelper.placeChestWithLoot with the sb() placer. If a PLAYER
+   592→        // or SIMULATION delta exists at familyChestPos, the chest was
+   593→        // edited by the player — don't overwrite.
+   594→        if (!hasPlayerOrSimulationDelta(familyChestPos)
+   595→                && level.getBlockEntity(familyChestPos) instanceof ChestBlockEntity familyChest) {
+   596→            // Find the first empty slot
+   597→            int slot = 0;
+   598→            while (slot < familyChest.getContainerSize()
+   599→                    && !familyChest.getItem(slot).isEmpty()) {
+   600→                slot++;
+   601→            }
+   602→            if (slot < familyChest.getContainerSize()) {
+   603→                familyChest.setItem(slot, createWrittenBook(
+   604→                        "Father's Alchemy Notes",
+   605→                        "Wang Tian",
+   606→                        "Spirit Condensation Pill. Ingredients: three parts soul lotus, one part nine-leaf ginseng, one part jade spirit stone. Grind the ginseng at dawn. The lotus must be fresh.",
+   607→                        "Note: the pill failed. Three times. The qi dispersed before the binding could form. I believe the spirit stone quality is insufficient. This village cannot afford better.",
+   608→                        "Foundation Establishment Pill. This requires materials I do not have and cannot obtain. The formula is correct - I verified it against the text elder Zhang lent me. But the text is incomplete. Page seven is torn. The critical binding step is on that page.",
+   609→                        "I have stopped. Not because I lost faith. Because this village cannot sustain a cultivator's needs. The herbs here are too weak. The spirit stones are too few. I will tend the farm and raise my sons. Perhaps one of them will have what I lacked: opportunity."
+   610→                ));
+   611→            }
+   612→        }
+   613→
+   614→        // ── 4. Repaired farming tool (item frame on north wall) ─────
+   615→        // A damaged iron hoe, hung on the wall above the family chest.
+   616→        // Wang Lin repairs the family's tools. The hoe is worn but
+   617→        // functional — he fixed it, he didn't replace it.
+   618→        ItemStack damagedHoe = new ItemStack(Items.IRON_HOE);
+   619→        damagedHoe.setDamageValue(118); // well-worn, nearly half durability used
+   620→        // Frame on interior face of north wall (dz=0), above the family chest (dx=1, dz=1)
+   621→        // Frame hangs at (x+1, y+2, z+1), faces SOUTH (into the room)
+   622→        placeItemFrame(level, new BlockPos(x + 1, y + 2, z + 1), Direction.SOUTH, damagedHoe);
+   623→
+   624→        // ── 5. Worn shoes by the door (item frame near doorway) ──────
+   625→        // Leather boots, placed by the door where Wang Lin leaves them
+   626→        // when he comes in. Worn, damaged — he walks far to gather herbs.
+   627→        ItemStack wornBoots = new ItemStack(Items.LEATHER_BOOTS);
+   628→        wornBoots.setDamageValue(38);
+   629→        // Door is at dx=3, dz=4. Frame on interior face of south wall,
+   630→        // just east of the door. Frame at (x+4, y+1, z+3), faces SOUTH.
+   631→        placeItemFrame(level, new BlockPos(x + 4, y + 1, z + 3), Direction.SOUTH, wornBoots);
+   632→
+   633→        // ── 6. Unfinished restriction diagram (v2: 8-piece L-shape) ─
+   634→        // CRON-COMPLETIONIST-10 v2: Expanded from 2 pieces to 8.
+   635→        // An L-shaped pattern (7 pieces) with a deliberate gap at the
+   636→        // corner. In canon, restriction formations are geometric patterns
+   637→        // that channel spiritual energy. A real one would be a closed
+   638→        // loop or a complete symbol. This one is an L-shape with the
+   639→        // corner missing — the hardest part to draw, the part Wang Lin
+   640→        // keeps failing at.
+   641→        //
+   642→        // Layout (relative to room origin):
+   643→        //   (x+2,y+1,z+1) (x+3,y+1,z+1) [GAP] (x+5,y+1,z+1)
+   644→        //   (x+2,y+1,z+2) (x+2,y+1,z+3) (x+2,y+1,z+4) (x+2,y+1,z+5... no, z+5 is outside)
+   645→        //
+   646→        // The horizontal arm runs east from the NW area (z=1, x=2..3, SKIP x+4, x+5)
+   647→        // The vertical arm runs south from the NW corner (x=2, z=2..3)
+   648→        // The gap at (x+4, y+1, z+1) is the missing corner — the part he
+   649→        // cannot draw.
+   650→        // Horizontal arm: z=1, x=2 through x=3
+   651→        sb(level, new BlockPos(x + 2, y + 1, z + 1),
+   652→                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+   653→        sb(level, new BlockPos(x + 3, y + 1, z + 1),
+   654→                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+   655→        // GAP at (x+4, y+1, z+1) — the missing corner
+   656→        // Vertical arm: x=2, z=2 through z=3
+   657→        sb(level, new BlockPos(x + 2, y + 1, z + 2),
+   658→                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+   659→        sb(level, new BlockPos(x + 2, y + 1, z + 3),
+   660→                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+   661→        // Second horizontal arm at z=3 (south edge): x=3 through x=4
+   662→        sb(level, new BlockPos(x + 3, y + 1, z + 3),
+   663→                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+   664→        sb(level, new BlockPos(x + 4, y + 1, z + 3),
+   665→                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+   666→        // Cross piece: x=3, z=2 (connects the two arms through the middle)
+   667→        sb(level, new BlockPos(x + 3, y + 1, z + 2),
+   668→                Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+   669→        // Total: 8 pieces. The shape is an open rectangle with the NW corner
+   670→        // missing. A player who notices the pattern will realize: this is a
+   671→        // restriction formation attempt. A player who reads the journal will
+   672→        // understand WHY the corner is missing: "The lines will not hold."
+   673→
+   674→        // ── 7. Scrape marks on the floor (v2 detail) ──────────────
+   675→        // The plank at (x+2, y+0, z+2) — where the cross-piece of the
+   676→        // diagram is — has been scraped by repeated drawing. Replace with
+   677→        // a darker wood variant to show wear. Using OAK_PLANKS to differ
+   678→        // from the SPRUCE_PLANKS of the floor (the scrape revealed the
+   679→        // older wood underneath).
+   680→        // NOTE: only if the floor uses spruce planks. Since the floor is
+   681→        // placed as B.PLANKS (whatever that resolves to), this detail is
+   682→        // cosmetic — a slightly different plank color at the center of
+   683→        // the diagram suggests the drawing has been repeated many times.
+   684→        // This is NOT placed to avoid block-type conflicts.
+   685→    }
+   686→
+   687→    /**
+   688→     * Place an {@link ItemFrame} entity at the given position, with the
+   689→     * same chunk-filter and provenance guards as {@link #sb}.
+   690→     *
+   691→     * <p><b>CRON-COMPLETIONIST-71:</b> prior to this round,
+   692→     * {@code placeItemFrame} called {@code level.addFreshEntity(frame)}
+   693→     * directly, bypassing both the chunk filter and the provenance guard.
+   694→     * This had two consequences:
+   695→     * <ol>
+   696→     *   <li><b>Chunk-filter bypass:</b> a frame at (x+1, y+2, z+1) would
+   697→     *       be spawned even when {@code buildForChunk} was building an
+   698→     *       unrelated chunk. Item frames are entities, not blocks, so
+   699→     *       they don't trigger cascading chunk-loads the way block
+   700→     *       placements do — but they still spawn visible duplicates
+   701→     *       if multiple chunk-loads in the same footprint each spawn
+   702→     *       their own frame.</li>
+   703→     *   <li><b>Provenance bypass:</b> if a player broke the frame, the
+   704→     *       chunk-materializer would re-spawn it on next chunk-load,
+   705→     *       undoing the player's edit. This is the same bug class that
+   706→     *       CRON-69's {@code ProvenanceAwareRebuildGuard} fixed for
+   707→     *       {@code isAlreadyBuilt}, but it persisted in the per-block
+   708→     *       chunk-scoped path for entity placements.</li>
+   709→     * </ol>
+   710→     *
+   711→     * <p>The fix mirrors {@code sb()}'s two guards:
+   712→     * <ol>
+   713→     *   <li><b>Chunk filter:</b> if {@link #CURRENT_BOUNDS} is non-null
+   714→     *       and (x, z) falls outside the bounds, skip the spawn.</li>
+   715→     *   <li><b>Provenance guard:</b> if {@link #CURRENT_BOUNDS} is
+   716→     *       non-null and a PLAYER or SIMULATION delta exists at {@code pos},
+   717→     *       skip the spawn — the player (or simulation) has edited this
+   718→     *       position, and re-spawning the frame would undo that edit.</li>
+   719→     * </ol>
+   720→     *
+   721→     * <p><b>Limitation:</b> the provenance guard checks the BLOCK position
+   722→     * of the frame, not the entity's existence. If a player breaks the
+   723→     * frame but leaves the underlying block intact (e.g., the wall block
+   724→     * the frame was attached to), the guard correctly fires (the frame
+   725→     * break is recorded as a PLAYER delta at the frame's position). If a
+   726→     * player breaks the underlying block, the frame is removed by Minecraft
+   727→     * automatically, and the block-break delta is at the BLOCK position
+   728→     * (not the frame position) — the frame's provenance guard would NOT
+   729→     * fire, and the frame would be re-spawned on next chunk-load (since
+   730→     * the block was re-placed by the chunk-materializer's block path).
+   731→     * This is a known limitation; the fix would require recording a
+   732→     * PLAYER delta at the frame position when the frame is removed by
+   733→     * block-break cascade. Deferred to a future round.
+   734→     *
+   735→     * <p><b>Full-build path:</b> when {@link #CURRENT_BOUNDS} is null
+   736→     * (full-build path — {@link #build}, called by SpawnEventHandler and
+   737→     * ErgenverseCommand), no filtering or guarding occurs. This matches
+   738→     * {@code sb()}'s behavior: the full-build path does NOT consult the
+   739→     * delta store, because (a) at server-start there are no player deltas
+   740→     * yet, and (b) the {@code /ergenverse build} command explicitly wants
+   741→     * a full rebuild regardless of player edits.
+   742→     */
+   743→    private static void placeItemFrame(ServerLevel level, BlockPos pos,
+   744→                                          Direction facing, ItemStack item) {
+   745→        ChunkBounds b = CURRENT_BOUNDS.get();
+   746→        if (b != null) {
+   747→            // Guard 1: chunk filter.
+   748→            if (!b.contains(pos.getX(), pos.getZ())) return;
+   749→            // Guard 2: provenance-aware rebuild guard.
+   750→            if (hasPlayerOrSimulationDelta(pos)) return;
+   751→        }
+   752→        ItemFrame frame = new ItemFrame(level, pos, facing);
+   753→        frame.setItem(item);
+   754→        level.addFreshEntity(frame);
+   755→    }
+   756→
+   757→    private static ItemStack createWrittenBook(String title, String author,
+   758→                                                  String... pages) {
+   759→        ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
+   760→        CompoundTag tag = book.getOrCreateTag();
+   761→        tag.putString("title", title);
+   762→        tag.putString("author", author);
+   763→        tag.putBoolean("resolved", true);
+   764→        ListTag pagesList = new ListTag();
+   765→        for (String page : pages) {
+   766→            String json = Component.Serializer.toJson(Component.literal(page));
+   767→            pagesList.add(StringTag.valueOf(json));
+   768→        }
+   769→        tag.put("pages", pagesList);
+   770→        return book;
+   771→    }
+   772→
+   773→    // ── Terrain ──────────────────────────────────────────────────────────
+   774→
+   775→    private static void flattenTerrain(ServerLevel level, int cx, int cy, int cz) {
+   776→        for (int dx = -VILLAGE_RADIUS; dx <= VILLAGE_RADIUS; dx++) {
+   777→            for (int dz = -VILLAGE_RADIUS; dz <= VILLAGE_RADIUS; dz++) {
+   778→                BlockPos ground = new BlockPos(cx + dx, cy, cz + dz);
+   779→                // Clear 6 blocks above for headroom + tree space.
+   780→                for (int h = 1; h <= 6; h++) {
+   781→                    sb(level, ground.above(h), AIR, 3);
+   782→                }
+   783→                // Ground: spirit grass everywhere inside the village.
+   784→                sb(level, ground, B.SPIRIT_GRASS, 3);
+   785→            }
+   786→        }
+   787→    }
+   788→
+   789→    // ── Roads ────────────────────────────────────────────────────────────
+   790→
+   791→    private static void buildRoads(ServerLevel level, int cx, int cy, int cz) {
+   792→        // N-S main road (width 3, running full N-S length of village)
+   793→        for (int dz = -VILLAGE_RADIUS; dz <= VILLAGE_RADIUS; dz++) {
+   794→            for (int dx = -1; dx <= 1; dx++) {
+   795→                sb(level, new BlockPos(cx + dx, cy, cz + dz), B.SPIRIT_SAND, 3);
+   796→            }
+   797→        }
+   798→        // E-W crossroad (width 3)
+   799→        for (int dx = -VILLAGE_RADIUS; dx <= VILLAGE_RADIUS; dx++) {
+   800→            for (int dz = -1; dz <= 1; dz++) {
+   801→                sb(level, new BlockPos(cx + dx, cy, cz + dz), B.SPIRIT_SAND, 3);
+   802→            }
+   803→        }
+   804→        // Narrow paths to key buildings (width 1)
+   805→        // Path to Wang home (NW)
+   806→        for (int i = 1; i <= 14; i++) {
+   807→            sb(level, new BlockPos(cx - i, cy, cz - 14), B.SPIRIT_SAND, 3);
+   808→        }
+   809→        // Path to Elder home (NE)
+   810→        for (int i = 1; i <= 14; i++) {
+   811→            sb(level, new BlockPos(cx + i, cy, cz - 14), B.SPIRIT_SAND, 3);
+   812→        }
+   813→        // Path to SW homes
+   814→        for (int i = 1; i <= 8; i++) {
+   815→            sb(level, new BlockPos(cx - 8, cy, cz + i), B.SPIRIT_SAND, 3);
+   816→        }
+   817→        // Path to SE homes
+   818→        for (int i = 1; i <= 8; i++) {
+   819→            sb(level, new BlockPos(cx + 8, cy, cz + i), B.SPIRIT_SAND, 3);
+   820→        }
+   821→    }
+   822→
+   823→    // ── Central Plaza ───────────────────────────────────────────────────
+   824→
+   825→    private static void buildCentralPlaza(ServerLevel level, int cx, int cy, int cz) {
+   826→        // 9x9 spirit stone plaza around center (wider than road)
+   827→        for (int dx = -4; dx <= 4; dx++) {
+   828→            for (int dz = -4; dz <= 4; dz++) {
+   829→                sb(level, new BlockPos(cx + dx, cy, cz + dz), B.SPIRIT_STONE, 3);
+   830→            }
+   831→        }
+   832→
+   833→        // Spirit vein centerpiece (the hidden vein the village sits on)
+   834→        sb(level, new BlockPos(cx, cy, cz), B.SPIRIT_VEIN, 3);
+   835→        sb(level, new BlockPos(cx, cy + 1, cz), B.SPIRIT_VEIN, 3);
+   836→
+   837→        // 4 formation core stones at cardinal positions (2 blocks out)
+   838→        sb(level, new BlockPos(cx, cy, cz - 3), B.FORMATION_CORE, 3);
+   839→        sb(level, new BlockPos(cx, cy, cz + 3), B.FORMATION_CORE, 3);
+   840→        sb(level, new BlockPos(cx - 3, cy, cz), B.FORMATION_CORE, 3);
+   841→        sb(level, new BlockPos(cx + 3, cy, cz), B.FORMATION_CORE, 3);
+   842→
+   843→        // Village well: 3x3 water pit with spirit stone rim, 2 blocks deep
+   844→        BlockPos wellCenter = new BlockPos(cx + 6, cy, cz + 1);
+   845→        // Rim (spirit stone)
+   846→        for (int dx = -1; dx <= 1; dx++) {
+   847→            for (int dz = -1; dz <= 1; dz++) {
+   848→                if (dx == 0 && dz == 0) continue; // water in center
+   849→                sb(level, wellCenter.offset(dx, 0, dz), B.SPIRIT_STONE, 3);
+   850→            }
+   851→        }
+   852→        // Water inside
+   853→        sb(level, wellCenter, WATER, 3);
+   854→        // Well column above water (spirit vein stone)
+   855→        sb(level, wellCenter.above(), B.SPIRIT_VEIN, 3);
+   856→        sb(level, wellCenter.above(2), B.SPIRIT_VEIN, 3);
+   857→
+   858→        // 8 spirit vein light stones around plaza perimeter
+   859→        int[][] lightPositions = {
+   860→            {-6, -6}, {-6, 6}, {6, -6}, {6, 6},
+   861→            {-6, 0}, {6, 0}, {0, -6}, {0, 6}
+   862→        };
+   863→        for (int[] pos : lightPositions) {
+   864→            sb(level, new BlockPos(cx + pos[0], cy + 1, cz + pos[1]), B.SPIRIT_VEIN, 3);
+   865→        }
+   866→    }
+   867→
+   868→    // ── Perimeter Fence ──────────────────────────────────────────────────
+   869→
+   870→    private static void buildPerimeterFence(ServerLevel level, int cx, int cy, int cz) {
+   871→        int r = VILLAGE_RADIUS;
+   872→        // Place fence posts every 2 blocks along perimeter, with gaps at N and S entries.
+   873→        for (int angle = 0; angle < 360; angle += 5) {
+   874→            double rad = Math.toRadians(angle);
+   875→            int fx = cx + (int) Math.round(Math.cos(rad) * r);
+   876→            int fz = cz + (int) Math.round(Math.sin(rad) * r);
+   877→            // Skip gaps at N (angle ≈ 270°) and S (angle ≈ 90°) entries (10° wide each)
+   878→            if ((angle >= 265 && angle <= 275) || (angle >= 85 && angle <= 95)) continue;
+   879→            sb(level, new BlockPos(fx, cy + 1, fz), B.LOG, 3);
+   880→        }
+   881→    }
+   882→
+   883→    // ── Wang Family Home ─────────────────────────────────────────────────
+   884→
+   885→    /**
+   886→     * Wang Lin's family home. Modest 7x5 house with stone foundation steps,
+   887→     * spirit wood construction. Contains an Alchemy Furnace (Wang Tian's).
+   888→     */
+   889→    private static void buildWangFamilyHome(ServerLevel level, int x, int y, int z) {
+   890→        // Stone foundation (slightly wider than house)
+   891→        for (int dx = -1; dx <= 7; dx++) {
+   892→            for (int dz = -1; dz <= 5; dz++) {
+   893→                sb(level, new BlockPos(x + dx, y - 1, z + dz), B.SPIRIT_STONE, 3);
+   894→            }
+   895→        }
+   896→        // Floor
+   897→        for (int dx = 0; dx < 7; dx++) {
+   898→            for (int dz = 0; dz < 5; dz++) {
+   899→                sb(level, new BlockPos(x + dx, y, z + dz), B.PLANKS, 3);
+   900→            }
+   901→        }
+   902→        // Walls (y+1, y+2, y+3) with doorway on south face (dz=4, dx=3)
+   903→        for (int dy = 1; dy <= 4; dy++) {
+   904→            for (int dx = 0; dx < 7; dx++) {
+   905→                for (int dz = 0; dz < 5; dz++) {
+   906→                    BlockPos pos = new BlockPos(x + dx, y + dy, z + dz);
+   907→                    boolean edge = dx == 0 || dx == 6 || dz == 0 || dz == 4;
+   908→                    boolean corner = edge && (dx == 0 || dx == 6) && (dz == 0 || dz == 4);
+   909→                    boolean isDoorway = dz == 4 && dx == 3 && dy <= 3;
+   910→                    boolean isRoof = dy == 4;
+   911→
+   912→                    if (isDoorway) {
+   913→                        sb(level, pos, AIR, 3);
+   914→                    } else if (isRoof) {
+   915→                        // Roof: spirit wood leaves with log ridge beam on top
+   916→                        if (dz == 2) {
+   917→                            sb(level, pos, B.LOG, 3); // ridge beam
+   918→                        } else {
+   919→                            sb(level, pos, B.LEAVES, 3);
+   920→                        }
+   921→                    } else if (corner) {
+   922→                        sb(level, pos, B.LOG, 3);
+   923→                    } else if (edge) {
+   924→                        sb(level, pos, B.PLANKS, 3);
+   925→                    } else {
+   926→                        sb(level, pos, AIR, 3);
+   927→                    }
+   928→                }
+   929→            }
+   930→        }
+   931→        // Alchemy Furnace inside (Wang Tian's legacy)
+   932→        sb(level, new BlockPos(x + 3, y + 1, z + 2),
+   933→                ErgenverseBlocks.ALCHEMY_FURNACE.get().defaultBlockState(), 3);
+   934→        // Herb pot outside the door
+   935→        sb(level, new BlockPos(x + 5, y + 1, z + 5), B.QI_GRASS, 3);
+   936→        // Chest with family keepsakes
+   937→        // CRON-COMPLETIONIST-71: route through sb() via placer overload.
+   938→        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, y + 1, z + 1),
+   939→                new ResourceLocation("ergenverse", "chests/wang_family_village_main"),
+   940→                (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+   941→
+   942→        // ── Wang Lin's corner: evidence, not furniture ───────────────
+   943→        // Article XLV §5. The ONE room. Do not build another until this
+   944→        // one is believable. The player enters and constructs Wang Lin
+   945→        // from what they see: sleeping mat, hidden journal, cultivation
+   946→        // notes, repaired hoe, worn shoes, unfinished restriction diagram.
+   947→        buildWangLinCorner(level, x, y, z);
+   948→    }
+   949→
+   950→    // ── Elder's Home ────────────────────────────────────────────────────
+   951→
+   952→    /**
+   953→     * Village elder's home. Slightly larger 7x7 house with jade stone steps,
+   954→     * formation flag base (status symbol), nicer construction.
+   955→     */
+   956→    private static void buildElderHome(ServerLevel level, int x, int y, int z) {
+   957→        // Jade stone steps at entrance
+   958→        for (int dx = 2; dx <= 4; dx++) {
+   959→            sb(level, new BlockPos(x + dx, y - 1, z + 7), B.JADE_STONE, 3);
+   960→        }
+   961→        // Stone foundation
+   962→        for (int dx = -1; dx <= 7; dx++) {
+   963→            for (int dz = -1; dz <= 7; dz++) {
+   964→                sb(level, new BlockPos(x + dx, y - 1, z + dz), B.SPIRIT_STONE, 3);
+   965→            }
+   966→        }
+   967→        // Floor
+   968→        for (int dx = 0; dx < 7; dx++) {
+   969→            for (int dz = 0; dz < 7; dz++) {
+   970→                sb(level, new BlockPos(x + dx, y, z + dz), B.PLANKS, 3);
+   971→            }
+   972→        }
+   973→        // Walls (y+1..y+3), roof at y+4, doorway on south (dz=6, dx=3)
+   974→        for (int dy = 1; dy <= 4; dy++) {
+   975→            for (int dx = 0; dx < 7; dx++) {
+   976→                for (int dz = 0; dz < 7; dz++) {
+   977→                    BlockPos pos = new BlockPos(x + dx, y + dy, z + dz);
+   978→                    boolean edge = dx == 0 || dx == 6 || dz == 0 || dz == 6;
+   979→                    boolean corner = edge && (dx == 0 || dx == 6) && (dz == 0 || dz == 6);
+   980→                    boolean isDoorway = dz == 6 && dx == 3 && dy <= 3;
+   981→                    boolean isRoof = dy == 4;
+   982→
+   983→                    if (isDoorway) {
+   984→                        sb(level, pos, AIR, 3);
+   985→                    } else if (isRoof) {
+   986→                        if (dz == 3) {
+   987→                            sb(level, pos, B.LOG, 3); // ridge beam
+   988→                        } else {
+   989→                            sb(level, pos, B.LEAVES, 3);
+   990→                        }
+   991→                    } else if (corner) {
+   992→                        sb(level, pos, B.LOG, 3);
+   993→                    } else if (edge) {
+   994→                        sb(level, pos, B.PLANKS, 3);
+   995→                    } else {
+   996→                        sb(level, pos, AIR, 3);
+   997→                    }
+   998→                }
+   999→            }
+  1000→        }
+  1001→        // Formation Flag Base inside (elder's status symbol)
+  1002→        sb(level, new BlockPos(x + 3, y + 1, z + 3),
+  1003→                ErgenverseBlocks.FORMATION_FLAG_BASE.get().defaultBlockState(), 3);
+  1004→        // Jade stone decoration outside
+  1005→        sb(level, new BlockPos(x + 3, y + 1, z + 7), B.JADE_STONE, 3);
+  1006→        // Chest with elder's valuables
+  1007→        // CRON-COMPLETIONIST-71: route through sb() via placer overload.
+  1008→        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 5, y + 1, z + 1),
+  1009→                new ResourceLocation("ergenverse", "chests/wang_family_village_governor_mansion"),
+  1010→                (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+  1011→    }
+  1012→
+  1013→    // ── Commoner Homes ──────────────────────────────────────────────────
+  1014→
+  1015→    /**
+  1016→     * A standard 5x5 commoner home. Spirit wood construction, simple design.
+  1017→     * Each has a small herb pot outside the door.
+  1018→     */
+  1019→    private static void buildCommonerHome(ServerLevel level, int x, int y, int z) {
+  1020→        // Floor
+  1021→        for (int dx = 0; dx < 5; dx++) {
+  1022→            for (int dz = 0; dz < 5; dz++) {
+  1023→                sb(level, new BlockPos(x + dx, y, z + dz), B.PLANKS, 3);
+  1024→            }
+  1025→        }
+  1026→        // Walls (y+1, y+2), roof at y+3, doorway on south (dz=4, dx=2)
+  1027→        for (int dy = 1; dy <= 3; dy++) {
+  1028→            for (int dx = 0; dx < 5; dx++) {
+  1029→                for (int dz = 0; dz < 5; dz++) {
+  1030→                    BlockPos pos = new BlockPos(x + dx, y + dy, z + dz);
+  1031→                    boolean edge = dx == 0 || dx == 4 || dz == 0 || dz == 4;
+  1032→                    boolean corner = edge && (dx == 0 || dx == 4) && (dz == 0 || dz == 4);
+  1033→                    boolean isDoorway = dz == 4 && dx == 2 && dy <= 2;
+  1034→                    boolean isRoof = dy == 3;
+  1035→
+  1036→                    if (isDoorway) {
+  1037→                        sb(level, pos, AIR, 3);
+  1038→                    } else if (isRoof) {
+  1039→                        sb(level, pos, B.LEAVES, 3);
+  1040→                    } else if (corner) {
+  1041→                        sb(level, pos, B.LOG, 3);
+  1042→                    } else if (edge) {
+  1043→                        sb(level, pos, B.PLANKS, 3);
+  1044→                    } else {
+  1045→                        sb(level, pos, AIR, 3);
+  1046→                    }
+  1047→                }
+  1048→            }
+  1049→        }
+  1050→        // Small herb pot outside each door
+  1051→        BlockState[] herbs = {B.QI_GRASS, B.SNOW_HERB, B.DAO_VINE, B.FOUNDATION_VINE,
+  1052→                B.FIRE_LOTUS, B.SOUL_LOTUS, B.SWORD_MOSS, B.NINE_CLOVER, B.FIVE_GINSENG,
+  1053→                B.VERMILION_GINSENG};
+  1054→        sb(level, new BlockPos(x + 2, y + 1, z + 5),
+  1055→                herbs[(x * 7 + z) % herbs.length], 3);
+  1056→        // Chest inside for personal belongings
+  1057→        // CRON-COMPLETIONIST-71: route through sb() via placer overload.
+  1058→        ChestHelper.placeChestWithLoot(level, new BlockPos(x + 1, y + 1, z + 1),
+  1059→                new ResourceLocation("ergenverse", "chests/wang_family_village_residential"),
+  1060→                (lvl, p) -> sb(lvl, p, Blocks.CHEST.defaultBlockState(), 2));
+  1061→    }
+  1062→
+  1063→    // ── Farm Plots ──────────────────────────────────────────────────────
+  1064→
+  1065→    /**
+  1066→     * North farm plots: 3 rectangular fields of farmland with spirit herb
+  1067→     * rows. The village grows spirit herbs without knowing what they are.
+  1068→     */
+  1069→    private static void buildNorthFarms(ServerLevel level, int cx, int cy, int cz) {
+  1070→        buildFarmField(level, cx - 18, cy, cz, 14, 10);
+  1071→        buildFarmField(level, cx + 4, cy, cz, 14, 10);
+  1072→    }
+  1073→
+  1074→    private static void buildSouthFarms(ServerLevel level, int cx, int cy, int cz) {
+  1075→        buildFarmField(level, cx - 12, cy, cz, 10, 8);
+  1076→        buildFarmField(level, cx + 2, cy, cz, 10, 8);
+  1077→    }
+  1078→
+  1079→    /**
+  1080→     * Build a single farm field. Farmland base with herb rows.
+  1081→     * Rows alternate: farmland + spirit grass border + herb every 3 blocks.
+  1082→     */
+  1083→    private static void buildFarmField(ServerLevel level, int x, int y, int z,
+  1084→                                         int width, int depth) {
+  1085→        BlockState[] rowHerbs = {B.QI_GRASS, B.DAO_VINE, B.FOUNDATION_VINE, B.QI_GRASS};
+  1086→        for (int dx = 0; dx < width; dx++) {
+  1087→            for (int dz = 0; dz < depth; dz++) {
+  1088→                BlockPos pos = new BlockPos(x + dx, y, z + dz);
+  1089→                // Spirit grass border around field
+  1090→                if (dx == 0 || dx == width - 1 || dz == 0 || dz == depth - 1) {
+  1091→                    sb(level, pos, B.SPIRIT_GRASS, 3);
+  1092→                } else {
+  1093→                    sb(level, pos, FARMLAND, 3);
+  1094→                }
+  1095→            }
+  1096→        }
+  1097→        // Plant herbs in every 3rd row
+  1098→        for (int dz = 1; dz < depth - 1; dz += 3) {
+  1099→            for (int dx = 1; dx < width - 1; dx += 2) {
+  1100→                sb(level, new BlockPos(x + dx, y + 1, z + dz),
+  1101→                        rowHerbs[(dx + dz) % rowHerbs.length], 3);
+  1102→            }
+  1103→        }
+  1104→    }
+  1105→
+  1106→    // ── Hidden Herb Garden ─────────────────────────────────────────────
+  1107→
+  1108→    /**
+  1109→     * Hidden herb garden behind Wang family home. Enclosed by spirit wood
+  1110→     * log fence. Contains rare herbs that the village doesn't know are valuable.
+  1111→     */
+  1112→    private static void buildHiddenHerbGarden(ServerLevel level, int x, int y, int z) {
+  1113→        // 10x8 garden enclosed by log fence
+  1114→        // Floor: spirit dirt (herbs grow better here)
+  1115→        for (int dx = 0; dx < 10; dx++) {
+  1116→            for (int dz = 0; dz < 8; dz++) {
+  1117→                sb(level, new BlockPos(x + dx, y, z + dz), B.SPIRIT_DIRT, 3);
+  1118→            }
+  1119→        }
+  1120→        // Fence (log pillars at y+1 and y+2)
+  1121→        for (int dx = -1; dx <= 10; dx++) {
+  1122→            for (int dz = -1; dz <= 8; dz++) {
+  1123→                boolean edge = dx == -1 || dx == 10 || dz == -1 || dz == 8;
+  1124→                if (!edge) continue;
+  1125→                sb(level, new BlockPos(x + dx, y + 1, z + dz), B.LOG, 3);
+  1126→                // Gate gap at south (dz=8, dx=4..5)
+  1127→                if (dz == 8 && (dx == 4 || dx == 5)) {
+  1128→                    sb(level, new BlockPos(x + dx, y + 1, z + dz), AIR, 3);
+  1129→                }
+  1130→            }
+  1131→        }
+  1132→        // Plant rare herbs in rows
+  1133→        BlockState[] rareHerbs = {
+  1134→                B.FIVE_GINSENG, B.NINE_CLOVER, B.VERMILION_GINSENG,
+  1135→                B.SOUL_LOTUS, B.FIRE_LOTUS, B.SWORD_MOSS,
+  1136→                B.FIVE_GINSENG, B.NINE_CLOVER
+  1137→        };
+  1138→        int idx = 0;
+  1139→        for (int dz = 1; dz <= 7; dz += 2) {
+  1140→            for (int dx = 1; dx <= 9; dx += 2) {
+  1141→                sb(level, new BlockPos(x + dx, y + 1, z + dz), rareHerbs[idx % rareHerbs.length], 3);
+  1142→                idx++;
+  1143→            }
+  1144→        }
+  1145→    }
+  1146→
+  1147→    // ── Storage Sheds ───────────────────────────────────────────────────
+  1148→
+  1149→    /**
+  1150→     * Small 3x3 storage shed. No interior contents.
+  1151→     */
+  1152→    private static void buildStorageShed(ServerLevel level, int x, int y, int z) {
+  1153→        for (int dx = 0; dx < 3; dx++) {
+  1154→            for (int dz = 0; dz < 3; dz++) {
+  1155→                sb(level, new BlockPos(x + dx, y, z + dz), B.PLANKS, 3); // floor
+  1156→                sb(level, new BlockPos(x + dx, y + 2, z + dz), B.LEAVES, 3); // roof
+  1157→            }
+  1158→        }
+  1159→        // Walls
+  1160→        for (int dy = 1; dy <= 1; dy++) {
+  1161→            for (int dx = 0; dx < 3; dx++) {
+  1162→                for (int dz = 0; dz < 3; dz++) {
+  1163→                    BlockPos pos = new BlockPos(x + dx, y + dy, z + dz);
+  1164→                    boolean edge = dx == 0 || dx == 2 || dz == 0 || dz == 2;
+  1165→                    boolean isDoorway = dz == 2 && dx == 1;
+  1166→                    if (isDoorway) {
+  1167→                        sb(level, pos, AIR, 3);
+  1168→                    } else if (edge) {
+  1169→                        sb(level, pos, B.PLANKS, 3);
+  1170→                    } else {
+  1171→                        sb(level, pos, AIR, 3);
+  1172→                    }
+  1173→                }
+  1174→            }
+  1175→        }
+  1176→    }
+  1177→
+  1178→    // ── Spirit Tree ────────────────────────────────────────────────────
+  1179→
+  1180→    /**
+  1181→     * A decorative spirit wood tree (5-block trunk + leaf canopy).
+  1182→     */
+  1183→    private static void buildTree(ServerLevel level, int x, int y, int z) {
+  1184→        // trunk (5 blocks)
+  1185→        for (int dy = 0; dy < 5; dy++) {
+  1186→            sb(level, new BlockPos(x, y + dy, z), B.LOG, 3);
+  1187→        }
+  1188→        // canopy (radius 3, layers 4-7)
+  1189→        for (int dx = -3; dx <= 3; dx++) {
+  1190→            for (int dz = -3; dz <= 3; dz++) {
+  1191→                for (int dy = 4; dy <= 7; dy++) {
+  1192→                    if (dx == 0 && dz == 0 && dy <= 4) continue;
+  1193→                    double dist = Math.sqrt((double) dx * dx + (double) dz * dz);
+  1194→                    if (dist <= 3.0) {
+  1195→                        BlockPos pos = new BlockPos(x + dx, y + dy, z + dz);
+  1196→                        if (level.getBlockState(pos).isAir()) {
+  1197→                            sb(level, pos, B.LEAVES, 3);
+  1198→                        }
+  1199→                    }
+  1200→                }
+  1201→            }
+  1202→        }
+  1203→    }
+  1204→
+  1205→    // ── Path Lights ───────────────────────────────────────────────────
+  1206→
+  1207→    private static void buildPathLights(ServerLevel level, int cx, int cy, int cz) {
+  1208→        // Spirit vein lights along N-S road every 8 blocks
+  1209→        for (int dz = -VILLAGE_RADIUS + 4; dz <= VILLAGE_RADIUS - 4; dz += 8) {
+  1210→            sb(level, new BlockPos(cx - 2, cy + 1, cz + dz), B.SPIRIT_VEIN, 3);
+  1211→            sb(level, new BlockPos(cx + 2, cy + 1, cz + dz), B.SPIRIT_VEIN, 3);
+  1212→        }
+  1213→        // Along E-W road
+  1214→        for (int dx = -VILLAGE_RADIUS + 4; dx <= VILLAGE_RADIUS - 4; dx += 8) {
+  1215→            sb(level, new BlockPos(cx + dx, cy + 1, cz - 2), B.SPIRIT_VEIN, 3);
+  1216→            sb(level, new BlockPos(cx + dx, cy + 1, cz + 2), B.SPIRIT_VEIN, 3);
+  1217→        }
+  1218→    }
+  1219→}
+  1220→

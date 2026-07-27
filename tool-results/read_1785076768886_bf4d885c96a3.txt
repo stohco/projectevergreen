@@ -1,0 +1,1080 @@
+     1→package dev.ergenverse.entity;
+     2→
+     3→import com.google.gson.JsonObject;
+     4→import dev.ergenverse.core.Ergenverse;
+     5→import dev.ergenverse.simulation.WorldStateDataLoader;
+     6→import dev.ergenverse.simulation.WorldRuntimeState;
+     7→import dev.ergenverse.wanglin.bead.LiMuwanSoulCaptureEvent;
+     8→import net.minecraft.nbt.CompoundTag;
+     9→import net.minecraft.network.syncher.EntityDataAccessor;
+    10→import net.minecraft.network.syncher.EntityDataSerializers;
+    11→import net.minecraft.network.syncher.SynchedEntityData;
+    12→import net.minecraft.server.level.ServerLevel;
+    13→import net.minecraft.world.damagesource.DamageSource;
+    14→import net.minecraft.world.entity.EntityType;
+    15→import net.minecraft.world.entity.Mob;
+    16→import net.minecraft.world.entity.PathfinderMob;
+    17→import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+    18→import net.minecraft.world.entity.ai.attributes.Attributes;
+    19→import net.minecraft.world.entity.ai.goal.FloatGoal;
+    20→import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+    21→import net.minecraft.world.level.Level;
+    22→import org.jetbrains.annotations.Nullable;
+    23→
+    24→/**
+    25→ * EntityCultivator — a polymorphic NPC shell driven by canon data.
+    26→ *
+    27→ * <h2>Design</h2>
+    28→ * <p>Instead of 151 separate Java classes for 151 canon characters, this is
+    29→ * a single, highly polymorphic entity. At spawn, it reads a
+    30→ * {@code character_id} (e.g. {@code "wang_tiangui"}) and configures itself
+    31→ * from the canon database + runtime overrides:
+    32→ * <ol>
+    33→ *   <li>{@link WorldStateDataLoader#getEntry(String, String)} — reads the
+    34→ *       canon baseline (name, cultivation realm, HP, location, etc.) from
+    35→ *       {@code data/ergenverse/npcs/<id>.json}.</li>
+    36→ *   <li>{@link WorldRuntimeState#getNpcState(String)} — layers any t>0
+    37→ *       mutations (damage taken, position drift) on top of the baseline.</li>
+    38→ * </ol>
+    39→ *
+    40→ * <h2>Synced data</h2>
+    41→ * <p>{@link #DATA_CHARACTER_ID} is a {@link SynchedEntityData} string field,
+    42→ * synced to clients. The client renderer reads it to pick the correct
+    43→ * model/texture. Without this, every cultivator would render identically.
+    44→ *
+    45→ * <h2>Hibernation</h2>
+    46→ * <p>{@link MobCategory#MISC} entities normally despawn when players walk
+    47→ * away. We override {@link #removeWhenFarAway(double)} to return
+    48→ * {@code false} — canon entities never despawn. But to avoid ticking-entity
+    49→ * accumulation (100s of NPCs each running AI), {@link #aiStep()} short-circuits
+    50→ * when no player is within {@link #HIBERNATION_RANGE} blocks. The entity
+    51→ * persists in the world but consumes minimal CPU.
+    52→ *
+    53→ * <h2>State persistence</h2>
+    54→ * <p>On chunk unload ({@link #onRemovedFromLevel()}), the entity writes its
+    55→ * current state (HP, position) back to {@link WorldRuntimeState}. On the
+    56→ * next materialization, {@link #initializeFromData} re-reads it. The canon
+    57→ * DB is never written to.
+    58→ *
+    59→ * <h2>v1 scope</h2>
+    60→ * <p>This first version supports {@code wang_tiangui} (Wang Lin's mortal
+    61→ * father): Mortal realm, 20 HP, no combat, passive wander. Behavior AI
+    62→ * (combat, dialogue, sect routines) is deferred to v2. The shell is
+    63→ * complete; the behavior brain is not.
+    64→ *
+    65→ * <h2>Prime Directive</h2>
+    66→ * <p>"Reality is objective." The entity's stats are read from canon, not
+    67→ * invented. If canon is silent on a stat, the field is left at its Minecraft
+    68→ * default (marked with a TODO) rather than fabricated.
+    69→ */
+    70→public class EntityCultivator extends PathfinderMob {
+    71→
+    72→    // ── Synced data: the character_id token ─────────────────────────────
+    73→
+    74→    /**
+    75→     * Synced string identifying which canon character this entity represents.
+    76→     * The client renderer reads this to pick model/texture. Set once at
+    77→     * spawn via {@link #setCharacterId(String)}.
+    78→     */
+    79→    private static final EntityDataAccessor<String> DATA_CHARACTER_ID =
+    80→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.STRING);
+    81→
+    82→    /** Synced display name (canonical name, e.g. "Wang Tiangui 王天贵"). */
+    83→    private static final EntityDataAccessor<String> DATA_DISPLAY_NAME =
+    84→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.STRING);
+    85→
+    86→    /** Synced cultivation realm ID (e.g. "mortal", "qi_condensation"). */
+    87→    private static final EntityDataAccessor<String> DATA_CULTIVATION_REALM =
+    88→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.STRING);
+    89→
+    90→    /** Synced pose flag: 0=idle, 1=meditating, 2=casting/channeling.
+    91→     *  The client renderer reads this to drive CultivatorRobeModel's
+    92→     *  meditation and casting poses. Previously these were TODO flags
+    93→     *  that were never set — now they are synced and the renderer uses them.
+    94→     */
+    95→    private static final EntityDataAccessor<Integer> DATA_POSE =
+    96→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.INT);
+    97→
+    98→    /** Synced sect/faction ID (e.g. "heng_yue_sect", "teng_family", "independent").
+    99→     *  The client renderer reads this to select per-sect cultivator textures.
+   100→     *  CRON-COMPLETIONIST-50: This closes the 30+ round visual deficit where
+   101→     *  ALL 151+ NPCs shared one default.png texture.
+   102→     */
+   103→    private static final EntityDataAccessor<String> DATA_SECT =
+   104→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.STRING);
+   105→
+   106→    /**
+   107→     * CRON-COMPLETIONIST-102: The UUID of the player this cultivator is
+   108→     * following as a companion. Empty string = not following anyone (default
+   109→     * for all canon NPCs). Set to a player's UUID when Li Muwan is revived —
+   110→     * she follows Wang Lin ("两人踏天同行" — they transcend together).
+   111→     *
+   112→     * <p>Synced to the client so the renderer can display companion-specific
+   113→     * visuals (e.g., a gentle aura, a different idle pose) in a future CRON.
+   114→     * The {@link dev.ergenverse.entity.ai.FollowPlayerGoal} reads this
+   115→     * server-side to determine its target.
+   116→     */
+   117→    private static final EntityDataAccessor<String> DATA_FOLLOWING_PLAYER_UUID =
+   118→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.STRING);
+   119→
+   120→    // ── CRON-COMPLETIONIST-19: Cognitive Body-Language Layer ───────────
+   121→    // The user's 2026-07-25 directive: "the real bottleneck isn't AI anymore.
+   122→    // It's representation. Suppose Wang Lin decides 'Observe wolves.' That's
+   123→    // wonderful. Now ask: Can the player tell? Without debug overlay, command,
+   124→    // logs, worklog, subtitles — just looking. If the answer is 'Not really,'
+   125→    // then the AI may as well not exist."
+   126→    //
+   127→    // The fix: project the active Commitment onto the entity's pose + look
+   128→    // target in REAL TIME (per CognitionDrivenGoal tick), not just at
+   129→    // settlement-scan time. The NPC's head tracks the commitment's look
+   130→    // target (the wolves), with smooth interpolated rotation and micro-saccade
+   131→    // noise. The player walking past does NOT break the look-target — the NPC
+   132→    // is absorbed in observation.
+   133→    //
+   134→    // These three synced floats carry the world-space look target. The
+   135→    // renderer reads them and lerps the head toward them. When all three
+   136→    // are NaN, no cognitive look target is set (vanilla look control runs).
+   137→
+   138→    /** Synced cognitive look-target X (world coords). NaN = no target. */
+   139→    private static final EntityDataAccessor<Float> DATA_LOOK_TARGET_X =
+   140→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+   141→    /** Synced cognitive look-target Y (world coords, eye height). NaN = no target. */
+   142→    private static final EntityDataAccessor<Float> DATA_LOOK_TARGET_Y =
+   143→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+   144→    /** Synced cognitive look-target Z (world coords). NaN = no target. */
+   145→    private static final EntityDataAccessor<Float> DATA_LOOK_TARGET_Z =
+   146→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+   147→
+   148→    // ── CRON-COMPLETIONIST-21: Acting Layer — Performance channels ──────
+   149→    // The user's 2026-07-26 review: "instead of thinking in poses, think in
+   150→    // independent channels — Head, Torso, Shoulders, Hands, Feet, Eyes,
+   151→    // Breathing, Attention, Weight. Each channel updates independently."
+   152→    //
+   153→    // These seven synced floats carry the acting directions (focus, urgency,
+   154→    // confidence, concealment, tension, patience, fatigue) from the server-side
+   155→    // Commitment to the client-side renderer. When all are NaN, no Commitment
+   156→    // is active and the renderer falls back to vanilla pose-based animation.
+   157→    // When set, the renderer drives each body part INDEPENDENTLY from the
+   158→    // channels — producing hundreds of emergent silhouettes instead of 5 fixed
+   159→    // poses. Same IntentNature + different context → different acting.
+   160→    /** Synced Performance channel: focus (concentration). NaN = no performance. */
+   161→    private static final EntityDataAccessor<Float> DATA_PERF_FOCUS =
+   162→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+   163→    /** Synced Performance channel: urgency (time pressure). */
+   164→    private static final EntityDataAccessor<Float> DATA_PERF_URGENCY =
+   165→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+   166→    /** Synced Performance channel: confidence (trust in one's read). */
+   167→    private static final EntityDataAccessor<Float> DATA_PERF_CONFIDENCE =
+   168→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+   169→    /** Synced Performance channel: concealment (importance of staying hidden). */
+   170→    private static final EntityDataAccessor<Float> DATA_PERF_CONCEALMENT =
+   171→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+   172→    /** Synced Performance channel: tension (physical readiness). */
+   173→    private static final EntityDataAccessor<Float> DATA_PERF_TENSION =
+   174→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+   175→    /** Synced Performance channel: patience (willingness to hold still). */
+   176→    private static final EntityDataAccessor<Float> DATA_PERF_PATIENCE =
+   177→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+   178→    /** Synced Performance channel: fatigue (accumulated tiredness). */
+   179→    private static final EntityDataAccessor<Float> DATA_PERF_FATIGUE =
+   180→            SynchedEntityData.defineId(EntityCultivator.class, EntityDataSerializers.FLOAT);
+   181→
+   182→    // ── Hibernation ─────────────────────────────────────────────────────
+   183→
+   184→    /**
+   185→     * Below this distance (in blocks) to the nearest player, the entity is
+   186→     * "active" (AI runs, pathfinding active). At or above this distance,
+   187→     * the entity hibernates — persists in the world, but {@link #aiStep()}
+   188→     * short-circuits. 64 blocks = 4 chunks, matching the proposal.
+   189→     */
+   190→    public static final double HIBERNATION_RANGE = 64.0;
+   191→
+   192→    /** Squared hibernation range (avoid sqrt in the hot path). */
+   193→    public static final double HIBERNATION_RANGE_SQ = HIBERNATION_RANGE * HIBERNATION_RANGE;
+   194→
+   195→    // ── Server-only state (not synced) ──────────────────────────────────
+   196→
+   197→    /** True once {@link #initializeFromData} has configured the entity. */
+   198→    private boolean initialized = false;
+   199→
+   200→    /** Cached canon data for this character (null on client). */
+   201→    @Nullable
+   202→    private JsonObject canonData;
+   203→
+   204→    // ═══════════════════════════════════════════════════════════════════
+   205→    //  Construction & registration helpers
+   206→    // ═══════════════════════════════════════════════════════════════════
+   207→
+   208→    public EntityCultivator(EntityType<? extends EntityCultivator> type, Level level) {
+   209→        super(type, level);
+   210→    }
+   211→
+   212→    /**
+   213→     * Register default attributes. Called from
+   214→     * {@code ErgenverseClient/EREntityTypes#registerAttributes} via
+   215→     * {@code EntityAttributeCreationEvent}. v1 uses Mortal-tier defaults
+   216→     * (20 HP, slow movement). Future: data-driven attributes per character.
+   217→     */
+   218→    public static AttributeSupplier.Builder createAttributes() {
+   219→        return Mob.createMobAttributes()
+   220→                .add(Attributes.MAX_HEALTH, 20.0D)
+   221→                .add(Attributes.MOVEMENT_SPEED, 0.3D)
+   222→                .add(Attributes.ATTACK_DAMAGE, 1.0D)
+   223→                .add(Attributes.FOLLOW_RANGE, 16.0D);
+   224→    }
+   225→
+   226→    // ═══════════════════════════════════════════════════════════════════
+   227→    //  SynchedEntityData
+   228→    // ═══════════════════════════════════════════════════════════════════
+   229→
+   230→    @Override
+   231→    protected void defineSynchedData() {
+   232→        super.defineSynchedData();
+   233→        this.entityData.define(DATA_CHARACTER_ID, "");
+   234→        this.entityData.define(DATA_DISPLAY_NAME, "Unknown Cultivator");
+   235→        this.entityData.define(DATA_CULTIVATION_REALM, "mortal");
+   236→        this.entityData.define(DATA_POSE, 0);
+   237→        this.entityData.define(DATA_SECT, "independent");
+   238→        // CRON-COMPLETIONIST-102: companion-following UUID (empty = not following).
+   239→        this.entityData.define(DATA_FOLLOWING_PLAYER_UUID, "");
+   240→        // CRON-COMPLETIONIST-19: cognitive look-target defaults to NaN (no target).
+   241→        // Float.NaN is a valid float and syncs cleanly. The renderer checks isNaN.
+   242→        this.entityData.define(DATA_LOOK_TARGET_X, Float.NaN);
+   243→        this.entityData.define(DATA_LOOK_TARGET_Y, Float.NaN);
+   244→        this.entityData.define(DATA_LOOK_TARGET_Z, Float.NaN);
+   245→        // CRON-COMPLETIONIST-21: Acting Layer — Performance channels default to
+   246→        // NaN (no active commitment). When CognitionDrivenGoal sets a Performance,
+   247→        // all seven are written together; when cleared, all seven go NaN together.
+   248→        this.entityData.define(DATA_PERF_FOCUS, Float.NaN);
+   249→        this.entityData.define(DATA_PERF_URGENCY, Float.NaN);
+   250→        this.entityData.define(DATA_PERF_CONFIDENCE, Float.NaN);
+   251→        this.entityData.define(DATA_PERF_CONCEALMENT, Float.NaN);
+   252→        this.entityData.define(DATA_PERF_TENSION, Float.NaN);
+   253→        this.entityData.define(DATA_PERF_PATIENCE, Float.NaN);
+   254→        this.entityData.define(DATA_PERF_FATIGUE, Float.NaN);
+   255→    }
+   256→
+   257→    public String getCharacterId() {
+   258→        return this.entityData.get(DATA_CHARACTER_ID);
+   259→    }
+   260→
+   261→    public void setCharacterId(String id) {
+   262→        this.entityData.set(DATA_CHARACTER_ID, id);
+   263→    }
+   264→
+   265→    /** CRON-COMPLETIONIST-50: Returns the synced sect/faction ID for texture selection. */
+   266→    public String getSectId() {
+   267→        return this.entityData.get(DATA_SECT);
+   268→    }
+   269→
+   270→    /** CRON-COMPLETIONIST-50: Sets the sect/faction ID (called during initialization). */
+   271→    public void setSectId(String sectId) {
+   272→        this.entityData.set(DATA_SECT, sectId);
+   273→    }
+   274→
+   275→    /**
+   276→     * CRON-COMPLETIONIST-102: Get the UUID of the player this cultivator is
+   277→     * following as a companion. Returns an empty string if not following
+   278→     * anyone (the default for all canon NPCs except revived Li Muwan).
+   279→     *
+   280→     * @return the following player's UUID string, or empty if not following
+   281→     */
+   282→    public String getFollowingPlayerUuid() {
+   283→        return this.entityData.get(DATA_FOLLOWING_PLAYER_UUID);
+   284→    }
+   285→
+   286→    /**
+   287→     * CRON-COMPLETIONIST-102: Set the UUID of the player this cultivator
+   288→     * should follow as a companion. Called by
+   289→     * {@link dev.ergenverse.wanglin.bead.LiMuwanRevivalEvent} when Li Muwan
+   290→     * is revived — she follows Wang Lin ("两人踏天同行").
+   291→     *
+   292→     * <p>Pass an empty string to stop following (clears the companion bond).
+   293→     *
+   294→     * @param playerUuid the player's UUID string, or empty to clear
+   295→     */
+   296→    public void setFollowingPlayerUuid(String playerUuid) {
+   297→        this.entityData.set(DATA_FOLLOWING_PLAYER_UUID, playerUuid == null ? "" : playerUuid);
+   298→    }
+   299→
+   300→    /**
+   301→     * CRON-COMPLETIONIST-102: Check if this cultivator is currently following
+   302→     * a player as a companion.
+   303→     *
+   304→     * @return {@code true} if a following-player UUID is set
+   305→     */
+   306→    public boolean isFollowingPlayer() {
+   307→        String uuid = getFollowingPlayerUuid();
+   308→        return uuid != null && !uuid.isEmpty();
+   309→    }
+   310→
+   311→    public String getDisplayNameCn() {
+   312→        return this.entityData.get(DATA_DISPLAY_NAME);
+   313→    }
+   314→
+   315→    public void setDisplayNameCn(String name) {
+   316→        this.entityData.set(DATA_DISPLAY_NAME, name);
+   317→    }
+   318→
+   319→    public String getCultivationRealm() {
+   320→        return this.entityData.get(DATA_CULTIVATION_REALM);
+   321→    }
+   322→
+   323→    public void setCultivationRealm(String realm) {
+   324→        this.entityData.set(DATA_CULTIVATION_REALM, realm);
+   325→    }
+   326→
+   327→    /** Pose constants for {@link #DATA_POSE}. */
+   328→    public static final int POSE_IDLE = 0;
+   329→    public static final int POSE_MEDITATING = 1;
+   330→    public static final int POSE_CASTING = 2;
+   331→    /** Crouched, watchful — the hidden-cultivator observing pose (Wang Lin watching wolves). */
+   332→    public static final int POSE_OBSERVING = 3;
+   333→    /** Combat-ready stance — the defender guarding the perimeter. */
+   334→    public static final int POSE_GUARDING = 4;
+   335→    /** Walking with purpose toward a target — cultivator moves decisively. CRON-COMPLETIONIST-44. */
+   336→    public static final int POSE_PURSUING = 5;
+   337→    /** Relaxed stance, facing a companion — cultivator socializes. CRON-COMPLETIONIST-44. */
+   338→    public static final int POSE_SOCIALIZING = 6;
+   339→
+   340→    public int getCultivatorPose() {
+   341→        return this.entityData.get(DATA_POSE);
+   342→    }
+   343→
+   344→    public void setCultivatorPose(int pose) {
+   345→        this.entityData.set(DATA_POSE, pose);
+   346→    }
+   347→
+   348→    // ── Activity lock (reasoning-engine cycle) ──────────────────────────
+   349→
+   350→    /**
+   351→     * When non-zero, the entity is <b>activity-locked</b> — its AI is suppressed
+   352→     * and it holds its current position + pose. This is how the
+   353→     * {@link dev.ergenverse.simulation.settlement.ActorReasoningEngine} makes
+   354→     * an entity visibly BEHAVE its reasoning: Wang Lin freezes at the treeline
+   355→     * in POSE_OBSERVING, the patriarch freezes at the gate in POSE_GUARDING,
+   356→     * while the others flee home. The lock expires at this tick; the
+   357→     * {@link dev.ergenverse.simulation.settlement.ActorMaterializer} clears it
+   358→     * when the threat expires, resuming normal AI.
+   359→     *
+   360→     * <p>Per the user's directive: the same wolf event should produce visibly
+   361→     * different behavior. Without this lock, the entity's RandomStrollGoal
+   362→     * would wander Wang Lin away from his observing vantage immediately. The
+   363→     * lock makes the reasoning-derived position + pose <b>observable</b>.
+   364→     */
+   365→    private long activityLockExpiryTick = 0L;
+   366→
+   367→    /** True if the entity is currently activity-locked (AI suppressed, holding pose). */
+   368→    public boolean isActivityLocked() {
+   369→        return activityLockExpiryTick > 0L;
+   370→    }
+   371→
+   372→    /**
+   373→     * Lock the entity to a reasoning-derived activity: suppress AI, set the
+   374→     * pose, hold position until the expiry tick.
+   375→     */
+   376→    public void lockToActivity(int pose, long expiryTick) {
+   377→        this.entityData.set(DATA_POSE, pose);
+   378→        this.activityLockExpiryTick = expiryTick;
+   379→        // AI suppression happens in {@link #aiStep()} (checking
+   380→        // isActivityLocked). We deliberately do NOT use setNoAi(true) because
+   381→        // that flag persists to NBT — if the chunk unloaded while locked, the
+   382→        // entity would be stuck frozen on reload. The transient field approach
+   383→        // means the lock clears on reload (the threat will have expired or the
+   384→        // materializer will re-evaluate).
+   385→    }
+   386→
+   387→    /**
+   388→     * Release the activity lock: resume normal AI. Called by the
+   389→     * {@link dev.ergenverse.simulation.settlement.ActorMaterializer} when the
+   390→     * threat has expired and the actor should return to daily rhythm.
+   391→     */
+   392→    public void releaseActivityLock() {
+   393→        if (activityLockExpiryTick > 0L) {
+   394→            this.activityLockExpiryTick = 0L;
+   395→            this.entityData.set(DATA_POSE, POSE_IDLE);
+   396→        }
+   397→    }
+   398→
+   399→    /** The tick at which the current activity lock expires (0 if not locked). */
+   400→    public long getActivityLockExpiryTick() {
+   401→        return activityLockExpiryTick;
+   402→    }
+   403→
+   404→    public boolean isMeditating() {
+   405→        return this.entityData.get(DATA_POSE) == POSE_MEDITATING;
+   406→    }
+   407→
+   408→    public boolean isCasting() {
+   409→        return this.entityData.get(DATA_POSE) == POSE_CASTING;
+   410→    }
+   411→
+   412→    /** CRON-COMPLETIONIST-30: True when the cultivator is in POSE_OBSERVING (crouched, watchful). */
+   413→    public boolean isObserving() {
+   414→        return this.entityData.get(DATA_POSE) == POSE_OBSERVING;
+   415→    }
+   416→
+   417→    /** CRON-COMPLETIONIST-30: True when the cultivator is in POSE_GUARDING (combat-ready stance). */
+   418→    public boolean isGuarding() {
+   419→        return this.entityData.get(DATA_POSE) == POSE_GUARDING;
+   420→    }
+   421→
+   422→    /** CRON-COMPLETIONIST-44: True when in POSE_PURSUING (walking with purpose toward a target). */
+   423→    public boolean isPursuing() {
+   424→        return this.entityData.get(DATA_POSE) == POSE_PURSUING;
+   425→    }
+   426→
+   427→    /** CRON-COMPLETIONIST-44: True when in POSE_SOCIALIZING (relaxed, facing a companion). */
+   428→    public boolean isSocializing() {
+   429→        return this.entityData.get(DATA_POSE) == POSE_SOCIALIZING;
+   430→    }
+   431→
+   432→    // ── CRON-COMPLETIONIST-19: Cognitive look-target + attention lock ──
+   433→
+   434→    /**
+   435→     * Transient (non-synced, non-persisted) flag: when true, the entity is
+   436→     * cognition-absorbed and the vanilla {@link RandomLookAroundGoal} should
+   437→     * NOT fire. Set by {@link dev.ergenverse.entity.ai.CognitionDrivenGoal}
+   438→     * when a Commitment is active. Cleared when the commitment ends.
+   439→     *
+   440→     * <p>The user's directive: an observing NPC "doesn't respond immediately
+   441→     * to player." This flag is how we honor that — without it, the vanilla
+   442→     * random-look goal would snap the NPC's head toward passing players,
+   443→     * destroying the absorbed-in-observation read.
+   444→     */
+   445→    private boolean cognitiveAttentionLock = false;
+   446→
+   447→    /** True while the NPC is cognition-absorbed (RandomLookAroundGoal suppressed). */
+   448→    public boolean isCognitiveAttentionLocked() {
+   449→        return cognitiveAttentionLock;
+   450→    }
+   451→
+   452→    /**
+   453→     * Set the cognitive attention lock. Called by CognitionDrivenGoal when
+   454→     * a Commitment is active (true) or ends (false). While locked, the
+   455→     * entity's head tracks ONLY the cognitive look-target, not random stuff.
+   456→     */
+   457→    public void setCognitiveAttentionLock(boolean locked) {
+   458→        this.cognitiveAttentionLock = locked;
+   459→    }
+   460→
+   461→    /**
+   462→     * Set the cognitive look-target (world coordinates). Called server-side
+   463→     * by CognitionDrivenGoal each tick from the active Commitment's primary
+   464→     * perceived target. Pass NaN for any component to clear the target.
+   465→     *
+   466→     * <p>The renderer reads these and lerps the head toward them with
+   467→     * micro-saccade noise — no snap rotation.
+   468→     */
+   469→    public void setCognitiveLookTarget(float x, float y, float z) {
+   470→        this.entityData.set(DATA_LOOK_TARGET_X, x);
+   471→        this.entityData.set(DATA_LOOK_TARGET_Y, y);
+   472→        this.entityData.set(DATA_LOOK_TARGET_Z, z);
+   473→    }
+   474→
+   475→    /** Clear the cognitive look-target (no target — vanilla look control runs). */
+   476→    public void clearCognitiveLookTarget() {
+   477→        this.entityData.set(DATA_LOOK_TARGET_X, Float.NaN);
+   478→        this.entityData.set(DATA_LOOK_TARGET_Y, Float.NaN);
+   479→        this.entityData.set(DATA_LOOK_TARGET_Z, Float.NaN);
+   480→    }
+   481→
+   482→    /** True if a cognitive look-target is currently set. */
+   483→    public boolean hasCognitiveLookTarget() {
+   484→        return !Float.isNaN(this.entityData.get(DATA_LOOK_TARGET_X));
+   485→    }
+   486→
+   487→    /** X component of the cognitive look-target (NaN if none). */
+   488→    public float getCognitiveLookTargetX() {
+   489→        return this.entityData.get(DATA_LOOK_TARGET_X);
+   490→    }
+   491→
+   492→    /** Y component of the cognitive look-target (NaN if none). */
+   493→    public float getCognitiveLookTargetY() {
+   494→        return this.entityData.get(DATA_LOOK_TARGET_Y);
+   495→    }
+   496→
+   497→    /** Z component of the cognitive look-target (NaN if none). */
+   498→    public float getCognitiveLookTargetZ() {
+   499→        return this.entityData.get(DATA_LOOK_TARGET_Z);
+   500→    }
+   501→
+   502→    // ═══════════════════════════════════════════════════════════════════
+   503→    //  CRON-COMPLETIONIST-21: Acting Layer — Performance channel accessors
+   504→    // ═══════════════════════════════════════════════════════════════════
+   505→
+   506→    /**
+   507→     * Set the seven Performance channels atomically (from a server-side
+   508→     * Commitment interpretation). Pass NaN for all to clear (no performance).
+   509→     *
+   510→     * <p>The renderer reads these each frame and drives the body's channels
+   511→     * (head lerp-speed, saccade amplitude, glance-away frequency, torso
+   512→     * tension, breathing rate, weight shift, hand position) INDEPENDENTLY.
+   513→     * This replaces the fixed-pose projection of CRON-19 with the
+   514→     * channel-based acting the user's 2026-07-26 review demands.
+   515→     */
+   516→    public void setPerformance(float focus, float urgency, float confidence,
+   517→                               float concealment, float tension, float patience,
+   518→                               float fatigue) {
+   519→        this.entityData.set(DATA_PERF_FOCUS, focus);
+   520→        this.entityData.set(DATA_PERF_URGENCY, urgency);
+   521→        this.entityData.set(DATA_PERF_CONFIDENCE, confidence);
+   522→        this.entityData.set(DATA_PERF_CONCEALMENT, concealment);
+   523→        this.entityData.set(DATA_PERF_TENSION, tension);
+   524→        this.entityData.set(DATA_PERF_PATIENCE, patience);
+   525→        this.entityData.set(DATA_PERF_FATIGUE, fatigue);
+   526→    }
+   527→
+   528→    /** Clear all Performance channels (no active commitment → vanilla pose). */
+   529→    public void clearPerformance() {
+   530→        this.entityData.set(DATA_PERF_FOCUS, Float.NaN);
+   531→        this.entityData.set(DATA_PERF_URGENCY, Float.NaN);
+   532→        this.entityData.set(DATA_PERF_CONFIDENCE, Float.NaN);
+   533→        this.entityData.set(DATA_PERF_CONCEALMENT, Float.NaN);
+   534→        this.entityData.set(DATA_PERF_TENSION, Float.NaN);
+   535→        this.entityData.set(DATA_PERF_PATIENCE, Float.NaN);
+   536→        this.entityData.set(DATA_PERF_FATIGUE, Float.NaN);
+   537→    }
+   538→
+   539→    /** True if a Performance is currently set (active commitment driving acting). */
+   540→    public boolean hasPerformance() {
+   541→        return !Float.isNaN(this.entityData.get(DATA_PERF_FOCUS));
+   542→    }
+   543→
+   544→    public float getPerfFocus() { return this.entityData.get(DATA_PERF_FOCUS); }
+   545→    public float getPerfUrgency() { return this.entityData.get(DATA_PERF_URGENCY); }
+   546→    public float getPerfConfidence() { return this.entityData.get(DATA_PERF_CONFIDENCE); }
+   547→    public float getPerfConcealment() { return this.entityData.get(DATA_PERF_CONCEALMENT); }
+   548→    public float getPerfTension() { return this.entityData.get(DATA_PERF_TENSION); }
+   549→    public float getPerfPatience() { return this.entityData.get(DATA_PERF_PATIENCE); }
+   550→    public float getPerfFatigue() { return this.entityData.get(DATA_PERF_FATIGUE); }
+   551→
+   552→    // ═══════════════════════════════════════════════════════════════════
+   553→    //  CRON-COMPLETIONIST-21: Attention Object ownership
+   554→    // ═══════════════════════════════════════════════════════════════════
+   555→    // The user's 2026-07-26 review: "Eventually [the look target] should
+   556→    // become Commitment → Attention Object → Renderer. Then Wang Lin keeps
+   557→    // watching THAT wolf even if another wolf walks slightly closer. That
+   558→    // tiny detail makes the NPC appear to have intention rather than a
+   559→    // targeting heuristic."
+   560→    //
+   561→    // We cannot track by entity UUID (PerceivedEntity has no UUID), so we pin
+   562→    // the attention object's WORLD POSITION at commitment start. Each tick,
+   563→    // the look-target resolver prefers the perceived entity NEAREST THE PINNED
+   564→    // POSITION (not nearest the NPC). This naturally tracks the same wolf as
+   565→    // it moves. If no suitable entity is within the stickiness radius for too
+   566→    // long, the pin is released and the resolver falls back to nearest-hostile.
+   567→
+   568→    /** Pinned attention-object world X. NaN = no pin (re-pin to nearest). */
+   569→    private float attentionPinX = Float.NaN;
+   570→    /** Pinned attention-object world Y. */
+   571→    private float attentionPinY = Float.NaN;
+   572→    /** Pinned attention-object world Z. */
+   573→    private float attentionPinZ = Float.NaN;
+   574→    /** Ticks since the pinned object was last seen in perception. Resets on re-sight. */
+   575→    private int attentionPinStaleTicks = 0;
+   576→    /** Max ticks the pin holds without re-sighting before it releases. */
+   577→    private static final int ATTENTION_PIN_MAX_STALE = 120; // ~6s
+   578→
+   579→    /** Pin the attention object to a world position (called at commitment start). */
+   580→    public void pinAttentionObject(float x, float y, float z) {
+   581→        this.attentionPinX = x;
+   582→        this.attentionPinY = y;
+   583→        this.attentionPinZ = z;
+   584→        this.attentionPinStaleTicks = 0;
+   585→    }
+   586→
+   587→    /** Update the pinned position as the tracked entity moves (re-sighted). */
+   588→    public void updateAttentionPin(float x, float y, float z) {
+   589→        this.attentionPinX = x;
+   590→        this.attentionPinY = y;
+   591→        this.attentionPinZ = z;
+   592→        this.attentionPinStaleTicks = 0;
+   593→    }
+   594→
+   595→    /** Mark one tick of staleness (called when the pinned object isn't re-sighted). */
+   596→    public void ageAttentionPin() {
+   597→        this.attentionPinStaleTicks++;
+   598→        if (this.attentionPinStaleTicks > ATTENTION_PIN_MAX_STALE) {
+   599→            clearAttentionPin();
+   600→        }
+   601→    }
+   602→
+   603→    /** Release the attention pin (commitment ended, or pin stale too long). */
+   604→    public void clearAttentionPin() {
+   605→        this.attentionPinX = Float.NaN;
+   606→        this.attentionPinY = Float.NaN;
+   607→        this.attentionPinZ = Float.NaN;
+   608→        this.attentionPinStaleTicks = 0;
+   609→    }
+   610→
+   611→    /** True if an attention-object pin is currently held. */
+   612→    public boolean hasAttentionPin() {
+   613→        return !Float.isNaN(attentionPinX);
+   614→    }
+   615→
+   616→    public float getAttentionPinX() { return attentionPinX; }
+   617→    public float getAttentionPinY() { return attentionPinY; }
+   618→    public float getAttentionPinZ() { return attentionPinZ; }
+   619→
+   620→    // ═══════════════════════════════════════════════════════════════════
+   621→    //  Data-driven initialization
+   622→    // ═══════════════════════════════════════════════════════════════════
+   623→
+   624→    /**
+   625→     * Configure this entity from canon data + runtime overrides.
+   626→     *
+   627→     * <p>Called by {@code ReificationScan} after spawn. Reads:
+   628→     * <ol>
+   629→     *   <li>Canon baseline from {@code data/ergenverse/npcs/<characterId>.json}</li>
+   630→     *   <li>Runtime overrides from {@link WorldRuntimeState#getNpcState(String)}</li>
+   631→     * </ol>
+   632→     *
+   633→     * <p>Sets: display name, cultivation realm, HP (from runtime override if
+   634→     * present, else canon baseline, else default). Future: position, inventory,
+   635→     * behavior profile.
+   636→     *
+   637→     * @param characterId the canon character ID (e.g. "wang_tiangui")
+   638→     * @param runtimeOverride the runtime state tag, or {@code null} if no
+   639→     *        override exists (entity uses canon baseline only)
+   640→     */
+   641→    public void initializeFromData(String characterId, @Nullable CompoundTag runtimeOverride) {
+   642→        this.setCharacterId(characterId);
+   643→
+   644→        // ── Load canon baseline (server only — client gets data via sync) ──
+   645→        if (!this.level().isClientSide) {
+   646→            this.canonData = WorldStateDataLoader.getEntry("npcs", characterId);
+   647→            if (this.canonData != null) {
+   648→                applyCanonBaseline(this.canonData);
+   649→            } else {
+   650→                Ergenverse.LOGGER.warn("[EntityCultivator] No canon data for character '{}'", characterId);
+   651→            }
+   652→
+   653→            // ── Layer runtime overrides on top ──────────────────────────
+   654→            if (runtimeOverride != null && !runtimeOverride.isEmpty()) {
+   655→                applyRuntimeOverrides(runtimeOverride);
+   656→            }
+   657→
+   658→            // ── Register with the ActorEntityLink ───────────────────────
+   659→            // This bridges the simulation-layer Actor to this Minecraft entity,
+   660→            // enabling the CognitionDrivenGoal to read the Actor's Intent and
+   661→            // drive the entity's physical behavior.
+   662→            dev.ergenverse.simulation.intent.ActorEntityLink.onEntitySpawn(this);
+   663→        }
+   664→
+   665→        this.initialized = true;
+   666→    }
+   667→
+   668→    /**
+   669→     * Apply canon baseline fields from the NPC JSON.
+   670→     * Reads: name_cn, name_en, cultivation_realm, max_hp (if canon).
+   671→     */
+   672→    private void applyCanonBaseline(JsonObject data) {
+   673→        // Display name — prefer name_cn, fall back to name_en, then ID
+   674→        String nameCn = hasString(data, "name_cn") ? data.get("name_cn").getAsString() : null;
+   675→        String nameEn = hasString(data, "name_en") ? data.get("name_en").getAsString() : null;
+   676→        String displayName = nameCn != null ? nameCn : (nameEn != null ? nameEn : "Unknown");
+   677→        if (nameCn != null && nameEn != null) {
+   678→            displayName = nameCn + " (" + nameEn + ")";
+   679→        }
+   680→        this.setDisplayNameCn(displayName);
+   681→
+   682→        // Cultivation realm
+   683→        if (hasString(data, "cultivation_realm")) {
+   684→            this.setCultivationRealm(data.get("cultivation_realm").getAsString());
+   685→        } else if (hasString(data, "realm")) {
+   686→            this.setCultivationRealm(data.get("realm").getAsString());
+   687→        }
+   688→
+   689→        // Max HP — only if canon specifies (don't invent)
+   690→        if (hasNumber(data, "max_hp")) {
+   691→            float maxHp = data.get("max_hp").getAsFloat();
+   692→            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(maxHp);
+   693→            this.setHealth(maxHp);
+   694→        }
+   695→
+   696→        // CRON-COMPLETIONIST-50: Sect/faction — read from "sect", "faction", or "affiliation"
+   697→        String sectId = null;
+   698→        if (hasString(data, "sect")) {
+   699→            sectId = data.get("sect").getAsString();
+   700→        } else if (hasString(data, "faction")) {
+   701→            sectId = data.get("faction").getAsString();
+   702→        } else if (hasString(data, "affiliation")) {
+   703→            sectId = data.get("affiliation").getAsString();
+   704→        }
+   705→        // Normalize: lowercase, spaces to underscores, strip parentheticals
+   706→        if (sectId != null && !sectId.isEmpty()) {
+   707→            sectId = sectId.toLowerCase().replaceAll("\\s+", "_")
+   708→                    .replaceAll("[()]", "").replaceAll("_+", "_");
+   709→            // Strip trailing underscore if any
+   710→            if (sectId.endsWith("_")) sectId = sectId.substring(0, sectId.length() - 1);
+   711→            this.setSectId(sectId);
+   712→        }
+   713→        // v1: mortal default (20 HP) applies via createAttributes() if canon silent
+   714→    }
+   715→
+   716→    /**
+   717→     * Apply t>0 runtime overrides (damage taken, etc.).
+   718→     * Reads: current_hp (if present).
+   719→     */
+   720→    private void applyRuntimeOverrides(CompoundTag override) {
+   721→        if (override.contains("current_hp")) {
+   722→            this.setHealth(override.getFloat("current_hp"));
+   723→        }
+   724→        // Future: position drift, inventory, learned techniques
+   725→    }
+   726→
+   727→    // ── Gson null-safe helpers ──────────────────────────────────────────
+   728→
+   729→    private static boolean hasString(JsonObject obj, String key) {
+   730→        return obj.has(key) && obj.get(key).isJsonPrimitive() && obj.get(key).getAsJsonPrimitive().isString();
+   731→    }
+   732→
+   733→    private static boolean hasNumber(JsonObject obj, String key) {
+   734→        return obj.has(key) && obj.get(key).isJsonPrimitive() && obj.get(key).getAsJsonPrimitive().isNumber();
+   735→    }
+   736→
+   737→    // ═══════════════════════════════════════════════════════════════════
+   738→    //  AI / Goals
+   739→    // ═══════════════════════════════════════════════════════════════════
+   740→
+   741→    @Override
+   742→    protected void registerGoals() {
+   743→        // ── Cognition-driven AI ──
+   744→        // CognitionDrivenGoal is the bridge from the simulation layer's Intent
+   745→        // to the Minecraft entity's physical behavior. When active, it controls
+   746→        // movement and look so the NPC acts on its current Intent (e.g.
+   747→        // AVOID_REVEALING_STRENGTH → moves away from player, OBSERVE_FROM_DISTANCE
+   748→        // → moves to vantage point, etc.). When no Intent is active, it yields
+   749→        // so the fallback goals (RandomStroll, RandomLookAround) run.
+   750→        this.goalSelector.addGoal(0, new FloatGoal(this));
+   751→        // NpcGiftOfferGoal: Article XXIV taken further — NPC walks up to the
+   752→        // player and OFFERS a gift/teaching, using the existing
+   753→        // ManifestationGiftSystem four-question gate. Priority 1 (above
+   754→        // NpcInitiationGoal=2). Only activates for NPCs with offers_gifts=true
+   755→        // in their JSON data and only after canon-faithful gates pass.
+   756→        this.goalSelector.addGoal(1, new dev.ergenverse.entity.ai.NpcGiftOfferGoal(this));
+   757→        // NpcInitiationGoal: Article XXIV — NPCs initiate gameplay (NPC→Player).
+   758→        // Priority 2, above CognitionDrivenGoal(3). Fires when player enters range,
+   759→        // sends a canon-faithful initiation line from NPC JSON data.
+   760→        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcInitiationGoal(this));
+   761→        // Desire-driven goal: Article XXXI — NPCs ACT on their desires.
+   762→        // Priority 2 (same tier as NpcInitiationGoal). Uses MOVE+LOOK so it
+   763→        // preempts LOOK-only goals when active. Reads DesireState data from
+   764→        // the Actor system. For "approach" desires, the NPC physically walks
+   765→        // to the target and speaks. For "line" desires, speaks when nearby.
+   766→        // Per Art XL: this produces a Living Moment, not architecture.
+   767→        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcDesireGoal(this));
+   768→        // NpcSectMissionGoal: Article XXIV/XXII — NPCs offer sect missions.
+   769→        // Priority 2 (same as NpcInitiationGoal; both are one-shot LOOK-only goals
+   770→        // with cooldowns, so the scheduler alternates between them naturally).
+   771→        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcSectMissionGoal(this));
+   772→        // NpcLectureGoal: Article XXIV — elder NPCs invite players to attend
+   773→        // lectures during scheduled time windows. Priority 2 (same tier as
+   774→        // NpcInitiationGoal and NpcSectMissionGoal; all use Flag.LOOK and
+   775→        // are one-shot with cooldowns, so MC scheduler alternates).
+   776→        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.NpcLectureGoal(this));
+   777→        // CRON-COMPLETIONIST-12: NpcScheduleGoal REMOVED per Article XLV §3.
+   778→        // The deprecated timetable-based schedule has been replaced entirely by
+   779→        // CognitionDrivenGoal at priority 3. The pipeline is now:
+   780→        //   pressures → Mind → Reasoning → Commitment → Execution
+   781→        // The world owns pressures. The NPC owns priorities. A Commitment
+   782→        // persists across ticks — the NPC does not re-evaluate every tick.
+   783→        // NpcScheduleGoal.java is retained in the source tree for git history
+   784→        // but is no longer referenced by any live code.
+   785→        this.goalSelector.addGoal(3, new dev.ergenverse.entity.ai.CognitionDrivenGoal(this));
+   786→        // NpcReactToWorldGoal: Living Moments bridge — NPCs observe beast events
+   787→        // (hunts, flees, rests) and react with contextual dialogue, look-at
+   788→        // behavior, and WorldHistory memory recording. This goal subscribes
+   789→        // to the WorldEventBus on "beast.*" topics. Priority 5 (below
+   790→        // CognitionDrivenGoal so intent-based behavior takes precedence).
+   791→        this.goalSelector.addGoal(5, new dev.ergenverse.entity.ai.NpcReactToWorldGoal(this));
+   792→        // CRON-COMPLETIONIST-57: CultivatorMeditationGoal — cultivator meditates when idle.
+   793→        // Priority 6 (above RandomStroll=7, below NpcReactToWorld=5). Fires organically:
+   794→        // sets POSE_MEDITATING → triggers CultivatorRobeModel zhan zhuang animation.
+   795→        // Previously a dead stub; now fully functional with random duration + cooldown.
+   796→        this.goalSelector.addGoal(6, new dev.ergenverse.entity.ai.CultivatorMeditationGoal(this));
+   797→        // CRON-COMPLETIONIST-102: FollowPlayerGoal — companion follow AI for
+   798→        // revived Li Muwan. Priority 4 (between CognitionDrivenGoal=3 and
+   799→        // NpcReactToWorld=5). Always registered but only activates when
+   800→        // isFollowingPlayer() returns true (set by LiMuwanRevivalEvent).
+   801→        // Canon: "两人踏天同行" — Li Muwan follows Wang Lin as his eternal
+   802→        // companion after the successful revival.
+   803→        this.goalSelector.addGoal(4, new dev.ergenverse.entity.ai.FollowPlayerGoal(this));
+   804→        this.goalSelector.addGoal(7, new net.minecraft.world.entity.ai.goal.RandomStrollGoal(this, 0.35D));
+   805→        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+   806→
+   807→        // ── Combat AI (Constitution: cultivators must fight, not just die) ──
+   808→        // Prior to these goals, EntityCultivator had ZERO combat capability —
+   809→        // a Nascent Soul elder would stand still while a zombie punched it to death.
+   810→        // CultivatorCombatGoal: melee (realm-scaled damage) + pursuit.
+   811→        // CultivatorSwordQiGoal: ranged sword-qi projectile (Qi Condensation+).
+   812→        // Both claim MOVE+LOOK, so they preempt wandering/cognition when a target exists.
+   813→        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.CultivatorCombatGoal(this, 1.0D));
+   814→        this.goalSelector.addGoal(2, new dev.ergenverse.entity.ai.CultivatorSwordQiGoal(this));
+   815→
+   816→        // ── Target selectors — WITHOUT these, getTarget() is always null and combat goals never fire ──
+   817→        // HurtByTargetGoal: retaliate when attacked (canon: a cultivator does not stand idle when struck).
+   818→        // NearestAttackableTargetGoal(Monster): defend the sect against hostile mobs (zombies, skeletons, etc.).
+   819→        this.targetSelector.addGoal(1, new net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal(this));
+   820→        this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(
+   821→                this, net.minecraft.world.entity.monster.Monster.class, true));
+   822→    }
+   823→
+   824→    // ═══════════════════════════════════════════════════════════════════
+   825→    //  Hibernation & persistence
+   826→    // ═══════════════════════════════════════════════════════════════════
+   827→
+   828→    /**
+   829→     * Canon entities NEVER despawn due to distance. They persist in the
+   830→     * world until explicitly removed (killed, or canon event removes them).
+   831→     */
+   832→    @Override
+   833→    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+   834→        return false;
+   835→    }
+   836→
+   837→    /**
+   838→     * Hibernation: if no player is within {@link #HIBERNATION_RANGE}, skip
+   839→     * AI processing. The entity still exists in the world (rendered if in
+   840→     * view, loaded in chunk), but its brain is off — no pathfinding, no
+   841→     * goal ticking. This prevents the "100 NPCs all ticking" performance
+   842→     * death trap.
+   843→     */
+   844→    @Override
+   845→    public void aiStep() {
+   846→        if (this.level().isClientSide) {
+   847→            // Client: always animate (rendering layer handles LOD)
+   848→            super.aiStep();
+   849→            return;
+   850→        }
+   851→        // Activity lock: the reasoning engine has placed this entity at a
+   852→        // specific position with a specific pose (Wang Lin observing at the
+   853→        // treeline, the patriarch guarding the gate). Suppress all goal AI so
+   854→        // the entity holds its reasoning-derived state and the player can SEE
+   855→        // the differentiated behavior. Gravity/drowning still apply via super.
+   856→        if (isActivityLocked()) {
+   857→            this.goalSelector.getRunningGoals().forEach(g -> g.stop());
+   858→            super.aiStep();
+   859→            return;
+   860→        }
+   861→        // CRON-COMPLETIONIST-19: Cognitive attention lock. When the NPC is
+   862→        // cognition-absorbed (a Commitment is active and the CognitionDrivenGoal
+   863→        // has set the attention lock), suppress RandomLookAroundGoal so the
+   864→        // NPC's head tracks the cognitive look-target, not random stuff. The
+   865→        // user's directive: an observing NPC "doesn't respond immediately to
+   866→        // player." We do NOT stop ALL goals — CognitionDrivenGoal must keep
+   867→        // running (it owns the look-target). We only stop the random-look
+   868→        // specifically. Other goals (combat, gift-offer) still fire if their
+   869→        // conditions trigger, which is correct — an observing NPC attacked
+   870→        // by a zombie should still defend itself.
+   871→        if (cognitiveAttentionLock) {
+   872→            this.goalSelector.getRunningGoals()
+   873→                    .filter(wg -> wg.getGoal() instanceof net.minecraft.world.entity.ai.goal.RandomLookAroundGoal)
+   874→                    .forEach(wg -> wg.stop());
+   875→        }
+   876→        // Server: hibernate if no player nearby
+   877→        if (this.level().getNearestPlayer(this, HIBERNATION_RANGE) == null) {
+   878→            // Hibernating — minimal tick. Still apply gravity, drowning, etc.
+   879→            // but skip goalSelector and navigation updates.
+   880→            this.goalSelector.getRunningGoals().forEach(g -> g.stop());
+   881→            // Call super but with navigation disabled — gravity still works
+   882→            super.aiStep();
+   883→            return;
+   884→        }
+   885→        super.aiStep();
+   886→    }
+   887→
+   888→    /**
+   889→     * Sync current entity state to the runtime layer.
+   890→     *
+   891→     * <p>Called from {@link #addAdditionalSaveData} (which fires on chunk
+   892→     * unload — Minecraft serializes the entity to NBT when its chunk
+   893→     * unloads) and from {@link #die} (on death). This is the dematerialization
+   894→     * step: the entity's current HP and position are written to
+   895→     * {@link WorldRuntimeState} so the next materialization reads the
+   896→     * updated state.
+   897→     *
+   898→     * <p>Note: in MC 1.20.1, {@code Entity.setRemoved(RemovalReason)} is final
+   899→     * and cannot be overridden. The NBT save path is the correct hook for
+   900→     * chunk-unload persistence — it fires at the same time and is the
+   901→     * vanilla-sanctioned way to persist entity state.
+   902→     */
+   903→    private void syncStateToRuntime() {
+   904→        if (this.level().isClientSide || !this.initialized || this.getCharacterId().isEmpty()) return;
+   905→        ServerLevel serverLevel = (ServerLevel) this.level();
+   906→        WorldRuntimeState runtime = WorldRuntimeState.get(serverLevel);
+   907→        CompoundTag state = runtime.getNpcState(this.getCharacterId());
+   908→        if (state == null) {
+   909→            state = new CompoundTag();
+   910→        }
+   911→        // Record current HP (the most common mutation: damage taken)
+   912→        state.putFloat("current_hp", this.getHealth());
+   913→        // Record last position (for re-materialization at the same spot)
+   914→        state.putDouble("last_pos_x", this.getX());
+   915→        state.putDouble("last_pos_y", this.getY());
+   916→        state.putDouble("last_pos_z", this.getZ());
+   917→        state.putLong("last_seen_tick", serverLevel.getGameTime());
+   918→        runtime.updateNpcState(this.getCharacterId(), state);
+   919→    }
+   920→
+   921→    // ═══════════════════════════════════════════════════════════════════
+   922→    //  NBT (entity save/load — for chunk unload/reload)
+   923→    // ═══════════════════════════════════════════════════════════════════
+   924→
+   925→    @Override
+   926→    public void addAdditionalSaveData(CompoundTag compound) {
+   927→        super.addAdditionalSaveData(compound);
+   928→        compound.putString("CharacterId", this.getCharacterId());
+   929→        compound.putString("DisplayName", this.getDisplayNameCn());
+   930→        compound.putString("CultivationRealm", this.getCultivationRealm());
+   931→        compound.putBoolean("Initialized", this.initialized);
+   932→        compound.putInt("CultivatorPose", this.getCultivatorPose());
+   933→        // Sync to runtime layer on every NBT save (fires on chunk unload).
+   934→        // This is the dematerialization persistence hook.
+   935→        syncStateToRuntime();
+   936→        // Sever the ActorEntityLink — the entity is being serialized/unloaded.
+   937→        // The Actor remains in the registry (simulation continues at territory
+   938→        // level), but the link to this Minecraft entity is gone.
+   939→        if (!this.level().isClientSide) {
+   940→            dev.ergenverse.simulation.intent.ActorEntityLink.onEntityUnload(this);
+   941→        }
+   942→    }
+   943→
+   944→    @Override
+   945→    public void readAdditionalSaveData(CompoundTag compound) {
+   946→        super.readAdditionalSaveData(compound);
+   947→        this.setCharacterId(compound.getString("CharacterId"));
+   948→        if (compound.contains("DisplayName")) {
+   949→            this.setDisplayNameCn(compound.getString("DisplayName"));
+   950→        }
+   951→        if (compound.contains("CultivationRealm")) {
+   952→            this.setCultivationRealm(compound.getString("CultivationRealm"));
+   953→        }
+   954→        this.initialized = compound.getBoolean("Initialized");
+   955→        if (compound.contains("CultivatorPose")) {
+   956→            this.setCultivatorPose(compound.getInt("CultivatorPose"));
+   957→        }
+   958→        // Re-establish the ActorEntityLink on chunk reload.
+   959→        // The entity is materializing from NBT — link it back to its Actor.
+   960→        if (!this.level().isClientSide && this.initialized && !this.getCharacterId().isEmpty()) {
+   961→            dev.ergenverse.simulation.intent.ActorEntityLink.onEntitySpawn(this);
+   962→        }
+   963→    }
+   964→
+   965→    // ═══════════════════════════════════════════════════════════════════
+   966→    //  Player Interaction — Layer 3 History Hook
+   967→    // ═══════════════════════════════════════════════════════════════════
+   968→
+   969→    /**
+   970→     * Record a player's right-click interaction with this NPC in the
+   971→     * Layer 3 emergent history (NpcMemory).
+   972→     *
+   973→     * <p>NOTE: {@code Mob.interact()} is final in MC 1.20.1, so we
+   974→     * cannot override it. Instead, {@link HistoryEvents} listens for
+   975→     * {@code PlayerInteractEvent.EntityInteract} and calls this method
+   976→     * when the target is an EntityCultivator.
+   977→     *
+   978→     * <p>v1: records an INTERACTION memory. v2: triggers dialogue system,
+   979→     * trade UI, quest offers based on trust score and NPC personality.
+   980→     *
+   981→     * @param serverPlayer the player who interacted
+   982→     */
+   983→    public void recordPlayerInteraction(net.minecraft.server.level.ServerPlayer serverPlayer) {
+   984→        if (this.level().isClientSide) return;
+   985→        if (this.getCharacterId().isEmpty()) return;
+   986→
+   987→        long tick = this.level().getGameTime();
+   988→        String detail = "Player interacted with " + this.getDisplayNameCn() +
+   989→                " (" + this.getCharacterId() + ")";
+   990→        dev.ergenverse.history.HistoryManager.onNpcInteraction(
+   991→                serverPlayer, this.getCharacterId(), "RIGHT_CLICK", detail, tick);
+   992→    }
+   993→
+   994→    // ═══════════════════════════════════════════════════════════════════
+   995→    //  Death handling
+   996→    // ═══════════════════════════════════════════════════════════════════
+   997→
+   998→    /**
+   999→     * On death: record the death in runtime state (canon death event, or
+  1000→     * player-caused divergence). The canon DB is NOT modified — the t₀
+  1001→     * archive remains pristine.
+  1002→     *
+  1003→     * <p>Additionally, if this NPC is a known Cave World owner (e.g. the
+  1004→     * Seven-Colored Daoist), transfer ownership of their world to the killer.
+  1005→     * Canon: "Wang Lin's escape = kill the owner = become the new owner."
+  1006→     */
+  1007→    @Override
+  1008→    public void die(DamageSource source) {
+  1009→        super.die(source);
+  1010→        if (!this.level().isClientSide && !this.getCharacterId().isEmpty()) {
+  1011→            ServerLevel serverLevel = (ServerLevel) this.level();
+  1012→            WorldRuntimeState runtime = WorldRuntimeState.get(serverLevel);
+  1013→            CompoundTag state = runtime.getNpcState(this.getCharacterId());
+  1014→            if (state == null) state = new CompoundTag();
+  1015→            state.putBoolean("is_dead", true);
+  1016→            state.putLong("death_tick", serverLevel.getGameTime());
+  1017→            state.putString("death_cause", source.getMsgId());
+  1018→            runtime.updateNpcState(this.getCharacterId(), state);
+  1019→            Ergenverse.LOGGER.info("[EntityCultivator] Character '{}' died at tick {} (cause: {})",
+  1020→                    this.getCharacterId(), serverLevel.getGameTime(), source.getMsgId());
+  1021→
+  1022→            // ── CRON-99: Li Muwan soul capture ──
+  1023→            // If this dying cultivator is Li Muwan, fire the Heaven-Defying
+  1024→            // Bead soul-capture event. This is the SOLE caller of
+  1025→            // HeavenDefyingBeadItem.setLiMuwanSoul — closes the CRON-95
+  1026→            // known gap where setLiMuwanSoul was defined but never invoked.
+  1027→            // Canon: 李慕婉 perishes after her 结婴 (Nascent Soul formation)
+  1028→            // fails; Wang Lin captures her 元婴 into the 天逆珠. This becomes
+  1029→            // his central motivation for the rest of the novel.
+  1030→            // See dev.ergenverse.wanglin.bead.LiMuwanSoulCaptureEvent for
+  1031→            // full canon basis and divergence safeguards.
+  1032→            if (LiMuwanSoulCaptureEvent.CHARACTER_ID.equals(this.getCharacterId())) {
+  1033→                LiMuwanSoulCaptureEvent.handleLiMuwanDeath(
+  1034→                        serverLevel, source, this.blockPosition());
+  1035→            }
+  1036→
+  1037→            // ── Layer 3: Record NPC death in emergent history if player-caused ──
+  1038→            if (source.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+  1039→                String npcName = this.getDisplayNameCn();
+  1040→                dev.ergenverse.history.HistoryManager.onNpcCombat(
+  1041→                        serverPlayer, this.getCharacterId(), npcName,
+  1042→                        true, serverLevel.getGameTime());
+  1043→
+  1044→                // ── Cave World Ownership transfer ──
+  1045→                // If this NPC is a known world owner (e.g. seven_colored_daoist), transfer
+  1046→                // ownership to the killer. Per canon: killing the owner = becoming the owner.
+  1047→                String ownedWorld = dev.ergenverse.wanglin.CaveWorldOwnership.getOwnedWorldForNpc(this.getCharacterId());
+  1048→                if (ownedWorld != null && !dev.ergenverse.wanglin.CaveWorldOwnership.isOwnerReplaced(ownedWorld)) {
+  1049→                    dev.ergenverse.cultivation.CultivationState cstate =
+  1050→                            dev.ergenverse.cultivation.CultivationCapability.getOrThrow(serverPlayer);
+  1051→                    String killerRealmId = cstate.getCurrentRealm().name().toLowerCase().replace(" ", "_");
+  1052→                    dev.ergenverse.wanglin.CaveWorldOwnership.Ownership newOwner =
+  1053→                            dev.ergenverse.wanglin.CaveWorldOwnership.transferOwnership(
+  1054→                                    ownedWorld,
+  1055→                                    serverPlayer.getUUID().toString(),
+  1056→                                    serverPlayer.getName().getString(),
+  1057→                                    killerRealmId,
+  1058→                                    serverLevel); // persist ownership to world save
+  1059→
+  1060→                    if (newOwner != null) {
+  1061→                        serverPlayer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+  1062→                                "\u00A7c\u00A7l\u26A0 CAVE WORLD OWNERSHIP TRANSFERRED!\u00A7r\n" +
+  1063→                                "\u00A7aYou have killed \u00A7f" + this.getDisplayNameCn() + "\u00A7a.\n" +
+  1064→                                "\u00A7fYou are now the Lord of the " + newOwner.worldLayerName + ".\n" +
+  1065→                                "\u00A77The Realm-Sealing Grand Array dissolves. The cultivation ceiling is lifted.\n" +
+  1066→                                "\u00A78Joss Flame harvest now flows to YOU.\n" +
+  1067→                                "\u00A77You may free the mortals... or continue the harvest."));
+  1068→                        dev.ergenverse.history.HistoryManager.onDiscovery(serverPlayer,
+  1069→                                "cave_world_ownership_transfer",
+  1070→                                "Killed " + this.getDisplayNameCn() + " and inherited the " + newOwner.worldLayerName + ".",
+  1071→                                serverLevel.getGameTime());
+  1072→                        Ergenverse.LOGGER.info("[Ergenverse] Cave World ownership transferred to {} (killed {}).",
+  1073→                                serverPlayer.getName().getString(), this.getCharacterId());
+  1074→                    }
+  1075→                }
+  1076→            }
+  1077→        }
+  1078→    }
+  1079→}
+  1080→

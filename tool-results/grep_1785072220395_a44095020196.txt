@@ -1,0 +1,252 @@
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/ai/FollowPlayerGoal.java:17: * specific player. Designed for Li Muwan after her successful revival —
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/ai/FollowPlayerGoal.java:22: * <p>In the novel 仙逆 by 耳根, after Wang Lin revives Li Muwan:
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/ai/FollowPlayerGoal.java:27: *   <li>Li Muwan's power is immense: "弹指灭天" (destroys heaven with a
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/ai/FollowPlayerGoal.java:43: * been designated as a companion (currently only revived Li Muwan).
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/render/EntityCultivatorRenderer.java:187:        // and per-character body scale (Situ Nan 1.10, Li Muwan 0.92, etc.).
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/render/EntityCultivatorRenderer.java:236:     * us apply the per-character scale (Situ Nan 1.10, Li Muwan 0.92, etc.)
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/render/EntityCultivatorRenderer.java:246:     * for shorter characters (Li Muwan's shadow shouldn't shrink to 0.46).
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/EntityCultivator.java:109:     * for all canon NPCs). Set to a player's UUID when Li Muwan is revived —
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/EntityCultivator.java:278:     * anyone (the default for all canon NPCs except revived Li Muwan).
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/EntityCultivator.java:289:     * {@link dev.ergenverse.wanglin.bead.LiMuwanRevivalEvent} when Li Muwan
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/EntityCultivator.java:798:        // revived Li Muwan. Priority 4 (between CognitionDrivenGoal=3 and
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/EntityCultivator.java:801:        // Canon: "两人踏天同行" — Li Muwan follows Wang Lin as his eternal
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/EntityCultivator.java:1022:            // ── CRON-99: Li Muwan soul capture ──
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/entity/EntityCultivator.java:1023:            // If this dying cultivator is Li Muwan, fire the Heaven-Defying
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:85: * <p>Before CRON-97, ALL 9 canon NPCs (Wang Lin, Situ Nan, Teng Li, Li Muwan,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:114: *   <li><b>li_muwan</b> → FAN (lady's folding fan; Luo He Sect alchemist).
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:153: *   <li>Li Muwan's fan: lady cultivator archetype. Not canon-attested for
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:154: *       Li Muwan specifically. Score 5/10.</li>
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:287:     * 0.92 = Li Muwan (slightly shorter, female).
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:292:     * (Situ Nan and Li Muwan both → FAN) also shared the weapon type's default
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:358:     *   <li>{@code li_muwan} → FAN, scale 0.92 — Luo He Sect alchemist
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:367:     * weapon type (Situ Nan and Li Muwan both → FAN) but have different
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:391:     * per-character anatomy variation (Situ Nan tall, Li Muwan shorter, etc.)
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:400:     * sharing a weapon type (Situ Nan + Li Muwan both → FAN) also shared the
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:409:        /** Folding fan (jade for Situ Nan; lady's fan for Li Muwan). */
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:427:         * But FAN is held by both Situ Nan (1.10) and Li Muwan (0.92), so
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:439:         * NONE for null/empty/unrecognized ids. Situ Nan and Li Muwan both
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:455:                case "li_muwan" -> FAN;
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:467:     * characters sharing a weapon type (Situ Nan and Li Muwan both → FAN) also
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:469:     * per-character anatomy (Situ Nan 1.10, Li Muwan 0.92).
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:474:     * or hold a fan AND be shorter (Li Muwan) — the two are no longer coupled.
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:505:     *   <li>{@code li_muwan} → 0.92 — Li Muwan (李慕婉) is a female cultivator
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:545:        /** Li Muwan — Luo He Sect alchemist, female build. */
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:546:        LI_MUWAN("li_muwan", 0.92F),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/client/model/CultivatorRobeModel.java:674:        // Situ Nan (jade fan) and Li Muwan (lady's fan).
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/spawn/LuoHeSectBuilder.java:30: * Lotus Yin Fire (青莲阴火). 李慕婉 (Li Muwan) — Wang Lin's lifelong attachment
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/spawn/ErgenverseCommand.java:69:            // Attempts to revive Li Muwan using the Heaven-Defying Bead.
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/spawn/ErgenverseCommand.java:94:     * <p>Attempts to revive Li Muwan using the Heaven-Defying Bead.
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/spawn/ErgenverseCommand.java:157:     * entire world — to revive Li Muwan. The novel specifies that he
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/spawn/ErgenverseCommand.java:195:                "Canon: Wang Lin uses 一界本源 to revive Li Muwan after entering the "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/behavior/QingLinInheritanceSpec.java:25:            "Qing Lin was an ancient cultivator who left false caves (decoy inheritance sites) in the Demon Spirit Land. Each false cave contained celestial-tier treasures: Celestial Wine (in a jug — Ch. ~625), the Dragon Formation (gifted by Li Muwan), and other inheritances. Wang Lin mined the false caves systematically — distinguishing real inheritances from Qing Lin's decoys using his restriction-reading skill.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/behavior/HeavenDefyingBeadSpec.java:14: * perfected, the master truly owns it. Stores Li Muwan's Nascent Soul after
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/behavior/HeavenDefyingBeadSpec.java:29:            "Bead with the Five Elements pattern. Originally 9 parts; the bead is its core. Interior door leads to a chamber where TIME RUNS 10× OUTSIDE. Used to recognize-master Wang Lin after Lu Mo (his clone) blasts it open via Dream Dao. Once Five Elements perfected, the master truly owns it. Stores Li Muwan's Nascent Soul after her body perishes. Reputed to contain Third-Step divine abilities inside. Sentient / destiny-bound / fused with primordial spirit / cross-novel artifact (also wielded by Su Ming / Xuan Zang).",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/behavior/HeavenDefyingBeadSpec.java:110:                            "Sentience level 6; interior chamber fully accessible; Li Muwan's Nascent Soul can be stored.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/behavior/HeavenDefyingBeadSpec.java:119:                    new StateDescription("Li Muwan's Nascent Soul stored",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/behavior/HeavenDefyingBeadSpec.java:121:                            "Li Muwan's body perishes (E28)",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/behavior/HeavenDefyingBeadSpec.java:133:                            "Interior chamber stores items, souls, and (canon) Li Muwan's Nascent Soul.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/behavior/HeavenDefyingBeadSpec.java:149:                            "Stores Li Muwan's Nascent Soul for 700 years.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/behavior/HeavenDefyingBeadSpec.java:162:            "Player usage (mod): The bead auto-binds on first pickup (cannot be dropped, traded, or duplicated). Right-click opens the surface storage menu (27 slots, divine-sense access). Sneak-right-click attempts physical entry into the interior dimension (requires Soul Formation+ capability; fails with backlash otherwise). Inside the dimension, time runs 10× faster — use for cultivation afk-grinds. The 'Ergen.BeadPartsAligned' NBT increments as the player comprehends each Five Elements essence (separate advancements). At 5 alignments, Li Muwan's Nascent Soul can be stored (a quest hook for the late game).",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/HeavenDefyingBead.java:23: *     - Stores Li Muwan's Nascent Soul after her body perishes.
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/HeavenDefyingBead.java:71:        public static final int MAX_STORAGE_SLOTS = 27;   // large but finite (canon: stores Li Muwan's Nascent Soul + many items)
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/HeavenDefyingBead.java:122:     * Store Li Muwan's Nascent Soul in the bead.
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/HeavenDefyingBead.java:123:     * Canon: after Li Muwan's body perished, Wang Lin stored her Nascent Soul
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/HeavenDefyingBead.java:130:        Ergenverse.LOGGER.info("[Ergenverse] HeavenDefyingBead: Li Muwan's Nascent Soul stored. Wang Lin's motivation is now absolute — he WILL revive her.");
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/BridgingPolicy.java:383:        new PolicyEntry("bead_li_muwan_storage", "Li Muwan's Nascent Soul stored in bead", Classification.CANON_CONCRETE,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinMemory.java:24: *   <li><b>+1.0</b> — supreme joy / fulfilment (e.g. Li Muwan's resurrection
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinMemory.java:34: *       Li Muwan's death E28, Qi Xi Spell failure E88).</li>
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinMemory.java:38: * from canon (e.g. Li Muwan's death is unambiguously his lowest point; the
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinSpeechPatterns.java:13: * dialogue: terse to strangers, gentle with Li Muwan and Wang Ping,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinSpeechPatterns.java:30: *   <li><b>GENTLE_WITH_FAMILY</b> — softens entirely with Li Muwan,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinSpeechPatterns.java:178:     * GENTLE_WITH_FAMILY — softens entirely with Li Muwan, Wang Ping,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinSpeechPatterns.java:180:     * Canon: his scenes with Li Muwan and Wang Ping are the novel's
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinSpeechPatterns.java:186:            "With Li Muwan (his wife), Wang Ping (his adopted son), Wang Yiyi (his daughter), "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinSpeechPatterns.java:194:            "Private moments with Li Muwan, Wang Ping, Wang Yiyi, or his parents.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinSpeechPatterns.java:195:            "Li Muwan, Wang Ping, Wang Yiyi, Wang Tianshui, Zhou Tingsu.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinSpeechPatterns.java:198:                            "E28 (Li Muwan's death — grieving speech)",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinSpeechPatterns.java:199:                            "E36 (Transcendence with Li Muwan)"),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTeachingPolicy.java:521:                    + "(Li Muwan's Nascent Soul, Samsara). Wang Lin NEVER shares these. The bead "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:209:                        "DEVOTION_TO_LI_MUWAN (Qing Shui parallels)",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:251:                // ── Li Muwan — the central arc (E28, E88, E36) ───────────
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:252:                new WangLinMemory("E28_li_muwan_death",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:253:                        "Li Muwan's body perished during Nascent Soul formation. Stored her Nascent Soul in the Heaven-Defying Bead.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:255:                        "DEVOTION_TO_LI_MUWAN, PATIENCE, HEAVEN_DEFYING_WILL",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:260:                        "Attempted the Qi Xi Spell at the cost of his own vitality to rebuild Li Muwan's body. The spell failed.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:262:                        "DEVOTION_TO_LI_MUWAN, HEAVEN_DEFYING_WILL",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:266:                new WangLinMemory("E36_transcendence_with_li_muwan",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:267:                        "Resurrected and Transcended with Li Muwan. His supreme fulfilment.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:269:                        "DEVOTION_TO_LI_MUWAN, HEAVEN_DEFYING_WILL",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:285:                        "PATERNAL_LOVE, DEVOTION_TO_LI_MUWAN (Dao evolution)",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinPersonality.java:335:                        "LONELINESS_ISOLATION, PATIENCE, DEVOTION_TO_LI_MUWAN",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/history/HistoryManager.java:210:     * e.g. Wang Lin gives Li Muwan a flower.
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/package-info.java:35: *   <li>pursues his own canon motivations (protect Li Muwan, guard his
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/package-info.java:77: *       (caution, ruthlessness, devotion to Li Muwan, filial devotion,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/package-info.java:89: *       gentle with Li Muwan/Wang Ping, "Wang" self-reference when cold,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/package-info.java:95: *       relationships (Li Muwan, Situ Nan, Tu Si, Bai Fan, Qing Shui, Zhou Yi,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/package-info.java:129: * He evaluates every share request against: (a) does it endanger Li Muwan or
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinCognitiveBridge.java:467:        if (behavior.contains("DEVOTION_TO_LI_MUWAN")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:12: * relationships can produce canon-faithful reactions: defend Li Muwan
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:18: * Wang Lin's motivation. Li Muwan is 1.0 (his entire late-game
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:28: *   <li><b>LI_MUWAN</b> — wife; entire late-game motivation.</li>
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:44: *   <li><b>WANG_YIYI</b> — daughter (with Li Muwan); brought to the
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:50: *   <li><b>LI_QIANMEI</b> — Li Muwan's sister; complicated affection.</li>
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:84:     * @param personId          stable identifier (e.g. {@code "LI_MUWAN"})
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:130:    /** LI_MUWAN — Wang Lin's wife; his entire late-game motivation. */
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:131:    public static final Relationship LI_MUWAN = new Relationship(
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:132:            "LI_MUWAN", "Li Muwan", RelationshipType.SPOUSE, 1.0,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:139:            "DEVOTION_TO_LI_MUWAN",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:141:                    List.of("E28 (Li Muwan's death)", "E88 (Qi Xi Spell)",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:142:                            "E36 (Transcendence with Li Muwan)", "Ch. 1433 (the '2,000 years alone')"),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:204:            "DEVOTION_TO_LI_MUWAN",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:287:    /** WANG_YIYI — daughter (with Li Muwan). */
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:290:            "Wang Lin and Li Muwan's daughter (CD-32). Wang Yiyi eventually returned to the "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:335:                    + "distance of a man whose Dao and whose heart belong to Li Muwan, but who "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:345:    /** LI_QIANMEI — Li Muwan's sister; complicated affection. */
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:348:            "Li Muwan's sister. The relationship with Wang Lin is marked by complicated "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:350:                    + "Wang Lin's heart belongs entirely to Li Muwan. He treats Li Qianmei with "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:353:            "DEVOTION_TO_LI_MUWAN",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinRelationships.java:398:            LI_MUWAN,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:23: *   <li><b>DEVOTION_TO_LI_MUWAN</b> — his entire late-game motivation.</li>
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:31: *       opportunity. 700 years to attempt Li Muwan's resurrection.</li>
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:53: * CAUTION and PRAGMATISM_OVER_PRIDE both vote NO; if Li Muwan is at stake,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:54: * DEVOTION_TO_LI_MUWAN overrides them and votes YES with maximum force.
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:72:     *                     emphasis (e.g. DEVOTION_TO_LI_MUWAN is 1.0 because the
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:162:     * DEVOTION_TO_LI_MUWAN — Wang Lin's entire late-game motivation. After
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:163:     * Li Muwan's death (E28), every action serves her resurrection. He kept
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:168:    public static final Trait DEVOTION_TO_LI_MUWAN = new Trait(
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:169:            "DEVOTION_TO_LI_MUWAN",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:170:            "Devotion to Li Muwan — His Entire Late-Game Motivation",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:171:            "Li Muwan is Wang Lin's wife and the centre of his emotional universe. "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:180:                    List.of("Ch. 1433 (the '2,000 years alone' passage)", "E28 (Li Muwan's death)",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:181:                            "E88 (Qi Xi Spell attempt)", "E36 (Transcendence with Li Muwan)"),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:183:                    "Author-confirmed: Li Muwan is the official main female lead and Wang Lin's "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:222:                    + "Domain evolution (CD-31). Wang Yiyi (Wang Lin and Li Muwan's daughter, "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:232:                            + "Wang Yiyi's mother is Li Muwan.")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:265:     * years to attempt Li Muwan's resurrection. He spent 7 years at the
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:273:                    + "restlessness. He waited 700 years to attempt Li Muwan's resurrection via the "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:324:                    + "occupied) and let Li Muwan not recognize him for years. He used Foundation "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:327:                    + "it is the long-game calculus of a man who cannot die before Li Muwan is "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:333:                            "wang_lin_relationships.md (Ma Liang body / Li Muwan arc)"),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:354:                    + "outliving everyone he cares about except Li Muwan.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:377:                    + "mortal-scale tenderness with Li Muwan, Wang Ping, and Wang Yiyi.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:399:                    + "cycle to put Li Muwan's soul into a baby (wang_lin_relationships.md). On the "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:446:     * causes him to act) — 1. Li Muwan is threatened → immediate, maximum-
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:457:                    + "people are threatened. Per CD-02, his trigger conditions are: (1) Li Muwan "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/ai/WangLinTraits.java:479:            DEVOTION_TO_LI_MUWAN,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:195:        /** Cloud Sky Sect — Li Muwan's sect. */
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:199:            "Wang Lin killed Sun Zhenwei here to take Li Muwan back (E47). Li Muwan became sect master. Her body perished (~Year 800, E28); Wang Lin spent 2000 years reviving her. They Transcended together.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:459:    public static final ConsequenceChain CHAIN_09_CLOUD_SKY_SECT_LI_MUWAN = new ConsequenceChain(
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:460:        "CC09", "The Cloud Sky Sect and Li Muwan", "E47, E28",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:461:        "Wang Lin kills Sun Zhenwei at Li Muwan's wedding (~Year 85-95). Li Muwan's body perishes (~Year 800); Wang Lin stores her soul in the bead.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:462:        "Wang Lin's willingness to defy sects for Li Muwan is established. Li Muwan becomes Cloud Sky Sect master.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:463:        "Li Muwan leads the sect. Wang Lin is often absent. Li Muwan's body is fragile.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:464:        "Li Muwan's body perishes. The Cloud Sky Sect loses its master. Wang Lin stores her soul.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:465:        "Li Muwan is ALIVE — restored and Transcended with Wang Lin. The Cloud Sky Sect likely still exists in Chu Country, protected by Wang Lin's legacy.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:558:    public static final ConsequenceChain CHAIN_18_LI_MUWAN_REVIVAL = new ConsequenceChain(
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:559:        "CC18", "Li Muwan's Death and Revival", "E28, E85",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:560:        "Li Muwan's body perishes (~Year 800). Wang Lin stores her soul. His entire late-game is motivated by her revival. He revives her and they Transcend together.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:564:        "Li Muwan is ALIVE and with Wang Lin on the IAC, paused at the edge of canon. The Heaven-Avoiding Coffin is empty.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:565:        "Li Muwan is not a quest target. She is Wang Lin's wife. The player meets her at the IAC. The emotional weight is part of the world's texture.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:692:        "Wang Lin achieves Heaven Trampling (4th Step) by crossing the bridges and comprehending his 14th Essence (Reincarnation) in the Root Dao. He Transcends with Li Muwan.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:708:            CHAIN_09_CLOUD_SKY_SECT_LI_MUWAN, CHAIN_10_HEAVENLY_FATE_SECT,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:712:            CHAIN_17_HEAVEN_TRAMPLING_BRIDGES, CHAIN_18_LI_MUWAN_REVIVAL,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:1052:                "Chu Country, Planet Suzaku. Li Muwan's former sect. Protected by Wang Lin's legacy."),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RIEdgeOfCanonState.java:1120:            new FigureState("li_muwan", "Li Muwan", true, "IAC (with Wang Lin)",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RICivilizationEngine.java:758:            "Nascent Soul (Li Muwan, Chen Bailiang)",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RICivilizationEngine.java:760:            "Cloud arts, flight techniques, alchemy (Li Muwan)",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RICivilizationEngine.java:763:                new FactionMember("Li Muwan", "李慕婉", "Sect Master", "Nascent Soul",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RICivilizationEngine.java:767:                    "Killed by Wang Lin at Li Muwan's wedding."),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RICivilizationEngine.java:771:                new EconomyEntry("Alchemy", "Li Muwan's alchemy skill is the sect's signature asset.", 5),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RICivilizationEngine.java:776:                    "Wang Lin intervened at Li Muwan's wedding; became Sect Master briefly.", 5)
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RICivilizationEngine.java:779:                new CanonEvent("Wang Lin kills Sun Zhenwei at Li Muwan's wedding", null, 5),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RICivilizationEngine.java:780:                new CanonEvent("Wang Lin becomes Sect Master briefly, hands to Li Muwan", null, 5)
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/RICivilizationEngine.java:783:            "Important primarily because of Li Muwan. Player encounters during Chu Country arc. Alchemy specialization makes it a good source of pills."
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/WangLinAntagonists.java:79:        "Wang Lin kills the Seven-Colored Daoist at the end of RI. Wang Lin then becomes the new Cave World owner (renames it 'Wang Lin's Cave World'), dissolves the seal, and eventually Transcends with Li Muwan.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalHistoricalEvents.java:107:                "event_li_muwan_nascent_soul_storage", "Storing Li Muwan's Nascent Soul", "存李慕婉元神",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalHistoricalEvents.java:113:                "After Li Muwan's body perished, Wang Lin stored her Nascent Soul inside the Heaven-Defying Bead to preserve her until he could rebuild her a body. This is the entire motivation for Wang Lin's late-game actions (becoming the Cave World owner, crossing the Heaven Trampling Bridges).",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalHistoricalEvents.java:117:                List.of("event", "li_muwan", "heaven_defying_bead", "wang_lin_unique", "motivation")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalHistoricalEvents.java:168:                "After 13 years of meditation at the Reincarnation Pool, Wang Lin fully comprehended the Reincarnation Essence (his 14th). The moment he completed it, he achieved Heaven Trampling — bypassing the 9th bridge entirely. Transcends with Li Muwan.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalHistoricalEvents.java:172:                        "Transcends with Li Muwan"),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalHistoricalEvents.java:197:                "Wang Lin used the Qi Xi Spell on himself, sacrificing 50% of his life force to resurrect Li Muwan and form flesh out of her Nascent Soul. Failed to fully recover Li Muwan — didn't pass the 4th day out of 7. This failure drove Wang Lin to seek the 4th Step / Heaven Trampling as the only path to revive her properly.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalHistoricalEvents.java:199:                        "Failed (Li Muwan didn't pass 4th day of 7)",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalHistoricalEvents.java:201:                List.of("event", "qi_xi_spell", "li_muwan_revival", "failure", "heaven_trampling_motivation")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalTechniques.java:277:                "Comprehended at the gate of the Ancient Immortal Domain in the Wind Immortal World. Can reverse time. Wang Lin used this to send Lu Mo (Slaughter True Body) back to the past to search for a method to resurrect Li Muwan.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalTechniques.java:281:                List.of("original_spell", "wang_lin_created", "time", "lu_mo", "li_muwan_revival")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalTechniques.java:458:                "Wang Lin used it on himself, sacrificing his vitality (lifespan) to resurrect Li Muwan and form flesh out of her Nascent Soul. Ancestor demanded 50% of Wang Lin's life force. Failed to fully recover Li Muwan — didn't pass the 4th day out of 7.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalTechniques.java:461:                        "Failed to fully recover Li Muwan (4 of 7 days)"),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalTechniques.java:462:                List.of("resurrection", "life_force", "li_muwan_revival", "wang_lin_owned", "sacrifice")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalKnowledge.java:164:                "The Heaven-Defying Bead was sent back through time by Wang Lin's future clone Lu Mo via Dream Dao. Lu Mo borrowed the Realm-Defining Compass from Old Man Miēshēng to blast the bead open. Lu Mo also left information in the White Hair Strand and Infant Skull to resolve the main body's confusion about reincarnation. The Ji Qiong skull had a divine sense left by Slaughter telling how to revive Li Muwan. The Dao Country Imperial Teacher is the missing bead portion (the Boundary Compass Treasure Spirit).",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalKnowledge.java:169:                List.of("knowledge", "reincarnation", "lu_mo", "dream_dao", "time_travel", "wang_lin_unique", "li_muwan_revival")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:37:                "Bead with the Five Elements pattern. Originally 9 parts; the bead is its core. Interior door leads to a chamber where time runs 10× outside. Stores Li Muwan's Nascent Soul. Reputed to contain Third-Step divine abilities inside. Sentient / destiny-bound / fused with primordial spirit at Heaven Trampling.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:41:                        "Stores Li Muwan's Nascent Soul after her body perishes",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:46:                List.of("core", "five_elements", "time", "space", "samsara", "li_muwan", "lu_mo", "heaven_defying"),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:517:                Transferability.contractedInheritance("Acquired to preserve Li Muwan's soul."),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:521:                        "Used to sustain Li Muwan's soul"),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:522:                List.of("coffin", "soul", "li_muwan", "preservation", "wang_lin_owned")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:587:                "I09_dragon_formation", "The Dragon Formation (Li Muwan gift)", "龙阵",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:592:                Transferability.contractedInheritance("Gift from Li Muwan; built based on Fighting Evil Sect formation. Sentiment-bound — Wang Lin retains as memento."),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:594:                "Formation-array treasure based on the Fighting Evil Sect (斗邪宗) formation. Gift from Li Muwan — sentiment-bound; retained to the end. Spirit-tier.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:596:                        "Gift from Li Muwan — sentiment-bound",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:599:                List.of("formation", "li_muwan", "fighting_evil_sect", "sentiment", "wang_lin_owned")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:1355:                "Ji Qiong's severed head. Used as consumable weapon. Spirit-tier power. Taken Ch. 1127. The skull had a divine sense left by Slaughter telling how to revive Li Muwan.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalInventory.java:1358:                        "Divine sense left by Slaughter (Li Muwan revival clue)"),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalExperiences.java:13: * storing Li Muwan's Nascent Soul, etc. Each experience drives a personality
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalExperiences.java:55:                "exp_li_muwan_death", "Death of Li Muwan", "李慕婉之死",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalExperiences.java:61:                "Li Muwan failed Nascent Soul formation multiple times; died at 500 years old. Wang Lin stored her Nascent Soul in the Heaven-Defying Bead for 700 years. He attempted the Qi Xi Spell (sacrificing 50% of his life force) — it failed (didn't pass the 4th day out of 7). This grief drove his entire late-game arc: becoming the Cave World owner, crossing the Heaven Trampling Bridges, transcending with her.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalExperiences.java:65:                List.of("experience", "grief", "li_muwan", "qi_xi_spell", "heaven_defying_bead", "wang_lin_unique")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalAllies.java:23:                "ally_li_muwan", "Li Muwan (Wife)", "李慕婉",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalAllies.java:35:                List.of("ally", "spouse", "li_muwan", "wang_lin_unique", "azure_dragon_jade_slip")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalAvatars.java:137:                "The Killing Origin and the Silent Extinction Origin fuse to form Lu Mo. Wang Lin's strongest clone — achieved the Fourth Step. Lu Mo borrowed the Realm-Defining Compass from Old Man Miēshēng and blasted the Heaven-Defying Pearl open via Dream Dao, sending it back through time to the main body. Lu Mo left information in the White Hair Strand and Infant Skull to resolve the main body's confusion about reincarnation. Used Flowing Time to send Lu Mo back to the past to search for a method to resurrect Li Muwan.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalAvatars.java:142:                        "Used Flowing Time to search for Li Muwan revival method"),
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/registry/CanonicalAvatars.java:143:                List.of("avatar", "true_body", "slaughter", "silent_extinction", "lu_mo", "fourth_step", "wang_lin_unique", "time_travel", "li_muwan_revival")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:17: * Li Muwan's Soul Capture Event — closes the CRON-95 known gap where
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:23: *   <li>李慕婉 (Li Muwan) is Wang Lin's only wife and Dao companion. She
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:33: *       woman's fetus (周茹 Zhou Ru). Li Muwan refuses to devour the host
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:37: * <p><b>Canon honesty:</b> The novel clearly establishes (1) Li Muwan's
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:71: * Muwan directly (uncanon — Wang Lin would never kill Li Muwan), the soul
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:78: * transfer). Inlining the Li Muwan soul-capture logic there would couple
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:94:     * Maximum distance (in blocks, Euclidean) from Li Muwan's death point
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:102:    /** Canon character ID for Li Muwan. Must match CanonUUID.LI_MUWAN's key. */
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:103:    public static final String CHARACTER_ID = "li_muwan";
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:108:     * Handle Li Muwan's death. Called from
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:115:     * tooltip would never display "Contains: Li Muwan's Nascent Soul"
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:118:     * @param level     the server level where Li Muwan died
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:165:                Component.literal("Li Muwan's Nascent Soul has been drawn into the Heaven-Defying Bead.")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:175:        //   subject="li_muwan_soul_captured" — stable identifier for the
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:178:                "li_muwan_soul_captured",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:179:                "Captured Li Muwan's Nascent Soul with the Heaven-Defying Bead.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:182:        Ergenverse.LOGGER.info("[Ergenverse] CRON-99: Li Muwan's Nascent Soul captured by {} "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:192:     * Find the player who will capture Li Muwan's soul. Preference:
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:199:     *       the canon-faithful case: Li Muwan dies of failed breakthrough
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:205:     * @param source    the damage source that killed Li Muwan
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:206:     * @param deathPos  the block position of Li Muwan's death
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:212:        // 1. Killer preference — if the player killed Li Muwan directly, they
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:214:        //    never kill Li Muwan) but the simulation permits it and the soul
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:221:        // 2. Closest player in radius — canon-faithful case. Li Muwan dies
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:271:     * present at Li Muwan's death. If no player is in radius, the death
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:276:        Ergenverse.LOGGER.warn("[Ergenverse] CRON-99: Li Muwan's Nascent Soul dissipated "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:294:                Component.literal("Li Muwan's Nascent Soul dissipated into the heavens.")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:301:                "li_muwan_soul_lost_no_bead",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:302:                "Li Muwan's Nascent Soul dissipated; no bead in inventory to capture it.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:305:        Ergenverse.LOGGER.warn("[Ergenverse] CRON-99: Li Muwan's Nascent Soul dissipated "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:317:     * the player has somehow acquired a dormant bead and Li Muwan dies,
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:327:                Component.literal("Li Muwan's Nascent Soul dissipated — your bead is still dormant.")
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:334:                "li_muwan_soul_lost_dormant_bead",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:335:                "Li Muwan's Nascent Soul dissipated; the bead was still DORMANT_STONE.",
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/LiMuwanSoulCaptureEvent.java:338:        Ergenverse.LOGGER.warn("[Ergenverse] CRON-99: Li Muwan's Nascent Soul dissipated "
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/BeadFunctionTab.java:32:    /** Deepest secrets — Li Muwan's Nascent Soul, Samsara, divine abilities. */
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/BeadDimension.java:21: * herb gardens, beast habitats, and at the deepest level, Li Muwan's
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/BeadDimension.java:151:        // Actual structures (cultivation areas, herb gardens, Li Muwan's chamber)
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:33: * world with 10x time dilation. Stores Li Muwan's Nascent Soul. Fuses with
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:55: *   <li>{@code Ergen.Bead.LiMuwanSoul} — whether Li Muwan's Nascent Soul is stored</li>
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:82:    public static final String NBT_LI_MUWAN_SOUL = "Ergen.Bead.LiMuwanSoul";
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:90:     * attempts to revive Li Muwan <b>137 times</b> across millennia — all
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:95:     * lifeless Li Muwan, her white-haired body dissolving into starlight —
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:132:     * CRON-COMPLETIONIST-102: Flag indicating Li Muwan has been successfully
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:134:     * after the World Origin Essence is consumed and Li Muwan spawns as a
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:141:     * state transition: Li Muwan is no longer a trapped soul — she lives
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:146:     * gone forever, and Li Muwan lives beyond the cycle of life and death.
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:151:    public static final String NBT_LI_MUWAN_REVIVED = "Ergen.Bead.LiMuwanRevived";
+/home/z/my-project/forge-mod/src/main/java/dev/ergenverse/wanglin/bead/HeavenDefyingBeadItem.java:592:        // Li Muwan's Nascent Soul
+
+[Showing results with pagination = limit: 250]
