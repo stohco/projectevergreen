@@ -52,6 +52,23 @@ function compileBuilding(building: CanonBuilding): THREE.Group {
 
   const [w, h, d] = building.size
 
+  // Stone foundation platform — every building sits on a flat stone base
+  // that extends 0.5m beyond the walls. This ensures buildings are on flat
+  // land even if terrain isn't perfectly flat. Canon: a carpenter clan would
+  // level the ground and lay a stone foundation before building.
+  if (building.purpose !== 'gate' && building.purpose !== 'fence') {
+    const foundationMat = getMaterial('STONE', building.shellTheme)
+    const foundation = new THREE.Mesh(
+      new THREE.BoxGeometry(w + 1, 0.3, d + 1),
+      foundationMat,
+    )
+    foundation.position.set(0, -0.15, 0)
+    foundation.receiveShadow = true
+    foundation.name = 'foundation'
+    foundation.userData.collidable = true
+    group.add(foundation)
+  }
+
   switch (building.purpose) {
     case 'well':
       compileWell(group, building)

@@ -130,8 +130,8 @@ export default function WorldCanvas() {
       const pines = createSpiritPines(0, 0, 200, 150)
       scene.add(pines)
 
-      // ---- Grass tufts (NMS-style dense clusters, not tall blades) ----
-      const grass = createGrassTufts(0, 0, 180, 5000)
+      // ---- Grass tufts (spread out, NMS-style clusters) ----
+      const grass = createGrassTufts(0, 0, 250, 3000)
       scene.add(grass)
 
       // ---- Rocks (geological detail) ----
@@ -200,15 +200,15 @@ export default function WorldCanvas() {
         console.log('[WorldCanvas] graph bootstrapped:', n, 'nodes')
       }).catch(() => {})
 
-      // ---- Post-FX (subtle) ----
+      // ---- Post-FX (minimal — don't over-do it) ----
       postFX = createPostFX(renderer, scene, camera, container.clientWidth, container.clientHeight, {
         ssao: false,
         bloom: true,
-        bloomStrength: 0.2,
+        bloomStrength: 0.15,
         chromaticAberration: false,
         vignette: true,
         grain: false,
-        colorGrade: true,
+        colorGrade: false,
       })
 
       setStatus('live')

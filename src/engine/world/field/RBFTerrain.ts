@@ -132,9 +132,11 @@ export function rbfTerrainHeight(x: number, z: number): number {
   // 3. Micro detail — small bumps for visual texture.
   h += noiseDetail(x * 0.05, z * 0.05) * 0.8
 
-  // 4. Flatten near spawn (village area) — 40-block radius.
+  // 4. Flatten near spawn (village area) — 60-block radius for the full village.
+  // Canon: Wang Family Village is a small mortal village on flat ground.
+  // The village needs flat terrain for all 25 buildings.
   const distFromSpawn = Math.sqrt(x * x + z * z)
-  const flattenRadius = 40
+  const flattenRadius = 60
   if (distFromSpawn < flattenRadius) {
     const t = distFromSpawn / flattenRadius
     const flatten = t * t // quadratic ramp from 0 at center to 1 at edge

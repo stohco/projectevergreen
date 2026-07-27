@@ -274,7 +274,7 @@ export function createGrassTufts(
   let attempts = 0
 
   // Poisson-disk-like distribution.
-  const minDist = 0.6
+  const minDist = 1.2 // spread out more — less dense, more natural
   const placedPositions: Array<{ x: number; z: number }> = []
   const maxCheck = 20
 
