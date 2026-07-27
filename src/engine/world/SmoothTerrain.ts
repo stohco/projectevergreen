@@ -132,15 +132,21 @@ export function createSpiritPines(
   size: number,
   count: number,
 ): THREE.InstancedMesh {
-  // Tree geometry: a trunk (cylinder) + foliage (cone).
-  const trunkGeo = new THREE.CylinderGeometry(0.15, 0.2, 2, 6)
-  trunkGeo.translate(0, 1, 0)
-  const foliageGeo = new THREE.ConeGeometry(1.0, 3, 7)
-  foliageGeo.translate(0, 3.5, 0)
-  // Merge into a single geometry (simple approach: use a group, but for
-  // instancing we need one geometry — use BufferGeometryUtils).
+  // Tree geometry: a trunk (cylinder) + foliage (cone) — fuller, NMS-style.
+  const trunkGeo = new THREE.CylinderGeometry(0.2, 0.3, 3, 8)
+  trunkGeo.translate(0, 1.5, 0)
+  // Triple-layer foliage for a fuller canopy.
+  const foliageGeo = new THREE.ConeGeometry(2.0, 4, 8)
+  foliageGeo.translate(0, 4.5, 0)
+  const foliageGeo2 = new THREE.ConeGeometry(1.6, 3, 8)
+  foliageGeo2.translate(0, 5.8, 0)
+  const foliageGeo3 = new THREE.ConeGeometry(1.1, 2.2, 8)
+  foliageGeo3.translate(0, 7.0, 0)
+  // Merge into a single geometry.
   const trunkPos = trunkGeo.attributes.position
   const foliagePos = foliageGeo.attributes.position
+  const foliagePos2 = foliageGeo2.attributes.position
+  const foliagePos3 = foliageGeo3.attributes.position
   const merged = new THREE.BufferGeometry()
   const positions: number[] = []
   const normals: number[] = []
@@ -154,16 +160,32 @@ export function createSpiritPines(
     const n = foliageGeo.attributes.normal
     normals.push(n.getX(i), n.getY(i), n.getZ(i))
   }
+  for (let i = 0; i < foliagePos2.count; i++) {
+    positions.push(foliagePos2.getX(i), foliagePos2.getY(i), foliagePos2.getZ(i))
+    const n = foliageGeo2.attributes.normal
+    normals.push(n.getX(i), n.getY(i), n.getZ(i))
+  }
+  for (let i = 0; i < foliagePos3.count; i++) {
+    positions.push(foliagePos3.getX(i), foliagePos3.getY(i), foliagePos3.getZ(i))
+    const n = foliageGeo3.attributes.normal
+    normals.push(n.getX(i), n.getY(i), n.getZ(i))
+  }
   merged.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
   merged.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3))
 
-  // Vertex colors: trunk brown, foliage green.
+  // Vertex colors: trunk brown, foliage green (3 layers, slightly different shades).
   const colors: number[] = []
   for (let i = 0; i < trunkPos.count; i++) {
     colors.push(0.35, 0.25, 0.15) // trunk brown
   }
   for (let i = 0; i < foliagePos.count; i++) {
-    colors.push(0.20, 0.40, 0.18) // foliage green
+    colors.push(0.18, 0.38, 0.16) // dark green
+  }
+  for (let i = 0; i < foliagePos2.count; i++) {
+    colors.push(0.22, 0.42, 0.18) // medium green
+  }
+  for (let i = 0; i < foliagePos3.count; i++) {
+    colors.push(0.26, 0.46, 0.20) // light green top
   }
   merged.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3))
 
