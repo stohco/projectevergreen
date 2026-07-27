@@ -67,9 +67,9 @@ function buildControlPoints(): ControlPoint[] {
     let amplitude = 0
     let radius = loc.radius * 3
     switch (loc.biome) {
-      case 'mountains': amplitude = 40; radius = loc.radius * 4; break
-      case 'snow': amplitude = 50; radius = loc.radius * 3; break
-      case 'sea': amplitude = -20; radius = loc.radius * 2; break
+      case 'mountains': amplitude = 120; radius = loc.radius * 4; break
+      case 'snow': amplitude = 150; radius = loc.radius * 3; break
+      case 'sea': amplitude = -30; radius = loc.radius * 2; break
       case 'swamp': amplitude = -2; radius = loc.radius * 2; break
       case 'plains': amplitude = 0; radius = loc.radius; break
       case 'desert': amplitude = 5; radius = loc.radius * 2; break

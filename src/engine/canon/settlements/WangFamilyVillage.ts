@@ -206,6 +206,132 @@ export const WANG_FAMILY_VILLAGE: CanonSettlement = {
       size: [5, 4, 1],
       rooms: [],
     },
+
+    // ---- Communal hall (village gathering place) ----
+    // Canon: a village of ~100 families would have a communal hall for
+    // meetings, festivals, and elder judgments. Larger than residential huts.
+    {
+      id: 'building:communal_hall',
+      name: 'Communal Hall',
+      nameCn: '祠堂',
+      purpose: 'administration',
+      shellTheme: 'poor_village_wood',
+      position: [0, 0, -6],
+      rotation: 0,
+      size: [10, 5, 8],
+      rooms: [
+        {
+          id: 'room:hall_main',
+          name: 'Main Hall',
+          function: 'hall',
+          position: [0, 0, 0],
+          size: [10, 5, 8],
+          furniture: [
+            { id: 'furn:hall_altar', kind: 'ALTAR', tags: ['ancestral', 'wooden'], position: [0, 0, -3], rotation: 0 },
+            { id: 'furn:hall_mat', kind: 'MEDITATION_MAT', tags: ['communal'], position: [0, 0, 0], rotation: 0 },
+          ],
+          anchors: [
+            { id: 'anchor:hall_altar', role: 'altar', localPos: [0, 0, -3] },
+            { id: 'anchor:hall_meditation', role: 'meditation', localPos: [0, 0, 0] },
+            { id: 'anchor:hall_door', role: 'door', localPos: [0, 0, 4] },
+          ],
+        },
+      ],
+    },
+
+    // ---- Carpentry workshop (canon: Wang Family Carpenter Clan) ----
+    // The village's livelihood. Contains workbenches, wood storage, tools.
+    {
+      id: 'building:carpentry_workshop',
+      name: 'Carpentry Workshop',
+      nameCn: '木工坊',
+      purpose: 'other',
+      shellTheme: 'poor_village_wood',
+      position: [-12, 0, -10],
+      rotation: 15,
+      size: [7, 3.5, 5],
+      rooms: [
+        {
+          id: 'room:workshop_floor',
+          name: 'Workshop Floor',
+          function: 'other',
+          position: [0, 0, 0],
+          size: [7, 3.5, 5],
+          furniture: [
+            { id: 'furn:workshop_table', kind: 'TABLE', tags: ['workbench', 'carpentry'], position: [0, 0, -1], rotation: 0 },
+            { id: 'furn:workshop_chest', kind: 'CHEST', tags: ['tools'], position: [-2, 0, 1], rotation: 0 },
+          ],
+          anchors: [
+            { id: 'anchor:workshop_table', role: 'desk', localPos: [0, 0, -1] },
+            { id: 'anchor:workshop_storage', role: 'storage', localPos: [-2, 0, 1] },
+            { id: 'anchor:workshop_door', role: 'door', localPos: [3, 0, 0] },
+          ],
+        },
+      ],
+    },
+
+    // ---- Granary (food storage) ----
+    // A village needs to store grain. Raised on stilts to prevent vermin.
+    {
+      id: 'building:granary',
+      name: 'Granary',
+      nameCn: '粮仓',
+      purpose: 'storage',
+      shellTheme: 'poor_village_wood',
+      position: [10, 0, -12],
+      rotation: -10,
+      size: [5, 4, 5],
+      rooms: [
+        {
+          id: 'room:granary_floor',
+          name: 'Storage',
+          function: 'storage',
+          position: [0, 0, 0],
+          size: [5, 4, 5],
+          furniture: [
+            { id: 'furn:granary_chest1', kind: 'CHEST', tags: ['grain'], position: [-1, 0, -1], rotation: 0 },
+            { id: 'furn:granary_chest2', kind: 'CHEST', tags: ['grain'], position: [1, 0, 1], rotation: 0 },
+            { id: 'furn:granary_table', kind: 'TABLE', tags: ['counting'], position: [0, 0, 0], rotation: 0 },
+          ],
+          anchors: [
+            { id: 'anchor:granary_storage', role: 'storage', localPos: [-1, 0, -1] },
+            { id: 'anchor:granary_door', role: 'door', localPos: [2, 0, 0] },
+          ],
+        },
+      ],
+    },
+
+    // ---- Shrine (small ancestral shrine) ----
+    // Canon: xianxia villages have shrines for ancestor worship and
+    // minor spiritual requests. A small open-air structure.
+    {
+      id: 'building:ancestral_shrine',
+      name: 'Ancestral Shrine',
+      nameCn: '祖祠',
+      purpose: 'shrine',
+      shellTheme: 'stone_well',
+      position: [3, 0, -12],
+      rotation: 0,
+      size: [4, 3.5, 4],
+      rooms: [
+        {
+          id: 'room:shrine_floor',
+          name: 'Shrine Floor',
+          function: 'meditation',
+          position: [0, 0, 0],
+          size: [4, 3.5, 4],
+          furniture: [
+            { id: 'furn:shrine_altar', kind: 'ALTAR', tags: ['ancestral', 'stone'], position: [0, 0, -1.5], rotation: 0 },
+            { id: 'furn:shrine_incense', kind: 'INCENSE_BURNER', tags: ['lit'], position: [0, 0.8, -1.5], rotation: 0 },
+            { id: 'furn:shrine_mat', kind: 'MEDITATION_MAT', tags: ['prayer'], position: [0, 0, 1], rotation: 0 },
+          ],
+          anchors: [
+            { id: 'anchor:shrine_altar', role: 'altar', localPos: [0, 0, -1.5] },
+            { id: 'anchor:shrine_meditation', role: 'meditation', localPos: [0, 0, 1] },
+          ],
+        },
+      ],
+    },
     // ---- Additional village huts (~100 families per canon) ----
     // These are simple mortal homes arranged in a loose grid around the plaza.
     // Canon: Wang Lin's village had ~100 families of the impoverished Wang

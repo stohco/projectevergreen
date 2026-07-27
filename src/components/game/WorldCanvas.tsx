@@ -6,7 +6,9 @@ import { createSky, type SkyHandle } from '@/engine/render/SkySystem'
 import { createPostFX, type PostFXHandle } from '@/engine/render/PostProcessing'
 import { createCultivatorModel, type CultivatorModelHandle } from '@/engine/entities/CultivatorModel'
 import { createPlayer, type PlayerHandle } from '@/engine/entities/PlayerEntity'
-import { createSolidTerrain, createVariedSpiritPines, createGrassTufts, createRocks, createSpiritFlowers, terrainHeight } from '@/engine/world/VoxelTerrain'
+import { createSolidTerrain, createVariedSpiritPines } from '@/engine/world/VoxelTerrain'
+import { createGrassTufts, createRocks, createSpiritFlowers } from '@/engine/world/SmoothTerrain'
+import { rbfTerrainHeight as terrainHeight } from '@/engine/world/field/RBFTerrain'
 import { createOcean, type OceanHandle } from '@/engine/world/OceanSystem'
 import { CanonSpawner } from '@/engine/world/CanonSpawner'
 import { compileSettlement } from '@/engine/world/compiler/SettlementCompiler'
@@ -341,7 +343,7 @@ export default function WorldCanvas() {
         // FIX: subdivide the movement into steps smaller than playerRadius (0.3m),
         // and check collision at each sub-step.
         const yaw = camera.userData.yaw ?? 0
-        const speed = (player.state.isFlying ? 30 : (keys['ShiftLeft'] ? 10 : 5)) * dt
+        const speed = (player.state.isFlying ? 30 : (keys['ShiftLeft'] ? 7 : 3.5)) * dt
         const fwd = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw))
         const right = new THREE.Vector3(-fwd.z, 0, fwd.x)
 
