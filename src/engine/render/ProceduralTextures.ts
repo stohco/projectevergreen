@@ -583,12 +583,12 @@ export function getAlbedoAtlas(): THREE.Texture {
     console.error('[ProceduralTextures] atlas build FAILED', e)
   }
   const tex = new THREE.CanvasTexture(canvas)
-  tex.magFilter = THREE.NearestFilter
-  tex.minFilter = THREE.NearestMipmapLinearFilter
+  tex.magFilter = THREE.LinearFilter
+  tex.minFilter = THREE.LinearMipmapLinearFilter
   tex.wrapS = THREE.RepeatWrapping
   tex.wrapT = THREE.RepeatWrapping
   tex.generateMipmaps = true
-  tex.anisotropy = 4
+  tex.anisotropy = 8
   // NOTE: Do NOT set colorSpace = SRGB here. The renderer's outputColorSpace
   // handles the final conversion; setting it on the texture causes the
   // MeshStandardMaterial to decode the texture as sRGB→linear, which then

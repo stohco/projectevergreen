@@ -74,8 +74,8 @@ export default function WorldCanvas() {
         0.1,
         4000,
       )
-      camera.position.set(30, 75, 30)
-      camera.lookAt(0, 60, 0)
+      camera.position.set(12, 80, 16)
+      camera.lookAt(0, 70, 4)
 
       // Sky.
       sky = createSky(scene)
@@ -87,16 +87,17 @@ export default function WorldCanvas() {
       // Post-FX.
       postFX = createPostFX(renderer, scene, camera, container.clientWidth, container.clientHeight, {
         ssao: false,
-        bloom: false,
+        bloom: true,
+        bloomStrength: 0.4,
         chromaticAberration: false,
-        vignette: false,
+        vignette: true,
         grain: false,
-        colorGrade: false,
+        colorGrade: true,
       })
 
       // Wang Lin cultivator at spawn village.
       cultivator = createCultivatorModel('foundation', false)
-      cultivator.group.position.set(0, 58, 4)
+      cultivator.group.position.set(0, 72, 4)
       cultivator.setAnimation('idle')
       cultivator.setAuraVisible(true)
       scene.add(cultivator.group)
