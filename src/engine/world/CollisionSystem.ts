@@ -25,6 +25,7 @@
  */
 
 import * as THREE from 'three'
+import { shouldCollide } from './CollisionTaxonomy'
 
 export class MeshCollisionSystem {
   private readonly raycaster: THREE.Raycaster
@@ -38,19 +39,21 @@ export class MeshCollisionSystem {
   }
 
   /**
-   * Register a Three.js object (and all its children) as collidable.
-   * Call this after compiling buildings — pass the village group.
-   * Only meshes with userData.collidable = true (or name starts with 'wall')
-   * are considered. Grass, flowers, and small props are NOT collidable.
+   * Register a Three.js object (and all its children) as potential collidables.
+   * Uses CollisionTaxonomy.shouldCollide() to automatically classify each mesh:
+   * walls/roofs/pillars/furniture = solid, grass/flowers/leaves = non-solid,
+   * doors = solid-when-closed, water = special.
+   *
+   * This is the "smart" collision — we don't manually flag things. The system
+   * infers collision from what the object IS (name + userData).
    */
   register(obj: THREE.Object3D): void {
     obj.traverse((child) => {
       const mesh = child as THREE.Mesh
       if (!mesh.isMesh) return
-      // Only register meshes marked as collidable, or named as walls/roofs.
-      if (mesh.userData.collidable || mesh.name?.includes('wall') || mesh.name?.includes('roof') || mesh.name?.includes('pillar') || mesh.name?.includes('door')) {
-        this.collidables.push(mesh)
-      }
+      // Register all meshes — the resolve() method filters dynamically
+      // using shouldCollide() so doors can toggle on/off.
+      this.collidables.push(mesh)
     })
   }
 
@@ -73,8 +76,10 @@ export class MeshCollisionSystem {
   ): { x: number; z: number; hit: boolean } {
     if (this.collidables.length === 0) return { x: newX, z: newZ, hit: false }
 
-    // Filter to only currently-collidable meshes (doors toggle this).
-    const activeCollidables = this.collidables.filter((m) => m.userData.collidable !== false)
+    // Filter to only currently-collidable meshes using the smart taxonomy.
+    // This checks each mesh dynamically — doors that opened since last frame
+    // are excluded, doors that closed are included.
+    const activeCollidables = this.collidables.filter((m) => shouldCollide(m as THREE.Mesh))
 
     let resultX = newX
     let resultZ = newZ

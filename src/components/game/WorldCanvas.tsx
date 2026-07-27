@@ -153,10 +153,11 @@ export default function WorldCanvas() {
         const groundY = terrainHeight(buildingX, buildingZ)
         child.position.y = groundY
       })
-      // Register all collidable meshes (walls, roofs, pillars, doors)
-      // from the compiled village. This wraps collision exactly around
-      // the actual 3D mesh geometry — not AABB boxes.
+      // Register all collidable meshes from the village + rocks.
+      // CollisionTaxonomy auto-classifies: walls/roofs = solid, grass = non-solid,
+      // doors = solid-when-closed, etc. Smart collision based on object nature.
       collision.register(villageGroup)
+      collision.register(rocks)
       scene.add(villageGroup)
       console.log('[WorldCanvas] collision meshes registered:', collision.count())
 
