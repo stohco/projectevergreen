@@ -13856,3 +13856,21 @@ Stage Summary:
 - Build: bun run lint passes. Dev server 200.
 - Next: implement the formal spec architecture. Start with the semantic world
   model + template library + compiler, then build the village vertical slice.
+
+Stage Summary:
+- SHIPPED: CRON-THREEJS-3 (git hash 97984af1). Build: bun run lint 0 errors. Dev server 200.
+- ARCHITECTURE: formal spec implemented (canon→semantic→template→compiler→render).
+  - CanonTypes.ts: CanonSettlement, CanonBuilding, CanonRoom, CanonFurniture, RoomAnchor
+  - TemplateLibrary.ts: 12 furniture templates, 3 building themes, material cache
+  - SettlementCompiler.ts: compiles semantic objects → Three.js meshes (huts, wells, gates)
+  - WangFamilyVillage.ts: 5 authored buildings + 2 roads + 1 spirit vein
+  - SmoothTerrain.ts: smooth heightmap mesh (NOT blocky voxels), vertex-colored by height
+  - SpiritPines: 150 instanced 3-layer foliage trees
+- VLM CRITIC: 1/10 → 4/10. Smooth terrain, trees, village building, player all visible.
+- HARSH CRITIQUE: terrain looks like "clay" (needs texture variation), only 1 building
+  visible (need all 5), trees still look like cones (need better foliage), world feels
+  empty (need grass/rocks/flowers). Player avatar lacks definition.
+- NEXT PRIORITY: (a) terrain texture variation (noise-based patches), (b) grass tufts
+  instanced on terrain, (c) all 5 village buildings visible (scale/position fix),
+  (d) better player avatar model, (e) wire GraphQueryService into actor materialization.
+- CRON JOB: 292872 (every 15min, OptMem-powered, webDevReview) will continue iteration.
