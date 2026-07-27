@@ -131,7 +131,7 @@ function aoLevel(side1: number, side2: number, corner: number): number {
 }
 
 /** Map AO level 0..3 → brightness 0..1 (smoothstep-ish). */
-const AO_BRIGHTNESS = [0.45, 0.62, 0.8, 1.0]
+const AO_BRIGHTNESS = [0.72, 0.85, 0.93, 1.0]
 
 /**
  * Build the three material-class meshes for a chunk.

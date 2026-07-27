@@ -21,7 +21,8 @@ import {
   CULTIVATOR_CONSTANTS, FlatWorldContext, nextProjectileId, disposeObject3D,
 } from '../ai/Goal'
 import {
-  CultivatorModel, createCultivatorModel, type CultivatorAnimName,
+  createCultivatorModel, type CultivatorModelHandle as CultivatorModel,
+  type RealmKey, type AnimKey as CultivatorAnimName,
 } from './CultivatorModel'
 import type { CanonActor } from '../canon/types'
 
@@ -111,14 +112,16 @@ export class EntityCultivator implements GoalOwner, EntityHandle {
     this.maxHealth = REALM_MAX_HEALTH[this.realm]
     this.health = this.maxHealth
 
-    this.model = createCultivatorModel({
-      realm: opts.realm,
-      gender: opts.gender ?? 'male',
-      robeColorOverride: opts.robeColorOverride,
-      trimColorOverride: opts.trimColorOverride,
-      bladeColor: opts.bladeColorOverride,
-      hairColor: opts.hairColor,
-    })
+    const realmKey: RealmKey = (opts.realm === 'ascendant' ? 'ascendant'
+      : opts.realm === 'void_amalgamation' ? 'void_amalgamation'
+      : opts.realm === 'void_refinement' ? 'void_refinement'
+      : opts.realm === 'soul_transformation' ? 'soul_transformation'
+      : opts.realm === 'soul_formation' ? 'soul_formation'
+      : opts.realm === 'nascent_soul' ? 'nascent_soul'
+      : opts.realm === 'core_formation' ? 'core_formation'
+      : opts.realm === 'foundation' ? 'foundation'
+      : 'qi_condensation') as RealmKey
+    this.model = createCultivatorModel(realmKey, opts.gender === 'female')
     this.group = this.model.group
     this.group.position.copy(this.position)
     this.group.userData.entityId = this.id

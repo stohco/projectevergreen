@@ -25,8 +25,9 @@
  */
 
 import * as THREE from 'three'
-import { createSkySystem, SkySystemHandle, DAY_LENGTH_SECONDS } from './SkySystem'
-import { createVolumetricClouds, CloudsHandle } from './VolumetricClouds'
+import { createSky, SkyHandle as SkySystemHandle } from './SkySystem'
+export const DAY_LENGTH_SECONDS = 120 // 2min day cycle for playtesting
+import { createClouds as createVolumetricClouds, CloudsHandle } from './VolumetricClouds'
 import {
   createAtmosphereRenderer,
   AtmosphereHandle,
@@ -44,7 +45,7 @@ import {
   WeatherState,
 } from '../effects/WeatherSystem'
 import { createLightingRig, LightingRigHandle } from '../effects/LightingRig'
-import { createPostProcessing, PostProcessingHandle } from './PostProcessing'
+import { createPostFX, PostFXHandle as PostProcessingHandle } from './PostProcessing'
 
 export interface AtmosphereStackHandle {
   sky: SkySystemHandle
@@ -94,15 +95,13 @@ export function createAtmosphereStack(
   const enableClouds = options.enableClouds ?? true
 
   // --- Mount all subsystems ----------------------------------------------
-  const sky = createSkySystem(scene, camera, renderer)
-  const clouds = createVolumetricClouds(scene, camera, renderer, {
-    halfResScale: perfTier === 'low' ? 0.4 : 0.5,
-  })
+  const sky = createSky(scene)
+  const clouds = createVolumetricClouds(scene)
   const atmosphere = createAtmosphereRenderer(scene, initialBiome)
   const weather = createWeatherSystem(initialWeather)
   const lighting = createLightingRig(scene)
   const postfx = enablePostFX
-    ? createPostProcessing(scene, camera, renderer, {
+    ? createPostFX(renderer, scene, camera, {
         enabled: {
           ssao: perfTier !== 'low',
           bloom: true,
@@ -118,8 +117,9 @@ export function createAtmosphereStack(
     : null
 
   // Hand the sky's sun light to the lighting rig (so the rig colors it).
-  lighting.setSunLight(sky.sun)
-  if (postfx) postfx.setSunMesh(sky.sunMesh)
+  const skyAny = sky as unknown as { sun?: THREE.DirectionalLight; sunMesh?: THREE.Mesh }
+  if (skyAny.sun) lighting.setSunLight(skyAny.sun)
+  if (postfx && skyAny.sunMesh) postfx.setSunMesh(skyAny.sunMesh)
 
   // Particle systems — biome-flavored + rain + snow extras.
   const biomeParticles = spawnBiomeParticleSet(scene, initialBiome)

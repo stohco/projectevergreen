@@ -571,10 +571,17 @@ export function getAlbedoAtlas(): THREE.Texture {
   // Default fill: stone-grey so any missing tile is grey (not magenta).
   ctx.fillStyle = '#808080'
   ctx.fillRect(0, 0, w, h)
-  TILE_KEYS.forEach((key, i) => {
-    const painter = PAINTERS[key] ?? ((c) => tileableNoise(c, TILE_SIZE, i * 31 + 1, 24, [200, 200, 200], 12))
-    drawTile(ctx, i, (tc) => painter(tc, i * 31 + 1))
-  })
+  try {
+    TILE_KEYS.forEach((key, i) => {
+      const painter = PAINTERS[key] ?? ((c) => tileableNoise(c, TILE_SIZE, i * 31 + 1, 24, [200, 200, 200], 12))
+      drawTile(ctx, i, (tc, ox, oy) => painter(tc, i * 31 + 1, ox, oy))
+    })
+    // Debug: expose the atlas canvas for inspection.
+    ;(globalThis as { __ergenAtlasCanvas?: HTMLCanvasElement }).__ergenAtlasCanvas = canvas
+    console.log('[ProceduralTextures] atlas built', w, 'x', h, 'tiles:', TILE_KEYS.length)
+  } catch (e) {
+    console.error('[ProceduralTextures] atlas build FAILED', e)
+  }
   const tex = new THREE.CanvasTexture(canvas)
   tex.magFilter = THREE.NearestFilter
   tex.minFilter = THREE.NearestMipmapLinearFilter
@@ -582,7 +589,12 @@ export function getAlbedoAtlas(): THREE.Texture {
   tex.wrapT = THREE.RepeatWrapping
   tex.generateMipmaps = true
   tex.anisotropy = 4
-  tex.colorSpace = THREE.SRGBColorSpace
+  // NOTE: Do NOT set colorSpace = SRGB here. The renderer's outputColorSpace
+  // handles the final conversion; setting it on the texture causes the
+  // MeshStandardMaterial to decode the texture as sRGB→linear, which then
+  // gets re-encoded as sRGB on output — but with vertexColors in linear
+  // space, the multiplication darkens incorrectly. Leave the texture as
+  // linear (no colorSpace set) so vertex colors multiply correctly.
   _atlas = tex
   return tex
 }

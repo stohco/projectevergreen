@@ -59,7 +59,7 @@ export default function WorldCanvas() {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       renderer.setSize(container.clientWidth, container.clientHeight)
       renderer.toneMapping = THREE.ACESFilmicToneMapping
-      renderer.toneMappingExposure = 1.0
+      renderer.toneMappingExposure = 1.4
       renderer.shadowMap.enabled = true
       renderer.shadowMap.type = THREE.PCFSoftShadowMap
       renderer.outputColorSpace = THREE.SRGBColorSpace

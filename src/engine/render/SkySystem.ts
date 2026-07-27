@@ -152,7 +152,7 @@ export function createSky(scene: THREE.Scene): SkyHandle {
   const hemi = new THREE.HemisphereLight(0xbcd6ff, 0x4a3520, 0.5)
   scene.add(hemi)
 
-  let timeOfDay = 0.35 // 8:24 AM
+  let timeOfDay = 0.5 // noon (maximum sun)
   const sunDir = new THREE.Vector3()
   const moonDir = new THREE.Vector3()
 
@@ -171,16 +171,16 @@ export function createSky(scene: THREE.Scene): SkyHandle {
     const isHorizon = Math.abs(intensity) < 0.3
     if (intensity > 0.5) {
       sunLight.color.setHex(0xfff4d6)
-      sunLight.intensity = 2.0
-      hemi.intensity = 0.55
+      sunLight.intensity = 3.0
+      hemi.intensity = 0.85
     } else if (intensity > 0.05) {
       sunLight.color.setHex(0xff8855)
-      sunLight.intensity = 1.6 + intensity
-      hemi.intensity = 0.4
+      sunLight.intensity = 2.0 + intensity
+      hemi.intensity = 0.6
     } else {
       sunLight.color.setHex(0x6a82c4)
-      sunLight.intensity = 0.35
-      hemi.intensity = 0.18
+      sunLight.intensity = 0.5
+      hemi.intensity = 0.25
     }
     void isHorizon
   }
