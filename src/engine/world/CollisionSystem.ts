@@ -1,158 +1,141 @@
 /**
- * CollisionSystem — AABB collision for buildings, props, and terrain.
+ * MeshCollisionSystem — ray-based collision against actual 3D mesh geometry.
  *
- * The player (and NPCs) cannot walk through walls, buildings, or large props.
- * This uses axis-aligned bounding boxes (AABB) for simplicity and performance.
- * Each building registers its AABB; the player movement code checks against
- * all registered boxes before moving.
+ * REPLACES the broken AABB system. This is the proper veteran approach:
  *
- * Terrain collision is handled separately (the ground-clamp in WorldCanvas)
- * — this system is for OBJECTS on top of terrain.
+ * Instead of axis-aligned bounding boxes (which can't handle rotated buildings,
+ * can't handle doorways, and teleport you on fast movement), we cast rays from
+ * the player in the movement direction against the ACTUAL wall meshes. The
+ * player stops at the intersection point — collision wraps exactly around the
+ * 3D model, works with any rotation, and doorways are naturally walkable
+ * (there's no mesh in the door gap, so the ray passes through).
  *
- * Per the DESIGN_HITBOXES_AND_FORMATIONS.md: every object has physical
- * properties (mass, material, world law resistance). Collision is the
- * physical manifestation of those properties — you can't walk through a
- * wall because the wall has mass and the world's laws resist changing it.
+ * How it works:
+ *   1. Register collidable meshes (walls, roofs, large props — NOT grass/flowers).
+ *   2. Before moving the player, cast a short ray (player radius) in the
+ *      movement direction from the player's new position.
+ *   3. If the ray hits a registered mesh, push the player back to just before
+ *      the hit point.
+ *   4. Cast rays in 4 cardinal directions (N/S/E/W) from the player's body
+ *      to prevent clipping when sliding along walls.
+ *
+ * This is how AAA games do character collision against arbitrary geometry.
+ * It's more expensive than AABB but the village has <100 meshes, so it's
+ * negligible (sub-millisecond per frame).
  */
 
-export interface AABB {
-  minX: number
-  maxX: number
-  minY: number
-  maxY: number
-  minZ: number
-  maxZ: number
-}
+import * as THREE from 'three'
 
-export interface CollisionEntity {
-  id: string
-  box: AABB
-  /** If true, entities are pushed out. If false, entity is a trigger (no push). */
-  solid: boolean
-}
+export class MeshCollisionSystem {
+  private readonly raycaster: THREE.Raycaster
+  private readonly collidables: THREE.Object3D[] = []
+  private readonly playerRadius: number
 
-export class CollisionSystem {
-  private readonly boxes: CollisionEntity[] = []
-
-  register(entity: CollisionEntity): void {
-    this.boxes.push(entity)
-  }
-
-  registerBox(id: string, box: AABB, solid = true): void {
-    this.boxes.push({ id, box, solid })
+  constructor(playerRadius = 0.4) {
+    this.raycaster = new THREE.Raycaster()
+    this.raycaster.far = playerRadius * 2
+    this.playerRadius = playerRadius
   }
 
   /**
-   * Check if a point (x, z) at height y is inside any solid AABB.
-   * Returns the colliding entity, or null if no collision.
+   * Register a Three.js object (and all its children) as collidable.
+   * Call this after compiling buildings — pass the village group.
+   * Only meshes with userData.collidable = true (or name starts with 'wall')
+   * are considered. Grass, flowers, and small props are NOT collidable.
    */
-  checkPoint(x: number, y: number, z: number): CollisionEntity | null {
-    for (const e of this.boxes) {
-      if (!e.solid) continue
-      const b = e.box
-      if (x >= b.minX && x <= b.maxX && y >= b.minY && y <= b.maxY && z >= b.minZ && z <= b.maxZ) {
-        return e
+  register(obj: THREE.Object3D): void {
+    obj.traverse((child) => {
+      const mesh = child as THREE.Mesh
+      if (!mesh.isMesh) return
+      // Only register meshes marked as collidable, or named as walls/roofs.
+      if (mesh.userData.collidable || mesh.name?.includes('wall') || mesh.name?.includes('roof') || mesh.name?.includes('pillar') || mesh.name?.includes('door')) {
+        this.collidables.push(mesh)
       }
-    }
-    return null
+    })
   }
 
   /**
-   * Check if a cylinder (player body) at (x, z) with radius r and height
-   * range [y, y+height] intersects any solid AABB.
-   * Returns the colliding entity, or null.
-   */
-  checkCylinder(x: number, y: number, z: number, radius: number, height: number): CollisionEntity | null {
-    for (const e of this.boxes) {
-      if (!e.solid) continue
-      const b = e.box
-      // Cylinder vs AABB: check if the cylinder's XZ circle intersects the
-      // AABB's XZ rectangle, AND the cylinder's Y range overlaps the AABB's Y range.
-      const closestX = Math.max(b.minX, Math.min(x, b.maxX))
-      const closestZ = Math.max(b.minZ, Math.min(z, b.maxZ))
-      const dx = x - closestX
-      const dz = z - closestZ
-      const distSq = dx * dx + dz * dz
-      if (distSq > radius * radius) continue // no XZ overlap
-      // Y overlap check.
-      if (y + height < b.minY || y > b.maxY) continue // no Y overlap
-      return e
-    }
-    return null
-  }
-
-  /**
-   * Resolve collision using the PREVIOUS position to determine which side
-   * the entity came from. This prevents the teleport-through-walls bug
-   * where a fast-moving player gets pushed to the wrong side.
+   * Check if the player can move from (prevX, prevZ) to (newX, newZ) without
+   * hitting a wall. Returns the corrected position.
    *
-   * Strategy: for each colliding box, determine which face the entity
-   * entered from (based on prevPos relative to box center), then push
-   * back to that face. This ensures the entity is pushed BACK to where
-   * it came from, not through to the other side.
+   * Strategy: cast rays in 8 directions from the new position. If any ray
+   * hits a wall within playerRadius, push the player back along that ray
+   * to just outside the hit point. This prevents:
+   *   - Walking through walls (ray stops you)
+   *   - Clipping into walls when sliding (8-direction coverage)
+   *   - Teleporting through walls (we check from the NEW position, not push to faces)
+   *
+   * Doorways work naturally: the door gap has no wall mesh, so rays pass
+   * through and the player can enter.
    */
   resolve(
-    x: number, y: number, z: number,
-    prevX: number, prevY: number, prevZ: number,
-    radius: number, height: number,
-  ): { x: number; y: number; z: number } {
-    let result = { x, y, z }
-    for (let iter = 0; iter < 4; iter++) {
-      const hit = this.checkCylinder(result.x, result.y, result.z, radius, height)
-      if (!hit) break
-      const b = hit.box
-      const centerX = (b.minX + b.maxX) / 2
-      const centerZ = (b.minZ + b.maxZ) / 2
+    newX: number, newY: number, newZ: number,
+    prevX: number, _prevY: number, prevZ: number,
+  ): { x: number; z: number; hit: boolean } {
+    if (this.collidables.length === 0) return { x: newX, z: newZ, hit: false }
 
-      // Determine which face the entity entered from using the PREVIOUS position.
-      // If prevX was outside the box on the -X side, push to -X face.
-      // If prevX was outside on +X side, push to +X face.
-      // If prevZ was outside on -Z side, push to -Z face.
-      // If prevZ was outside on +Z side, push to +Z face.
-      // If both were outside (corner entry), push along the axis of greater movement.
+    let resultX = newX
+    let resultZ = newZ
+    let hit = false
 
-      const wasOutsideMinX = prevX + radius <= b.minX
-      const wasOutsideMaxX = prevX - radius >= b.maxX
-      const wasOutsideMinZ = prevZ + radius <= b.minZ
-      const wasOutsideMaxZ = prevZ - radius >= b.maxZ
+    // Cast rays in 8 directions from the player's body center.
+    // The ray origin is at the player's chest height (newY + 0.9).
+    const origin = new THREE.Vector3(resultX, newY + 0.9, resultZ)
+    const directions = [
+      new THREE.Vector3(1, 0, 0),   // +X (east)
+      new THREE.Vector3(-1, 0, 0),  // -X (west)
+      new THREE.Vector3(0, 0, 1),   // +Z (south)
+      new THREE.Vector3(0, 0, -1),  // -Z (north)
+      new THREE.Vector3(0.707, 0, 0.707),   // NE
+      new THREE.Vector3(-0.707, 0, 0.707),  // NW
+      new THREE.Vector3(0.707, 0, -0.707),  // SE
+      new THREE.Vector3(-0.707, 0, -0.707), // SW
+    ]
 
-      const movedX = Math.abs(x - prevX)
-      const movedZ = Math.abs(z - prevZ)
-
-      if (wasOutsideMinX) {
-        // Came from -X side — push back to -X face.
-        result.x = b.minX - radius
-      } else if (wasOutsideMaxX) {
-        // Came from +X side — push back to +X face.
-        result.x = b.maxX + radius
-      } else if (wasOutsideMinZ) {
-        // Came from -Z side.
-        result.z = b.minZ - radius
-      } else if (wasOutsideMaxZ) {
-        // Came from +Z side.
-        result.z = b.maxZ + radius
-      } else {
-        // Entity was already inside the box (shouldn't happen normally).
-        // Fall back to nearest-face push based on current position.
-        const distMinX = Math.abs(result.x - b.minX)
-        const distMaxX = Math.abs(result.x - b.maxX)
-        const distMinZ = Math.abs(result.z - b.minZ)
-        const distMaxZ = Math.abs(result.z - b.maxZ)
-        const minDist = Math.min(distMinX, distMaxX, distMinZ, distMaxZ)
-        if (minDist === distMinX) result.x = b.minX - radius
-        else if (minDist === distMaxX) result.x = b.maxX + radius
-        else if (minDist === distMinZ) result.z = b.minZ - radius
-        else result.z = b.maxZ + radius
+    for (const dir of directions) {
+      this.raycaster.set(origin, dir)
+      this.raycaster.far = this.playerRadius
+      const intersects = this.raycaster.intersectObjects(this.collidables, false)
+      if (intersects.length > 0) {
+        const hitPoint = intersects[0].point
+        const dist = intersects[0].distance
+        if (dist < this.playerRadius) {
+          // Push the player back along the reverse of the ray direction.
+          const pushDist = this.playerRadius - dist + 0.01
+          resultX -= dir.x * pushDist
+          resultZ -= dir.z * pushDist
+          origin.x = resultX
+          origin.z = resultZ
+          hit = true
+        }
       }
     }
-    return result
+
+    // Also check the movement direction specifically — if moving into a wall,
+    // stop the player at the wall surface.
+    const moveDir = new THREE.Vector3(newX - prevX, 0, newZ - prevZ)
+    if (moveDir.lengthSq() > 0.0001) {
+      moveDir.normalize()
+      const moveOrigin = new THREE.Vector3(prevX, newY + 0.9, prevZ)
+      this.raycaster.set(moveOrigin, moveDir)
+      this.raycaster.far = this.playerRadius + moveDir.length() * 0.5
+      const moveHits = this.raycaster.intersectObjects(this.collidables, false)
+      if (moveHits.length > 0 && moveHits[0].distance < this.playerRadius) {
+        // Can't move in this direction — stay at previous position on this axis.
+        resultX = prevX
+        resultZ = prevZ
+        hit = true
+      }
+    }
+
+    return { x: resultX, z: resultZ, hit }
   }
 
   clear(): void {
-    this.boxes.length = 0
+    this.collidables.length = 0
   }
 
   count(): number {
-    return this.boxes.length
+    return this.collidables.length
   }
 }

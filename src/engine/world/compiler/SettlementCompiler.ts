@@ -103,11 +103,15 @@ function compileHut(group: THREE.Group, building: CanonBuilding): void {
   const doorMat = getMaterial('DOOR', theme)
   const pillarMat = getMaterial('PILLAR', theme)
 
+  /** Helper: tag a mesh as collidable for the ray-based collision system. */
+  const collidable = (mesh: THREE.Mesh, name: string): THREE.Mesh => {
+    mesh.userData.collidable = true
+    mesh.name = name
+    return mesh
+  }
+
   // Floor
-  const floor = new THREE.Mesh(
-    new THREE.BoxGeometry(w, 0.1, d),
-    floorMat,
-  )
+  const floor = collidable(new THREE.Mesh(new THREE.BoxGeometry(w, 0.1, d), floorMat), 'floor')
   floor.position.set(0, 0.05, 0)
   floor.receiveShadow = true
   group.add(floor)
@@ -115,10 +119,7 @@ function compileHut(group: THREE.Group, building: CanonBuilding): void {
   // Walls (4 walls with door opening on +Z face)
   const wallThickness = 0.15
   // Back wall (-Z)
-  const backWall = new THREE.Mesh(
-    new THREE.BoxGeometry(w, h, wallThickness),
-    wallMat,
-  )
+  const backWall = collidable(new THREE.Mesh(new THREE.BoxGeometry(w, h, wallThickness), wallMat), 'wall_back')
   backWall.position.set(0, h / 2, -d / 2)
   backWall.castShadow = true
   backWall.receiveShadow = true
@@ -128,42 +129,27 @@ function compileHut(group: THREE.Group, building: CanonBuilding): void {
   const doorHeight = 1.8
   const sideWidth = (w - doorWidth) / 2
   if (sideWidth > 0) {
-    const leftFront = new THREE.Mesh(
-      new THREE.BoxGeometry(sideWidth, h, wallThickness),
-      wallMat,
-    )
+    const leftFront = collidable(new THREE.Mesh(new THREE.BoxGeometry(sideWidth, h, wallThickness), wallMat), 'wall_front_left')
     leftFront.position.set(-(doorWidth / 2 + sideWidth / 2), h / 2, d / 2)
     leftFront.castShadow = true
     group.add(leftFront)
-    const rightFront = new THREE.Mesh(
-      new THREE.BoxGeometry(sideWidth, h, wallThickness),
-      wallMat,
-    )
+    const rightFront = collidable(new THREE.Mesh(new THREE.BoxGeometry(sideWidth, h, wallThickness), wallMat), 'wall_front_right')
     rightFront.position.set(doorWidth / 2 + sideWidth / 2, h / 2, d / 2)
     rightFront.castShadow = true
     group.add(rightFront)
   }
   // Above door
-  const aboveDoor = new THREE.Mesh(
-    new THREE.BoxGeometry(doorWidth, h - doorHeight, wallThickness),
-    wallMat,
-  )
+  const aboveDoor = collidable(new THREE.Mesh(new THREE.BoxGeometry(doorWidth, h - doorHeight, wallThickness), wallMat), 'wall_above_door')
   aboveDoor.position.set(0, doorHeight + (h - doorHeight) / 2, d / 2)
   group.add(aboveDoor)
 
   // Left wall (-X)
-  const leftWall = new THREE.Mesh(
-    new THREE.BoxGeometry(wallThickness, h, d),
-    wallMat,
-  )
+  const leftWall = collidable(new THREE.Mesh(new THREE.BoxGeometry(wallThickness, h, d), wallMat), 'wall_left')
   leftWall.position.set(-w / 2, h / 2, 0)
   leftWall.castShadow = true
   group.add(leftWall)
   // Right wall (+X)
-  const rightWall = new THREE.Mesh(
-    new THREE.BoxGeometry(wallThickness, h, d),
-    wallMat,
-  )
+  const rightWall = collidable(new THREE.Mesh(new THREE.BoxGeometry(wallThickness, h, d), wallMat), 'wall_right')
   rightWall.position.set(w / 2, h / 2, 0)
   rightWall.castShadow = true
   group.add(rightWall)
