@@ -13920,3 +13920,28 @@ Stage Summary:
   4. Only 1-2 village buildings visible at a time. Camera too close or buildings too spread.
   5. No "latest highest growing github repos for ai game development" researched yet.
 - NEXT PRIORITY: (1) Hand-author Planet Suzaku geography from CANON_RI_COMPLETE_WORLD.md. (2) Fix grass material color. (3) Implement NMS-style action combat (dodge, attack, qi skills). (4) Research trending AI game dev repos. (5) Wire WorldState.sample() into renderer.
+
+---
+Task ID: CRON-THREEJS-6
+Agent: threejs-aaa-loop
+Task: Fix character model (bald, floating head, wrong facing) + remove spirit root selection + NMS camera + no transparency
+
+Work Log:
+- Woke OptMem. Read user complaints: bald head, floating head, wrong facing, spirit root selection is BS, objects floating, transparent trees, need NMS voxel system + flying + camera, strong debug system, critic needs to be way more critical.
+- REWROTE CultivatorModel.ts completely:
+  * Hair cap (half-sphere covering top of head) + top-knot bun = NO MORE BALD
+  * Neck connects torso (y=1.35) to head (y=1.50) = NO MORE FLOATING HEAD
+  * Model faces +Z by default, setYaw(yaw) rotates correctly = NO MORE WRONG FACING
+  * All MeshStandardMaterial (no custom ShaderMaterial) = responds to scene lighting
+  * All materials opaque = NO MORE TRANSPARENCY
+  * Realistic 1.8m proportions: feet y=0, head top y=1.66
+- Removed spirit root selection from CharacterCreation.tsx — just name input + Begin button
+- Removed yaw+PI offset in WorldCanvas (was making player face wrong way)
+- Fixed A/D inversion (right vector corrected)
+- PlayerEntity uses robeColorOverride=0x8a7a5a (brown peasant clothes for mortal)
+
+Stage Summary:
+- SHIPPED: CRON-THREEJS-6 (git hash 00e5b954). Build: bun run lint 0 errors. Dev server 200.
+- VLM CRITIC CONFIRMED all fixes: has hair ✓, head attached ✓, facing away from camera ✓, brown clothes ✓, trees not transparent ✓.
+- HARSH CRITIQUE: model is still low-poly (3/10 for quality). Needs blendshapes, better proportions, cloth physics. No NMS voxel system yet. No flying mechanics. No strong debug system. World is not hand-crafted Planet Suzaku. Need to read all canon JSONs and transcribe into the engine.
+- NEXT PRIORITY: (1) NMS voxel system (block-based building/mining on top of smooth terrain). (2) NMS flying mechanics (sword-flight with proper physics). (3) NMS camera controls (orbit + zoom + collision). (4) Strong debug system (inspector, entity viewer, graph visualizer). (5) Hand-crafted Planet Suzaku map from canon JSONs. (6) Read all *_REFERENCE.ts and ri_canon_*.json files and transcribe into engine.
