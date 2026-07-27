@@ -185,8 +185,10 @@ export default function WorldCanvas() {
         }
       }
       const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false }
-      // Click to lock pointer (NMS-style: locked = crosshair + mouse look).
-      const onClick = () => { if (!pointerLocked) renderer.domElement.requestPointerLock?.() }
+      // NMS-style camera: the canvas click does NOT lock the pointer.
+      // The pointer is locked ONLY via the dedicated "Lock Camera" button.
+      // When unlocked, the mouse cursor is free for UI interaction.
+      // When locked, mouse looks around + crosshair appears for aiming/combat.
       const onPointerLockChange = () => {
         pointerLocked = document.pointerLockElement === renderer.domElement
         setCameraLocked(pointerLocked)
@@ -196,7 +198,7 @@ export default function WorldCanvas() {
         camera.userData.yaw = (camera.userData.yaw ?? 0) - e.movementX * 0.003
         camera.userData.pitch = Math.max(-1.0, Math.min(0.6, (camera.userData.pitch ?? -0.15) - e.movementY * 0.003))
       }
-      // Scroll-to-zoom: adjust camera distance.
+      // Scroll-to-zoom: works whether locked or unlocked.
       const onWheel = (e: WheelEvent) => {
         e.preventDefault()
         const zoom = (camera.userData.zoom ?? 7) + e.deltaY * 0.01
@@ -204,7 +206,6 @@ export default function WorldCanvas() {
       }
       window.addEventListener('keydown', onKeyDown)
       window.addEventListener('keyup', onKeyUp)
-      renderer.domElement.addEventListener('click', onClick)
       renderer.domElement.addEventListener('wheel', onWheel, { passive: false })
       document.addEventListener('pointerlockchange', onPointerLockChange)
       document.addEventListener('mousemove', onMouseMove)
@@ -369,7 +370,6 @@ export default function WorldCanvas() {
         resizeObserver?.disconnect()
         window.removeEventListener('keydown', onKeyDown)
         window.removeEventListener('keyup', onKeyUp)
-        renderer.domElement.removeEventListener('click', onClick)
         renderer.domElement.removeEventListener('wheel', onWheel)
         document.removeEventListener('pointerlockchange', onPointerLockChange)
         document.removeEventListener('mousemove', onMouseMove)
@@ -413,7 +413,7 @@ export default function WorldCanvas() {
         }}
         className="absolute left-1/2 top-4 z-30 -translate-x-1/2 select-none rounded-md border border-amber-500/40 bg-black/60 px-4 py-1.5 font-mono text-[10px] uppercase tracking-widest text-amber-200/80 backdrop-blur-sm transition-colors hover:border-amber-400/60 hover:text-amber-100"
       >
-        {cameraLocked ? '🔓 Unlock Camera (ESC)' : '🔒 Lock Camera (Click)'}
+        {cameraLocked ? '🔓 Unlock Camera (ESC)' : '🔒 Lock Camera (Mouse Look)'}
       </button>
 
       {/* Top-left status */}
@@ -434,10 +434,11 @@ export default function WorldCanvas() {
       </div>
       {/* Controls hint */}
       <div className="pointer-events-none absolute bottom-4 right-4 z-10 select-none rounded-md border border-amber-500/30 bg-black/50 px-3 py-2 font-mono text-[10px] text-amber-100/70 backdrop-blur-sm">
-        <div>WASD move · MOUSE look · SCROLL zoom</div>
+        <div>WASD move · SCROLL zoom</div>
         <div>SPACE jump · SHIFT sprint</div>
         <div>F sword-flight (needs qi) · Q meditate (needs qi)</div>
-        <div>ESC unlock camera · CLICK lock camera</div>
+        <div className="mt-1 text-amber-300/70">Lock Camera button → mouse look + crosshair</div>
+        <div className="text-amber-300/70">ESC → unlock camera (free cursor)</div>
       </div>
     </div>
   )
