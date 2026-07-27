@@ -6,6 +6,7 @@ import { createSky, type SkyHandle } from '@/engine/render/SkySystem'
 import { createPostFX, type PostFXHandle } from '@/engine/render/PostProcessing'
 import { createCultivatorModel, type CultivatorModelHandle } from '@/engine/entities/CultivatorModel'
 import { createPlayer, type PlayerHandle } from '@/engine/entities/PlayerEntity'
+import { NPCCognition } from '@/engine/entities/NPCCognition'
 import { createSolidTerrain, createVariedSpiritPines } from '@/engine/world/VoxelTerrain'
 import { createGrassTufts, createRocks, createSpiritFlowers } from '@/engine/world/SmoothTerrain'
 import { rbfTerrainHeight as terrainHeight } from '@/engine/world/field/RBFTerrain'
@@ -204,6 +205,20 @@ export default function WorldCanvas() {
       wanglinNpc.setAnimation('idle')
       wanglinNpc.setAuraVisible(false)
       scene.add(wanglinNpc.group)
+
+      // ---- Wang Lin NPC Cognition (PRD §16) ----
+      // Wang Lin has independent behavior: perception → motivation →
+      // commitment → action. He observes the player, wanders the village,
+      // meditates, and reacts to beasts. His real self is on the Immortal
+      // Astral Continent; this is his manifestation.
+      const wanglinCognition = new NPCCognition({
+        name: 'Wang Lin',
+        realm: 'Foundation Establishment',
+        homePosition: new THREE.Vector3(0, wanglinY, 0),
+        patrolRadius: 15,
+        perceptionRange: 3,
+        baseHostility: 0, // Wang Lin is not hostile to the player
+      }, wanglinNpc)
 
       // ---- Canon fidelity check ----
       const violations = checkCanonFidelity({
@@ -536,10 +551,19 @@ export default function WorldCanvas() {
         else player.setAnimation('idle')
         player.update(dt)
 
-        // Wang Lin NPC idle.
-        wanglinYaw += dt * 0.15
-        wanglinNpc.setYaw(wanglinYaw)
-        wanglinNpc.update(dt)
+        // Wang Lin NPC cognition update (PRD §16).
+        // Drives perception → motivation → commitment → action.
+        const beastPositions = spawner.getNearby(wanglinNpc.group.position.x, wanglinNpc.group.position.z, 20)
+          .filter((e) => e.type === 'beast')
+          .map((e) => e.position)
+        const playerVisible = player.state.position.distanceTo(wanglinNpc.group.position) < 30
+        wanglinCognition.update(dt, player.state.position, playerVisible, beastPositions)
+        wanglinNpc.update(dt) // procedural animation (breathing, arm sway)
+        // Keep Wang Lin on terrain.
+        const wanglinGroundY = terrainHeight(wanglinNpc.group.position.x, wanglinNpc.group.position.z)
+        if (wanglinNpc.group.position.y < wanglinGroundY) {
+          wanglinNpc.group.position.y = wanglinGroundY
+        }
 
         // Animate doors (swing open/closed).
         villageGroup.traverse((child) => {
