@@ -8,6 +8,13 @@ import dev.ergenverse.cultivation.RealmId;
 import dev.ergenverse.entity.EREntityTypes;
 import dev.ergenverse.entity.MosquitoSwarmEntity;
 import dev.ergenverse.entity.SpiritBeastEntity;
+import dev.ergenverse.graph.Edge;
+import dev.ergenverse.graph.GraphBootstrap;
+import dev.ergenverse.graph.GraphQueryService;
+import dev.ergenverse.graph.Node;
+import dev.ergenverse.graph.NodeId;
+import dev.ergenverse.graph.NodeType;
+import dev.ergenverse.graph.WorldGraph;
 import dev.ergenverse.perception.PerceptionTier;
 import dev.ergenverse.simulation.event.EnergyType;
 import dev.ergenverse.simulation.event.WorldEventBus;
@@ -77,6 +84,36 @@ import java.util.stream.Collectors;
  *
  * <p>Status: FOUNDATION. The engine defines the tick loop and query API.
  * Full integration with Forge server tick events is the next step.
+ *
+ * <h2>CRON-139 — Graph-First Query Path</h2>
+ * <p>Queries 1-4 (queryWhatExists, queryWhoOwns, queryWhoWants, queryWhoKnows)
+ * now consult the {@link dev.ergenverse.graph.WorldGraph} (populated by
+ * {@link GraphBootstrap} from {@link dev.ergenverse.wanglin.RICanonicalDatabase})
+ * BEFORE falling back to JSON subsystem iteration. The graph is the canon
+ * source of truth; JSON subsystems are the fallback for entities that the
+ * graph does not yet cover (e.g., simulation-spawned beasts, civilizations
+ * not in RICanonicalDatabase, ecosystem entries).
+ *
+ * <p>The graph returns its own record types ({@link GraphQueryService.LocationEntry},
+ * {@link GraphQueryService.OwnershipInfo}, {@link GraphQueryService.DesireInfo},
+ * {@link GraphQueryService.KnowledgeInfo}) which are converted to the
+ * WorldStateEngine's record types ({@link ObjectEntry}, {@link OwnershipRecord},
+ * {@link DesireRecord}, {@link KnowledgeRecord}) via the private convert* helpers.
+ *
+ * <p>Queries 5-6 (queryWhyUntaken, queryNaturalNext) remain JSON-only —
+ * they consult the {@code opportunities} and {@code karma} subsystems which
+ * do not yet have direct graph equivalents. A future CRON will add
+ * OpportunityNodes + KarmicEventNodes to the graph.
+ *
+ * <p><b>Canon fidelity:</b> The graph is populated exclusively from
+ * {@link dev.ergenverse.wanglin.RICanonicalDatabase} — every NPC, location,
+ * artifact, and technique node traces back to a Layer 1 canon entry. The
+ * JSON subsystems (npcs/, civilizations/, ecosystems/) may contain
+ * mod-original entries not in the canon database; those entries still
+ * appear in query results via the JSON fallback path. This means a query
+ * may return BOTH graph-sourced canon entries AND JSON-sourced mod-original
+ * entries — they are merged by objectId (graph first, JSON duplicates
+ * suppressed).
  */
 public final class WorldStateEngine {
 
@@ -588,90 +625,134 @@ public final class WorldStateEngine {
         if (locationId == null || locationId.isBlank()) return Collections.emptyList();
 
         List<ObjectEntry> out = new ArrayList<>();
+        Set<String> seenIds = new HashSet<>(); // CRON-139: dedupe graph+JSON results
         String loc = locationId.toLowerCase();
 
-        // ── NPCs at this location ──
+        // ── CRON-139: Graph-first path ──
+        // Consult the WorldGraph before JSON subsystems. The graph is populated
+        // from RICanonicalDatabase (canon locations + their residents via
+        // LOCATED_IN edges). If the graph recognizes this location, its
+        // contents are added first; JSON entries with the same objectId are
+        // suppressed to avoid duplicates.
+        NodeId graphLoc = resolveGraphNode(locationId, NodeType.LOCATION);
+        if (graphLoc != null) {
+            try {
+                List<GraphQueryService.LocationEntry> graphEntries =
+                        GraphBootstrap.query().whatExistsAt(graphLoc);
+                for (GraphQueryService.LocationEntry ge : graphEntries) {
+                    ObjectEntry oe = convertLocationEntry(ge, locationId);
+                    if (seenIds.add(oe.objectId())) {
+                        out.add(oe);
+                    }
+                }
+                Ergenverse.LOGGER.debug("[WorldStateEngine] queryWhatExists('{}') graph-first: {} entries",
+                        locationId, graphEntries.size());
+            } catch (Exception ex) {
+                // Defensive: if the graph query throws (e.g., bootstrap not
+                // complete, edge corruption), log and fall through to JSON.
+                Ergenverse.LOGGER.warn("[WorldStateEngine] Graph query failed for whatExistsAt('{}'), falling back to JSON: {}",
+                        locationId, ex.getMessage());
+            }
+        }
+
+
+        // ── NPCs at this location (JSON fallback — CRON-139 dedupes by objectId) ──
         for (Map.Entry<String, JsonObject> e : WorldStateDataLoader.getSubsystem("npcs").entrySet()) {
             JsonObject npc = e.getValue();
             String npcLoc = WorldStateDataLoader.str(npc, "location", "").toLowerCase();
             if (locationMatches(npcLoc, loc)) {
                 String name = WorldStateDataLoader.str(npc, "name", e.getKey());
-                out.add(new ObjectEntry(
-                        WorldStateDataLoader.str(npc, "npc_id", e.getKey()),
-                        "npc",
-                        locationId,
-                        0L, // age unknown
-                        name + " — " + WorldStateDataLoader.str(npc, "cultivation", "realm unknown")
-                ));
+                String oid = WorldStateDataLoader.str(npc, "npc_id", e.getKey());
+                if (seenIds.add(oid)) {
+                    out.add(new ObjectEntry(
+                            oid,
+                            "npc",
+                            locationId,
+                            0L, // age unknown
+                            name + " — " + WorldStateDataLoader.str(npc, "cultivation", "realm unknown")
+                    ));
+                }
             }
         }
 
-        // ── Civilizations at this location ──
+        // ── Civilizations at this location (JSON fallback) ──
         for (Map.Entry<String, JsonObject> e : WorldStateDataLoader.getSubsystem("civilizations").entrySet()) {
             JsonObject civ = e.getValue();
             String civLoc = WorldStateDataLoader.str(civ, "location", "").toLowerCase();
             if (locationMatches(civLoc, loc)) {
                 String name = WorldStateDataLoader.str(civ, "name", e.getKey());
-                out.add(new ObjectEntry(
-                        WorldStateDataLoader.str(civ, "civilization_id", e.getKey()),
-                        "civilization",
-                        locationId,
-                        0L,
-                        name + " — " + WorldStateDataLoader.str(civ, "type", "faction") +
-                        " (" + WorldStateDataLoader.str(civ, "canon_status", "unknown status") + ")"
-                ));
+                String oid = WorldStateDataLoader.str(civ, "civilization_id", e.getKey());
+                if (seenIds.add(oid)) {
+                    out.add(new ObjectEntry(
+                            oid,
+                            "civilization",
+                            locationId,
+                            0L,
+                            name + " — " + WorldStateDataLoader.str(civ, "type", "faction") +
+                            " (" + WorldStateDataLoader.str(civ, "canon_status", "unknown status") + ")"
+                    ));
+                }
             }
         }
 
-        // ── Ecosystems at this location ──
+        // ── Ecosystems at this location (JSON fallback) ──
         for (Map.Entry<String, JsonObject> e : WorldStateDataLoader.getSubsystem("ecosystems").entrySet()) {
             JsonObject eco = e.getValue();
             String ecoLoc = WorldStateDataLoader.str(eco, "location", "").toLowerCase();
             if (locationMatches(ecoLoc, loc)) {
                 String name = WorldStateDataLoader.str(eco, "name", e.getKey());
-                out.add(new ObjectEntry(
-                        WorldStateDataLoader.str(eco, "ecosystem_id", e.getKey()),
-                        "ecosystem",
-                        locationId,
-                        0L,
-                        name + " — " + WorldStateDataLoader.str(eco, "description", "ecosystem")
-                ));
+                String oid = WorldStateDataLoader.str(eco, "ecosystem_id", e.getKey());
+                if (seenIds.add(oid)) {
+                    out.add(new ObjectEntry(
+                            oid,
+                            "ecosystem",
+                            locationId,
+                            0L,
+                            name + " — " + WorldStateDataLoader.str(eco, "description", "ecosystem")
+                    ));
+                }
             }
         }
 
-        // ── Macro terrain at this location ──
+        // ── Macro terrain at this location (JSON fallback) ──
         for (Map.Entry<String, JsonObject> e : WorldStateDataLoader.getSubsystem("macro_terrain").entrySet()) {
             JsonObject mt = e.getValue();
             String mtBeing = WorldStateDataLoader.str(mt, "being", "").toLowerCase();
             String mtName = WorldStateDataLoader.str(mt, "name", "").toLowerCase();
             // macro_terrain is matched by name or being containing the location, or vice versa
             if (mtName.contains(loc) || loc.contains(mtName) || !mtBeing.isEmpty()) {
-                out.add(new ObjectEntry(
-                        WorldStateDataLoader.str(mt, "terrain_id", e.getKey()),
-                        "macro_terrain",
-                        locationId,
-                        0L,
-                        WorldStateDataLoader.str(mt, "name", e.getKey()) +
-                        " — " + WorldStateDataLoader.str(mt, "scale", "terrain-scale")
-                ));
+                String oid = WorldStateDataLoader.str(mt, "terrain_id", e.getKey());
+                if (seenIds.add(oid)) {
+                    out.add(new ObjectEntry(
+                            oid,
+                            "macro_terrain",
+                            locationId,
+                            0L,
+                            WorldStateDataLoader.str(mt, "name", e.getKey()) +
+                            " — " + WorldStateDataLoader.str(mt, "scale", "terrain-scale")
+                    ));
+                }
             }
         }
 
-        // ── Species whose habitat references this location ──
+        // ── Species whose habitat references this location (JSON fallback) ──
         for (Map.Entry<String, JsonObject> e : WorldStateDataLoader.getSubsystem("species").entrySet()) {
             JsonObject sp = e.getValue();
             JsonObject canon = WorldStateDataLoader.obj(sp, "canonical");
             if (canon == null) continue;
             String habitat = WorldStateDataLoader.str(canon, "habitat", "").toLowerCase();
             if (locationMatches(habitat, loc)) {
-                out.add(new ObjectEntry(
-                        WorldStateDataLoader.str(sp, "species_id", e.getKey()),
-                        "species",
-                        locationId,
-                        0L,
-                        WorldStateDataLoader.str(sp, "name", e.getKey()) +
-                        " — bloodline: " + WorldStateDataLoader.str(sp, "bloodline_tier", "unknown")
-                ));
+                String oid = WorldStateDataLoader.str(sp, "species_id", e.getKey());
+                if (seenIds.add(oid)) {
+                    out.add(new ObjectEntry(
+                            oid,
+                            "species",
+                            locationId,
+                            0L,
+                            WorldStateDataLoader.str(sp, "name", e.getKey()) +
+                            " — bloodline: " + WorldStateDataLoader.str(sp, "bloodline_tier", "unknown")
+                    ));
+                }
             }
         }
 
@@ -690,6 +771,28 @@ public final class WorldStateEngine {
     public static OwnershipRecord queryWhoOwns(String objectId) {
         WorldStateDataLoader.loadOnce();
         if (objectId == null || objectId.isBlank()) return null;
+
+        // ── CRON-139: Graph-first path ──
+        // The graph is the canon source of truth for artifact ownership
+        // (CanonArtifact.currentOwner → OWNS edge from owner NPC to artifact).
+        // If the graph recognizes this artifact, return its owner immediately.
+        NodeId graphArt = resolveGraphNode(objectId, NodeType.ARTIFACT);
+        if (graphArt != null) {
+            try {
+                GraphQueryService.OwnershipInfo info =
+                        GraphBootstrap.query().whoOwns(graphArt);
+                if (info != null) {
+                    Ergenverse.LOGGER.debug("[WorldStateEngine] queryWhoOwns('{}') graph-first: owner={}",
+                            objectId, info.ownerName());
+                    return convertOwnershipInfo(info);
+                }
+                // Graph recognized the artifact but it has no owner edge —
+                // fall through to JSON (provenance may have stale data).
+            } catch (Exception ex) {
+                Ergenverse.LOGGER.warn("[WorldStateEngine] Graph query failed for whoOwns('{}'), falling back to JSON: {}",
+                        objectId, ex.getMessage());
+            }
+        }
 
         // Try provenance first (canonical artifact ownership)
         JsonObject prov = WorldStateDataLoader.getEntry("provenance", objectId);
@@ -732,6 +835,31 @@ public final class WorldStateEngine {
         if (objectId == null || objectId.isBlank()) return Collections.emptyList();
 
         List<DesireRecord> out = new ArrayList<>();
+        Set<String> seenWanters = new HashSet<>(); // CRON-139: dedupe graph+JSON
+
+        // ── CRON-139: Graph-first path ──
+        // The graph tracks desire via karmic edges (KARMIC_DEBT, GRUDGE,
+        // VENGEANCE_OBLIGATION, HATES, ENEMY_OF). If the graph recognizes
+        // this artifact, its wanters are returned first; JSON karma entries
+        // with the same bearer are suppressed.
+        NodeId graphArt = resolveGraphNode(objectId, NodeType.ARTIFACT);
+        if (graphArt != null) {
+            try {
+                List<GraphQueryService.DesireInfo> graphWanters =
+                        GraphBootstrap.query().whoWants(graphArt);
+                for (GraphQueryService.DesireInfo di : graphWanters) {
+                    DesireRecord dr = convertDesireInfo(di);
+                    if (seenWanters.add(dr.desirerId())) {
+                        out.add(dr);
+                    }
+                }
+                Ergenverse.LOGGER.debug("[WorldStateEngine] queryWhoWants('{}') graph-first: {} wanters",
+                        objectId, graphWanters.size());
+            } catch (Exception ex) {
+                Ergenverse.LOGGER.warn("[WorldStateEngine] Graph query failed for whoWants('{}'), falling back to JSON: {}",
+                        objectId, ex.getMessage());
+            }
+        }
 
         // Check karma nodes — if an object ID appears in a consequence, the
         // bearer of that karma node desires the object (wants to claim/destroy it).
@@ -744,10 +872,12 @@ public final class WorldStateEngine {
                 String targetId = WorldStateDataLoader.str(c, "target_id", "");
                 if (targetId.equalsIgnoreCase(objectId)) {
                     String bearer = WorldStateDataLoader.str(karma, "bearer", "unknown");
-                    String type = WorldStateDataLoader.str(c, "type", "inheritance_claimed");
-                    int mag = WorldStateDataLoader.integer(c, "magnitude", 5);
-                    out.add(new DesireRecord(objectId, bearer, desireTypeFromConsequence(type),
-                            Math.min(10, mag / 10), karma_karma(karma)));
+                    if (seenWanters.add(bearer)) {
+                        String type = WorldStateDataLoader.str(c, "type", "inheritance_claimed");
+                        int mag = WorldStateDataLoader.integer(c, "magnitude", 5);
+                        out.add(new DesireRecord(objectId, bearer, desireTypeFromConsequence(type),
+                                Math.min(10, mag / 10), karma_karma(karma)));
+                    }
                 }
             }
         }
@@ -787,6 +917,30 @@ public final class WorldStateEngine {
         if (objectId == null || objectId.isBlank()) return Collections.emptyList();
 
         List<KnowledgeRecord> out = new ArrayList<>();
+        Set<String> seenKnowers = new HashSet<>(); // CRON-139: dedupe graph+JSON
+
+        // ── CRON-139: Graph-first path ──
+        // The graph tracks knowledge via WITNESSED + FAMILIAR_WITH edges.
+        // If the graph recognizes this artifact, its knowers are returned
+        // first; JSON karma entries with the same bearer are suppressed.
+        NodeId graphArt = resolveGraphNode(objectId, NodeType.ARTIFACT);
+        if (graphArt != null) {
+            try {
+                List<GraphQueryService.KnowledgeInfo> graphKnowers =
+                        GraphBootstrap.query().whoKnowsAbout(graphArt);
+                for (GraphQueryService.KnowledgeInfo ki : graphKnowers) {
+                    KnowledgeRecord kr = convertKnowledgeInfo(ki);
+                    if (seenKnowers.add(kr.knowerId())) {
+                        out.add(kr);
+                    }
+                }
+                Ergenverse.LOGGER.debug("[WorldStateEngine] queryWhoKnows('{}') graph-first: {} knowers",
+                        objectId, graphKnowers.size());
+            } catch (Exception ex) {
+                Ergenverse.LOGGER.warn("[WorldStateEngine] Graph query failed for whoKnows('{}'), falling back to JSON: {}",
+                        objectId, ex.getMessage());
+            }
+        }
 
         // Karma bearers know about objects tied to their karma
         for (JsonObject karma : WorldStateDataLoader.getSubsystem("karma").values()) {
@@ -797,9 +951,11 @@ public final class WorldStateEngine {
                 String targetId = WorldStateDataLoader.str(ce.getAsJsonObject(), "target_id", "");
                 if (targetId.equalsIgnoreCase(objectId)) {
                     String bearer = WorldStateDataLoader.str(karma, "bearer", "unknown");
-                    int kw = WorldStateDataLoader.integer(karma, "karmic_weight", 0);
-                    int tier = Math.min(5, Math.abs(kw) / 1000 + 2);
-                    out.add(new KnowledgeRecord(objectId, bearer, tier, Math.min(10, Math.abs(kw) / 500)));
+                    if (seenKnowers.add(bearer)) {
+                        int kw = WorldStateDataLoader.integer(karma, "karmic_weight", 0);
+                        int tier = Math.min(5, Math.abs(kw) / 1000 + 2);
+                        out.add(new KnowledgeRecord(objectId, bearer, tier, Math.min(10, Math.abs(kw) / 500)));
+                    }
                 }
             }
         }
@@ -912,6 +1068,148 @@ public final class WorldStateEngine {
         // Also check the raw forms (for IDs like "zhao_mountains")
         return dataLoc.toLowerCase().contains(queryLoc.toLowerCase())
                 || queryLoc.toLowerCase().contains(dataLoc.toLowerCase());
+    }
+
+    // ─── CRON-139: Graph-First Helpers ───────────────────────────────
+
+    /**
+     * CRON-139: Check if the WorldGraph is available (bootstrapped and non-null).
+     * Defensive — returns false if GraphBootstrap.bootstrap() has not been called
+     * yet (e.g., during early mod loading before Ergenverse constructor completes).
+     */
+    private static boolean graphAvailable() {
+        return GraphBootstrap.GRAPH != null;
+    }
+
+    /**
+     * CRON-139: Resolve a free-text ID or name (from a WorldStateEngine query
+     * caller) to a graph {@link NodeId} of the requested type. Tries multiple
+     * lookup strategies in order:
+     * <ol>
+     *   <li><b>Exact NodeId match:</b> if the input matches a canon ID format
+     *       (e.g., "L01", "I09_dragon_formation", "N02"), construct a NodeId
+     *       directly and check if the graph has it.</li>
+     *   <li><b>Case-insensitive displayName match:</b> iterate all nodes of the
+     *       requested type and check if any has a displayName that exactly
+     *       matches (case-insensitive) the input. This handles queries like
+     *       "Wang Lin" → NPC node "N01" (displayName "Wang Lin").</li>
+     *   <li><b>Substring fallback:</b> if no exact match, check if any node's
+     *       displayName contains the input as a substring (case-insensitive).
+     *       This handles queries like "heng_yue" → LOCATION "L04" (displayName
+     *       "Heng Yue Sect").</li>
+     * </ol>
+     *
+     * <p>Returns null if the graph is unavailable or no node matches. The
+     * caller is then expected to fall through to JSON subsystem iteration.
+     *
+     * <p>Performance: O(nodes_of_type) per call. Acceptable for query-time
+     * use (max 158 NPCs, 80 locations, 178 artifacts, 214 techniques —
+     * ~630 nodes total). For tighter inner loops, build a name→NodeId
+     * cache in GraphBootstrap on a future CRON.
+     *
+     * @param idOrName the canon ID (e.g., "L01"), name (e.g., "Wang Lin"),
+     *                 or partial name (e.g., "heng_yue") to resolve
+     * @param type     the expected NodeType (LOCATION, ARTIFACT, NPC, TECHNIQUE)
+     * @return the resolved NodeId, or null if not found / graph unavailable
+     */
+    private static NodeId resolveGraphNode(String idOrName, NodeType type) {
+        if (idOrName == null || idOrName.isBlank() || !graphAvailable()) return null;
+        WorldGraph graph = GraphBootstrap.GRAPH;
+
+        // Strategy 1: exact NodeId match
+        NodeId exact = new NodeId(idOrName, type);
+        if (graph.hasNode(exact)) return exact;
+
+        // Strategy 2: case-insensitive displayName match
+        String lower = idOrName.trim().toLowerCase(Locale.ROOT);
+        for (Node n : graph.nodesOfType(type)) {
+            if (n.displayName() != null && n.displayName().trim().toLowerCase(Locale.ROOT).equals(lower)) {
+                return n.id();
+            }
+        }
+
+        // Strategy 3: substring fallback (handles "heng_yue" → "Heng Yue Sect")
+        for (Node n : graph.nodesOfType(type)) {
+            if (n.displayName() != null) {
+                String dn = n.displayName().trim().toLowerCase(Locale.ROOT).replace("_", " ");
+                String ql = lower.replace("_", " ");
+                if (dn.contains(ql) || ql.contains(dn)) {
+                    return n.id();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * CRON-139: Convert a graph {@link GraphQueryService.LocationEntry} to a
+     * WorldStateEngine {@link ObjectEntry}. The graph's objectId is the
+     * namespaced NodeId (e.g., "npc:N01"); the WorldStateEngine's objectId
+     * is the bare canon ID (e.g., "N01"). We strip the namespace to maintain
+     * compatibility with existing callers that compare against bare IDs.
+     */
+    private static ObjectEntry convertLocationEntry(GraphQueryService.LocationEntry ge, String queriedLocationId) {
+        String bareId = stripNamespace(ge.objectId());
+        return new ObjectEntry(
+                bareId,
+                ge.objectType(),
+                queriedLocationId,
+                ge.ageYears(),
+                ge.displayName() + " — " + ge.trueState()
+        );
+    }
+
+    /**
+     * CRON-139: Convert a graph {@link GraphQueryService.OwnershipInfo} to a
+     * WorldStateEngine {@link OwnershipRecord}.
+     */
+    private static OwnershipRecord convertOwnershipInfo(GraphQueryService.OwnershipInfo info) {
+        return new OwnershipRecord(
+                stripNamespace(info.entityId()),
+                info.ownerName(), // WorldStateEngine.trueOwner is a name, not an ID
+                info.ownerType(),
+                info.ownerStrength(),
+                info.claimStrength()
+        );
+    }
+
+    /**
+     * CRON-139: Convert a graph {@link GraphQueryService.DesireInfo} to a
+     * WorldStateEngine {@link DesireRecord}.
+     */
+    private static DesireRecord convertDesireInfo(GraphQueryService.DesireInfo di) {
+        return new DesireRecord(
+                stripNamespace(di.entityId()),
+                stripNamespace(di.wanterId()),
+                di.desireType(),
+                di.desireStrength(),
+                di.desireReason()
+        );
+    }
+
+    /**
+     * CRON-139: Convert a graph {@link GraphQueryService.KnowledgeInfo} to a
+     * WorldStateEngine {@link KnowledgeRecord}.
+     */
+    private static KnowledgeRecord convertKnowledgeInfo(GraphQueryService.KnowledgeInfo ki) {
+        return new KnowledgeRecord(
+                stripNamespace(ki.entityId()),
+                stripNamespace(ki.knowerId()),
+                ki.knowledgeTier(),
+                ki.knowledgeAccuracy()
+        );
+    }
+
+    /**
+     * CRON-139: Strip the namespace prefix from a namespaced NodeId string
+     * (e.g., "npc:N01" → "N01"). If there is no namespace, returns the input
+     * unchanged.
+     */
+    private static String stripNamespace(String namespaced) {
+        if (namespaced == null) return "";
+        int colon = namespaced.indexOf(':');
+        return colon < 0 ? namespaced : namespaced.substring(colon + 1);
     }
 
     /** An entry in the "what exists" registry. */
