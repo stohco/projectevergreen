@@ -199,55 +199,80 @@ function compileHut(group: THREE.Group, building: CanonBuilding): void {
 
 /**
  * Compile a stone well.
+ * Fixed: the hollow cylinder was rendering as transparent prisms because
+ * MeshStandardMaterial with open-ended cylinder + DoubleSide was causing
+ * depth-sorting artifacts. Now uses closed cylinder (solid) for the wall.
  */
 function compileWell(group: THREE.Group, building: CanonBuilding): void {
   const wellMat = getMaterial('WALL', building.shellTheme)
   const waterMat = getMaterial('WATER', building.shellTheme)
   const woodMat = getMaterial('PILLAR', building.shellTheme)
+  const roofMat = getMaterial('ROOF', building.shellTheme)
 
-  // Well wall (hollow cylinder)
-  const wall = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.8, 0.9, 1.0, 16, 1, true),
+  // Well outer wall — SOLID cylinder (not open-ended). This prevents the
+  // transparent half-oval prism artifact. The wall is a ring: outer cylinder
+  // minus inner. We approximate with a thick solid cylinder + a darker inner
+  // cylinder to fake the hollow.
+  const outerWall = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.9, 1.0, 1.0, 16),
     wellMat,
   )
-  wall.position.set(0, 0.5, 0)
-  wall.castShadow = true
-  wall.receiveShadow = true
-  group.add(wall)
+  outerWall.position.set(0, 0.5, 0)
+  outerWall.castShadow = true
+  outerWall.receiveShadow = true
+  outerWall.name = 'wall'
+  group.add(outerWall)
 
-  // Water surface
+  // Inner dark cylinder (the well shaft — looks dark/hollow from above).
+  const innerShaft = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.6, 0.6, 0.95, 16),
+    new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 1.0 }),
+  )
+  innerShaft.position.set(0, 0.5, 0)
+  group.add(innerShaft)
+
+  // Water surface — opaque, at the bottom of the shaft.
   const water = new THREE.Mesh(
-    new THREE.CircleGeometry(0.7, 16),
-    waterMat,
+    new THREE.CircleGeometry(0.55, 16),
+    new THREE.MeshStandardMaterial({
+      color: 0x2a6a9a,
+      roughness: 0.2,
+      metalness: 0.3,
+      transparent: false, // MUST be opaque — transparency causes sorting artifacts
+    }),
   )
   water.rotation.x = -Math.PI / 2
-  water.position.set(0, 0.3, 0)
+  water.position.set(0, 0.15, 0)
   group.add(water)
 
   // Wooden frame (2 posts + crossbar)
   for (const px of [-0.8, 0.8]) {
     const post = new THREE.Mesh(
-      new THREE.BoxGeometry(0.1, 2.0, 0.1),
+      new THREE.BoxGeometry(0.12, 2.2, 0.12),
       woodMat,
     )
-    post.position.set(px, 1.0, 0)
+    post.position.set(px, 1.1, 0)
     post.castShadow = true
+    post.name = 'pillar'
     group.add(post)
   }
   const crossbar = new THREE.Mesh(
     new THREE.BoxGeometry(1.8, 0.1, 0.1),
     woodMat,
   )
-  crossbar.position.set(0, 2.0, 0)
+  crossbar.position.set(0, 2.1, 0)
+  crossbar.name = 'beam'
   group.add(crossbar)
 
   // Small roof on top
   const roof = new THREE.Mesh(
     new THREE.ConeGeometry(1.2, 0.6, 4),
-    getMaterial('ROOF', building.shellTheme),
+    roofMat,
   )
-  roof.position.set(0, 2.35, 0)
+  roof.position.set(0, 2.45, 0)
   roof.rotation.y = Math.PI / 4
+  roof.castShadow = true
+  roof.name = 'roof'
   group.add(roof)
 }
 

@@ -10,6 +10,7 @@ import { createSmoothTerrain, createSpiritPines, createGrassTufts, createRocks, 
 import { compileSettlement } from '@/engine/world/compiler/SettlementCompiler'
 import { WANG_FAMILY_VILLAGE } from '@/engine/canon/settlements/WangFamilyVillage'
 import { MeshCollisionSystem } from '@/engine/world/CollisionSystem'
+import { checkCanonFidelity, logFidelityViolations } from '@/engine/debug/CanonFidelityChecker'
 import { WorldGraph } from '@/engine/graph/WorldGraph'
 import { GraphQueryService } from '@/engine/graph/GraphQueryService'
 import { bootstrapGraphFromCanon } from '@/engine/graph/CanonGraphLoader'
@@ -116,8 +117,7 @@ export default function WorldCanvas() {
         color: 0x1a4a7a,
         roughness: 0.2,
         metalness: 0.1,
-        transparent: true,
-        opacity: 0.85,
+        transparent: false, // opaque — transparency causes depth-sorting artifacts
       })
       const ocean = new THREE.Mesh(oceanGeo, oceanMat)
       ocean.position.y = -0.5
@@ -182,6 +182,14 @@ export default function WorldCanvas() {
       wanglinNpc.setAnimation('idle')
       wanglinNpc.setAuraVisible(false)
       scene.add(wanglinNpc.group)
+
+      // ---- Canon fidelity check ----
+      const violations = checkCanonFidelity({
+        buildings: WANG_FAMILY_VILLAGE.buildings,
+        spiritVeins: WANG_FAMILY_VILLAGE.spiritVeins,
+        playerName: playerName,
+      })
+      logFidelityViolations(violations)
 
       // ---- WorldGraph (async bootstrap) ----
       const graph = new WorldGraph()
