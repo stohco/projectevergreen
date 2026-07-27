@@ -14,6 +14,9 @@ import { CanonSpawner } from '@/engine/world/CanonSpawner'
 import { compileSettlement } from '@/engine/world/compiler/SettlementCompiler'
 import { WANG_FAMILY_VILLAGE } from '@/engine/canon/settlements/WangFamilyVillage'
 import { MeshCollisionSystem } from '@/engine/world/CollisionSystem'
+import { WorldDeltaStore } from '@/engine/world/WorldDeltaStore'
+import { WorldFacade } from '@/engine/world/WorldFacade'
+import { raycastVoxels } from '@/engine/voxels/VoxelRaycaster'
 import { checkCanonFidelity, logFidelityViolations } from '@/engine/debug/CanonFidelityChecker'
 import { WorldGraph } from '@/engine/graph/WorldGraph'
 import { GraphQueryService } from '@/engine/graph/GraphQueryService'
@@ -228,6 +231,18 @@ export default function WorldCanvas() {
         colorGrade: false,
       })
 
+      // ---- World facade (save/load + player edits) ----
+      const deltaStore = new WorldDeltaStore()
+      const facade = new WorldFacade(deltaStore, { layers: [] })
+      // Load existing save if present.
+      if (deltaStore.loadFromLocalStorage()) {
+        console.log('[WorldCanvas] save loaded:', deltaStore.size(), 'deltas')
+      }
+
+      // Apply loaded deltas to the scene (replay player edits).
+      // For now this just logs — full replay requires tracking which meshes
+      // each delta affects. Future: dirty-region remeshing.
+
       setStatus('live')
 
       // ---- Input ----
@@ -296,6 +311,83 @@ export default function WorldCanvas() {
       }
       const onContextMenu = (e: Event) => { e.preventDefault() }
 
+      // Left-click when camera LOCKED = mine/destroy block at crosshair.
+      // Right-click when camera LOCKED = place block at crosshair.
+      // Uses raycasting against the terrain + building meshes.
+      const collidableMeshes: THREE.Object3D[] = []
+      villageGroup.traverse((child) => {
+        const mesh = child as THREE.Mesh
+        if (mesh.isMesh) collidableMeshes.push(mesh)
+      })
+
+      const onMiningClick = (e: MouseEvent) => {
+        if (!pointerLocked) return
+        if (e.button !== 0 && e.button !== 2) return
+
+        // Raycast from camera center (crosshair).
+        const origin = camera.position.clone()
+        const dir = new THREE.Vector3()
+        camera.getWorldDirection(dir)
+
+        // Use Three.js raycaster against actual meshes.
+        const raycaster = new THREE.Raycaster(origin, dir, 0.1, 50)
+        const hits = raycaster.intersectObjects(collidableMeshes, true)
+        if (hits.length === 0) return
+
+        const hit = hits[0]
+        const point = hit.point
+        const normal = hit.face?.normal ?? new THREE.Vector3(0, 1, 0)
+        // Transform normal to world space.
+        normal.transformDirection(hit.object.matrixWorld)
+
+        if (e.button === 0) {
+          // LEFT-CLICK: Mine/destroy — hide the hit mesh (player delta).
+          const hitMesh = hit.object as THREE.Mesh
+          if (hitMesh.userData.isDoor) return // can't mine doors
+          hitMesh.visible = false
+          // Record as player delta.
+          facade.setPlayerBlock(
+            { x: Math.floor(point.x), y: Math.floor(point.y), z: Math.floor(point.z) },
+            0, // 0 = air (removed)
+          )
+          console.log('[Mining] destroyed block at', point.x, point.y, point.z)
+        } else if (e.button === 2) {
+          // RIGHT-CLICK: Place block adjacent to hit face.
+          const px = Math.floor(point.x + normal.x)
+          const py = Math.floor(point.y + normal.y)
+          const pz = Math.floor(point.z + normal.z)
+          // Create a simple wooden block.
+          const blockGeo = new THREE.BoxGeometry(0.95, 0.95, 0.95)
+          const blockMat = new THREE.MeshStandardMaterial({ color: 0x8a7050, roughness: 0.8 })
+          const block = new THREE.Mesh(blockGeo, blockMat)
+          block.position.set(px + 0.5, py + 0.5, pz + 0.5)
+          block.castShadow = true
+          block.name = 'placed_block'
+          block.userData.collidable = true
+          scene.add(block)
+          collidableMeshes.push(block)
+          // Register with collision system.
+          collision.register(block)
+          // Record as player delta.
+          facade.setPlayerBlock({ x: px, y: py, z: pz }, 1)
+          console.log('[Placing] placed block at', px, py, pz)
+        }
+      }
+
+      // Save key (F5 = save, F9 = load).
+      const onSaveKey = (e: KeyboardEvent) => {
+        if (e.code === 'F5') {
+          e.preventDefault()
+          facade.save()
+          console.log('[Save] world saved:', deltaStore.size(), 'deltas')
+        }
+        if (e.code === 'F9') {
+          e.preventDefault()
+          const loaded = facade.load()
+          console.log('[Load] world loaded:', loaded, deltaStore.size(), 'deltas')
+        }
+      }
+
       const onPointerLockChange = () => {
         pointerLocked = document.pointerLockElement === renderer.domElement
         setCameraLocked(pointerLocked)
@@ -317,8 +409,10 @@ export default function WorldCanvas() {
         camera.userData.zoom = Math.max(3, Math.min(20, zoom))
       }
       window.addEventListener('keydown', onKeyDown)
+      window.addEventListener('keydown', onSaveKey)
       window.addEventListener('keyup', onKeyUp)
       window.addEventListener('mousedown', onMouseDown)
+      window.addEventListener('mousedown', onMiningClick)
       window.addEventListener('mouseup', onMouseUp)
       window.addEventListener('contextmenu', onContextMenu)
       renderer.domElement.addEventListener('wheel', onWheel, { passive: false })
@@ -565,8 +659,10 @@ export default function WorldCanvas() {
         cancelAnimationFrame(frameId)
         resizeObserver?.disconnect()
         window.removeEventListener('keydown', onKeyDown)
+        window.removeEventListener('keydown', onSaveKey)
         window.removeEventListener('keyup', onKeyUp)
         window.removeEventListener('mousedown', onMouseDown)
+        window.removeEventListener('mousedown', onMiningClick)
         window.removeEventListener('mouseup', onMouseUp)
         window.removeEventListener('contextmenu', onContextMenu)
         renderer.domElement.removeEventListener('wheel', onWheel)
@@ -635,9 +731,9 @@ export default function WorldCanvas() {
       <div className="pointer-events-none absolute bottom-4 right-4 z-10 select-none rounded-md border border-amber-500/30 bg-black/50 px-3 py-2 font-mono text-[10px] text-amber-100/70 backdrop-blur-sm">
         <div>WASD move · SCROLL zoom</div>
         <div>SPACE jump · SHIFT sprint</div>
-        <div>E open/close door · F sword-flight (needs qi)</div>
-        <div>Q meditate (needs qi) · Y toggle camera lock</div>
-        <div className="text-amber-300/70">Right-click-drag = orbit · ESC = unlock</div>
+        <div>E door · F flight · Q meditate · Y cam lock</div>
+        <div className="text-amber-300/70">L-CLICK mine · R-CLICK place (locked cam)</div>
+        <div className="text-amber-300/70">F5 save · F9 load · RMB-drag orbit</div>
       </div>
     </div>
   )
