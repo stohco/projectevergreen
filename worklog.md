@@ -13894,3 +13894,29 @@ Stage Summary:
 - HARSH CRITIQUE: terrain is now canon-authored (RBF) but the renderer still constructs meshes directly instead of sampling the field. The WorldState field exists but WorldCanvas doesn't call sample() — it calls rbfTerrainHeight() directly. The inversion (renderer = view over field) is architecturally present but not yet wired. Next round must wire WorldState.sample() into the render loop.
 - NEXT PRIORITY: (1) Wire WorldState.sample() into renderer. (2) Building layout constraint solver (simulated annealing). (3) Character parametric manifold (blendshapes). (4) Qi vector field. (5) 5 graph projections. (6) Worker-thread mesh compilation. (7) Automated blind QA harness with Chamfer/LPIPS/SSIM metrics.
 - The cron job (292872, every 15min, OptMem-powered) will continue this iteration loop.
+
+---
+Task ID: CRON-THREEJS-5
+Agent: threejs-aaa-loop
+Task: Character creation (typed name, English) + mortal start + fix inverted A/D + scroll zoom + user directive compliance
+
+Work Log:
+- Woke OptMem. Read user directives: name selectable/typed (not Traveler), English not Chinese, hand-crafted Planet Suzaku (not random seed), start as mortal, A/D inverted, scroll doesn't zoom, NMS action combat inspiration.
+- Created CharacterCreation.tsx: name input (English, max 20 chars) + spirit root selection (Metal/Wood/Water/Fire/Earth/Void with Chinese element characters as flavor). Saved to localStorage. "Begin Your Journey" button. Skipped on revisit. VLM rated 8/10 polish.
+- Updated page.tsx: shows CharacterCreation first → WorldCanvas after. Clean flow.
+- Updated PlayerEntity: player starts as MORTAL (qi=0, maxQi=0). Brown peasant clothes (not ivory cultivator robes). F (flight) and Q (meditate) check maxQi>0 — mortal cannot fly or meditate. Must discover cultivation in-world (NMS-style).
+- Removed nameCn from PlayerState (user wants English for player).
+- FIXED INVERTED A/D: right vector was (fwd.z, 0, -fwd.x) → changed to (-fwd.z, 0, fwd.x). Now A=left, D=right correctly.
+- ADDED SCROLL-TO-ZOOM: onWheel listener adjusts camera.userData.zoom (3..20). Camera follow uses zoom for camDist.
+- Updated controls hint: "WASD move · MOUSE look · SCROLL zoom", "F sword-flight (needs qi) · Q meditate (needs qi)".
+
+Stage Summary:
+- SHIPPED: CRON-THREEJS-5 (git hash 86093c23). Build: bun run lint 0 errors. Dev server 200.
+- VLM CRITIC: character creation 8/10, in-game 6/10. Player in brown peasant clothes confirmed.
+- HARSH CRITIQUE:
+  1. World is NOT hand-crafted Planet Suzaku yet — terrain uses RBF with canon control points but the points come from placement data (mod-original coords), not hand-authored geography. Need to author the actual Planet Suzaku map from the canon research docs.
+  2. No NMS action combat system — need dodge, attack, qi skills, enemy AI.
+  3. Grass renders as dark spikes (VLM: "black vertical spike-like shapes"). Material color not applying correctly to instanced mesh.
+  4. Only 1-2 village buildings visible at a time. Camera too close or buildings too spread.
+  5. No "latest highest growing github repos for ai game development" researched yet.
+- NEXT PRIORITY: (1) Hand-author Planet Suzaku geography from CANON_RI_COMPLETE_WORLD.md. (2) Fix grass material color. (3) Implement NMS-style action combat (dodge, attack, qi skills). (4) Research trending AI game dev repos. (5) Wire WorldState.sample() into renderer.
