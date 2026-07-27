@@ -13740,3 +13740,119 @@ Stage Summary:
   (f) **Add water rendering.** WaterRenderer.ts exists but isn't wired. Sea of Devils (south) should be a vast ocean.
   (g) **Canon fidelity audit.** Verify Wang Lin's starting realm (Foundation — mod-original, novel starts at mortal), village name (赵国偏僻山村, not "Wang Family Village"), Teng Li (藤厉) hostility.
 - The architecture is solid (10-point CRON-69 port + WorldGraph + canon DB + 12-component HUD + 8 AI goals). The visual quality needs 3-4 more iteration loops to hit the AAA bar. The cron job (292742, every 15 min, webDevReview) will continue this loop autonomously.
+
+---
+Task ID: CRON-THREEJS-3
+Agent: threejs-aaa-loop
+Task: HARSH SELF-CRITIQUE of current state + pivot to formal spec architecture (canon→graph→semantic→template→compiler→runtime→render) + smooth NMS-style visuals (NOT blocky Minecraft)
+
+Work Log:
+- Woke OptMem. Read worklog tail. Took fresh screenshot. Ran VLM harsh critic.
+- VLM critic rating: 1/10. "100% Debug Tool / Engine Test Scene."
+- Writing this critique BEFORE implementing fixes, per user directive.
+
+HARSH SELF-CRITIQUE (brutally honest):
+
+1. THE VISUALS ARE COSMIC HORROR, NOT AAA.
+   The terrain is a field of jagged, stretched, Z-fighting cubes. The ground
+   plane flickers with moiré patterns. There are harsh white specular streaks
+   that look like broken HDR bloom, not spiritual qi. The color palette is
+   "vomit-inducing pastels" (mint green + lavender + grey + mustard). This
+   does not look like a xianxia world. It looks like a failed Unity test scene.
+
+2. THERE IS NO VILLAGE.
+   The UI says "Remote Village in Zhao Country" but the screen shows ZERO
+   structures. No huts. No roofs. No walls. No well. No gates. Just a 5x5
+   jade-brick platform with four cobblestone pillars. That is not a village.
+   That is a debug marker. Wang Lin's birthplace should feel inhabited —
+   poor wooden huts, a dirt path, a well, spirit pines, a cliff where he
+   found the bead. None of this exists.
+
+3. THE PLAYER AVATAR IS A GENERIC ASSET.
+   The player model is a low-poly figure with a shader-material robe that
+   doesn't respond to scene lighting. It looks pasted in, not grounded.
+   It floats slightly above the collision plane. The animation is stiff.
+   It does not look like a cultivator — it looks like a programmer-art
+   placeholder. Wang Lin NPC is off-screen and invisible.
+
+4. THE TERRAIN IS BLOCKY MINECRAFT, NOT SMOOTH NMS.
+   The user explicitly said: "you dont have to stick to minecraft's style
+   anymore, you have the freedom to make your voxel game look like No Mortal
+   Space's graphics, except better and triple A!" But I built a blocky voxel
+   engine with greedy meshing that produces sharp cube edges. No Mortal Space
+   uses SMOOTH low-poly terrain — rolling hills, gentle slopes, painterly
+   textures. I need to replace the blocky voxel terrain with a smooth
+   heightmap mesh. Voxels can stay for player edits (mining/building) but
+   the BASE terrain must be smooth.
+
+5. THE GRAPH IS WIRED BUT UNUSED.
+   CanonGraphLoader bootstraps 632 nodes + 424 edges. GraphQueryService has
+   7 query methods. But NO system actually queries the graph at runtime.
+   Actor materialization doesn't use whoExistsAt(). Threat detection doesn't
+   use threatsNearSettlement(). Quest generation doesn't use naturalNext().
+   The graph is a dead data structure — it loads, logs a console message,
+   and sits idle. This is not "graph engineering applied to all systems."
+   This is graph theater.
+
+6. NO SEMANTIC WORLD MODEL.
+   The spec demands: Settlement → Building → Room → Furniture → Anchors.
+   None of this exists. There are no CanonSettlement, CanonBuilding,
+   CanonRoom, CanonFurniture types. There is no template library. There is
+   no compiler that turns semantic objects into renderable geometry. The
+   "village" is a hardcoded 5x5 platform in WorldCanvas.tsx — the worst
+   kind of spaghetti.
+
+7. NO SAVE/LOAD PERSISTENCE.
+   WorldDeltaStore exists with localStorage serialization. But nothing
+   writes to it. Player block edits go through chunkMgr.setBlock directly,
+   bypassing WorldFacade. On reload, all edits are lost. The CRON-69
+   architecture (blueprint never modified, divergence lives in the journal)
+   is not implemented in the Three.js port.
+
+8. LIGHTING IS BROKEN.
+   No ambient occlusion. No proper shadows. The sun is at a fixed position.
+   The bloom is too strong. The tone mapping is wrong. The cultivator model
+   uses a custom shader that ignores scene lights, making it glow
+   inconsistently. The overall scene is either too dark or too bright
+   depending on camera angle.
+
+9. DEBUG TEXT LEAKS INTO THE GAME VIEW.
+   The bottom-left shows "F3 Debug", "con", "zoom" — developer controls
+   visible to the player. The HUD has inconsistent typography (serif vs
+   sans-serif, Chinese vs English mixed). The minimap is a black circle
+   with colored dots — looks like a 1990s RTS radar, not a mystical
+   compass.
+
+10. THE CODEBASE IS A PILE OF FILES, NOT A SYSTEM.
+    There are 36+ files in src/engine/ but they don't compose into a
+    coherent game. The layer boundaries from the spec are violated:
+    WorldCanvas.tsx imports from voxels, entities, render, graph, canon
+    simultaneously. It's a 450-line god component. The canon layer imports
+    nothing (good) but the render layer imports canon types (bad — violates
+    "rendering may not know about canon semantics").
+
+ROOT CAUSE: I built the engine bottom-up (voxels → entities → render)
+without first defining the semantic world model. The spec is clear:
+Canon → Graph → Semantic → Template → Compiler → Runtime → Render.
+I skipped Semantic + Template + Compiler and went straight to blocks.
+That's why it looks like Minecraft, not No Mortal Space.
+
+FIX PLAN (this round):
+- Define the semantic world model (CanonSettlement, CanonBuilding, CanonRoom,
+  CanonFurniture, RoomAnchor) per the spec.
+- Define the template library (FurnitureTemplate, BuildingTheme, VoxelPlacement).
+- Define the compiler output (VoxelInstruction with provenance + priority).
+- Build Wang Family Village as a semantic object with buildings, rooms,
+  furniture, anchors.
+- Compile the village into actual Three.js meshes (huts with roofs, a well,
+  fences, gates) — NOT a 5x5 platform.
+- Replace blocky voxel terrain with SMOOTH low-poly heightmap mesh.
+- Fix lighting: add AO, proper sun direction, soften bloom.
+- Wire the graph: GraphQueryService powers actor materialization.
+- Remove debug text from the game view.
+
+Stage Summary:
+- SHIPPED: this critique (no code changes yet — critique first, implement second).
+- Build: bun run lint passes. Dev server 200.
+- Next: implement the formal spec architecture. Start with the semantic world
+  model + template library + compiler, then build the village vertical slice.

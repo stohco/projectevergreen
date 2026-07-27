@@ -2,13 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
-import { ChunkManager } from '@/engine/voxels/ChunkManager'
 import { createSky, type SkyHandle } from '@/engine/render/SkySystem'
 import { createPostFX, type PostFXHandle } from '@/engine/render/PostProcessing'
 import { createCultivatorModel, type CultivatorModelHandle } from '@/engine/entities/CultivatorModel'
 import { createPlayer, type PlayerHandle } from '@/engine/entities/PlayerEntity'
-import { BlockId } from '@/engine/voxels/BlockRegistry'
-import { raycastVoxels } from '@/engine/voxels/VoxelRaycaster'
+import { createSmoothTerrain, createSpiritPines, terrainHeight } from '@/engine/world/SmoothTerrain'
+import { compileSettlement } from '@/engine/world/compiler/SettlementCompiler'
+import { WANG_FAMILY_VILLAGE } from '@/engine/canon/settlements/WangFamilyVillage'
 import { WorldGraph } from '@/engine/graph/WorldGraph'
 import { GraphQueryService } from '@/engine/graph/GraphQueryService'
 import { bootstrapGraphFromCanon } from '@/engine/graph/CanonGraphLoader'
@@ -16,29 +16,25 @@ import { bootstrapGraphFromCanon } from '@/engine/graph/CanonGraphLoader'
 /**
  * WorldCanvas — the Er Gen Verse Three.js mount.
  *
- * CRITICAL: The player is NOT Wang Lin. The player is a first-class actor
- * (ivory-robed traveler, Qi Condensation). Wang Lin exists in the world as
- * a manifestation NPC (jade-green robes, Foundation realm) — his real self
- * is on the Immortal Astral Continent (仙罡大陆). The player encounters
- * Wang Lin's manifestation.
+ * ARCHITECTURE (per formal spec):
+ *   Canon (WangFamilyVillage.ts) → Semantic (CanonTypes) → Template (TemplateLibrary)
+ *   → Compiler (SettlementCompiler) → Three.js Presentation Layer → Player
  *
- * Camera: third-person, behind the player avatar.
- * Controls: WASD move, mouse look, SPACE jump/fly up, SHIFT sprint,
- *           F toggle flight (御剑飞行, costs qi).
+ * The player is NOT Wang Lin. The player is a first-class actor (Traveler /
+ * 行道者 in ivory robes). Wang Lin is a manifestation NPC (jade green robes,
+ * Foundation realm) — his real self is on the Immortal Astral Continent.
+ *
+ * Visual style: smooth low-poly (like No Mortal Space), NOT blocky Minecraft.
+ * Terrain is a smooth heightmap mesh. Buildings are compiled from semantic
+ * data using the template library. Trees are instanced meshes.
  */
 export default function WorldCanvas() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [status, setStatus] = useState<string>('booting')
   const [hud, setHud] = useState({
     fps: 0,
-    chunks: 0,
-    tris: 0,
-    x: 0,
-    y: 0,
-    z: 0,
-    biome: 'plains',
-    qi: 100,
-    maxQi: 100,
+    x: 0, y: 0, z: 0,
+    qi: 100, maxQi: 100,
     realm: 'Qi Condensation',
   })
 
@@ -49,282 +45,230 @@ export default function WorldCanvas() {
     let renderer: THREE.WebGLRenderer
     let scene: THREE.Scene
     let camera: THREE.PerspectiveCamera
-    let chunkMgr: ChunkManager
     let sky: SkyHandle
     let postFX: PostFXHandle
     let player: PlayerHandle
     let wanglinNpc: CultivatorModelHandle
-    let graph: WorldGraph
-    let graphQuery: GraphQueryService
     let frameId = 0
     let resizeObserver: ResizeObserver | null = null
     let pointerLocked = false
-
     const keys: Record<string, boolean> = {}
 
     try {
-      renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        powerPreference: 'high-performance',
-        alpha: false,
-      })
+      // ---- Renderer ----
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' })
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       renderer.setSize(container.clientWidth, container.clientHeight)
       renderer.toneMapping = THREE.ACESFilmicToneMapping
-      renderer.toneMappingExposure = 1.2
+      renderer.toneMappingExposure = 1.1
       renderer.shadowMap.enabled = true
       renderer.shadowMap.type = THREE.PCFSoftShadowMap
       renderer.outputColorSpace = THREE.SRGBColorSpace
       container.appendChild(renderer.domElement)
 
+      // ---- Scene ----
       scene = new THREE.Scene()
-      // Soft atmospheric fog — not too dense, lets terrain colors through.
-      scene.fog = new THREE.FogExp2(0xc8d6e8, 0.0008)
+      scene.fog = new THREE.FogExp2(0xc8d6e8, 0.0025)
 
-      camera = new THREE.PerspectiveCamera(
-        65,
-        container.clientWidth / container.clientHeight,
-        0.1,
-        4000,
-      )
-      camera.position.set(4, 73, 14)
-      camera.lookAt(4, 66, 8)
+      // ---- Camera ----
+      camera = new THREE.PerspectiveCamera(65, container.clientWidth / container.clientHeight, 0.1, 2000)
+      camera.position.set(8, 12, 16)
+      camera.lookAt(0, 4, 0)
 
-      // Sky.
+      // ---- Sky ----
       sky = createSky(scene)
 
-      // Voxel world.
-      chunkMgr = new ChunkManager(scene)
-      chunkMgr.updateCamera(camera.position.x, camera.position.z)
+      // ---- Lighting (proper, not flat) ----
+      const ambient = new THREE.AmbientLight(0xbcd6ff, 0.35)
+      scene.add(ambient)
+      const hemi = new THREE.HemisphereLight(0xbcd6ff, 0x4a3520, 0.5)
+      scene.add(hemi)
+      // Sun — the sky system already adds a directional light, but we add
+      // a fill light so shadows aren't too dark.
+      const fillLight = new THREE.DirectionalLight(0xfff4d6, 0.8)
+      fillLight.position.set(30, 50, 20)
+      fillLight.castShadow = true
+      fillLight.shadow.mapSize.set(2048, 2048)
+      fillLight.shadow.camera.left = -60
+      fillLight.shadow.camera.right = 60
+      fillLight.shadow.camera.top = 60
+      fillLight.shadow.camera.bottom = -60
+      fillLight.shadow.camera.near = 0.5
+      fillLight.shadow.camera.far = 200
+      fillLight.shadow.bias = -0.0003
+      scene.add(fillLight)
 
-      // Post-FX — subtle, not crushing.
+      // ---- Smooth terrain (NOT blocky voxels) ----
+      const terrainSize = 400
+      const terrain = createSmoothTerrain(0, 0, terrainSize, 120)
+      scene.add(terrain)
+
+      // ---- Spirit pines (instanced, not blocky) ----
+      const pines = createSpiritPines(0, 0, 200, 150)
+      scene.add(pines)
+
+      // ---- Wang Family Village (compiled from semantic data) ----
+      const villageGroup = compileSettlement(WANG_FAMILY_VILLAGE)
+      // The village buildings have Y=0 in semantic data; we need to place
+      // them at terrain height. The settlement origin is (0,0,0) so buildings
+      // are already at the right XZ. We lift the entire group to terrain Y.
+      villageGroup.position.y = terrainHeight(0, 0)
+      scene.add(villageGroup)
+
+      // ---- Player (NOT Wang Lin) ----
+      const spawnY = terrainHeight(4, 8)
+      player = createPlayer({
+        name: 'Traveler',
+        nameCn: '行道者',
+        spiritRoot: 'wood',
+        startPosition: [4, spawnY, 8],
+      })
+      player.setAnimation('idle')
+      scene.add(player.group)
+
+      // ---- Wang Lin NPC (manifestation) ----
+      const wanglinY = terrainHeight(0, 0)
+      wanglinNpc = createCultivatorModel('foundation', false)
+      wanglinNpc.group.position.set(0, wanglinY, 0)
+      wanglinNpc.group.scale.setScalar(1.1)
+      wanglinNpc.setAnimation('idle')
+      wanglinNpc.setAuraVisible(false)
+      scene.add(wanglinNpc.group)
+
+      // ---- WorldGraph (async bootstrap) ----
+      const graph = new WorldGraph()
+      const graphQuery = new GraphQueryService(graph)
+      bootstrapGraphFromCanon(graph).then((n) => {
+        console.log('[WorldCanvas] graph bootstrapped:', n, 'nodes')
+      }).catch(() => {})
+
+      // ---- Post-FX (subtle) ----
       postFX = createPostFX(renderer, scene, camera, container.clientWidth, container.clientHeight, {
         ssao: false,
         bloom: true,
-        bloomStrength: 0.3,
+        bloomStrength: 0.2,
         chromaticAberration: false,
         vignette: true,
         grain: false,
         colorGrade: true,
       })
 
-      // ---- PLAYER (the user, NOT Wang Lin) ----
-      // Ivory white robes, Qi Condensation, starts near the village plaza.
-      // Start at y=70 (well above the y=64 platform) so gravity settles
-      // the player onto the surface, not inside it.
-      player = createPlayer({
-        name: 'Traveler',
-        nameCn: '行道者',
-        spiritRoot: 'wood',
-        startPosition: [4, 70, 8],
-      })
-      player.setAnimation('idle')
-      scene.add(player.group)
-
-      // ---- WANG LIN (manifestation NPC) ----
-      // Jade green robes, Foundation realm. Stands in the village plaza.
-      // His real self is on the Immortal Astral Continent (仙罡大陆).
-      wanglinNpc = createCultivatorModel('foundation', false)
-      wanglinNpc.group.position.set(0, 64, 0)
-      wanglinNpc.group.scale.setScalar(1.2)
-      wanglinNpc.setAnimation('idle')
-      wanglinNpc.setAuraVisible(false)
-      scene.add(wanglinNpc.group)
-
-      // Soft ambient + hemisphere light (no harsh specular).
-      const ambient = new THREE.AmbientLight(0xbcd6ff, 0.4)
-      scene.add(ambient)
-
-      const hemi = new THREE.HemisphereLight(0xbcd6ff, 0x4a3520, 0.6)
-      scene.add(hemi)
-
-      // Spirit-vein glow point light near the cliff of 天逆珠.
-      const veinLight = new THREE.PointLight(0x9be15d, 1.5, 40, 1.8)
-      veinLight.position.set(-80, 68, -120)
-      scene.add(veinLight)
-
-      // ---- WorldGraph + GraphQueryService ----
-      graph = new WorldGraph()
-      graphQuery = new GraphQueryService(graph)
-      // Bootstrap asynchronously (fetches /ri_canon_database.json).
-      bootstrapGraphFromCanon(graph).then((count) => {
-        console.log('[WorldCanvas] graph bootstrapped:', count, 'nodes')
-        ;(globalThis as { __ergenGraph?: unknown }).__ergenGraph = graph
-        ;(globalThis as { __ergenGraphQuery?: unknown }).__ergenGraphQuery = graphQuery
-      }).catch((e) => {
-        console.error('[WorldCanvas] graph bootstrap failed', e)
-      })
-
       setStatus('live')
 
-      // ---- Input: third-person camera + player movement ----
+      // ---- Input ----
       const onKeyDown = (e: KeyboardEvent) => {
         keys[e.code] = true
         if (e.code === 'Space') e.preventDefault()
-        // Toggle flight.
-        if (e.code === 'KeyF' && !player.state.isFlying) {
-          if (player.consumeQi(10)) {
-            player.setFlying(true)
-            console.log('[Player] sword-flight engaged (御剑飞行)')
-          }
-        } else if (e.code === 'KeyF' && player.state.isFlying) {
-          player.setFlying(false)
+        if (e.code === 'KeyF') {
+          if (player.state.isFlying) { player.setFlying(false) }
+          else if (player.consumeQi(10)) { player.setFlying(true) }
         }
-        // Toggle meditation.
-        if (e.code === 'KeyQ') {
-          player.setMeditating(!player.state.isMeditating)
-        }
+        if (e.code === 'KeyQ') player.setMeditating(!player.state.isMeditating)
       }
-      const onKeyUp = (e: KeyboardEvent) => {
-        keys[e.code] = false
-      }
-      const onClick = () => {
-        if (!pointerLocked) {
-          renderer.domElement.requestPointerLock?.()
-        }
-      }
-      const onPointerLockChange = () => {
-        pointerLocked = document.pointerLockElement === renderer.domElement
-      }
+      const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false }
+      const onClick = () => { if (!pointerLocked) renderer.domElement.requestPointerLock?.() }
+      const onPointerLockChange = () => { pointerLocked = document.pointerLockElement === renderer.domElement }
       const onMouseMove = (e: MouseEvent) => {
         if (!pointerLocked) return
-        const yaw = (camera.userData.yaw ?? 0) - e.movementX * 0.003
-        const pitch = (camera.userData.pitch ?? -0.2) - e.movementY * 0.003
-        camera.userData.yaw = yaw
-        camera.userData.pitch = Math.max(-1.2, Math.min(0.8, pitch))
+        camera.userData.yaw = (camera.userData.yaw ?? 0) - e.movementX * 0.003
+        camera.userData.pitch = Math.max(-1.0, Math.min(0.6, (camera.userData.pitch ?? -0.15) - e.movementY * 0.003))
       }
       window.addEventListener('keydown', onKeyDown)
       window.addEventListener('keyup', onKeyUp)
       renderer.domElement.addEventListener('click', onClick)
       document.addEventListener('pointerlockchange', onPointerLockChange)
       document.addEventListener('mousemove', onMouseMove)
-
       camera.userData.yaw = 0
-      camera.userData.pitch = -0.2
+      camera.userData.pitch = -0.15
 
       // ---- Main loop ----
       const clock = new THREE.Clock()
-      let fpsAccum = 0
-      let fpsFrames = 0
-      let fpsTimer = 0
-      let hudTimer = 0
+      let fpsFrames = 0, fpsTimer = 0, hudTimer = 0
       let wanglinYaw = 0
 
       const animate = () => {
         frameId = requestAnimationFrame(animate)
         const dt = Math.min(clock.getDelta(), 0.1)
 
-        // ---- Player movement ----
-        const speed = (player.state.isFlying ? 40 : (keys['ShiftLeft'] ? 12 : 6)) * dt
+        // Player movement.
         const yaw = camera.userData.yaw ?? 0
+        const speed = (player.state.isFlying ? 30 : (keys['ShiftLeft'] ? 10 : 5)) * dt
         const fwd = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw))
         const right = new THREE.Vector3(fwd.z, 0, -fwd.x)
-
         let moved = false
         if (keys['KeyW']) { player.state.position.addScaledVector(fwd, speed); moved = true }
         if (keys['KeyS']) { player.state.position.addScaledVector(fwd, -speed); moved = true }
         if (keys['KeyA']) { player.state.position.addScaledVector(right, -speed); moved = true }
         if (keys['KeyD']) { player.state.position.addScaledVector(right, speed); moved = true }
 
+        // Ground clamp: player stands on terrain surface.
         if (player.state.isFlying) {
-          if (keys['Space']) { player.state.position.y += speed; moved = true }
-          if (keys['KeyC']) { player.state.position.y -= speed; moved = true }
-          // Flight costs qi.
-          if (!player.consumeQi(2.0 * dt)) {
-            player.setFlying(false) // out of qi, stop flying
-          }
+          if (keys['Space']) player.state.position.y += speed
+          if (keys['KeyC']) player.state.position.y -= speed
+          if (!player.consumeQi(2.0 * dt)) player.setFlying(false)
         } else {
-          // Ground movement: simple gravity + surface snap.
-          // Check the block at the player's feet level.
-          const feetBlock = chunkMgr.getBlock(
-            Math.floor(player.state.position.x),
-            Math.floor(player.state.position.y),
-            Math.floor(player.state.position.z),
-          )
-          const belowFeet = chunkMgr.getBlock(
-            Math.floor(player.state.position.x),
-            Math.floor(player.state.position.y) - 1,
-            Math.floor(player.state.position.z),
-          )
-          if (feetBlock !== BlockId.AIR) {
-            // Inside a solid block — push up.
-            player.state.position.y = Math.floor(player.state.position.y) + 1
-          } else if (belowFeet === BlockId.AIR) {
-            // Falling.
-            player.state.position.y -= 20 * dt
+          const groundY = terrainHeight(player.state.position.x, player.state.position.z)
+          if (player.state.position.y < groundY + 0.5) {
+            player.state.position.y = groundY + 0.0 // snap to surface
+            player.state.velocity.y = 0
           } else {
-            // Standing on surface — snap to integer.
-            player.state.position.y = Math.floor(player.state.position.y) + 0.0
+            player.state.position.y -= 20 * dt // gravity
           }
-          if (keys['Space']) {
-            // Jump.
-            player.state.position.y += 1.5
+          if (keys['Space'] && player.state.position.y <= groundY + 0.1) {
+            player.state.velocity.y = 7 // jump
+          }
+          player.state.position.y += player.state.velocity.y * dt
+          player.state.velocity.y -= 25 * dt // gravity
+          // Don't fall through terrain.
+          const newGround = terrainHeight(player.state.position.x, player.state.position.z)
+          if (player.state.position.y < newGround) {
+            player.state.position.y = newGround
+            player.state.velocity.y = 0
           }
         }
 
-        // Player yaw follows camera yaw.
-        player.setYaw(yaw + Math.PI) // face away from camera (third-person)
-
-        // Player animation.
-        if (player.state.isMeditating) {
-          player.setAnimation('cast')
-        } else if (player.state.isFlying) {
-          player.setAnimation('fly')
-        } else if (moved) {
-          player.setAnimation(keys['ShiftLeft'] ? 'run' : 'walk')
-        } else {
-          player.setAnimation('idle')
-        }
-
+        player.setYaw(yaw + Math.PI)
+        if (player.state.isMeditating) player.setAnimation('cast')
+        else if (player.state.isFlying) player.setAnimation('fly')
+        else if (moved) player.setAnimation(keys['ShiftLeft'] ? 'run' : 'walk')
+        else player.setAnimation('idle')
         player.update(dt)
 
-        // ---- Wang Lin NPC idle (slowly rotates, meditates occasionally) ----
-        wanglinYaw += dt * 0.2
+        // Wang Lin NPC idle.
+        wanglinYaw += dt * 0.15
         wanglinNpc.setYaw(wanglinYaw)
         wanglinNpc.update(dt)
 
-        // ---- Third-person camera ----
-        // Camera follows behind and above the player.
-        const camDistance = 6
-        const camHeight = 3
-        const pitch = camera.userData.pitch ?? -0.2
+        // Third-person camera (smooth follow).
+        const pitch = camera.userData.pitch ?? -0.15
+        const camDist = 7, camHeight = 2
         const camOffset = new THREE.Vector3(
-          -Math.sin(yaw) * Math.cos(pitch) * camDistance,
-          -Math.sin(pitch) * camDistance + camHeight,
-          -Math.cos(yaw) * Math.cos(pitch) * camDistance,
+          -Math.sin(yaw) * Math.cos(pitch) * camDist,
+          -Math.sin(pitch) * camDist + camHeight,
+          -Math.cos(yaw) * Math.cos(pitch) * camDist,
         )
         const targetCamPos = player.state.position.clone().add(camOffset)
-        camera.position.lerp(targetCamPos, 0.15) // smooth follow
-        camera.lookAt(player.state.position.x, player.state.position.y + 1.5, player.state.position.z)
+        camera.position.lerp(targetCamPos, 0.12)
+        camera.lookAt(player.state.position.x, player.state.position.y + 1.2, player.state.position.z)
 
-        // ---- Update systems ----
-        chunkMgr.updateCamera(camera.position.x, camera.position.z)
-        chunkMgr.update(dt)
+        // Update systems.
         sky.update(dt)
-
         postFX.update(dt)
         postFX.composer.render()
 
-        // ---- FPS counter + HUD ----
-        fpsAccum += dt
+        // FPS + HUD.
         fpsFrames++
         fpsTimer += dt
         if (fpsTimer > 0.5) {
-          const fps = Math.round(fpsFrames / fpsAccum)
-          fpsTimer = 0
-          fpsAccum = 0
-          fpsFrames = 0
-          hudTimer += 0.5
-          if (hudTimer > 0.25) {
+          const fps = Math.round(fpsFrames / fpsTimer)
+          fpsTimer = 0; fpsFrames = 0; hudTimer += 0.5
+          if (hudTimer > 0.2) {
             hudTimer = 0
             setHud({
               fps,
-              chunks: chunkMgr.loadedCount(),
-              tris: chunkMgr.triangleCount(),
               x: Math.floor(player.state.position.x),
               y: Math.floor(player.state.position.y),
               z: Math.floor(player.state.position.z),
-              biome: chunkMgr.getChunkAt(player.state.position.x, player.state.position.z)?.biomeTag ?? 'unknown',
               qi: Math.floor(player.state.qi),
               maxQi: player.state.maxQi,
               realm: player.state.realm.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
@@ -332,45 +276,11 @@ export default function WorldCanvas() {
           }
         }
       }
-
-      // ---- Village structures: spawn after chunks load ----
-      const villageSpawnedRef = { done: false }
-      const trySpawnVillage = () => {
-        if (villageSpawnedRef.done) return
-        const centerChunk = chunkMgr.getChunkAt(0, 0)
-        if (!centerChunk) return
-        villageSpawnedRef.done = true
-        // Meditation platform: 5x5 jade brick at y=64.
-        for (let dx = -2; dx <= 2; dx++) {
-          for (let dz = -2; dz <= 2; dz++) {
-            chunkMgr.setBlock(dx, 64, dz, BlockId.JADE_BRICKS)
-          }
-        }
-        // Four stone lanterns at the platform corners.
-        const lanternPositions: Array<[number, number]> = [[-6, -6], [6, -6], [-6, 6], [6, 6]]
-        for (const [lx, lz] of lanternPositions) {
-          chunkMgr.setBlock(lx, 64, lz, BlockId.COBBLESTONE)
-          chunkMgr.setBlock(lx, 65, lz, BlockId.COBBLESTONE)
-          chunkMgr.setBlock(lx, 66, lz, BlockId.JADE_BRICKS)
-          chunkMgr.setBlock(lx, 67, lz, BlockId.JADE_BRICKS)
-          chunkMgr.setBlock(lx, 68, lz, BlockId.BLUE_TILE)
-        }
-        // Spirit-pine windbreak to the north.
-        for (let dx = -8; dx <= 8; dx += 2) {
-          chunkMgr.setBlock(dx, 64, -10, BlockId.PINE_WOOD)
-          chunkMgr.setBlock(dx, 65, -10, BlockId.PINE_WOOD)
-          chunkMgr.setBlock(dx, 66, -10, BlockId.PINE_WOOD)
-          chunkMgr.setBlock(dx, 67, -10, BlockId.PINE_LEAVES)
-          chunkMgr.setBlock(dx, 68, -10, BlockId.PINE_LEAVES)
-        }
-      }
-      const villageInterval = setInterval(trySpawnVillage, 200)
-
       animate()
 
+      // ---- Resize ----
       resizeObserver = new ResizeObserver(() => {
-        const w = container.clientWidth
-        const h = container.clientHeight
+        const w = container.clientWidth, h = container.clientHeight
         camera.aspect = w / h
         camera.updateProjectionMatrix()
         renderer.setSize(w, h)
@@ -379,8 +289,6 @@ export default function WorldCanvas() {
       resizeObserver.observe(container)
 
       // ---- Bridge to HUD ----
-      // CRITICAL: player is NOT Wang Lin. Player name is "Traveler" (行道者).
-      // Wang Lin is an NPC.
       const bridge = {
         getState() {
           return {
@@ -403,7 +311,7 @@ export default function WorldCanvas() {
             world: {
               time: sky.getTimeOfDay(),
               weather: 'clear' as const,
-              biome: chunkMgr.getChunkAt(player.state.position.x, player.state.position.z)?.biomeTag ?? 'plains',
+              biome: 'plains',
               nearbyActors: [
                 { name: 'Wang Lin (Manifestation)', nameCn: '王林 (化身)', realm: 'Foundation Establishment', hostility: 0, distance: Math.floor(player.state.position.distanceTo(wanglinNpc.group.position)) },
               ],
@@ -413,77 +321,36 @@ export default function WorldCanvas() {
             debug: {
               fps: hud.fps,
               frameTime: 16.6,
-              chunks: chunkMgr.loadedCount(),
-              tris: chunkMgr.triangleCount(),
+              chunks: 1, tris: 0,
               pos: [player.state.position.x, player.state.position.y, player.state.position.z],
               yaw: (camera.userData.yaw ?? 0),
               pitch: (camera.userData.pitch ?? 0),
-              biome: chunkMgr.getChunkAt(player.state.position.x, player.state.position.z)?.biomeTag ?? 'unknown',
-              mem: 0,
-              entities: 2, // player + Wang Lin
-              drawCalls: 0,
+              biome: 'plains',
+              mem: 0, entities: 2, drawCalls: 0,
             },
           }
         },
-        saveWorld(_key: string) { /* Future: serialize WorldDeltaStore */ },
-        loadWorld(_key: string) { /* Future: deserialize WorldDeltaStore */ },
-        onTick(_cb: () => void) { return () => {} },
+        saveWorld() {}, loadWorld() {}, onTick() { return () => {} },
       }
       ;(globalThis as { __ergenBridge?: unknown }).__ergenBridge = bridge
 
-      // Block placement / removal on mouse buttons (player writes through facade).
-      const onMouseDown = (e: MouseEvent) => {
-        if (!pointerLocked) return
-        const origin = camera.position.clone()
-        const dir = new THREE.Vector3()
-        camera.getWorldDirection(dir)
-        const hit = raycastVoxels(
-          { x: origin.x, y: origin.y, z: origin.z },
-          { x: dir.x, y: dir.y, z: dir.z },
-          32,
-          (wx, wy, wz) => chunkMgr.getBlock(wx, wy, wz),
-        )
-        if (!hit) return
-        if (e.button === 0) {
-          // Player breaks block (PLAYER provenance).
-          chunkMgr.setBlock(hit.block.x, hit.block.y, hit.block.z, BlockId.AIR)
-        } else if (e.button === 2) {
-          // Player places block (PLAYER provenance).
-          const px = hit.block.x + hit.normal.x
-          const py = hit.block.y + hit.normal.y
-          const pz = hit.block.z + hit.normal.z
-          chunkMgr.setBlock(px, py, pz, BlockId.STONE_BRICKS)
-        }
-      }
-      renderer.domElement.addEventListener('mousedown', onMouseDown)
-      renderer.domElement.addEventListener('contextmenu', (e) => e.preventDefault())
-
       return () => {
         cancelAnimationFrame(frameId)
-        clearInterval(villageInterval)
         resizeObserver?.disconnect()
         window.removeEventListener('keydown', onKeyDown)
         window.removeEventListener('keyup', onKeyUp)
         renderer.domElement.removeEventListener('click', onClick)
-        renderer.domElement.removeEventListener('mousedown', onMouseDown)
         document.removeEventListener('pointerlockchange', onPointerLockChange)
         document.removeEventListener('mousemove', onMouseMove)
-        sky.dispose()
-        player.dispose()
-        wanglinNpc.dispose()
-        postFX.dispose()
-        renderer.dispose()
+        sky.dispose(); player.dispose(); wanglinNpc.dispose()
+        postFX.dispose(); renderer.dispose()
         renderer.domElement.remove()
       }
     } catch (e) {
       console.error('[WorldCanvas] boot failed', e)
       setStatus('error')
     }
-
-    return () => {
-      cancelAnimationFrame(frameId)
-      resizeObserver?.disconnect()
-    }
+    return () => { cancelAnimationFrame(frameId); resizeObserver?.disconnect() }
   }, [])
 
   return (
@@ -496,27 +363,20 @@ export default function WorldCanvas() {
       {/* Top-right HUD */}
       <div className="pointer-events-none absolute right-4 top-4 z-10 select-none rounded-md border border-amber-500/30 bg-black/50 px-3 py-2 font-mono text-[10px] text-amber-100/90 backdrop-blur-sm">
         <div>FPS <span className="text-emerald-300">{hud.fps}</span></div>
-        <div>CHK <span className="text-emerald-300">{hud.chunks}</span></div>
-        <div>TRI <span className="text-emerald-300">{(hud.tris / 1000).toFixed(1)}k</span></div>
         <div>POS <span className="text-emerald-300">{hud.x},{hud.y},{hud.z}</span></div>
-        <div>BIO <span className="text-emerald-300">{hud.biome}</span></div>
         <div>QI <span className="text-emerald-300">{hud.qi}/{hud.maxQi}</span></div>
         <div>RLM <span className="text-emerald-300">{hud.realm}</span></div>
       </div>
       {/* Bottom-center lore */}
       <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 select-none text-center font-serif text-amber-100/60">
         <p className="text-sm italic">天地不仁，以万物为刍狗</p>
-        <p className="mt-1 text-[10px] uppercase tracking-[0.3em] text-amber-200/40">
-          Heaven is impartial; all things are straw dogs
-        </p>
+        <p className="mt-1 text-[10px] uppercase tracking-[0.3em] text-amber-200/40">Heaven is impartial</p>
       </div>
       {/* Controls hint */}
       <div className="pointer-events-none absolute bottom-4 right-4 z-10 select-none rounded-md border border-amber-500/30 bg-black/50 px-3 py-2 font-mono text-[10px] text-amber-100/70 backdrop-blur-sm">
         <div>WASD move · MOUSE look</div>
         <div>SPACE jump/fly · SHIFT sprint</div>
-        <div>F sword-flight (御剑飞行, 2qi/s)</div>
-        <div>Q meditate (3x qi regen)</div>
-        <div>L-CLICK break · R-CLICK place</div>
+        <div>F sword-flight · Q meditate</div>
       </div>
     </div>
   )
