@@ -335,28 +335,53 @@ export default function WorldCanvas() {
         frameId = requestAnimationFrame(animate)
         const dt = Math.min(clock.getDelta(), 0.1)
 
-        // Player movement.
+        // Player movement — with sub-stepped collision to prevent tunneling.
+        // At sprint speed (10 b/s * dt), one frame can move 0.17 blocks.
+        // A wall is 0.15m thick — the player would tunnel through it.
+        // FIX: subdivide the movement into steps smaller than playerRadius (0.3m),
+        // and check collision at each sub-step.
         const yaw = camera.userData.yaw ?? 0
         const speed = (player.state.isFlying ? 30 : (keys['ShiftLeft'] ? 10 : 5)) * dt
         const fwd = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw))
         const right = new THREE.Vector3(-fwd.z, 0, fwd.x)
-        let moved = false
-        const prevPos = player.state.position.clone()
-        if (keys['KeyW']) { player.state.position.addScaledVector(fwd, speed); moved = true }
-        if (keys['KeyS']) { player.state.position.addScaledVector(fwd, -speed); moved = true }
-        if (keys['KeyA']) { player.state.position.addScaledVector(right, -speed); moved = true }
-        if (keys['KeyD']) { player.state.position.addScaledVector(right, speed); moved = true }
 
-        // Collision check: ray-based mesh collision. Casts rays from the
-        // player against actual wall meshes. Stops at the wall surface.
-        // Doorways are naturally walkable (no mesh in the door gap).
-        if (!player.state.isFlying) {
-          const resolved = collision.resolve(
-            player.state.position.x, player.state.position.y, player.state.position.z,
-            prevPos.x, prevPos.y, prevPos.z,
-          )
-          player.state.position.x = resolved.x
-          player.state.position.z = resolved.z
+        // Compute the full movement vector for this frame.
+        const moveVec = new THREE.Vector3()
+        if (keys['KeyW']) moveVec.addScaledVector(fwd, speed)
+        if (keys['KeyS']) moveVec.addScaledVector(fwd, -speed)
+        if (keys['KeyA']) moveVec.addScaledVector(right, -speed)
+        if (keys['KeyD']) moveVec.addScaledVector(right, speed)
+        const moved = moveVec.lengthSq() > 0.0001
+
+        const prevPos = player.state.position.clone()
+
+        if (moved && !player.state.isFlying) {
+          // Sub-step: break the movement into steps of max 0.3m each.
+          // At each step, apply collision. This prevents tunneling through
+          // thin walls at high speed.
+          const stepSize = 0.3
+          const totalDist = moveVec.length()
+          const numSteps = Math.max(1, Math.ceil(totalDist / stepSize))
+          const stepVec = moveVec.clone().divideScalar(numSteps)
+
+          for (let s = 0; s < numSteps; s++) {
+            // Apply one sub-step.
+            player.state.position.add(stepVec)
+
+            // Collision check at this sub-step position.
+            const resolved = collision.resolve(
+              player.state.position.x, player.state.position.y, player.state.position.z,
+              prevPos.x, prevPos.y, prevPos.z,
+            )
+            player.state.position.x = resolved.x
+            player.state.position.z = resolved.z
+
+            // If collision hit, stop moving for remaining sub-steps (we hit a wall).
+            if (resolved.hit) break
+          }
+        } else if (moved && player.state.isFlying) {
+          // Flying: no collision, just move.
+          player.state.position.add(moveVec)
         }
 
         // Ground clamp: player stands on terrain surface.
