@@ -108,8 +108,8 @@ export default function WorldCanvas() {
       const pines = createSpiritPines(0, 0, 200, 150)
       scene.add(pines)
 
-      // ---- Grass tufts (kills the "flat green void" look) ----
-      const grass = createGrassTufts(0, 0, 200, 3000)
+      // ---- Grass tufts (NMS-style dense clusters, not tall blades) ----
+      const grass = createGrassTufts(0, 0, 180, 5000)
       scene.add(grass)
 
       // ---- Rocks (geological detail) ----
