@@ -635,6 +635,31 @@ public class EntityCultivator extends PathfinderMob {
     }
 
     /**
+     * CRON-138: Returns true if the cultivator has enough qi to PROJECT a
+     * sword-qi attack (剑气). The threshold is 5% of maxQi — same as the
+     * flight-continuation threshold, because a sword-qi projection is a
+     * brief, focused expenditure comparable to one flight tick.
+     *
+     * <p>Canon intuition: a cultivator at near-zero qi cannot project sword
+     * qi; they must rest (or absorb spiritual energy) first. This closes
+     * CRON-134 self-critique #8: 'No qi cost for OTHER cultivator abilities.
+     * Sword flight now costs qi, but other qi-consuming abilities
+     * (CultivatorSwordQiGoal ranged attack, casting, meditation) do NOT
+     * cost qi. A cultivator who exhausts their qi on flight can still cast
+     * sword-qi projectiles with no penalty. Canon: all cultivation
+     * abilities consume qi.'
+     *
+     * <p>The actual consumption (5.0 qi per projection) happens in
+     * {@link dev.ergenverse.entity.ai.CultivatorSwordQiGoal#fireSwordQi}.
+     * This helper only checks the gate; the goal calls
+     * {@link #consumeQi} at fire time.
+     */
+    public boolean hasEnoughQiForSwordQi() {
+        if (this.maxQi <= 0.0) return false;
+        return this.qi >= this.maxQi * 0.05;
+    }
+
+    /**
      * CRON-134: Initialize the qi reserves for this cultivator's realm.
      * Called lazily from {@link #tickQi()} on first server tick. Sets
      * maxQi per-realm and fills qi to maxQi (cultivators spawn at full qi).
