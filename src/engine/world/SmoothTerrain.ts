@@ -1,56 +1,19 @@
 /**
- * SmoothTerrain — low-poly heightmap terrain mesh.
+ * SmoothTerrain — low-poly heightmap terrain mesh, RBF-driven.
  *
- * Replaces the blocky voxel terrain with a SMOOTH mesh like No Mortal Space.
- * Uses simplex noise for rolling hills. The mesh is a PlaneGeometry with
- * vertex displacement. Face normals are computed for smooth shading.
+ * Uses the RBF terrain height function (canon control points + Wendland RBF
+ * + micro detail noise) from RBFTerrain.ts. Mountains sit where canon says
+ * they sit. The village area is flattened. This is NOT blocky voxels — it's
+ * a single continuous smooth mesh.
  *
- * This is NOT voxel — it's a single continuous mesh. Player edits (mining/
- * building) will use a separate voxel overlay system in the future. For now,
- * the terrain is the visual foundation: smooth, painterly, xianxia.
- *
- * Deterministic: same seed = same terrain. The CANON_SEED is fixed.
+ * The renderer samples the field: terrain = T(blueprint, simDelta, playerDelta).
  */
 
 import * as THREE from 'three'
-import { createNoise2D } from 'simplex-noise'
+import { rbfTerrainHeight, terrainMaterialAt, SEA_LEVEL } from './field/RBFTerrain'
 
-const CANON_SEED = 1337
-
-function mulberry32(seed: number): () => number {
-  let a = seed >>> 0
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0
-    let t = a
-    t = Math.imul(t ^ (t >>> 15), t | 1)
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
-
-const noise2D = createNoise2D(mulberry32(CANON_SEED))
-const noise2D_detail = createNoise2D(mulberry32(CANON_SEED + 1))
-
-/** Terrain height at a world (x, z) position. */
-export function terrainHeight(x: number, z: number): number {
-  // Base rolling hills — gentle, not jagged.
-  const base = noise2D(x * 0.01, z * 0.01) * 8
-  // Medium detail.
-  const medium = noise2D(x * 0.03, z * 0.03) * 3
-  // Fine detail.
-  const fine = noise2D_detail(x * 0.08, z * 0.08) * 1
-  // Flatten near spawn (village area) — 40-block radius.
-  const dist = Math.sqrt(x * x + z * z)
-  const flattenRadius = 40
-  let height = base + medium + fine
-  if (dist < flattenRadius) {
-    const t = dist / flattenRadius
-    const flatten = 1 - (1 - t) * (1 - t) // quadratic
-    const targetHeight = 2 // gentle village height
-    height = height * flatten + targetHeight * (1 - flatten)
-  }
-  return height
-}
+// Re-export for backward compatibility.
+export { rbfTerrainHeight as terrainHeight } from './field/RBFTerrain'
 
 /**
  * Create a smooth terrain mesh covering `size` x `size` blocks centered
@@ -65,12 +28,12 @@ export function createSmoothTerrain(
   const geo = new THREE.PlaneGeometry(size, size, segments, segments)
   geo.rotateX(-Math.PI / 2) // make it horizontal (XZ plane, Y up)
 
-  // Displace vertices by terrain height.
+  // Displace vertices by RBF terrain height (canon-authored).
   const positions = geo.attributes.position
   for (let i = 0; i < positions.count; i++) {
     const x = positions.getX(i) + centerX
     const z = positions.getZ(i) + centerZ
-    const y = terrainHeight(x, z)
+    const y = rbfTerrainHeight(x, z)
     positions.setY(i, y)
   }
   positions.needsUpdate = true
@@ -78,29 +41,38 @@ export function createSmoothTerrain(
   // Compute vertex normals for smooth shading.
   geo.computeVertexNormals()
 
-  // Vertex colors based on height (grass low, stone mid, snow high).
+  // Vertex colors based on height + material (canon-driven).
   const colors = new Float32Array(positions.count * 3)
   const color = new THREE.Color()
   for (let i = 0; i < positions.count; i++) {
+    const x = positions.getX(i) + centerX
+    const z = positions.getZ(i) + centerZ
     const y = positions.getY(i)
-    if (y < 0) {
-      color.setRGB(0.15, 0.35, 0.55) // underwater — deep blue
-    } else if (y < 1) {
-      color.setRGB(0.75, 0.65, 0.45) // beach sand
-    } else if (y < 6) {
-      color.setRGB(0.35, 0.55, 0.25) // grass green
-    } else if (y < 10) {
-      color.setRGB(0.45, 0.50, 0.30) // dry grass / rock transition
-    } else if (y < 14) {
-      color.setRGB(0.50, 0.48, 0.42) // rock
-    } else {
-      color.setRGB(0.90, 0.92, 0.95) // snow cap
+    const mat = terrainMaterialAt(y)
+    switch (mat) {
+      case 'WATER':
+        color.setRGB(0.15, 0.35, 0.55); break
+      case 'SAND':
+        color.setRGB(0.75, 0.65, 0.45); break
+      case 'GRASS':
+        // Grass gets slight noise variation for painterly feel.
+        color.setRGB(0.30, 0.52, 0.22); break
+      case 'STONE':
+        if (y > 18) {
+          color.setRGB(0.92, 0.94, 0.96) // snow cap
+        } else {
+          color.setRGB(0.48, 0.46, 0.42) // rock
+        }
+        break
+      default:
+        color.setRGB(0.40, 0.50, 0.30)
     }
     // Add slight noise variation for painterly feel.
-    const variation = noise2D_detail(x_var(positions.getX(i)), z_var(positions.getZ(i))) * 0.08
-    colors[i * 3] = Math.max(0, color.r + variation)
-    colors[i * 3 + 1] = Math.max(0, color.g + variation)
-    colors[i * 3 + 2] = Math.max(0, color.b + variation)
+    const v = (Math.sin(x * 12.9898 + z * 78.233) * 43758.5453) % 1
+    const variation = (v - Math.floor(v) - 0.5) * 0.1
+    colors[i * 3] = Math.max(0, Math.min(1, color.r + variation))
+    colors[i * 3 + 1] = Math.max(0, Math.min(1, color.g + variation))
+    colors[i * 3 + 2] = Math.max(0, Math.min(1, color.b + variation))
   }
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
@@ -118,9 +90,6 @@ export function createSmoothTerrain(
   return mesh
 }
 
-// Helpers for vertex color variation.
-function x_var(x: number): number { return x * 0.5 }
-function z_var(z: number): number { return z * 0.5 }
 
 /**
  * Create instanced spirit-pine trees scattered on the terrain.
@@ -210,10 +179,12 @@ export function createSpiritPines(
     // No trees in the village plaza (20-block radius).
     if (dist < 20) continue
     // No trees on water or snow.
-    const h = terrainHeight(x, z)
+    const h = rbfTerrainHeight(x, z)
     if (h < 1 || h > 12) continue
-    // Deterministic placement via noise.
-    if (noise2D(x * 0.3, z * 0.3) < -0.3) continue
+    // Deterministic placement via a simple hash.
+    const hash = (Math.sin(x * 12.9898 + z * 78.233) * 43758.5453)
+    const noiseVal = (hash - Math.floor(hash)) * 2 - 1 // -1..1
+    if (noiseVal < -0.3) continue
     dummy.position.set(x, h, z)
     dummy.rotation.y = Math.random() * Math.PI * 2
     const scale = 0.8 + Math.random() * 0.6
