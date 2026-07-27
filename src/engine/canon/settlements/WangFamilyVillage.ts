@@ -248,12 +248,20 @@ export const WANG_FAMILY_VILLAGE: CanonSettlement = {
 
 /**
  * Generate ~20 village huts arranged in a loose grid around the plaza.
- * Canon: Wang Family Village had ~100 families (CANON_RI_COMPLETE_WORLD.md L34).
- * We place 20 visible huts representing the densest part of the village.
- * Each hut is a simple mortal home (poor_village_wood theme, 5x3x4 meters).
+ * Canon: Wang Family Village had ~100 families of the impoverished Wang
+ * Family Carpenter Clan (CANON_RI_COMPLETE_WORLD.md L34). We place 20
+ * visible huts representing the densest part of the village.
+ *
+ * Each hut has VARIED size, rotation, and theme — not identical clones.
+ * Canon: the Wang Family were carpenters, so the huts show woodworking
+ * skill but poverty — some have slightly better construction (larger,
+ * straighter), others are rougher (smaller, more weathered). This variation
+ * reflects the economic diversity within an impoverished clan.
  */
 function generateVillageHuts() {
   const huts: typeof WANG_FAMILY_VILLAGE.buildings = []
+  // Positions arranged in loose rows around the central plaza.
+  // The village is organic — not a perfect grid.
   const positions: Array<[number, number, number]> = [
     // East row
     [14, 0, 6], [18, 0, 2], [22, 0, -2], [16, 0, -8], [20, 0, -12],
@@ -263,20 +271,25 @@ function generateVillageHuts() {
     [-8, 0, -16], [-2, 0, -18], [4, 0, -16], [10, 0, -18],
     // South row (near gate)
     [-10, 0, 14], [-4, 0, 16], [6, 0, 14], [12, 0, 16],
-    // Scattered
+    // Scattered (outlier huts on the village edge)
     [-24, 0, 6], [24, 0, 8],
   ]
   for (let i = 0; i < positions.length; i++) {
     const [x, y, z] = positions[i]
+    // Vary the hut size: some smaller (poorer), some larger (better off).
+    const sizeVariation = 0.8 + (i % 3) * 0.15 // 0.8, 0.95, 1.1 cycle
+    const width = (4.5 + (i % 4) * 0.5) * sizeVariation // 4.5-6.6
+    const height = 2.8 + (i % 3) * 0.4 // 2.8-3.6
+    const depth = (3.5 + (i % 5) * 0.4) * sizeVariation // 3.5-5.7
     huts.push({
       id: `building:hut_${i}`,
-      name: `Villager Hut ${i + 1}`,
-      nameCn: `村民屋 ${i + 1}`,
+      name: `Carpenter Family Hut ${i + 1}`,
+      nameCn: `木匠家 ${i + 1}`,
       purpose: 'home',
       shellTheme: 'poor_village_wood',
       position: [x, y, z],
-      rotation: Math.floor(Math.random() * 360),
-      size: [5, 3, 4],
+      rotation: (i * 37 + 15) % 360, // varied rotation, not all the same
+      size: [Math.round(width * 10) / 10, Math.round(height * 10) / 10, Math.round(depth * 10) / 10],
       rooms: [],
     })
   }

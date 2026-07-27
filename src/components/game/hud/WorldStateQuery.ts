@@ -38,6 +38,7 @@ export interface RealmInfo {
 }
 
 export const CULTIVATION_REALMS: RealmInfo[] = [
+  { id: 'mortal',            en: 'Mortal',                     cn: '凡人', short: '凡', order: -1 },
   { id: 'qi_condensation',  en: 'Qi Condensation',           cn: '凝气期', short: '凝气', order: 0 },
   { id: 'foundation',       en: 'Foundation Establishment',  cn: '筑基期', short: '筑基', order: 1 },
   { id: 'core_formation',   en: 'Core Formation',            cn: '结丹期', short: '结丹', order: 2 },
@@ -194,19 +195,19 @@ export interface BreakthroughToast {
 /* ─────────────────────────────────────────────────────────────────────── */
 
 const DEFAULT_PLAYER: PlayerState = {
-  name: 'Wang Lin',
-  nameCn: '王林',
-  realmId: 'foundation',
-  realmProgress: 0.12,
-  qi: 120,
-  maxQi: 500,
-  qiRegenerating: true,
+  name: 'Lu Feizhen',
+  nameCn: '',
+  realmId: 'mortal',
+  realmProgress: 0,
+  qi: 0,
+  maxQi: 0,
+  qiRegenerating: false,
   health: 100,
   maxHealth: 100,
-  spiritSenseRange: 64,
+  spiritSenseRange: 0,
   position: [0, 70, 0],
-  faction: 'Heng Yue Sect (disciple)',
-  hostility: 10,
+  faction: 'None (Mortal)',
+  hostility: 0,
 }
 
 const DEFAULT_WORLD: WorldState = {

@@ -46,7 +46,7 @@ export function compileSettlement(settlement: CanonSettlement): THREE.Group {
  */
 function compileBuilding(building: CanonBuilding): THREE.Group {
   const group = new THREE.Group()
-  group.name = `building:${building.id}`
+  group.name = building.id
   group.position.set(building.position[0], building.position[1], building.position[2])
   group.rotation.y = (building.rotation * Math.PI) / 180
 

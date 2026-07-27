@@ -153,10 +153,9 @@ export default function WorldCanvas() {
         const groundY = terrainHeight(buildingX, buildingZ)
         child.position.y = groundY
         // Register collision AABB for this building.
-        // Use the building's world position + a reasonable bounding box.
-        // The building group has walls/roof — we use a box slightly smaller
-        // than the building footprint for walkable doorways.
-        const buildingData = WANG_FAMILY_VILLAGE.buildings.find((b) => b.id === child.name?.replace('building:', ''))
+        // The building group name is 'building:<id>' — match against the
+        // full building id in WANG_FAMILY_VILLAGE.buildings.
+        const buildingData = WANG_FAMILY_VILLAGE.buildings.find((b) => b.id === child.name)
         if (buildingData) {
           const [w, h, d] = buildingData.size
           collision.registerBox(buildingData.id, {
