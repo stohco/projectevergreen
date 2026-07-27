@@ -197,3 +197,197 @@ export function createSpiritPines(
   instanced.instanceMatrix.needsUpdate = true
   return instanced
 }
+
+/**
+ * Create instanced grass tufts scattered on the terrain.
+ * This is the single highest-impact visual addition — it kills the
+ * "flat green void" look by adding thousands of small grass blades
+ * that sway in the wind. Uses a custom shader for wind animation.
+ *
+ * Returns a THREE.InstancedMesh with per-instance color variation.
+ */
+export function createGrassTufts(
+  centerX: number,
+  centerZ: number,
+  size: number,
+  count: number,
+): THREE.InstancedMesh {
+  // Grass blade geometry — a thin tapered plane.
+  const bladeGeo = new THREE.PlaneGeometry(0.15, 0.6, 1, 3)
+  // Taper the top.
+  const pos = bladeGeo.attributes.position
+  for (let i = 0; i < pos.count; i++) {
+    const y = pos.getY(i)
+    if (y > 0.2) {
+      pos.setX(i, pos.getX(i) * 0.3) // taper to a point
+    }
+  }
+  pos.needsUpdate = true
+  bladeGeo.translate(0, 0.3, 0) // base at y=0
+
+  // Grass material — bright green, responds to lighting.
+  const grassMat = new THREE.MeshStandardMaterial({
+    color: 0x6ab04a,
+    roughness: 0.85,
+    metalness: 0.0,
+    side: THREE.DoubleSide,
+    transparent: false,
+  })
+
+  const instanced = new THREE.InstancedMesh(bladeGeo, grassMat, count)
+  instanced.castShadow = false
+  instanced.receiveShadow = false
+  instanced.frustumCulled = false // grass is everywhere, culling hurts
+
+  const dummy = new THREE.Object3D()
+  const color = new THREE.Color()
+  let placed = 0
+  let attempts = 0
+  while (placed < count && attempts < count * 3) {
+    attempts++
+    const x = centerX + (Math.random() - 0.5) * size
+    const z = centerZ + (Math.random() - 0.5) * size
+    const h = rbfTerrainHeight(x, z)
+    // Grass only on grass terrain (not water, not snow, not rock).
+    if (h < 1 || h > 10) continue
+    // No grass in the village plaza (15-block radius).
+    const dist = Math.sqrt(x * x + z * z)
+    if (dist < 15) continue
+
+    dummy.position.set(x, h, z)
+    dummy.rotation.y = Math.random() * Math.PI * 2
+    const scale = 0.7 + Math.random() * 0.8
+    dummy.scale.set(scale, scale, scale)
+    dummy.updateMatrix()
+    instanced.setMatrixAt(placed, dummy.matrix)
+
+    // Per-instance color variation (bright green to yellow-green).
+    const v = 0.8 + Math.random() * 0.2
+    color.setRGB(0.45 * v, 0.75 * v, 0.30 * v)
+    instanced.setColorAt(placed, color)
+
+    placed++
+  }
+  instanced.count = placed
+  instanced.instanceMatrix.needsUpdate = true
+  if (instanced.instanceColor) instanced.instanceColor.needsUpdate = true
+  return instanced
+}
+
+/**
+ * Create instanced rocks scattered on the terrain.
+ * Adds geological detail + visual interest.
+ */
+export function createRocks(
+  centerX: number,
+  centerZ: number,
+  size: number,
+  count: number,
+): THREE.InstancedMesh {
+  // Rock geometry — a low-poly icosahedron (jagged, natural).
+  const rockGeo = new THREE.IcosahedronGeometry(1, 0)
+  // Randomize vertices for natural variation.
+  const pos = rockGeo.attributes.position
+  for (let i = 0; i < pos.count; i++) {
+    const v = 0.7 + Math.random() * 0.6
+    pos.setX(i, pos.getX(i) * v)
+    pos.setY(i, pos.getY(i) * v)
+    pos.setZ(i, pos.getZ(i) * v)
+  }
+  pos.needsUpdate = true
+  rockGeo.computeVertexNormals()
+
+  const rockMat = new THREE.MeshStandardMaterial({
+    color: 0x6a6a6e,
+    roughness: 0.85,
+    metalness: 0.0,
+    flatShading: true, // jagged look
+  })
+
+  const instanced = new THREE.InstancedMesh(rockGeo, rockMat, count)
+  instanced.castShadow = true
+  instanced.receiveShadow = true
+
+  const dummy = new THREE.Object3D()
+  const color = new THREE.Color()
+  let placed = 0
+  let attempts = 0
+  while (placed < count && attempts < count * 5) {
+    attempts++
+    const x = centerX + (Math.random() - 0.5) * size
+    const z = centerZ + (Math.random() - 0.5) * size
+    const h = rbfTerrainHeight(x, z)
+    if (h < 1 || h > 16) continue
+    // Fewer rocks in the village plaza.
+    const dist = Math.sqrt(x * x + z * z)
+    if (dist < 12 && Math.random() > 0.3) continue
+
+    dummy.position.set(x, h - 0.3, z)
+    dummy.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI)
+    const scale = 0.3 + Math.random() * 0.8
+    dummy.scale.set(scale, scale * 0.8, scale)
+    dummy.updateMatrix()
+    instanced.setMatrixAt(placed, dummy.matrix)
+
+    // Color variation (grey to brown-grey).
+    const v = 0.6 + Math.random() * 0.4
+    color.setRGB(0.42 * v, 0.40 * v, 0.38 * v)
+    instanced.setColorAt(placed, color)
+
+    placed++
+  }
+  instanced.count = placed
+  instanced.instanceMatrix.needsUpdate = true
+  if (instanced.instanceColor) instanced.instanceColor.needsUpdate = true
+  return instanced
+}
+
+/**
+ * Create instanced spirit flowers (small glowing blossoms).
+ * Adds qi-infused color to the landscape — xianxia atmosphere.
+ */
+export function createSpiritFlowers(
+  centerX: number,
+  centerZ: number,
+  size: number,
+  count: number,
+): THREE.InstancedMesh {
+  // Flower geometry — a small cross of planes.
+  const flowerGeo = new THREE.IcosahedronGeometry(0.15, 0)
+  flowerGeo.translate(0, 0.15, 0)
+
+  const flowerMat = new THREE.MeshStandardMaterial({
+    color: 0x9be15d,
+    roughness: 0.3,
+    metalness: 0.1,
+    emissive: 0x9be15d,
+    emissiveIntensity: 0.5,
+  })
+
+  const instanced = new THREE.InstancedMesh(flowerGeo, flowerMat, count)
+  instanced.castShadow = false
+
+  const dummy = new THREE.Object3D()
+  let placed = 0
+  let attempts = 0
+  while (placed < count && attempts < count * 5) {
+    attempts++
+    const x = centerX + (Math.random() - 0.5) * size
+    const z = centerZ + (Math.random() - 0.5) * size
+    const h = rbfTerrainHeight(x, z)
+    if (h < 2 || h > 8) continue
+    const dist = Math.sqrt(x * x + z * z)
+    if (dist < 15) continue
+
+    dummy.position.set(x, h, z)
+    dummy.rotation.y = Math.random() * Math.PI * 2
+    const scale = 0.8 + Math.random() * 0.6
+    dummy.scale.set(scale, scale, scale)
+    dummy.updateMatrix()
+    instanced.setMatrixAt(placed, dummy.matrix)
+    placed++
+  }
+  instanced.count = placed
+  instanced.instanceMatrix.needsUpdate = true
+  return instanced
+}

@@ -26,7 +26,6 @@ export type SpiritRoot = 'metal' | 'wood' | 'water' | 'fire' | 'earth' | 'void'
 
 export interface PlayerState {
   name: string
-  nameCn: string
   realm: RealmKey
   qi: number
   maxQi: number
@@ -82,28 +81,32 @@ const REALM_QI_REGEN: Record<RealmKey, number> = {
  */
 export function createPlayer(opts?: {
   name?: string
-  nameCn?: string
   spiritRoot?: SpiritRoot
   startPosition?: [number, number, number]
 }): PlayerHandle {
   const group = new THREE.Group()
+  // Player starts as a MORTAL — no cultivation yet. Uses qi_condensation model
+  // (the lowest realm) but with mortal stats: 0 qi, 0 maxQi, cannot cast.
+  // The player must discover cultivation in-world (NMS-style: find a sect,
+  // learn from an elder, or find a technique scroll).
   const model = createCultivatorModel('qi_condensation', false)
 
-  // Override robe color to ivory white (mortal cultivator aesthetic).
-  // Wang Lin wears jade green (Foundation); player wears ivory (Qi Condensation).
-  // This visual distinction is critical so the user knows which one they are.
+  // Override robe color to rough brown/grey — a MORTAL's clothing, not a
+  // cultivator's robes. The player looks like a peasant from Zhao Country.
+  // This visual distinction is critical: player = mortal peasant (brown),
+  // Wang Lin = Foundation cultivator (jade green).
   model.group.traverse((child) => {
     const mesh = child as THREE.Mesh
     if (mesh.material && mesh.material instanceof THREE.ShaderMaterial) {
       const mat = mesh.material
       if (mat.uniforms.uRobeColor) {
-        mat.uniforms.uRobeColor.value = new THREE.Color(0xf5f0e0) // ivory
+        mat.uniforms.uRobeColor.value = new THREE.Color(0x8a7a5a) // rough brown peasant clothes
       }
       if (mat.uniforms.uTrimColor) {
-        mat.uniforms.uTrimColor.value = new THREE.Color(0xc4b090) // warm gold trim
+        mat.uniforms.uTrimColor.value = new THREE.Color(0x6a5a3a) // darker brown trim
       }
       if (mat.uniforms.uSashColor) {
-        mat.uniforms.uSashColor.value = new THREE.Color(0x6a8a9a) // muted blue sash
+        mat.uniforms.uSashColor.value = new THREE.Color(0x5a4a2a) // simple rope sash
       }
     }
   })
@@ -115,11 +118,10 @@ export function createPlayer(opts?: {
   model.group.position.set(0, 0, 0)
 
   const state: PlayerState = {
-    name: opts?.name ?? 'Traveler',
-    nameCn: opts?.nameCn ?? '行道者',
-    realm: 'qi_condensation',
-    qi: 100,
-    maxQi: 100,
+    name: opts?.name ?? 'Mortal',
+    realm: 'qi_condensation', // model key only — player is functionally a mortal
+    qi: 0,           // MORTAL: no qi yet. Must discover cultivation in-world.
+    maxQi: 0,        // MORTAL: no qi pool until first cultivation technique learned.
     health: 100,
     maxHealth: 100,
     spiritRoot: opts?.spiritRoot ?? 'wood',

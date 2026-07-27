@@ -6,7 +6,7 @@ import { createSky, type SkyHandle } from '@/engine/render/SkySystem'
 import { createPostFX, type PostFXHandle } from '@/engine/render/PostProcessing'
 import { createCultivatorModel, type CultivatorModelHandle } from '@/engine/entities/CultivatorModel'
 import { createPlayer, type PlayerHandle } from '@/engine/entities/PlayerEntity'
-import { createSmoothTerrain, createSpiritPines, terrainHeight } from '@/engine/world/SmoothTerrain'
+import { createSmoothTerrain, createSpiritPines, createGrassTufts, createRocks, createSpiritFlowers, terrainHeight } from '@/engine/world/SmoothTerrain'
 import { compileSettlement } from '@/engine/world/compiler/SettlementCompiler'
 import { WANG_FAMILY_VILLAGE } from '@/engine/canon/settlements/WangFamilyVillage'
 import { WorldGraph } from '@/engine/graph/WorldGraph'
@@ -34,8 +34,8 @@ export default function WorldCanvas() {
   const [hud, setHud] = useState({
     fps: 0,
     x: 0, y: 0, z: 0,
-    qi: 100, maxQi: 100,
-    realm: 'Qi Condensation',
+    qi: 0, maxQi: 0,
+    realm: 'Mortal',
   })
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export default function WorldCanvas() {
 
       // ---- Camera ----
       camera = new THREE.PerspectiveCamera(65, container.clientWidth / container.clientHeight, 0.1, 2000)
-      camera.position.set(8, 12, 16)
+      camera.position.set(16, 14, 20)
       camera.lookAt(0, 4, 0)
 
       // ---- Sky ----
@@ -107,6 +107,18 @@ export default function WorldCanvas() {
       const pines = createSpiritPines(0, 0, 200, 150)
       scene.add(pines)
 
+      // ---- Grass tufts (kills the "flat green void" look) ----
+      const grass = createGrassTufts(0, 0, 200, 3000)
+      scene.add(grass)
+
+      // ---- Rocks (geological detail) ----
+      const rocks = createRocks(0, 0, 200, 40)
+      scene.add(rocks)
+
+      // ---- Spirit flowers (qi-infused xianxia atmosphere) ----
+      const flowers = createSpiritFlowers(0, 0, 150, 60)
+      scene.add(flowers)
+
       // ---- Wang Family Village (compiled from semantic data) ----
       const villageGroup = compileSettlement(WANG_FAMILY_VILLAGE)
       // The village buildings have Y=0 in semantic data; we need to place
@@ -116,11 +128,14 @@ export default function WorldCanvas() {
       scene.add(villageGroup)
 
       // ---- Player (NOT Wang Lin) ----
+      // Player name comes from the character creation screen (English, typed).
+      // Player starts as a MORTAL: 0 qi, 0 maxQi, brown peasant clothes.
+      const playerName = (globalThis as { __ergenPlayerName?: string }).__ergenPlayerName ?? 'Mortal'
+      const playerSpiritRoot = ((globalThis as { __ergenPlayerSpiritRoot?: string }).__ergenPlayerSpiritRoot ?? 'wood') as 'metal' | 'wood' | 'water' | 'fire' | 'earth' | 'void'
       const spawnY = terrainHeight(4, 8)
       player = createPlayer({
-        name: 'Traveler',
-        nameCn: '行道者',
-        spiritRoot: 'wood',
+        name: playerName,
+        spiritRoot: playerSpiritRoot,
         startPosition: [4, spawnY, 8],
       })
       player.setAnimation('idle')
@@ -160,10 +175,14 @@ export default function WorldCanvas() {
         keys[e.code] = true
         if (e.code === 'Space') e.preventDefault()
         if (e.code === 'KeyF') {
+          // Sword-flight requires qi. A mortal (maxQi=0) cannot fly.
           if (player.state.isFlying) { player.setFlying(false) }
-          else if (player.consumeQi(10)) { player.setFlying(true) }
+          else if (player.state.maxQi > 0 && player.consumeQi(10)) { player.setFlying(true) }
         }
-        if (e.code === 'KeyQ') player.setMeditating(!player.state.isMeditating)
+        if (e.code === 'KeyQ') {
+          // Meditation requires at least some qi capacity.
+          if (player.state.maxQi > 0) player.setMeditating(!player.state.isMeditating)
+        }
       }
       const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false }
       const onClick = () => { if (!pointerLocked) renderer.domElement.requestPointerLock?.() }
@@ -173,13 +192,21 @@ export default function WorldCanvas() {
         camera.userData.yaw = (camera.userData.yaw ?? 0) - e.movementX * 0.003
         camera.userData.pitch = Math.max(-1.0, Math.min(0.6, (camera.userData.pitch ?? -0.15) - e.movementY * 0.003))
       }
+      // Scroll-to-zoom: adjust camera distance.
+      const onWheel = (e: WheelEvent) => {
+        e.preventDefault()
+        const zoom = (camera.userData.zoom ?? 7) + e.deltaY * 0.01
+        camera.userData.zoom = Math.max(3, Math.min(20, zoom))
+      }
       window.addEventListener('keydown', onKeyDown)
       window.addEventListener('keyup', onKeyUp)
       renderer.domElement.addEventListener('click', onClick)
+      renderer.domElement.addEventListener('wheel', onWheel, { passive: false })
       document.addEventListener('pointerlockchange', onPointerLockChange)
       document.addEventListener('mousemove', onMouseMove)
       camera.userData.yaw = 0
       camera.userData.pitch = -0.15
+      camera.userData.zoom = 7
 
       // ---- Main loop ----
       const clock = new THREE.Clock()
@@ -194,7 +221,7 @@ export default function WorldCanvas() {
         const yaw = camera.userData.yaw ?? 0
         const speed = (player.state.isFlying ? 30 : (keys['ShiftLeft'] ? 10 : 5)) * dt
         const fwd = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw))
-        const right = new THREE.Vector3(fwd.z, 0, -fwd.x)
+        const right = new THREE.Vector3(-fwd.z, 0, fwd.x)
         let moved = false
         if (keys['KeyW']) { player.state.position.addScaledVector(fwd, speed); moved = true }
         if (keys['KeyS']) { player.state.position.addScaledVector(fwd, -speed); moved = true }
@@ -239,9 +266,10 @@ export default function WorldCanvas() {
         wanglinNpc.setYaw(wanglinYaw)
         wanglinNpc.update(dt)
 
-        // Third-person camera (smooth follow).
+        // Third-person camera (smooth follow + scroll zoom).
         const pitch = camera.userData.pitch ?? -0.15
-        const camDist = 7, camHeight = 2
+        const camDist = camera.userData.zoom ?? 7
+        const camHeight = 2
         const camOffset = new THREE.Vector3(
           -Math.sin(yaw) * Math.cos(pitch) * camDist,
           -Math.sin(pitch) * camDist + camHeight,
@@ -271,7 +299,7 @@ export default function WorldCanvas() {
               z: Math.floor(player.state.position.z),
               qi: Math.floor(player.state.qi),
               maxQi: player.state.maxQi,
-              realm: player.state.realm.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+              realm: 'Mortal',
             })
           }
         }
@@ -294,9 +322,7 @@ export default function WorldCanvas() {
           return {
             player: {
               name: player.state.name,
-              nameCn: player.state.nameCn,
-              realm: player.state.realm.replace(/_/g, ' '),
-              realmCn: '凝气期',
+              realm: 'Mortal',
               qi: Math.floor(player.state.qi),
               maxQi: player.state.maxQi,
               health: player.state.health,
@@ -340,6 +366,7 @@ export default function WorldCanvas() {
         window.removeEventListener('keydown', onKeyDown)
         window.removeEventListener('keyup', onKeyUp)
         renderer.domElement.removeEventListener('click', onClick)
+        renderer.domElement.removeEventListener('wheel', onWheel)
         document.removeEventListener('pointerlockchange', onPointerLockChange)
         document.removeEventListener('mousemove', onMouseMove)
         sky.dispose(); player.dispose(); wanglinNpc.dispose()
@@ -374,9 +401,9 @@ export default function WorldCanvas() {
       </div>
       {/* Controls hint */}
       <div className="pointer-events-none absolute bottom-4 right-4 z-10 select-none rounded-md border border-amber-500/30 bg-black/50 px-3 py-2 font-mono text-[10px] text-amber-100/70 backdrop-blur-sm">
-        <div>WASD move · MOUSE look</div>
-        <div>SPACE jump/fly · SHIFT sprint</div>
-        <div>F sword-flight · Q meditate</div>
+        <div>WASD move · MOUSE look · SCROLL zoom</div>
+        <div>SPACE jump · SHIFT sprint</div>
+        <div>F sword-flight (needs qi) · Q meditate (needs qi)</div>
       </div>
     </div>
   )
