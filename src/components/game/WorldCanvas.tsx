@@ -7,6 +7,7 @@ import { createPostFX, type PostFXHandle } from '@/engine/render/PostProcessing'
 import { createCultivatorModel, type CultivatorModelHandle } from '@/engine/entities/CultivatorModel'
 import { createPlayer, type PlayerHandle } from '@/engine/entities/PlayerEntity'
 import { createSmoothTerrain, createSpiritPines, createGrassTufts, createRocks, createSpiritFlowers, terrainHeight } from '@/engine/world/SmoothTerrain'
+import { createOcean, type OceanHandle } from '@/engine/world/OceanSystem'
 import { compileSettlement } from '@/engine/world/compiler/SettlementCompiler'
 import { WANG_FAMILY_VILLAGE } from '@/engine/canon/settlements/WangFamilyVillage'
 import { MeshCollisionSystem } from '@/engine/world/CollisionSystem'
@@ -109,20 +110,21 @@ export default function WorldCanvas() {
       const terrain = createSmoothTerrain(0, 0, terrainSize, 160)
       scene.add(terrain)
 
-      // ---- Ocean plane (Planet Suzaku is ocean-dominated) ----
-      // A vast blue plane at sea level (y=0) extending to the horizon.
-      const oceanGeo = new THREE.PlaneGeometry(terrainSize * 3, terrainSize * 3)
-      oceanGeo.rotateX(-Math.PI / 2)
-      const oceanMat = new THREE.MeshStandardMaterial({
-        color: 0x1a4a7a,
-        roughness: 0.2,
-        metalness: 0.1,
-        transparent: false, // opaque — transparency causes depth-sorting artifacts
+      // ---- Ocean (Gerstner wave ocean — Planet Suzaku is ocean-dominated) ----
+      // Vast ocean with GPU Gerstner waves, fresnel reflection, foam at crests.
+      // Opaque (no transparency artifacts). Drives buoyancy for future boats/creatures.
+      const ocean = createOcean(terrainSize * 3, 200, {
+        amplitude1: 0.8,
+        amplitude2: 0.4,
+        amplitude3: 0.2,
+        wavelength1: 25,
+        wavelength2: 12,
+        wavelength3: 6,
+        speed: 1.0,
+        steepness: 0.6,
       })
-      const ocean = new THREE.Mesh(oceanGeo, oceanMat)
-      ocean.position.y = -0.5
-      ocean.receiveShadow = true
-      scene.add(ocean)
+      ocean.mesh.position.y = -0.5
+      scene.add(ocean.mesh)
 
       // ---- Spirit pines (instanced, not blocky) ----
       const pines = createSpiritPines(0, 0, 200, 150)
@@ -404,6 +406,7 @@ export default function WorldCanvas() {
 
         // Update systems.
         sky.update(dt)
+        ocean.update(dt)
         postFX.update(dt)
         postFX.composer.render()
 
