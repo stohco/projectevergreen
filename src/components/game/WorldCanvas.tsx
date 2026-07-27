@@ -74,8 +74,8 @@ export default function WorldCanvas() {
         0.1,
         4000,
       )
-      camera.position.set(12, 80, 16)
-      camera.lookAt(0, 70, 4)
+      camera.position.set(6, 74, 10)
+      camera.lookAt(0, 73, 4)
 
       // Sky.
       sky = createSky(scene)
@@ -98,9 +98,17 @@ export default function WorldCanvas() {
       // Wang Lin cultivator at spawn village.
       cultivator = createCultivatorModel('foundation', false)
       cultivator.group.position.set(0, 72, 4)
+      cultivator.group.scale.setScalar(1.5) // make him visible from a distance
       cultivator.setAnimation('idle')
       cultivator.setAuraVisible(true)
       scene.add(cultivator.group)
+
+      // Spotlight on Wang Lin so he's always visible.
+      const cultivatorSpot = new THREE.SpotLight(0xfff4d6, 4.0, 40, Math.PI / 5, 0.5, 1.5)
+      cultivatorSpot.position.set(0, 90, 8)
+      cultivatorSpot.target.position.set(0, 72, 4)
+      scene.add(cultivatorSpot)
+      scene.add(cultivatorSpot.target)
 
       // Spirit-vein glow point light near spawn.
       const veinLight = new THREE.PointLight(0x9be15d, 2.0, 80, 1.6)
