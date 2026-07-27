@@ -135,6 +135,17 @@ public final class Ergenverse {
         //    (so item tooltips can pull canon metadata from the registry).
         WangLinMasterRegistry.bootstrap();
 
+        // ── CRON-137: WorldGraph — the single integration point for all
+        //    simulation systems. Populates the graph from RICanonicalDatabase
+        //    (158 NPCs, 80 locations, 178 artifacts, 214 techniques) with
+        //    canon edges (social, ownership, spatial). GraphQueryService wraps
+        //    the graph with simulation-ready queries (socialContacts,
+        //    settlementResidents, whoOwns, whoWants, whoKnowsAbout, etc.).
+        //    Must run AFTER WangLinMasterRegistry (reads RICanonicalDatabase
+        //    which is populated by the master registry) and BEFORE any
+        //    simulation system that needs graph queries.
+        dev.ergenverse.graph.GraphBootstrap.bootstrap();
+
         // ── World Laws: every location knows why it exists. The laws
         //    determine what herbs grow, what beasts evolve, what
         //    techniques work, what formations fail.
