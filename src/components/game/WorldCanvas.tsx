@@ -146,30 +146,19 @@ export default function WorldCanvas() {
       // single Y for the whole settlement. This prevents floating buildings
       // on sloped terrain. We walk the village group and adjust each building
       // child to terrainHeight(child.x, child.z).
-      const collision = new CollisionSystem()
+      const collision = new MeshCollisionSystem(0.4) // player radius 0.4m
       villageGroup.children.forEach((child) => {
         const buildingX = villageGroup.position.x + child.position.x
         const buildingZ = villageGroup.position.z + child.position.z
         const groundY = terrainHeight(buildingX, buildingZ)
         child.position.y = groundY
-        // Register collision AABB for this building.
-        // The building group name is 'building:<id>' — match against the
-        // full building id in WANG_FAMILY_VILLAGE.buildings.
-        const buildingData = WANG_FAMILY_VILLAGE.buildings.find((b) => b.id === child.name)
-        if (buildingData) {
-          const [w, h, d] = buildingData.size
-          collision.registerBox(buildingData.id, {
-            minX: buildingX - w / 2 + 0.5, // inset for doorway
-            maxX: buildingX + w / 2 - 0.5,
-            minY: groundY,
-            maxY: groundY + h,
-            minZ: buildingZ - d / 2 + 0.5,
-            maxZ: buildingZ + d / 2 - 0.5,
-          })
-        }
       })
+      // Register all collidable meshes (walls, roofs, pillars, doors)
+      // from the compiled village. This wraps collision exactly around
+      // the actual 3D mesh geometry — not AABB boxes.
+      collision.register(villageGroup)
       scene.add(villageGroup)
-      console.log('[WorldCanvas] collision boxes registered:', collision.count())
+      console.log('[WorldCanvas] collision meshes registered:', collision.count())
 
       // ---- Player (NOT Wang Lin) ----
       // Player name comes from the character creation screen (English, typed).
@@ -330,13 +319,13 @@ export default function WorldCanvas() {
         if (keys['KeyA']) { player.state.position.addScaledVector(right, -speed); moved = true }
         if (keys['KeyD']) { player.state.position.addScaledVector(right, speed); moved = true }
 
-        // Collision check: if the player's new position intersects a building
-        // AABB, push them back. Player body = cylinder radius 0.4, height 1.8.
+        // Collision check: ray-based mesh collision. Casts rays from the
+        // player against actual wall meshes. Stops at the wall surface.
+        // Doorways are naturally walkable (no mesh in the door gap).
         if (!player.state.isFlying) {
           const resolved = collision.resolve(
             player.state.position.x, player.state.position.y, player.state.position.z,
             prevPos.x, prevPos.y, prevPos.z,
-            0.4, 1.8,
           )
           player.state.position.x = resolved.x
           player.state.position.z = resolved.z
